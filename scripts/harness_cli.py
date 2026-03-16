@@ -18,38 +18,62 @@ Three laws:
 """
 
 import argparse
+import asyncio
 import json
-import os
+import logging
+import re as _stdlib_re
 import subprocess
 import sys
-import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
-from dotenv import load_dotenv
+from scripts.harness_config import get_config
 
-# ── Configurable base paths ───────────────────────────────────────────────
-# Override with environment variables or they default to the repo root.
-_REPO_ROOT   = Path(__file__).resolve().parent.parent
-CMO_BASE_DIR = Path(os.environ.get("CMO_BASE_DIR", str(_REPO_ROOT)))
-WORKSPACE_DIR = Path(os.environ.get("WORKSPACE_DIR", str(_REPO_ROOT / "workspace")))
-
-# Load .env from repo root or CMO_BASE_DIR
-load_dotenv(CMO_BASE_DIR / ".env")
-load_dotenv(_REPO_ROOT / ".env")
+_CFG = get_config()
 
 from google import genai as google_genai
 
-# ── Paths (derived from configurable bases) ───────────────────────────────
-SCRIPTS      = CMO_BASE_DIR / "scripts"
-DATA_DIR     = CMO_BASE_DIR / "data"
-CONTENT_LOG  = DATA_DIR / "content_log.json"
-PENDING_DIR  = DATA_DIR / "pending_checks"
-KNOWLEDGE    = WORKSPACE_DIR / "knowledge" if (WORKSPACE_DIR / "knowledge").exists() else _REPO_ROOT / "knowledge"
-WORKSPACE    = WORKSPACE_DIR
-VENV_PY      = os.environ.get("VENV_PYTHON", sys.executable)
+# ── Paths (derived from centralized config) ───────────────────────────────
+_REPO_ROOT   = _CFG.repo_root
+SCRIPTS      = _CFG.scripts_dir
+DATA_DIR     = _CFG.data_dir
+CONTENT_LOG  = _CFG.content_log
+PENDING_DIR  = _CFG.pending_checks_dir
+KNOWLEDGE    = _CFG.knowledge_dir
+WORKSPACE    = _CFG.workspace_dir
+VENV_PY      = _CFG.venv_python
+
+# ── Logging ───────────────────────────────────────────────────────────────
+log = logging.getLogger("kai-harness")
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"ts":"%(asctime)s","level":"%(levelname)s","module":"%(name)s","msg":"%(message)s"}',
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+
+# ── Input sanitization ────────────────────────────────────────────────────
+_UNSAFE_CHARS = _stdlib_re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]')
+
+def sanitize_input(value: str, max_length: int = 500) -> str:
+    """Sanitize user input before passing to LLM prompts.
+
+    Strips control characters, limits length, and escapes prompt-injection
+    patterns like system/instruction delimiters.
+    """
+    if not value:
+        return ""
+    # Strip control characters
+    value = _UNSAFE_CHARS.sub('', value)
+    # Truncate
+    value = value[:max_length]
+    # Escape common prompt-injection delimiters
+    value = value.replace('```', '` ` `')
+    value = value.replace('---', '- - -')
+    # Strip leading/trailing whitespace
+    return value.strip()
+
 
 # ── MARKETING.md parser ────────────────────────────────────────────────────
 import re as _re
@@ -164,7 +188,7 @@ class MarketingConfig:
         return self.thresholds.get(fmt, {}).get("seo", fmt not in SHORT_FORM)
 
     def channel(self, site: str) -> str:
-        return self.channels.get(site, "1471889734841270332")
+        return self.channels.get(site, _CFG.discord.fallback_channel)
 
     def framework_paths(self, fmt: str) -> list[Path]:
         """Resolve framework paths from MARKETING.md relative to WORKSPACE."""
@@ -217,11 +241,8 @@ SITES = list(MARKETING.channels.keys()) or ["myproduct"]
 # Short-form formats (ad/email) — lower Four U's threshold, no SEO lint
 SHORT_FORM = {"meta-ads", "google-ads", "cold-email", "email-lifecycle", "tiktok"}
 
-# Channel map from MARKETING.md (no hardcoded fallbacks)
-DISCORD_CHANNELS = {**MARKETING.channels}
-
-# Ad/short-form formats use lower Four U's threshold
-SHORT_FORM = {"meta-ads", "google-ads", "cold-email", "email-lifecycle", "tiktok"}
+# Channel map from MARKETING.md (config.yaml provides fallbacks)
+DISCORD_CHANNELS = {**MARKETING.channels, **_CFG.discord.channels}
 
 # Site-specific proof points — loaded from config.yaml or MARKETING.md
 # Add your product facts to config.yaml under products[].proof_points
@@ -418,11 +439,37 @@ Hashtags (5 max, specific): #[tag1] #[tag2] #[tag3] #[tag4] #[tag5]""",
 }
 
 
-# ── Gemini client ──────────────────────────────────────────────────────────
-def gemini(prompt: str, model: str = "gemini-2.0-flash") -> str:
-    client = google_genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-    response = client.models.generate_content(model=model, contents=prompt)
-    return response.text.strip()
+# ── Gemini client with timeout + circuit breaker ─────────────────────────
+_CONSECUTIVE_FAILURES = 0
+
+def gemini(prompt: str, model: str | None = None) -> str:
+    """Call Gemini with timeout and circuit breaker.
+
+    Raises RuntimeError after api_max_retries consecutive failures.
+    """
+    global _CONSECUTIVE_FAILURES
+    model = model or _CFG.gemini_model
+    timeout = _CFG.api_timeout
+
+    if _CONSECUTIVE_FAILURES >= _CFG.api_max_retries:
+        raise RuntimeError(
+            f"Circuit breaker open: {_CONSECUTIVE_FAILURES} consecutive API failures. "
+            "Check GEMINI_API_KEY and network connectivity."
+        )
+
+    try:
+        client = google_genai.Client(
+            api_key=_CFG.gemini_api_key,
+            http_options={"timeout": timeout * 1000},  # genai uses milliseconds
+        )
+        response = client.models.generate_content(model=model, contents=prompt)
+        _CONSECUTIVE_FAILURES = 0  # Reset on success
+        return response.text.strip()
+    except Exception as e:
+        _CONSECUTIVE_FAILURES += 1
+        log.error("Gemini API call failed (attempt %d/%d): %s",
+                  _CONSECUTIVE_FAILURES, _CFG.api_max_retries, e)
+        raise
 
 
 # ── Script runner ──────────────────────────────────────────────────────────
@@ -450,6 +497,12 @@ def step(n: int, total: int, title: str):
 
 # ── Brief generator ────────────────────────────────────────────────────────
 def generate_brief(site: str, keyword: str, fmt: str, persona: str | None = None) -> dict:
+    # Sanitize all user-provided values before LLM injection
+    site = sanitize_input(site, max_length=100)
+    keyword = sanitize_input(keyword, max_length=200)
+    fmt = sanitize_input(fmt, max_length=50)
+    persona = sanitize_input(persona, max_length=100) if persona else None
+
     step(1, 6, f"Research — {site} / {keyword}")
 
     gsc_opps    = run_cmo(["gsc", "opportunities", f"--site={site}"])
@@ -603,160 +656,118 @@ Write the complete draft now:""")
     return draft
 
 
+# ── Format → policy mapping ───────────────────────────────────────────────
+FORMAT_TO_POLICY = {
+    "blog":            "blog-publish",
+    "seo":             "blog-publish",
+    "linkedin":        "linkedin-article",
+    "email-lifecycle": "cold-email",
+    "cold-email":      "cold-email",
+    "press":           "press-release",
+    "tiktok":          "tiktok-script",
+    "meta-ads":        "meta-ad",
+    "google-ads":      "google-ad",
+}
+
+
 # ── Quality gate ───────────────────────────────────────────────────────────
 def run_gate(draft: str, keyword: str, threshold: int = 12, max_retries: int = 2,
              fmt: str | None = None) -> dict:
     step(3, 6, "Quality Gate")
 
-    is_short = any(m in draft for m in ["VARIANT A", "H1:", "Touch 1", "Subject:", "HOOK (0-3s)"])
-
-    # Priority: CLI --threshold > skill contract YAML > MARKETING.md table > heuristic
-    contract = MARKETING.skill_contract(fmt) if fmt else {}
-    contract_gates = contract.get("quality_gates", [])
-    contract_threshold = next(
-        (int(_re.search(r"(\d+)", g).group(1)) for g in contract_gates if "four_us_total" in g),
-        None
-    )
-    marketing_threshold = MARKETING.threshold(fmt) if fmt else (10 if is_short else 12)
-    effective_threshold = (
-        threshold       if threshold != 12 else
-        contract_threshold if contract_threshold else
-        marketing_threshold
-    )
-    # Contract can also require banned_words and seo_lint explicitly
-    contract_requires_seo = any("seo_lint" in g for g in contract_gates)
-    skip_seo = is_short and not contract_requires_seo and not MARKETING.seo_required(fmt or "")
-
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
-        f.write(draft)
-        tmp = f.name
-
+    policy_name = FORMAT_TO_POLICY.get(fmt or "", "default")
     results = {"passed": False, "draft": draft, "attempts": 0}
 
-    try:
-        for attempt in range(1, max_retries + 2):
-            print(f"  Attempt {attempt}/{max_retries + 1}...")
-            passed = True
+    for attempt in range(1, max_retries + 2):
+        print(f"  Attempt {attempt}/{max_retries + 1}...")
 
-            # Four U's
-            _, out = run_script("four_us_score.py", ["--file", tmp, "--json"])
-            try:
-                four_us = json.loads(out)
-            except Exception:
-                four_us = {"passed": False, "scores": {}, "notes": {}}
+        # Run unified quality scorer via gate.propose()
+        from scripts.quality import gate as quality_gate
+        proposal = asyncio.run(quality_gate.propose(
+            content=draft,
+            file_path="<harness-draft>",
+            policy_name=policy_name,
+        ))
 
-            scores = four_us.get("scores", {})
-            total  = sum(scores.get(k, 0) for k in ["unique", "useful", "ultra_specific", "urgent"])
-            mins_ok = all(scores.get(k, 0) >= 2 for k in ["unique", "useful", "ultra_specific", "urgent"])
-            four_us["passed"] = (total >= effective_threshold and mins_ok)
-            four_us["total"]  = total
-            results["four_us"] = four_us
+        results["proposal_id"] = proposal["proposal_id"]
+        results["score"] = proposal["score"]
+        results["grade"] = proposal["grade"]
+        results["violations"] = proposal.get("top_fixes", [])
+        results["violation_count"] = proposal.get("violation_count", 0)
+        results["policy"] = proposal["policy"]
 
-            indicator = "✅" if four_us["passed"] else "❌"
-            suffix    = f" (threshold: {effective_threshold}+)" if is_short else ""
-            print(f"    Four U's: {indicator} {total}/16{suffix}")
+        status = proposal["status"]
+        score = proposal["score"]
+        grade = proposal["grade"]
+        v_count = proposal.get("violation_count", 0)
 
-            if not four_us["passed"]:
-                passed = False
+        print(f"    Score: {score}/100 (grade {grade}) | Policy: {policy_name}")
+        print(f"    Violations: {v_count} | Status: {status}")
+        print(f"    Reason: {proposal['reason']}")
 
-            # Banned words
-            _, out = run_script("banned_word_check.py", ["--file", tmp, "--json"])
-            try:
-                banned = json.loads(out)
-            except Exception:
-                banned = {"passed": True, "tier1": []}
-            results["banned"] = banned
-            print(f"    Banned words: {'✅' if banned.get('passed') else '❌'}")
-            if not banned.get("passed"):
-                passed = False
+        if proposal.get("top_fixes"):
+            print("    Top fixes:")
+            for fix in proposal["top_fixes"][:3]:
+                print(f"      - [{fix['rule_id']}] {fix['rule_name']}: {fix['suggestion']}")
 
-            # SEO lint — contract + MARKETING.md decide; heuristic is fallback
-            if skip_seo:
-                seo = {"passed": True, "errors": [], "warnings": [], "skipped": True}
-                print("    SEO lint: ⏭ skipped")
-            else:
-                _, out = run_script("seo_lint.py", ["--file", tmp, "--keyword", keyword, "--json"])
-                try:
-                    seo = json.loads(out)
-                except Exception:
-                    seo = {"passed": True, "errors": [], "warnings": []}
-                e, w = len(seo.get("errors", [])), len(seo.get("warnings", []))
-                print(f"    SEO lint: {'✅' if seo.get('passed') else '❌'} ({e} error(s), {w} warning(s))")
-                if not seo.get("passed"):
-                    passed = False
-            results["seo"] = seo
-
-            if passed:
-                results["passed"] = True
-                results["attempts"] = attempt
-                results["draft"]    = draft
-                print(f"\n  ✅ Gate passed on attempt {attempt}.")
-                break
-
+        if status == "approved":
+            results["passed"] = True
+            results["attempts"] = attempt
+            results["draft"] = draft
+            print(f"\n  ✅ Gate passed on attempt {attempt} (score {score}, auto-approved).")
+            break
+        elif status == "pending":
+            results["passed"] = True  # Hold = human review, but don't block
+            results["attempts"] = attempt
+            results["draft"] = draft
+            print(f"\n  ⏳ Gate hold — score {score} in review range. Proposal: {proposal['proposal_id']}")
+            print(f"     Approve: python -m scripts.quality gate --approve {proposal['proposal_id']}")
+            break
+        else:
+            # Rejected — try to revise
             if attempt <= max_retries:
-                print(f"\n  Gate failed. Revising (attempt {attempt}/{max_retries})...")
+                print(f"\n  Gate rejected (score {score}). Revising (attempt {attempt}/{max_retries})...")
                 draft = revise_draft(draft, results, keyword)
-                with open(tmp, "w") as f:
-                    f.write(draft)
             else:
                 results["attempts"] = attempt
-                results["draft"]    = draft
-                print(f"\n  ❌ Gate failed after {max_retries} retries. Human review required.")
-    finally:
-        try:
-            os.unlink(tmp)
-        except Exception:
-            pass
+                results["draft"] = draft
+                print(f"\n  ❌ Gate failed after {max_retries} retries (score {score}). Human review required.")
+                print(f"     Proposal: {proposal['proposal_id']}")
 
     return results
 
 
 # ── Surgical revision ──────────────────────────────────────────────────────
 def revise_draft(draft: str, gate_results: dict, keyword: str) -> str:
-    """Fix only what failed. Do not change what passed."""
-    failures  = []
-    preserved = []
+    """Fix only what failed, using exact violation details from quality scorer."""
+    failures = []
 
-    # Four U's — report all failing dimensions
-    four_us = gate_results.get("four_us", {})
-    scores  = four_us.get("scores", {})
-    notes   = four_us.get("notes", {})
-    if four_us and not four_us.get("passed"):
-        for dim in ["unique", "useful", "ultra_specific", "urgent"]:
-            s = scores.get(dim, 0)
-            n = notes.get(dim, "")
-            if s < 3:
-                label = dim.replace("_", "-").title()
-                failures.append(f"Four U's {label} scored {s}/4 — fix: {n}")
-            else:
-                preserved.append(f"Four U's {dim.replace('_','-').title()} = {s}/4 (DO NOT change)")
+    # Use top_fixes from quality scorer — these have rule IDs, line numbers, and exact suggestions
+    for fix in gate_results.get("violations", []):
+        rule_id = fix.get("rule_id", "")
+        rule_name = fix.get("rule_name", "")
+        suggestion = fix.get("suggestion", "")
+        v = fix.get("first_violation", {})
+        line = v.get("line", "?")
+        text = v.get("text", "")
+        fix_text = v.get("fix", suggestion)
+        count = fix.get("violation_count", 1)
 
-    # Banned words — exact word + context + replacement
-    banned = gate_results.get("banned", {})
-    if banned and not banned.get("passed"):
-        for hit in banned.get("tier1", []):
-            ctx = hit.get("context", "")[:120]
-            rep = hit.get("replacement", "rewrite the phrase")
-            failures.append(f'Banned word "{hit["word"]}" — context: "{ctx}" — replace with: {rep}')
-
-    # SEO errors only (skip warnings to avoid over-constraining)
-    seo = gate_results.get("seo", {})
-    if seo and not seo.get("passed") and not seo.get("skipped"):
-        for err in seo.get("errors", []):
-            failures.append(f"SEO error: {err}")
+        failures.append(
+            f"[{rule_id}] {rule_name} (line {line}, {count} occurrence(s)): "
+            f'"{text[:100]}" → Fix: {fix_text}'
+        )
 
     if not failures:
         return draft
 
     word_count = len(draft.split())
+    score = gate_results.get("score", "?")
 
-    return gemini(f"""Revise this content draft. Fix ONLY the listed issues.
+    return gemini(f"""Revise this content draft. Current quality score: {score}/100. Fix ONLY the listed issues.
 
-ISSUES TO FIX:
+ISSUES TO FIX (from quality scorer — each has rule ID, line number, and exact fix):
 {chr(10).join(f"- {f}" for f in failures)}
-
-DO NOT CHANGE (these are already passing):
-{chr(10).join(f"- {p}" for p in preserved) or "None"}
 
 HARD CONSTRAINTS:
 - Keep at least {word_count} words — do NOT shorten
@@ -775,23 +786,41 @@ Return ONLY the revised draft — no preamble, no explanation:""")
 def post_for_approval(draft: str, brief: dict, gate_results: dict):
     step(4, 6, "Discord Approval")
 
-    site       = brief.get("target_site", "meetkai")
-    channel_id = DISCORD_CHANNELS.get(site, DISCORD_CHANNELS["meetkai"])
-    total      = gate_results.get("four_us", {}).get("total", "?")
-    fmt        = brief.get("format")
-    keyword    = brief.get("target_keyword", "")
-    preview    = draft[:600].replace('"', "'")
-    seo_w      = len(gate_results.get("seo", {}).get("warnings", []))
+    site        = brief.get("target_site", "meetkai")
+    channel_id  = DISCORD_CHANNELS.get(site, DISCORD_CHANNELS.get("meetkai", ""))
+    fmt         = brief.get("format")
+    keyword     = brief.get("target_keyword", "")
+    preview     = draft[:600].replace('"', "'")
+    score       = gate_results.get("score", "?")
+    grade       = gate_results.get("grade", "?")
+    proposal_id = gate_results.get("proposal_id", "none")
+    v_count     = gate_results.get("violation_count", 0)
+    policy      = gate_results.get("policy", "default")
 
     msg = (
         f"**📝 Content ready for approval**\\n"
         f"Site: `{site}` | Format: `{fmt}` | Keyword: `{keyword}`\\n"
-        f"Four U's: {total}/16 | SEO warnings: {seo_w}\\n\\n"
+        f"Score: {score}/100 (grade {grade}) | Violations: {v_count} | Policy: `{policy}`\\n"
+        f"Proposal: `{proposal_id}`\\n\\n"
         f"**Preview:**\\n```\\n{preview}...\\n```\\n\\n"
+        f"Approve: `python -m scripts.quality gate --approve {proposal_id}`\\n"
         f"React ✅ to approve · ❌ to reject with reason"
     )
-    os.system(f'openclaw message send --channel discord --target {channel_id} --message "{msg}"')
+    try:
+        result = subprocess.run(
+            ["openclaw", "message", "send", "--channel", "discord",
+             "--target", channel_id, "--message", msg],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode != 0:
+            log.warning("Discord post failed (exit %d): %s", result.returncode, result.stderr[:200])
+    except FileNotFoundError:
+        log.warning("openclaw not found — skipping Discord post")
+    except subprocess.TimeoutExpired:
+        log.warning("Discord post timed out")
     print(f"  Posted to #{site} channel ({channel_id})")
+    print(f"  Proposal ID: {proposal_id}")
+    print(f"  Approve: python -m scripts.quality gate --approve {proposal_id}")
     print("  Draft saved to /tmp/harness_draft.md — publish manually after approval.")
 
 
@@ -832,7 +861,10 @@ def cmd_run(args):
 def cmd_gate(args):
     header("Kai Harness — Gate Check")
     draft = Path(args.file).read_text()
-    r = run_gate(draft, args.keyword, threshold=args.threshold)
+    fmt = getattr(args, "format", None)
+    r = run_gate(draft, args.keyword, threshold=args.threshold, fmt=fmt)
+    if r.get("proposal_id"):
+        print(f"\n  Proposal: {r['proposal_id']} | Score: {r.get('score', '?')}/100")
     if not r["passed"]:
         sys.exit(1)
 
@@ -889,7 +921,8 @@ def cmd_status(args):
     print(f"  Pending 30d checks:  {pending_count}")
     print(f"  Knowledge base:      {'✅' if ww else '❌'}")
     print(f"  MARKETING.md:        {'✅' if mmd else '❌'}")
-    print(f"  Gate scripts:        ✅")
+    print(f"  Quality scorer:      ✅ (unified gate)")
+    print(f"  Policies:            {', '.join(FORMAT_TO_POLICY.values())}")
     print(f"\n  Formats:  {', '.join(FORMATS)}")
     print(f"  Sites:    {', '.join(SITES)}")
 
@@ -920,6 +953,7 @@ def main():
     g = sub.add_parser("gate", help="Gate check on existing draft")
     g.add_argument("--file",    required=True)
     g.add_argument("--keyword", required=True)
+    g.add_argument("--format",  choices=FORMATS, help="Content format (selects gate policy)")
     add_threshold(g)
 
     # brief

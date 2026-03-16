@@ -4,6 +4,8 @@ Content Quality Scorer — Engine orchestrator.
 Parses documents, runs rule sets, aggregates weighted scores.
 """
 
+import hashlib
+from collections import OrderedDict
 from pathlib import Path
 from typing import List, Optional
 
@@ -18,6 +20,15 @@ import scripts.quality.rules.algorithmic_authorship  # noqa: F401
 import scripts.quality.rules.geo_signals  # noqa: F401
 import scripts.quality.rules.content_structure  # noqa: F401
 import scripts.quality.rules.four_us  # noqa: F401
+
+# Module-level LRU cache for content scoring
+_SCORE_CACHE: "OrderedDict[str, QualityReport]" = OrderedDict()
+_CACHE_MAX = 128
+
+
+def clear_cache() -> None:
+    """Clear the content scoring cache."""
+    _SCORE_CACHE.clear()
 
 
 class QualityEngine:
@@ -53,6 +64,16 @@ class QualityEngine:
 
     async def score_content(self, content: str, file_path: str = "<stdin>") -> QualityReport:
         """Score raw content string."""
+        # Build cache key from content hash + scoring config
+        rule_names = sorted(cls.__name__ for cls in self._rule_classes)
+        key_data = content + str(self.use_llm) + str(rule_names)
+        cache_key = hashlib.sha256(key_data.encode("utf-8")).hexdigest()
+
+        if cache_key in _SCORE_CACHE:
+            # Move to end so it's treated as most-recently-used
+            _SCORE_CACHE.move_to_end(cache_key)
+            return _SCORE_CACHE[cache_key]
+
         doc = parse_markdown(content)
 
         # Instantiate and run rules
@@ -110,9 +131,16 @@ class QualityEngine:
                 if rule.rule_id == "CS-05" and "grade_level" in rule.metadata:
                     metadata["reading_level"] = rule.metadata["grade_level"]
 
-        return QualityReport(
+        report = QualityReport(
             file_path=file_path,
             overall_score=overall,
             categories=categories,
             metadata=metadata,
         )
+
+        # Store in cache; evict oldest entry if over capacity
+        _SCORE_CACHE[cache_key] = report
+        if len(_SCORE_CACHE) > _CACHE_MAX:
+            _SCORE_CACHE.popitem(last=False)
+
+        return report

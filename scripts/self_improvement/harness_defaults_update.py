@@ -19,22 +19,39 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
 import re
+import shutil
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dotenv import load_dotenv
-load_dotenv("/opt/cmo-analytics/.env")
+try:
+    import yaml
+except ImportError:
+    yaml = None
 
-CONTENT_LOG = "/opt/cmo-analytics/data/content_log.json"
-MARKETING_MD = "/root/.openclaw/workspace/MARKETING.md"
-DEFAULTS_FILE = "/opt/cmo-analytics/data/harness_defaults.json"
-DISCORD_CHANNEL = "1471889734841270332"  # #meet-kai
+# Use centralized config
+from scripts.harness_config import get_config
 
-MIN_N = 5          # Minimum data points to declare a pattern
-MIN_DELTA = 0.15   # Minimum 15% lift to be actionable
+_CFG = get_config()
+
+CONTENT_LOG = str(_CFG.content_log)
+MARKETING_MD = str(_CFG.marketing_md)
+DEFAULTS_FILE = str(_CFG.defaults_file)
+POLICY_DIR = str(_CFG.policy_dir)
+
+MIN_N = _CFG.thresholds.min_n
+MIN_DELTA = _CFG.thresholds.min_delta
+
+log = logging.getLogger("harness-defaults")
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"ts":"%(asctime)s","level":"%(levelname)s","module":"%(name)s","msg":"%(message)s"}',
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 
 
 def load_log() -> list:
@@ -206,7 +223,82 @@ def update_marketing_md(patterns: dict, dry_run: bool = False) -> list[str]:
     new_content = content + "\n".join(lines)
 
     if not dry_run:
+        # Create backup before overwriting
+        backup = MARKETING_MD + ".bak"
+        shutil.copy2(MARKETING_MD, backup)
+        log.info("Backed up MARKETING.md to %s", backup)
         Path(MARKETING_MD).write_text(new_content)
+
+    return updates
+
+
+def update_policy_thresholds(patterns: dict, dry_run: bool = False) -> list[str]:
+    """Auto-update gate policy YAML thresholds when winner patterns emerge.
+
+    When n>=5 winners consistently score above/below a threshold with delta>=15%,
+    adjust the auto_approve_above / reject_below values to match reality.
+    """
+    if not yaml:
+        return ["Skipped policy update: PyYAML not installed"]
+
+    updates = []
+    measured = [e for e in load_log() if e.get("quality_retro") and e.get("performance_30d")]
+    winners = [e for e in measured if e.get("performance_30d", {}).get("grade") == "winner"]
+    losers = [e for e in measured if e.get("performance_30d", {}).get("grade") == "underperformer"]
+
+    if len(winners) < MIN_N:
+        return []
+
+    # Calculate winner quality score distribution
+    winner_scores = [e["quality_retro"]["overall_score"] for e in winners]
+    loser_scores = [e["quality_retro"]["overall_score"] for e in losers] if losers else []
+
+    if not winner_scores:
+        return []
+
+    winner_p10 = sorted(winner_scores)[max(0, len(winner_scores) // 10)]  # 10th percentile of winners
+    loser_p90 = sorted(loser_scores)[min(len(loser_scores) - 1, len(loser_scores) * 9 // 10)] if loser_scores else 50
+
+    # Update each policy file
+    policy_dir = Path(POLICY_DIR)
+    if not policy_dir.exists():
+        return []
+
+    for policy_file in policy_dir.glob("*.yaml"):
+        try:
+            content = policy_file.read_text()
+            policy = yaml.safe_load(content)
+            if not policy:
+                continue
+
+            old_approve = policy.get("auto_approve_above", 85)
+            old_reject = policy.get("reject_below", 60)
+
+            # New thresholds: approve above 10th percentile of winners, reject below 90th percentile of losers
+            new_approve = max(int(winner_p10) - 5, 60)  # Don't go below 60
+            new_reject = min(int(loser_p90) + 5, new_approve - 10)  # Keep at least 10pt gap
+
+            if abs(new_approve - old_approve) < 5 and abs(new_reject - old_reject) < 5:
+                continue  # No significant change
+
+            policy["auto_approve_above"] = new_approve
+            policy["reject_below"] = new_reject
+            policy["hold_between"] = [new_reject, new_approve]
+
+            if not dry_run:
+                # Backup policy file before overwriting
+                shutil.copy2(policy_file, str(policy_file) + ".bak")
+                with open(policy_file, "w") as f:
+                    yaml.dump(policy, f, default_flow_style=False, sort_keys=False)
+
+            update_msg = (
+                f"- `{policy_file.name}`: approve {old_approve}→{new_approve}, "
+                f"reject {old_reject}→{new_reject} "
+                f"(based on {len(winner_scores)} winners, {len(loser_scores)} losers)"
+            )
+            updates.append(update_msg)
+        except Exception as e:
+            updates.append(f"- `{policy_file.name}`: error — {e}")
 
     return updates
 
@@ -214,11 +306,26 @@ def update_marketing_md(patterns: dict, dry_run: bool = False) -> list[str]:
 def post_discord(updates: list[str], patterns: dict):
     if not updates:
         return
+    channel = _CFG.discord.get("meetkai")
+    if not channel:
+        log.info("No Discord channel configured — skipping post")
+        return
     lines = ["**🧠 Harness Defaults Updated**", "Patterns reached statistical significance (n≥5, Δ≥15%):", ""]
     lines.extend(updates)
     lines.append("\nMARKETING.md updated. Next run will use these defaults.")
-    msg = "\n".join(lines).replace('"', "'")
-    os.system(f'openclaw message send --channel discord --target {DISCORD_CHANNEL} --message "{msg}"')
+    msg = "\n".join(lines)
+    try:
+        result = subprocess.run(
+            ["openclaw", "message", "send", "--channel", "discord",
+             "--target", channel, "--message", msg],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode != 0:
+            log.warning("Discord post failed (exit %d): %s", result.returncode, result.stderr[:200])
+    except FileNotFoundError:
+        log.warning("openclaw not found — skipping Discord post")
+    except subprocess.TimeoutExpired:
+        log.warning("Discord post timed out")
 
 
 def main():
@@ -242,15 +349,22 @@ def main():
 
     updates = update_marketing_md(patterns, dry_run=args.dry_run)
 
+    # Also update policy YAML thresholds
+    policy_updates = update_policy_thresholds(patterns, dry_run=args.dry_run)
+
+    all_updates = updates + policy_updates
+
     if args.dry_run:
         print("\n[DRY RUN] Proposed updates:")
-        for u in updates:
+        for u in all_updates:
             print(f"  {u}")
     else:
-        if updates:
+        if all_updates:
             save_defaults(patterns)
-            post_discord(updates, patterns)
-            print(f"\n{len(updates)} default(s) updated in MARKETING.md")
+            post_discord(all_updates, patterns)
+            print(f"\n{len(updates)} MARKETING.md default(s) updated")
+            if policy_updates:
+                print(f"{len(policy_updates)} policy threshold(s) updated")
         else:
             print("No significant patterns found above threshold yet.")
 

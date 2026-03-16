@@ -16,23 +16,60 @@ Usage:
 
 import argparse
 import json
+import logging
 import os
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
-from pathlib import Path
-
-from dotenv import load_dotenv
-load_dotenv("/opt/cmo-analytics/.env")
 
 from google import genai as google_genai
 
-CONTENT_LOG = "/opt/cmo-analytics/data/content_log.json"
-KNOWLEDGE_BASE = "/root/.openclaw/workspace/knowledge/playbooks"
+# Use centralized config
+from scripts.harness_config import get_config
+
+_CFG = get_config()
+
+CONTENT_LOG = str(_CFG.content_log)
+KNOWLEDGE_BASE = str(_CFG.knowledge_base)
 WHAT_WORKS_FILE = f"{KNOWLEDGE_BASE}/what-works.md"
 
-WIN_POSITION = 5
-WIN_CTR = 0.05
-WIN_TIME_ON_PAGE = 90
+WIN_POSITION = _CFG.thresholds.win_position
+WIN_CTR = _CFG.thresholds.win_ctr
+WIN_TIME_ON_PAGE = _CFG.thresholds.win_time_on_page
+
+log = logging.getLogger("pattern-extract")
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"ts":"%(asctime)s","level":"%(levelname)s","module":"%(name)s","msg":"%(message)s"}',
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+
+
+# ── Gemini client with timeout ───────────────────────────────────────────
+_CONSECUTIVE_FAILURES = 0
+
+def _gemini(prompt: str) -> str:
+    """Call Gemini with timeout and circuit breaker."""
+    global _CONSECUTIVE_FAILURES
+    if _CONSECUTIVE_FAILURES >= _CFG.api_max_retries:
+        raise RuntimeError(
+            f"Circuit breaker open: {_CONSECUTIVE_FAILURES} consecutive API failures."
+        )
+    try:
+        client = google_genai.Client(
+            api_key=_CFG.gemini_api_key,
+            http_options={"timeout": _CFG.api_timeout * 1000},
+        )
+        response = client.models.generate_content(
+            model=_CFG.gemini_model, contents=prompt,
+        )
+        _CONSECUTIVE_FAILURES = 0
+        return response.text.strip()
+    except Exception as e:
+        _CONSECUTIVE_FAILURES += 1
+        log.error("Gemini call failed (attempt %d/%d): %s",
+                  _CONSECUTIVE_FAILURES, _CFG.api_max_retries, e)
+        raise
 
 
 def load_log() -> list:
@@ -60,9 +97,7 @@ def is_winner(entry: dict) -> bool:
 
 
 def analyze_winner(entry: dict) -> str:
-    """Use Claude to extract what made this piece win."""
-    client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
-
+    """Use Gemini to extract what made this piece win."""
     perf = entry.get("performance_30d", {})
     gsc = perf.get("gsc", {})
     ga4 = perf.get("ga4", {})
@@ -90,8 +125,7 @@ Focus on: hook type effectiveness, specificity of angle, persona match, format c
 Be concrete — what specifically worked and why? What can be replicated?
 Output ONLY the analysis text, no headers or JSON."""
 
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
-    return response.text.strip()
+    return _gemini(prompt)
 
 
 def append_to_what_works(entry: dict, analysis: str):
@@ -166,7 +200,6 @@ def run_weekly_aggregation(site: str = "all") -> str:
             f"Four U's: {w.get('four_us_score', 'N/A')}"
         )
 
-    client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
     prompt = f"""You are analyzing content performance patterns from the Kai Harness system.
 
 Winners ({len(winners)} total):
@@ -182,8 +215,7 @@ Format each pattern as: [PATTERN] | [data backing it] | [recommendation]
 
 Output as plain text, one pattern per line."""
 
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
-    patterns_text = response.text.strip()
+    patterns_text = _gemini(prompt)
 
     # Save patterns
     patterns_file = f"{KNOWLEDGE_BASE}/weekly-patterns.md"
@@ -195,16 +227,152 @@ Output as plain text, one pattern per line."""
     return patterns_text
 
 
+def correlate_rules_with_performance(site: str = "all") -> dict:
+    """Correlate quality rule scores with winner/loser classification.
+
+    Returns dict of rule_id → {winner_avg, loser_avg, delta_pct, n_winners, n_losers}
+    for rules where delta >= 15% and n >= 5.
+    """
+    log = load_log()
+    if site != "all":
+        log = [e for e in log if e.get("site") == site]
+
+    # Split into winners and losers that have quality_retro data
+    winners = [e for e in log if is_winner(e) and e.get("quality_retro", {}).get("rule_scores")]
+    losers = [
+        e for e in log
+        if not is_winner(e)
+        and e.get("performance_30d")  # has been checked
+        and e.get("quality_retro", {}).get("rule_scores")
+    ]
+
+    if len(winners) < 3 or len(losers) < 3:
+        return {"insufficient_data": True, "n_winners": len(winners), "n_losers": len(losers)}
+
+    # Collect per-rule scores for winners vs losers
+    winner_rules: dict[str, list[float]] = defaultdict(list)
+    loser_rules: dict[str, list[float]] = defaultdict(list)
+
+    for entry in winners:
+        for rule_id, data in entry["quality_retro"]["rule_scores"].items():
+            winner_rules[rule_id].append(data["score"])
+
+    for entry in losers:
+        for rule_id, data in entry["quality_retro"]["rule_scores"].items():
+            loser_rules[rule_id].append(data["score"])
+
+    # Find rules with significant delta
+    correlations = {}
+    for rule_id in set(winner_rules) & set(loser_rules):
+        w_scores = winner_rules[rule_id]
+        l_scores = loser_rules[rule_id]
+        if len(w_scores) < 3 or len(l_scores) < 3:
+            continue
+
+        w_avg = sum(w_scores) / len(w_scores)
+        l_avg = sum(l_scores) / len(l_scores)
+        if l_avg > 0:
+            delta = (w_avg - l_avg) / l_avg
+        else:
+            delta = 1.0 if w_avg > 0 else 0.0
+
+        if abs(delta) >= 0.15:  # 15% threshold
+            correlations[rule_id] = {
+                "winner_avg": round(w_avg, 3),
+                "loser_avg": round(l_avg, 3),
+                "delta_pct": round(delta * 100, 1),
+                "n_winners": len(w_scores),
+                "n_losers": len(l_scores),
+            }
+
+    return correlations
+
+
+def post_weekly_summary():
+    """Weekly Discord summary: avg quality score trend."""
+    entries = load_log()
+    scored = [e for e in entries if e.get("quality_retro")]
+    if not scored:
+        print("No quality-scored entries yet.")
+        return
+
+    scores = [e["quality_retro"]["overall_score"] for e in scored]
+    avg = sum(scores) / len(scores)
+
+    # Compare to last week's scores (entries scored >7 days ago)
+    now = datetime.now(timezone.utc)
+    old = []
+    for e in scored:
+        scored_at = e["quality_retro"].get("scored_at", "")
+        if scored_at:
+            dt = datetime.fromisoformat(scored_at)
+            if (now - dt).days > 7:
+                old.append(e["quality_retro"]["overall_score"])
+
+    msg_lines = [
+        "**📊 Weekly Quality Report**",
+        f"Avg score: {avg:.0f}/100 across {len(scored)} pieces",
+    ]
+    if old:
+        old_avg = sum(old) / len(old)
+        delta = avg - old_avg
+        arrow = "↑" if delta > 0 else "↓" if delta < 0 else "→"
+        msg_lines.append(f"Trend: {old_avg:.0f} → {avg:.0f} ({arrow}{abs(delta):.0f} pts)")
+
+    # Add top correlations
+    correlations = correlate_rules_with_performance()
+    if not correlations.get("insufficient_data") and correlations:
+        msg_lines.append("\n**Rules that correlate with winners:**")
+        sorted_rules = sorted(correlations.items(), key=lambda x: x[1]["delta_pct"], reverse=True)
+        for rule_id, data in sorted_rules[:5]:
+            msg_lines.append(
+                f"  {rule_id}: winners avg {data['winner_avg']:.2f} vs losers {data['loser_avg']:.2f} "
+                f"(+{data['delta_pct']:.0f}%, n={data['n_winners']}+{data['n_losers']})"
+            )
+
+    msg = "\n".join(msg_lines)
+    channel = _CFG.discord.get("meetkai")
+    try:
+        subprocess.run(
+            ["openclaw", "message", "send", "--channel", "discord",
+             "--target", channel, "--message", msg],
+            check=True, timeout=30,
+        )
+    except FileNotFoundError:
+        log.warning("openclaw CLI not found — skipping Discord post")
+    except subprocess.TimeoutExpired:
+        log.warning("openclaw message send timed out after 30s")
+    print(msg)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Pattern Extractor")
     parser.add_argument("--url", help="Extract patterns for a specific URL")
     parser.add_argument("--weekly", action="store_true", help="Run weekly aggregation")
+    parser.add_argument("--correlate", action="store_true", help="Correlate quality rules with performance")
+    parser.add_argument("--weekly-summary", action="store_true", help="Post weekly quality summary to Discord")
     parser.add_argument("--site", default="all", help="Site filter for weekly run")
     args = parser.parse_args()
 
+    if args.correlate:
+        print(f"Correlating quality rules with performance (site={args.site})...")
+        correlations = correlate_rules_with_performance(args.site)
+        if correlations.get("insufficient_data"):
+            print(f"Insufficient data: {correlations['n_winners']} winners, {correlations['n_losers']} losers (need 3+ each)")
+        else:
+            print(f"\nRules correlated with winners ({len(correlations)} rules with delta >= 15%):")
+            for rule_id, data in sorted(correlations.items(), key=lambda x: x[1]["delta_pct"], reverse=True):
+                print(f"  {rule_id}: winners={data['winner_avg']:.3f} losers={data['loser_avg']:.3f} "
+                      f"delta=+{data['delta_pct']:.1f}% (n={data['n_winners']}w/{data['n_losers']}l)")
+        return
+
+    if args.weekly_summary:
+        post_weekly_summary()
+        return
+
     if args.url:
-        log = load_log()
-        entry = next((e for e in log if e["url"] == args.url), None)
+        entries = load_log()
+        entry = next((e for e in entries if e["url"] == args.url), None)
         if not entry:
             print(f"URL not in log: {args.url}")
             return
@@ -224,9 +392,9 @@ def main():
         return
 
     # Default: process all unprocessed winners
-    log = load_log()
+    entries = load_log()
     processed = 0
-    for entry in log:
+    for entry in entries:
         if is_winner(entry) and not entry.get("patterns_extracted"):
             print(f"Processing winner: {entry['url']}")
             analysis = analyze_winner(entry)
@@ -237,7 +405,7 @@ def main():
     if processed:
         # Save updated log
         with open(CONTENT_LOG, "w") as f:
-            json.dump(log, f, indent=2)
+            json.dump(entries, f, indent=2)
         print(f"\n{processed} winner(s) processed.")
     else:
         print("No unprocessed winners found.")

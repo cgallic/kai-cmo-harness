@@ -1,0 +1,59 @@
+# Kai Harness — Centralized Configuration
+#
+# All hardcoded paths, Discord IDs, site mappings, and thresholds.
+# Environment variables override these values (see scripts/harness_config.py).
+
+# API settings
+gemini_model: "gemini-2.0-flash"
+api_timeout: 30       # seconds — applied to all LLM API calls
+api_max_retries: 3    # circuit breaker: fail after N consecutive errors
+
+# Paths (override with env vars: CMO_BASE_DIR, WORKSPACE_DIR, CMO_DATA_DIR, etc.)
+paths:
+  # cmo_base_dir: "/opt/cmo-analytics"   # uncomment on server
+  # workspace_dir: "/root/.openclaw/workspace"
+  # data_dir: "/opt/cmo-analytics/data"
+  # marketing_md: "/root/.openclaw/workspace/MARKETING.md"
+  # knowledge_base: "/root/.openclaw/workspace/knowledge/playbooks"
+
+# Discord channel IDs by site key
+discord:
+  fallback_channel: ""
+  channels:
+    kaicalls: "1469307381103198382"
+    buildwithkai: "1469307544454566020"
+    abp: "1469310748290191441"
+    meetkai: "1471889734841270332"
+    connorgallic: "1471889734841270332"
+
+# Site-specific integrations
+sites:
+  gsc_urls:
+    kaicalls: "sc-domain:kaicalls.com"
+    buildwithkai: "sc-domain:buildwithkai.com"
+    abp: "sc-domain:awesomebackyardparties.com"
+    meetkai: "sc-domain:meetkai.xyz"
+    connorgallic: "sc-domain:connorgallic.com"
+    vocalscribe: "sc-domain:vocalscribe.xyz"
+  ga4_properties:
+    # Values here are defaults — override with GA4_PROPERTY_KAICALLS etc.
+    kaicalls: ""
+    buildwithkai: ""
+    abp: ""
+    meetkai: ""
+    connorgallic: ""
+
+# Performance and pattern thresholds
+thresholds:
+  win_position: 5       # GSC position <= N = winner
+  win_ctr: 0.05         # 5% CTR minimum for winner
+  win_time_on_page: 90  # seconds on page minimum for winner
+  min_n: 5              # minimum data points to declare a pattern
+  min_delta: 0.15       # minimum 15% lift to be actionable
+
+# Products — site facts for content generation
+products: []
+  # - id: kaicalls
+  #   proof_points: "AI receptionist handles 500+ calls/day with 98% accuracy"
+  # - id: buildwithkai
+  #   proof_points: "..."

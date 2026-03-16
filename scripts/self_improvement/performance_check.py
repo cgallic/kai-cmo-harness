@@ -13,48 +13,38 @@ Usage:
 """
 
 import argparse
+import asyncio
 import json
+import logging
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-# Load env
-from dotenv import load_dotenv
-load_dotenv("/opt/cmo-analytics/.env")
+# Use centralized config
+from scripts.harness_config import get_config
 
-CONTENT_LOG = "/opt/cmo-analytics/data/content_log.json"
-PENDING_CHECKS_DIR = "/opt/cmo-analytics/data/pending_checks"
+_CFG = get_config()
 
-# Win thresholds
-WIN_POSITION = 5
-WIN_CTR = 0.05        # 5%
-WIN_TIME_ON_PAGE = 90 # seconds
+CONTENT_LOG = str(_CFG.content_log)
+PENDING_CHECKS_DIR = str(_CFG.pending_checks_dir)
 
-SITE_URLS = {
-    "kaicalls": "sc-domain:kaicalls.com",
-    "buildwithkai": "sc-domain:buildwithkai.com",
-    "abp": "sc-domain:awesomebackyardparties.com",
-    "meetkai": "sc-domain:meetkai.xyz",
-    "connorgallic": "sc-domain:connorgallic.com",
-    "vocalscribe": "sc-domain:vocalscribe.xyz",
-}
+# Win thresholds from config
+WIN_POSITION = _CFG.thresholds.win_position
+WIN_CTR = _CFG.thresholds.win_ctr
+WIN_TIME_ON_PAGE = _CFG.thresholds.win_time_on_page
 
-GA4_PROPERTY_IDS = {
-    "kaicalls": os.environ.get("GA4_PROPERTY_KAICALLS", ""),
-    "buildwithkai": os.environ.get("GA4_PROPERTY_BWK", ""),
-    "abp": os.environ.get("GA4_PROPERTY_ABP", ""),
-    "meetkai": os.environ.get("GA4_PROPERTY_MEETKAI", ""),
-    "connorgallic": os.environ.get("GA4_PROPERTY_CONNORGALLIC", ""),
-}
+SITE_URLS = _CFG.sites.gsc_urls
+GA4_PROPERTY_IDS = _CFG.sites.ga4_properties
+DISCORD_CHANNEL_IDS = _CFG.discord.channels
 
-DISCORD_CHANNEL_IDS = {
-    "kaicalls": "1469307381103198382",
-    "buildwithkai": "1469307544454566020",
-    "abp": "1469310748290191441",
-    "meetkai": "1471889734841270332",
-    "connorgallic": "1471889734841270332",
-}
+log = logging.getLogger("perf-check")
+logging.basicConfig(
+    level=logging.INFO,
+    format='{"ts":"%(asctime)s","level":"%(levelname)s","module":"%(name)s","msg":"%(message)s"}',
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
 
 
 def load_log() -> list:
@@ -116,7 +106,7 @@ def pull_gsc_data(url: str, keyword: str, site: str) -> dict:
                         ]
                     }
                 ],
-                "rowLimit": 1,
+                "rowLimit": 10,
             },
         ).execute()
 
@@ -124,12 +114,22 @@ def pull_gsc_data(url: str, keyword: str, site: str) -> dict:
         if not rows:
             return {"impressions": 0, "clicks": 0, "ctr": 0.0, "position": None}
 
-        row = rows[0]
+        # Aggregate across all matching rows
+        total_impressions = sum(r.get("impressions", 0) for r in rows)
+        total_clicks = sum(r.get("clicks", 0) for r in rows)
+        # Weighted average position (weighted by impressions)
+        weighted_pos = sum(
+            r.get("position", 0) * r.get("impressions", 0) for r in rows
+        )
+        avg_position = weighted_pos / max(total_impressions, 1)
+        overall_ctr = total_clicks / max(total_impressions, 1)
+
         return {
-            "impressions": row.get("impressions", 0),
-            "clicks": row.get("clicks", 0),
-            "ctr": round(row.get("ctr", 0.0), 4),
-            "position": round(row.get("position", 0.0), 1),
+            "impressions": total_impressions,
+            "clicks": total_clicks,
+            "ctr": round(overall_ctr, 4),
+            "position": round(avg_position, 1),
+            "rows_aggregated": len(rows),
         }
     except Exception as e:
         return {"error": str(e)}
@@ -221,6 +221,52 @@ def evaluate_performance(entry: dict, gsc: dict, ga4: dict) -> dict:
     }
 
 
+def retro_score_content(url: str, site: str) -> dict | None:
+    """Run quality scorer on published content retroactively by fetching URL."""
+    try:
+        import urllib.request
+        req = urllib.request.Request(url, headers={"User-Agent": "KaiHarness/1.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+
+        # Extract article body text (strip HTML tags)
+        import re
+        # Remove script/style tags
+        html = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", html, flags=re.DOTALL | re.IGNORECASE)
+        # Remove HTML tags
+        text = re.sub(r"<[^>]+>", " ", html)
+        # Normalize whitespace
+        text = re.sub(r"\s+", " ", text).strip()
+
+        if len(text) < 200:
+            return None
+
+        # Run through quality scorer
+        from scripts.quality.engine import QualityEngine
+        engine = QualityEngine(use_llm=False)  # No LLM for batch scoring
+        report = asyncio.run(engine.score_content(text, file_path=url))
+
+        # Extract per-rule scores
+        rule_scores = {}
+        for cat in report.categories:
+            for rule in cat.rules:
+                rule_scores[rule.rule_id] = {
+                    "score": round(rule.score, 3),
+                    "passed": rule.passed,
+                    "violations": len(rule.violations),
+                }
+
+        return {
+            "overall_score": round(report.overall_score, 1),
+            "grade": report.overall_grade,
+            "rule_scores": rule_scores,
+            "scored_at": datetime.now(timezone.utc).isoformat(),
+        }
+    except Exception as e:
+        print(f"  Retro-score failed for {url}: {e}")
+        return None
+
+
 def format_discord_message(entry: dict, gsc: dict, ga4: dict, evaluation: dict) -> str:
     grade_emoji = {"winner": "🏆", "average": "📊", "underperformer": "⚠️"}
     emoji = grade_emoji.get(evaluation["grade"], "📊")
@@ -241,6 +287,13 @@ def format_discord_message(entry: dict, gsc: dict, ga4: dict, evaluation: dict) 
         f"**Grade: {evaluation['grade'].upper()}**",
     ]
 
+    # Include quality score if available
+    entry_quality = entry.get("quality_retro")
+    if entry_quality:
+        lines.append("")
+        lines.append(f"**Quality Score:** {entry_quality.get('overall_score', 'N/A')}/100 "
+                     f"(grade {entry_quality.get('grade', '?')})")
+
     if evaluation["is_winner"]:
         lines.append("→ Pattern extracted to knowledge base.")
     elif evaluation["is_underperformer"]:
@@ -250,10 +303,22 @@ def format_discord_message(entry: dict, gsc: dict, ga4: dict, evaluation: dict) 
 
 
 def post_to_discord(message: str, site: str):
-    channel_id = DISCORD_CHANNEL_IDS.get(site, DISCORD_CHANNEL_IDS["meetkai"])
-    os.system(
-        f'openclaw message send --channel discord --target {channel_id} --message "{message.replace(chr(34), chr(39))}"'
-    )
+    channel_id = DISCORD_CHANNEL_IDS.get(site, _CFG.discord.fallback_channel)
+    if not channel_id:
+        log.info("No Discord channel for site %s — skipping post", site)
+        return
+    try:
+        result = subprocess.run(
+            ["openclaw", "message", "send", "--channel", "discord",
+             "--target", channel_id, "--message", message],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode != 0:
+            log.warning("Discord post failed (exit %d): %s", result.returncode, result.stderr[:200])
+    except FileNotFoundError:
+        log.warning("openclaw not found — skipping Discord post")
+    except subprocess.TimeoutExpired:
+        log.warning("Discord post timed out")
 
 
 def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
@@ -269,9 +334,14 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
     ga4 = pull_ga4_data(url, site)
     evaluation = evaluate_performance({"url": url, "keyword": keyword}, gsc, ga4)
 
+    # Retro-score with quality scorer
+    quality = retro_score_content(url, site)
+
     print(f"  GSC: {gsc}")
     print(f"  GA4: {ga4}")
     print(f"  Grade: {evaluation['grade']}")
+    if quality:
+        print(f"  Quality: {quality['overall_score']}/100 (grade {quality['grade']})")
 
     # Update log
     log = load_log()
@@ -283,6 +353,8 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
                 "grade": evaluation["grade"],
                 "checked_at": datetime.now(timezone.utc).isoformat(),
             }
+            if quality:
+                e["quality_retro"] = quality
             break
     if not dry_run:
         save_log(log)
@@ -310,13 +382,58 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
     }
 
 
+def batch_score_all(dry_run: bool = False):
+    """Nightly cron: batch score all published content, append trend to content_log.json."""
+    log = load_log()
+    scored = 0
+    total = len(log)
+
+    print(f"Batch scoring {total} entries...")
+    for i, entry in enumerate(log):
+        url = entry.get("url")
+        site = entry.get("site")
+        if not url:
+            continue
+
+        # Skip if already scored within last 7 days
+        existing = entry.get("quality_retro", {})
+        if existing.get("scored_at"):
+            from datetime import timedelta
+            scored_at = datetime.fromisoformat(existing["scored_at"])
+            if datetime.now(timezone.utc) - scored_at < timedelta(days=7):
+                continue
+
+        print(f"  [{i+1}/{total}] {url[:80]}...")
+        quality = retro_score_content(url, site)
+        if quality:
+            entry["quality_retro"] = quality
+            scored += 1
+
+    if not dry_run and scored > 0:
+        save_log(log)
+
+    print(f"\nBatch scoring complete: {scored}/{total} entries scored.")
+
+    # Post weekly summary if enough data
+    scored_entries = [e for e in log if e.get("quality_retro")]
+    if scored_entries:
+        scores = [e["quality_retro"]["overall_score"] for e in scored_entries]
+        avg = sum(scores) / len(scores)
+        print(f"Average quality score: {avg:.1f}/100 across {len(scored_entries)} pieces")
+
+
 def main():
     parser = argparse.ArgumentParser(description="30-Day Performance Checker")
     parser.add_argument("--all", action="store_true", help="Check all pending")
     parser.add_argument("--url", help="Check specific URL")
+    parser.add_argument("--batch-score", action="store_true", help="Batch score all published content (nightly cron)")
     parser.add_argument("--days", type=int, default=30)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+
+    if args.batch_score:
+        batch_score_all(dry_run=args.dry_run)
+        return
 
     if args.url:
         log = load_log()
@@ -347,8 +464,15 @@ def main():
 
     if winners:
         print("Winners — running pattern extraction...")
+        pattern_script = str(_CFG.scripts_dir / "self_improvement" / "pattern_extract.py")
         for w in winners:
-            os.system(f'python3 /opt/cmo-analytics/scripts/pattern_extract.py --url "{w["url"]}"')
+            try:
+                subprocess.run(
+                    [_CFG.venv_python, pattern_script, "--url", w["url"]],
+                    capture_output=True, text=True, timeout=120,
+                )
+            except Exception as e:
+                log.warning("Pattern extraction failed for %s: %s", w["url"], e)
 
 
 if __name__ == "__main__":

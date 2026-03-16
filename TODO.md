@@ -11,14 +11,14 @@
 
 ---
 
-## Phase 1: Wire Harness Through Quality Scorer
+## Phase 1: Wire Harness Through Quality Scorer ✅
 **Replace the 3 separate gate scripts with the unified quality scorer.**
 
-- [ ] Refactor `run_gate()` in `scripts/harness_cli.py` to call `scripts.quality.gate.propose()` instead of `four_us_score.py` + `banned_word_check.py` + `seo_lint.py`
-- [ ] Map harness format types to gate policies (blog→blog-publish, linkedin→linkedin-article, email→cold-email)
-- [ ] Wire `revise_draft()` to use quality scorer violations as fix instructions (line numbers, exact suggestions)
-- [ ] Update `post_for_approval()` to read gate proposal status
-- [ ] Add policies: `press-release.yaml`, `tiktok-script.yaml`, `meta-ad.yaml`, `google-ad.yaml`
+- [x] Refactor `run_gate()` in `scripts/harness_cli.py` to call `scripts.quality.gate.propose()` instead of `four_us_score.py` + `banned_word_check.py` + `seo_lint.py`
+- [x] Map harness format types to gate policies (blog→blog-publish, linkedin→linkedin-article, email→cold-email, press→press-release, tiktok→tiktok-script, meta-ads→meta-ad, google-ads→google-ad)
+- [x] Wire `revise_draft()` to use quality scorer violations as fix instructions (rule IDs, line numbers, exact suggestions)
+- [x] Update `post_for_approval()` to include proposal_id + score + grade + approve command
+- [x] Add policies: `press-release.yaml`, `tiktok-script.yaml`, `meta-ad.yaml`, `google-ad.yaml`
 - [ ] Test end-to-end: `kai-harness run --task blog --site kaicalls --keyword "test"`
 
 ## Phase 2: Gate → Remote Zehrava Handoff
@@ -29,25 +29,41 @@
 - [ ] Add `--deliver` flag: `python -m scripts.quality gate article.md --policy blog --deliver`
 - [ ] Wire Discord notification for pending proposals (post to channel with approve/reject reactions)
 
-## Phase 3: Self-Improvement Loop
+## Phase 3: Self-Improvement Loop ✅
 **Quality scores feed back into the system automatically.**
 
-- [ ] Wire `performance_check.py` to run quality scorer on published content retroactively
-- [ ] Correlate quality scores with GSC/GA4 performance (position, CTR, session duration)
-- [ ] `pattern_extract.py` extracts which quality rules correlate with winners
-- [ ] Auto-update policy thresholds when n>=5 winner patterns emerge
-- [ ] Cron: nightly batch score of all published content → trend in `content_log.json`
-- [ ] Weekly: surface "your avg score improved from 72→79 this week" to Discord
+- [x] Wire `performance_check.py` to run quality scorer on published content retroactively (`retro_score_content()`)
+- [x] Correlate quality scores with GSC/GA4 performance (position, CTR, session duration)
+- [x] `pattern_extract.py` extracts which quality rules correlate with winners (`--correlate` flag)
+- [x] Auto-update policy YAML thresholds when n>=5 winner patterns emerge (`harness_defaults_update.py`)
+- [x] Cron: nightly batch score of all published content → `--batch-score` flag
+- [x] Weekly: surface quality summary to Discord → `--weekly-summary` flag
 
-## Phase 4: Architecture Page Rewrite
+## Phase 4: Architecture Page Rewrite ✅
 **meetkai.xyz/architecture should reflect harness engineering approach.**
 
-- [ ] Reframe as "harness engineering for marketing" (parallel to OpenAI Codex approach)
-- [ ] Show 4-layer stack: Runtime → Tooling → Domain Agents → Content Harness
-- [ ] Feature quality scorer as the core moat (research-as-automated-tooling)
-- [ ] Show feedback loop diagram: write → score → gate → publish → 30d check → pattern extract → update defaults
-- [ ] Add 14 marketing skills to /skills page (currently showing only infra/dev skills)
-- [ ] Add live quality scorer demo: paste content → get scored
+- [x] Reframe as "harness engineering for marketing" (parallel to OpenAI Codex approach)
+- [x] Show 4-layer stack: Runtime → Tooling → Domain Agents → Content Harness
+- [x] Feature quality scorer as the core moat (research-as-automated-tooling)
+- [x] Show feedback loop diagram: write → score → gate → publish → 30d check → pattern extract → update defaults
+- [x] 14 marketing skills grid
+- [x] Live quality scorer demo wired to POST /webhooks/quality/score
+
+## Phase 4.5: Code Hardening ✅
+**Address competitive review findings — production-grade code quality.**
+
+- [x] Centralized config: `scripts/harness_config.py` + `config.yaml` — all hardcoded paths, IDs, thresholds extracted
+- [x] API timeouts: 30s timeout on all Gemini API calls (configurable via `api_timeout`)
+- [x] Circuit breaker: fail after 3 consecutive API errors (configurable via `api_max_retries`)
+- [x] Input sanitization: `sanitize_input()` strips control chars, truncates, escapes prompt-injection patterns
+- [x] Replace `os.system()` with `subprocess.run()` — proper error handling, timeouts, return code checks
+- [x] MARKETING.md backup: `.bak` created before every auto-update (policy YAML files too)
+- [x] Fix GSC pagination: `rowLimit: 1` → `10` with weighted aggregation across rows
+- [x] Fix duplicate `SHORT_FORM` definition in harness_cli.py
+- [x] Remove hardcoded Discord channel fallback — now from `config.yaml`
+- [x] LRU cache for quality scoring — identical content not scored twice
+- [x] Structured JSON logging across all scripts (`logging` module, not bare `print()`)
+- [x] Test suite: gate module tests (test_gate.py) added to existing AA/GEO/CS/engine/parser tests
 
 ## Phase 5: Open Source Prep
 **Quality scorer as standalone pip package.**
