@@ -1,0 +1,20 @@
+# Snapchat ad copy gate
+id: snapchat-ad
+auto_approve_above: 70
+hold_between: [45, 70]
+reject_below: 45
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "you won't believe"
+  - "mind-blowing"
+  - "act now"
+  - "limited time"
+  - "guaranteed"
+require_policy_ref: harness/references/snapchat-ads-policy-reference.md
+notes: |
+  Snapchat has strict young audience protections.
+  No personalized ads for under-18 in EU/UK.
+  Political/advocacy ads banned in EU as of Oct 2025.
+  AR lens and filter ads have additional creative restrictions.

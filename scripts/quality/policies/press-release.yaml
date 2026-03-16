@@ -1,0 +1,14 @@
+# PR announcement publishing gate
+id: press-release
+auto_approve_above: 80
+hold_between: [55, 80]
+reject_below: 55
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "excited to announce"
+  - "leading provider"
+  - "best-in-class"
+  - "industry-leading"
+  - "cutting-edge"
+  - "thrilled to announce"

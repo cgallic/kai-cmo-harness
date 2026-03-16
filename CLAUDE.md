@@ -39,10 +39,17 @@ When you need to create content, find the right framework here. Load the primary
 | Email (lifecycle) | `knowledge/channels/email-lifecycle.md` | `knowledge/checklists/email-checklist.md` |
 | Email (cold outreach) | `knowledge/channels/email-lifecycle.md` + `harness/references/cold-email-rules.md` | — |
 | SEO content | `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` + `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` | `knowledge/checklists/seo-checklist.md` |
-| Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `knowledge/frameworks/meta-advertising/` | `knowledge/checklists/meta-advertising-checklist.md` |
-| Google ads | `knowledge/channels/paid-acquisition.md` + `harness/references/google-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `harness/references/meta-ads-rules.md` | `knowledge/checklists/meta-advertising-checklist.md` |
+| Google ads | `knowledge/channels/paid-acquisition.md` + `harness/references/google-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| LinkedIn ads | `knowledge/channels/linkedin-articles.md` + `harness/references/linkedin-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| Microsoft/Bing ads | `knowledge/channels/paid-acquisition.md` + `harness/references/microsoft-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| Pinterest ads | `harness/references/pinterest-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| TikTok ads | `knowledge/channels/tiktok-algorithm.md` + `harness/references/tiktok-ads-policy-reference.md` | `knowledge/checklists/tiktok-checklist.md` |
+| TikTok Shop | `knowledge/channels/tiktok-shop.md` + `harness/references/tiktok-ads-policy-reference.md` | `knowledge/checklists/tiktok-checklist.md` |
+| Snapchat ads | `harness/references/snapchat-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| Amazon ads | `harness/references/amazon-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| X/Twitter ads | `harness/references/x-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Press release | `knowledge/channels/press-releases.md` | `knowledge/checklists/pr-checklist.md` |
-| TikTok content | `knowledge/channels/tiktok-algorithm.md` + `knowledge/channels/tiktok-shop.md` | `knowledge/checklists/tiktok-checklist.md` |
 | Sales/landing page | `knowledge/frameworks/content-copywriting/perception-engineering.md` | `knowledge/checklists/perception-engineering-checklist.md` |
 | Technical SEO audit | `knowledge/checklists/technical-seo-audit-sop.md` | `knowledge/checklists/seo-checklist.md` |
 | Podcast setup | `knowledge/channels/podcast.md` | — |
@@ -106,6 +113,27 @@ Write content --> four_us_score.py --> banned_word_check.py --> seo_lint.py (if 
 ```
 
 Max 2 auto-retry cycles. After 2 failures, surface to a human with the specific failures listed.
+
+### Ad Policy Compliance Gate
+
+**Before writing any ad copy**, load the platform's policy reference. Every ad must pass platform TOS in addition to quality gates.
+
+| Platform | Policy Reference | Key Restrictions |
+|----------|-----------------|------------------|
+| Google Ads | `harness/references/google-ads-policy-reference.md` | Healthcare certs, financial disclosures, no superlatives without proof |
+| Meta (FB/IG) | `harness/references/meta-ads-rules.md` | Special Ad Categories (housing/employment/credit), no before/after images, personal attributes ban |
+| TikTok | `harness/references/tiktok-ads-policy-reference.md` | No political ads, weight management restrictions, AI content disclosure required |
+| LinkedIn | `harness/references/linkedin-ads-rules.md` | Professional context required, B2B claim substantiation |
+| Microsoft/Bing | `harness/references/microsoft-ads-rules.md` | Global gambling bans by country, clinical trials ban |
+| Pinterest | `harness/references/pinterest-ads-rules.md` | All weight loss ads banned (narrow GLP-1 exception), strict body image rules |
+| Snapchat | `harness/references/snapchat-ads-policy-reference.md` | Young audience protections, EU political ad ban |
+| Amazon | `harness/references/amazon-ads-policy-reference.md` | 18-month claim evidence rule, no competitor disparagement |
+| X/Twitter | `harness/references/x-ads-policy-reference.md` | Verification tier affects ad access, political ad certification by country |
+| **All platforms** | `harness/references/advertising-compliance.md` | FTC disclosures, GDPR consent, CAN-SPAM, COPPA, click-to-cancel rule |
+
+```
+Write ad --> Load platform policy --> Quality gate --> Policy compliance check --> PASS/FAIL
+```
 
 ---
 
@@ -241,9 +269,19 @@ kai-cmo-harness/
 ├── harness/                               # Content pipeline engine
 │   ├── brief-schema.md                    # Content brief template
 │   ├── skill-contracts/                   # Per-format contracts (7 YAML files)
-│   ├── references/                        # Platform-specific rules
+│   ├── references/                        # Platform-specific rules & policies
 │   │   ├── cold-email-rules.md            # CAN-SPAM, deliverability
-│   │   └── google-ads-rules.md            # Google Ads policies
+│   │   ├── google-ads-rules.md            # Google Ads copy constraints
+│   │   ├── google-ads-policy-reference.md # Google Ads full TOS/policies (991 lines)
+│   │   ├── meta-ads-rules.md              # Meta/FB/IG full TOS/policies (931 lines)
+│   │   ├── tiktok-ads-policy-reference.md # TikTok full TOS/policies (1020 lines)
+│   │   ├── linkedin-ads-rules.md          # LinkedIn Ads policies (465 lines)
+│   │   ├── microsoft-ads-rules.md         # Microsoft/Bing Ads policies (431 lines)
+│   │   ├── pinterest-ads-rules.md         # Pinterest Ads policies (490 lines)
+│   │   ├── snapchat-ads-policy-reference.md # Snapchat Ads policies (512 lines)
+│   │   ├── amazon-ads-policy-reference.md # Amazon Ads policies (579 lines)
+│   │   ├── x-ads-policy-reference.md      # X/Twitter Ads policies (621 lines)
+│   │   └── advertising-compliance.md      # FTC/GDPR/CAN-SPAM/COPPA/CCPA (1500 lines)
 │   └── ARCHITECTURE.md                    # Harness design docs
 │
 ├── scripts/

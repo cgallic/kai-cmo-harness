@@ -1,0 +1,20 @@
+# X (Twitter) ad copy gate
+id: x-twitter-ad
+auto_approve_above: 65
+hold_between: [40, 65]
+reject_below: 40
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "buy now"
+  - "guaranteed"
+  - "act fast"
+  - "get rich quick"
+  - "no risk"
+require_policy_ref: harness/references/x-ads-policy-reference.md
+notes: |
+  X verification tier (Blue/Gold/Grey) affects ad access and features.
+  Political ads require certification by country (17+ countries).
+  Cannabis/CBD ads available in limited US states and Canada.
+  Crypto ads expanding but require licensing proof in most regions.

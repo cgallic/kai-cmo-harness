@@ -1,0 +1,22 @@
+# Amazon ad copy gate (Sponsored Products, Sponsored Brands, DSP)
+id: amazon-ad
+auto_approve_above: 70
+hold_between: [45, 70]
+reject_below: 45
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "best seller"       # unless Amazon Best Seller badge earned
+  - "#1"                # unless substantiated
+  - "guaranteed"
+  - "competitor name"   # no competitor disparagement
+  - "Amazon's choice"   # cannot self-claim
+  - "Prime"             # restricted usage
+  - "cheapest"
+  - "lowest price"
+require_policy_ref: harness/references/amazon-ads-policy-reference.md
+notes: |
+  Amazon requires 18-month evidence for all claims.
+  No competitor disparagement. No self-referencing Amazon badges.
+  Restricted: supplements, alcohol, healthcare, financial products.
+  Brand Store pages must meet additional quality standards.

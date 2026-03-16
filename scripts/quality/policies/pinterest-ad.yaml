@@ -1,0 +1,24 @@
+# Pinterest ad copy gate
+id: pinterest-ad
+auto_approve_above: 75
+hold_between: [50, 75]
+reject_below: 50
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "lose weight"
+  - "weight loss"
+  - "before and after"
+  - "diet pills"
+  - "fat burning"
+  - "body transformation"
+  - "slim down"
+  - "shed pounds"
+  - "click here"
+  - "guaranteed results"
+require_policy_ref: harness/references/pinterest-ads-rules.md
+notes: |
+  Pinterest bans ALL weight loss ads (first major platform to do so).
+  Narrow exception: prescription GLP-1 medications (US/Canada only, prior approval required).
+  Strict body image policies — no before/after, no body shaming.
+  Higher quality threshold reflects Pinterest's visual-first, aspirational platform.

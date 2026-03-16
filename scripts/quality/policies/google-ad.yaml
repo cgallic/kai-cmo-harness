@@ -1,0 +1,20 @@
+# Google Ads RSA / PMax copy gate
+id: google-ad
+auto_approve_above: 65
+hold_between: [40, 65]
+reject_below: 40
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "guaranteed"
+  - "best"              # superlative without proof
+  - "#1"                # superlative without proof
+  - "act now"
+  - "FREE"              # all-caps banned
+require_policy_ref: harness/references/google-ads-policy-reference.md
+notes: |
+  Healthcare ads require LegitScript/NABP certification.
+  Financial services (crypto, lending) need Google certification.
+  No binary options or high-APR payday loan ads.
+  Dishonest pricing practices banned (Oct 2025 update).

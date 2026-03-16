@@ -1,0 +1,21 @@
+# Microsoft / Bing ad copy gate
+id: microsoft-ad
+auto_approve_above: 65
+hold_between: [40, 65]
+reject_below: 40
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "buy now"
+  - "act fast"
+  - "guaranteed"
+  - "best"              # superlative without proof
+  - "#1"                # superlative without proof
+  - "FREE"              # all-caps banned
+require_policy_ref: harness/references/microsoft-ads-rules.md
+notes: |
+  Microsoft editorial rules are strict on capitalization, grammar, and punctuation.
+  Belgium has complete gambling ad ban. Netherlands requires age 24+.
+  Global ban on clinical trials advertising (Aug 2025).
+  Healthcare/pharma requires certification. Financial services need disclaimers.

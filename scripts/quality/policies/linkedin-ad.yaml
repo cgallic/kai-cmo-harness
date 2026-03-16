@@ -1,0 +1,21 @@
+# LinkedIn ad copy gate
+id: linkedin-ad
+auto_approve_above: 70
+hold_between: [45, 70]
+reject_below: 45
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "buy now"
+  - "act fast"
+  - "guaranteed results"
+  - "get rich"
+  - "make money fast"
+  - "100% free"
+  - "no risk"
+require_policy_ref: harness/references/linkedin-ads-rules.md
+notes: |
+  LinkedIn enforces professional context. Avoid hype language.
+  B2B claims require substantiation. Employment/housing/credit
+  ads have targeting restrictions similar to Meta Special Ad Categories.

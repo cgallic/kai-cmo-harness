@@ -1,0 +1,23 @@
+# Facebook / Instagram ad copy gate
+id: meta-ad
+auto_approve_above: 70
+hold_between: [45, 70]
+reject_below: 45
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "click here"
+  - "buy now"
+  - "limited time offer"
+  - "act fast"
+  - "don't miss out"
+  - "are you struggling with"   # personal attributes violation
+  - "do you suffer from"        # personal attributes violation
+  - "if you're overweight"      # personal attributes violation
+require_policy_ref: harness/references/meta-ads-rules.md
+notes: |
+  Special Ad Categories (housing/employment/credit) restrict targeting.
+  No before/after images for health/wellness.
+  Personal attributes policy — never imply user has a condition.
+  Crypto ads use 2026 three-tier system (regulated/semi/restricted).
+  Account Health Score directly impacts review speed and appeals.
