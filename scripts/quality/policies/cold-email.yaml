@@ -1,0 +1,15 @@
+# Cold email / outreach gate
+id: cold-email
+auto_approve_above: 75
+hold_between: [50, 75]
+reject_below: 50
+require_rules_pass:
+  - CS-07    # no AI cliches
+block_if_terms:
+  - "refund guaranteed"
+  - "guaranteed"
+  - "100% free"
+  - "no risk"
+  - "legal action"
+  - "act now"
+  - "limited time only"

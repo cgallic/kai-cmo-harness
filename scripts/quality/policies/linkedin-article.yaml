@@ -1,0 +1,12 @@
+# LinkedIn article publishing gate
+id: linkedin-article
+auto_approve_above: 80
+hold_between: [55, 80]
+reject_below: 55
+require_rules_pass:
+  - CS-07    # no AI cliches
+  - CS-01    # must have a hook
+block_if_terms:
+  - "it's important to note"
+  - "in conclusion"
+  - "harness the power"

@@ -1,0 +1,14 @@
+# Blog / SEO article publishing gate
+id: blog-publish
+auto_approve_above: 85
+hold_between: [60, 85]
+reject_below: 60
+require_rules_pass:
+  - CS-07    # no AI cliches (mandatory)
+  - AA-23    # no back-references
+block_if_terms:
+  - "it's important to note"
+  - "in conclusion"
+  - "in today's fast-paced"
+  - "harness the power"
+  - "without further ado"

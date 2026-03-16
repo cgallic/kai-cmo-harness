@@ -1,0 +1,7 @@
+# Default gate policy — used when no specific policy is specified
+id: default
+auto_approve_above: 85
+hold_between: [60, 85]
+reject_below: 60
+require_rules_pass: []
+block_if_terms: []
