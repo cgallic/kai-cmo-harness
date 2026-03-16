@@ -8,7 +8,8 @@ An autonomous marketing intelligence system. Works two ways:
 ## What's Inside
 
 - **100+ marketing frameworks** — AEO/AI search, content copywriting, Meta advertising, perception engineering, SEO, email, TikTok, paid acquisition
-- **Quality gate pipeline** — Four U's scoring (12+/16 to publish), banned word detection, SEO linting with auto-retry
+- **Ad network policy library** — Actual TOS, prohibited/restricted content, and compliance rules for 9 platforms (Google, Meta, TikTok, LinkedIn, Microsoft/Bing, Pinterest, Snapchat, Amazon, X/Twitter) plus cross-platform FTC/GDPR/CAN-SPAM/COPPA compliance
+- **Quality gate pipeline** — Four U's scoring (12+/16 to publish), banned word detection, SEO linting, platform policy compliance checks with auto-retry
 - **8 audience personas** — With pain points, hooks, and voice profiles
 - **Content pipeline** — Research → Brief → Write → Gate → Approve → Publish → 30-day performance check
 - **Self-improvement loop** — Extracts winning patterns from published content and updates the harness defaults
@@ -60,7 +61,19 @@ kai-cmo-harness/
 ├── harness/                     # Pipeline config + quality gates
 │   ├── brief-schema.md          # Content brief format
 │   ├── skill-contracts/         # Format-specific YAML contracts
-│   └── references/              # Cold email rules, Google Ads rules
+│   └── references/              # Ad network policies & compliance (12 files, 7,600+ lines)
+│       ├── google-ads-policy-reference.md   # Google Ads TOS/policies
+│       ├── meta-ads-rules.md                # Meta/FB/IG TOS/policies
+│       ├── tiktok-ads-policy-reference.md   # TikTok TOS/policies
+│       ├── linkedin-ads-rules.md            # LinkedIn Ads policies
+│       ├── microsoft-ads-rules.md           # Microsoft/Bing Ads policies
+│       ├── pinterest-ads-rules.md           # Pinterest Ads policies
+│       ├── snapchat-ads-policy-reference.md # Snapchat Ads policies
+│       ├── amazon-ads-policy-reference.md   # Amazon Ads policies
+│       ├── x-ads-policy-reference.md        # X/Twitter Ads policies
+│       ├── advertising-compliance.md        # FTC/GDPR/CAN-SPAM/COPPA/CCPA
+│       ├── google-ads-rules.md              # Google Ads copy constraints
+│       └── cold-email-rules.md              # CAN-SPAM, deliverability
 │
 ├── workspace/                   # OpenClaw workspace templates
 │   ├── MARKETING.md             # Operating config (parsed by harness)
@@ -123,12 +136,35 @@ Content that fails gets 2 automatic revision attempts. After that, it's escalate
 | Blog post | Algorithmic Authorship | Four U's 12+ / SEO lint |
 | LinkedIn article | LinkedIn writing guide | Four U's 12+ |
 | Cold email (3-touch) | Cold email rules | Four U's 10+ |
-| Meta ads (3 variants) | Meta advertising | Four U's 10+ |
-| Google ads (RSA + PMax) | Google Ads rules | Four U's 10+ |
+| Meta ads (FB/IG) | Meta advertising + Meta TOS | Four U's 10+ / Policy check |
+| Google ads (RSA + PMax) | Google Ads rules + Google TOS | Four U's 10+ / Policy check |
+| TikTok ads/scripts | TikTok algorithm + TikTok TOS | Four U's 10+ / Policy check |
+| LinkedIn ads | LinkedIn Ads policies | Four U's 10+ / Policy check |
+| Microsoft/Bing ads | Microsoft Ads policies | Four U's 10+ / Policy check |
+| Pinterest ads | Pinterest Ads policies | Four U's 10+ / Policy check |
+| Snapchat ads | Snapchat Ads policies | Four U's 10+ / Policy check |
+| Amazon ads | Amazon Ads policies | Four U's 10+ / Policy check |
+| X/Twitter ads | X Ads policies | Four U's 10+ / Policy check |
 | Email lifecycle | Email lifecycle | Four U's 10+ |
-| TikTok script | TikTok algorithm | Four U's 10+ |
 | Press release | Press release guide | Four U's 12+ |
 | SEO content | AEO + Algorithmic Authorship | Four U's 12+ / SEO lint |
+
+## Ad Network Policy Library
+
+Every ad platform has rules about what you can and can't say. The harness includes actual TOS-derived policy docs so content gets checked **before** it hits the ad review queue.
+
+| Platform | Lines | Covers |
+|----------|------:|--------|
+| Google Ads | 991 | Prohibited/restricted content, healthcare certs, crypto rules, disapproval prevention |
+| Meta (FB/IG) | 931 | 22 prohibited categories, Special Ad Categories, personal attributes ban, MARS enforcement |
+| TikTok | 1,020 | Shop seller policies, Spark Ads, AI content disclosure, political ad ban |
+| X/Twitter | 621 | Verification tiers, political certification by country, cannabis/crypto |
+| Amazon | 579 | 18-month claim evidence, DSP policies, Brand Store requirements |
+| Snapchat | 512 | AR lens/filter rules, young audience protections, EU political ad ban |
+| Pinterest | 490 | Weight loss ad ban (first platform), body image rules, GLP-1 exception |
+| LinkedIn | 465 | Professional context, B2B claim substantiation, Account Quality Score |
+| Microsoft/Bing | 431 | Country-specific gambling bans, clinical trials ban, editorial rules |
+| **Cross-platform** | **1,500** | **FTC, GDPR, CAN-SPAM, COPPA, CCPA, FINRA, FDA, AI ad rules** |
 
 ## Knowledge Base Highlights
 
