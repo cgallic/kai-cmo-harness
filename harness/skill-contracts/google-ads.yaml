@@ -1,0 +1,41 @@
+skill: google-ads
+version: 2.0
+harness: kai-harness
+
+description: >
+  Google Search Ads (RSA), Performance Max assets, and Display ad copy.
+  Keyword-intent driven. Every headline independently meaningful.
+
+inputs:
+  required:
+    - brief: object
+    - ad_type: string     # rsa | pmax | display | demand_gen
+    - target_keywords: list[string]  # with match types e.g. ["law firm answering service +broad"]
+  optional:
+    - competitor_urls: list[string]  # for competitive angle
+    - landing_page_url: string
+    - budget_tier: string  # low (<$50/d) | mid ($50-500/d) | high (>$500/d)
+
+outputs:
+  headlines: list[string]     # 15 for RSA, each max 30 chars
+  descriptions: list[string]  # 4 for RSA, each max 90 chars
+  long_headlines: list[string] # for PMax/Display, max 90 chars
+  display_path: string        # domain.com/path1/path2
+  bidding_recommendation: string
+
+quality_gates:
+  - all_headlines_char_count <= 30
+  - all_descriptions_char_count <= 90
+  - keyword_in_min_2_headlines == true
+  - has_number_or_stat == true
+  - has_action_cta == true
+  - banned_words_tier1 == 0
+  - no_superlatives_without_proof == true
+
+hooks:
+  pre_write: load_brief + load_paid_acquisition_channel + load_google_ads_rules
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_7day_check

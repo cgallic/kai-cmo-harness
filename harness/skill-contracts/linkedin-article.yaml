@@ -1,0 +1,29 @@
+skill: linkedin-article
+version: 2.0
+harness: kai-harness
+
+inputs:
+  required:
+    - brief: object
+  optional:
+    - voice_override: string  # default: Connor's voice from memory/connor-voice.md
+
+outputs:
+  draft: markdown
+  four_us_score: object
+  hook_type: string  # curiosity_gap | contrarian | data_driven | story | authority
+
+quality_gates:
+  - four_us_total >= 12
+  - four_us_min_single >= 2
+  - banned_words_tier1 == 0
+  - linkedin_format_check == pass  # no headers, short paragraphs, spacing
+
+word_count: 700-1000
+hooks:
+  pre_write: load_brief + load_linkedin_skill + load_connor_voice
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: post_to_linkedin + content_log
+  on_publish: schedule_30day_check

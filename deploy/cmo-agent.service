@@ -1,0 +1,25 @@
+[Unit]
+Description=CMO Agent — Autonomous Marketing Pipeline
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/cmo-analytics
+ExecStart=/opt/cmo-analytics/venv/bin/python -m agent
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+
+# Environment
+EnvironmentFile=/opt/cmo-analytics/.env
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/opt/cmo-analytics
+
+[Install]
+WantedBy=multi-user.target

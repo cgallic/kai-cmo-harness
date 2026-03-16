@@ -1,0 +1,77 @@
+# ============================================================================
+# Example: Marketing Agency Configuration
+# ============================================================================
+# An agency managing multiple client brands with separate analytics.
+
+owner:
+  name: "Sam Torres"
+  company: "Apex Digital Agency"
+  timezone: "America/Chicago"
+
+products:
+  - id: clienta
+    name: "Smith & Associates Law"
+    url: "https://smithlawfirm.com"
+    description: "Personal injury law firm — Chicago metro"
+    supabase_url_env: "CLIENTA_SUPABASE_URL"
+    supabase_key_env: "CLIENTA_SUPABASE_KEY"
+    ga4_property_env: "GA_CLIENTA_PROPERTY_ID"
+    gsc_url_env: "GSC_CLIENTA_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - 15 years in practice, 300+ cases won
+      - Average settlement: $450,000
+      - Free consultation, no fee unless we win
+      - Offices in Chicago Loop and Oak Park
+
+  - id: clientb
+    name: "FreshBite Meal Prep"
+    url: "https://freshbite.co"
+    description: "Weekly meal prep delivery — DFW area"
+    ga4_property_env: "GA_CLIENTB_PROPERTY_ID"
+    gsc_url_env: "GSC_CLIENTB_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - 800 active subscribers
+      - Plans from $8.99/meal
+      - 4.7 stars on Google (340 reviews)
+      - Chef-designed menus, macro-counted
+
+  - id: clientc
+    name: "TrueNorth HVAC"
+    url: "https://truenorthhvac.com"
+    description: "Residential HVAC installation and repair"
+    ga4_property_env: "GA_CLIENTC_PROPERTY_ID"
+    gsc_url_env: "GSC_CLIENTC_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - 20+ years serving North Texas
+      - Same-day emergency service
+      - Licensed, bonded, insured
+      - Financing available: 0% APR for 12 months
+
+discord:
+  writer_channel_id: ""
+  finance_channel_id: ""
+  updates_channel_id: ""
+  health_channel_id: ""
+  research_channel_id: ""
+
+harness:
+  four_us_threshold: 12
+  max_gate_retries: 2
+  self_improvement: true
+  llm_provider: "gemini"
+  llm_model: "gemini-2.0-flash"
+
+server:
+  host: ""
+  user: "root"
+  workspace_path: "~/.openclaw/workspace"
+  analytics_path: "/opt/cmo-analytics"
+
+schedule:
+  daily_report: "0 8 * * *"
+  weekly_report: "0 8 * * 1"
+  pattern_extract: "0 8 * * 1"
+  performance_check: "0 9 1 * *"

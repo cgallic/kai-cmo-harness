@@ -1,0 +1,37 @@
+# Kai CMO Harness — Python Dependencies
+# Install: pip install -r scripts/requirements.txt
+
+# Core
+python-dotenv>=1.0.0
+pyyaml>=6.0
+jinja2>=3.1.0
+requests>=2.31.0
+
+# LLM providers (install the one you use)
+google-genai>=1.0.0        # For Gemini (default)
+# anthropic>=0.40.0        # For Claude
+# openai>=1.0.0            # For OpenAI
+
+# Analytics
+google-analytics-data>=0.18.0
+google-auth>=2.20.0
+google-auth-oauthlib>=1.0.0
+searchconsole>=0.2.0
+
+# Data
+supabase>=2.0.0
+stripe>=7.0.0
+
+# Quality gates
+# (no additional deps — these use stdlib + basic NLP)
+
+# Gateway (optional — install if running the webhook server)
+# fastapi>=0.100.0
+# uvicorn>=0.23.0
+# pydantic>=2.0.0
+
+# Agent loop (optional — install if running autonomous mode)
+# anthropic>=0.40.0
+# discord.py>=2.3.0
+# twilio>=8.0.0
+# apscheduler>=3.10.0

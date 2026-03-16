@@ -1,0 +1,31 @@
+skill: email
+version: 2.0
+harness: kai-harness
+
+inputs:
+  required:
+    - brief: object
+    - list_segment: string  # kaicalls_leads | bwk_users | abp_vendors | newsletter
+  optional:
+    - subject_variants: int  # default 3 subject line A/B options
+
+outputs:
+  draft: markdown
+  subject_lines: list[string]
+  four_us_score: object
+  preview_text: string
+
+quality_gates:
+  - four_us_total >= 12
+  - banned_words_tier1 == 0
+  - subject_line_length <= 50  # chars
+  - word_count <= 500
+
+word_count: 300-500
+hooks:
+  pre_write: load_brief + load_email_channel + load_email_checklist
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: send_via_loops + content_log
+  on_send: schedule_open_rate_check  # 7-day check instead of 30

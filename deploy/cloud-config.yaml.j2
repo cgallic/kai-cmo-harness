@@ -1,0 +1,85 @@
+#cloud-config
+# ============================================================================
+# CMO Harness — Cloud-Init Template (Hetzner / DigitalOcean / Vultr)
+# ============================================================================
+# Render with: python render_templates.py
+# Then paste into your VPS provider's "User Data" field.
+# ============================================================================
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - python3.12
+  - python3.12-venv
+  - python3-pip
+  - git
+  - curl
+  - jq
+  - caddy
+
+write_files:
+  - path: /opt/cmo-analytics/.env
+    permissions: '0600'
+    content: |
+      # ── LLM ──
+      GEMINI_API_KEY=YOUR_GEMINI_KEY_HERE
+      ANTHROPIC_API_KEY=YOUR_ANTHROPIC_KEY_HERE
+
+      # ── Analytics ──
+      GOOGLE_CREDENTIALS_PATH=/opt/cmo-analytics/credentials/service-account.json
+      {% for product in products %}
+      # {{ product.name }}
+      {{ product.ga4_property_env | default('GA_' + product.id | upper + '_PROPERTY_ID') }}=YOUR_GA4_PROPERTY_ID
+      {{ product.gsc_url_env | default('GSC_' + product.id | upper + '_URL') }}=sc-domain:{{ product.url | replace('https://', '') | replace('http://', '') }}
+      {% if product.supabase_url_env is defined %}
+      {{ product.supabase_url_env }}=YOUR_SUPABASE_URL
+      {{ product.supabase_key_env }}=YOUR_SUPABASE_KEY
+      {% endif %}
+      {% endfor %}
+
+      # ── Stripe ──
+      STRIPE_API_KEY=YOUR_STRIPE_KEY_HERE
+
+      # ── Meta Ads ──
+      META_ACCESS_TOKEN=YOUR_META_TOKEN_HERE
+      META_AD_ACCOUNT_ID=act_YOUR_ACCOUNT_ID
+
+      # ── Discord ──
+      DISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN
+
+      # ── Gateway ──
+      CMO_GATEWAY_API_KEY=YOUR_GATEWAY_KEY_HERE
+
+runcmd:
+  # Clone harness repo
+  - git clone https://github.com/YOUR_USERNAME/kai-cmo-harness.git /opt/cmo-analytics
+
+  # Set up Python venv
+  - cd /opt/cmo-analytics && python3.12 -m venv venv
+  - cd /opt/cmo-analytics && source venv/bin/activate && pip install -r requirements.txt
+
+  # Create data directories
+  - mkdir -p /opt/cmo-analytics/data/pending_checks
+  - mkdir -p /opt/cmo-analytics/reports
+  - mkdir -p /opt/cmo-analytics/research/learnings
+
+  # Copy workspace files to OpenClaw location
+  - mkdir -p /root/.openclaw/workspace
+  - cp -r /opt/cmo-analytics/workspace/* /root/.openclaw/workspace/
+  - cp -r /opt/cmo-analytics/knowledge /root/.openclaw/workspace/
+  - cp -r /opt/cmo-analytics/harness /root/.openclaw/workspace/
+
+  # Install systemd service
+  - cp /opt/cmo-analytics/deploy/cmo-agent.service /etc/systemd/system/
+  - systemctl daemon-reload
+  - systemctl enable cmo-agent
+
+  # Set up cron jobs
+  - |
+    cat > /etc/cron.d/cmo-harness << 'CRON'
+    # Daily report
+    {{ schedule.daily_report | default('0 8 * * *') }} root cd /opt/cmo-analytics && source venv/bin/activate && python scripts/harness_cli.py status >> /var/log/cmo-daily.log 2>&1
+    # Weekly patterns
+    {{ schedule.pattern_extract | default('0 8 * * 1') }} root cd /opt/cmo-analytics && source venv/bin/activate && python scripts/self_improvement/pattern_extract.py --weekly >> /var/log/cmo-patterns.log 2>&1
+    CRON

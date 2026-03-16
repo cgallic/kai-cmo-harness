@@ -1,0 +1,62 @@
+# ============================================================================
+# Kai CMO Harness — Configuration
+# ============================================================================
+# Copy this file to config.yaml and fill in your values.
+# Then run: python render_templates.py
+# ============================================================================
+
+owner:
+  name: "Your Name"
+  company: "Your Company"
+  timezone: "America/New_York"
+
+# Products you're marketing. Add as many as needed.
+# Each product gets its own domain agent + analytics.
+products:
+  - id: myproduct
+    name: "My Product"
+    url: "https://myproduct.com"
+    description: "One-line description of what it does"
+    # Analytics keys (must match .env variable names)
+    supabase_url_env: "MYPRODUCT_SUPABASE_URL"
+    supabase_key_env: "MYPRODUCT_SUPABASE_KEY"
+    ga4_property_env: "GA_MYPRODUCT_PROPERTY_ID"
+    gsc_url_env: "GSC_MYPRODUCT_URL"
+    # Discord channel for this product's alerts
+    discord_channel_id: ""
+    # Site-specific proof points (injected into content briefs)
+    proof_points: |
+      - Fact 1 about the product
+      - Fact 2 with specific numbers
+      - Pricing: $X/mo
+
+# Discord channels (OpenClaw path only)
+discord:
+  writer_channel_id: ""      # Content approval drafts
+  finance_channel_id: ""     # Revenue/subscription alerts
+  updates_channel_id: ""     # Daily/weekly reports
+  health_channel_id: ""      # Infrastructure alerts
+  research_channel_id: ""    # Research digest
+
+# Harness settings
+harness:
+  four_us_threshold: 12          # Minimum Four U's score (12 for long-form, 10 for ads)
+  max_gate_retries: 2            # Auto-revision attempts before escalating to human
+  self_improvement: true         # Enable pattern extraction + harness defaults updates
+  llm_provider: "gemini"         # gemini | openai | anthropic
+  llm_model: "gemini-2.0-flash"  # Model for content generation
+
+# Server deployment (OpenClaw path only)
+server:
+  host: ""                       # VPS IP address
+  user: "root"
+  workspace_path: "~/.openclaw/workspace"
+  analytics_path: "/opt/cmo-analytics"
+  venv_python: "/opt/cmo-analytics/venv/bin/python3"
+
+# Scheduled tasks (OpenClaw path only)
+schedule:
+  daily_report: "0 8 * * *"       # 8am daily
+  weekly_report: "0 8 * * 1"      # 8am Monday
+  pattern_extract: "0 8 * * 1"    # 8am Monday
+  performance_check: "0 9 1 * *"  # 9am 1st of month

@@ -1,0 +1,51 @@
+# ============================================================================
+# Example: DTC E-commerce Configuration
+# ============================================================================
+# A DTC brand with one Shopify store, Meta ads, and TikTok.
+
+owner:
+  name: "Jordan Lee"
+  company: "GlowCraft Skincare"
+  timezone: "America/New_York"
+
+products:
+  - id: glowcraft
+    name: "GlowCraft"
+    url: "https://glowcraft.com"
+    description: "Clean skincare brand — serums, moisturizers, SPF"
+    ga4_property_env: "GA_GLOWCRAFT_PROPERTY_ID"
+    gsc_url_env: "GSC_GLOWCRAFT_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - 12,000+ customers in first 18 months
+      - 4.8 star average across 2,100 reviews
+      - Hero product: Vitamin C Serum ($38) — 67% repurchase rate
+      - 60-day LTV: $94 (industry avg: $52)
+      - Free shipping on orders $50+
+      - Clean ingredients, cruelty-free, recyclable packaging
+
+discord:
+  writer_channel_id: ""
+  finance_channel_id: ""
+  updates_channel_id: ""
+  health_channel_id: ""
+  research_channel_id: ""
+
+harness:
+  four_us_threshold: 12
+  max_gate_retries: 2
+  self_improvement: true
+  llm_provider: "gemini"
+  llm_model: "gemini-2.0-flash"
+
+server:
+  host: ""
+  user: "root"
+  workspace_path: "~/.openclaw/workspace"
+  analytics_path: "/opt/cmo-analytics"
+
+schedule:
+  daily_report: "0 9 * * *"
+  weekly_report: "0 9 * * 1"
+  pattern_extract: "0 9 * * 1"
+  performance_check: "0 10 1 * *"

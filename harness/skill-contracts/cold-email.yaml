@@ -1,0 +1,38 @@
+skill: cold-email
+version: 2.0
+harness: kai-harness
+
+description: >
+  TCPA-compliant cold outreach sequences. 3-touch structure.
+  Hook + Bridge + CTA. Max 150 words per touch.
+
+inputs:
+  required:
+    - brief: object
+    - list_segment: string    # job title, industry, or named segment
+    - sequence_length: int    # 1-3 touches
+  optional:
+    - sender_name: string
+    - product: string         # kaicalls | buildwithkai | abp
+
+outputs:
+  sequence: list              # touch 1, 2, 3
+  subject_lines: list[string] # 3 variants per touch for A/B
+  word_count_per_touch: list[int]
+  personalization_tokens: list[string]  # e.g. {{company}}, {{city}}, {{pain_point}}
+
+quality_gates:
+  - all_touches_word_count <= 150
+  - subject_line_char_count <= 50
+  - has_personalization_token == true
+  - first_line_not_generic == true   # no "I hope this finds you well"
+  - single_cta_per_touch == true
+  - banned_words_tier1 == 0
+  - no_multiple_ctAs == true
+
+hooks:
+  pre_write: load_brief + load_cold_email_rules + load_email_lifecycle
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: load_into_instantly + content_log

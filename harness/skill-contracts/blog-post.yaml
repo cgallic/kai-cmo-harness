@@ -1,0 +1,32 @@
+skill: blog-post
+version: 2.0
+harness: kai-harness
+
+inputs:
+  required:
+    - brief: object  # see harness/brief-schema.md
+  optional:
+    - tone_override: string
+    - length_override: int
+
+outputs:
+  draft: markdown
+  four_us_score: object
+  seo_score: object
+  suggested_title: string
+  meta_description: string
+
+quality_gates:
+  - four_us_total >= 12
+  - four_us_min_single >= 2
+  - banned_words_tier1 == 0
+  - seo_lint_hard_errors == 0
+
+word_count: 1200-1800
+hooks:
+  pre_write: load_brief + load_algorithmic_authorship + load_content_checklist
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report  # max 2 retries
+  on_pass: post_for_approval
+  on_approve: publish + content_log
+  on_publish: schedule_30day_check

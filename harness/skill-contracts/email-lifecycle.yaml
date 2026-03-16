@@ -1,0 +1,42 @@
+skill: email-lifecycle
+version: 2.0
+harness: kai-harness
+
+description: >
+  Lifecycle / nurture emails for existing subscribers and trial users.
+  Covers onboarding, activation, upsell, win-back, and newsletter sequences.
+  Sent via Loops.
+
+inputs:
+  required:
+    - brief: object
+    - email_type: string    # onboarding | activation | upsell | winback | newsletter | announcement
+    - list_segment: string  # kaicalls_leads | bwk_users | abp_vendors | newsletter
+    - trigger: string       # signed_up | day_3 | day_7 | churned | manual
+  optional:
+    - personalization_fields: list[string]  # Loops custom fields to use
+
+outputs:
+  subject: string
+  preview_text: string       # 40-90 chars shown in inbox before open
+  body: markdown
+  subject_variants: list[string]  # 3 A/B variants
+  send_time_recommendation: string
+
+quality_gates:
+  - four_us_total >= 10
+  - banned_words_tier1 == 0
+  - subject_char_count <= 50
+  - preview_text_char_count <= 90
+  - word_count <= 500
+  - single_primary_cta == true
+  - has_plain_text_version == true
+
+word_count: 200-500
+hooks:
+  pre_write: load_brief + load_email_lifecycle_channel + load_email_checklist
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: send_via_loops + content_log
+  on_send: schedule_open_rate_check  # 7-day check

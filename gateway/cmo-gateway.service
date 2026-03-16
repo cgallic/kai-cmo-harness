@@ -1,0 +1,22 @@
+# CMO Gateway systemd service
+# Copy to /etc/systemd/system/cmo-gateway.service
+# Then: systemctl daemon-reload && systemctl enable --now cmo-gateway
+
+[Unit]
+Description=CMO Agent System Webhook Gateway
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/cmo_agent
+Environment="PATH=/opt/cmo_agent/venv/bin:/usr/local/bin:/usr/bin"
+EnvironmentFile=/opt/cmo_agent/scripts/.env
+ExecStart=/opt/cmo_agent/venv/bin/uvicorn gateway.main:app --host 0.0.0.0 --port 8088
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,66 @@
+# ============================================================================
+# Example: B2B SaaS Configuration
+# ============================================================================
+# A SaaS company with two products, Stripe billing, and cold outreach.
+
+owner:
+  name: "Alex Rivera"
+  company: "DataPulse"
+  timezone: "America/Los_Angeles"
+
+products:
+  - id: datapulse
+    name: "DataPulse"
+    url: "https://datapulse.io"
+    description: "Real-time analytics dashboard for SaaS metrics"
+    supabase_url_env: "DATAPULSE_SUPABASE_URL"
+    supabase_key_env: "DATAPULSE_SUPABASE_KEY"
+    ga4_property_env: "GA_DATAPULSE_PROPERTY_ID"
+    gsc_url_env: "GSC_DATAPULSE_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - 2,400 active companies use DataPulse
+      - Average time to first insight: 4 minutes (industry avg: 2 hours)
+      - Pricing: Starter $29/mo, Growth $99/mo, Enterprise custom
+      - 99.97% uptime over last 12 months
+      - Integrates with Stripe, Paddle, Chargebee out of the box
+
+  - id: pulsealerts
+    name: "PulseAlerts"
+    url: "https://pulsealerts.io"
+    description: "Anomaly detection and Slack alerts for SaaS metrics"
+    supabase_url_env: "ALERTS_SUPABASE_URL"
+    supabase_key_env: "ALERTS_SUPABASE_KEY"
+    ga4_property_env: "GA_ALERTS_PROPERTY_ID"
+    gsc_url_env: "GSC_ALERTS_URL"
+    discord_channel_id: ""
+    proof_points: |
+      - Catches churn signals 14 days before cancellation
+      - Free tier: 3 alerts. Pro: unlimited at $19/mo
+      - Works with any Stripe-connected product
+
+discord:
+  writer_channel_id: ""
+  finance_channel_id: ""
+  updates_channel_id: ""
+  health_channel_id: ""
+  research_channel_id: ""
+
+harness:
+  four_us_threshold: 12
+  max_gate_retries: 2
+  self_improvement: true
+  llm_provider: "gemini"
+  llm_model: "gemini-2.0-flash"
+
+server:
+  host: ""
+  user: "root"
+  workspace_path: "~/.openclaw/workspace"
+  analytics_path: "/opt/cmo-analytics"
+
+schedule:
+  daily_report: "0 8 * * *"
+  weekly_report: "0 8 * * 1"
+  pattern_extract: "0 8 * * 1"
+  performance_check: "0 9 1 * *"

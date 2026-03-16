@@ -1,0 +1,41 @@
+skill: meta-ads
+version: 2.0
+harness: kai-harness
+
+description: >
+  Facebook and Instagram ad copy. Covers primary text, headlines, descriptions,
+  and CTAs for cold (TOF), warm (MOF), and retargeting (BOF) audiences.
+
+inputs:
+  required:
+    - brief: object
+    - funnel_stage: string  # tof | mof | bof
+    - ad_format: string     # single_image | carousel | video | collection
+  optional:
+    - objective: string     # leads | conversions | traffic | awareness | messages
+    - audience_hint: string # description of target audience
+    - landing_page_url: string
+
+outputs:
+  variants: list  # 3 ad variants (A/B/C test set)
+  primary_text: string      # up to 125 chars for feed preview
+  headline: string          # up to 27 chars
+  description: string       # up to 27 chars
+  cta_button: string        # See More | Learn More | Get Quote | Book Now | Sign Up | etc.
+  hook_type: string         # pattern_interrupt | social_proof | pain_agitate | direct_offer | story
+
+quality_gates:
+  - four_us_total >= 10     # lower bar — short format
+  - banned_words_tier1 == 0
+  - headline_char_count <= 27
+  - primary_text_char_count <= 125  # first 125 chars must hook before "See more"
+  - has_specific_number_or_stat == true  # must anchor with data
+
+word_count: 50-200 per variant
+hooks:
+  pre_write: load_brief + load_meta_advertising_channel + load_meta_frameworks + load_meta_checklist
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_7day_check  # ads need faster feedback loop
