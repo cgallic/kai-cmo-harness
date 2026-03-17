@@ -477,6 +477,199 @@ EXTERNAL DATA SOURCES
 
 ---
 
+## Outcome Engine
+
+The Outcome Engine collapses the harness from a 28-decision builder tool to a 3-input system: `format`, `site`, `keyword`. Users provide those three; the engine makes all internal decisions.
+
+**Spec:** `docs/superpowers/specs/2026-03-17-outcome-engine-design.md`
+
+### Layer Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      3 INPUTS                                │
+│  format: "blog"   site: "kaicalls"   keyword: "AI recep…"  │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   OUTCOME ENGINE                             │
+│  scripts/content/engine.py :: generate()                     │
+│                                                             │
+│  1. Validate inputs                                         │
+│  2. Resolve persona      (persona_resolver.py)              │
+│  3. Load frameworks      (FRAMEWORK_MAP per format)         │
+│  4. Generate brief       (brief_generator.py + Gemini)      │
+│  5. Write content        (_writer.py + Gemini)              │
+│  6. Run quality gate     (gate.propose + retry loop)        │
+│  7. Apply approval       (approval_policy.py)               │
+│  8. Log if approved      (content_log.py)                   │
+│                                                             │
+│  Returns: GenerateResult(content, brief, gate_report,       │
+│           status, proposal_id, metadata)                    │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     4 SURFACES                               │
+│                                                             │
+│  CLI:     kai-harness generate --format blog --site kai…    │
+│  Discord: !kai blog kaicalls "AI receptionists"             │
+│  HTTP:    POST /generate {format, site, keyword}            │
+│  MCP:     (planned — see MCP Design Options below)          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Module Map
+
+```
+scripts/content/
+├── engine.py              # Core orchestrator — the single entry point
+├── brief_generator.py     # Auto-generates 18-field brief from 3 inputs
+├── persona_resolver.py    # Maps (site, keyword) → persona via config
+├── approval_policy.py     # 3x3 decision matrix: gate_status × policy
+├── _writer.py             # Pure functions: prompt assembly + LLM calls
+├── intent_parser.py       # NLP: freeform text → (format, site, keyword)
+├── content_log.py         # Programmatic logging API
+└── __init__.py
+```
+
+### Decision Flow
+
+The engine makes all 28 decisions internally:
+
+| Decision | How it's made | Source |
+|----------|--------------|--------|
+| Persona | `persona_resolver.resolve_persona()` | config.yaml `site_persona_defaults` + keyword AI-signal regex |
+| Framework files | `FRAMEWORK_MAP[format]` | Hardcoded in engine.py, matches CLAUDE.md table |
+| Skill contract | Format slug → `harness/skill-contracts/{slug}.yaml` | YAML file |
+| Word count | Contract YAML → `word_count` field | Skill contract |
+| Secondary keywords | GSC data + Gemini inference | API + LLM |
+| Angle, hooks, competitor weakness | Single Gemini call in brief_generator | LLM |
+| Audience pain | Persona .md file + Gemini inference | Knowledge base + LLM |
+| Internal links | Last 5 URLs from content_log.json for this site | Content log |
+| Proof points | config.yaml `products[].proof_points` | Config |
+| Quality gate policy | `FORMAT_TO_POLICY[format]` | _writer.py |
+| Approval policy | `resolve_policy(format, site)` | config.yaml `approval_policy` |
+| Four U's threshold | Contract YAML or default (12 long, 10 short) | Skill contract |
+| SEO lint required? | `format not in SHORT_FORM` | _writer.py |
+| Retry count | Max 2 | Hardcoded |
+
+### Approval Policy
+
+The engine uses a 3x3 decision matrix to determine content fate:
+
+```
+                   Policy
+                   auto     hold     reject_only
+Gate Status  ┌──────────┬──────────┬──────────┐
+  approved   │ approved │   held   │ approved │
+  pending    │   held   │   held   │   held   │
+  rejected   │  failed  │  failed  │  failed  │
+             └──────────┴──────────┴──────────┘
+```
+
+Policies are configured per format+site in `config.yaml`:
+```yaml
+approval_policy:
+  default: "hold"
+  overrides:
+    - format: "blog"
+      site: "kaicalls"
+      policy: "auto"       # blogs for kaicalls auto-approve
+    - format: "meta-ads"
+      site: "*"
+      policy: "hold"       # all ads require human review
+```
+
+---
+
+## MCP Server — Design Options
+
+The harness should be accessible as native tools in Claude Code, Codex, and similar AI coding tools. Three design options are under consideration.
+
+### Option A: Content-Only MCP
+
+Expose only the Outcome Engine as MCP tools. Minimal surface, fast to build.
+
+```
+Tools:
+  generate     — Full pipeline: 3 inputs → content + gate + approval
+  brief        — Brief only (dry-run mode)
+  gate         — Run quality gate on arbitrary content
+  status       — What's been published, what's pending
+```
+
+**Pros:** Simple, focused, ships fast. Matches the "hide 90% of the system" principle.
+**Cons:** Analytics, TikTok scraping, cold email, ad management stay in other surfaces.
+
+### Option B: Full Marketing Suite MCP
+
+Expose the entire gateway's capabilities as MCP tools. Every router becomes a tool.
+
+```
+Tools:
+  generate           — Outcome Engine pipeline
+  brief              — Brief generation
+  gate               — Quality gate check
+  status             — Pipeline status
+  report             — Performance report (GSC + GA4)
+  patterns           — Winner pattern analysis
+  tiktok_scrape      — Scrape TikTok for content research
+  tiktok_generate    — Generate TikTok content batches
+  cold_email_warmup  — Check email warmup status
+  cold_email_send    — Queue cold email campaigns
+  analytics_summary  — Cross-platform analytics
+  creative_generate  — Generate creative assets
+```
+
+**Pros:** "CMO in a box" — full marketing ops from Claude Code.
+**Cons:** Large surface area, more maintenance, some tools (Stripe, WhatsApp) may not make sense as MCP tools.
+
+### Option C: Content + Analytics MCP (Recommended)
+
+Expose content creation plus the feedback loop. You can generate content AND check how it performed — the self-improvement loop lives in the same interface.
+
+```
+Tools:
+  generate     — Full pipeline: format + site + keyword → content
+  brief        — Brief only (preview before committing)
+  gate         — Quality gate check on any content
+  status       — Published content + pending checks
+  report       — Performance report: winners, averages, underperformers
+  patterns     — What's working: hook types, formats, personas
+```
+
+**Pros:** Closed feedback loop. Generate → publish → check performance → adjust → generate again. All from Claude Code. Matches the harness's self-improvement architecture.
+**Cons:** Doesn't include TikTok scraping, cold email, or ad management (but those are lower-frequency operations better served by the gateway API).
+
+### Authentication
+
+| Approach | When to use | Complexity |
+|----------|------------|------------|
+| **Local MCP (stdio)** | Single developer, same machine | None — runs as subprocess |
+| **API key in .mcp.json** | Small team, shared server | Low — reuse existing `CMO_GATEWAY_API_KEY` |
+| **OAuth 2.1 + PKCE** | Multi-user, remote access, audit trail | High — needs auth server, token management |
+
+**Recommended path:** Start with local MCP (stdio transport) that calls `engine.generate()` directly via Python imports. No auth needed. Upgrade to remote MCP with OAuth when multi-user access is needed.
+
+### MCP Server Location
+
+Ships with the harness as a drop-in file:
+
+```
+your-project/
+├── CLAUDE.md
+├── .mcp.json              # Registers the MCP server with Claude Code
+├── knowledge/
+├── harness/
+└── scripts/
+    └── content/
+        └── mcp_server.py  # MCP server — runs as stdio subprocess
+```
+
+---
+
 ## Key Design Decisions
 
 **MARKETING.md as operating config, not code.** Changing thresholds, adding formats, or updating framework mappings requires editing a markdown file, not Python code. This means non-engineers can tune the pipeline.
@@ -488,3 +681,5 @@ EXTERNAL DATA SOURCES
 **Parallel agent architecture.** Domain agents are spawned simultaneously on heartbeat, not sequentially. A 6-agent heartbeat takes as long as the slowest agent, not the sum of all agents.
 
 **Self-improvement has safety thresholds.** Patterns must reach n>=5 samples and 15%+ lift before they're promoted to learned defaults. This prevents one-off flukes from changing pipeline behavior.
+
+**Outcome over options.** The Outcome Engine hides 90% of the system from the user. Instead of exposing 28 configuration points, it takes 3 inputs and makes all decisions internally. Users who need control can override individual fields (persona, angle, word count); users who don't get good defaults automatically.

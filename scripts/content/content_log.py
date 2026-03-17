@@ -24,21 +24,71 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-LOG_FILE = "/opt/cmo-analytics/data/content_log.json"
+from scripts.harness_config import get_config
+
+_CFG = get_config()
+
+LOG_FILE = str(_CFG.content_log)
 CALENDAR_FILE = "/opt/meetkai-data/content-calendar.md"
 
 
-def load_log() -> list:
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE) as f:
+def load_log(log_file: str | None = None) -> list:
+    path = log_file or LOG_FILE
+    if os.path.exists(path):
+        with open(path) as f:
             return json.load(f)
     return []
 
 
-def save_log(entries: list):
-    os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
-    with open(LOG_FILE, "w") as f:
+def save_log(entries: list, log_file: str | None = None):
+    path = log_file or LOG_FILE
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
         json.dump(entries, f, indent=2)
+
+
+def log_entry(
+    url: str,
+    keyword: str,
+    site: str,
+    format: str,
+    title: str = "",
+    brief: dict | None = None,
+    four_us: int = 0,
+    notes: str = "",
+    log_file: str | None = None,
+) -> dict:
+    """Programmatic API to log a published content entry.
+
+    Returns the created entry dict.
+    """
+    brief = brief or {}
+    now = datetime.now(timezone.utc).isoformat()
+    entry_id = f"{site}-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
+
+    entry = {
+        "id": entry_id,
+        "url": url,
+        "keyword": keyword,
+        "title": title or brief.get("angle") or keyword,
+        "platform": format,
+        "site": site,
+        "format": format,
+        "published_at": now,
+        "four_us_score": four_us or brief.get("four_us_score"),
+        "persona": brief.get("persona"),
+        "angle": brief.get("angle"),
+        "notes": notes,
+        "performance_30d": None,
+    }
+
+    log = load_log(log_file)
+    log.append(entry)
+    save_log(log, log_file)
+    append_to_calendar(entry)
+    schedule_30day_check(entry)
+
+    return entry
 
 
 def append_to_calendar(entry: dict):

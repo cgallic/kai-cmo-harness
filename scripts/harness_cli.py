@@ -30,6 +30,15 @@ from pathlib import Path
 import yaml
 
 from scripts.harness_config import get_config
+from scripts.content._writer import (
+    FORMAT_INSTRUCTIONS as _WRITER_FORMAT_INSTRUCTIONS,
+    FORMAT_TO_POLICY as _WRITER_FORMAT_TO_POLICY,
+    SHORT_FORM as _WRITER_SHORT_FORM,
+    assemble_write_prompt,
+    write_content as _writer_write_content,
+    assemble_revision_prompt,
+    revise_content as _writer_revise_content,
+)
 
 _CFG = get_config()
 
@@ -238,8 +247,8 @@ FORMATS = [
 ]
 SITES = list(MARKETING.channels.keys()) or ["myproduct"]
 
-# Short-form formats (ad/email) — lower Four U's threshold, no SEO lint
-SHORT_FORM = {"meta-ads", "google-ads", "cold-email", "email-lifecycle", "tiktok"}
+# Short-form formats — imported from _writer, aliased for backward compat
+SHORT_FORM = _WRITER_SHORT_FORM
 
 # Channel map from MARKETING.md (config.yaml provides fallbacks)
 DISCORD_CHANNELS = {**MARKETING.channels, **_CFG.discord.channels}
@@ -263,180 +272,8 @@ def _load_site_facts() -> dict[str, str]:
 
 SITE_FACTS = _load_site_facts()
 
-# Format-specific write instructions
-FORMAT_INSTRUCTIONS = {
-    "blog": """OUTPUT: Markdown only. No HTML tags.
-
-STRUCTURE (follow exactly):
-# [H1 title — must contain the exact target keyword, written as an insight not a label]
-Meta: [150-160 char description — keyword in first 50 chars]
-
-[Opening paragraph — hook as first sentence, keyword in first 100 words, state the counter-intuitive insight and the cost of delay within first 200 words]
-
-## [H2 — include keyword or close variant]
-[section body]
-
-## [H2 — secondary keyword]
-[section body]
-
-## [H2 — secondary keyword]
-[section body]
-
-## [H2 — secondary keyword]
-[section body]
-
-[Closing paragraph — CTA]
-
-REQUIREMENTS:
-- Minimum 1,400 words. Count matters. Expand every section if short.
-- 4+ H2s, at least one containing the keyword
-- Keyword appears 3-5 times total, naturally
-- 2+ internal links (use the URLs from the brief)
-- Every sentence under 20 words
-- No bullet lists longer than 4 items — convert to prose
-- Every claim has a number attached. "Most" → specific %. "Saves money" → exact dollar amount.""",
-
-    "linkedin": """OUTPUT: Plain text only. No markdown headers.
-
-STRUCTURE:
-[Single strong hook sentence — pattern interrupt or counter-intuitive fact]
-
-[2-3 sentence expansion of the hook]
-
-[Core insight — 3-4 short paragraphs, each 2-3 lines max]
-
-[Proof point with a specific number]
-
-[CTA — one sentence, low friction]
-
-REQUIREMENTS:
-- 600-900 words
-- One idea per paragraph
-- No hashtags, no "Thoughts?" endings
-- Every paragraph separated by a blank line""",
-
-    "cold-email": """OUTPUT: Three separate email touches, each clearly labeled.
-
---- TOUCH 1 ---
-Subject: [under 50 chars — no clickbait, no spam triggers]
-[2 A/B subject variants]
-Body (max 120 words):
-[Personalization hook — observation about THEM, not about you]
-[Bridge — one sentence connecting their situation to the offer]
-[CTA — one specific action, low friction, no calendar link]
-
---- TOUCH 2 (3 days later) ---
-Subject: [different angle from Touch 1]
-Body (max 100 words):
-[Different angle from Touch 1]
-[One piece of proof/data]
-[Same low-friction CTA]
-
---- TOUCH 3 (7 days later) ---
-Subject: [breakup framing]
-Body (max 80 words):
-[Close the loop gracefully — no guilt]
-[Leave the door open]
-
-REQUIREMENTS:
-- Never open with "I hope this finds you well" or "My name is"
-- No attachments mentioned
-- No meeting ask in Touch 1""",
-
-    "meta-ads": """OUTPUT: Three ad variants (A/B/C), each clearly labeled.
-
---- VARIANT A: [hook type] ---
-Primary text (hook, max 125 chars for above-fold preview):
-Full primary text (can expand below "See more"):
-Headline (max 27 chars):
-Description (max 27 chars):
-CTA button: [See More | Learn More | Get Quote | Book Now | Sign Up]
-
---- VARIANT B: [different hook type] ---
-[same structure]
-
---- VARIANT C: [different hook type] ---
-[same structure]
-
-Hook types to use across variants: pattern_interrupt | social_proof | pain_agitate | direct_offer | curiosity_gap
-Include at least one number/stat in each variant.
-Make each variant test a genuinely different angle — not just rewording.""",
-
-    "google-ads": """OUTPUT: RSA + PMax asset group.
-
-RSA:
-H1: [max 30 chars — contains keyword]
-H2: [max 30 chars — contains keyword or benefit]
-H3-H15: [max 30 chars each — list all 15]
-D1-D4: [max 90 chars each — list all 4]
-Display path: [domain]/[keyword-slug]
-
-PMax additional headlines (5, max 90 chars each):
-PH1:
-PH2:
-PH3:
-PH4:
-PH5:
-
-Bidding recommendation: [Smart Bidding strategy + rationale]
-
-REQUIREMENTS:
-- Keyword in H1 and H2
-- At least one headline with a price or stat
-- No exclamation marks in headlines (Google policy)""",
-
-    "press": """OUTPUT: Standard press release format.
-
-FOR IMMEDIATE RELEASE
-
-[HEADLINE — under 100 chars, present tense, newsworthy]
-[SUBHEADLINE — optional, adds context]
-
-[CITY, Date] — [Lede: who, what, when, where, why in under 100 words]
-
-[Body paragraph 1 — context and significance]
-
-"[Quote from Connor Gallic, founder — specific, not corporate-speak]," said Connor Gallic, founder of [Company].
-
-[Body paragraph 2 — supporting details, data]
-
-[Body paragraph 3 — market context or additional proof]
-
-###
-
-About [Company]: [3-4 sentences, factual]
-Media Contact: press@[domain].com""",
-
-    "seo": """Same as blog format. Optimize specifically for position 0 / Featured Snippet:
-- Answer the target query directly in the first paragraph (40-60 words, complete sentence)
-- Use definition structure where applicable: "[Keyword] is [definition]"
-- Include a step-by-step section with numbered list if the query is procedural""",
-
-    "email-lifecycle": """OUTPUT: Single lifecycle email.
-
-Subject: [under 50 chars]
-Preview text: [40-90 chars — appears in inbox before open]
-
-Body (under 400 words):
-[Personalized opening — reference their action/status]
-[Core value delivery — one main insight or resource]
-[Supporting detail or proof]
-[Single CTA — button text + destination]
-
-PS: [Optional — one sentence that adds value or reinforces CTA]""",
-
-    "tiktok": """OUTPUT: TikTok video script, 45-60 seconds.
-
-HOOK (0-3s): [Say AND visually show the keyword/hook — must work on mute]
-SOFT CTA (3-15s): [Mention offer or product naturally]
-PROBLEM (15-30s): [Agitate the pain — specific scenario]
-DEMO (30-45s): [Show the solution working — concrete]
-FOMO (45-52s): [Scarcity or social proof]
-HARD CTA (52-60s): [Point to link in bio or product]
-
-Notes for creator: [3-5 specific visual direction notes]
-Hashtags (5 max, specific): #[tag1] #[tag2] #[tag3] #[tag4] #[tag5]""",
-}
+# Format-specific write instructions — imported from _writer
+FORMAT_INSTRUCTIONS = _WRITER_FORMAT_INSTRUCTIONS
 
 
 # ── Gemini client with timeout + circuit breaker ─────────────────────────
@@ -570,13 +407,9 @@ def write_content(brief: dict) -> str:
     fmt  = brief["format"]
     site = brief["target_site"]
 
-    # ── MARKETING.md drives framework selection ────────────────────────────
-    # Re-read on every run — picks up learned defaults written by
-    # harness_defaults_update.py without restarting the process.
+    # Re-read on every run — picks up learned defaults
     MARKETING.reload()
 
-    # framework_paths() resolves paths listed in MARKETING.md's Framework Map table.
-    # Falls back to hardcoded paths when MARKETING.md doesn't cover the format yet.
     framework_paths = MARKETING.framework_paths(fmt) or {
         "blog":           [KNOWLEDGE / "frameworks/content-copywriting/algorithmic-authorship.md"],
         "linkedin":       [WORKSPACE / "skills/linkedin-writing/SKILL.md"],
@@ -591,83 +424,31 @@ def write_content(brief: dict) -> str:
         "seo":            [KNOWLEDGE / "frameworks/aeo-ai-search"],
     }.get(fmt, [])
 
-    framework = "\n\n---\n\n".join(
+    framework_texts = "\n\n---\n\n".join(
         p.read_text()[:1500] for p in framework_paths if p.exists()
     )
 
-    # Load winning patterns
     ww = KNOWLEDGE / "playbooks/what-works.md"
     patterns = ww.read_text()[-2000:] if ww.exists() else ""
 
-    # ── Load skill contract for this format ────────────────────────────────
-    # Contract YAML defines word count, gate thresholds, hook order, retry limit.
-    # Changing the YAML changes the harness behavior — no code edits needed.
     contract = MARKETING.skill_contract(fmt)
-    wc_range  = contract.get("word_count", f"{brief.get('word_count_target', 1000)}")
-    wc_target = brief.get("word_count_target") or (
-        int(str(wc_range).split("-")[0]) if "-" in str(wc_range) else int(wc_range)
-    )
-
-    # ── Site facts ─────────────────────────────────────────────────────────
     facts = SITE_FACTS.get(site, "")
 
-    # Format instructions
-    instructions = FORMAT_INSTRUCTIONS.get(fmt, f"Write the content. Target {wc_target} words.")
+    prompt = assemble_write_prompt(
+        brief=brief,
+        framework_texts=framework_texts,
+        patterns=patterns,
+        contract=contract,
+        site_facts=facts,
+        learned_defaults=MARKETING.learned_defaults,
+        non_negotiables=MARKETING.non_negotiables,
+    )
 
-    draft = gemini(f"""You are writing content for the Kai Harness marketing pipeline.
-
-## MARKETING.md — Operating Config
-{MARKETING.non_negotiables or "Apply standard quality rules."}
-
-## Learned Defaults (updated automatically from winner patterns)
-{MARKETING.learned_defaults or "No learned defaults yet — write specifically and hook-first."}
-
-## Brief
-{json.dumps(brief, indent=2)}
-
-## Central thesis (build the entire piece around this)
-Angle: {brief.get('angle')}
-Competitor weakness to exploit: {brief.get('competitor_weakness')}
-Audience pain: {brief.get('audience_pain')}
-
-## Verified proof points (use these — do not invent stats)
-{facts or brief.get('proof_available', '')}
-
-## Format instructions
-{instructions}
-
-## Framework rules (from MARKETING.md framework map)
-{framework or "Write clearly. Lead with data. Short sentences. Hook first."}
-
-## Winning patterns from past content
-{patterns or "None yet — write specifically and hook-first."}
-
-## Non-negotiables
-- No banned words: leverage, utilize, synergy, innovative, revolutionary, game-changer,
-  deep dive, in conclusion, going forward, first and foremost, next level, it's important to note
-- Conditions after main clause: "Do X if Y fails" not "If Y fails, do X"
-- Every sentence under 20 words
-- Every claim has a number — no vague adjectives
-- Lead with hook_options[0] as the first body sentence
-- Do not stop early — hit the word count target
-
-Write the complete draft now:""")
-
-    return draft
+    return _writer_write_content(prompt, gemini)
 
 
-# ── Format → policy mapping ───────────────────────────────────────────────
-FORMAT_TO_POLICY = {
-    "blog":            "blog-publish",
-    "seo":             "blog-publish",
-    "linkedin":        "linkedin-article",
-    "email-lifecycle": "cold-email",
-    "cold-email":      "cold-email",
-    "press":           "press-release",
-    "tiktok":          "tiktok-script",
-    "meta-ads":        "meta-ad",
-    "google-ads":      "google-ad",
-}
+# ── Format → policy mapping — imported from _writer ──────────────────────
+FORMAT_TO_POLICY = _WRITER_FORMAT_TO_POLICY
 
 
 # ── Quality gate ───────────────────────────────────────────────────────────
@@ -740,46 +521,10 @@ def run_gate(draft: str, keyword: str, threshold: int = 12, max_retries: int = 2
 # ── Surgical revision ──────────────────────────────────────────────────────
 def revise_draft(draft: str, gate_results: dict, keyword: str) -> str:
     """Fix only what failed, using exact violation details from quality scorer."""
-    failures = []
-
-    # Use top_fixes from quality scorer — these have rule IDs, line numbers, and exact suggestions
-    for fix in gate_results.get("violations", []):
-        rule_id = fix.get("rule_id", "")
-        rule_name = fix.get("rule_name", "")
-        suggestion = fix.get("suggestion", "")
-        v = fix.get("first_violation", {})
-        line = v.get("line", "?")
-        text = v.get("text", "")
-        fix_text = v.get("fix", suggestion)
-        count = fix.get("violation_count", 1)
-
-        failures.append(
-            f"[{rule_id}] {rule_name} (line {line}, {count} occurrence(s)): "
-            f'"{text[:100]}" → Fix: {fix_text}'
-        )
-
-    if not failures:
-        return draft
-
-    word_count = len(draft.split())
-    score = gate_results.get("score", "?")
-
-    return gemini(f"""Revise this content draft. Current quality score: {score}/100. Fix ONLY the listed issues.
-
-ISSUES TO FIX (from quality scorer — each has rule ID, line number, and exact fix):
-{chr(10).join(f"- {f}" for f in failures)}
-
-HARD CONSTRAINTS:
-- Keep at least {word_count} words — do NOT shorten
-- Do NOT remove numbers, data points, or specific examples
-- Do NOT introduce: leverage, utilize, synergy, revolutionary, game-changer, next level, in conclusion
-- For SEO title errors: rewrite the # H1 to contain "{keyword}" — keep the hook as the first body paragraph
-- Fix every listed issue. Change nothing else.
-
-DRAFT:
-{draft}
-
-Return ONLY the revised draft — no preamble, no explanation:""")
+    prompt = assemble_revision_prompt(draft, gate_results, keyword)
+    if prompt == draft:
+        return draft  # Nothing to fix
+    return _writer_revise_content(prompt, gemini)
 
 
 # ── Discord approval ───────────────────────────────────────────────────────
@@ -904,6 +649,48 @@ def cmd_patterns(args):
     print(out)
 
 
+def cmd_generate(args):
+    """Outcome Engine — 3-input content generation."""
+    header(f"Outcome Engine — {args.format.upper()} / {args.site} / {args.keyword}")
+    from scripts.content.engine import generate as engine_generate
+
+    result = asyncio.run(engine_generate(
+        format=args.format,
+        site=args.site,
+        keyword=args.keyword,
+        persona=getattr(args, "persona", None),
+        dry_run=getattr(args, "dry_run", False),
+        skip_gates=getattr(args, "skip_gates", False),
+    ))
+
+    if result.status == "error":
+        print(f"\n  ❌ Error: {result.metadata.get('error')}")
+        sys.exit(1)
+
+    print(f"  Persona: {result.brief.get('persona')}")
+    print(f"  Angle:   {result.brief.get('angle')}")
+    print(f"  Hook:    {(result.brief.get('hook_options') or [''])[0]}")
+
+    if result.status == "draft":
+        print(f"\n  Status: draft (dry-run or gates skipped)")
+        if result.brief:
+            print(f"\n  Brief:\n{json.dumps(result.brief, indent=2)}")
+        return
+
+    if result.content:
+        draft_path = Path("/tmp/harness_draft.md")
+        draft_path.write_text(result.content)
+        print(f"  Draft:   /tmp/harness_draft.md ({result.metadata.get('word_count', '?')} words)")
+
+    if result.gate_report:
+        gr = result.gate_report
+        print(f"  Score:   {gr.get('score', '?')}/100 (grade {gr.get('grade', '?')})")
+        print(f"  Policy:  {result.metadata.get('approval_policy')}")
+
+    print(f"\n  Status:  {result.status}")
+    print(f"  Proposal: {result.proposal_id}")
+
+
 def cmd_status(args):
     header("Kai Harness — Status")
     log = json.loads(CONTENT_LOG.read_text()) if CONTENT_LOG.exists() else []
@@ -978,6 +765,15 @@ def main():
     # approvals
     sub.add_parser("approvals", help="Pending approval drafts")
 
+    # generate (Outcome Engine)
+    gen = sub.add_parser("generate", help="Outcome Engine: 3-input content generation")
+    gen.add_argument("--format",    required=True, choices=FORMATS)
+    gen.add_argument("--site",      required=True)
+    gen.add_argument("--keyword",   required=True)
+    gen.add_argument("--persona")
+    gen.add_argument("--dry-run",     action="store_true", help="Generate brief only")
+    gen.add_argument("--skip-gates",  action="store_true", help="Skip quality gates")
+
     args = p.parse_args()
     {
         "run":       cmd_run,
@@ -986,6 +782,7 @@ def main():
         "report":    cmd_report,
         "patterns":  cmd_patterns,
         "status":    cmd_status,
+        "generate":  cmd_generate,
         "approvals": lambda _: print("\n".join(str(f) for f in Path("/tmp").glob("harness_draft*.md")) or "No drafts pending."),
     }[args.command](args)
 

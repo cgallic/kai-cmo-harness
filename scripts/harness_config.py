@@ -67,8 +67,10 @@ class ThresholdConfig:
     win_position: int = 5
     win_ctr: float = 0.05
     win_time_on_page: int = 90
-    min_n: int = 5
+    min_n: int = 10
     min_delta: float = 0.15
+    p_value_threshold: float = 0.05
+    drift_max_pct: float = 0.20
     social: SocialThresholdConfig = field(default_factory=SocialThresholdConfig)
 
 
@@ -101,6 +103,10 @@ class HarnessConfig:
     discord: DiscordConfig = field(default_factory=DiscordConfig)
     sites: SiteConfig = field(default_factory=SiteConfig)
     thresholds: ThresholdConfig = field(default_factory=ThresholdConfig)
+
+    # Outcome Engine
+    site_persona_defaults: dict = field(default_factory=dict)
+    approval_policy: dict = field(default_factory=lambda: {"default": "hold", "overrides": []})
 
     def __post_init__(self):
         # Derive paths that depend on other fields
@@ -192,8 +198,10 @@ def load_config() -> HarnessConfig:
         win_position=thresh_raw.get("win_position", 5),
         win_ctr=thresh_raw.get("win_ctr", 0.05),
         win_time_on_page=thresh_raw.get("win_time_on_page", 90),
-        min_n=thresh_raw.get("min_n", 5),
+        min_n=thresh_raw.get("min_n", 10),
         min_delta=thresh_raw.get("min_delta", 0.15),
+        p_value_threshold=thresh_raw.get("p_value_threshold", 0.05),
+        drift_max_pct=thresh_raw.get("drift_max_pct", 0.20),
         social=social_thresh,
     )
 
@@ -215,6 +223,8 @@ def load_config() -> HarnessConfig:
         discord=discord,
         sites=sites,
         thresholds=thresholds,
+        site_persona_defaults=raw.get("site_persona_defaults", {}),
+        approval_policy=raw.get("approval_policy", {"default": "hold", "overrides": []}),
     )
 
     return cfg

@@ -255,6 +255,58 @@ def parse_and_respond(command_str: str, channel_id: str) -> str:
         return f"Unknown command `{cmd}`. Try `!harness help`."
 
 
+def parse_kai_command(command_str: str, channel_id: str) -> str:
+    """Parse a !kai command — Outcome Engine shorthand.
+
+    Syntax: !kai <format> <site> "<keyword>"
+    Example: !kai blog kaicalls "AI receptionists"
+    """
+    import shlex
+
+    parts = command_str.strip().split(None, 2)
+    if not parts or len(parts) < 3:
+        return (
+            "Usage: `!kai <format> <site> <keyword>`\n"
+            "Example: `!kai blog kaicalls \"AI receptionists\"`\n"
+            f"Formats: {', '.join(FORMATS)}"
+        )
+
+    fmt, site = parts[0], parts[1]
+    # Handle quoted keyword
+    keyword_raw = parts[2]
+    try:
+        keyword = shlex.split(keyword_raw)[0] if keyword_raw.startswith('"') else keyword_raw
+    except ValueError:
+        keyword = keyword_raw.strip('"')
+
+    if fmt not in FORMATS:
+        return f"Unknown format `{fmt}`. Valid: {', '.join(FORMATS)}"
+    if site not in SITES:
+        return f"Unknown site `{site}`. Valid: {', '.join(SITES)}"
+
+    start_msg = (
+        f"🚀 **Outcome Engine:** `{fmt}` · `{site}` · `{keyword}`\n"
+        f"Pipeline: persona → brief → write → gate → approval\n"
+        f"ETA: ~2-3 minutes."
+    )
+
+    # Spawn engine in background
+    log_file = f"/tmp/kai_generate_{datetime.now(timezone.utc).strftime('%H%M%S')}.log"
+    bg_cmd = (
+        f"cd /opt/cmo-analytics && source venv/bin/activate && "
+        f"python3 -c \""
+        f"import asyncio; from scripts.content.engine import generate; "
+        f"r = asyncio.run(generate('{fmt}', '{site}', '{keyword}')); "
+        f"print(f'Status: {{r.status}}, Score: {{r.gate_report.get(\"score\", \"?\") if r.gate_report else \"?\"}}')"
+        f"\" > {log_file} 2>&1 && "
+        f"openclaw message send --channel discord --target {channel_id} "
+        f"--message '✅ Engine done: {fmt}/{site}/{keyword}. Status in {log_file}.'"
+    )
+    subprocess.Popen(bg_cmd, shell=True, executable="/bin/bash")
+
+    return start_msg
+
+
 def main():
     parser = argparse.ArgumentParser(description="Kai Harness Discord Handler")
     parser.add_argument("--command", required=True, help="Command string after !harness")

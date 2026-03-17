@@ -22,7 +22,7 @@ from gateway.models import WebhookResponse
 
 # Import routers
 from gateway.routers import analytics, tiktok, cold_email, tasks, clients, jobs
-from gateway.routers import whatsapp, agent, creative, stripe
+from gateway.routers import whatsapp, agent, creative, stripe, generate
 
 
 @asynccontextmanager
@@ -94,7 +94,8 @@ async def root():
             "tasks": "/webhooks/tasks/*",
             "clients": "/clients",
             "jobs": "/jobs/*",
-            "agent": "/agent/*"
+            "agent": "/agent/*",
+            "generate": "/generate"
         }
     }
 
@@ -171,6 +172,13 @@ app.include_router(
     stripe.router,
     prefix="/stripe",
     tags=["Stripe"],
+    dependencies=[Depends(verify_api_key)]
+)
+
+app.include_router(
+    generate.router,
+    prefix="/generate",
+    tags=["Generate"],
     dependencies=[Depends(verify_api_key)]
 )
 
