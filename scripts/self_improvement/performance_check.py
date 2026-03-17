@@ -197,6 +197,12 @@ def pull_ga4_data(url: str, site: str) -> dict:
 
 def evaluate_performance(entry: dict, gsc: dict, ga4: dict) -> dict:
     """Determine if content is a winner, average, or underperformer."""
+    platform = entry.get("platform", "web")
+
+    # Social content uses social_metrics instead of GSC/GA4
+    if platform in ("tiktok", "instagram") and entry.get("social_metrics"):
+        return evaluate_social_performance(entry)
+
     position = gsc.get("position")
     ctr = gsc.get("ctr", 0)
     avg_duration = ga4.get("avg_session_duration", 0)
@@ -218,6 +224,54 @@ def evaluate_performance(entry: dict, gsc: dict, ga4: dict) -> dict:
         "is_winner": is_winner,
         "is_underperformer": is_underperformer,
         "grade": "winner" if is_winner else ("underperformer" if is_underperformer else "average"),
+    }
+
+
+def evaluate_social_performance(entry: dict) -> dict:
+    """Evaluate social content (TikTok/Instagram) using social_metrics."""
+    platform = entry.get("platform")
+    metrics = entry.get("social_metrics", {})
+    social = _CFG.thresholds.social
+
+    if platform == "tiktok":
+        views = metrics.get("views", 0)
+        completion = metrics.get("completion_rate", 0)
+        engagement = metrics.get("engagement_rate", 0)
+
+        is_winner = (
+            views >= social.tiktok_win_views
+            and completion >= social.tiktok_win_completion
+            and engagement >= social.tiktok_win_engagement
+        )
+        is_underperformer = (
+            views < social.tiktok_win_views * 0.1
+            or (views > 1000 and engagement < 0.01)
+        )
+
+    elif platform == "instagram":
+        reach = metrics.get("reach", 0)
+        engagement = metrics.get("engagement_rate", 0)
+        saves = metrics.get("saves", 0)
+
+        is_winner = (
+            reach >= social.ig_win_reach
+            and engagement >= social.ig_win_engagement
+            and saves >= social.ig_win_saves
+        )
+        is_underperformer = (
+            reach < social.ig_win_reach * 0.1
+            or (reach > 500 and engagement < 0.01)
+        )
+
+    else:
+        is_winner = False
+        is_underperformer = False
+
+    return {
+        "is_winner": is_winner,
+        "is_underperformer": is_underperformer,
+        "grade": "winner" if is_winner else ("underperformer" if is_underperformer else "average"),
+        "source": "social_metrics",
     }
 
 
@@ -382,6 +436,51 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
     }
 
 
+def check_social_entries(dry_run: bool = False) -> list:
+    """Evaluate all social entries that have social_metrics but no grade yet."""
+    entries = load_log()
+    results = []
+
+    for entry in entries:
+        platform = entry.get("platform", "web")
+        if platform not in ("tiktok", "instagram"):
+            continue
+        if not entry.get("social_metrics"):
+            continue
+        # Skip if already graded
+        if entry.get("performance_30d", {}).get("grade"):
+            continue
+
+        evaluation = evaluate_social_performance(entry)
+        metrics = entry["social_metrics"]
+
+        entry["performance_30d"] = {
+            "social": metrics,
+            "grade": evaluation["grade"],
+            "source": "social_import",
+            "checked_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+        results.append({
+            "entry_id": entry.get("id"),
+            "platform": platform,
+            "post_id": entry.get("post_id"),
+            "grade": evaluation["grade"],
+            "metrics": metrics,
+        })
+
+        grade_label = {"winner": "[WIN]", "average": "[AVG]", "underperformer": "[LOW]"}
+        label = grade_label.get(evaluation["grade"], "[???]")
+        print(f"  {label} [{platform}] {entry.get('post_id', '?')[:20]} -> {evaluation['grade']}")
+
+    if not dry_run and results:
+        save_log(entries)
+
+    winners = [r for r in results if r["grade"] == "winner"]
+    print(f"\n{len(results)} social entries graded. {len(winners)} winner(s).")
+    return results
+
+
 def batch_score_all(dry_run: bool = False):
     """Nightly cron: batch score all published content, append trend to content_log.json."""
     log = load_log()
@@ -427,9 +526,16 @@ def main():
     parser.add_argument("--all", action="store_true", help="Check all pending")
     parser.add_argument("--url", help="Check specific URL")
     parser.add_argument("--batch-score", action="store_true", help="Batch score all published content (nightly cron)")
+    parser.add_argument("--social", action="store_true", help="Grade all social entries (TikTok/Instagram)")
     parser.add_argument("--days", type=int, default=30)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+
+    if args.social:
+        results = check_social_entries(dry_run=args.dry_run)
+        if args.dry_run:
+            print("[DRY RUN] No changes saved")
+        return
 
     if args.batch_score:
         batch_score_all(dry_run=args.dry_run)

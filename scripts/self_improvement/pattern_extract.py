@@ -80,6 +80,14 @@ def load_log() -> list:
 
 
 def is_winner(entry: dict) -> bool:
+    platform = entry.get("platform", "web")
+
+    # Social content: check social_metrics directly
+    if platform in ("tiktok", "instagram") and entry.get("social_metrics"):
+        perf = entry.get("performance_30d", {})
+        return perf.get("grade") == "winner"
+
+    # Web content: check GSC/GA4
     perf = entry.get("performance_30d")
     if not perf:
         return False
@@ -98,14 +106,44 @@ def is_winner(entry: dict) -> bool:
 
 def analyze_winner(entry: dict) -> str:
     """Use Gemini to extract what made this piece win."""
+    platform = entry.get("platform", "web")
     perf = entry.get("performance_30d", {})
-    gsc = perf.get("gsc", {})
-    ga4 = perf.get("ga4", {})
+
+    # Build performance section based on platform type
+    if platform in ("tiktok", "instagram") and entry.get("social_metrics"):
+        metrics = entry["social_metrics"]
+        if platform == "tiktok":
+            perf_text = f"""Performance (Social — TikTok):
+- Views: {metrics.get("views", 0):,}
+- Completion Rate: {(metrics.get("completion_rate", 0) * 100):.1f}%
+- Engagement Rate: {(metrics.get("engagement_rate", 0) * 100):.1f}%
+- Likes: {metrics.get("likes", 0):,} | Comments: {metrics.get("comments", 0):,}
+- Shares: {metrics.get("shares", 0):,} | Saves: {metrics.get("saves", 0):,}
+- Avg Watch Time: {metrics.get("avg_watch_time", 0):.1f}s"""
+        else:
+            perf_text = f"""Performance (Social — Instagram):
+- Reach: {metrics.get("reach", 0):,}
+- Impressions: {metrics.get("impressions", 0):,}
+- Engagement Rate: {(metrics.get("engagement_rate", 0) * 100):.1f}%
+- Likes: {metrics.get("likes", 0):,} | Comments: {metrics.get("comments", 0):,}
+- Shares: {metrics.get("shares", 0):,} | Saves: {metrics.get("saves", 0):,}
+- Profile Visits: {metrics.get("profile_visits", 0):,} | Follows: {metrics.get("follows", 0):,}"""
+    else:
+        gsc = perf.get("gsc", {})
+        ga4 = perf.get("ga4", {})
+        perf_text = f"""Performance (30-day):
+- GSC Position: {gsc.get("position", "N/A")}
+- CTR: {(gsc.get("ctr", 0) * 100):.1f}%
+- Impressions: {gsc.get("impressions", 0):,}
+- Sessions: {ga4.get("sessions", 0):,}
+- Avg Duration: {ga4.get("avg_session_duration", 0):.0f}s"""
 
     prompt = f"""A piece of content performed well. Analyze what made it win.
 
 Content Details:
-- Title/Angle: {entry.get("title") or entry.get("keyword")}
+- Platform: {platform}
+- Title/Angle: {entry.get("title") or entry.get("keyword") or entry.get("description", "")[:100]}
+- Description: {entry.get("description", "")[:200]}
 - Target Keyword: {entry.get("keyword")}
 - Site: {entry.get("site")}
 - Format: {entry.get("format")}
@@ -113,15 +151,11 @@ Content Details:
 - Angle Used: {entry.get("angle", "unknown")}
 - Four U's Score: {entry.get("four_us_score", "unknown")}/16
 
-Performance (30-day):
-- GSC Position: {gsc.get("position", "N/A")}
-- CTR: {(gsc.get("ctr", 0) * 100):.1f}%
-- Impressions: {gsc.get("impressions", 0):,}
-- Sessions: {ga4.get("sessions", 0):,}
-- Avg Duration: {ga4.get("avg_session_duration", 0):.0f}s
+{perf_text}
 
 Write a concise 3-5 sentence analysis of what likely made this content win.
 Focus on: hook type effectiveness, specificity of angle, persona match, format choice.
+{"For TikTok/Instagram: also consider hook timing, visual style, trending sounds/hashtags." if platform in ("tiktok", "instagram") else ""}
 Be concrete — what specifically worked and why? What can be replicated?
 Output ONLY the analysis text, no headers or JSON."""
 
@@ -131,22 +165,53 @@ Output ONLY the analysis text, no headers or JSON."""
 def append_to_what_works(entry: dict, analysis: str):
     os.makedirs(KNOWLEDGE_BASE, exist_ok=True)
 
+    platform = entry.get("platform", "web")
     perf = entry.get("performance_30d", {})
-    gsc = perf.get("gsc", {})
-    ga4 = perf.get("ga4", {})
     date = entry.get("published_at", "")[:10]
     checked = perf.get("checked_at", "")[:10]
 
+    title = entry.get("title") or entry.get("keyword") or entry.get("description", "")[:80]
+
+    # Build results section based on platform
+    if platform in ("tiktok", "instagram") and entry.get("social_metrics"):
+        metrics = entry["social_metrics"]
+        if platform == "tiktok":
+            results = (
+                f"- Views: {metrics.get('views', 0):,} | "
+                f"Completion: {(metrics.get('completion_rate', 0) * 100):.1f}% | "
+                f"Engagement: {(metrics.get('engagement_rate', 0) * 100):.1f}%\n"
+                f"- Likes: {metrics.get('likes', 0):,} | "
+                f"Shares: {metrics.get('shares', 0):,} | "
+                f"Saves: {metrics.get('saves', 0):,}"
+            )
+        else:
+            results = (
+                f"- Reach: {metrics.get('reach', 0):,} | "
+                f"Impressions: {metrics.get('impressions', 0):,} | "
+                f"Engagement: {(metrics.get('engagement_rate', 0) * 100):.1f}%\n"
+                f"- Likes: {metrics.get('likes', 0):,} | "
+                f"Saves: {metrics.get('saves', 0):,} | "
+                f"Follows: {metrics.get('follows', 0):,}"
+            )
+    else:
+        gsc = perf.get("gsc", {})
+        ga4 = perf.get("ga4", {})
+        results = (
+            f"- Position: #{gsc.get('position', 'N/A')} | "
+            f"CTR: {(gsc.get('ctr', 0) * 100):.1f}% | "
+            f"Sessions: {ga4.get('sessions', 0):,}\n"
+            f"- Avg Duration: {ga4.get('avg_session_duration', 0):.0f}s"
+        )
+
     block = f"""
-## {entry.get("title") or entry.get("keyword")} — {entry.get("site")} — {date}
-**URL:** {entry.get("url")}
+## {title} — {entry.get("site")} — {date}
+**Platform:** {platform} | **URL:** {entry.get("url") or entry.get("post_id", "N/A")}
 **Keyword:** {entry.get("keyword")}
 **Format:** {entry.get("format")} | **Persona:** {entry.get("persona", "N/A")} | **Four U's:** {entry.get("four_us_score", "N/A")}/16
 **Angle:** {entry.get("angle", "N/A")}
 
-**30-Day Results (checked {checked}):**
-- Position: #{gsc.get("position", "N/A")} | CTR: {(gsc.get("ctr", 0) * 100):.1f}% | Sessions: {ga4.get("sessions", 0):,}
-- Avg Duration: {ga4.get("avg_session_duration", 0):.0f}s
+**Results (checked {checked}):**
+{results}
 
 **Why it worked:**
 {analysis}
@@ -189,14 +254,35 @@ def run_weekly_aggregation(site: str = "all") -> str:
     # Build summary for Claude to analyze
     summary_lines = []
     for w in winners:
+        platform = w.get("platform", "web")
         perf = w.get("performance_30d", {})
-        gsc = perf.get("gsc", {})
-        ga4 = perf.get("ga4", {})
+
+        if platform in ("tiktok", "instagram") and w.get("social_metrics"):
+            metrics = w["social_metrics"]
+            if platform == "tiktok":
+                perf_str = (
+                    f"Views: {metrics.get('views', 0):,} | "
+                    f"Completion: {(metrics.get('completion_rate', 0)*100):.1f}% | "
+                    f"Engagement: {(metrics.get('engagement_rate', 0)*100):.1f}%"
+                )
+            else:
+                perf_str = (
+                    f"Reach: {metrics.get('reach', 0):,} | "
+                    f"Engagement: {(metrics.get('engagement_rate', 0)*100):.1f}% | "
+                    f"Saves: {metrics.get('saves', 0):,}"
+                )
+        else:
+            gsc = perf.get("gsc", {})
+            ga4 = perf.get("ga4", {})
+            perf_str = (
+                f"Position: {gsc.get('position', 'N/A')} | "
+                f"CTR: {(gsc.get('ctr', 0)*100):.1f}% | "
+                f"Duration: {ga4.get('avg_session_duration', 0):.0f}s"
+            )
+
         summary_lines.append(
-            f"- [{w.get('site')}] [{w.get('format')}] [{w.get('persona', 'N/A')}] "
-            f"Keyword: {w.get('keyword')} | "
-            f"Position: {gsc.get('position', 'N/A')} | CTR: {(gsc.get('ctr', 0)*100):.1f}% | "
-            f"Duration: {ga4.get('avg_session_duration', 0):.0f}s | "
+            f"- [{platform}] [{w.get('site')}] [{w.get('format')}] [{w.get('persona', 'N/A')}] "
+            f"Keyword: {w.get('keyword')} | {perf_str} | "
             f"Four U's: {w.get('four_us_score', 'N/A')}"
         )
 

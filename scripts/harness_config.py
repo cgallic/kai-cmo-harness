@@ -49,6 +49,19 @@ class SiteConfig:
 
 
 @dataclass
+class SocialThresholdConfig:
+    """Win thresholds for social platforms."""
+    # TikTok organic
+    tiktok_win_views: int = 10000
+    tiktok_win_completion: float = 0.40
+    tiktok_win_engagement: float = 0.05
+    # Instagram organic
+    ig_win_reach: int = 5000
+    ig_win_engagement: float = 0.05
+    ig_win_saves: int = 50
+
+
+@dataclass
 class ThresholdConfig:
     """Performance and pattern thresholds."""
     win_position: int = 5
@@ -56,6 +69,7 @@ class ThresholdConfig:
     win_time_on_page: int = 90
     min_n: int = 5
     min_delta: float = 0.15
+    social: SocialThresholdConfig = field(default_factory=SocialThresholdConfig)
 
 
 @dataclass
@@ -165,12 +179,22 @@ def load_config() -> HarnessConfig:
 
     # Build threshold config
     thresh_raw = raw.get("thresholds", {})
+    social_raw = thresh_raw.get("social", {})
+    social_thresh = SocialThresholdConfig(
+        tiktok_win_views=social_raw.get("tiktok_win_views", 10000),
+        tiktok_win_completion=social_raw.get("tiktok_win_completion", 0.40),
+        tiktok_win_engagement=social_raw.get("tiktok_win_engagement", 0.05),
+        ig_win_reach=social_raw.get("ig_win_reach", 5000),
+        ig_win_engagement=social_raw.get("ig_win_engagement", 0.05),
+        ig_win_saves=social_raw.get("ig_win_saves", 50),
+    )
     thresholds = ThresholdConfig(
         win_position=thresh_raw.get("win_position", 5),
         win_ctr=thresh_raw.get("win_ctr", 0.05),
         win_time_on_page=thresh_raw.get("win_time_on_page", 90),
         min_n=thresh_raw.get("min_n", 5),
         min_delta=thresh_raw.get("min_delta", 0.15),
+        social=social_thresh,
     )
 
     # Build paths — env vars override YAML
