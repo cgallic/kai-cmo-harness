@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# kai-render — Scaffold and render Remotion video ads.
+# Usage: kai-render scaffold --archetype problem-agitation --format vertical
+# Usage: kai-render render --project ./remotion-ads --composition ProblemAgitation
+# Usage: kai-render all --archetype problem-agitation (scaffold + render all formats)
+set -euo pipefail
+
+KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+export PYTHONPATH="${KAI_ROOT}:${PYTHONPATH:-}"
+source "${KAI_ROOT}/lib/find-python.sh"
+
+KAI_DIR="${HOME}/.kai-marketing"
+RENDER_DIR="${KAI_DIR}/renders"
+REMOTION_TEMPLATES="${KAI_ROOT}/lib/components/templates/remotion"
+
+case "${1:-help}" in
+    scaffold)
+        # Generate Remotion project from brand tokens + archetype
+        shift
+        ARCHETYPE="problem-agitation"
+        FORMAT="vertical"
+        OUTPUT="${RENDER_DIR}/$(date +%Y%m%d)"
+
+        while [[ $# -gt 0 ]]; do
+            case $1 in
+                --archetype) ARCHETYPE="$2"; shift 2 ;;
+                --format) FORMAT="$2"; shift 2 ;;
+                --output) OUTPUT="$2"; shift 2 ;;
+                *) shift ;;
+            esac
+        done
+
+        mkdir -p "$OUTPUT/src/config" "$OUTPUT/src/components" "$OUTPUT/src/templates" "$OUTPUT/public"
+
+        # Generate brand.ts from config
+        "$PYTHON" -c "
+import sys; sys.path.insert(0, '${KAI_ROOT}')
+from lib.components.creative.brand_tokens import load_brand_from_config, to_remotion_brand
+tokens = load_brand_from_config()
+print(to_remotion_brand(tokens))
+" > "$OUTPUT/src/config/brand.ts"
+
+        # Generate scene config
+        "$PYTHON" -c "
+import sys, json; sys.path.insert(0, '${KAI_ROOT}')
+from lib.components.creative.scene_builder import build_scenes, scenes_to_remotion_config
+comp = build_scenes('${ARCHETYPE}', {}, '${FORMAT}')
+print(scenes_to_remotion_config(comp))
+" > "$OUTPUT/src/config/scenes.json"
+
+        # Copy Remotion templates if they exist
+        if [ -d "$REMOTION_TEMPLATES" ] && [ "$(ls -A "$REMOTION_TEMPLATES" 2>/dev/null)" ]; then
+            cp "$REMOTION_TEMPLATES"/*.tsx "$OUTPUT/src/templates/" 2>/dev/null || true
+        fi
+
+        # Copy from remotion-ad-generator skill if available
+        SKILL_TEMPLATES="${HOME}/.claude/skills/remotion-ad-generator/templates"
+        if [ -d "$SKILL_TEMPLATES" ]; then
+            cp "$SKILL_TEMPLATES"/*.tsx "$OUTPUT/src/templates/" 2>/dev/null || true
+            cp "$SKILL_TEMPLATES"/*.ts "$OUTPUT/src/config/" 2>/dev/null || true
+        fi
+
+        # Generate package.json
+        cat > "$OUTPUT/package.json" << 'PKGJSON'
+{
+  "name": "kai-ad-render",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx remotion studio",
+    "build:vertical": "npx remotion render src/Root.tsx Vertical out/vertical.mp4",
+    "build:square": "npx remotion render src/Root.tsx Square out/square.mp4",
+    "build:landscape": "npx remotion render src/Root.tsx Landscape out/landscape.mp4",
+    "build:all": "npm run build:vertical && npm run build:square && npm run build:landscape"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "remotion": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
+PKGJSON
+
+        echo "Scaffolded Remotion project at: $OUTPUT"
+        echo "  Archetype: $ARCHETYPE"
+        echo "  Format: $FORMAT"
+        echo "  Brand config: $OUTPUT/src/config/brand.ts"
+        echo "  Scene config: $OUTPUT/src/config/scenes.json"
+        echo ""
+        echo "Next steps:"
+        echo "  cd $OUTPUT && npm install && npm run dev  (preview)"
+        echo "  cd $OUTPUT && npm run build:all           (render all formats)"
+        ;;
+
+    render)
+        # Render an existing Remotion project
+        shift
+        PROJECT="."
+        COMPOSITION=""
+
+        while [[ $# -gt 0 ]]; do
+            case $1 in
+                --project) PROJECT="$2"; shift 2 ;;
+                --composition) COMPOSITION="$2"; shift 2 ;;
+                *) shift ;;
+            esac
+        done
+
+        if [ ! -f "$PROJECT/package.json" ]; then
+            echo "Error: No package.json found at $PROJECT. Run 'kai-render scaffold' first."
+            exit 1
+        fi
+
+        if ! command -v npx &>/dev/null; then
+            echo "Error: npx not found. Install Node.js: https://nodejs.org"
+            exit 1
+        fi
+
+        cd "$PROJECT"
+        if [ ! -d "node_modules" ]; then
+            echo "Installing dependencies..."
+            npm install
+        fi
+
+        mkdir -p out
+        if [ -n "$COMPOSITION" ]; then
+            echo "Rendering $COMPOSITION..."
+            npx remotion render src/Root.tsx "$COMPOSITION" "out/${COMPOSITION}.mp4"
+        else
+            echo "Rendering all formats..."
+            npm run build:all 2>&1
+        fi
+
+        echo ""
+        echo "Rendered videos:"
+        ls -la out/*.mp4 2>/dev/null || echo "  (no output files found)"
+        ;;
+
+    archetypes)
+        # List available archetypes
+        "$PYTHON" -c "
+import sys; sys.path.insert(0, '${KAI_ROOT}')
+from lib.components.creative.scene_builder import get_all_archetypes
+for a in get_all_archetypes():
+    print(f'  {a}')
+"
+        ;;
+
+    help|--help|-h)
+        echo "kai-render — Scaffold and render Remotion video ads"
+        echo ""
+        echo "Commands:"
+        echo "  scaffold   Generate a Remotion project from brand tokens + archetype"
+        echo "             --archetype <name>  (problem-agitation, social-proof, product-demo, lifestyle)"
+        echo "             --format <fmt>      (vertical, square, landscape, portrait)"
+        echo "             --output <path>     (default: ~/.kai-marketing/renders/YYYYMMDD)"
+        echo ""
+        echo "  render     Render an existing Remotion project to MP4"
+        echo "             --project <path>    (project directory)"
+        echo "             --composition <name> (specific composition, or all)"
+        echo ""
+        echo "  archetypes List available ad archetypes"
+        ;;
+    *)
+        echo "Unknown command: $1. Run 'kai-render help' for usage."
+        exit 1
+        ;;
+esac

@@ -21,10 +21,11 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 
 # Category weights (must sum to 1.0)
 CATEGORY_WEIGHTS = {
-    "Algorithmic Authorship": 0.35,
-    "GEO/AEO Signals": 0.20,
-    "Content Structure": 0.25,
-    "Four U's": 0.20,
+    "Algorithmic Authorship": 0.30,
+    "GEO/AEO Signals": 0.15,
+    "Content Structure": 0.20,
+    "Four U's": 0.15,
+    "Taste": 0.20,
 }
 
 # Weights when LLM rules are disabled (redistribute Four U's proportionally)

@@ -21,6 +21,12 @@ import scripts.quality.rules.geo_signals  # noqa: F401
 import scripts.quality.rules.content_structure  # noqa: F401
 import scripts.quality.rules.four_us  # noqa: F401
 import scripts.quality.rules.voice_consistency  # noqa: F401
+import scripts.quality.rules.taste_specificity  # noqa: F401
+import scripts.quality.rules.taste_emotional  # noqa: F401
+import scripts.quality.rules.taste_originality  # noqa: F401
+import scripts.quality.rules.taste_hook  # noqa: F401
+import scripts.quality.rules.taste_cta  # noqa: F401
+import scripts.quality.rules.taste_proof  # noqa: F401
 
 # Module-level LRU cache for content scoring
 _SCORE_CACHE: "OrderedDict[str, QualityReport]" = OrderedDict()

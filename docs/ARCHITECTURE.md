@@ -683,3 +683,149 @@ your-project/
 **Self-improvement has safety thresholds.** Patterns must reach n>=5 samples and 15%+ lift before they're promoted to learned defaults. This prevents one-off flukes from changing pipeline behavior.
 
 **Outcome over options.** The Outcome Engine hides 90% of the system from the user. Instead of exposing 28 configuration points, it takes 3 inputs and makes all decisions internally. Users who need control can override individual fields (persona, angle, word count); users who don't get good defaults automatically.
+
+---
+
+## Skill Architecture (v0.2.0)
+
+The harness was repackaged as SKILL.md files that Claude Code discovers as slash commands.
+
+### Skill Layer
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    16 SKILLS (SKILL.md files)                     │
+│                                                                  │
+│  Content Sprint:    brief → write → gate → report → retro       │
+│  Advertising:       ad-copy, ad-research, creative-brief,       │
+│                     ad-render                                    │
+│  Channels:          email-sequence, seo-audit, content-ideas,   │
+│                     checklist                                    │
+│  Operations:        marketing-sprint, kai-upgrade                │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ calls via bin/ CLI tools
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    6 CLI TOOLS (bin/)                             │
+│  kai-gate    kai-brief    kai-report    kai-config               │
+│  kai-ab      kai-render                                          │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ calls Python scripts
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    PYTHON ENGINE (~40K lines)                     │
+│  Quality (35 rules) │ Content (engine, brief, A/B) │ Analytics  │
+│  Self-Improvement   │ Ads (policy freshness)       │ Comp. Mon. │
+│  Components (lib/)  │ Gateway (11 routes)          │ Scheduler  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    PERSISTENT STATE                               │
+│  ~/.kai-marketing/                                               │
+│  config.yaml │ briefs/ │ drafts/ │ gates/ │ content-log.jsonl   │
+│  ab_tests.db │ competitive/ │ renders/ │ analytics/snapshots/   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Quality Gate Architecture (v0.2.0)
+
+```
+DRAFT ──▶ QUALITY ENGINE (35 rules)
+           │
+           ├── Algorithmic Authorship (15 rules, 30% weight)
+           │   AA-01..AA-31: clause position, verb-first, sentence length...
+           │
+           ├── Content Structure (9 rules, 20% weight)
+           │   CS-01..CS-08 + VC-01: hooks, headings, active voice, AI slop, voice
+           │
+           ├── Taste (6 rules, 20% weight)  ← NEW
+           │   TS-01: Specificity density (numbers > adjectives)
+           │   TS-02: Emotional resonance (pain/aspiration/urgency)
+           │   TS-03: Originality (catches AI clichés and template language)
+           │   TS-04: Hook strength (first-sentence impact)
+           │   TS-05: CTA clarity (end-of-content call to action)
+           │   TS-06: Proof density (evidence per 500 words)
+           │
+           ├── GEO/AEO Signals (4 rules, 15% weight)
+           │   GEO-01..GEO-04: citations, quotations, statistics, technical terms
+           │
+           └── Four U's (1 rule, 15% weight, LLM-scored)
+               FU-01: Unique, Useful, Ultra-specific, Urgent
+
+           ──▶ SCORE (0-100) + GRADE (A-F) + VIOLATIONS + FIX SUGGESTIONS
+```
+
+### Brand System
+
+```
+~/.kai-marketing/config.yaml
+  └── brand:
+       ├── name, tagline
+       ├── colors: primary, secondary, background, text, accent
+       ├── fonts: heading, body
+       ├── assets: logo, character
+       └── voice: formal_casual, serious_playful, technical_simple, confident, terse
+
+READS FROM:                    GENERATES:
+  tailwind.config.ts    ──▶    brand_tokens.py    ──▶    Remotion brand.ts
+  globals.css           ──▶    (extraction)        ──▶    Voice matching
+  package.json          ──▶                        ──▶    Ad format previews
+  kai-config set        ──▶                        ──▶    Content tone scoring
+```
+
+### Remotion Video Ad Pipeline
+
+```
+/creative-brief
+  └── ad copy (hooks, problems, CTAs)
+       └── /ad-render
+            ├── Load brand tokens from config
+            ├── Build scenes (scene_builder.py)
+            │   ├── 4 archetypes: problem-agitation, social-proof, product-demo, lifestyle
+            │   └── Each = sequence of Scene objects (name, duration, text, animation)
+            ├── Scaffold Remotion project
+            │   ├── src/config/brand.ts    (from brand_tokens.py)
+            │   ├── src/config/scenes.json (from scene_builder.py)
+            │   ├── src/templates/*.tsx    (from remotion-ad-generator skill)
+            │   └── package.json           (Remotion deps + render scripts)
+            └── Render to MP4
+                ├── out/vertical.mp4  (1080x1920, Reels/Stories/TikTok)
+                ├── out/square.mp4    (1080x1080, Feed)
+                └── out/landscape.mp4 (1920x1080, YouTube/in-stream)
+```
+
+### Component Library
+
+```
+lib/components/
+├── creative/
+│   ├── brand_tokens.py     # Extract → BrandTokens → to_remotion_brand()
+│   ├── format_specs.py     # 12 platform specs: get_platform_spec("meta", "feed")
+│   ├── scene_builder.py    # build_scenes("problem-agitation", copy, "vertical")
+│   └── copy_variants.py    # generate_variants("hook text", n=3, style="hooks")
+├── scoring/
+│   └── specificity.py      # score_specificity(text) → {specific, vague, ratio}
+└── research/
+    └── keyword_scorer.py   # score_keyword(pos=8, imp=1240) → 92
+
+Each module is independently importable — no dependency on the quality gate pipeline.
+```
+
+### A/B Test Tracker
+
+```
+kai-ab create "test-name" --variants "A,B,C"
+  └── SQLite: ab_tests table (test_id, variants, metric, status)
+
+kai-ab record <id> --variant A --impressions 1000 --clicks 45 --conversions 8
+  └── SQLite: ab_results table (cumulative per day per variant)
+
+kai-ab analyze <id>
+  └── Two-proportion z-test
+      ├── Compute p1, p2, pooled proportion
+      ├── Calculate z-score and confidence
+      ├── Compare to 95% threshold
+      ├── Estimate remaining sample needed
+      └── Return: winner (if significant), confidence %, recommendation
+```

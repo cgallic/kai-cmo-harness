@@ -44,6 +44,29 @@ quality:
   four_us_min_total: 12
   four_us_min_single: 2
   max_retries: 2
+
+# Brand identity — used by /ad-copy, /ad-render, /content-write, /creative-brief
+brand:
+  name: ""
+  tagline: ""
+  colors:
+    primary: "#6366f1"
+    secondary: "#8b5cf6"
+    background: "#0f0f23"
+    text: "#ffffff"
+    accent: "#22c55e"
+  fonts:
+    heading: "Inter"
+    body: "Inter"
+  assets:
+    logo: ""
+    character: ""
+  voice:
+    formal_casual: 4       # 1=very formal, 10=very casual
+    serious_playful: 3     # 1=dead serious, 10=very playful
+    technical_simple: 7    # 1=ELI5, 10=expert-level
+    confident: 8           # 1=hedging, 10=bold assertions
+    terse: 8               # 1=verbose, 10=extremely concise
 DEFCFG
             echo "Config initialized at $KAI_DIR/config.yaml"
         else
@@ -58,8 +81,9 @@ DEFCFG
         KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
         source "${KAI_ROOT}/lib/find-python.sh"
         "$PYTHON" -c "
-import yaml, sys
-with open('$KAI_DIR/config.yaml') as f:
+import yaml, sys, os
+p = os.path.join(os.path.expanduser('~'), '.kai-marketing', 'config.yaml')
+with open(p) as f:
     cfg = yaml.safe_load(f) or {}
 keys = '${2}'.split('.')
 val = cfg
@@ -73,8 +97,9 @@ print(val)
         KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
         source "${KAI_ROOT}/lib/find-python.sh"
         "$PYTHON" -c "
-import yaml
-with open('$KAI_DIR/config.yaml') as f:
+import yaml, os
+p = os.path.join(os.path.expanduser('~'), '.kai-marketing', 'config.yaml')
+with open(p) as f:
     cfg = yaml.safe_load(f) or {}
 keys = '${2}'.split('.')
 val = '${3}'
@@ -91,7 +116,7 @@ d = cfg
 for k in keys[:-1]:
     d = d.setdefault(k, {})
 d[keys[-1]] = val
-with open('$KAI_DIR/config.yaml', 'w') as f:
+with open(p, 'w') as f:
     yaml.dump(cfg, f, default_flow_style=False)
 print(f'Set {\".\".join(keys)} = {val}')
 " 2>/dev/null || echo "Error: could not set value"

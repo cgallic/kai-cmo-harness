@@ -1,11 +1,11 @@
 ---
 name: kai-marketing
-description: Marketing team as slash commands. 100+ frameworks, quality gates, self-improvement loop, ad management, creative direction, competitive intelligence. Full marketing ops from brief to publish with automated scoring.
+description: Marketing team as slash commands. 35-rule quality gate with taste scoring, Remotion video ad rendering, A/B test tracking with statistical significance, brand system, competitive monitoring, 40 playbooks, 153 knowledge files. Full marketing ops from brief to publish.
 ---
 
 # kai-marketing
 
-A marketing team as slash commands. Drop into any Claude Code project for instant marketing intelligence with quality gates that enforce standards before anything ships.
+A marketing team as slash commands. 16 skills, 35 quality rules (including taste enforcement), Remotion video ad rendering, A/B testing with real statistical significance, and a self-improvement loop that makes content better over time.
 
 ## The Marketing Sprint
 
@@ -17,113 +17,81 @@ A marketing team as slash commands. Drop into any Claude Code project for instan
 
 Each skill reads what the previous one wrote. The system learns from its output.
 
-## Skills — 15 Slash Commands
+## Skills — 16 Slash Commands
 
-### Content Sprint (the core loop)
+### Content Sprint
 
 | Skill | Your Specialist | What They Do |
 |-------|----------------|--------------|
-| `/content-brief` | **CMO** | Generate a strategic brief from (format, site, keyword). Auto-resolves persona, pulls GSC data, generates hooks and angles. |
-| `/content-write` | **Content Director** | Write the piece using the brief, framework rules, persona hooks, and learned patterns from past winners. Quality gate runs automatically. |
-| `/content-gate` | **Quality Assurance** | Score any content against 28+ rules across 4 categories. Auto-retry on failure (max 2). Detailed scorecard with fix suggestions. |
-| `/content-report` | **Analytics Lead** | Pull performance data for published content. GSC position + CTR, GA4 session duration. Grades: winner / average / underperformer. |
-| `/content-retro` | **CMO (Feedback)** | Analyze what worked. Extract winner patterns (n>=5, 15%+ lift). Auto-update learned defaults for next run. |
+| `/content-brief` | **CMO** | Generate 18-field brief from (format, site, keyword). Auto-resolves persona, pulls GSC data. |
+| `/content-write` | **Content Director** | Write using brief + framework + persona + learned patterns. Auto-runs quality gate. |
+| `/content-gate` | **Quality Assurance** | Score against **35 rules in 5 categories** including taste. Auto-retry (max 2). |
+| `/content-report` | **Analytics Lead** | Pull GSC + GA4 performance. Grade: winner / average / underperformer. |
+| `/content-retro` | **CMO (Feedback)** | Extract winner patterns (n>=5, 15%+ lift). Auto-update learned defaults. |
 
 ### Advertising & Creative
 
 | Skill | Your Specialist | What They Do |
 |-------|----------------|--------------|
-| `/ad-copy` | **Ad Manager** | Write platform-compliant ad copy. Loads TOS rules for 9 platforms (Meta, Google, TikTok, LinkedIn, Pinterest, Snapchat, Amazon, X, Microsoft). Shows char counts and format preview. |
-| `/ad-research` | **Competitive Intel** | Research competitor ads via Meta Ad Library, Google Ads Transparency, TikTok Creative Center. Analyze creative patterns, hooks, offers, and longevity. |
-| `/creative-brief` | **Creative Director** | Generate visual concepts, copy variants, video scripts, image specs, and structured A/B test matrices. Platform-aware with exact format specs. |
+| `/ad-copy` | **Ad Manager** | Platform-compliant copy for 9 platforms. TOS loaded. Char counts + preview. |
+| `/ad-research` | **Competitive Intel** | Scrape Meta Ad Library, Google Transparency, TikTok Creative Center. |
+| `/creative-brief` | **Creative Director** | Visual concepts, copy variants, video scripts, A/B test matrices. |
+| `/ad-render` | **Video Producer** | Scaffold Remotion project → render MP4 in vertical/square/landscape. 4 archetypes. |
 
-### Channel Specialists
-
-| Skill | Your Specialist | What They Do |
-|-------|----------------|--------------|
-| `/email-sequence` | **Email Marketer** | Build email nurture flows using lifecycle marketing + perception engineering frameworks. CAN-SPAM compliant. |
-| `/seo-audit` | **SEO Strategist** | Audit any URL against 17-point technical SEO checklist + algorithmic authorship rules. Uses /browse if available. |
-| `/content-ideas` | **Research Lead** | Scrape GSC for keyword opportunities. Cross-reference with personas. Suggest topics ranked by opportunity score. |
-| `/checklist` | **QA Gatekeeper** | Surface the right checklist for any marketing task. 20+ checklists indexed by task type — content, SEO, ads, email, PR, launches, creatives. |
-
-### Pipeline & Operations
+### Channels & Operations
 
 | Skill | Your Specialist | What They Do |
 |-------|----------------|--------------|
-| `/marketing-sprint` | **Full Pipeline** | Run the entire content chain in one command: brief → write → gate → log. Progress updates between steps. The marketing `/ship`. |
-| `/kai-upgrade` | **Self-Updater** | Pull latest version, re-register skills, show changelog. Safe — never touches content state. |
+| `/email-sequence` | **Email Marketer** | Nurture flows with lifecycle + perception engineering. CAN-SPAM compliant. |
+| `/seo-audit` | **SEO Strategist** | 17-point technical audit + algorithmic authorship. Uses /browse if available. |
+| `/content-ideas` | **Research Lead** | GSC keyword gaps × persona matching. Topics ranked by opportunity score. |
+| `/checklist` | **QA Gatekeeper** | 23+ checklists indexed by task type — content, SEO, ads, email, PR, launches. |
+| `/marketing-sprint` | **Full Pipeline** | Brief → write → gate → log in one command. The marketing `/ship`. |
+| `/kai-upgrade` | **Self-Updater** | Pull latest, re-register skills, show changelog. |
 
-## Quality Gates
+## Quality Gate — 35 Rules, 5 Categories
 
-Every piece of content passes automated quality gates before shipping:
+| Category | Rules | What It Checks |
+|----------|:-----:|---------------|
+| **Algorithmic Authorship** | 15 | Clause positioning, verb-first, sentence length, entity naming |
+| **Content Structure** | 9 | Hooks, headings, paragraphs, active voice, AI cliché detection |
+| **Taste** | 6 | Specificity, emotional resonance, originality, hook strength, CTA, proof density |
+| **GEO/AEO Signals** | 4 | Citations, quotations, statistics, technical terms |
+| **Four U's** | 1 | Unique, Useful, Ultra-specific, Urgent (LLM-scored) |
 
-- **28+ scoring rules** across Algorithmic Authorship, GEO/AEO Signals, Content Structure, Four U's, Voice Consistency
-- **Banned word detection** — 50+ instant-reject words (leverage, synergy, innovative...)
-- **AI slop detection** — catches "in conclusion", "it's important to note", "in today's rapidly evolving"
-- **SEO linting** — keyword density, internal links, sentence length, heading structure
-- **Voice consistency** — compares draft against brand voice profile
-- **Platform compliance** — 9 ad network TOS policies (Meta, Google, TikTok, LinkedIn, etc.)
+**Taste rules** (the edge): TS-01 catches vague claims. TS-02 catches flat, clinical language. TS-03 catches AI-generated clichés. TS-04 catches weak openings. TS-05 catches missing CTAs. TS-06 catches claims without proof.
 
-Minimum scores: 12/16 Four U's for long-form, 10/16 for ads/email. Max 2 auto-retries with surgical revision.
+## Operational Tools (Real Code)
 
-## Knowledge Base — 120+ Files
+| Tool | Command |
+|------|---------|
+| **A/B Test Tracker** (statistical significance) | `kai-ab create/record/analyze` |
+| **Scheduled Analytics** (weekly GSC/GA4/Meta pull) | `python -m scripts.analytics.scheduled_pull --all` |
+| **Policy Freshness** (10 platform TOS staleness check) | `python -m scripts.ads.policy_freshness check` |
+| **Competitive Monitor** (website change detection) | `python -m scripts.analytics.competitive_monitor check --all` |
+| **Performance Dashboard** (trends + degradation alerts) | `python -m scripts.analytics.performance_dashboard weekly` |
+| **Remotion Video Ads** (scaffold + render) | `kai-render scaffold --archetype problem-agitation` |
+| **Brand System** (design tokens in config) | `kai-config set brand.colors.primary "#6366f1"` |
 
-### Frameworks (30+)
-- **Algorithmic Authorship** — reverse-engineered from Google AI Overviews selection patterns
-- **AEO/AI Search** — Answer Engine Optimization for ChatGPT, Perplexity, Google AI Mode
-- **Perception Engineering** — cognitive persuasion for sales pages and landing pages
-- **Meta Advertising** — Andromeda, GEM, Lattice, Breakdown Effect deep dives
-- **Headline Formulas** — proven headline patterns for any content type
+## Knowledge Base — 153 Files
 
-### Channels (11)
-- Blog, LinkedIn, Email, Press, TikTok, TikTok Shop, Meta Ads, Paid Acquisition, SEO, Podcast
-
-### Playbooks (12+)
-- Ad Creative Best Practices — copy formulas, testing framework, format specs
-- Ad Campaign Management — structure, audiences, optimization cadence, scaling
-- Social Media Strategy — LinkedIn, Instagram, X, TikTok, YouTube
-- Video Content Creation — scripts, production, editing, repurposing
-- Product Launch Playbook — pre-launch, launch day, post-launch optimization
-- Influencer Marketing — tiers, briefs, contracts, ROI measurement
-- PR & Communications — pitching, media lists, thought leadership, crisis comms
-- Semantic SEO Methodology — topical maps, quality/trending nodes
-- Local SEO/GBP Optimization — proximity, naming, multi-location
-- Landing Page Messaging — 7-phase workflow
-- Content Publication Velocity — briefs, velocity monitoring
-
-### Checklists (20+)
-- Content, SEO, Technical SEO, Meta Ads, Paid Acquisition, TikTok, Email, PR, Landing Page, Perception Engineering, Fintech Design, Patent Research, Business Model, 2026 Readiness, Ad Launch, Creative Production
-
-### Personas (8)
-- Competent Cog, Shock Absorber, Ghosted Applicant, Subscription Serf, System Manager, Admin Martyr, Obsolescence Anxious, Credibility Fighter
-
-### Ad Platform Policies (12)
-- Google, Meta, TikTok, LinkedIn, Microsoft/Bing, Pinterest, Snapchat, Amazon, X/Twitter
-- Cross-platform: FTC, GDPR, CAN-SPAM, COPPA, CCPA, Click-to-Cancel
+- **40 playbooks** — ads, CRO, pricing, retention, growth loops, ABM, demand gen, launches, budgeting, and more
+- **24 frameworks** — algorithmic authorship, AEO, perception engineering, 50 copywriting formulas, loop mechanics
+- **23 checklists** — content, SEO, Google Ads, LinkedIn Ads, CRO, website launch, social audit, creative production
+- **16 channel guides** — blog, LinkedIn, email, TikTok, Meta, YouTube, Instagram, X, affiliate, community, newsletter, podcast
+- **12 ad policies** — Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X + FTC/GDPR
+- **8 personas** — with pain points, hooks, and voice profiles
 
 ## Quick Start
 
 ```bash
-# Generate a content brief
-/content-brief blog mysite "target keyword"
-
-# Write the content (reads the brief automatically)
-/content-write
-
-# Score it against quality gates
-/content-gate
-
-# Research competitor ads
-/ad-research "CompetitorName" meta
-
-# Generate ad creative with compliance check
-/ad-copy meta mysite "free trial offer"
-
-# Full pipeline in one command
-/marketing-sprint blog mysite "target keyword"
-
-# Find the right checklist for any task
-/checklist launch meta ads
+/content-brief blog mysite "target keyword"     # Generate strategic brief
+/content-write                                   # Write + auto-gate
+/content-gate                                    # Detailed 35-rule scorecard
+/ad-copy meta mysite "free trial"                # Platform-compliant ad copy
+/ad-render problem-agitation                     # Scaffold Remotion video ad
+/marketing-sprint blog mysite "target keyword"   # Full pipeline, one command
+/checklist launch meta ads                       # Right checklist for any task
 ```
 
 ## Self-Improvement Loop
@@ -134,8 +102,6 @@ The system learns from its own output:
 3. Weekly → winner patterns extracted (hook types, formats, personas that work)
 4. Patterns above threshold (n>=5, 15%+ lift) → promoted to learned defaults
 5. Next content run reads updated defaults → quality improves over time
-
-No manual tuning required. The system gets better the more you use it.
 
 ## Install
 
@@ -148,6 +114,6 @@ Then add to your project's CLAUDE.md:
 ```
 ## kai-marketing
 Available skills: /content-brief, /content-write, /content-gate, /content-report,
-/content-retro, /ad-copy, /ad-research, /creative-brief, /email-sequence,
+/content-retro, /ad-copy, /ad-research, /creative-brief, /ad-render, /email-sequence,
 /seo-audit, /content-ideas, /checklist, /marketing-sprint, /kai-upgrade
 ```

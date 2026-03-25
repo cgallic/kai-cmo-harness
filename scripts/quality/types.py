@@ -21,6 +21,7 @@ class Category(str, Enum):
     GEO_SIGNALS = "GEO/AEO Signals"
     CONTENT_STRUCTURE = "Content Structure"
     FOUR_US = "Four U's"
+    TASTE = "Taste"
 
 
 @dataclass

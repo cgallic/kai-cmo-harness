@@ -85,6 +85,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `channels/x-twitter.md` | **X/Twitter** — threads, hot takes, growth via replies, Spaces, ad formats, content calendar |
 | `channels/affiliate-referral.md` | **Affiliate & referral** — program structure, tiers, recruitment, tracking, fraud prevention, referral loops |
 | `channels/community-building.md` | **Community** — Discord/Slack/FB Groups, growth stages, engagement rituals, community-led growth, moderation |
+| `channels/newsletter-strategy.md` | **Newsletter** — Platform selection (beehiiv vs Substack vs Ghost), growth tactics by phase, content formats, monetization (sponsors, paid, affiliate, boosts), retention |
 | `channels/podcast.md` | Setting up podcast equipment, studio setup, recording workflow |
 
 ---
@@ -144,6 +145,18 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/marketing-by-stage.md` | **Marketing by stage** - Pre-launch, early ($0-10K), growth ($10K-100K), scale ($100K+) playbooks with channel selection, budgets, team structure, common mistakes |
 | `playbooks/seo-link-building.md` | **Link building** - 7 ethical tactics (data/PR, guest posts, broken links, HARO, resource pages), monthly calendar, quality metrics, what to avoid |
 | `playbooks/technical-marketing-tracking.md` | **Technical marketing** - Tracking stack (data layer, GTM, pixels), platform setup (Meta/Google/LinkedIn/TikTok), consent management, UTMs, debugging guide |
+| `playbooks/content-repurposing.md` | **Content repurposing** - Pillar-to-platform system, extraction matrix (1 pillar → 20-25 assets), platform adaptation rules, weekly workflow, automation tools |
+| `playbooks/competitive-intelligence.md` | **Competitive intelligence** - 5 intelligence layers, signal monitoring, product/pricing/positioning analysis, sales battlecard template, CI calendar |
+| `playbooks/saas-metrics-guide.md` | **SaaS metrics** - MRR waterfall, NRR, churn benchmarks by segment, cohort analysis, CAC/LTV, Rule of 40, Magic Number, diagnostic framework |
+| `playbooks/demand-generation.md` | **Demand generation** - Create vs capture demand, multi-touch campaign framework, lead scoring, channel playbooks, MQL→SQL pipeline metrics |
+| `playbooks/account-based-marketing.md` | **ABM** - 3 tiers (one-to-one/few/many), account dossier template, multi-channel orchestration, engagement scoring, sales alignment SLA |
+| `playbooks/partnership-comarketing.md` | **Partnerships** - Partner types, fit matrix, co-marketing campaigns, integration levels, outreach templates, ROI measurement |
+| `playbooks/customer-retention.md` | **Customer retention** - 8-layer retention stack, dunning/payment recovery, onboarding, health scoring, churn analysis, expansion levers, cancellation flow |
+| `playbooks/event-webinar-marketing.md` | **Events & webinars** - Webinar production (4-week timeline), promotion, day-of execution, post-event follow-up, virtual summit playbook, platform selection |
+| `playbooks/ecommerce-marketing.md` | **E-commerce** - Acquisition channels, product page CRO, cart recovery, email flows (7 automated), AOV growth, seasonal calendar, BFCM prep |
+| `playbooks/marketing-budget-forecasting.md` | **Budgeting** - Benchmarks by stage, 70/20/10 allocation, revenue forecasting, pipeline math, ROI by channel, budget defense framework |
+| `playbooks/seo-internal-linking.md` | **Internal linking** - Hub-and-spoke model, anchor text rules, link placement priority, orphan page detection, link equity flow, monthly audit |
+| `playbooks/podcast-marketing.md` | **Podcast marketing** - Strategy, guest acquisition, production workflow, distribution, growth tactics by phase, monetization, repurposing (1 episode → 20-30 pieces) |
 
 ---
 
@@ -238,13 +251,26 @@ Original source files preserved in `archive/` for reference.
 | **Technical marketing / tracking** | `playbooks/technical-marketing-tracking.md` | `playbooks/analytics-attribution.md` |
 | **Retargeting / remarketing** | `playbooks/retargeting-remarketing.md` | `playbooks/ad-campaign-management.md` |
 | **Marketing automation** | `playbooks/marketing-automation.md` | `channels/email-lifecycle.md` |
+| **Content repurposing** | `playbooks/content-repurposing.md` | `playbooks/video-content-creation.md` |
+| **Newsletter / Substack** | `channels/newsletter-strategy.md` | `channels/email-lifecycle.md` |
+| **Competitive intelligence** | `playbooks/competitive-intelligence.md` | Use `/ad-research` for ad-specific CI |
+| **SaaS metrics / unit economics** | `playbooks/saas-metrics-guide.md` | `playbooks/analytics-attribution.md` |
+| **Demand generation (B2B)** | `playbooks/demand-generation.md` | `playbooks/marketing-automation.md` |
+| **Account-based marketing (ABM)** | `playbooks/account-based-marketing.md` | `playbooks/demand-generation.md` |
+| **Partnerships / co-marketing** | `playbooks/partnership-comarketing.md` | `channels/affiliate-referral.md` |
 | **2026 strategic planning** | `playbooks/2026-marketing-playbook.md` | - |
 | **B2B SaaS marketing** | `playbooks/business-model-marketing.md` | `channels/paid-acquisition.md` |
 | **DTC marketing** | `playbooks/business-model-marketing.md` | `channels/email-lifecycle.md` |
 | **Fintech marketing** | `playbooks/business-model-marketing.md` | `design/b2c-fintech-design.md` |
 | **Crypto/Web3 marketing** | `playbooks/business-model-marketing.md` | - |
 | **Marketplace marketing** | `playbooks/business-model-marketing.md` | - |
-| **Podcast setup** | `channels/podcast.md` | - |
+| **Podcast setup (equipment)** | `channels/podcast.md` | - |
+| **Podcast marketing strategy** | `playbooks/podcast-marketing.md` | `playbooks/content-repurposing.md` |
+| **Customer retention / churn** | `playbooks/customer-retention.md` | `playbooks/saas-metrics-guide.md` |
+| **Webinar / event marketing** | `playbooks/event-webinar-marketing.md` | `playbooks/demand-generation.md` |
+| **E-commerce marketing** | `playbooks/ecommerce-marketing.md` | `playbooks/ad-campaign-management.md` |
+| **Marketing budget / forecasting** | `playbooks/marketing-budget-forecasting.md` | `playbooks/analytics-attribution.md` |
+| **SEO internal linking** | `playbooks/seo-internal-linking.md` | `playbooks/seo-link-building.md` |
 
 ### By Goal
 
