@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# kai-report — Pull performance data for published content.
+# Usage: kai-report --all              (check all pending 30-day reviews)
+# Usage: kai-report --site kaicalls    (check one site)
+# Usage: kai-report --format json      (JSON output)
+set -euo pipefail
+
+KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+export PYTHONPATH="${KAI_ROOT}:${PYTHONPATH:-}"
+
+source "${KAI_ROOT}/lib/find-python.sh"
+exec "$PYTHON" "${KAI_ROOT}/scripts/content/report_cli.py" "$@"

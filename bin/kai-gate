@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# kai-gate — Run quality gate on any content file.
+# Usage: kai-gate <file> [--policy <policy>] [--format json|terminal|markdown]
+# Usage: kai-gate --list                    (list pending proposals)
+# Usage: kai-gate --approve <proposal-id>   (approve a proposal)
+set -euo pipefail
+
+KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+
+# Ensure Python can find the scripts package
+export PYTHONPATH="${KAI_ROOT}:${PYTHONPATH:-}"
+
+source "${KAI_ROOT}/lib/find-python.sh"
+exec "$PYTHON" -m scripts.quality "$@"

@@ -1,6 +1,6 @@
-# Koray Content Brief Checklist
+# SEO Expert Content Brief Checklist
 
-A comprehensive checklist for creating SEO-optimized content briefs, extracted from Koray Tugberk Gubur's consulting methodology. Covers anchor text strategy, internal linking, PDF briefs, heading structure, and uniqueness requirements.
+A comprehensive checklist for creating SEO-optimized content briefs, extracted from SEO Expert's consulting methodology. Covers anchor text strategy, internal linking, PDF briefs, heading structure, and uniqueness requirements.
 
 ---
 
@@ -235,4 +235,4 @@ A comprehensive checklist for creating SEO-optimized content briefs, extracted f
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Sessions, 2025*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Sessions, 2025*

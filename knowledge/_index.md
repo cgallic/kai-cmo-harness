@@ -22,14 +22,15 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | File | Use When |
 |------|----------|
 | `algorithmic-authorship.md` | Writing SEO content, Featured Snippets, AI Overviews |
-| `koray-writing-rules.md` | **Koray's algorithmic authorship rules** - C4/Wikipedia derived, hypernym/hyponym, 60% uniqueness |
+| `SEO Expert-writing-rules.md` | **SEO Expert's algorithmic authorship rules** - C4/Wikipedia derived, hypernym/hyponym, 60% uniqueness |
 | `perception-engineering.md` | Writing persuasive copy, handling objections, sales pages |
 | `perception-engineering-advanced.md` | Deep persuasion strategy, cognitive mechanisms |
 | `headline-formulas.md` | Creating headlines for any content type |
 | `four-us-framework.md` | Evaluating content quality (Unique, Useful, Ultra-specific, Urgent) |
 | `qdp-qdh-qds-content-architecture.md` | URL structure decisions, page vs heading vs sentence |
+| `copywriting-formulas.md` | **50 copywriting formulas** — PAS, AIDA, BAB, 4Ps, FAB, future pacing, objection preempt, risk reversal, 15 headline formulas, 10 CTA formulas, 5 subject line formulas |
 
-### Koray SEO Methodology (`frameworks/`)
+### SEO Expert SEO Methodology (`frameworks/`)
 
 | File | Use When |
 |------|----------|
@@ -79,6 +80,11 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `channels/seo-content.md` | Optimizing content for search rankings |
 | `channels/email-lifecycle.md` | Email sequences, automation, deliverability, lifecycle marketing |
 | `channels/paid-acquisition.md` | Paid media strategy, CAC optimization, platform playbooks |
+| `channels/youtube.md` | **YouTube** — channel strategy, SEO, script structure, retention tactics, Shorts, YouTube Ads, analytics |
+| `channels/instagram.md` | **Instagram** — Reels, carousels, stories, SEO, DM sales, growth tactics, ad placements, metrics |
+| `channels/x-twitter.md` | **X/Twitter** — threads, hot takes, growth via replies, Spaces, ad formats, content calendar |
+| `channels/affiliate-referral.md` | **Affiliate & referral** — program structure, tiers, recruitment, tracking, fraud prevention, referral loops |
+| `channels/community-building.md` | **Community** — Discord/Slack/FB Groups, growth stages, engagement rituals, community-led growth, moderation |
 | `channels/podcast.md` | Setting up podcast equipment, studio setup, recording workflow |
 
 ---
@@ -112,7 +118,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 | File | Use When |
 |------|----------|
-| `playbooks/koray-semantic-seo-methodology.md` | **Koray's full SEO system** - Quality/Trending nodes, Topical Maps, Author sections, Topical Entry Grid |
+| `playbooks/SEO Expert-semantic-seo-methodology.md` | **SEO Expert's full SEO system** - Quality/Trending nodes, Topical Maps, Author sections, Topical Entry Grid |
 | `playbooks/local-seo-gbp-optimization.md` | **Local SEO/GBP** - City center proximity, naming conventions, virtual offices, multi-location |
 | `playbooks/surround-sound-llm-manipulation.md` | **LLM manipulation** - EMD strategy, multi-domain consensus, podcasts, e-books, Reddit/Quora |
 | `playbooks/content-publication-velocity.md` | **Publication workflow** - Content briefs, velocity monitoring, segment completion, cross-linking |
@@ -120,6 +126,24 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/2026-marketing-playbook.md` | FY2026 strategic planning, AI/privacy shifts, board-level risk assessment |
 | `playbooks/business-model-marketing.md` | Marketing strategy by business model (B2B SaaS, DTC, Fintech, Crypto, Marketplace) |
 | `playbooks/video-clipping-automation-workflow.md` | Automated video clipping and multi-platform posting with OpusClip + Repurpose.io |
+| `playbooks/ad-creative-best-practices.md` | **Ad creatives** - Copy formulas (PAS, AIDA, BAB), testing framework (3x3 matrix), platform format specs, budget/bidding, creative fatigue signals |
+| `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
+| `playbooks/social-media-strategy.md` | **Organic social** - LinkedIn, Instagram, X/Twitter, TikTok, YouTube best practices, content pillars, calendar template, platform benchmarks |
+| `playbooks/video-content-creation.md` | **Video production** - Short-form scripts (15/30/60s), long-form structure, testimonials, production tiers, editing rules, repurposing framework |
+| `playbooks/launch-playbook.md` | **Product launches** - Pre-launch (4 weeks), launch day hour-by-hour, post-launch optimization, crisis playbook |
+| `playbooks/influencer-marketing.md` | **Influencer/UGC** - Tiers (nano→mega), campaign types, creator briefs, contracts, FTC compliance, ROI measurement |
+| `playbooks/pr-comms-strategy.md` | **PR & comms** - PESO model, pitch framework, media list building, thought leadership calendar, crisis communications |
+| `playbooks/conversion-rate-optimization.md` | **CRO** - 5-layer optimization stack, form optimization, A/B testing methodology, CTA best practices, quick-win checklist |
+| `playbooks/analytics-attribution.md` | **Analytics** - UTM standards, attribution models, GA4 setup, dashboard templates, blended CAC, reporting cadence |
+| `playbooks/retargeting-remarketing.md` | **Retargeting** - Funnel segmentation, Meta/Google/email setup, creative strategy by segment, budget allocation, incrementality testing |
+| `playbooks/marketing-automation.md` | **Marketing automation** - 6 essential workflows (welcome, nurture, abandoned, re-engagement, post-purchase, event), lead scoring, segmentation, tool selection |
+| `playbooks/growth-loops-applied.md` | **Growth loops** - 6 loop archetypes (viral, invitation, content/SEO, paid, PLG hybrid, community), loop design methodology, K-factor measurement, false loop detection |
+| `playbooks/brand-positioning.md` | **Brand positioning** - Positioning statement formula, JTBD framework, value proposition canvas, messaging matrix, competitive differentiation, voice definition |
+| `playbooks/pricing-strategy.md` | **Pricing** - 9 pricing psychology principles, 3-tier packaging model, feature gating, value metrics, pricing page best practices, competitive pricing |
+| `playbooks/customer-journey-mapping.md` | **Customer journey** - 6-stage journey map, content-to-stage mapping, funnel diagnostics, stage transition signals, journey optimization checklist |
+| `playbooks/marketing-by-stage.md` | **Marketing by stage** - Pre-launch, early ($0-10K), growth ($10K-100K), scale ($100K+) playbooks with channel selection, budgets, team structure, common mistakes |
+| `playbooks/seo-link-building.md` | **Link building** - 7 ethical tactics (data/PR, guest posts, broken links, HARO, resource pages), monthly calendar, quality metrics, what to avoid |
+| `playbooks/technical-marketing-tracking.md` | **Technical marketing** - Tracking stack (data layer, GTM, pixels), platform setup (Meta/Google/LinkedIn/TikTok), consent management, UTMs, debugging guide |
 
 ---
 
@@ -127,7 +151,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 | File | Use When |
 |------|----------|
-| `checklists/koray-technical-seo-checklist.md` | **Security hardening** - htaccess, CSP, query parameters, hack recovery |
+| `checklists/SEO Expert-technical-seo-checklist.md` | **Security hardening** - htaccess, CSP, query parameters, hack recovery |
 | `checklists/content-brief-checklist.md` | **Content brief creation** - Components, anchor strategy, PDF guidelines |
 | `checklists/patent-research-checklist.md` | **Google patent research** - Key engineers, SEO Patent Reader GPT, methodology |
 | `checklists/content-checklist.md` | Final review before publishing content |
@@ -143,6 +167,13 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `checklists/2026-readiness-checklist.md` | FY2026 infrastructure and strategy readiness |
 | `checklists/business-model-checklist.md` | Business model-specific marketing validation |
 | `checklists/landing-page-messaging-checklist.md` | Landing page messaging workflow validation (companion to playbook) |
+| `checklists/ad-launch-checklist.md` | **Ad launch** - Strategy, creative, compliance, tracking, landing page, optimization cadence, kill criteria |
+| `checklists/creative-production-checklist.md` | **Creative production** - Image, video, carousel checklists with platform specs and quality gates |
+| `checklists/website-launch-checklist.md` | **Website launch** - Pre-launch (content, SEO, technical, conversion, security), launch day, post-launch, migration-specific |
+| `checklists/social-media-audit-checklist.md` | **Social media audit** - Profile, content, audience audit per platform + competitive analysis + strategy gaps |
+| `checklists/cro-audit-checklist.md` | **CRO audit** - Technical, above-fold, trust, forms, content, navigation scoring (1-5 per section, /30 total) |
+| `checklists/google-ads-launch-checklist.md` | **Google Ads** - Account setup, Search/PMax/Display/YouTube config, keywords, ad copy, extensions, landing page, post-launch |
+| `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
 
 ---
 
@@ -178,15 +209,35 @@ Original source files preserved in `archive/` for reference.
 | **Meta/Facebook ads** | `channels/meta-advertising.md` | `frameworks/meta-advertising/` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |
 | **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` | `checklists/seo-checklist.md` |
-| **Technical SEO security** | `checklists/koray-technical-seo-checklist.md` | - |
+| **Technical SEO security** | `checklists/SEO Expert-technical-seo-checklist.md` | - |
 | **Local SEO/GBP** | `playbooks/local-seo-gbp-optimization.md` | - |
-| **Topical map creation** | `playbooks/koray-semantic-seo-methodology.md` | - |
+| **Topical map creation** | `playbooks/SEO Expert-semantic-seo-methodology.md` | - |
 | **LLM/ChatGPT visibility** | `playbooks/surround-sound-llm-manipulation.md` | `frameworks/aeo-ai-search/llm-citation-tracking.md` |
 | **Content brief creation** | `checklists/content-brief-checklist.md` | `playbooks/content-publication-velocity.md` |
 | **Patent research** | `checklists/patent-research-checklist.md` | - |
 | **Header/footer design** | `frameworks/dynamic-header-footer-design.md` | - |
 | **News/trending pages** | `frameworks/trending-nodes-news-pages.md` | - |
 | **Image optimization** | `frameworks/image-optimization-indexation.md` | - |
+| **Ad creative production** | `playbooks/ad-creative-best-practices.md` | `checklists/creative-production-checklist.md` |
+| **Ad campaign setup** | `playbooks/ad-campaign-management.md` | `checklists/ad-launch-checklist.md` |
+| **Ad creative testing** | `playbooks/ad-creative-best-practices.md` | `playbooks/ad-campaign-management.md` |
+| **Competitor ad analysis** | Use `/ad-research` skill | `playbooks/ad-creative-best-practices.md` |
+| **Social media strategy** | `playbooks/social-media-strategy.md` | platform-specific channel guide |
+| **Video content** | `playbooks/video-content-creation.md` | `playbooks/video-clipping-automation-workflow.md` |
+| **Product launch** | `playbooks/launch-playbook.md` | `playbooks/ad-campaign-management.md` |
+| **Influencer marketing** | `playbooks/influencer-marketing.md` | `playbooks/social-media-strategy.md` |
+| **PR / media outreach** | `playbooks/pr-comms-strategy.md` | `channels/press-releases.md` |
+| **Crisis communications** | `playbooks/pr-comms-strategy.md` (crisis section) | - |
+| **Growth loops / viral mechanics** | `playbooks/growth-loops-applied.md` | `frameworks/content-copywriting/loop-mechanics.md` |
+| **Brand positioning** | `playbooks/brand-positioning.md` | `playbooks/business-model-marketing.md` |
+| **Pricing strategy** | `playbooks/pricing-strategy.md` | `playbooks/conversion-rate-optimization.md` |
+| **Customer journey mapping** | `playbooks/customer-journey-mapping.md` | `playbooks/analytics-attribution.md` |
+| **CRO / conversion optimization** | `playbooks/conversion-rate-optimization.md` | `checklists/cro-audit-checklist.md` |
+| **Marketing by company stage** | `playbooks/marketing-by-stage.md` | `playbooks/launch-playbook.md` |
+| **SEO link building** | `playbooks/seo-link-building.md` | `playbooks/pr-comms-strategy.md` |
+| **Technical marketing / tracking** | `playbooks/technical-marketing-tracking.md` | `playbooks/analytics-attribution.md` |
+| **Retargeting / remarketing** | `playbooks/retargeting-remarketing.md` | `playbooks/ad-campaign-management.md` |
+| **Marketing automation** | `playbooks/marketing-automation.md` | `channels/email-lifecycle.md` |
 | **2026 strategic planning** | `playbooks/2026-marketing-playbook.md` | - |
 | **B2B SaaS marketing** | `playbooks/business-model-marketing.md` | `channels/paid-acquisition.md` |
 | **DTC marketing** | `playbooks/business-model-marketing.md` | `channels/email-lifecycle.md` |

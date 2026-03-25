@@ -1,6 +1,6 @@
-# Koray Technical SEO Security Checklist
+# SEO Expert Technical SEO Security Checklist
 
-A comprehensive technical SEO security checklist extracted from Koray Tugberk Gubur's consulting sessions. This checklist focuses on preventing hacks, securing WordPress installations, and handling recovery from security breaches.
+A comprehensive technical SEO security checklist extracted from SEO Expert's consulting sessions. This checklist focuses on preventing hacks, securing WordPress installations, and handling recovery from security breaches.
 
 ---
 
@@ -167,4 +167,4 @@ A comprehensive technical SEO security checklist extracted from Koray Tugberk Gu
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Sessions, 2025*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Sessions, 2025*

@@ -1,6 +1,6 @@
 # Local SEO & Google Business Profile Optimization
 
-A comprehensive playbook for local SEO dominance based on Koray Tugberk Gubur's consulting methodology. Covers GBP optimization, multi-location strategies, and cross-platform local presence.
+A comprehensive playbook for local SEO dominance based on SEO Expert's consulting methodology. Covers GBP optimization, multi-location strategies, and cross-platform local presence.
 
 ---
 
@@ -430,4 +430,4 @@ Create separate pages when:
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Transcripts*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Transcripts*

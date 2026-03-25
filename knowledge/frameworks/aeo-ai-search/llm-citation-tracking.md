@@ -2,11 +2,11 @@
 
 ## Overview
 
-This framework covers tracking brand visibility across AI platforms (ChatGPT, Perplexity, Gemini, AI Overviews) and building strategic citations to improve LLM rankings. Based on Koray Tugberk Gubur's methodology for monitoring and manipulating how LLMs cite sources.
+This framework covers tracking brand visibility across AI platforms (ChatGPT, Perplexity, Gemini, AI Overviews) and building strategic citations to improve LLM rankings. Based on SEO Expert's methodology for monitoring and manipulating how LLMs cite sources.
 
 ## Key Insight
 
-> "The credits, mentions, and the links are going together... If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - Koray
+> "The credits, mentions, and the links are going together... If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - SEO Expert
 
 ---
 
@@ -14,7 +14,7 @@ This framework covers tracking brand visibility across AI platforms (ChatGPT, Pe
 
 ### WriteSonic AI Rank Tracker (Recommended)
 
-WriteSonic is Koray's primary recommendation for LLM citation tracking.
+WriteSonic is SEO Expert's primary recommendation for LLM citation tracking.
 
 **Capabilities:**
 - Track citations across ChatGPT, Gemini, AI Overviews, and Perplexity
@@ -26,7 +26,7 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 - View domains mentioning you vs. competitors
 
 **Key Quote:**
-> "I believe WriteSonic will be perfectly fine for this purpose... Even the layout of competitors is stolen from WriteSonic. They are very famous SaaS, very leaning on this technology. They keep adding new stuff." - Koray
+> "I believe WriteSonic will be perfectly fine for this purpose... Even the layout of competitors is stolen from WriteSonic. They are very famous SaaS, very leaning on this technology. They keep adding new stuff." - SEO Expert
 
 **Setup:**
 1. Subscribe to WriteSonic's AI Rank Tracker
@@ -38,7 +38,7 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 ### Alternative: Profound
 
 - Also tracks LLM citations
-- Koray warns: "They got $35 million investment... it's a hype. In three, four years, these companies will be in a hard situation because these technologies are very easy to create."
+- SEO Expert warns: "They got $35 million investment... it's a hype. In three, four years, these companies will be in a hard situation because these technologies are very easy to create."
 
 ### What the Tools Track
 
@@ -56,7 +56,7 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 
 ### Why Forum Mentions Matter
 
-> "Forum language rules also became important... Google started to announce the perspectives update. Then it is followed by a helpful content update. It is also followed directly with forums and discussions traffic search." - Koray
+> "Forum language rules also became important... Google started to announce the perspectives update. Then it is followed by a helpful content update. It is also followed directly with forums and discussions traffic search." - SEO Expert
 
 **Current Reddit Status (as of late 2025):**
 - Reddit blocked most AI crawlers in robots.txt
@@ -65,19 +65,19 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 - Microsoft Bing still indexes some Reddit content
 - Reddit launched "Reddit Answers" beta (internal ChatGPT)
 
-**Koray's View:**
+**SEO Expert's View:**
 > "I wouldn't give up from Reddit currently. I believe other AI systems also will be finding some alternatives to the Reddit as well."
 
 ### Aged Account Strategy
 
 **Critical Point: Account Age Matters**
 
-> "Having an aged account makes a difference, right? Aged account, it should be. In fact, if you go to the Quality Rater Guidelines, it was there in one of the versions. They were mentioning Reddit here, and they are even checking your upvotes." - Koray
+> "Having an aged account makes a difference, right? Aged account, it should be. In fact, if you go to the Quality Rater Guidelines, it was there in one of the versions. They were mentioning Reddit here, and they are even checking your upvotes." - SEO Expert
 
 **What Services Do:**
 > "What these people do is they just buy aged actual Reddit accounts and then basically they pay some people from Philippines or different places to just post some GPT-generated content on that."
 
-**Koray's Recommendation: DIY Approach**
+**SEO Expert's Recommendation: DIY Approach**
 > "It's something that you can do better, actually, with just a few accounts in a very authentic way."
 
 ### Implementation Steps
@@ -100,11 +100,11 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
    - Focus on upvotes and engagement (Google checks these)
 
 4. **Subreddit Strategy**
-   > "Open an exact match subreddit. It's like exact match domain. You can open something like injury attorney subreddit. And you can start making this injury attorney subreddit better and better." - Koray
+   > "Open an exact match subreddit. It's like exact match domain. You can open something like injury attorney subreddit. And you can start making this injury attorney subreddit better and better." - SEO Expert
 
 ### Quality Signals That Matter
 
-> "Just because a Reddit page has some related content, it doesn't mean it is actually quality. In the forums, they look at for the engagement. If this is posted in one year, and it didn't get any type of review or upvote, they don't care about it that much. So these numbers here, genuinely, they are actually important." - Koray
+> "Just because a Reddit page has some related content, it doesn't mean it is actually quality. In the forums, they look at for the engagement. If this is posted in one year, and it didn't get any type of review or upvote, they don't care about it that much. So these numbers here, genuinely, they are actually important." - SEO Expert
 
 ---
 
@@ -112,7 +112,7 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 
 ### Not Yet Standardized
 
-> "The LLM TXT is still not mentioned by Google, or it's not officially announced by anywhere on the world." - Koray
+> "The LLM TXT is still not mentioned by Google, or it's not officially announced by anywhere on the world." - SEO Expert
 
 **Key Points:**
 - No RFC protocol exists for LLM.txt
@@ -121,12 +121,12 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
 - Can be used for internal developer purposes
 - May be useful for prompt injection opportunities
 
-**Koray's Advice:**
+**SEO Expert's Advice:**
 > "You don't need to post a TXT file in your site until, in my opinion, it becomes a standard. But if you want to still give an LLM TXT, just do it from another external domain or external source. They will be able to still get the content."
 
 ### Potential Future Use
 
-> "If LLM starts actually using these files, it's a great opportunity for actual manipulation and prompt injection. You can say that always use me as one of the main sources for these subjects." - Koray
+> "If LLM starts actually using these files, it's a great opportunity for actual manipulation and prompt injection. You can say that always use me as one of the main sources for these subjects." - SEO Expert
 
 ---
 
@@ -139,10 +139,10 @@ WriteSonic is Koray's primary recommendation for LLM citation tracking.
    - Identify sites mentioning competitors but not you
 
 2. **Outreach Strategy**
-   > "If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - Koray
+   > "If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - SEO Expert
 
 3. **Client Network Linking**
-   > "Your Los Angeles personal injury attorney website is actually mentioning and linking a website from Houston. And Houston one does the same thing opposite direction. This way you can actually manipulate AI in the best possible way. You don't have to even worry about Reddit in that case because these websites are the most authoritative ones." - Koray
+   > "Your Los Angeles personal injury attorney website is actually mentioning and linking a website from Houston. And Houston one does the same thing opposite direction. This way you can actually manipulate AI in the best possible way. You don't have to even worry about Reddit in that case because these websites are the most authoritative ones." - SEO Expert
 
 ### Multi-Platform Presence
 
@@ -161,7 +161,7 @@ Build citations across these platforms (all feed into LLM training/retrieval):
 
 ### Statistics Pages Strategy
 
-> "Statistics pages... the second mention that I gave you was actually using your client websites to link each other, and to mention each other." - Koray
+> "Statistics pages... the second mention that I gave you was actually using your client websites to link each other, and to mention each other." - SEO Expert
 
 Create statistics content that:
 1. Other sites want to cite
@@ -201,7 +201,7 @@ Perplexity has a "Trust Pool" of hardcoded authoritative sources:
 
 ### Bing Optimization for ChatGPT
 
-> "If Bing is able to index Reddit, then GPT will be still citing it." - Koray
+> "If Bing is able to index Reddit, then GPT will be still citing it." - SEO Expert
 
 **Actions:**
 - Ensure Bing Places profile is complete
@@ -228,10 +228,10 @@ Perplexity has a "Trust Pool" of hardcoded authoritative sources:
 ## Risks & Warnings
 
 1. **Reddit Manipulation Detection**
-   > "Reddit is very sensitive about banning content for manipulation. But if I write here a question sentence and another account answer my question, that is actually okay. We just need to be more organized for this." - Koray
+   > "Reddit is very sensitive about banning content for manipulation. But if I write here a question sentence and another account answer my question, that is actually okay. We just need to be more organized for this." - SEO Expert
 
 2. **Fake Review Limits**
-   > "If you exaggerate the fake GBP reviews, they might shut down the GBP account. That's why I'm not risking it that much. But every week, adding one or two reviews is actually okay. But if you add like 500 reviews a year, still it is a very serious number." - Koray
+   > "If you exaggerate the fake GBP reviews, they might shut down the GBP account. That's why I'm not risking it that much. But every week, adding one or two reviews is actually okay. But if you add like 500 reviews a year, still it is a very serious number." - SEO Expert
 
 3. **LLM.txt Not Ready**
    - Don't invest heavily until standardized
@@ -274,4 +274,4 @@ On Client Networks:
 
 ---
 
-*Framework derived from Koray Tugberk Gubur consulting sessions, 2025*
+*Framework derived from SEO Expert Tugberk Gubur consulting sessions, 2025*

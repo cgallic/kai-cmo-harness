@@ -1,6 +1,6 @@
-# Koray Writing Rules Framework
+# SEO Expert Writing Rules Framework
 
-A comprehensive framework for optimizing content for search engines and LLMs, derived from Koray Tugberk Gubur's algorithmic authorship methodology.
+A comprehensive framework for optimizing content for search engines and LLMs, derived from SEO Expert's algorithmic authorship methodology.
 
 ## Overview
 
@@ -234,7 +234,7 @@ For legal or professional content, maintain legal terminology:
 
 ---
 
-## Key Koray Quotes
+## Key SEO Expert Quotes
 
 > "My algorithmic authorship rules actually started from the basic rules of Wikipedia, but not on purpose, because I have seen that Stephen Baker was using this data set for formulating entire information extraction rules."
 

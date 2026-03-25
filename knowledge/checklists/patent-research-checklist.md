@@ -1,6 +1,6 @@
-# Koray Patent Research Checklist
+# SEO Expert Patent Research Checklist
 
-A comprehensive guide to researching Google patents for SEO insights, extracted from Koray Tugberk Gubur's consulting methodology. Includes key engineers to follow, patent analysis workflow, and understanding core ranking concepts.
+A comprehensive guide to researching Google patents for SEO insights, extracted from SEO Expert's consulting methodology. Includes key engineers to follow, patent analysis workflow, and understanding core ranking concepts.
 
 ---
 
@@ -105,7 +105,7 @@ A comprehensive guide to researching Google patents for SEO insights, extracted 
   - *Why*: Engineers often work on related systems together
 
 ### Step 2: Use SEO Patent Reader GPT
-- [ ] **Upload PDF to GPT** - Use Koray's SEO Patent Reader GPT
+- [ ] **Upload PDF to GPT** - Use SEO Expert's SEO Patent Reader GPT
   - *Location*: Available in ChatGPT GPT store
 
 - [ ] **Get structured analysis**:
@@ -194,7 +194,7 @@ A comprehensive guide to researching Google patents for SEO insights, extracted 
 |----------|---------|
 | **LinkedIn** | Follow engineers for current insights |
 | **SEO Patent Reader GPT** | Simplify patent analysis |
-| **Koray's Passage Ranking SOP** | List of 10-15 key patents |
+| **SEO Expert's Passage Ranking SOP** | List of 10-15 key patents |
 
 ---
 
@@ -272,7 +272,7 @@ RELATED PATENTS TO READ:
 4. Start following engineers on LinkedIn
 
 ### Advanced (Ongoing)
-1. Join patent study cohorts (Koray's coaching program has one)
+1. Join patent study cohorts (SEO Expert's coaching program has one)
 2. Study Alexander Gruszewski's RankLab work
 3. Cross-reference patents with Google API leaks
 4. Track new patents from key engineers
@@ -285,11 +285,11 @@ RELATED PATENTS TO READ:
 - [ ] **Map/Query side patents** - Different from organic search
 - [ ] **Local ranking factors** - May have separate patent lineage
 
-*Note: Koray mentioned this as a to-do item for further research*
+*Note: SEO Expert mentioned this as a to-do item for further research*
 
 ---
 
-## Key Quotes from Koray on Patents
+## Key Quotes from SEO Expert on Patents
 
 > "I'm going from the engineer. I'm checking what they published."
 
@@ -301,4 +301,4 @@ RELATED PATENTS TO READ:
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Sessions, 2025*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Sessions, 2025*

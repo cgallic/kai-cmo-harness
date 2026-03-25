@@ -1,6 +1,6 @@
-# Koray's Semantic SEO Methodology
+# SEO Expert's Semantic SEO Methodology
 
-A comprehensive playbook for implementing Koray Tugberk Gubur's semantic SEO principles, focusing on topical authority, content architecture, and internal linking strategies.
+A comprehensive playbook for implementing SEO Expert's semantic SEO principles, focusing on topical authority, content architecture, and internal linking strategies.
 
 ---
 
@@ -381,4 +381,4 @@ How to File a Claim
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Transcripts*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Transcripts*

@@ -1,6 +1,6 @@
 # Surround Sound & LLM Manipulation Playbook
 
-A strategic playbook for controlling entity perception across search engines and Large Language Models (LLMs) like ChatGPT, Claude, and Perplexity using Koray Tugberk Gubur's "Surround Sound" methodology.
+A strategic playbook for controlling entity perception across search engines and Large Language Models (LLMs) like ChatGPT, Claude, and Perplexity using SEO Expert's "Surround Sound" methodology.
 
 ---
 
@@ -506,4 +506,4 @@ LOWER AI INFLUENCE
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Transcripts*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Transcripts*

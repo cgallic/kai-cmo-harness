@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# kai-marketing setup — Register skills with Claude Code, Codex, or Gemini CLI.
+# Run once after cloning. Re-run after /kai-upgrade.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VERSION=$(cat "${SCRIPT_DIR}/VERSION" 2>/dev/null || echo "0.1.0")
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+info()  { printf "${GREEN}[OK]${RESET}    %s\n" "$1"; }
+warn()  { printf "${YELLOW}[WARN]${RESET}  %s\n" "$1"; }
+header(){ printf "\n${BOLD}${CYAN}%s${RESET}\n\n" "$1"; }
+
+header "kai-marketing v${VERSION} — setup"
+
+# ── Step 1: Detect platform ──────────────────────────────────────────────
+HOST="${1:-auto}"
+if [ "$HOST" = "auto" ]; then
+    if [ -d "${HOME}/.claude" ]; then
+        HOST="claude"
+    elif [ -d "${HOME}/.codex" ]; then
+        HOST="codex"
+    elif [ -d "${HOME}/.gemini" ]; then
+        HOST="gemini"
+    else
+        HOST="claude"  # default
+    fi
+fi
+info "Detected platform: ${HOST}"
+
+# ── Step 2: Initialize state directory ──────────────────────────────────
+KAI_DIR="${HOME}/.kai-marketing"
+mkdir -p "$KAI_DIR"/{briefs,drafts,gates,reports,pending,analytics,sessions}
+
+if [ ! -f "$KAI_DIR/config.yaml" ]; then
+    "${SCRIPT_DIR}/bin/kai-config" init
+    info "Created default config at ${KAI_DIR}/config.yaml"
+else
+    info "Config exists at ${KAI_DIR}/config.yaml"
+fi
+
+# Copy voice profile template if available and not already present
+if [ -f "${SCRIPT_DIR}/workspace/SOUL.md" ] && [ ! -f "$KAI_DIR/voice.md" ]; then
+    cp "${SCRIPT_DIR}/workspace/SOUL.md" "$KAI_DIR/voice.md"
+    info "Copied voice profile template to ${KAI_DIR}/voice.md"
+fi
+
+# ── Step 3: Check Python dependencies ───────────────────────────────────
+if command -v python3 &>/dev/null; then
+    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oP '\d+\.\d+')
+    info "Python ${PYTHON_VERSION} found"
+
+    # Check for critical deps
+    if python3 -c "import yaml" 2>/dev/null; then
+        info "PyYAML available"
+    else
+        warn "PyYAML not found. Run: pip install -r ${SCRIPT_DIR}/scripts/requirements.txt"
+    fi
+else
+    warn "Python 3 not found. Skills will work for reading knowledge, but content generation requires Python 3.10+."
+fi
+
+# ── Step 4: Make bin/ scripts executable ────────────────────────────────
+chmod +x "${SCRIPT_DIR}/bin/"* 2>/dev/null || true
+chmod +x "${SCRIPT_DIR}/setup" 2>/dev/null || true
+info "bin/ scripts are executable"
+
+# ── Step 5: Platform-specific skill registration ────────────────────────
+SKILL_COUNT=0
+for skill_dir in content-brief content-write content-gate content-report content-retro \
+                 ad-copy email-sequence seo-audit content-ideas marketing-sprint kai-upgrade; do
+    if [ -f "${SCRIPT_DIR}/${skill_dir}/SKILL.md" ]; then
+        SKILL_COUNT=$((SKILL_COUNT + 1))
+    fi
+done
+
+info "${SKILL_COUNT} skills found"
+
+if [ "$HOST" = "codex" ]; then
+    info "For Codex: skills in ${SCRIPT_DIR}/*/SKILL.md are auto-discovered"
+elif [ "$HOST" = "gemini" ]; then
+    info "For Gemini CLI: skills in ${SCRIPT_DIR}/*/SKILL.md are auto-discovered"
+else
+    info "For Claude Code: add skills to your project's CLAUDE.md (see README)"
+fi
+
+# ── Done ────────────────────────────────────────────────────────────────
+header "Setup complete!"
+echo "Next steps:"
+echo "  1. Add your API keys to ${KAI_DIR}/config.yaml or .env"
+echo "  2. Add a kai-marketing section to your project's CLAUDE.md:"
+echo ""
+echo "     ## kai-marketing"
+echo "     Available skills: /content-brief, /content-write, /content-gate,"
+echo "     /content-report, /content-retro, /ad-copy, /email-sequence,"
+echo "     /seo-audit, /content-ideas, /marketing-sprint, /kai-upgrade"
+echo ""
+echo "  3. Try: /content-brief blog <your-site> \"your keyword\""

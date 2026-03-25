@@ -1,6 +1,6 @@
 # Content Publication & Velocity Playbook
 
-A comprehensive guide to content brief methodology, publication timing, segment completion strategy, and indexation acceleration based on Koray Tugberk Gubur's consulting methodology.
+A comprehensive guide to content brief methodology, publication timing, segment completion strategy, and indexation acceleration based on SEO Expert's consulting methodology.
 
 ---
 
@@ -22,7 +22,7 @@ Key principles:
 
 ### Brief Components
 
-Based on Koray's template structure, every content brief should include:
+Based on SEO Expert's template structure, every content brief should include:
 
 ```
 CONTENT BRIEF TEMPLATE
@@ -536,4 +536,4 @@ Make strategic updates to trigger re-evaluation:
 
 ---
 
-*Source: Koray Tugberk Gubur SEO Consulting Transcripts*
+*Source: SEO Expert Tugberk Gubur SEO Consulting Transcripts*

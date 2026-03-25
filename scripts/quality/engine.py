@@ -20,6 +20,7 @@ import scripts.quality.rules.algorithmic_authorship  # noqa: F401
 import scripts.quality.rules.geo_signals  # noqa: F401
 import scripts.quality.rules.content_structure  # noqa: F401
 import scripts.quality.rules.four_us  # noqa: F401
+import scripts.quality.rules.voice_consistency  # noqa: F401
 
 # Module-level LRU cache for content scoring
 _SCORE_CACHE: "OrderedDict[str, QualityReport]" = OrderedDict()

@@ -353,6 +353,19 @@ class Scheduler:
                 "client": "abp",
                 "config": {"notify_on_complete": True}
             },
+            # Social data staleness monitoring
+            {
+                "name": "Social Data Staleness Check",
+                "cron_expression": "0 9 * * 1",  # 9 AM Mondays
+                "task_type": "social_staleness_check",
+                "config": {"notify_on_complete": True}
+            },
+            {
+                "name": "Social Data Critical Alert",
+                "cron_expression": "0 8 * * *",  # 8 AM daily
+                "task_type": "social_staleness_check",
+                "config": {"notify_on_complete": False, "extra": {"critical_only": True}}
+            },
         ]
 
         existing_tasks = {t.name for t in self.db.list_scheduled_tasks(enabled_only=False)}

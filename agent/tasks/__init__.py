@@ -21,6 +21,7 @@ from .ad_management import AdManagementTask
 from .seo_optimization import SEOOptimizationTask
 from .weekly_report import WeeklyReportTask
 from .creative_assets import CreativeAssetsTask
+from .social_staleness import SocialStalenessTask
 
 # Task type to handler mapping (generic handlers only)
 TASK_HANDLERS: dict[str, type[BaseTask]] = {
@@ -33,6 +34,7 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "warmup_check": LeadOutreachTask,
     "creative_assets": CreativeAssetsTask,
     "og_image": CreativeAssetsTask,
+    "social_staleness_check": SocialStalenessTask,
 }
 
 
@@ -74,6 +76,7 @@ __all__ = [
     "SEOOptimizationTask",
     "WeeklyReportTask",
     "CreativeAssetsTask",
+    "SocialStalenessTask",
     "register_task",
     "get_task_handler",
 ]

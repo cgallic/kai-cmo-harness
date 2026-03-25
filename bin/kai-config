@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# kai-config — Manage ~/.kai-marketing/config.yaml
+# Usage: kai-config get <key>
+# Usage: kai-config set <key> <value>
+# Usage: kai-config init              (create default config)
+# Usage: kai-config path              (print config directory path)
+set -euo pipefail
+
+KAI_DIR="${HOME}/.kai-marketing"
+
+case "${1:-help}" in
+    init)
+        mkdir -p "$KAI_DIR"/{briefs,drafts,gates,reports,pending,analytics,sessions}
+        if [ ! -f "$KAI_DIR/config.yaml" ]; then
+            cat > "$KAI_DIR/config.yaml" << 'DEFCFG'
+# Kai Marketing — Configuration
+# This file is read by all kai-marketing skills.
+
+# LLM provider for content generation
+llm:
+  provider: gemini
+  model: gemini-2.0-flash
+  api_key_env: GEMINI_API_KEY  # reads from this env var
+  timeout: 30
+
+# Site configurations (add your sites here)
+sites: {}
+  # kaicalls:
+  #   gsc_property: "sc-domain:kaicalls.com"
+  #   ga4_property: "properties/123456789"
+  #   default_persona: "Shock Absorber"
+  #   proof_points: "500+ law firms served, 99.7% uptime"
+
+# Approval policy: auto | hold | reject_only
+approval:
+  default: hold
+  overrides: []
+    # - format: blog
+    #   site: kaicalls
+    #   policy: auto
+
+# Quality gate thresholds (override per format in skill contracts)
+quality:
+  four_us_min_total: 12
+  four_us_min_single: 2
+  max_retries: 2
+DEFCFG
+            echo "Config initialized at $KAI_DIR/config.yaml"
+        else
+            echo "Config already exists at $KAI_DIR/config.yaml"
+        fi
+        ;;
+    path)
+        echo "$KAI_DIR"
+        ;;
+    get)
+        if [ -z "${2:-}" ]; then echo "Usage: kai-config get <key>"; exit 1; fi
+        KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+        source "${KAI_ROOT}/lib/find-python.sh"
+        "$PYTHON" -c "
+import yaml, sys
+with open('$KAI_DIR/config.yaml') as f:
+    cfg = yaml.safe_load(f) or {}
+keys = '${2}'.split('.')
+val = cfg
+for k in keys:
+    val = val.get(k, '') if isinstance(val, dict) else ''
+print(val)
+" 2>/dev/null || echo ""
+        ;;
+    set)
+        if [ -z "${2:-}" ] || [ -z "${3:-}" ]; then echo "Usage: kai-config set <key> <value>"; exit 1; fi
+        KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+        source "${KAI_ROOT}/lib/find-python.sh"
+        "$PYTHON" -c "
+import yaml
+with open('$KAI_DIR/config.yaml') as f:
+    cfg = yaml.safe_load(f) or {}
+keys = '${2}'.split('.')
+val = '${3}'
+# Try numeric conversion
+try:
+    val = int(val)
+except ValueError:
+    try:
+        val = float(val)
+    except ValueError:
+        if val.lower() in ('true', 'false'):
+            val = val.lower() == 'true'
+d = cfg
+for k in keys[:-1]:
+    d = d.setdefault(k, {})
+d[keys[-1]] = val
+with open('$KAI_DIR/config.yaml', 'w') as f:
+    yaml.dump(cfg, f, default_flow_style=False)
+print(f'Set {\".\".join(keys)} = {val}')
+" 2>/dev/null || echo "Error: could not set value"
+        ;;
+    help|--help|-h)
+        echo "kai-config — Manage ~/.kai-marketing/config.yaml"
+        echo ""
+        echo "Commands:"
+        echo "  init          Create default config and directories"
+        echo "  path          Print config directory path"
+        echo "  get <key>     Get a config value (dot notation: llm.model)"
+        echo "  set <key> <v> Set a config value"
+        ;;
+    *)
+        echo "Unknown command: $1. Run 'kai-config help' for usage."
+        exit 1
+        ;;
+esac

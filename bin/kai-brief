@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# kai-brief — Generate a content brief from (format, site, keyword).
+# Usage: kai-brief --format blog --site kaicalls --keyword "AI receptionists"
+# Usage: kai-brief --format blog --site kaicalls --keyword "AI receptionists" --output json
+set -euo pipefail
+
+KAI_ROOT="$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")/.." && pwd)"
+export PYTHONPATH="${KAI_ROOT}:${PYTHONPATH:-}"
+
+source "${KAI_ROOT}/lib/find-python.sh"
+exec "$PYTHON" "${KAI_ROOT}/scripts/content/brief_cli.py" "$@"

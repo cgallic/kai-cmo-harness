@@ -107,7 +107,7 @@ The knowledge base contains **116 markdown files** across 7 directories. Based o
 
 - Meta Engineering blog posts restructured for advertiser implications
 - Academic GEO research (Princeton/Georgia Tech) reframed as actionable optimization rules
-- Koray Tugberk Gubur's surround-sound methodology organized into playbook format
+- SEO Expert's surround-sound methodology organized into playbook format
 
 ### Critical depreciation risk:
 
