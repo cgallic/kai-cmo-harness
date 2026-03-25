@@ -340,7 +340,7 @@ def generate_brief(site: str, keyword: str, fmt: str, persona: str | None = None
     fmt = sanitize_input(fmt, max_length=50)
     persona = sanitize_input(persona, max_length=100) if persona else None
 
-    step(1, 6, f"Research — {site} / {keyword}")
+    step(1, 7, f"Research — {site} / {keyword}")
 
     gsc_opps    = run_cmo(["gsc", "opportunities", f"--site={site}"])
     gsc_queries = run_cmo(["gsc", "queries",       f"--site={site}", "--limit=20"])
@@ -402,7 +402,7 @@ Return ONLY valid JSON:
 
 # ── Content writer ─────────────────────────────────────────────────────────
 def write_content(brief: dict) -> str:
-    step(2, 6, f"Write — {brief['format']} / {brief['target_keyword']}")
+    step(2, 7, f"Write — {brief['format']} / {brief['target_keyword']}")
 
     fmt  = brief["format"]
     site = brief["target_site"]
@@ -454,7 +454,7 @@ FORMAT_TO_POLICY = _WRITER_FORMAT_TO_POLICY
 # ── Quality gate ───────────────────────────────────────────────────────────
 def run_gate(draft: str, keyword: str, threshold: int = 12, max_retries: int = 2,
              fmt: str | None = None) -> dict:
-    step(3, 6, "Quality Gate")
+    step(4, 7, "Quality Gate")
 
     policy_name = FORMAT_TO_POLICY.get(fmt or "", "default")
     results = {"passed": False, "draft": draft, "attempts": 0}
@@ -529,7 +529,7 @@ def revise_draft(draft: str, gate_results: dict, keyword: str) -> str:
 
 # ── Discord approval ───────────────────────────────────────────────────────
 def post_for_approval(draft: str, brief: dict, gate_results: dict):
-    step(4, 6, "Discord Approval")
+    step(5, 7, "Discord Approval")
 
     site        = brief.get("target_site", "meetkai")
     channel_id  = DISCORD_CHANNELS.get(site, DISCORD_CHANNELS.get("meetkai", ""))
@@ -569,6 +569,156 @@ def post_for_approval(draft: str, brief: dict, gate_results: dict):
     print("  Draft saved to /tmp/harness_draft.md — publish manually after approval.")
 
 
+# ── Brief compliance check (gstack /review scope drift pattern) ───────────
+def brief_compliance_check(draft: str, brief: dict) -> dict:
+    """Compare draft against brief requirements. Catches scope drift before quality gate.
+
+    Returns {compliant: bool, checks: dict, score: str, missing: list}.
+    Inspired by gstack /review Step 1.5 — "did they build what was requested?"
+    """
+    step(3, 7, "Brief Compliance Check")
+
+    checks = {
+        "keyword_present": brief.get("target_keyword", "").lower() in draft.lower(),
+        "word_count_met": len(draft.split()) >= brief.get("word_count_target", 1000) * 0.85,
+        "internal_links": all(
+            link in draft for link in brief.get("internal_links", [])[:2]
+        ) if brief.get("internal_links") else True,
+        "cta_present": True,
+        "angle_used": True,
+        "persona_aligned": True,
+    }
+
+    # Check CTA keywords appear in draft
+    cta = brief.get("cta", "")
+    if cta:
+        cta_words = [w for w in cta.lower().split() if len(w) > 3][:3]
+        checks["cta_present"] = any(w in draft.lower() for w in cta_words) if cta_words else True
+
+    # LLM check for fuzzy compliance (angle, persona, competitor gap)
+    angle = brief.get("angle", "")
+    pain = brief.get("audience_pain", "")
+    weakness = brief.get("competitor_weakness", "")
+
+    if angle or pain or weakness:
+        fuzzy_prompt = f"""Compare this draft against the content brief. Return ONLY valid JSON.
+
+BRIEF REQUIREMENTS:
+- Angle: {sanitize_input(angle, 200)}
+- Audience pain point: {sanitize_input(pain, 200)}
+- Competitor weakness to exploit: {sanitize_input(weakness, 200)}
+- CTA: {sanitize_input(cta, 100)}
+
+DRAFT (first 2000 chars):
+{draft[:2000]}
+
+Return JSON:
+{{"angle_used": true, "persona_aligned": true, "competitor_gap_addressed": true, "missing_elements": [], "extra_scope": []}}"""
+
+        try:
+            raw = gemini(fuzzy_prompt)
+            if "```" in raw:
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            fuzzy = json.loads(raw.strip())
+            checks["angle_used"] = fuzzy.get("angle_used", True)
+            checks["persona_aligned"] = fuzzy.get("persona_aligned", True)
+        except Exception as e:
+            log.warning("Fuzzy compliance check failed (non-blocking): %s", e)
+
+    passed = sum(checks.values())
+    total = len(checks)
+
+    result = {
+        "compliant": passed >= total - 1,  # Allow 1 miss
+        "checks": checks,
+        "score": f"{passed}/{total}",
+        "missing": [k for k, v in checks.items() if not v],
+    }
+
+    if not result["compliant"]:
+        print(f"  ⚠️  Brief compliance: {result['score']} — missing: {', '.join(result['missing'])}")
+    else:
+        print(f"  ✅ Brief compliance: {result['score']}")
+
+    return result
+
+
+def revise_for_compliance(draft: str, brief: dict, compliance: dict) -> str:
+    """Revise draft to fix brief compliance failures."""
+    missing = compliance.get("missing", [])
+    if not missing:
+        return draft
+
+    fix_instructions = []
+    if "keyword_present" in missing:
+        fix_instructions.append(f"Include the keyword '{brief['target_keyword']}' naturally 3-5 times.")
+    if "word_count_met" in missing:
+        fix_instructions.append(f"Expand to at least {brief.get('word_count_target', 1400)} words.")
+    if "internal_links" in missing:
+        links = brief.get("internal_links", [])[:2]
+        fix_instructions.append(f"Include these internal links: {', '.join(links)}")
+    if "cta_present" in missing:
+        fix_instructions.append(f"Add a clear CTA: {brief.get('cta', '')}")
+    if "angle_used" in missing:
+        fix_instructions.append(f"The draft drifted from the brief's angle: '{brief.get('angle', '')}'. Refocus.")
+    if "persona_aligned" in missing:
+        fix_instructions.append(f"Address the persona's pain: '{brief.get('audience_pain', '')}'")
+
+    prompt = f"""Revise this draft to fix these specific compliance issues. Change ONLY what's needed — keep everything else identical.
+
+FIX THESE:
+{chr(10).join(f'- {i}' for i in fix_instructions)}
+
+DRAFT:
+{draft}
+
+Return the FULL revised draft (not just the changed parts)."""
+
+    try:
+        return _writer_revise_content(prompt, gemini)
+    except Exception:
+        return draft
+
+
+# ── Pre-publish readiness dashboard (gstack /ship pre-flight pattern) ─────
+def pre_publish_dashboard(brief: dict, compliance: dict, gate_results: dict) -> str:
+    """Pre-publish readiness checklist. Returns formatted string for CLI + Discord."""
+    checks = [
+        ("Brief generated",     bool(brief.get("target_keyword")),
+         "✅" if brief.get("target_keyword") else "❌"),
+        ("3+ hook variants",    len(brief.get("hook_options", [])) >= 3,
+         "✅" if len(brief.get("hook_options", [])) >= 3 else "⚠️"),
+        ("Competitor analyzed",  len(brief.get("competitor_weakness", "")) >= 20,
+         "✅" if len(brief.get("competitor_weakness", "")) >= 20 else "⚠️"),
+        ("Brief compliance",    compliance.get("compliant", False),
+         compliance.get("score", "?") if compliance.get("compliant") else f"❌ {compliance.get('score', '?')}"),
+        ("Quality gate",        gate_results.get("passed", False),
+         "✅" if gate_results.get("passed") else "❌"),
+        ("Score",               gate_results.get("score", 0) >= 70,
+         f"{gate_results.get('score', '?')}/100 ({gate_results.get('grade', '?')})"),
+        ("Violations remaining", gate_results.get("violation_count", 0) == 0,
+         str(gate_results.get("violation_count", "?"))),
+    ]
+
+    all_pass = all(passed for _, passed, _ in checks)
+
+    lines = [
+        "┌──────────────────────────────────────────┐",
+        "│     PRE-PUBLISH READINESS DASHBOARD       │",
+        "├──────────────────────────────────────────┤",
+    ]
+    for label, _passed, display in checks:
+        lines.append(f"│  {display:<6} {label:<32} │")
+    lines.append("├──────────────────────────────────────────┤")
+    status = "✅ READY TO PUBLISH" if all_pass else "⚠️  REVIEW NEEDED"
+    lines.append(f"│  {status:<40}│")
+    lines.append("└──────────────────────────────────────────┘")
+
+    return "\n".join(lines)
+
+
 # ── Commands ───────────────────────────────────────────────────────────────
 def cmd_run(args):
     header(f"Kai Harness — {args.task.upper()} / {args.site} / {args.keyword}")
@@ -588,7 +738,21 @@ def cmd_run(args):
         f.write(draft)
     print(f"  Draft: /tmp/harness_draft.md ({len(draft.split())} words)")
 
+    # Brief compliance check — catch scope drift before quality gate
+    compliance = brief_compliance_check(draft, brief)
+    if not compliance["compliant"]:
+        print("  Revising for compliance...")
+        draft = revise_for_compliance(draft, brief, compliance)
+        with open("/tmp/harness_draft.md", "w") as f:
+            f.write(draft)
+        # Re-check after revision
+        compliance = brief_compliance_check(draft, brief)
+
     gate_results = run_gate(draft, args.keyword, threshold=args.threshold, fmt=args.task)
+
+    # Show pre-publish readiness dashboard
+    dashboard = pre_publish_dashboard(brief, compliance, gate_results)
+    print(f"\n{dashboard}")
 
     if not gate_results["passed"] and not args.force:
         print("\n❌ Gate failed. Revise manually:")

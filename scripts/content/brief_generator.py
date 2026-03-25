@@ -66,6 +66,60 @@ def _load_skill_contract(fmt: str, workspace: Path) -> dict:
     return {}
 
 
+def research_landscape(keyword: str, site: str, gemini_fn) -> dict:
+    """Three-layer research: tried-and-true → current discourse → first-principles gap.
+
+    Inspired by gstack /office-hours Phase 2.75 (Search Before Building).
+    Returns: {consensus: str, gap: str, angle_suggestion: str, eureka: str|None}
+    """
+    cfg = get_config()
+    knowledge = cfg.knowledge_dir
+
+    # Layer 1: What we already know (scan knowledge base for relevant frameworks)
+    relevant_frameworks = []
+    kw_parts = [w.lower() for w in keyword.split() if len(w) > 3]
+    if (knowledge / "frameworks").exists():
+        for fw_path in (knowledge / "frameworks").rglob("*.md"):
+            try:
+                content = fw_path.read_text(encoding="utf-8", errors="ignore")[:500].lower()
+                if any(part in content for part in kw_parts):
+                    relevant_frameworks.append(fw_path.name)
+            except Exception:
+                continue
+
+    # Layer 2: What's ranking now (GSC data)
+    gsc_data = _run_cmo(["gsc", "queries", f"--site={site}", "--limit=10"])
+
+    # Layer 3: First-principles gap analysis via LLM
+    prompt = f"""You are analyzing the content landscape for the keyword: "{keyword}"
+
+LAYER 1 (What's tried-and-true — our knowledge base):
+Relevant frameworks: {', '.join(relevant_frameworks[:5]) or 'no direct match'}
+
+LAYER 2 (What's currently ranking — GSC data):
+{gsc_data[:1500] or 'No GSC data available'}
+
+LAYER 3 (First-principles gap analysis):
+1. What does every article on this topic say? (The consensus view)
+2. Where is the consensus wrong, incomplete, or outdated?
+3. What specific angle would make new content genuinely different?
+4. Is there a reason the conventional approach is wrong here?
+
+Return ONLY valid JSON:
+{{"consensus": "1-2 sentences: what everyone says",
+  "gap": "1-2 sentences: what is missing or wrong",
+  "angle_suggestion": "specific differentiated angle for our content",
+  "eureka": null}}
+
+Set eureka to a string ONLY if the conventional approach is demonstrably wrong and you can explain why."""
+
+    try:
+        raw = gemini_fn(prompt)
+        return _parse_json_response(raw)
+    except Exception:
+        return {"consensus": "", "gap": "", "angle_suggestion": "", "eureka": None}
+
+
 def _parse_json_response(raw: str) -> dict:
     """Parse JSON from LLM response with fallback chain."""
     # Direct parse
@@ -162,22 +216,39 @@ async def generate_brief(
         except Exception:
             pass
 
+    # Step 3.5: Three-layer landscape research (gstack /office-hours pattern)
+    landscape = {}
+    if gemini_fn:
+        landscape = research_landscape(keyword, site, gemini_fn)
+
     # Step 4: LLM call for creative fields
     data_sources = {
         "persona": "config" if not persona else "override",
         "gsc_data": "api" if gsc_opps or gsc_queries else "none",
         "word_count": "override" if word_count else "contract",
         "internal_links": "content_log" if internal_links else "none",
+        "landscape_research": "llm" if landscape.get("consensus") else "none",
     }
 
     if gemini_fn and not (angle and hook_options and secondary_keywords):
+        # Build landscape context for the creative prompt
+        landscape_ctx = ""
+        if landscape.get("consensus"):
+            landscape_ctx = f"""
+LANDSCAPE RESEARCH (use this to differentiate our angle):
+- Consensus: {landscape.get('consensus', '')}
+- Gap: {landscape.get('gap', '')}
+- Suggested angle: {landscape.get('angle_suggestion', '')}
+{"- EUREKA: " + landscape['eureka'] if landscape.get('eureka') else ''}
+"""
+
         creative_prompt = f"""Generate creative fields for a content brief.
 
 Site: {site}
 Keyword: {keyword}
 Format: {format}
 Persona: {resolved_persona}
-
+{landscape_ctx}
 GSC opportunities:
 {gsc_opps[:3000] or "No GSC data"}
 
@@ -234,6 +305,9 @@ Return ONLY valid JSON:
     }
 
     # Step 6: Attach metadata
-    brief["metadata"] = {"data_sources": data_sources}
+    brief["metadata"] = {
+        "data_sources": data_sources,
+        "landscape": landscape if landscape.get("consensus") else None,
+    }
 
     return brief

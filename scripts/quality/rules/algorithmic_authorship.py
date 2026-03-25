@@ -9,7 +9,7 @@ import re
 
 from scripts.quality.parser import Document
 from scripts.quality.types import Category, Severity, Violation
-from scripts.quality.config import FILLER_WORDS, BACK_REFERENCES, VAGUE_QUANTIFIERS
+from scripts.quality.config import FILLER_WORDS, BACK_REFERENCES, VAGUE_QUANTIFIERS, get_filler_words, get_back_references, get_vague_quantifiers
 from scripts.quality.rules import register
 from scripts.quality.rules.base import BaseRule
 
@@ -186,12 +186,11 @@ class NoVagueQuantifiers(BaseRule):
     SEVERITY = Severity.WARNING
     DESCRIPTION = 'Replace "many", "several", "a lot" with specific numbers'
 
-    _PATTERNS = [re.compile(p, re.IGNORECASE) for p in VAGUE_QUANTIFIERS]
-
     def evaluate(self, doc):
         violations = []
+        patterns = [re.compile(p, re.IGNORECASE) for p in get_vague_quantifiers()]
         for s in doc.all_sentences:
-            for pattern in self._PATTERNS:
+            for pattern in patterns:
                 match = pattern.search(s.text)
                 if match:
                     word = match.group(0)
@@ -380,7 +379,7 @@ class NoFillerWords(BaseRule):
 
     def evaluate(self, doc):
         violations = []
-        filler_patterns = [re.compile(r'\b' + w + r'\b', re.IGNORECASE) for w in FILLER_WORDS]
+        filler_patterns = [re.compile(r'\b' + w + r'\b', re.IGNORECASE) for w in get_filler_words()]
         for s in doc.all_sentences:
             for pattern in filler_patterns:
                 match = pattern.search(s.text)
@@ -406,12 +405,11 @@ class NoBackReferences(BaseRule):
     SEVERITY = Severity.WARNING
     DESCRIPTION = 'Avoid "as mentioned", "as shown above", "in the previous section"'
 
-    _PATTERNS = [re.compile(p, re.IGNORECASE) for p in BACK_REFERENCES]
-
     def evaluate(self, doc):
         violations = []
+        patterns = [re.compile(p, re.IGNORECASE) for p in get_back_references()]
         for s in doc.all_sentences:
-            for pattern in self._PATTERNS:
+            for pattern in patterns:
                 match = pattern.search(s.text)
                 if match:
                     phrase = match.group(0)

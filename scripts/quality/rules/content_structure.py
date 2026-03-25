@@ -10,7 +10,10 @@ import math
 
 from scripts.quality.parser import Document
 from scripts.quality.types import Category, Severity, Violation
-from scripts.quality.config import AI_CLICHES, STRUCTURE_TARGETS
+from scripts.quality.config import (
+    AI_CLICHES_TIER1, AI_CLICHES_TIER2, AI_CLICHES_TIER3,
+    get_structure_targets, get_banned_patterns_tier1, get_banned_patterns_tier2, get_banned_patterns_tier3,
+)
 from scripts.quality.rules import register
 from scripts.quality.rules.base import BaseRule
 
@@ -63,7 +66,7 @@ class HeadingFrequency(BaseRule):
     DESCRIPTION = "Add a heading every 200-300 words for scannability"
 
     def evaluate(self, doc):
-        max_gap = STRUCTURE_TARGETS["max_words_between_headings"]
+        max_gap = get_structure_targets()["max_words_between_headings"]
         violations = []
 
         for section in doc.sections:
@@ -90,8 +93,8 @@ class ParagraphLength(BaseRule):
     DESCRIPTION = "Keep paragraphs at 2-4 sentences for readability"
 
     def evaluate(self, doc):
-        min_s = STRUCTURE_TARGETS["min_paragraph_sentences"]
-        max_s = STRUCTURE_TARGETS["max_paragraph_sentences"]
+        min_s = get_structure_targets()["min_paragraph_sentences"]
+        max_s = get_structure_targets()["max_paragraph_sentences"]
         violations = []
 
         for para in doc.all_paragraphs:
@@ -142,7 +145,7 @@ class ActiveVoice(BaseRule):
 
         total = max(len(doc.all_sentences), 1)
         active_pct = ((total - passive_count) / total) * 100
-        target = STRUCTURE_TARGETS["target_active_voice_pct"]
+        target = get_structure_targets()["target_active_voice_pct"]
 
         score = min(active_pct / target, 1.0)
         return self._make_result(
@@ -207,8 +210,8 @@ class ReadingLevel(BaseRule):
         except ImportError:
             grade = self._flesch_kincaid_grade(doc)
 
-        min_grade = STRUCTURE_TARGETS["target_reading_level_min"]
-        max_grade = STRUCTURE_TARGETS["target_reading_level_max"]
+        min_grade = get_structure_targets()["target_reading_level_min"]
+        max_grade = get_structure_targets()["target_reading_level_max"]
 
         violations = []
         if grade > max_grade:
@@ -248,8 +251,8 @@ class AvgSentenceLength(BaseRule):
         total = sum(s.word_count for s in doc.all_sentences)
         avg = total / len(doc.all_sentences)
 
-        min_len = STRUCTURE_TARGETS["min_avg_sentence_length"]
-        max_len = STRUCTURE_TARGETS["max_avg_sentence_length"]
+        min_len = get_structure_targets()["min_avg_sentence_length"]
+        max_len = get_structure_targets()["max_avg_sentence_length"]
 
         violations = []
         if avg > max_len:
@@ -274,32 +277,71 @@ class AvgSentenceLength(BaseRule):
 
 @register
 class NoAICliches(BaseRule):
-    """CS-07: Remove AI-generated cliches."""
+    """CS-07: Remove AI-generated cliches (tiered: blocking, warning, opportunity)."""
     RULE_ID = "CS-07"
     RULE_NAME = "No AI cliches"
     CATEGORY = Category.CONTENT_STRUCTURE
     SEVERITY = Severity.WARNING
-    DESCRIPTION = 'Remove "it\'s important to note", "in conclusion", "harness the power", etc.'
+    DESCRIPTION = 'Detect AI slop: filler openings, corporate speak, weak hedging (46 patterns in 3 tiers)'
 
-    _PATTERNS = [re.compile(p, re.IGNORECASE) for p in AI_CLICHES]
+    # Class-level defaults (used if getters fail). Dynamic patterns loaded in evaluate().
+    _DEFAULT_TIER1 = AI_CLICHES_TIER1
+    _DEFAULT_TIER2 = AI_CLICHES_TIER2
+    _DEFAULT_TIER3 = AI_CLICHES_TIER3
+
+    def _compile_tiers(self):
+        """Compile pattern tiers at score time (reads harness.yaml overrides)."""
+        try:
+            t1 = get_banned_patterns_tier1()
+            t2 = get_banned_patterns_tier2()
+            t3 = get_banned_patterns_tier3()
+        except Exception:
+            t1, t2, t3 = self._DEFAULT_TIER1, self._DEFAULT_TIER2, self._DEFAULT_TIER3
+
+        compiled = []
+        for patterns, tier in [(t1, "BLOCKING"), (t2, "WARNING"), (t3, "OPPORTUNITY")]:
+            for p in patterns:
+                try:
+                    compiled.append((re.compile(p, re.IGNORECASE), tier))
+                except re.error:
+                    pass  # Skip invalid regex from agency config
+        return compiled
 
     def evaluate(self, doc):
         violations = []
+        tier_counts = {"BLOCKING": 0, "WARNING": 0, "OPPORTUNITY": 0}
+        all_tiers = self._compile_tiers()
+
         for s in doc.all_sentences:
-            for pattern in self._PATTERNS:
+            for pattern, tier in all_tiers:
                 m = pattern.search(s.text)
                 if m:
                     phrase = m.group(0)
+                    tier_counts[tier] += 1
+                    fix_prefix = {
+                        "BLOCKING": "INSTANT REJECT — remove",
+                        "WARNING": "Remove corporate speak",
+                        "OPPORTUNITY": "Strengthen — rewrite without hedging",
+                    }[tier]
                     violations.append(Violation(
                         line=s.line,
                         text=s.text[:120],
-                        fix=f'Remove AI cliche: "{phrase}"',
+                        fix=f'{fix_prefix}: "{phrase}"',
                     ))
                     break  # One per sentence
 
         total = max(len(doc.all_sentences), 1)
-        score = 1.0 - (len(violations) / total)
-        return self._make_result(score, violations)
+        # Tier 1 hits penalize 3x, tier 2 penalize 2x, tier 3 penalize 1x
+        weighted_violations = (tier_counts["BLOCKING"] * 3
+                               + tier_counts["WARNING"] * 2
+                               + tier_counts["OPPORTUNITY"])
+        score = max(0.0, 1.0 - (weighted_violations / total))
+
+        return self._make_result(score, violations, metadata={
+            "tier1_blocking": tier_counts["BLOCKING"],
+            "tier2_warning": tier_counts["WARNING"],
+            "tier3_opportunity": tier_counts["OPPORTUNITY"],
+        })
 
 
 @register
@@ -325,7 +367,7 @@ class ReaderFocusedLanguage(BaseRule):
         else:
             ratio = you_count / we_count
 
-        target = STRUCTURE_TARGETS["you_your_ratio_target"]
+        target = get_structure_targets()["you_your_ratio_target"]
 
         violations = []
         if ratio < target and we_count > 0:

@@ -104,6 +104,10 @@ class HarnessConfig:
     sites: SiteConfig = field(default_factory=SiteConfig)
     thresholds: ThresholdConfig = field(default_factory=ThresholdConfig)
 
+    # Agency overrides (loaded from harness.yaml)
+    quality_overrides: dict = field(default_factory=dict)
+    content_overrides: dict = field(default_factory=dict)
+
     # Outcome Engine
     site_persona_defaults: dict = field(default_factory=dict)
     approval_policy: dict = field(default_factory=lambda: {"default": "hold", "overrides": []})
@@ -159,12 +163,44 @@ def _load_config_yaml() -> dict:
     return {}
 
 
+def _load_harness_yaml() -> dict:
+    """Load agency-specific harness.yaml overrides.
+
+    Search order: HARNESS_CONFIG env var → repo root harness.yaml.
+    Returns empty dict if not found (all defaults apply).
+    """
+    import logging
+    _log = logging.getLogger("harness-config")
+
+    candidates = [
+        os.environ.get("HARNESS_CONFIG", ""),
+        str(_REPO_ROOT / "harness.yaml"),
+    ]
+    for path_str in candidates:
+        if not path_str:
+            continue
+        path = Path(path_str)
+        if path.exists():
+            try:
+                data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                _log.info("Loaded harness.yaml from %s", path)
+                return data
+            except yaml.YAMLError as e:
+                _log.warning("Malformed harness.yaml at %s: %s — using defaults", path, e)
+                return {}
+            except Exception as e:
+                _log.warning("Failed to read harness.yaml at %s: %s — using defaults", path, e)
+                return {}
+    return {}
+
+
 def load_config() -> HarnessConfig:
     """Load and validate harness configuration.
 
     Merges config.yaml values with environment variable overrides.
     """
     raw = _load_config_yaml()
+    harness_raw = _load_harness_yaml()
 
     # Build discord config
     discord_raw = raw.get("discord", {})
@@ -223,6 +259,8 @@ def load_config() -> HarnessConfig:
         discord=discord,
         sites=sites,
         thresholds=thresholds,
+        quality_overrides=harness_raw.get("quality", {}),
+        content_overrides=harness_raw.get("content", {}),
         site_persona_defaults=raw.get("site_persona_defaults", {}),
         approval_policy=raw.get("approval_policy", {"default": "hold", "overrides": []}),
     )

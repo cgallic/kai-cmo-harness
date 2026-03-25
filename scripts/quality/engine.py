@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from scripts.quality.parser import parse_markdown
 from scripts.quality.types import Category, CategoryScore, QualityReport
-from scripts.quality.config import CATEGORY_WEIGHTS, CATEGORY_WEIGHTS_NO_LLM
+from scripts.quality.config import get_category_weights, get_category_weights_no_llm
 from scripts.quality.rules import get_all_rules, get_rules_for_sets
 from scripts.quality.rules.base import BaseRule
 
@@ -90,8 +90,8 @@ class QualityEngine:
 
             results_by_category.setdefault(category, []).append(result)
 
-        # Determine weights
-        weights = CATEGORY_WEIGHTS if self.use_llm else CATEGORY_WEIGHTS_NO_LLM
+        # Determine weights (dynamic — reads harness.yaml overrides at score time)
+        weights = get_category_weights() if self.use_llm else get_category_weights_no_llm()
 
         # Build category scores
         categories = []

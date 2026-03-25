@@ -12,7 +12,7 @@ import re
 
 from scripts.quality.parser import Document
 from scripts.quality.types import Category, Severity, Violation
-from scripts.quality.config import GEO_TARGETS, GEO_BOOSTS
+from scripts.quality.config import GEO_TARGETS, GEO_BOOSTS, get_geo_targets
 from scripts.quality.rules import register
 from scripts.quality.rules.base import BaseRule
 
@@ -45,7 +45,7 @@ class CitationCount(BaseRule):
                     break
 
         count = len(citations)
-        target = GEO_TARGETS["citations"]
+        target = get_geo_targets()["citations"]
         words_k = max(doc.word_count / 1000, 0.5)
         density = count / words_k
 
@@ -85,7 +85,7 @@ class QuotationCount(BaseRule):
                 quotes.append((s, m.group(1)))
 
         count = len(quotes)
-        target = GEO_TARGETS["quotations"]
+        target = get_geo_targets()["quotations"]
         score = min(count / max(target, 1), 1.0)
 
         violations = []
@@ -128,7 +128,7 @@ class StatisticCount(BaseRule):
                     stats.add((s.line, m.group(0)))
 
         count = len(stats)
-        target = GEO_TARGETS["statistics"]
+        target = get_geo_targets()["statistics"]
         words_k = max(doc.word_count / 1000, 0.5)
         density = count / words_k
 
@@ -170,7 +170,7 @@ class TechnicalTermDensity(BaseRule):
                 terms.add(m.group(0).lower())
 
         count = len(terms)
-        target = GEO_TARGETS["technical_terms"]
+        target = get_geo_targets()["technical_terms"]
         words_k = max(doc.word_count / 1000, 0.5)
         density = count / words_k
 

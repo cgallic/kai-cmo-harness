@@ -8,9 +8,50 @@ All LLM calls go through an injected `gemini_fn` callable — no module-level si
 """
 
 import json
+import logging
+
+_wlog = logging.getLogger("writer")
 
 # Short-form formats (ad/email) — lower Four U's threshold, no SEO lint
 SHORT_FORM = {"meta-ads", "google-ads", "cold-email", "email-lifecycle", "tiktok"}
+
+
+def get_format_instructions(fmt: str) -> str | None:
+    """Get format instructions — checks harness.yaml content.formats override first.
+
+    Returns None if no override exists (caller uses built-in FORMAT_INSTRUCTIONS).
+    """
+    try:
+        from scripts.harness_config import get_config
+        overrides = get_config().content_overrides or {}
+        formats = overrides.get("formats", {})
+        fmt_config = formats.get(fmt, {})
+        if isinstance(fmt_config, dict):
+            instructions = fmt_config.get("instructions")
+            if instructions and isinstance(instructions, str):
+                return instructions
+    except Exception:
+        pass
+    return None
+
+
+def get_format_word_count(fmt: str, default: int = 1400) -> tuple[int, int]:
+    """Get word count range for a format from harness.yaml.
+
+    Returns (min, max) tuple. Falls back to default if no override.
+    """
+    try:
+        from scripts.harness_config import get_config
+        overrides = get_config().content_overrides or {}
+        formats = overrides.get("formats", {})
+        fmt_config = formats.get(fmt, {})
+        if isinstance(fmt_config, dict):
+            wc = fmt_config.get("word_count")
+            if isinstance(wc, list) and len(wc) == 2:
+                return (int(wc[0]), int(wc[1]))
+    except Exception:
+        pass
+    return (default, default)
 
 # Format-specific write instructions
 FORMAT_INSTRUCTIONS = {
@@ -217,7 +258,7 @@ def assemble_write_prompt(
     wc_target = brief.get("word_count_target") or (
         int(str(wc_range).split("-")[0]) if "-" in str(wc_range) else int(wc_range)
     )
-    instructions = format_instructions or FORMAT_INSTRUCTIONS.get(
+    instructions = format_instructions or get_format_instructions(fmt) or FORMAT_INSTRUCTIONS.get(
         fmt, f"Write the content. Target {wc_target} words."
     )
 

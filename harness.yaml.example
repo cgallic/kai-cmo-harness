@@ -1,0 +1,128 @@
+# harness.yaml — Agency-Specific Configuration
+# =============================================
+# All quality rules, weights, and content settings live here.
+# The engine reads this at startup. Edit freely — no Python needed.
+#
+# Copy this file to harness.yaml and customize for your agency.
+# If harness.yaml is missing, the engine uses built-in defaults.
+# Override path: set HARNESS_CONFIG=/path/to/harness.yaml
+
+# ── Quality Scoring ────────────────────────────────────────────────
+quality:
+
+  # Category weights — must sum to 1.0
+  # Algorithmic Authorship: SEO sentence structure, keyword placement
+  # GEO Signals: citations, statistics, quotes (AI search visibility)
+  # Content Structure: headings, paragraphs, reading level, AI slop
+  # Four U's: Unique, Useful, Ultra-specific, Urgent (LLM-scored)
+  weights:
+    algorithmic_authorship: 0.35
+    geo_signals: 0.20
+    content_structure: 0.25
+    four_us: 0.20
+
+  # Structure targets — controls heading frequency, paragraph length, etc.
+  structure:
+    max_words_between_headings: 300
+    min_words_between_headings: 100
+    min_paragraph_sentences: 2
+    max_paragraph_sentences: 4
+    min_avg_sentence_length: 15
+    max_avg_sentence_length: 20
+    target_active_voice_pct: 90
+    target_reading_level_min: 6    # Flesch-Kincaid grade level
+    target_reading_level_max: 8
+    you_your_ratio_target: 2.0     # "you/your" should be 2x "we/our/I"
+
+  # GEO signal targets — per 1,000 words
+  # These drive AI search visibility (Perplexity, AI Overviews, ChatGPT)
+  geo:
+    citations: 5        # +115% visibility boost
+    quotations: 3       # +40% visibility boost
+    statistics: 5        # +37% visibility boost
+    technical_terms: 10  # +32.7% visibility boost
+
+  # AI slop detection — patterns the quality gate penalizes
+  # Three tiers: tier1 (instant reject), tier2 (heavy penalty), tier3 (moderate)
+  #
+  # Options per tier:
+  #   "default"              → Use built-in patterns (recommended starting point)
+  #   []                     → Disable this tier entirely
+  #   ["pattern1", "pattern2"] → Replace built-in with your own list
+  #   {remove: [...], add: [...]} → Surgical override: remove specific defaults, add new ones
+  banned_patterns:
+    tier1: "default"
+    tier2: "default"
+    tier3: "default"
+    # Example: B2B agency that uses "leverage" and "innovative" legitimately
+    # tier2:
+    #   remove: ["leverage", "innovative"]
+    #   add: ["disrupt", "pivot", "synergize"]
+
+  # Filler words to flag (AA-22 rule)
+  # "default" uses built-in list. Or provide your own:
+  # filler_words: ["also", "actually", "basically", "really", "very"]
+  filler_words: "default"
+
+  # Back-reference patterns to flag (AA-23 rule)
+  # "default" uses built-in list.
+  back_references: "default"
+
+  # Vague quantifiers to flag (AA-13 rule)
+  # "default" uses built-in list.
+  vague_quantifiers: "default"
+
+# ── Content Generation ─────────────────────────────────────────────
+content:
+
+  # Default LLM for content generation and brief enrichment
+  model: "gemini-2.0-flash"
+
+  # Brief generation settings
+  brief:
+    require_gsc_data: false           # Set true if your agency always has GSC connected
+    require_competitor_analysis: true  # Require competitor_weakness in brief
+    min_hook_variants: 3              # Minimum hook options per brief
+
+  # Three-layer landscape research (runs before brief generation)
+  research:
+    enabled: true          # Set false to skip landscape research
+    search_enabled: false  # Set true if WebSearch/API available
+
+  # Per-format overrides
+  # word_count: [min, max] range
+  # instructions: null = use built-in. Or provide custom markdown string.
+  formats:
+    blog:
+      word_count: [1200, 1800]
+      # instructions: |
+      #   OUTPUT: Markdown only. No HTML tags.
+      #   STRUCTURE: ...your custom blog structure...
+    linkedin:
+      word_count: [600, 900]
+    cold-email:
+      word_count: [80, 120]    # Per touch
+    email-lifecycle:
+      word_count: [300, 500]
+    meta-ads:
+      word_count: [50, 150]
+    google-ads:
+      word_count: [50, 150]
+    tiktok:
+      word_count: [150, 300]   # Spoken words
+    press:
+      word_count: [400, 600]
+
+# ── Approval Workflow ──────────────────────────────────────────────
+approval:
+  channel: "discord"       # discord | slack | webhook | none
+  default_policy: "hold"   # auto | hold | manual
+
+# ── Self-Improvement Loop ─────────────────────────────────────────
+self_improvement:
+  enabled: true
+  min_data_points: 5       # Minimum content pieces before declaring patterns
+  win_thresholds:
+    position: 5            # GSC position <= N = winner
+    ctr: 0.05              # 5% CTR minimum
+    time_on_page: 90       # Seconds on page minimum

@@ -32,10 +32,38 @@ Wait for all domain agents to complete and push results back.
 
 ### Step 3 — Route Results
 
-Each agent returns either `NOTHING` or an alert string.
-- `NOTHING` → no action needed from orchestrator
-- Alert string → agent already posted to its channel; orchestrator logs it
-- Multiple alerts → post aggregate to #updates if more than 2 products flagged
+Each agent returns either `NOTHING` or a structured alert.
+
+**Alert format** (agents should return this JSON when alerting):
+```json
+{"confidence": "HIGH", "alert": "KaiCalls MRR dropped 25% week-over-week", "metric": "mrr", "delta": "-25%"}
+```
+
+Confidence levels:
+- `HIGH` (8+/10): Metric moved >20% from baseline, n>=100, consistent across 3+ days
+- `MEDIUM` (5-7/10): Metric moved 10-20%, n>=30, or single-day spike
+- `LOW` (1-4/10): Metric moved <10%, n<30, or first occurrence with no pattern
+
+**Backward compat**: If an agent returns a plain string (not JSON), treat it as `HIGH` confidence.
+
+Routing rules:
+- `NOTHING` → no action
+- `HIGH` confidence → agent already posted to its channel; orchestrator logs it
+- `MEDIUM` confidence → log only (suppress from Discord). On weekly digest (Mondays), include.
+- `LOW` confidence → log to `/tmp/heartbeat_suppressed.jsonl` only. Surface in weekly digest.
+- Multiple HIGH alerts → post aggregate to #updates if more than 2 products flagged
+
+### Step 3.5 — Weekly Digest (Mondays only)
+
+On Monday heartbeats, after routing HIGH alerts, also compile a digest of all MEDIUM and LOW alerts suppressed since last Monday. Post to #updates as a single message:
+
+```
+📊 Weekly Signal Digest (suppressed alerts from last 7 days):
+MEDIUM: [list]
+LOW: [list]
+```
+
+If no suppressed alerts exist, skip this step.
 
 ### Step 4 — Proactive Memory Scan (every heartbeat, script self-throttles to 6h)
 
