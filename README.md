@@ -1,317 +1,233 @@
-# kai-marketing
+# Kai CMO Harness
 
-A marketing team as slash commands. 16 skills, 40 playbooks, 35 quality rules, 153 knowledge files, and ~40,000 lines of Python — all wired together with a self-improvement loop that makes content better over time.
+A marketing team as slash commands. 31 skills, 41 playbooks, 24 checklists, 27 frameworks, 17 channels, 8 personas, 12 ad platform policies — all wired into Claude Code with auto-discovery and quality gates.
 
-Drop it into Claude Code and type `/marketing-sprint blog mysite "target keyword"`. Three minutes later: a scored, gated, publish-ready blog post.
+Drop it into any project. Type `/kai-email-system`. It reads your codebase, builds a `marketing.md` product bible with full ICP and personas, then batch-produces every lifecycle email your product needs — scored, gated, Loops-ready.
 
-## What makes this different
+## How It Works
 
-This is not a prompt library. It's an **operational marketing system** with real code behind it:
+```
+First run in any project:
+  /kai-anything → auto-explores codebase → creates marketing.md → does the work
 
-| Layer | What | Lines of Code |
-|-------|------|:-------------|
-| **Quality Gate Engine** | 35 rules across 5 categories, SQLite audit trail, YAML policies, retry loop | 1,700 |
-| **Content Engine** | Brief → write → gate → approve → log, surgical revision on failure | 4,000 |
-| **Taste Scoring** | Specificity density, emotional resonance, originality, hook strength, CTA clarity, proof density | 600 |
-| **Analytics** | GSC, GA4, Meta Ads, Stripe + scheduled weekly pulls + competitive monitor + degradation alerts | 7,400 |
-| **Self-Improvement** | Performance check → pattern extract → defaults update. System learns from its own output | 2,700 |
-| **A/B Test Tracker** | SQLite-backed variant tracking with statistical significance (z-test) + sample size estimation | 400 |
-| **Ad Policy Freshness** | Tracks 10 platform policies, detects staleness, links to source URLs | 300 |
-| **Competitive Monitor** | Fetches competitor pages, detects changes, stores diffs over time | 400 |
-| **Brand System** | Design token extraction from tailwind/CSS/config → Remotion brand.ts generation | 300 |
-| **Remotion Pipeline** | Scene builder + project scaffolding → rendered MP4 video ads in 4 formats | 500 |
-| **Component Library** | 10 reusable modules: scoring, creative, research | 600 |
-| **Agent/Scheduler** | Cron parser, 9 task types, heartbeat protocol | 1,700 |
-| **Gateway** | FastAPI with 11 routers | 2,800 |
+Every subsequent run:
+  /kai-anything → reads marketing.md → skips questions → does the work
+```
 
-**Total: ~40,000 lines of Python + 153 knowledge files + 16 skills + 6 CLI tools**
+**marketing.md** is your product marketing bible. Created once by auto-exploration, read by all 31 skills. Contains: product details, full ICP profiles (primary + secondary + anti-ICP), custom personas with language patterns and objections, brand voice, competitive landscape, business stage, current channels, and metrics.
 
 ## Install (30 seconds)
 
-### As a Claude Code skill (recommended)
+### Claude Code (recommended)
 
-Paste this into Claude Code:
-
-> Install kai-marketing: run `git clone https://github.com/cgallic/kai-marketing.git ~/.claude/skills/kai-marketing && cd ~/.claude/skills/kai-marketing && ./setup` then add a kai-marketing section to CLAUDE.md listing the available skills.
-
-### Manual
+Copy the `harness/skills/` directories into `~/.claude/skills/`:
 
 ```bash
-git clone https://github.com/cgallic/kai-marketing.git
-cd kai-marketing && ./setup
+git clone https://github.com/cgallic/kai-cmo-harness.git
+cp -r kai-cmo-harness/harness/skills/kai* ~/.claude/skills/
 ```
 
-Requirements: Git, Python 3.10+, shell. Node.js optional (for Remotion video rendering).
+That's it. Type `/kai` to see all 31 commands.
 
-## Skills — 16 Slash Commands
+### Manual (use from any project)
 
-### The Content Sprint
+Clone the repo anywhere. Skills reference the knowledge base by absolute path — update the paths in each SKILL.md if your clone location differs from `E:\Dev2\kai-cmo-harness-work`.
 
-```
-/content-brief → /content-write → /content-gate → /content-report → /content-retro
-                                                                          │
-                                              loop closes ←───────────────┘
-```
+## 31 Slash Commands
 
-| Skill | Role | What It Does |
-|-------|------|-------------|
-| `/content-brief` | CMO | Generate 18-field brief from (format, site, keyword). Auto-resolves persona, pulls GSC data. |
-| `/content-write` | Content Director | Write using brief + framework + persona + learned patterns. Auto-runs quality gate. |
-| `/content-gate` | Quality Assurance | Score against 35 rules in 5 categories. Auto-retry (max 2). Detailed scorecard. |
-| `/content-report` | Analytics Lead | Pull GSC + GA4 performance. Grade each piece: winner / average / underperformer. |
-| `/content-retro` | CMO Feedback | Extract winner patterns (n>=5, 15%+ lift). Auto-update defaults for next run. |
+### PRODUCE — Make Stuff
 
-### Advertising & Creative
+| Command | What It Does |
+|---------|-------------|
+| `/kai-write` | Write one piece of content (blog, email, LinkedIn, ad, press release, TikTok script) |
+| `/kai-landing-page` | Complete landing page with perception engineering + CRO |
+| `/kai-email-system` | All lifecycle + transactional emails for a product (Loops-ready) |
+| `/kai-ad-campaign` | Full paid campaign across 9 platforms + funnel stages (TOF/MOF/BOF) |
+| `/kai-content-calendar` | Month/quarter of blog + SEO content with briefs |
+| `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
+| `/kai-video` | Video scripts + clipping plans for short-form and long-form |
+| `/kai-cold-outreach` | 3-touch cold email sequences with CAN-SPAM compliance |
+| `/kai-newsletter` | Newsletter editions — content selection, subject lines, scheduling |
+| `/kai-case-study` | Customer case studies (Problem → Solution → Results) |
+| `/kai-repurpose` | 1 pillar → 15-25 assets across all channels |
+| `/kai-launch` | Full product launch package — orchestrates everything above |
+| `/kai-retarget` | Retargeting/remarketing campaign architecture |
+| `/kai-influencer` | Influencer/creator marketing campaigns |
+| `/kai-webinar` | Webinar/event marketing + follow-up sequences |
+| `/kai-podcast` | Podcast launch or guest strategy |
+| `/kai-abm` | Account-based marketing for enterprise targets |
+| `/kai-partnership` | Co-marketing / partnership campaigns |
 
-| Skill | Role | What It Does |
-|-------|------|-------------|
-| `/ad-copy` | Ad Manager | Platform-compliant copy for 9 platforms. TOS loaded automatically. Char counts + preview. |
-| `/ad-research` | Competitive Intel | Scrape Meta Ad Library, Google Transparency, TikTok Creative Center. Analyze patterns. |
-| `/creative-brief` | Creative Director | Visual concepts, copy variants, video scripts, A/B test matrices. Platform-aware specs. |
-| `/ad-render` | Video Producer | Scaffold Remotion project from brand tokens. Render MP4 in vertical/square/landscape. |
+### AUDIT — Check Stuff
 
-### Channels & Operations
+| Command | What It Does |
+|---------|-------------|
+| `/kai-gate` | Quality gate — Four U's score, banned words, AI slop, SEO lint |
+| `/kai-audit` | Full marketing audit — runs all 24 checklists at once |
+| `/kai-seo-audit` | Technical SEO audit with prioritized fix list |
+| `/kai-cro` | Conversion rate audit — 5-layer optimization stack |
 
-| Skill | Role | What It Does |
-|-------|------|-------------|
-| `/email-sequence` | Email Marketer | Nurture flows with lifecycle marketing + perception engineering. CAN-SPAM compliant. |
-| `/seo-audit` | SEO Strategist | 17-point technical audit + algorithmic authorship rules. Uses /browse if available. |
-| `/content-ideas` | Research Lead | GSC keyword gaps × persona matching. Topics ranked by opportunity score. |
-| `/checklist` | QA Gatekeeper | Surface the right checklist for any task. 23+ checklists indexed by type. |
-| `/marketing-sprint` | Full Pipeline | Brief → write → gate → log in one command. The marketing `/ship`. |
-| `/kai-upgrade` | Self-Updater | Pull latest, re-register skills, show changelog. Never touches content state. |
+### PLAN — Think Stuff
 
-## Quality Gate — 35 Rules, 5 Categories
+| Command | What It Does |
+|---------|-------------|
+| `/kai-brief` | Structured content brief with persona and angle selection |
+| `/kai-growth-plan` | "I'm at $X MRR — what do I do?" Stage-appropriate marketing plan |
+| `/kai-brand` | Brand positioning workshop — messaging, voice, differentiation |
+| `/kai-budget` | Marketing budget planning + channel allocation |
+| `/kai-retention` | Customer retention system design |
 
-Every piece of content scores against 35 automated rules before shipping:
+### ANALYZE — Research Stuff
 
-| Category | Rules | What It Checks |
-|----------|:-----:|---------------|
-| **Algorithmic Authorship** | 15 | Clause positioning, verb-first instructions, sentence length, entity naming, list consistency |
-| **Content Structure** | 9 | Hook presence, heading frequency, paragraph length, active voice, reading level, AI cliché detection |
-| **Taste** | 6 | **Specificity density, emotional resonance, originality, hook strength, CTA clarity, proof density** |
-| **GEO/AEO Signals** | 4 | Citation density, quotation density, statistics, technical terms |
-| **Four U's** | 1 | Unique, Useful, Ultra-specific, Urgent (LLM-scored) |
+| Command | What It Does |
+|---------|-------------|
+| `/kai-competitors` | 5-layer competitive teardown + sales battlecards |
+| `/kai-surround-sound` | Get your brand into ChatGPT/Perplexity/Claude answers |
+| `/kai-analytics` | Analytics + attribution setup guide |
 
-The **Taste** category is what separates this from every other content tool. It doesn't just check structure — it checks whether content is actually *good*:
+### ROUTER
 
-- **TS-01 Specificity:** Are claims backed by numbers, names, examples? Or vague adjectives?
-- **TS-02 Emotional Resonance:** Does it trigger pain/aspiration/urgency? Or read like a textbook?
-- **TS-03 Originality:** Are sentences unique to your brand? Or could any competitor publish them?
-- **TS-04 Hook Strength:** Does the first sentence grab attention? Or start with "In today's rapidly evolving..."?
-- **TS-05 CTA Clarity:** Does it end with a specific action? Or fade out with "learn more"?
-- **TS-06 Proof Density:** Named proof points per 500 words. Claims without proof = trust erosion.
+| Command | What It Does |
+|---------|-------------|
+| `/kai` | Shows all skills organized by business stage and workflow |
 
-## CLI Tools — 6 Shell Commands
+## By Business Stage
 
-```bash
-kai-gate score article.md --no-llm          # Score content against 35 rules
-kai-brief --format blog --site x --keyword y # Generate brief from 3 inputs
-kai-report --all --format json               # Pull performance data
-kai-config get brand.colors.primary          # Read brand config
-kai-ab analyze ab-1234abcd                   # A/B test significance analysis
-kai-render scaffold --archetype problem-agitation  # Scaffold Remotion video ad project
-```
+**Pre-Launch ($0):**
+`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-brand`
 
-## A/B Test Tracker
+**Launch ($0–$10K MRR):**
+`/kai-launch` → `/kai-email-system` → `/kai-ad-campaign` → `/kai-social`
 
-Real statistical significance testing, not a playbook:
+**Growth ($10K–$100K MRR):**
+`/kai-content-calendar` → `/kai-seo-audit` → `/kai-surround-sound` → `/kai-video` → `/kai-newsletter`
 
-```bash
-kai-ab create "headline-test" --variants "pain-hook,data-hook,social-hook" --metric cvr
-kai-ab record ab-1234 --variant pain-hook --impressions 1200 --clicks 54 --conversions 8
-kai-ab analyze ab-1234
+**Scale ($100K+ MRR):**
+`/kai-audit` → `/kai-abm` → `/kai-competitors` → `/kai-retention` → `/kai-budget`
 
-# Output:
-# A/B TEST: headline-test (ab-1234)
-# Metric: CVR  |  Status: RUNNING
-#
-# Variant               Impressions     Clicks      CTR     Conv      CVR
-# data-hook                   1,200         78    6.50%       15   19.23%
-# pain-hook                   1,200         54    4.50%        8   14.81%
-# social-hook                 1,200         42    3.50%        5   11.90%
-#
-# Confidence: 74.5%  |  Significant: NO
-# Recommendation: Need ~1157 impressions per variant. Keep running.
-```
+## Quality Gates
 
-## Brand System
+Every piece of content passes automated quality checks before shipping:
 
-Configure once, flows everywhere — to ad copy, Remotion video rendering, content writing, and voice matching:
+### Four U's Score (min 12/16 for content, 10/16 for ads/email)
 
-```bash
-kai-config set brand.name "KaiCalls"
-kai-config set brand.colors.primary "#6366f1"
-kai-config set brand.tagline "AI receptionist that never sleeps"
-kai-config get brand.colors.primary   # → #6366f1
-```
+| U | Question |
+|---|----------|
+| **Unique** | Can only WE write this? |
+| **Useful** | Can the reader take action immediately? |
+| **Ultra-specific** | Numbers, named tools, concrete examples? |
+| **Urgent** | Reason to engage today? |
 
-Extracts design tokens from tailwind.config, CSS variables, and package.json. Generates Remotion `brand.ts` automatically.
+### Instant Rejection
 
-## Remotion Video Ad Pipeline
+**Banned words:** leverage, utilize, synergy, innovative, deep dive, circle back, touch base, moving forward, at the end of the day
 
-```bash
-kai-render scaffold --archetype problem-agitation --format vertical
-# Generates complete Remotion project:
-#   src/config/brand.ts    — Your brand colors/fonts
-#   src/config/scenes.json — Scene-by-scene composition
-#   src/templates/         — Remotion React components
-#   package.json           — npm run build:all → MP4
+**AI slop:** "In conclusion", "It's important to note", "In today's rapidly evolving", "This comprehensive guide", "Without further ado", "It's worth noting that"
 
-cd ~/.kai-marketing/renders/20260325 && npm install && npm run build:all
-# → out/vertical.mp4 (1080x1920, Reels/Stories/TikTok)
-# → out/square.mp4   (1080x1080, Feed)
-# → out/landscape.mp4 (1920x1080, YouTube)
-```
+### SEO Content (additional)
 
-4 archetypes: **Problem-Agitation** (cold), **Social Proof** (warm), **Product Demo** (retargeting), **Lifestyle** (brand).
+Algorithmic Authorship rules: conditions after main clause, verb-first instructions, sentences under 20 words, bold the answer not the query.
 
-## Knowledge Base — 153 Files
+### Ad Compliance
+
+Every ad loads the platform's TOS before writing. 10 platform policies (Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X) + FTC/GDPR/CAN-SPAM/COPPA compliance.
+
+## Knowledge Base
 
 | Category | Count | Highlights |
 |----------|:-----:|-----------|
-| **Playbooks** | 40 | Ad creative, campaign management, CRO, pricing, customer journey, growth loops, brand positioning, retention, demand gen, ABM, partnerships, launches, budgeting, link building, tracking/GTM, content repurposing, podcast, newsletter, social media, video, influencer, PR, competitive intel, SaaS metrics, e-commerce, marketing by stage, automation, retargeting, internal linking |
-| **Frameworks** | 24 | Algorithmic authorship, AEO/AI search (12 files), perception engineering, headline formulas, copywriting formulas (50 formulas), loop mechanics, Meta advertising (4 deep dives) |
-| **Checklists** | 23 | Content, SEO, technical SEO, Meta ads, Google ads, LinkedIn ads, paid acquisition, TikTok, email, PR, landing page, CRO, website launch, social media audit, creative production, ad launch |
-| **Channel Guides** | 16 | Blog, LinkedIn, Email, Press, TikTok, TikTok Shop, Meta, Paid, SEO, Podcast, YouTube, Instagram, X/Twitter, Affiliate, Community, Newsletter |
+| **Playbooks** | 41 | Ad creative, CRO, pricing, growth loops, brand positioning, retention, demand gen, ABM, partnerships, launches, budgeting, competitive intel, content repurposing, surround sound/LLM manipulation, and more |
+| **Frameworks** | 27 | Algorithmic authorship, AEO/AI search (12 files including patent analysis + Perplexity reverse-engineering), perception engineering, headline formulas, copywriting formulas, loop mechanics, Meta advertising (4 deep dives) |
+| **Checklists** | 24 | Content, SEO, technical SEO, Meta ads, Google ads, LinkedIn ads, TikTok, email, PR, landing page, CRO, website launch, social media audit, creative production, ad launch |
+| **Channel Guides** | 17 | Blog, LinkedIn, Email, Press, TikTok, TikTok Shop, Meta, Paid, SEO, Podcast, YouTube, Instagram, X/Twitter, Affiliate, Community, Newsletter |
 | **Personas** | 8 | Competent Cog, Shock Absorber, Ghosted Applicant, Subscription Serf, System Manager, Admin Martyr, Obsolescence Anxious, Credibility Fighter |
-| **Ad Policies** | 12 | Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X + FTC/GDPR/CAN-SPAM/COPPA |
+| **Ad Policies** | 12 | Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X + FTC/GDPR/CAN-SPAM/COPPA (7,600+ lines) |
+| **Skill Contracts** | 7 | Blog post, email, email lifecycle, cold email, Meta ads, Google ads, LinkedIn article |
 
-## Operational Tools (Real Code, Not Playbooks)
+## marketing.md — The Product Bible
 
-| Tool | What It Does | Command |
-|------|-------------|---------|
-| **Scheduled Analytics Pull** | Weekly GSC + GA4 + Meta Ads data snapshots | `python -m scripts.analytics.scheduled_pull --all` |
-| **Policy Freshness Checker** | Detects stale ad platform policies, links to update sources | `python -m scripts.ads.policy_freshness check` |
-| **Competitive Monitor** | Tracks competitor website changes, pricing shifts, content updates | `python -m scripts.analytics.competitive_monitor check --all` |
-| **Performance Dashboard** | Weekly summary, 12-week trends, ranking degradation alerts | `python -m scripts.analytics.performance_dashboard weekly` |
-| **A/B Test Tracker** | Statistical significance with z-test, sample size estimation | `kai-ab analyze <test-id>` |
+When any `/kai-*` skill runs for the first time in a project, it:
 
-## Component Library
+1. **Auto-explores** — reads CLAUDE.md, README, package.json, routes, schemas, landing pages, existing marketing
+2. **Creates marketing.md** with:
+   - Product details + value prop + activation moment
+   - **Full ICP profiles** — primary, secondary, anti-ICP with trigger events, pain severity, current solutions
+   - **Custom personas** — mapped to harness archetypes with language patterns, objections, decision triggers, trusted channels
+   - User segments
+   - Business model + stage + pricing
+   - Brand voice with examples
+   - Competitive landscape
+   - Current channels + metrics
+3. **Presents for confirmation** — you review, tweak, save
 
-Reusable Python modules in `lib/components/`:
-
-| Module | What It Does |
-|--------|-------------|
-| `creative/brand_tokens.py` | Extract design tokens from tailwind/CSS/config, generate Remotion brand.ts |
-| `creative/format_specs.py` | Platform char limits, image dimensions, video durations for all 12 placements |
-| `creative/scene_builder.py` | Convert brief + copy into Remotion scene compositions (4 archetypes) |
-| `creative/copy_variants.py` | Generate N variants of any copy block for A/B testing |
-| `scoring/specificity.py` | Count specific vs vague claims in text (reusable outside quality gate) |
-| `research/keyword_scorer.py` | Score keyword opportunity (0-100) from position, impressions, CTR gap |
-
-## Self-Improvement Loop
-
-```
-Day 0:   Write → gate → publish → log
-Day 30:  performance_check.py pulls GSC + GA4, grades each piece
-Weekly:  pattern_extract.py identifies winners (n>=5, 15%+ lift)
-Weekly:  harness_defaults_update.py writes patterns into MARKETING.md
-Day 31+: Next content run reads updated defaults → quality improves
-```
-
-The system gets better the more you use it. No manual tuning required.
+Every subsequent skill reads `marketing.md` and gets straight to work. No more answering the same discovery questions across 31 skills.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      KNOWLEDGE BASE (153 files)                  │
-│  frameworks/  channels/  checklists/  personas/  playbooks/      │
-│  40 playbooks, 24 frameworks, 23 checklists, 16 channels        │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ loaded per task type
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    SKILL LAYER (16 slash commands)                │
-│  content-brief → content-write → content-gate → content-report  │
-│  ad-copy, ad-research, ad-render, creative-brief, email-seq     │
-│  seo-audit, content-ideas, checklist, marketing-sprint          │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ calls via bin/ CLI tools
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    ENGINE LAYER (~40,000 lines Python)            │
-│  Quality Gate (35 rules)  │  Content Engine  │  Analytics        │
-│  A/B Tracker              │  Self-Improvement │  Competitive Mon  │
-│  Brand Tokens             │  Scene Builder    │  Policy Freshness │
-│  Component Library        │  Gateway (11 API routes)             │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │ persistent state
-                           ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    STATE (~/.kai-marketing/)                      │
-│  config.yaml  │  briefs/  │  drafts/  │  gates/  │  reports/    │
-│  content-log.jsonl  │  ab_tests.db  │  competitive/  │  renders/│
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                    KNOWLEDGE BASE (153 files)                      │
+│  41 playbooks · 27 frameworks · 24 checklists · 17 channels      │
+│  8 personas · 12 ad policies · 7 skill contracts                  │
+└─────────────────────────┬────────────────────────────────────────┘
+                          │ loaded per task type
+                          ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    SKILL LAYER (31 slash commands)                 │
+│                                                                    │
+│  PRODUCE: write, landing-page, email-system, ad-campaign,         │
+│           content-calendar, social, video, cold-outreach,         │
+│           newsletter, case-study, repurpose, launch, retarget,    │
+│           influencer, webinar, podcast, abm, partnership          │
+│                                                                    │
+│  AUDIT:   gate, audit, seo-audit, cro                             │
+│  PLAN:    brief, growth-plan, brand, budget, retention            │
+│  ANALYZE: competitors, surround-sound, analytics                  │
+│  ROUTER:  kai                                                      │
+└─────────────────────────┬────────────────────────────────────────┘
+                          │ reads on first run
+                          ▼
+┌──────────────────────────────────────────────────────────────────┐
+│               marketing.md (per-project product bible)            │
+│  Product · ICP · Personas · Brand Voice · Competitive · Metrics   │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ## Directory Structure
 
 ```
-kai-marketing/
-├── SKILL.md                    # Root skill: system overview + index
-├── VERSION                     # 0.1.0
-├── CHANGELOG.md
-├── setup                       # One-command installer
-├── bin/                        # 6 CLI tools
-│   ├── kai-gate                # Quality gate scoring
-│   ├── kai-brief               # Brief generation
-│   ├── kai-report              # Performance reporting
-│   ├── kai-config              # Config management + brand system
-│   ├── kai-ab                  # A/B test tracking
-│   └── kai-render              # Remotion video ad scaffolding
+kai-cmo-harness/
+├── CLAUDE.md                    # Entry point — Claude Code reads this
+├── README.md                    # This file
 │
-├── content-brief/SKILL.md      # 16 skill definitions
-├── content-write/SKILL.md
-├── content-gate/SKILL.md
-├── content-report/SKILL.md
-├── content-retro/SKILL.md
-├── ad-copy/SKILL.md
-├── ad-research/SKILL.md
-├── ad-render/SKILL.md
-├── creative-brief/SKILL.md
-├── email-sequence/SKILL.md
-├── seo-audit/SKILL.md
-├── content-ideas/SKILL.md
-├── checklist/SKILL.md
-├── marketing-sprint/SKILL.md
-├── kai-upgrade/SKILL.md
+├── knowledge/                   # Marketing intelligence (153 files)
+│   ├── _index.md                # Framework lookup table
+│   ├── frameworks/              # 27 frameworks (SEO, copywriting, AEO, ads)
+│   ├── channels/                # 17 channel guides
+│   ├── checklists/              # 24 validation checklists
+│   ├── personas/                # 8 audience personas
+│   ├── playbooks/               # 41 strategic playbooks
+│   └── design/                  # UI/UX design patterns
 │
-├── knowledge/                  # 153 marketing knowledge files
-│   ├── _index.md               # Full index with "use when" triggers
-│   ├── frameworks/             # 24 frameworks (SEO, copywriting, ads, AEO)
-│   ├── channels/               # 16 channel guides
-│   ├── checklists/             # 23 validation checklists
-│   ├── personas/               # 8 audience personas
-│   ├── playbooks/              # 40 strategic playbooks
-│   └── design/                 # UI/UX design patterns
+├── harness/                     # Pipeline config
+│   ├── skill-contracts/         # 7 per-format YAML contracts
+│   ├── references/              # 12 ad platform policies (7,600+ lines)
+│   └── skills/                  # 31 slash command skills
+│       ├── kai/                 # Router — shows all skills
+│       ├── kai-write/           # Write one piece
+│       ├── kai-email-system/    # All emails for a product
+│       ├── kai-ad-campaign/     # Full ad campaign
+│       ├── kai-landing-page/    # Landing page copy
+│       ├── kai-surround-sound/  # LLM brand manipulation
+│       └── ... (26 more)
 │
-├── harness/                    # Pipeline config
-│   ├── skill-contracts/        # Per-format YAML contracts
-│   └── references/             # 12 ad platform TOS policies (7,600+ lines)
+├── scripts/                     # Quality gate engine
+│   └── quality_gates/           # Four U's scorer, banned words, SEO lint
 │
-├── scripts/                    # Python engine (~40K lines)
-│   ├── quality/                # 35-rule quality scorer
-│   │   └── rules/              # AA, CS, GEO, FU, VC, TS rules
-│   ├── content/                # Engine, brief gen, A/B tracker, intent parser
-│   ├── analytics/              # GSC, GA4, Meta, scheduled pull, competitive monitor, dashboard
-│   ├── self_improvement/       # Performance check, pattern extract, defaults update
-│   └── ads/                    # Meta ads, ad loop, policy freshness
-│
-├── lib/                        # Shared utilities
-│   ├── preamble.sh             # Skill preamble
-│   ├── find-python.sh          # Cross-platform Python detection
-│   └── components/             # Reusable component library
-│       ├── creative/           # Brand tokens, format specs, scene builder, copy variants
-│       ├── scoring/            # Specificity scorer (reusable outside gate)
-│       └── research/           # Keyword opportunity scorer
-│
-├── agent/                      # Autonomous agent loop (optional)
-├── gateway/                    # FastAPI webhook gateway (optional)
-├── workspace/                  # OpenClaw workspace templates
-├── deploy/                     # VPS deployment
-└── docs/                       # Extended documentation
+├── workspace/                   # Output directory for generated content
+├── agent/                       # OpenClaw autonomous agent (optional)
+├── gateway/                     # FastAPI webhook gateway (optional)
+└── docs/                        # Extended documentation
 ```
 
 ## License
