@@ -2,19 +2,19 @@
 
 A marketing team as slash commands. 31 skills, 41 playbooks, 24 checklists, 27 frameworks, 17 channels, 8 personas, 12 ad platform policies — all wired into Claude Code with auto-discovery and quality gates.
 
-Drop it into any project. Type `/kai-email-system`. It reads your codebase, builds a `marketing.md` product bible with full ICP and personas, then batch-produces every lifecycle email your product needs — scored, gated, Loops-ready.
+Drop it into any project. Type `/kai-email-system`. It reads your codebase, builds a `MARKETING.md` product bible with full ICP and personas, then batch-produces every lifecycle email your product needs — scored, gated, Loops-ready.
 
 ## How It Works
 
 ```
 First run in any project:
-  /kai-anything → auto-explores codebase → creates marketing.md → does the work
+  /kai-anything → auto-explores codebase → creates MARKETING.md → does the work
 
 Every subsequent run:
-  /kai-anything → reads marketing.md → skips questions → does the work
+  /kai-anything → reads MARKETING.md → skips questions → does the work
 ```
 
-**marketing.md** is your product marketing bible. Created once by auto-exploration, read by all 31 skills. Contains: product details, full ICP profiles (primary + secondary + anti-ICP), custom personas with language patterns and objections, brand voice, competitive landscape, business stage, current channels, and metrics.
+**MARKETING.md** is your product marketing bible. Created once by auto-exploration, read by all 31 skills. Contains: product details, full ICP profiles (primary + secondary + anti-ICP), custom personas with language patterns and objections, brand voice, competitive landscape, business stage, current channels, and metrics.
 
 ## Install (30 seconds)
 
@@ -144,12 +144,12 @@ Every ad loads the platform's TOS before writing. 10 platform policies (Google, 
 | **Ad Policies** | 12 | Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X + FTC/GDPR/CAN-SPAM/COPPA (7,600+ lines) |
 | **Skill Contracts** | 7 | Blog post, email, email lifecycle, cold email, Meta ads, Google ads, LinkedIn article |
 
-## marketing.md — The Product Bible
+## MARKETING.md — The Product Bible
 
 When any `/kai-*` skill runs for the first time in a project, it:
 
 1. **Auto-explores** — reads CLAUDE.md, README, package.json, routes, schemas, landing pages, existing marketing
-2. **Creates marketing.md** with:
+2. **Creates MARKETING.md** with:
    - Product details + value prop + activation moment
    - **Full ICP profiles** — primary, secondary, anti-ICP with trigger events, pain severity, current solutions
    - **Custom personas** — mapped to harness archetypes with language patterns, objections, decision triggers, trusted channels
@@ -160,7 +160,7 @@ When any `/kai-*` skill runs for the first time in a project, it:
    - Current channels + metrics
 3. **Presents for confirmation** — you review, tweak, save
 
-Every subsequent skill reads `marketing.md` and gets straight to work. No more answering the same discovery questions across 31 skills.
+Every subsequent skill reads `MARKETING.md` and gets straight to work. No more answering the same discovery questions across 31 skills.
 
 ## Architecture
 
@@ -188,7 +188,7 @@ Every subsequent skill reads `marketing.md` and gets straight to work. No more a
                           │ reads on first run
                           ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│               marketing.md (per-project product bible)            │
+│               MARKETING.md (per-project product bible)            │
 │  Product · ICP · Personas · Brand Voice · Competitive · Metrics   │
 └──────────────────────────────────────────────────────────────────┘
 ```

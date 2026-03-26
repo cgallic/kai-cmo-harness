@@ -7,17 +7,17 @@ Orchestrate a complete product launch — coordinates emails, ads, content, PR, 
 
 ## Phase 0: Load Product Context
 
-Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
 
 **If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
 
-**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `MARKETING.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
 
 ---
 
 ## Phase 1: Launch Discovery
 
-Read from `marketing.md`. Only ask about things not covered there:
+Read from `MARKETING.md`. Only ask about things not covered there:
 
 1. **What's launching?** (new product, feature, major update, rebrand)
 2. **Launch date** — when does it go live?
