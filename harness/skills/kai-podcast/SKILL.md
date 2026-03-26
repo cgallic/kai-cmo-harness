@@ -9,9 +9,19 @@ Launch a podcast OR plan a podcast guest strategy. Two modes: Host (launch your 
 
 ---
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## Phase 1: Discovery
 
-Gather context before planning:
+Read from `marketing.md`. Only ask about things not covered there:
 
 1. **Mode** — Are we launching a show (Host) or getting booked on shows (Guest)?
 2. **Goal** — Brand awareness, thought leadership, lead gen, networking, SEO backlinks?

@@ -5,16 +5,24 @@ description: Build a complete cold email outreach system — ICP definition, seq
 
 Build a complete cold outreach system — from ICP definition through batch-produced sequences with compliance checks.
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## Phase 1: Outreach Discovery
 
-Ask the user:
+Read from `marketing.md`. Only ask about things not covered there:
 
-1. **Product/service** — what are we selling?
-2. **ICP (Ideal Customer Profile)** — job titles, company size, industry, pain points
-3. **Offer** — what's the ask? (demo, call, free trial, content download)
-4. **Sending infrastructure** — what tool? (Instantly, Smartlead, Loops, etc.)
-5. **Volume** — how many prospects per day/week?
-6. **Existing sequences** — anything running already?
+1. **Offer** — what's the ask? (demo, call, free trial, content download)
+2. **Sending infrastructure** — what tool? (Instantly, Smartlead, Loops, etc.)
+3. **Volume** — how many prospects per day/week?
+4. **Existing sequences** — anything running already?
 
 ## Phase 2: Sequence Architecture
 

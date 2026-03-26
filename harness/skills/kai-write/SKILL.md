@@ -5,6 +5,16 @@ description: Write a single piece of marketing content using Kai CMO Harness fra
 
 Write one piece of content using the Kai CMO Harness. Loads the right framework, applies quality gates, outputs ready-to-publish copy.
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## Step 1: Identify Format and Load Context
 
 Determine the content format from the user's request, then load the corresponding files from the harness at `E:\Dev2\kai-cmo-harness-work`:

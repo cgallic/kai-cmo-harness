@@ -5,17 +5,25 @@ description: Plan and produce a full paid ad campaign across platforms (Meta, Go
 
 Plan and batch-produce a complete ad campaign across platforms and funnel stages. Every ad passes platform policy compliance + quality gates.
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## Phase 1: Campaign Discovery
 
-Ask the user (or read project files):
+Read from `marketing.md`. Only ask about things not covered there:
 
-1. **Product/offer** — what are we advertising?
-2. **Platforms** — which platforms? (Meta, Google, LinkedIn, TikTok, etc.)
-3. **Budget range** — affects platform mix and bid strategy recommendations
-4. **Goal** — leads, conversions, traffic, awareness, app installs?
-5. **Audience** — who are we targeting? (map to harness persona if applicable)
-6. **Landing page** — where do ads send traffic?
-7. **Existing assets** — any images/video already available?
+1. **Platforms** — which platforms? (Meta, Google, LinkedIn, TikTok, etc.)
+2. **Budget range** — affects platform mix and bid strategy recommendations
+3. **Goal** — leads, conversions, traffic, awareness, app installs?
+4. **Landing page** — where do ads send traffic?
+5. **Existing assets** — any images/video already available?
 
 ## Phase 2: Campaign Architecture
 

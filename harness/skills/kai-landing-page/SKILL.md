@@ -5,16 +5,24 @@ description: Produce complete landing page copy using perception engineering and
 
 Produce a complete landing page using perception engineering + CRO principles. Every section scored.
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## Phase 1: Page Discovery
 
-Ask the user:
+Read from `marketing.md`. Only ask about things not covered there:
 
-1. **Product/offer** — what does it do? What's the core transformation?
-2. **Target audience** — who lands here? (map to harness persona if applicable)
-3. **Traffic source** — cold (ads), warm (content), hot (referral)? Determines awareness level.
-4. **Goal** — signup, demo request, purchase, waitlist?
-5. **Existing page** — rewrite or net-new?
-6. **Proof available** — testimonials, case studies, metrics, logos?
+1. **Traffic source** — cold (ads), warm (content), hot (referral)? Determines awareness level.
+2. **Goal** — signup, demo request, purchase, waitlist?
+3. **Existing page** — rewrite or net-new?
+4. **Proof available** — testimonials, case studies, metrics, logos?
 
 ## Phase 2: Page Architecture
 

@@ -7,6 +7,16 @@ description: Customer retention system — churn analysis, retention tactics, lo
 
 Design a complete retention system: churn diagnostics, retention tactics, engagement scoring, loyalty mechanics, and win-back campaigns.
 
+## Phase 0: Load Product Context
+
+Check if `marketing.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
+
+**If it exists:** Read it — skip product discovery questions. It has the product name, ICP, value prop, monetization, brand voice, current channels, and competitive landscape.
+
+**If it does NOT exist:** Auto-explore the codebase to create it in the **project root** (next to CLAUDE.md). Do NOT ask the user what the product is. Read CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, and any project files. Search for email/ad/analytics config. Then create `marketing.md` using the template from `/kai-email-system`. Present draft to user for confirmation.
+
+---
+
 ## References
 
 Load these files as context before starting:
@@ -18,7 +28,7 @@ Load these files as context before starting:
 
 ## Phase 1 — Discovery
 
-1. Ask the user for:
+1. Read from `marketing.md`. Only ask about things not covered there:
    - Business model (SaaS, ecommerce, services, marketplace)
    - Current churn rate (monthly/annual, if known)
    - Customer count and average revenue per customer
