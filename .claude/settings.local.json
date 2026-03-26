@@ -1,7 +1,20 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(for dir:*)",
+      "Bash(do mkdir:*)",
+      "Bash(echo \"Created $dir\")",
+      "Bash(done)",
+      "Bash(ls -d \"C:/Users/cgall/.claude/skills/kai\"*/)",
+      "Bash(for skill:*)",
+      "Bash(do)",
+      "Bash(file=\"C:/Users/cgall/.claude/skills/$skill/SKILL.md\")",
+      "Bash(if grep:*)",
+      "Bash(then)"
+    ],
     "additionalDirectories": [
-      "E:\\Dev2\\DigitalProduct\\AlgoProduct"
+      "E:\\Dev2\\DigitalProduct\\AlgoProduct",
+      "C:\\Users\\cgall\\OneDrive\\Desktop\\Dev\\adminpanelnew"
     ]
   }
 }
