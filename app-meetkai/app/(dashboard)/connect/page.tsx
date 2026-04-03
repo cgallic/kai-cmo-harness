@@ -119,19 +119,66 @@ function ProviderCard({
   async function handleConnect() {
     setLoading(true);
 
-    // Create the integration record if it doesn't exist
-    if (!integration) {
-      await supabase.from("integrations").insert({
-        brand_id: brandId,
-        channel: provider.channel,
-        provider: provider.provider,
-        status: "pending_auth",
+    try {
+      // Call our API route to create a Pipedream connect token
+      const res = await fetch("/api/connections/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand_id: brandId,
+          channel: provider.channel,
+          provider: provider.provider,
+          app_slug: provider.appSlug,
+        }),
       });
-    }
 
-    // TODO: Call Pipedream Connect API to get OAuth link
-    // For now, just mark as pending
-    setLoading(false);
+      const data = await res.json();
+
+      if (!res.ok || !data.connect_link_url) {
+        console.error("Failed to get connect link:", data);
+        setLoading(false);
+        return;
+      }
+
+      // Open Pipedream OAuth in a popup
+      const popup = window.open(
+        data.connect_link_url,
+        "pipedream-connect",
+        "width=600,height=700,left=200,top=100"
+      );
+
+      // Poll for connection status while popup is open
+      const pollInterval = setInterval(async () => {
+        if (popup?.closed) {
+          clearInterval(pollInterval);
+          setLoading(false);
+          return;
+        }
+
+        const { data: updated } = await supabase
+          .from("integrations")
+          .select("status")
+          .eq("brand_id", brandId)
+          .eq("channel", provider.channel)
+          .eq("provider", provider.provider)
+          .single();
+
+        if (updated?.status === "connected") {
+          clearInterval(pollInterval);
+          popup?.close();
+          setLoading(false);
+        }
+      }, 2000);
+
+      // Safety timeout after 2 minutes
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        setLoading(false);
+      }, 120000);
+    } catch (error) {
+      console.error("Connection error:", error);
+      setLoading(false);
+    }
   }
 
   async function handleDisconnect() {
