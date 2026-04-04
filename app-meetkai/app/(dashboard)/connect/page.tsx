@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useBrand, useIntegrations } from "@/lib/hooks";
 import { PROVIDERS, CHANNEL_CATEGORIES, type ProviderConfig, type Integration } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,26 @@ const iconMap: Record<string, typeof BarChart3> = {
 export default function ConnectPage() {
   const { brand, loading: brandLoading } = useBrand();
   const { integrations, loading: intLoading } = useIntegrations(brand?.id);
+  const searchParams = useSearchParams();
+
+  // Handle OAuth success redirect — confirm the connection
+  useEffect(() => {
+    const connectedProvider = searchParams.get("connected");
+    if (!connectedProvider || !brand) return;
+
+    async function confirmConnection() {
+      const res = await fetch("/api/connections/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brand!.id, provider: connectedProvider }),
+      });
+      if (res.ok) {
+        // Clean URL
+        window.history.replaceState({}, "", "/connect");
+      }
+    }
+    confirmConnection();
+  }, [searchParams, brand]);
 
   if (brandLoading || intLoading) {
     return (
@@ -149,34 +170,38 @@ function ProviderCard({
           "width=600,height=700,left=200,top=100"
         );
 
-        const pollInterval = setInterval(async () => {
+        // Listen for postMessage from the popup callback page
+        const handler = async (event: MessageEvent) => {
+          if (event.data?.type !== "pipedream-connect") return;
+          window.removeEventListener("message", handler);
+
+          if (event.data.success) {
+            // Confirm the connection server-side
+            await fetch("/api/connections/confirm", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ brand_id: brandId, provider: provider.provider }),
+            });
+          }
+          setLoading(false);
+        };
+        window.addEventListener("message", handler);
+
+        // Fallback: if popup closes without messaging
+        const checkClosed = setInterval(() => {
           if (popup?.closed) {
-            clearInterval(pollInterval);
-            setLoading(false);
-            return;
-          }
-
-          const { data: updated } = await supabase
-            .from("integrations")
-            .select("status")
-            .eq("brand_id", brandId)
-            .eq("channel", provider.channel)
-            .eq("provider", provider.provider)
-            .single();
-
-          if (updated?.status === "connected") {
-            clearInterval(pollInterval);
-            popup?.close();
+            clearInterval(checkClosed);
+            window.removeEventListener("message", handler);
             setLoading(false);
           }
-        }, 2000);
+        }, 1000);
 
         setTimeout(() => {
-          clearInterval(pollInterval);
+          clearInterval(checkClosed);
+          window.removeEventListener("message", handler);
           setLoading(false);
         }, 120000);
       } else {
-        // No Pipedream yet — integration saved as pending
         setLoading(false);
       }
     } catch (err) {

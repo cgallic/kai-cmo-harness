@@ -72,8 +72,8 @@ export async function POST(request: Request) {
 
     const result = await pd.tokens.create({
       externalUserId: brand_id,
-      successRedirectUri: `${appUrl}/connect?connected=${provider}`,
-      errorRedirectUri: `${appUrl}/connect?error=${provider}`,
+      successRedirectUri: `${appUrl}/api/connections/callback?provider=${provider}`,
+      errorRedirectUri: `${appUrl}/api/connections/callback?provider=${provider}&error=auth_failed`,
     });
 
     // Append the app slug so Pipedream knows which service to connect
