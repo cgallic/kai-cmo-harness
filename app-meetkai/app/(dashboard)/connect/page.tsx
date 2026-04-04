@@ -112,15 +112,16 @@ function ProviderCard({
   brandId: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
   const Icon = iconMap[provider.icon] || Link2;
   const status = integration?.status || "not_connected";
 
   async function handleConnect() {
     setLoading(true);
+    setError(null);
 
     try {
-      // Call our API route to create a Pipedream connect token
       const res = await fetch("/api/connections/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -134,49 +135,53 @@ function ProviderCard({
 
       const data = await res.json();
 
-      if (!res.ok || !data.connect_link_url) {
-        console.error("Failed to get connect link:", data);
+      if (!res.ok) {
+        setError(data.error || "Connection failed");
         setLoading(false);
         return;
       }
 
-      // Open Pipedream OAuth in a popup
-      const popup = window.open(
-        data.connect_link_url,
-        "pipedream-connect",
-        "width=600,height=700,left=200,top=100"
-      );
+      // If we got a connect link, open OAuth popup
+      if (data.connect_link_url) {
+        const popup = window.open(
+          data.connect_link_url,
+          "pipedream-connect",
+          "width=600,height=700,left=200,top=100"
+        );
 
-      // Poll for connection status while popup is open
-      const pollInterval = setInterval(async () => {
-        if (popup?.closed) {
+        const pollInterval = setInterval(async () => {
+          if (popup?.closed) {
+            clearInterval(pollInterval);
+            setLoading(false);
+            return;
+          }
+
+          const { data: updated } = await supabase
+            .from("integrations")
+            .select("status")
+            .eq("brand_id", brandId)
+            .eq("channel", provider.channel)
+            .eq("provider", provider.provider)
+            .single();
+
+          if (updated?.status === "connected") {
+            clearInterval(pollInterval);
+            popup?.close();
+            setLoading(false);
+          }
+        }, 2000);
+
+        setTimeout(() => {
           clearInterval(pollInterval);
           setLoading(false);
-          return;
-        }
-
-        const { data: updated } = await supabase
-          .from("integrations")
-          .select("status")
-          .eq("brand_id", brandId)
-          .eq("channel", provider.channel)
-          .eq("provider", provider.provider)
-          .single();
-
-        if (updated?.status === "connected") {
-          clearInterval(pollInterval);
-          popup?.close();
-          setLoading(false);
-        }
-      }, 2000);
-
-      // Safety timeout after 2 minutes
-      setTimeout(() => {
-        clearInterval(pollInterval);
+        }, 120000);
+      } else {
+        // No Pipedream yet — integration saved as pending
         setLoading(false);
-      }, 120000);
-    } catch (error) {
-      console.error("Connection error:", error);
+      }
+    } catch (err) {
+      console.error("Connection error:", err);
+      setError("Something went wrong");
       setLoading(false);
     }
   }
@@ -203,6 +208,10 @@ function ProviderCard({
         </div>
         {integration && <Badge status={integration.status} />}
       </div>
+
+      {error && (
+        <p className="text-error text-xs mb-2">{error}</p>
+      )}
 
       <div className="mt-auto pt-2">
         {status === "connected" ? (
