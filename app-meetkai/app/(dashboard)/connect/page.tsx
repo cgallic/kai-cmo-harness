@@ -177,11 +177,16 @@ function ProviderCard({
 
           if (event.data.success) {
             // Confirm the connection server-side
-            await fetch("/api/connections/confirm", {
+            const confirmRes = await fetch("/api/connections/confirm", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ brand_id: brandId, provider: provider.provider }),
             });
+            const confirmData = await confirmRes.json();
+            console.log("Confirm result:", confirmData);
+            // Reload to show updated status
+            window.location.reload();
+            return;
           }
           setLoading(false);
         };
