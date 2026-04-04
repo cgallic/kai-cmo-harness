@@ -1,8 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { PipedreamClient } from "@pipedream/sdk";
+
+function getPipedreamClient() {
+  return new PipedreamClient({
+    projectId: process.env.PIPEDREAM_PROJECT_ID!,
+    projectEnvironment: (process.env.PIPEDREAM_ENVIRONMENT as "development" | "production") || "development",
+    clientId: process.env.PIPEDREAM_CLIENT_ID!,
+    clientSecret: process.env.PIPEDREAM_CLIENT_SECRET!,
+  });
+}
 
 export async function POST(request: Request) {
-  // Verify authenticated user
   const supabase = await createClient();
   const {
     data: { user },
@@ -12,7 +21,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { brand_id, channel, provider, app_slug } = body;
+  const { brand_id, channel, provider } = body;
 
   // Verify user owns this brand
   const { data: brand } = await supabase
@@ -49,52 +58,35 @@ export async function POST(request: Request) {
     });
   }
 
-  // If Pipedream keys are configured, create a real connect token
-  const pipedreamSecret = process.env.PIPEDREAM_CLIENT_SECRET;
-  if (pipedreamSecret) {
-    try {
-      const tokenRes = await fetch(
-        "https://api.pipedream.com/v1/connect/tokens",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${pipedreamSecret}`,
-          },
-          body: JSON.stringify({
-            external_user_id: brand_id,
-            ...(app_slug ? { app: app_slug } : {}),
-            allowed_origins: [
-              process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010",
-            ],
-            success_redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010"}/connect?connected=${provider}`,
-            error_redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010"}/connect?error=${provider}`,
-          }),
-        }
-      );
-
-      if (tokenRes.ok) {
-        const tokenData = await tokenRes.json();
-        return NextResponse.json({
-          token: tokenData.token,
-          expires_at: tokenData.expires_at,
-          connect_link_url: tokenData.connect_link_url,
-        });
-      }
-
-      const err = await tokenRes.text();
-      console.error("Pipedream token error:", tokenRes.status, err);
-    } catch (error) {
-      console.error("Pipedream error:", error);
-    }
+  // Create Pipedream connect token
+  if (!process.env.PIPEDREAM_CLIENT_ID || !process.env.PIPEDREAM_CLIENT_SECRET) {
+    return NextResponse.json({
+      status: "pending_auth",
+      message: "Pipedream not configured",
+    });
   }
 
-  // No Pipedream keys or Pipedream call failed — return without connect link
-  // The integration record was still created as pending_auth
-  return NextResponse.json({
-    status: "pending_auth",
-    message: pipedreamSecret
-      ? "Pipedream token creation failed — integration saved as pending"
-      : "Pipedream not configured — integration saved as pending. Add PIPEDREAM_CLIENT_SECRET to enable OAuth.",
-  });
+  try {
+    const pd = getPipedreamClient();
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010";
+
+    const result = await pd.tokens.create({
+      externalUserId: brand_id,
+      successRedirectUri: `${appUrl}/connect?connected=${provider}`,
+      errorRedirectUri: `${appUrl}/connect?error=${provider}`,
+    });
+
+    return NextResponse.json({
+      token: result.token,
+      expires_at: result.expiresAt,
+      connect_link_url: result.connectLinkUrl,
+    });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Pipedream SDK error:", message);
+    return NextResponse.json(
+      { error: "Failed to create connect token", detail: message },
+      { status: 502 }
+    );
+  }
 }
