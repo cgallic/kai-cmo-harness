@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { brand_id, channel, provider } = body;
+  const { brand_id, channel, provider, app_slug } = body;
 
   // Verify user owns this brand
   const { data: brand } = await supabase
@@ -76,10 +76,16 @@ export async function POST(request: Request) {
       errorRedirectUri: `${appUrl}/connect?error=${provider}`,
     });
 
+    // Append the app slug so Pipedream knows which service to connect
+    let connectUrl = result.connectLinkUrl;
+    if (app_slug && connectUrl) {
+      connectUrl += `&app=${encodeURIComponent(app_slug)}`;
+    }
+
     return NextResponse.json({
       token: result.token,
       expires_at: result.expiresAt,
-      connect_link_url: result.connectLinkUrl,
+      connect_link_url: connectUrl,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
