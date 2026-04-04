@@ -1,20 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useBrand, useSnapshots } from "@/lib/hooks";
+import { useState } from "react";
+import { useBrand, useSnapshots, useIntegrations } from "@/lib/hooks";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatNumber, formatPercent } from "@/lib/utils";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar,
 } from "recharts";
-import { BarChart3, TrendingUp, TrendingDown, Users, Eye, Clock } from "lucide-react";
+import { BarChart3, TrendingUp, Users, Eye, RefreshCw } from "lucide-react";
 
 export default function AnalyticsPage() {
   const { brand, loading: brandLoading } = useBrand();
   const { snapshots, loading: snapshotLoading } = useSnapshots(brand?.id, "analytics");
+  const { integrations } = useIntegrations(brand?.id);
   const [range, setRange] = useState("28d");
+  const [syncing, setSyncing] = useState(false);
+
+  const ga4Connected = integrations.some((i) => i.provider === "ga4" && i.status === "connected");
+
+  async function handleSync() {
+    if (!brand) return;
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/analytics/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brand.id }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        console.error("Sync failed:", data);
+        alert(data.error || "Sync failed");
+      }
+    } catch (err) {
+      console.error("Sync error:", err);
+    }
+    setSyncing(false);
+  }
 
   if (brandLoading || snapshotLoading) {
     return (
@@ -62,7 +88,14 @@ export default function AnalyticsPage() {
           <h1 className="font-display text-2xl font-bold tracking-tight">Analytics</h1>
           <p className="text-text-secondary text-sm mt-1">Traffic, engagement, and search performance.</p>
         </div>
-        <div className="flex items-center gap-1 p-1 bg-bg-elevated rounded-lg border border-border">
+        <div className="flex items-center gap-3">
+          {ga4Connected && (
+            <Button variant="secondary" size="sm" onClick={handleSync} loading={syncing}>
+              <RefreshCw className="w-3.5 h-3.5" />
+              Sync
+            </Button>
+          )}
+          <div className="flex items-center gap-1 p-1 bg-bg-elevated rounded-lg border border-border">
           {["7d", "28d", "90d"].map((r) => (
             <button
               key={r}
@@ -75,6 +108,7 @@ export default function AnalyticsPage() {
               {r}
             </button>
           ))}
+          </div>
         </div>
       </div>
 
@@ -82,8 +116,20 @@ export default function AnalyticsPage() {
         <div className="flex flex-col items-center py-20 text-text-tertiary">
           <BarChart3 className="w-12 h-12 mb-3 opacity-30" />
           <p className="text-sm mb-2">No analytics data yet</p>
-          <p className="text-xs">Connect Google Analytics to see your traffic data here.</p>
-          <a href="/connect" className="text-amber text-sm mt-4 hover:underline">Connect accounts</a>
+          {ga4Connected ? (
+            <>
+              <p className="text-xs mb-4">Google Analytics is connected. Pull your data now.</p>
+              <Button onClick={handleSync} loading={syncing}>
+                <RefreshCw className="w-4 h-4" />
+                Sync Analytics
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-xs">Connect Google Analytics to see your traffic data here.</p>
+              <a href="/connect" className="text-amber text-sm mt-4 hover:underline">Connect accounts</a>
+            </>
+          )}
         </div>
       ) : (
         <>
