@@ -52,7 +52,7 @@ export function useAudit(brandId: string | undefined) {
     fetch();
   }, [brandId]);
 
-  return { audit, loading };
+  return { audit, loading, setAudit };
 }
 
 export function useIntegrations(brandId: string | undefined) {

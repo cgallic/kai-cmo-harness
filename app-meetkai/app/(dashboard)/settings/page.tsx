@@ -1,18 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useBrand, useIntegrations } from "@/lib/hooks";
+import { useState, useEffect, useCallback } from "react";
+import { useBrand, useIntegrations, useAudit } from "@/lib/hooks";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Save, User, Link2, Bell } from "lucide-react";
+import { Save, User, Link2, Bell, Search } from "lucide-react";
+import { cn, scoreColor, timeAgo } from "@/lib/utils";
+import type { Audit } from "@/lib/types";
 
 export default function SettingsPage() {
   const { brand, loading } = useBrand();
   const { integrations } = useIntegrations(brand?.id);
+  const { audit, setAudit } = useAudit(brand?.id);
   const searchParams = useSearchParams();
   const isOnboarding = searchParams.get("onboarding") === "true";
 
@@ -38,7 +41,7 @@ export default function SettingsPage() {
         )}
       </div>
 
-      <BusinessProfileForm brand={brand} isOnboarding={isOnboarding} />
+      <BusinessProfileForm brand={brand} isOnboarding={isOnboarding} audit={audit} brandId={brand?.id} onAuditComplete={setAudit} />
 
       {!isOnboarding && (
         <>
@@ -53,13 +56,21 @@ export default function SettingsPage() {
 function BusinessProfileForm({
   brand,
   isOnboarding,
+  audit,
+  brandId,
+  onAuditComplete,
 }: {
   brand: ReturnType<typeof useBrand>["brand"];
   isOnboarding: boolean;
+  audit: Audit | null;
+  brandId: string | undefined;
+  onAuditComplete: (audit: Audit) => void;
 }) {
   const router = useRouter();
   const supabase = createClient();
   const [saving, setSaving] = useState(false);
+  const [auditRunning, setAuditRunning] = useState(false);
+  const [auditError, setAuditError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: brand?.name || "",
     url: brand?.url || "",
@@ -102,6 +113,42 @@ function BusinessProfileForm({
       router.push("/dashboard");
     }
   }
+
+  const runAudit = useCallback(async () => {
+    if (!brandId || auditRunning) return;
+    setAuditRunning(true);
+    setAuditError(null);
+
+    try {
+      const res = await fetch("/api/audits/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brandId, domain: brand?.url }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setAuditError(data.error || "Audit failed");
+        return;
+      }
+
+      const newAudit: Audit = {
+        id: data.audit_id,
+        brand_id: brandId,
+        overall_score: data.overall_score,
+        category_scores: data.category_scores || {},
+        findings: data.findings || [],
+        metadata: {},
+        created_at: data.created_at || new Date().toISOString(),
+      };
+      onAuditComplete(newAudit);
+    } catch {
+      setAuditError("Network error. Please try again.");
+    } finally {
+      setAuditRunning(false);
+    }
+  }, [brandId, brand?.url, auditRunning, onAuditComplete]);
 
   const archetypes = [
     { value: "local_service", label: "Local Service Business" },
@@ -174,6 +221,47 @@ function BusinessProfileForm({
           {isOnboarding ? "Create Profile & Continue" : "Save Changes"}
         </Button>
       </form>
+
+      {/* Audit section — shown after profile exists */}
+      {!isOnboarding && brand && (
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-foreground">Marketing Audit</h4>
+            {audit && (
+              <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                <span>Last run: {timeAgo(audit.created_at)}</span>
+                <span className={cn("font-mono font-semibold", scoreColor(audit.overall_score ?? 0))}>
+                  {audit.overall_score ?? "—"}/100
+                </span>
+              </div>
+            )}
+          </div>
+
+          {auditError && (
+            <div className="bg-error-dim border border-error/20 rounded-lg px-3 py-2 text-xs text-error mb-3">
+              {auditError}
+            </div>
+          )}
+
+          <Button
+            variant="secondary"
+            size="sm"
+            loading={auditRunning}
+            disabled={!brand.url}
+            onClick={runAudit}
+            className="w-full"
+          >
+            <Search className="w-3.5 h-3.5" />
+            {audit ? "Run New Audit" : "Run First Audit"}
+          </Button>
+
+          {!brand.url && (
+            <p className="text-xs text-text-tertiary mt-2">
+              Save a website URL above to enable audits.
+            </p>
+          )}
+        </div>
+      )}
     </Card>
   );
 }
