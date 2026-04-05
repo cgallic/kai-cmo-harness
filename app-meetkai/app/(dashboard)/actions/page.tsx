@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useBrand, useActions } from "@/lib/hooks";
+import { useState, useCallback } from "react";
+import { useBrand, useActions, useAudit } from "@/lib/hooks";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge, RiskBadge } from "@/components/ui/badge";
@@ -10,12 +10,43 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { cn, timeAgo } from "@/lib/utils";
 import type { Action } from "@/lib/types";
-import { Check, X, Clock, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import { Check, X, Clock, ChevronDown, ChevronUp, Zap, Sparkles, Play } from "lucide-react";
 
 export default function ActionsPage() {
   const { brand, loading: brandLoading } = useBrand();
-  const { actions, loading: actionsLoading } = useActions(brand?.id);
+  const { actions, loading: actionsLoading, refresh } = useActions(brand?.id);
+  const { audit } = useAudit(brand?.id);
   const [activeTab, setActiveTab] = useState("pending");
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
+  const handleGenerate = useCallback(async () => {
+    if (!brand?.id) return;
+    setGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const res = await fetch("/api/actions/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brand.id, source: "audit" }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setGenerateError(data.error || "Failed to generate actions");
+        return;
+      }
+
+      // Refresh actions list — realtime subscription will also catch it
+      await refresh();
+    } catch {
+      setGenerateError("Network error. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  }, [brand?.id, refresh]);
 
   const pending = actions.filter((a) => a.approval_state === "pending");
   const completed = actions.filter((a) => a.execution_state === "completed");
@@ -43,12 +74,31 @@ export default function ActionsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight">Actions</h1>
-        <p className="text-text-secondary text-sm mt-1">
-          Review and approve AI-proposed marketing actions.
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Actions</h1>
+          <p className="text-text-secondary text-sm mt-1">
+            Review and approve AI-proposed marketing actions.
+          </p>
+        </div>
+        {brand && audit && (
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleGenerate}
+            loading={generating}
+          >
+            <Sparkles className="w-4 h-4" />
+            Generate Actions
+          </Button>
+        )}
       </div>
+
+      {generateError && (
+        <div className="bg-error-dim border border-error/20 text-error text-sm rounded-lg px-4 py-3">
+          {generateError}
+        </div>
+      )}
 
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
@@ -56,11 +106,21 @@ export default function ActionsPage() {
         <div className="flex flex-col items-center py-16 text-text-tertiary">
           <Zap className="w-10 h-10 mb-3 opacity-30" />
           <p className="text-sm">No {activeTab} actions</p>
+          {activeTab === "pending" && audit && actions.length === 0 && (
+            <p className="text-xs mt-2">
+              Click &quot;Generate Actions&quot; to create proposals from your latest audit.
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
           {filtered.map((action) => (
-            <ActionCard key={action.id} action={action} showActions={activeTab === "pending"} />
+            <ActionCard
+              key={action.id}
+              action={action}
+              showActions={activeTab === "pending"}
+              onUpdate={refresh}
+            />
           ))}
         </div>
       )}
@@ -68,22 +128,60 @@ export default function ActionsPage() {
   );
 }
 
-function ActionCard({ action, showActions }: { action: Action; showActions: boolean }) {
+interface ActionCardProps {
+  action: Action;
+  showActions: boolean;
+  onUpdate: () => Promise<void>;
+}
+
+function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
   const supabase = createClient();
 
-  async function handleAction(state: "approved" | "rejected") {
-    setLoading(state);
-    await supabase
-      .from("actions")
-      .update({
-        approval_state: state,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", action.id);
-    setLoading(null);
+  async function handleApprove() {
+    setLoading("approved");
+    try {
+      // Update approval state
+      await supabase
+        .from("actions")
+        .update({
+          approval_state: "approved",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", action.id);
+
+      // Execute the action
+      await fetch("/api/actions/execute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action_id: action.id }),
+      });
+
+      await onUpdate();
+    } finally {
+      setLoading(null);
+    }
   }
+
+  async function handleReject() {
+    setLoading("rejected");
+    try {
+      await supabase
+        .from("actions")
+        .update({
+          approval_state: "rejected",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", action.id);
+
+      await onUpdate();
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  const resultSummary = action.result_summary as Record<string, unknown> | null;
 
   return (
     <Card>
@@ -116,16 +214,16 @@ function ActionCard({ action, showActions }: { action: Action; showActions: bool
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => handleAction("approved")}
+                onClick={handleApprove}
                 loading={loading === "approved"}
               >
-                <Check className="w-4 h-4" />
-                Approve
+                <Play className="w-4 h-4" />
+                Approve & Run
               </Button>
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => handleAction("rejected")}
+                onClick={handleReject}
                 loading={loading === "rejected"}
               >
                 <X className="w-4 h-4" />
@@ -153,12 +251,18 @@ function ActionCard({ action, showActions }: { action: Action; showActions: bool
               </pre>
             </div>
           )}
-          {action.result_summary && (
+          {resultSummary && (
             <div>
               <h4 className="text-xs font-medium text-text-secondary mb-2">Result</h4>
-              <pre className="text-xs font-mono bg-bg-elevated rounded-lg p-3 overflow-x-auto text-text-secondary">
-                {JSON.stringify(action.result_summary, null, 2)}
-              </pre>
+              {typeof resultSummary.deliverable === "string" ? (
+                <pre className="text-xs font-mono bg-bg-elevated rounded-lg p-3 overflow-x-auto text-text-secondary whitespace-pre-wrap">
+                  {resultSummary.deliverable}
+                </pre>
+              ) : (
+                <pre className="text-xs font-mono bg-bg-elevated rounded-lg p-3 overflow-x-auto text-text-secondary">
+                  {JSON.stringify(resultSummary, null, 2)}
+                </pre>
+              )}
             </div>
           )}
         </div>

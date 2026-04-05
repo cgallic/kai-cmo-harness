@@ -47,16 +47,42 @@ function PendingActionCard({ action }: { action: Action }) {
   const [loading, setLoading] = useState<"approve" | "reject" | null>(null);
   const supabase = createClient();
 
-  async function handleAction(state: "approved" | "rejected") {
-    setLoading(state === "approved" ? "approve" : "reject");
-    await supabase
-      .from("actions")
-      .update({
-        approval_state: state,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", action.id);
-    setLoading(null);
+  async function handleApprove() {
+    setLoading("approve");
+    try {
+      // Approve the action
+      await supabase
+        .from("actions")
+        .update({
+          approval_state: "approved",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", action.id);
+
+      // Execute it
+      await fetch("/api/actions/execute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action_id: action.id }),
+      });
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  async function handleReject() {
+    setLoading("reject");
+    try {
+      await supabase
+        .from("actions")
+        .update({
+          approval_state: "rejected",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", action.id);
+    } finally {
+      setLoading(null);
+    }
   }
 
   return (
@@ -76,7 +102,7 @@ function PendingActionCard({ action }: { action: Action }) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => handleAction("approved")}
+          onClick={handleApprove}
           loading={loading === "approve"}
           className="text-success hover:bg-success-dim"
         >
@@ -85,7 +111,7 @@ function PendingActionCard({ action }: { action: Action }) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => handleAction("rejected")}
+          onClick={handleReject}
           loading={loading === "reject"}
           className="text-error hover:bg-error-dim"
         >

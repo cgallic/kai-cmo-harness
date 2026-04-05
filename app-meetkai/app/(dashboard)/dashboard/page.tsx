@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import { useBrand, useAudit, useIntegrations, useActions, useSnapshots } from "@/lib/hooks";
 import { AuditScoreRing } from "@/components/dashboard/audit-score-ring";
 import { ConnectedAccounts } from "@/components/dashboard/connected-accounts";
@@ -7,13 +8,49 @@ import { QuickStats } from "@/components/dashboard/quick-stats";
 import { PendingActions } from "@/components/dashboard/pending-actions";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 
 export default function DashboardPage() {
   const { brand, loading: brandLoading } = useBrand();
   const { audit, loading: auditLoading } = useAudit(brand?.id);
   const { integrations } = useIntegrations(brand?.id);
-  const { actions } = useActions(brand?.id);
+  const { actions, refresh: refreshActions } = useActions(brand?.id);
   const { snapshots } = useSnapshots(brand?.id);
+
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
+  const hasAudit = !!audit;
+  const hasActions = actions.length > 0;
+  const showGeneratePrompt = hasAudit && !hasActions && !auditLoading;
+
+  const handleGenerate = useCallback(async () => {
+    if (!brand?.id) return;
+    setGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const res = await fetch("/api/actions/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brand.id, source: "audit" }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setGenerateError(data.error || "Failed to generate actions");
+        return;
+      }
+
+      await refreshActions();
+    } catch {
+      setGenerateError("Network error. Please try again.");
+    } finally {
+      setGenerating(false);
+    }
+  }, [brand?.id, refreshActions]);
 
   if (brandLoading) {
     return (
@@ -52,6 +89,32 @@ export default function DashboardPage() {
 
       {/* Quick stats */}
       <QuickStats audit={audit} integrations={integrations} actions={actions} snapshots={snapshots} />
+
+      {/* Generate actions prompt */}
+      {showGeneratePrompt && (
+        <div className="bg-amber-dim/50 border border-amber/20 rounded-[12px] p-5 flex items-center gap-4">
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-foreground mb-1">
+              Audit complete — generate recommended actions?
+            </h3>
+            <p className="text-xs text-text-secondary">
+              MiKai found findings in your audit. Generate action proposals to start fixing issues.
+            </p>
+            {generateError && (
+              <p className="text-xs text-error mt-1">{generateError}</p>
+            )}
+          </div>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleGenerate}
+            loading={generating}
+          >
+            <Sparkles className="w-4 h-4" />
+            Generate Actions
+          </Button>
+        </div>
+      )}
 
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
