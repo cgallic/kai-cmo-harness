@@ -66,28 +66,43 @@ export async function POST(request: Request) {
   try {
     const pd = getPd();
 
-    // 1. Find GA4 property
-    const adminRes = await pd.proxy.get({
-      url: "https://analyticsadmin.googleapis.com/v1beta/accountSummaries",
-      accountId,
-      externalUserId: brand_id,
-    });
-    const adminData = (adminRes as { data?: { accountSummaries?: { propertySummaries?: { property: string }[] }[] } })?.data ?? adminRes;
-    console.log("GA4 admin:", JSON.stringify(adminData).slice(0, 300));
-
-    let propertyId: string | null = null;
-    const summaries = (adminData as { accountSummaries?: { propertySummaries?: { property: string }[] }[] })?.accountSummaries;
-    if (summaries) {
-      for (const acct of summaries) {
-        if (acct.propertySummaries?.length) {
-          propertyId = acct.propertySummaries[0].property;
-          break;
-        }
-      }
-    }
+    // 1. Read selected GA4 property from integration config
+    const config = (integration.config || {}) as Record<string, unknown>;
+    let propertyId = config.ga4_property_id as string | undefined;
 
     if (!propertyId) {
-      return NextResponse.json({ error: "No GA4 properties found" }, { status: 404 });
+      // No property selected — fetch available properties so frontend can prompt selection
+      const adminRes = await pd.proxy.get({
+        url: "https://analyticsadmin.googleapis.com/v1beta/accountSummaries",
+        accountId,
+        externalUserId: brand_id,
+      });
+
+      interface PropertySummary { property: string; displayName: string }
+      interface AccountSummary { displayName: string; propertySummaries?: PropertySummary[] }
+      interface AdminResponse { accountSummaries?: AccountSummary[] }
+
+      const adminData = ((adminRes as { data?: AdminResponse })?.data ?? adminRes) as AdminResponse;
+      const properties: { property_id: string; display_name: string; account_name: string }[] = [];
+      const summaries = adminData?.accountSummaries;
+      if (summaries) {
+        for (const acct of summaries) {
+          if (acct.propertySummaries?.length) {
+            for (const prop of acct.propertySummaries) {
+              properties.push({
+                property_id: prop.property,
+                display_name: prop.displayName,
+                account_name: acct.displayName,
+              });
+            }
+          }
+        }
+      }
+
+      return NextResponse.json({
+        error: "No GA4 property selected",
+        properties,
+      });
     }
     console.log("Using property:", propertyId);
 
