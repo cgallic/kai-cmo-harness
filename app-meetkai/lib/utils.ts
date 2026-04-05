@@ -43,6 +43,7 @@ export function statusColor(status: string): string {
     case "pending":
     case "pending_auth":
     case "executing":
+    case "needs_setup":
       return "text-amber";
     case "degraded":
     case "held":
@@ -67,6 +68,7 @@ export function statusBgColor(status: string): string {
     case "pending":
     case "pending_auth":
     case "executing":
+    case "needs_setup":
       return "bg-amber-dim";
     case "degraded":
     case "held":

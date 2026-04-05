@@ -95,12 +95,21 @@ export interface ChannelSnapshot {
 // Provider mapping (mirrors gateway/adapters/pipedream/base.py)
 export const PROVIDERS: ProviderConfig[] = [
   // Analytics
-  { channel: "analytics", provider: "ga4", name: "Google Analytics", icon: "BarChart3", appSlug: "google_analytics" },
-  { channel: "analytics", provider: "gsc", name: "Google Search Console", icon: "Search", appSlug: "google_search_console" },
+  {
+    channel: "analytics", provider: "ga4", name: "Google Analytics", icon: "BarChart3", appSlug: "google_analytics",
+    configRequired: { key: "ga4_property_id", label: "Property", type: "select", endpoint: "/api/analytics/properties", responseKey: "properties", optionLabel: "display_name", optionValue: "property_id" },
+  },
+  {
+    channel: "analytics", provider: "gsc", name: "Google Search Console", icon: "Search", appSlug: "google_search_console",
+    configRequired: { key: "gsc_site_url", label: "Site", type: "select", endpoint: "/api/analytics/gsc-sites", responseKey: "sites", optionLabel: "site_url", optionValue: "site_url" },
+  },
   { channel: "analytics", provider: "gbp", name: "Google Business", icon: "MapPin", appSlug: "google_my_business" },
   // Website
   { channel: "website", provider: "wordpress", name: "WordPress", icon: "Globe", appSlug: "wordpress_org" },
-  { channel: "website", provider: "shopify", name: "Shopify", icon: "ShoppingBag", appSlug: "shopify" },
+  {
+    channel: "website", provider: "shopify", name: "Shopify", icon: "ShoppingBag", appSlug: "shopify",
+    configRequired: { key: "shopify_store", label: "Store domain", type: "text" },
+  },
   // Social
   { channel: "social", provider: "facebook", name: "Facebook", icon: "Facebook", appSlug: "facebook_pages" },
   { channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "instagram_business" },
@@ -111,9 +120,25 @@ export const PROVIDERS: ProviderConfig[] = [
   { channel: "email", provider: "mailchimp", name: "Mailchimp", icon: "Mail", appSlug: "mailchimp" },
   { channel: "email", provider: "sendgrid", name: "SendGrid", icon: "Send", appSlug: "sendgrid" },
   // Paid Media
-  { channel: "paid_media", provider: "google_ads", name: "Google Ads", icon: "Megaphone", appSlug: "google_ads" },
-  { channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing_api" },
+  {
+    channel: "paid_media", provider: "google_ads", name: "Google Ads", icon: "Megaphone", appSlug: "google_ads",
+    configRequired: { key: "google_ads_customer_id", label: "Customer ID", type: "text" },
+  },
+  {
+    channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing_api",
+    configRequired: { key: "meta_ads_account_id", label: "Ad Account ID", type: "text" },
+  },
 ];
+
+export interface ProviderConfigRequired {
+  key: string;           // e.g. "ga4_property_id"
+  label: string;         // e.g. "GA4 Property"
+  type: "select" | "text";
+  endpoint?: string;     // API to fetch options, e.g. "/api/analytics/properties"
+  responseKey?: string;  // key in response containing the array
+  optionLabel?: string;  // which field to display
+  optionValue?: string;  // which field is the value
+}
 
 export interface ProviderConfig {
   channel: string;
@@ -121,6 +146,7 @@ export interface ProviderConfig {
   name: string;
   icon: string;
   appSlug: string;
+  configRequired?: ProviderConfigRequired;
 }
 
 // Channel category groupings for the connect page

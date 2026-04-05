@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useBrand, useIntegrations } from "@/lib/hooks";
 import { PROVIDERS, CHANNEL_CATEGORIES, type ProviderConfig, type Integration } from "@/lib/types";
@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   BarChart3, Search, MapPin, Globe, ShoppingBag,
   Facebook, Instagram, Linkedin, Music, Youtube,
-  Mail, Send, Megaphone, Target, Link2, RefreshCw,
+  Mail, Send, Megaphone, Target, Link2, RefreshCw, Check,
 } from "lucide-react";
 
 const iconMap: Record<string, typeof BarChart3> = {
@@ -123,6 +123,126 @@ export default function ConnectPage() {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  ConfigPicker — inline property/account selector for a provider    */
+/* ------------------------------------------------------------------ */
+
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+function ConfigPicker({
+  provider,
+  integration,
+  brandId,
+  onSaved,
+}: {
+  provider: ProviderConfig;
+  integration: Integration;
+  brandId: string;
+  onSaved: () => void;
+}) {
+  // cfg is always defined when this component is rendered (parent guards on configRequired)
+  const cfg = provider.configRequired!;
+  const supabase = createClient();
+  const currentValue = (integration.config as Record<string, string>)?.[cfg.key] ?? "";
+
+  const [options, setOptions] = useState<SelectOption[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
+  const [textValue, setTextValue] = useState(currentValue);
+  const [saving, setSaving] = useState(false);
+
+  // Fetch dropdown options for "select" type
+  useEffect(() => {
+    if (cfg.type !== "select" || !cfg.endpoint) return;
+    setLoadingOptions(true);
+    fetch(`${cfg.endpoint}?brand_id=${brandId}`)
+      .then((res) => res.json())
+      .then((data: Record<string, unknown>) => {
+        const items = (data[cfg.responseKey || "items"] ?? []) as Record<string, string>[];
+        setOptions(
+          items.map((item) => ({
+            label: item[cfg.optionLabel || "name"] ?? "",
+            value: item[cfg.optionValue || "id"] ?? "",
+          }))
+        );
+      })
+      .catch(console.error)
+      .finally(() => setLoadingOptions(false));
+  }, [cfg, brandId]);
+
+  const save = useCallback(
+    async (value: string) => {
+      if (!value) return;
+      setSaving(true);
+      const newConfig = { ...(integration.config || {}), [cfg.key]: value };
+      await supabase
+        .from("integrations")
+        .update({ config: newConfig, updated_at: new Date().toISOString() })
+        .eq("id", integration.id);
+      setSaving(false);
+      onSaved();
+    },
+    [cfg.key, integration, supabase, onSaved]
+  );
+
+  if (cfg.type === "select") {
+    if (loadingOptions) {
+      return <Skeleton className="h-9 w-full mt-2" />;
+    }
+    if (options.length === 0) {
+      return (
+        <p className="text-xs text-text-tertiary mt-2">
+          No {cfg.label.toLowerCase()}s found.
+        </p>
+      );
+    }
+    return (
+      <select
+        value={currentValue}
+        onChange={(e) => save(e.target.value)}
+        disabled={saving}
+        className="w-full mt-2 px-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+      >
+        <option value="">Select {cfg.label.toLowerCase()}...</option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
+  // Text input
+  return (
+    <div className="flex gap-2 mt-2">
+      <input
+        type="text"
+        value={textValue}
+        onChange={(e) => setTextValue(e.target.value)}
+        placeholder={cfg.label}
+        className="flex-1 px-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+        disabled={saving}
+      />
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => save(textValue)}
+        loading={saving}
+        disabled={!textValue || textValue === currentValue}
+      >
+        <Check className="w-3.5 h-3.5" />
+      </Button>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ProviderCard                                                       */
+/* ------------------------------------------------------------------ */
+
 function ProviderCard({
   provider,
   integration,
@@ -137,6 +257,19 @@ function ProviderCard({
   const supabase = createClient();
   const Icon = iconMap[provider.icon] || Link2;
   const status = integration?.status || "not_connected";
+
+  // Determine whether this connected provider still needs sub-account config
+  const cfg = provider.configRequired;
+  const configuredValue = cfg
+    ? ((integration?.config as Record<string, string> | undefined)?.[cfg.key] ?? "")
+    : "";
+  const needsSetup = status === "connected" && !!cfg && !configuredValue;
+  const isFullyActive = status === "connected" && (!cfg || !!configuredValue);
+
+  // Force reload integration data after config save
+  function handleConfigSaved() {
+    window.location.reload();
+  }
 
   async function handleConnect() {
     setLoading(true);
@@ -226,27 +359,52 @@ function ProviderCard({
     setLoading(false);
   }
 
+  // Determine which badge to show
+  const badgeStatus = needsSetup ? "needs_setup" : integration?.status;
+  const badgeLabel = needsSetup ? "Needs setup" : isFullyActive ? "Active" : undefined;
+
   return (
     <Card className="flex flex-col">
-      <div className="flex items-start gap-3 mb-4">
+      <div className="flex items-start gap-3 mb-2">
         <div className="w-10 h-10 rounded-lg bg-bg-elevated border border-border flex items-center justify-center flex-shrink-0">
           <Icon className="w-5 h-5 text-text-secondary" />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold">{provider.name}</h3>
           <p className="text-xs text-text-tertiary capitalize">{provider.channel.replace(/_/g, " ")}</p>
+          {/* Show configured value label when fully active */}
+          {isFullyActive && cfg && configuredValue && (
+            <p className="text-xs text-success mt-0.5 truncate">
+              {cfg.label}: {configuredValue}
+            </p>
+          )}
         </div>
-        {integration && <Badge status={integration.status} />}
+        {badgeStatus && (
+          <Badge status={badgeStatus} label={badgeLabel} />
+        )}
       </div>
 
       {error && (
         <p className="text-error text-xs mb-2">{error}</p>
       )}
 
+      {/* Inline config picker when connected but needs setup */}
+      {needsSetup && integration && (
+        <div className="mb-2">
+          <p className="text-xs text-amber">Select a {cfg!.label.toLowerCase()} to complete setup</p>
+          <ConfigPicker
+            provider={provider}
+            integration={integration}
+            brandId={brandId}
+            onSaved={handleConfigSaved}
+          />
+        </div>
+      )}
+
       <div className="mt-auto pt-2">
         {status === "connected" ? (
           <div className="flex gap-2">
-            <Button variant="secondary" size="sm" className="flex-1" disabled>
+            <Button variant="secondary" size="sm" className="flex-1" disabled={needsSetup}>
               <RefreshCw className="w-3.5 h-3.5" />
               Sync
             </Button>
