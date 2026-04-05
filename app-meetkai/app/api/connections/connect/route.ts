@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized", code: "UNAUTHORIZED" }, { status: 401 });
   }
 
   const body = await request.json();
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     .single();
 
   if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   // Create or update integration record
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Pipedream SDK error:", message);
     return NextResponse.json(
-      { error: "Failed to create connect token", detail: message },
+      { error: "Failed to create connect token", code: "CONNECT_TOKEN_FAILED", detail: message },
       { status: 502 }
     );
   }

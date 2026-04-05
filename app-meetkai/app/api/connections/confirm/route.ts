@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized", code: "UNAUTHORIZED" }, { status: 401 });
   }
 
   const { brand_id, provider } = await request.json();
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   if (!brand) {
     console.error("Brand not found:", brandError);
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   // Use service role to bypass RLS for the update
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
   if (!integrations || integrations.length === 0) {
     console.error("No integration found:", findError);
-    return NextResponse.json({ error: "No integration found" }, { status: 404 });
+    return NextResponse.json({ error: "No integration found", code: "INTEGRATION_NOT_FOUND" }, { status: 404 });
   }
 
   const integration = integrations[0];
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
 
   if (updateError) {
     console.error("Update failed:", updateError);
-    return NextResponse.json({ error: "Failed to update integration" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update integration", code: "UPDATE_FAILED" }, { status: 500 });
   }
 
   console.log("Integration confirmed as connected:", integration.id);

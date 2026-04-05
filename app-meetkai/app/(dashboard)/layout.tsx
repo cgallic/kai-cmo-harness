@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
+import { Toaster } from "sonner";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
           {children}
         </div>
       </main>
+      <Toaster
+        theme="dark"
+        toastOptions={{
+          style: {
+            background: "#141414",
+            border: "1px solid #1e1e1e",
+            color: "#fafafa",
+          },
+        }}
+      />
     </div>
   );
 }

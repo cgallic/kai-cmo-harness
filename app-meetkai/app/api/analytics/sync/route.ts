@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized", code: "UNAUTHORIZED" }, { status: 401 });
   }
 
   const { brand_id } = await request.json();
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     .single();
 
   if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   const serviceClient = await createServiceClient();
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     .single();
 
   if (!integration?.connected_account_id) {
-    return NextResponse.json({ error: "Google Analytics not connected" }, { status: 404 });
+    return NextResponse.json({ error: "Google Analytics not connected", code: "GA4_NOT_CONNECTED" }, { status: 404 });
   }
 
   const accountId = integration.connected_account_id;
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     }
 
     if (!propertyId) {
-      return NextResponse.json({ error: "No GA4 properties found" }, { status: 404 });
+      return NextResponse.json({ error: "No GA4 properties found", code: "GA4_NO_PROPERTIES" }, { status: 404 });
     }
     console.log("Using property:", propertyId);
 
@@ -178,6 +178,6 @@ export async function POST(request: Request) {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("GA4 sync error:", message);
-    return NextResponse.json({ error: "Sync failed", detail: message }, { status: 502 });
+    return NextResponse.json({ error: "Sync failed", code: "SYNC_FAILED", detail: message }, { status: 502 });
   }
 }

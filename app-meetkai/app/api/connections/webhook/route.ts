@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const { external_user_id, account_id, app } = body;
 
   if (!external_user_id || !account_id) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    return NextResponse.json({ error: "Missing required fields", code: "MISSING_FIELDS" }, { status: 400 });
   }
 
   const supabase = await createServiceClient();
