@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Save, User, Link2, Bell } from "lucide-react";
+import { Save, User, Link2, Bell, BarChart3, Search } from "lucide-react";
+import type { Integration } from "@/lib/types";
 
 export default function SettingsPage() {
   const { brand, loading } = useBrand();
@@ -42,6 +43,7 @@ export default function SettingsPage() {
 
       {!isOnboarding && (
         <>
+          <AnalyticsConfiguration brand={brand} integrations={integrations} />
           <ConnectedAccountsList integrations={integrations} />
           <NotificationPreferences brand={brand} />
         </>
@@ -209,6 +211,189 @@ function ConnectedAccountsList({ integrations }: { integrations: ReturnType<type
           ))}
         </div>
       )}
+    </Card>
+  );
+}
+
+interface GA4Property {
+  property_id: string;
+  display_name: string;
+  account_name: string;
+}
+
+interface GscSite {
+  site_url: string;
+  permission_level: string;
+}
+
+function AnalyticsConfiguration({
+  brand,
+  integrations,
+}: {
+  brand: ReturnType<typeof useBrand>["brand"];
+  integrations: Integration[];
+}) {
+  const supabase = createClient();
+  const [ga4Properties, setGa4Properties] = useState<GA4Property[]>([]);
+  const [gscSites, setGscSites] = useState<GscSite[]>([]);
+  const [loadingGa4, setLoadingGa4] = useState(false);
+  const [loadingGsc, setLoadingGsc] = useState(false);
+  const [savingGa4, setSavingGa4] = useState(false);
+  const [savingGsc, setSavingGsc] = useState(false);
+
+  const ga4Integration = integrations.find(
+    (i) => i.provider === "ga4" && i.status === "connected"
+  );
+  const gscIntegration = integrations.find(
+    (i) => i.provider === "google_search_console" && i.status === "connected"
+  );
+
+  const selectedGa4Property = (ga4Integration?.config as Record<string, unknown>)
+    ?.ga4_property_id as string | undefined;
+  const selectedGscSite = (gscIntegration?.config as Record<string, unknown>)
+    ?.gsc_site_url as string | undefined;
+
+  useEffect(() => {
+    if (ga4Integration && brand) {
+      setLoadingGa4(true);
+      fetch(`/api/analytics/properties?brand_id=${brand.id}`)
+        .then((res) => res.json())
+        .then((data: { properties?: GA4Property[] }) => {
+          setGa4Properties(data.properties || []);
+        })
+        .catch(console.error)
+        .finally(() => setLoadingGa4(false));
+    }
+  }, [ga4Integration, brand]);
+
+  useEffect(() => {
+    if (gscIntegration && brand) {
+      setLoadingGsc(true);
+      fetch(`/api/analytics/gsc-sites?brand_id=${brand.id}`)
+        .then((res) => res.json())
+        .then((data: { sites?: GscSite[] }) => {
+          setGscSites(data.sites || []);
+        })
+        .catch(console.error)
+        .finally(() => setLoadingGsc(false));
+    }
+  }, [gscIntegration, brand]);
+
+  async function handleSelectGa4(propertyId: string) {
+    if (!ga4Integration) return;
+    setSavingGa4(true);
+    const newConfig = { ...(ga4Integration.config || {}), ga4_property_id: propertyId };
+    await supabase
+      .from("integrations")
+      .update({ config: newConfig, updated_at: new Date().toISOString() })
+      .eq("id", ga4Integration.id);
+    setSavingGa4(false);
+    window.location.reload();
+  }
+
+  async function handleSelectGsc(siteUrl: string) {
+    if (!gscIntegration) return;
+    setSavingGsc(true);
+    const newConfig = { ...(gscIntegration.config || {}), gsc_site_url: siteUrl };
+    await supabase
+      .from("integrations")
+      .update({ config: newConfig, updated_at: new Date().toISOString() })
+      .eq("id", gscIntegration.id);
+    setSavingGsc(false);
+    window.location.reload();
+  }
+
+  if (!ga4Integration && !gscIntegration) return null;
+
+  const selectedGa4Name = ga4Properties.find(
+    (p) => p.property_id === selectedGa4Property
+  );
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <BarChart3 className="w-4 h-4 text-amber" />
+          Analytics Configuration
+        </CardTitle>
+      </CardHeader>
+
+      <div className="space-y-4">
+        {/* GA4 Property Selector */}
+        {ga4Integration && (
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-1.5">
+              Google Analytics Property
+            </label>
+            {loadingGa4 ? (
+              <Skeleton className="h-10 w-full" />
+            ) : ga4Properties.length === 0 ? (
+              <p className="text-xs text-text-tertiary">
+                No GA4 properties found for this account.
+              </p>
+            ) : (
+              <>
+                <select
+                  value={selectedGa4Property || ""}
+                  onChange={(e) => handleSelectGa4(e.target.value)}
+                  disabled={savingGa4}
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+                >
+                  <option value="">Select a property...</option>
+                  {ga4Properties.map((prop) => (
+                    <option key={prop.property_id} value={prop.property_id}>
+                      {prop.display_name} ({prop.account_name})
+                    </option>
+                  ))}
+                </select>
+                {selectedGa4Name && (
+                  <p className="text-xs text-text-tertiary mt-1">
+                    Currently using: {selectedGa4Name.display_name}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* GSC Site Selector */}
+        {gscIntegration && (
+          <div>
+            <label className="flex items-center gap-1.5 text-sm font-medium text-text-secondary mb-1.5">
+              <Search className="w-3.5 h-3.5" />
+              Search Console Site
+            </label>
+            {loadingGsc ? (
+              <Skeleton className="h-10 w-full" />
+            ) : gscSites.length === 0 ? (
+              <p className="text-xs text-text-tertiary">
+                No Search Console sites found for this account.
+              </p>
+            ) : (
+              <>
+                <select
+                  value={selectedGscSite || ""}
+                  onChange={(e) => handleSelectGsc(e.target.value)}
+                  disabled={savingGsc}
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+                >
+                  <option value="">Select a site...</option>
+                  {gscSites.map((site) => (
+                    <option key={site.site_url} value={site.site_url}>
+                      {site.site_url} ({site.permission_level})
+                    </option>
+                  ))}
+                </select>
+                {selectedGscSite && (
+                  <p className="text-xs text-text-tertiary mt-1">
+                    Currently using: {selectedGscSite}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </Card>
   );
 }
