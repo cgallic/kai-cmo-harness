@@ -24,8 +24,28 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MeetKai Dashboard",
+  title: {
+    default: "MeetKai Dashboard",
+    template: "%s | MeetKai",
+  },
   description: "AI CMO Dashboard — connect your marketing accounts, see what AI finds, approve actions.",
+  metadataBase: new URL("https://app.meetkai.xyz"),
+  openGraph: {
+    title: "MeetKai — AI CMO Dashboard",
+    description: "Connect your marketing accounts. Get AI-powered audits. Approve actions with one click.",
+    url: "https://app.meetkai.xyz",
+    siteName: "MeetKai",
+    images: [{ url: "/logo.svg", width: 160, height: 40 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "MeetKai — AI CMO Dashboard",
+    description: "Connect your marketing accounts. Get AI-powered audits. Approve actions with one click.",
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

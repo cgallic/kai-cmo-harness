@@ -68,8 +68,12 @@ export function Sidebar({ userEmail }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-          <Link href="/dashboard" className="font-display text-xl font-bold tracking-tight">
-            Meet<span className="text-amber">Kai</span>
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-icon.svg" alt="" width={24} height={24} className="shrink-0" />
+            <span className="font-display text-xl font-bold tracking-tight">
+              Meet<span className="text-amber">Kai</span>
+            </span>
           </Link>
           <button onClick={() => setMobileOpen(false)} className="lg:hidden">
             <X className="w-5 h-5 text-text-secondary" />

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40">
+  <style>
+    .meet { fill: #ffffff; font-family: Georgia, 'Times New Roman', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+    .kai { fill: #f59e0b; font-family: Georgia, 'Times New Roman', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  </style>
+  <text x="4" y="30" class="meet">Meet</text>
+  <text x="82" y="30" class="kai">Kai</text>
+</svg>
