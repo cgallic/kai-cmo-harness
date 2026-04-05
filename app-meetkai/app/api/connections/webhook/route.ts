@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   if (!brandId || !accountId) {
     return NextResponse.json(
-      { error: "Missing required fields: id and external_user_id" },
+      { error: "Missing required fields: id and external_user_id", code: "MISSING_FIELDS" },
       { status: 400 },
     );
   }
