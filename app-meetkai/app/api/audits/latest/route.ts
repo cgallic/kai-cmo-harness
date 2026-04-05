@@ -19,24 +19,23 @@ export async function GET(request: Request) {
   }
 
   // Verify brand ownership
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id")
     .eq("id", brandId)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+  if (brandErr || !brand) {
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
-  const { data: audit } = await supabase
+  const { data: audits } = await supabase
     .from("audits")
     .select("*")
     .eq("brand_id", brandId)
     .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .limit(1);
 
-  return NextResponse.json({ audit: audit ?? null });
+  return NextResponse.json({ audit: audits?.[0] ?? null });
 }

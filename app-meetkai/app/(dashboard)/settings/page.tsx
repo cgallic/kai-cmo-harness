@@ -13,7 +13,7 @@ import { cn, scoreColor, timeAgo } from "@/lib/utils";
 import type { Integration, Audit } from "@/lib/types";
 
 export default function SettingsPage() {
-  const { brand, loading } = useBrand();
+  const { brand, loading, refresh: refreshBrand } = useBrand();
   const { integrations } = useIntegrations(brand?.id);
   const { audit, setAudit } = useAudit(brand?.id);
   const searchParams = useSearchParams();
@@ -45,7 +45,7 @@ export default function SettingsPage() {
 
       {!isOnboarding && (
         <>
-          <AnalyticsConfiguration brand={brand} integrations={integrations} />
+          <AnalyticsConfiguration brand={brand} integrations={integrations} onConfigUpdated={refreshBrand} />
           <ConnectedAccountsList integrations={integrations} />
           <NotificationPreferences brand={brand} />
         </>
@@ -316,9 +316,11 @@ interface GscSite {
 function AnalyticsConfiguration({
   brand,
   integrations,
+  onConfigUpdated,
 }: {
   brand: ReturnType<typeof useBrand>["brand"];
   integrations: Integration[];
+  onConfigUpdated?: () => void;
 }) {
   const supabase = createClient();
   const [ga4Properties, setGa4Properties] = useState<GA4Property[]>([]);
@@ -375,7 +377,7 @@ function AnalyticsConfiguration({
       .update({ config: newConfig, updated_at: new Date().toISOString() })
       .eq("id", ga4Integration.id);
     setSavingGa4(false);
-    window.location.reload();
+    onConfigUpdated?.();
   }
 
   async function handleSelectGsc(siteUrl: string) {
@@ -387,7 +389,7 @@ function AnalyticsConfiguration({
       .update({ config: newConfig, updated_at: new Date().toISOString() })
       .eq("id", gscIntegration.id);
     setSavingGsc(false);
-    window.location.reload();
+    onConfigUpdated?.();
   }
 
   if (!ga4Integration && !gscIntegration) return null;

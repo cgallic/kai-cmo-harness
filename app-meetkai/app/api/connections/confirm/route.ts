@@ -15,15 +15,15 @@ export async function POST(request: Request) {
   console.log("Confirming connection:", { brand_id, provider, user_id: user.id });
 
   // Verify ownership
-  const { data: brand, error: brandError } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
-    console.error("Brand not found:", brandError);
+  if (brandErr || !brand) {
+    console.error("Brand not found:", brandErr);
     return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 

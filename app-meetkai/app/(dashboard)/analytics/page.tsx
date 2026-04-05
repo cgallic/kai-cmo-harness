@@ -39,7 +39,7 @@ interface GscSyncResponse {
 
 export default function AnalyticsPage() {
   const { brand, loading: brandLoading } = useBrand();
-  const { snapshots, loading: snapshotLoading } = useSnapshots(brand?.id, "analytics");
+  const { snapshots, loading: snapshotLoading, refresh: refreshSnapshots } = useSnapshots(brand?.id, "analytics");
   const { integrations } = useIntegrations(brand?.id);
   const [range, setRange] = useState("28d");
   const [syncing, setSyncing] = useState(false);
@@ -85,7 +85,7 @@ export default function AnalyticsPage() {
       });
       const data: SyncResponse = await res.json();
       if (res.ok) {
-        window.location.reload();
+        await refreshSnapshots();
       } else if (data.properties && data.properties.length > 0) {
         // Backend is asking user to select a GA4 property
         setAvailableProperties(data.properties);
@@ -111,7 +111,7 @@ export default function AnalyticsPage() {
       });
       const data: GscSyncResponse = await res.json();
       if (res.ok) {
-        window.location.reload();
+        await refreshSnapshots();
       } else if (data.sites && data.sites.length > 0) {
         alert("Please select a Search Console site in Settings first.");
       } else {

@@ -24,25 +24,28 @@ export async function POST(request: Request) {
   const { brand_id, channel, provider, app_slug } = body;
 
   // Verify user owns this brand
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
+  if (brandErr || !brand) {
     return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
-  // Create or update integration record
-  const { data: existing } = await supabase
+  // Create or update integration record — use .limit(1) to handle multiple gracefully
+  const { data: existingRows } = await supabase
     .from("integrations")
     .select("id")
     .eq("brand_id", brand_id)
     .eq("channel", channel)
     .eq("provider", provider)
-    .single();
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  const existing = existingRows?.[0] ?? null;
 
   if (existing) {
     await supabase
@@ -92,7 +95,7 @@ export async function POST(request: Request) {
     console.error("Pipedream SDK error:", message);
     return NextResponse.json(
       { error: "Failed to create connect token", code: "CONNECT_TOKEN_FAILED", detail: message },
-      { status: 502 }
+      { status: 500 }
     );
   }
 }

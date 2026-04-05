@@ -35,30 +35,41 @@ export async function POST(request: Request) {
 
   const { brand_id } = await request.json();
 
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+  if (brandErr || !brand) {
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   const serviceClient = await createServiceClient();
 
-  const { data: integration } = await serviceClient
+  // Use .limit(1) to gracefully handle multiple GSC integrations
+  const { data: integrations, error: intErr } = await serviceClient
     .from("integrations")
     .select("*")
     .eq("brand_id", brand_id)
     .eq("provider", "google_search_console")
     .eq("status", "connected")
-    .single();
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (!integration?.connected_account_id) {
+  if (intErr || !integrations || integrations.length === 0) {
     return NextResponse.json(
-      { error: "Google Search Console not connected" },
+      { error: "Google Search Console not connected", code: "GSC_NOT_CONNECTED" },
+      { status: 404 }
+    );
+  }
+
+  const integration = integrations[0];
+
+  if (!integration.connected_account_id) {
+    return NextResponse.json(
+      { error: "Google Search Console not connected", code: "GSC_NOT_CONNECTED" },
       { status: 404 }
     );
   }
@@ -109,9 +120,10 @@ export async function POST(request: Request) {
 
     const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
-    const encodedSiteUrl = encodeURIComponent(siteUrl);
+    // Note: The GSC API expects the site URL to be path-encoded in the URL.
+    // Pipedream proxy forwards the URL as-is, so we encode once here.
     const queryRes = await pd.proxy.post({
-      url: `https://www.googleapis.com/webmasters/v3/sites/${encodedSiteUrl}/searchAnalytics/query`,
+      url: `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
       accountId,
       externalUserId: brand_id,
       body: {
@@ -152,8 +164,8 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("GSC sync error:", message);
     return NextResponse.json(
-      { error: "GSC sync failed", detail: message },
-      { status: 502 }
+      { error: "GSC sync failed", code: "SYNC_FAILED", detail: message },
+      { status: 500 }
     );
   }
 }

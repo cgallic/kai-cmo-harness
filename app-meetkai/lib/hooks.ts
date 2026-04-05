@@ -11,25 +11,31 @@ export function useBrand() {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetch() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setLoading(false); return; }
+  const refresh = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setLoading(false); return; }
 
-      const { data } = await supabase
-        .from("brands")
-        .select("*")
-        .eq("user_id", user.id)
-        .limit(1)
-        .single();
+    const { data: rows, error } = await supabase
+      .from("brands")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1);
 
-      setBrand(data);
-      setLoading(false);
+    if (error) {
+      console.error("useBrand error:", error.message);
+      setBrand(null);
+    } else {
+      setBrand(rows?.[0] ?? null);
     }
-    fetch();
+    setLoading(false);
   }, []);
 
-  return { brand, loading };
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return { brand, loading, refresh };
 }
 
 export function useAudit(brandId: string | undefined) {
@@ -38,14 +44,19 @@ export function useAudit(brandId: string | undefined) {
 
   const fetchAudit = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
-    const { data } = await supabase
+    const { data: rows, error } = await supabase
       .from("audits")
       .select("*")
       .eq("brand_id", brandId)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .single();
-    setAudit(data);
+      .limit(1);
+
+    if (error) {
+      console.error("useAudit error:", error.message);
+      setAudit(null);
+    } else {
+      setAudit(rows?.[0] ?? null);
+    }
     setLoading(false);
   }, [brandId]);
 
@@ -64,11 +75,14 @@ export function useIntegrations(brandId: string | undefined) {
     if (!brandId) { setLoading(false); return; }
 
     async function fetch() {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("integrations")
         .select("*")
         .eq("brand_id", brandId)
         .order("created_at", { ascending: true });
+      if (error) {
+        console.error("useIntegrations error:", error.message);
+      }
       setIntegrations(data || []);
       setLoading(false);
     }
@@ -121,7 +135,10 @@ export function useActions(brandId: string | undefined, filters?: { approval_sta
       query = query.eq("execution_state", filters.execution_state);
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
+    if (error) {
+      console.error("useActions error:", error.message);
+    }
     setActions(data || []);
     setLoading(false);
   }, [brandId, filters?.approval_state, filters?.execution_state]);
@@ -150,25 +167,30 @@ export function useSnapshots(brandId: string | undefined, channel?: string) {
   const [snapshots, setSnapshots] = useState<ChannelSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
-    async function fetch() {
-      let query = supabase
-        .from("channel_snapshots")
-        .select("*")
-        .eq("brand_id", brandId)
-        .order("created_at", { ascending: false });
 
-      if (channel) {
-        query = query.eq("channel", channel);
-      }
+    let query = supabase
+      .from("channel_snapshots")
+      .select("*")
+      .eq("brand_id", brandId)
+      .order("created_at", { ascending: false });
 
-      const { data } = await query.limit(10);
-      setSnapshots(data || []);
-      setLoading(false);
+    if (channel) {
+      query = query.eq("channel", channel);
     }
-    fetch();
+
+    const { data, error } = await query.limit(10);
+    if (error) {
+      console.error("useSnapshots error:", error.message);
+    }
+    setSnapshots(data || []);
+    setLoading(false);
   }, [brandId, channel]);
 
-  return { snapshots, loading };
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return { snapshots, loading, refresh };
 }

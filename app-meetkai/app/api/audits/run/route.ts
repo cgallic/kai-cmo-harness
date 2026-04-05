@@ -112,15 +112,15 @@ export async function POST(request: Request) {
   }
 
   // Verify brand ownership
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id, name, url")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+  if (brandErr || !brand) {
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   const auditDomain = domain || brand.url;

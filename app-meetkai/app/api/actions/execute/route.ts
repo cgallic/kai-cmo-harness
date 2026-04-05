@@ -247,14 +247,14 @@ export async function POST(request: Request) {
   }
 
   // Read action via user session (RLS ensures ownership)
-  const { data: action } = await supabase
+  const { data: action, error: actionErr } = await supabase
     .from("actions")
     .select("*")
     .eq("id", action_id)
     .single();
 
-  if (!action) {
-    return NextResponse.json({ error: "Action not found" }, { status: 404 });
+  if (actionErr || !action) {
+    return NextResponse.json({ error: "Action not found", code: "ACTION_NOT_FOUND" }, { status: 404 });
   }
 
   if (action.approval_state !== "approved") {

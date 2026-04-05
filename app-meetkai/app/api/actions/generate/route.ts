@@ -88,32 +88,33 @@ export async function POST(request: Request) {
   }
 
   // Verify brand ownership
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id, url")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
-    return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+  if (brandErr || !brand) {
+    return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
-  // Get latest audit
-  const { data: audit } = await supabase
+  // Get latest audit — use .limit(1) instead of .single() to avoid throwing on 0 rows
+  const { data: audits, error: auditErr } = await supabase
     .from("audits")
     .select("*")
     .eq("brand_id", brand_id)
     .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .limit(1);
 
-  if (!audit) {
+  if (auditErr || !audits || audits.length === 0) {
     return NextResponse.json(
-      { error: "No audit found. Run an audit first." },
+      { error: "No audit found. Run an audit first.", code: "NO_AUDIT" },
       { status: 404 }
     );
   }
+
+  const audit = audits[0];
 
   // Parse findings — they're stored as jsonb
   const findings: AuditFinding[] = Array.isArray(audit.findings)

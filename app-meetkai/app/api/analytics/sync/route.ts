@@ -36,28 +36,36 @@ export async function POST(request: Request) {
 
   const { brand_id } = await request.json();
 
-  const { data: brand } = await supabase
+  const { data: brand, error: brandErr } = await supabase
     .from("brands")
     .select("id")
     .eq("id", brand_id)
     .eq("user_id", user.id)
     .single();
 
-  if (!brand) {
+  if (brandErr || !brand) {
     return NextResponse.json({ error: "Brand not found", code: "BRAND_NOT_FOUND" }, { status: 404 });
   }
 
   const serviceClient = await createServiceClient();
 
-  const { data: integration } = await serviceClient
+  // Use .limit(1) to gracefully handle multiple GA4 integrations
+  const { data: integrations, error: intErr } = await serviceClient
     .from("integrations")
     .select("*")
     .eq("brand_id", brand_id)
     .eq("provider", "ga4")
     .eq("status", "connected")
-    .single();
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (!integration?.connected_account_id) {
+  if (intErr || !integrations || integrations.length === 0) {
+    return NextResponse.json({ error: "Google Analytics not connected", code: "GA4_NOT_CONNECTED" }, { status: 404 });
+  }
+
+  const integration = integrations[0];
+
+  if (!integration.connected_account_id) {
     return NextResponse.json({ error: "Google Analytics not connected", code: "GA4_NOT_CONNECTED" }, { status: 404 });
   }
 
@@ -194,6 +202,6 @@ export async function POST(request: Request) {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("GA4 sync error:", message);
-    return NextResponse.json({ error: "Sync failed", code: "SYNC_FAILED", detail: message }, { status: 502 });
+    return NextResponse.json({ error: "Sync failed", code: "SYNC_FAILED", detail: message }, { status: 500 });
   }
 }

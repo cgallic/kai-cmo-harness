@@ -30,14 +30,15 @@ export async function POST(request: Request) {
   const serviceClient = await createServiceClient();
 
   // Find the most recent pending integration for this brand
-  const { data: integration } = await serviceClient
+  const { data: integrations } = await serviceClient
     .from("integrations")
     .select("*")
     .eq("brand_id", brandId)
     .eq("status", "pending_auth")
     .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .limit(1);
+
+  const integration = integrations?.[0] ?? null;
 
   if (integration) {
     await serviceClient
