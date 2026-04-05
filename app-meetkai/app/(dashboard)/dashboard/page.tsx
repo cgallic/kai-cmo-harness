@@ -14,7 +14,7 @@ import type { Audit } from "@/lib/types";
 
 export default function DashboardPage() {
   const { brand, loading: brandLoading } = useBrand();
-  const { audit, loading: auditLoading, setAudit } = useAudit(brand?.id);
+  const { audit, loading: auditLoading, setAudit, refresh: refreshAudit } = useAudit(brand?.id);
   const { integrations } = useIntegrations(brand?.id);
   const { actions, refresh: refreshActions } = useActions(brand?.id);
   const { snapshots } = useSnapshots(brand?.id);
@@ -91,6 +91,10 @@ export default function DashboardPage() {
       setGenerating(false);
     }
   }, [brand?.id, refreshActions]);
+
+  const handleAuditComplete = useCallback(() => {
+    refreshAudit();
+  }, [refreshAudit]);
 
   if (brandLoading) {
     return (
@@ -169,19 +173,17 @@ export default function DashboardPage() {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AuditScoreRing
-          audit={displayAudit}
+          audit={audit}
           brandUrl={brand.url}
           brandId={brand.id}
-          running={auditRunning}
-          onRunAudit={runAudit}
-          onAuditComplete={setAudit}
+          onAuditComplete={handleAuditComplete}
         />
         <ConnectedAccounts integrations={integrations} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PendingActions actions={actions} />
-        <ActivityFeed actions={actions} />
+        <ActivityFeed actions={actions} audit={audit} integrations={integrations} />
       </div>
     </div>
   );

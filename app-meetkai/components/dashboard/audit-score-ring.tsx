@@ -1,7 +1,10 @@
 "use client";
 
-import { cn, scoreColor } from "@/lib/utils";
+import { useState } from "react";
+import { cn, scoreColor, timeAgo } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
+import { RefreshCw } from "lucide-react";
 import type { Audit } from "@/lib/types";
 import { Search } from "lucide-react";
 
@@ -9,23 +12,11 @@ interface AuditScoreRingProps {
   audit: Audit | null;
   brandUrl?: string | null;
   brandId?: string;
-  onAuditComplete?: (audit: Audit) => void;
-  running?: boolean;
-  onRunAudit?: () => void;
+  onAuditComplete?: () => void;
 }
 
-export function AuditScoreRing({
-  audit,
-  brandUrl,
-  brandId,
-  onAuditComplete: _onAuditComplete,
-  running,
-  onRunAudit,
-}: AuditScoreRingProps) {
-  // Suppress unused variable warning — kept for future callback wiring
-  void _onAuditComplete;
-  void brandId;
-
+export function AuditScoreRing({ audit, brandUrl, brandId, onAuditComplete }: AuditScoreRingProps) {
+  const [running, setRunning] = useState(false);
   const score = audit?.overall_score ?? 0;
   const circumference = 2 * Math.PI * 45;
   const progress = (score / 100) * circumference;
@@ -42,9 +33,50 @@ export function AuditScoreRing({
   const showEmptyState = !audit && !running;
   const hasUrl = Boolean(brandUrl);
 
+  async function handleRerun() {
+    if (!brandId) return;
+    setRunning(true);
+    try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      await fetch("/api/audits/run", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({ brand_id: brandId }),
+      });
+      onAuditComplete?.();
+    } finally {
+      setRunning(false);
+    }
+  }
+
   return (
     <div className="card">
-      <h3 className="section-title mb-6">Audit Score</h3>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="section-title">Audit Score</h3>
+          {audit?.created_at && (
+            <p className="text-text-tertiary text-[10px] mt-0.5">
+              Last audited: {timeAgo(audit.created_at)}
+            </p>
+          )}
+        </div>
+        {brandId && (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleRerun}
+            loading={running}
+            className="text-xs gap-1.5"
+          >
+            <RefreshCw className="w-3 h-3" />
+            Re-run
+          </Button>
+        )}
+      </div>
 
       {running ? (
         <div className="flex flex-col items-center justify-center py-8 gap-4">
@@ -86,7 +118,7 @@ export function AuditScoreRing({
               <p className="text-text-tertiary text-sm mb-3">
                 No audit data yet. Run your first audit to see your marketing score.
               </p>
-              <Button onClick={onRunAudit} size="md">
+              <Button onClick={handleRerun} size="md">
                 <Search className="w-4 h-4" />
                 Run your first audit
               </Button>

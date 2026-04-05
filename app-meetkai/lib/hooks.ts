@@ -36,23 +36,24 @@ export function useAudit(brandId: string | undefined) {
   const [audit, setAudit] = useState<Audit | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchAudit = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
-    async function fetch() {
-      const { data } = await supabase
-        .from("audits")
-        .select("*")
-        .eq("brand_id", brandId)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
-      setAudit(data);
-      setLoading(false);
-    }
-    fetch();
+    const { data } = await supabase
+      .from("audits")
+      .select("*")
+      .eq("brand_id", brandId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+    setAudit(data);
+    setLoading(false);
   }, [brandId]);
 
-  return { audit, loading, setAudit };
+  useEffect(() => {
+    fetchAudit();
+  }, [fetchAudit]);
+
+  return { audit, loading, setAudit, refresh: fetchAudit };
 }
 
 export function useIntegrations(brandId: string | undefined) {
