@@ -1,6 +1,7 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { PipedreamClient } from "@pipedream/sdk";
+import { PROVIDERS } from "@/lib/types";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -47,6 +48,10 @@ export async function POST(request: Request) {
   const integration = integrations[0];
   console.log("Found integration:", integration.id, "status:", integration.status);
 
+  // Look up the Pipedream app slug for this provider
+  const providerConfig = PROVIDERS.find((p) => p.provider === provider);
+  const appSlug = providerConfig?.appSlug || "";
+
   // Look up the connected account from Pipedream
   let connectedAccountId: string | null = null;
   if (process.env.PIPEDREAM_CLIENT_ID && process.env.PIPEDREAM_CLIENT_SECRET) {
@@ -61,14 +66,37 @@ export async function POST(request: Request) {
         clientSecret: process.env.PIPEDREAM_CLIENT_SECRET!,
       });
 
-      const accountsPage = await pd.accounts.list({
+      // Filter by app slug to get the right account for THIS provider
+      const listParams: { externalUserId: string; app?: string } = {
         externalUserId: brand_id,
-      });
+      };
+      if (appSlug) {
+        listParams.app = appSlug;
+      }
+
+      const accountsPage = await pd.accounts.list(listParams);
       const accounts = accountsPage?.data ?? [];
+      console.log(`Pipedream accounts for app=${appSlug}:`, accounts.length, accounts.map((a) => ({ id: a.id, app: a.app, healthy: a.healthy })));
+
+      // Use the most recently created account for this specific app
       if (accounts.length > 0) {
         connectedAccountId = accounts[accounts.length - 1].id ?? null;
       }
-      console.log("Pipedream accounts found:", accounts.length, "using:", connectedAccountId);
+
+      // Fallback: if no accounts found with app filter, try without filter
+      if (!connectedAccountId && appSlug) {
+        console.log("No accounts found for app slug, trying without filter...");
+        const allAccountsPage = await pd.accounts.list({
+          externalUserId: brand_id,
+        });
+        const allAccounts = allAccountsPage?.data ?? [];
+        console.log("All Pipedream accounts:", allAccounts.length, allAccounts.map((a) => ({ id: a.id, app: a.app, healthy: a.healthy })));
+        if (allAccounts.length > 0) {
+          connectedAccountId = allAccounts[allAccounts.length - 1].id ?? null;
+        }
+      }
+
+      console.log("Using connected_account_id:", connectedAccountId);
     } catch (error) {
       console.error("Pipedream account lookup error:", error);
     }

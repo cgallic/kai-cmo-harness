@@ -91,20 +91,27 @@ export async function GET(request: NextRequest) {
 
   try {
     const pd = getPd();
+    const accountId = integration.connected_account_id as string;
+    console.log("GSC sites: fetching with accountId:", accountId, "brandId:", brandId);
+
     const res = await pd.proxy.get({
       url: "https://www.googleapis.com/webmasters/v3/sites",
-      accountId: integration.connected_account_id as string,
+      accountId,
       externalUserId: brandId,
     });
 
-    const data = ((res as { data?: GscSitesResponse })?.data ??
-      res) as GscSitesResponse;
+    // Pipedream SDK wraps response in { data: <body>, rawResponse: Response }
+    const raw = res as Record<string, unknown>;
+    console.log("GSC sites raw response keys:", Object.keys(raw));
+    const body = (raw.data ?? raw) as GscSitesResponse;
+    console.log("GSC sites body:", JSON.stringify(body).substring(0, 500));
 
-    const sites: GscSite[] = (data?.siteEntry || []).map((entry) => ({
+    const sites: GscSite[] = (body?.siteEntry || []).map((entry) => ({
       site_url: entry.siteUrl,
       permission_level: entry.permissionLevel,
     }));
 
+    console.log("GSC sites found:", sites.length);
     return NextResponse.json({ sites });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);

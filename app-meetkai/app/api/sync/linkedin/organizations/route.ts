@@ -51,14 +51,22 @@ export async function GET(request: NextRequest) {
 
   try {
     const pd = getPd();
+    const accountId = integration.connected_account_id;
+    console.log("LinkedIn orgs: fetching with accountId:", accountId, "brandId:", brandId);
+
     const res = await pd.proxy.get({
       url: "https://api.linkedin.com/v2/organizationAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(organizationalTarget~(id,localizedName)))",
-      accountId: integration.connected_account_id,
+      accountId,
       externalUserId: brandId,
     });
 
-    const data = ((res as { data?: LinkedInOrgAclsResponse })?.data ?? res) as LinkedInOrgAclsResponse;
-    const organizations = (data?.elements || [])
+    // Pipedream SDK wraps response in { data: <body>, rawResponse: Response }
+    const raw = res as Record<string, unknown>;
+    console.log("LinkedIn orgs raw response keys:", Object.keys(raw));
+    const body = (raw.data ?? raw) as LinkedInOrgAclsResponse;
+    console.log("LinkedIn orgs body:", JSON.stringify(body).substring(0, 500));
+
+    const organizations = (body?.elements || [])
       .map((el) => {
         const org = el["organizationalTarget~"];
         if (!org) return null;
@@ -66,6 +74,7 @@ export async function GET(request: NextRequest) {
       })
       .filter(Boolean);
 
+    console.log("LinkedIn orgs found:", organizations.length);
     return NextResponse.json({ organizations });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);

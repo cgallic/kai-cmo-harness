@@ -47,16 +47,22 @@ export async function GET(request: NextRequest) {
 
   try {
     const pd = getPd();
+    const accountId = integration.connected_account_id;
+    console.log("Instagram accounts: fetching with accountId:", accountId, "brandId:", brandId);
 
     // Fetch Facebook Pages with linked Instagram Business accounts
     const res = await pd.proxy.get({
       url: "https://graph.facebook.com/v19.0/me/accounts?fields=id,name,instagram_business_account",
-      accountId: integration.connected_account_id,
+      accountId,
       externalUserId: brandId,
     });
 
-    const data = ((res as { data?: FbPagesResponse })?.data ?? res) as FbPagesResponse;
-    const pages = (data?.data || []).filter((p) => p.instagram_business_account?.id);
+    const raw = res as Record<string, unknown>;
+    console.log("Instagram accounts raw response keys:", Object.keys(raw));
+    const body = (raw.data ?? raw) as FbPagesResponse;
+    console.log("Instagram accounts body:", JSON.stringify(body).substring(0, 500));
+
+    const pages = (body?.data || []).filter((p) => p.instagram_business_account?.id);
 
     // Fetch username for each IG account
     const accounts = await Promise.all(

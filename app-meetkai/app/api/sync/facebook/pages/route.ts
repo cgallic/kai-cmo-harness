@@ -46,15 +46,24 @@ export async function GET(request: NextRequest) {
 
   try {
     const pd = getPd();
+    const accountId = integration.connected_account_id;
+    console.log("Facebook pages: fetching with accountId:", accountId, "brandId:", brandId);
+
     const res = await pd.proxy.get({
       url: "https://graph.facebook.com/v19.0/me/accounts?fields=id,name",
-      accountId: integration.connected_account_id,
+      accountId,
       externalUserId: brandId,
     });
 
-    const data = ((res as { data?: FbPagesResponse })?.data ?? res) as FbPagesResponse;
-    const pages = (data?.data || []).map((p) => ({ id: p.id, name: p.name }));
+    // Pipedream SDK wraps response in { data: <body>, rawResponse: Response }
+    const raw = res as Record<string, unknown>;
+    console.log("Facebook pages raw response keys:", Object.keys(raw));
+    const body = (raw.data ?? raw) as FbPagesResponse;
+    console.log("Facebook pages body:", JSON.stringify(body).substring(0, 500));
 
+    const pages = (body?.data || []).map((p) => ({ id: p.id, name: p.name }));
+
+    console.log("Facebook pages found:", pages.length);
     return NextResponse.json({ pages });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
