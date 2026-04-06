@@ -187,11 +187,11 @@ export const PROVIDERS: ProviderConfig[] = [
   // Paid Media
   {
     channel: "paid_media", provider: "google_ads", name: "Google Ads", icon: "Megaphone", appSlug: "google_ads",
-    configRequired: { key: "google_ads_customer_id", label: "Customer ID", type: "text" },
+    configRequired: { key: "google_ads_customer_id", label: "Customer", type: "select", endpoint: "/api/sync/google-ads/customers", responseKey: "customers", optionLabel: "name", optionValue: "id" },
   },
   {
     channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing",
-    configRequired: { key: "meta_ads_account_id", label: "Ad Account ID", type: "text" },
+    configRequired: { key: "meta_ads_account_id", label: "Ad Account", type: "select", endpoint: "/api/sync/meta-ads/accounts", responseKey: "accounts", optionLabel: "name", optionValue: "id" },
   },
   // CRM
   { channel: "crm", provider: "hubspot", name: "HubSpot", icon: "UserCheck", appSlug: "hubspot" },
