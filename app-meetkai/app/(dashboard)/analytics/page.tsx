@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
 
   const ga4Connected = integrations.some((i) => i.provider === "ga4" && i.status === "connected");
   const gscConnected = integrations.some(
-    (i) => i.provider === "google_search_console" && i.status === "connected"
+    (i) => i.provider === "gsc" && i.status === "connected"
   );
 
   async function handleSelectProperty(propertyId: string) {

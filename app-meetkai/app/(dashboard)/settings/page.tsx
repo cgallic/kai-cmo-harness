@@ -334,7 +334,7 @@ function AnalyticsConfiguration({
     (i) => i.provider === "ga4" && i.status === "connected"
   );
   const gscIntegration = integrations.find(
-    (i) => i.provider === "google_search_console" && i.status === "connected"
+    (i) => i.provider === "gsc" && i.status === "connected"
   );
 
   const selectedGa4Property = (ga4Integration?.config as Record<string, unknown>)

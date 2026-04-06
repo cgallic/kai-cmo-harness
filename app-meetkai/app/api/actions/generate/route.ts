@@ -140,7 +140,7 @@ export async function POST(request: Request) {
     action_type: mapFindingToActionType(finding),
     channel: mapCategoryToChannel(finding.category),
     intent: generateHumanReadableIntent(finding),
-    risk_tier: finding.severity === "critical" ? "medium" : "low",
+    risk_tier: finding.severity === "critical" ? "high" : "medium",
     proposed_changes: {
       finding: finding.description,
       recommendation: finding.recommendation || "",

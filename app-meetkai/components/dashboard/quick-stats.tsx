@@ -43,8 +43,8 @@ export function QuickStats({ audit, integrations, actions, snapshots }: QuickSta
   const stats: StatItem[] = [
     {
       label: "Audit Score",
-      value: audit?.overall_score ? Math.round(audit.overall_score) : "—",
-      color: audit?.overall_score
+      value: audit?.overall_score != null ? Math.round(audit.overall_score) : "—",
+      color: audit?.overall_score != null
         ? audit.overall_score >= 70 ? "text-success" : audit.overall_score >= 40 ? "text-amber" : "text-error"
         : "text-text-tertiary",
       subtitle: audit?.created_at ? `Audited ${timeAgo(audit.created_at)}` : null,
