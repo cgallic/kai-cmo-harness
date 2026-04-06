@@ -77,3 +77,21 @@ export function statusBgColor(status: string): string {
       return "bg-error-dim";
   }
 }
+
+export function riskTierColor(tier: string): string {
+  switch (tier) {
+    case "low": return "text-success";
+    case "medium": return "text-amber";
+    case "high": return "text-error";
+    default: return "text-text-tertiary";
+  }
+}
+
+export function riskTierBgColor(tier: string): string {
+  switch (tier) {
+    case "low": return "bg-success-dim";
+    case "medium": return "bg-amber-dim";
+    case "high": return "bg-error-dim";
+    default: return "bg-border";
+  }
+}

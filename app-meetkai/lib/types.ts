@@ -92,6 +92,54 @@ export interface ChannelSnapshot {
   created_at: string;
 }
 
+export interface Content {
+  id: string;
+  brand_id: string;
+  format: string;
+  title: string | null;
+  body: string | null;
+  brief: Record<string, unknown> | null;
+  gate_report: Record<string, unknown> | null;
+  status: ContentStatus;
+  skill: string | null;
+  gateway_job_id: string | null;
+  gateway_run_id: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+  published_at: string | null;
+}
+
+export type ContentStatus = "draft" | "approved" | "published" | "rejected";
+
+export interface AgentRun {
+  id: string;
+  brand_id: string;
+  task_type: string;
+  skill: string | null;
+  trigger: string;
+  status: "pending" | "running" | "completed" | "failed";
+  input: Record<string, unknown> | null;
+  output: Record<string, unknown> | null;
+  error: string | null;
+  risk_tier: "low" | "medium" | "high";
+  started_at: string | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  brand_id: string;
+  role: "user" | "assistant" | "tool" | "system";
+  content: string | null;
+  tool_calls: Record<string, unknown> | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+export type AutonomyMode = "supervised" | "balanced" | "autonomous";
+
 // Provider mapping (mirrors gateway/adapters/pipedream/base.py)
 export const PROVIDERS: ProviderConfig[] = [
   // Analytics
