@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     .from("integrations")
     .select("*")
     .eq("brand_id", brand_id)
-    .eq("provider", "google_search_console")
+    .eq("provider", "gsc")
     .eq("status", "connected")
     .order("created_at", { ascending: false })
     .limit(1);

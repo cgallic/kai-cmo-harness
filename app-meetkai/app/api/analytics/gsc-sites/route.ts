@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       .select("*")
       .eq("id", integrationId)
       .eq("brand_id", brandId)
-      .eq("provider", "google_search_console")
+      .eq("provider", "gsc")
       .eq("status", "connected")
       .single();
     if (!error && data) integration = data as Record<string, unknown>;
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       .from("integrations")
       .select("*")
       .eq("brand_id", brandId)
-      .eq("provider", "google_search_console")
+      .eq("provider", "gsc")
       .eq("status", "connected")
       .order("created_at", { ascending: false })
       .limit(1);
