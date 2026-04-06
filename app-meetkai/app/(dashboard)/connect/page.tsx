@@ -402,7 +402,11 @@ function ProviderCard({
       )}
 
       <div className="mt-auto pt-2">
-        {status === "connected" ? (
+        {provider.comingSoon ? (
+          <Button variant="secondary" size="sm" className="w-full" disabled>
+            Coming Soon
+          </Button>
+        ) : status === "connected" ? (
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" className="flex-1" disabled={needsSetup}>
               <RefreshCw className="w-3.5 h-3.5" />

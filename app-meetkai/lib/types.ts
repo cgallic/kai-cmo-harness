@@ -162,7 +162,7 @@ export const PROVIDERS: ProviderConfig[] = [
   { channel: "social", provider: "facebook", name: "Facebook", icon: "Facebook", appSlug: "facebook_pages" },
   { channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "instagram_business" },
   { channel: "social", provider: "linkedin", name: "Linkedin", icon: "Linkedin", appSlug: "linkedin" },
-  { channel: "social", provider: "tiktok", name: "TikTok", icon: "Music", appSlug: "tiktok_marketing" },
+  { channel: "social", provider: "tiktok", name: "TikTok", icon: "Music", appSlug: "", comingSoon: true },
   { channel: "social", provider: "youtube", name: "YouTube", icon: "Youtube", appSlug: "youtube_data_api" },
   // Email
   { channel: "email", provider: "mailchimp", name: "Mailchimp", icon: "Mail", appSlug: "mailchimp" },
@@ -195,6 +195,7 @@ export interface ProviderConfig {
   icon: string;
   appSlug: string;
   configRequired?: ProviderConfigRequired;
+  comingSoon?: boolean;
 }
 
 // Channel category groupings for the connect page
