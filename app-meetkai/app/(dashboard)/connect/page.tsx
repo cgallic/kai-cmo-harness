@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
+import { timeAgo } from "@/lib/utils";
 import {
   BarChart3, Search, MapPin, Globe, ShoppingBag,
   Facebook, Instagram, Linkedin, Music, Youtube,
@@ -199,6 +200,7 @@ function ConfigPicker({
       return (
         <p className="text-xs text-text-tertiary mt-2">
           No {cfg.label.toLowerCase()}s found.
+          {cfg.key === "gsc_site_url" && " Make sure this Google account has verified sites in Search Console."}
         </p>
       );
     }
@@ -247,6 +249,37 @@ function ConfigPicker({
 /*  ProviderCard                                                       */
 /* ------------------------------------------------------------------ */
 
+// Maps provider key to its sync API endpoint
+const SYNC_ENDPOINTS: Record<string, string> = {
+  ga4: "/api/analytics/sync",
+  gsc: "/api/analytics/sync-gsc",
+  facebook: "/api/sync/facebook",
+  instagram: "/api/sync/instagram",
+  linkedin: "/api/sync/linkedin",
+  youtube: "/api/sync/youtube",
+  pinterest: "/api/sync/pinterest",
+  google_ads: "/api/sync/google-ads",
+  meta_ads: "/api/sync/meta-ads",
+  mailchimp: "/api/sync/mailchimp",
+  sendgrid: "/api/sync/sendgrid",
+  klaviyo: "/api/sync/klaviyo",
+  hubspot: "/api/sync/hubspot",
+  stripe: "/api/sync/stripe",
+  convertkit: "/api/sync/convertkit",
+  activecampaign: "/api/sync/activecampaign",
+  twitter: "/api/sync/twitter",
+  calendly: "/api/sync/calendly",
+  notion: "/api/sync/notion",
+  google_sheets: "/api/sync/google-sheets",
+  airtable: "/api/sync/airtable",
+  wordpress: "/api/sync/wordpress",
+  shopify: "/api/sync/shopify",
+  webflow: "/api/sync/webflow",
+  squarespace: "/api/sync/squarespace",
+  slack: "/api/sync/slack",
+  gbp: "/api/sync/gbp",
+};
+
 function ProviderCard({
   provider,
   integration,
@@ -257,6 +290,7 @@ function ProviderCard({
   brandId: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
   const Icon = iconMap[provider.icon] || Link2;
@@ -353,6 +387,31 @@ function ProviderCard({
     }
   }
 
+  async function handleSync() {
+    const endpoint = SYNC_ENDPOINTS[provider.provider];
+    if (!endpoint) {
+      setError("Sync not available for this provider yet");
+      return;
+    }
+    setSyncing(true);
+    setError(null);
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand_id: brandId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Sync failed");
+      }
+    } catch {
+      setError("Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   async function handleDisconnect() {
     if (!integration) return;
     setLoading(true);
@@ -376,6 +435,12 @@ function ProviderCard({
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold">{provider.name}</h3>
           <p className="text-xs text-text-tertiary capitalize">{provider.channel.replace(/_/g, " ")}</p>
+          {/* Show last sync time */}
+          {integration?.last_sync_at && (
+            <p className="text-[10px] text-text-tertiary mt-0.5">
+              Synced {timeAgo(integration.last_sync_at)}
+            </p>
+          )}
           {/* Show configured value label when fully active */}
           {isFullyActive && cfg && configuredValue && (
             <p className="text-xs text-success mt-0.5 truncate">
@@ -412,7 +477,14 @@ function ProviderCard({
           </Button>
         ) : status === "connected" ? (
           <div className="flex gap-2">
-            <Button variant="secondary" size="sm" className="flex-1" disabled={needsSetup}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+              disabled={needsSetup || !SYNC_ENDPOINTS[provider.provider]}
+              onClick={handleSync}
+              loading={syncing}
+            >
               <RefreshCw className="w-3.5 h-3.5" />
               Sync
             </Button>

@@ -153,15 +153,27 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   { channel: "analytics", provider: "gbp", name: "Google Business", icon: "MapPin", appSlug: "google_my_business" },
   // Website
-  { channel: "website", provider: "wordpress", name: "WordPress", icon: "Globe", appSlug: "wordpress_org" },
+  {
+    channel: "website", provider: "wordpress", name: "WordPress", icon: "Globe", appSlug: "wordpress_org",
+    configRequired: { key: "wordpress_site_url", label: "Site URL", type: "text" },
+  },
   {
     channel: "website", provider: "shopify", name: "Shopify", icon: "ShoppingBag", appSlug: "shopify",
     configRequired: { key: "shopify_store", label: "Store domain", type: "text" },
   },
   // Social
-  { channel: "social", provider: "facebook", name: "Facebook", icon: "Facebook", appSlug: "facebook_pages" },
-  { channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "instagram_business" },
-  { channel: "social", provider: "linkedin", name: "Linkedin", icon: "Linkedin", appSlug: "linkedin" },
+  {
+    channel: "social", provider: "facebook", name: "Facebook", icon: "Facebook", appSlug: "facebook_pages",
+    configRequired: { key: "facebook_page_id", label: "Page", type: "select", endpoint: "/api/sync/facebook/pages", responseKey: "pages", optionLabel: "name", optionValue: "id" },
+  },
+  {
+    channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "instagram_business",
+    configRequired: { key: "instagram_account_id", label: "Account", type: "select", endpoint: "/api/sync/instagram/accounts", responseKey: "accounts", optionLabel: "name", optionValue: "id" },
+  },
+  {
+    channel: "social", provider: "linkedin", name: "LinkedIn", icon: "Linkedin", appSlug: "linkedin",
+    configRequired: { key: "linkedin_organization_id", label: "Organization", type: "select", endpoint: "/api/sync/linkedin/organizations", responseKey: "organizations", optionLabel: "name", optionValue: "id" },
+  },
   { channel: "social", provider: "tiktok", name: "TikTok", icon: "Music", appSlug: "", comingSoon: true },
   { channel: "social", provider: "youtube", name: "YouTube", icon: "Youtube", appSlug: "youtube_data_api" },
   { channel: "social", provider: "twitter", name: "X / Twitter", icon: "Twitter", appSlug: "twitter" },
