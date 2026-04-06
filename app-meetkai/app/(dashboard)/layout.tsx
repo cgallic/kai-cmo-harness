@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
+import { ChatPanel } from "@/components/chat/chat-panel";
 import { Toaster } from "sonner";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           {children}
         </div>
       </main>
+      <ChatPanel />
       <Toaster
         theme="dark"
         toastOptions={{

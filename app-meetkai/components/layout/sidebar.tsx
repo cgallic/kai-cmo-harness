@@ -14,12 +14,14 @@ import {
   LogOut,
   Menu,
   X,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/connect", label: "Connect", icon: Link2 },
+  { href: "/content", label: "Content", icon: FileText },
   { href: "/actions", label: "Actions", icon: Zap },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
