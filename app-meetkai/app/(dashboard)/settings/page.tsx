@@ -8,9 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Save, User, Link2, Bell, BarChart3, Search } from "lucide-react";
+import { Save, User, Link2, Bell, BarChart3, Search, Shield } from "lucide-react";
 import { cn, scoreColor, timeAgo } from "@/lib/utils";
-import type { Integration, Audit } from "@/lib/types";
+import type { Integration, Audit, AutonomyMode } from "@/lib/types";
 
 export default function SettingsPage() {
   const { brand, loading, refresh: refreshBrand } = useBrand();
@@ -45,6 +45,7 @@ export default function SettingsPage() {
 
       {!isOnboarding && (
         <>
+          <AutonomySettings brand={brand} />
           <AnalyticsConfiguration brand={brand} integrations={integrations} onConfigUpdated={refreshBrand} />
           <ConnectedAccountsList integrations={integrations} />
           <NotificationPreferences brand={brand} />
@@ -482,6 +483,69 @@ function AnalyticsConfiguration({
             )}
           </div>
         )}
+      </div>
+    </Card>
+  );
+}
+
+function AutonomySettings({ brand }: { brand: ReturnType<typeof useBrand>["brand"] }) {
+  const supabase = createClient();
+  const [mode, setMode] = useState<AutonomyMode>(
+    ((brand?.metadata as Record<string, unknown>)?.autonomy_mode as AutonomyMode) || "balanced"
+  );
+  const [saving, setSaving] = useState(false);
+
+  const modes: { value: AutonomyMode; label: string; desc: string }[] = [
+    { value: "supervised", label: "Supervised", desc: "All actions require approval" },
+    { value: "balanced", label: "Balanced", desc: "Low-risk auto-executes, medium+ needs approval" },
+    { value: "autonomous", label: "Autonomous", desc: "Only high-risk actions need approval" },
+  ];
+
+  async function handleChange(newMode: AutonomyMode) {
+    if (!brand) return;
+    setMode(newMode);
+    setSaving(true);
+    await supabase
+      .from("brands")
+      .update({ autonomy_mode: newMode })
+      .eq("id", brand.id);
+    setSaving(false);
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="w-4 h-4 text-amber" />
+          AI Autonomy
+        </CardTitle>
+      </CardHeader>
+      <p className="text-xs text-text-tertiary mb-4">
+        Control how much the AI CMO can do without your approval.
+      </p>
+      <div className="space-y-2">
+        {modes.map((m) => (
+          <button
+            key={m.value}
+            onClick={() => handleChange(m.value)}
+            disabled={saving}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors",
+              mode === m.value
+                ? "bg-amber-dim border border-amber/30"
+                : "bg-bg-elevated border border-border hover:border-border-hover"
+            )}
+          >
+            <div className={cn(
+              "w-3 h-3 rounded-full border-2",
+              mode === m.value ? "border-amber bg-amber" : "border-text-tertiary"
+            )} />
+            <div>
+              <p className="text-sm font-medium">{m.label}</p>
+              <p className="text-xs text-text-tertiary">{m.desc}</p>
+            </div>
+          </button>
+        ))}
       </div>
     </Card>
   );
