@@ -2,16 +2,15 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { Brand, Integration, Action, Audit, ChannelSnapshot } from "@/lib/types";
+import type { Brand, Integration, Action, Audit, ChannelSnapshot, Content, AgentRun } from "@/lib/types";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-
-const supabase = createClient();
 
 export function useBrand() {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
+    const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setLoading(false); return; }
 
@@ -44,6 +43,7 @@ export function useAudit(brandId: string | undefined) {
 
   const fetchAudit = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
+    const supabase = createClient();
     const { data: rows, error } = await supabase
       .from("audits")
       .select("*")
@@ -75,6 +75,7 @@ export function useIntegrations(brandId: string | undefined) {
     if (!brandId) { setLoading(false); return; }
 
     async function fetch() {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from("integrations")
         .select("*")
@@ -89,6 +90,7 @@ export function useIntegrations(brandId: string | undefined) {
     fetch();
 
     // Realtime subscription
+    const supabase = createClient();
     const channel = supabase
       .channel("integrations-changes")
       .on(
@@ -121,6 +123,7 @@ export function useActions(brandId: string | undefined, filters?: { approval_sta
   const fetchActions = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
 
+    const supabase = createClient();
     let query = supabase
       .from("actions")
       .select("*")
@@ -148,6 +151,7 @@ export function useActions(brandId: string | undefined, filters?: { approval_sta
 
     if (!brandId) return;
 
+    const supabase = createClient();
     const channel = supabase
       .channel("actions-changes")
       .on(
@@ -170,6 +174,7 @@ export function useSnapshots(brandId: string | undefined, channel?: string) {
   const refresh = useCallback(async () => {
     if (!brandId) { setLoading(false); return; }
 
+    const supabase = createClient();
     let query = supabase
       .from("channel_snapshots")
       .select("*")
@@ -193,4 +198,90 @@ export function useSnapshots(brandId: string | undefined, channel?: string) {
   }, [refresh]);
 
   return { snapshots, loading, refresh };
+}
+
+export function useContent(brandId: string | undefined, filters?: { status?: string; format?: string }) {
+  const [content, setContent] = useState<Content[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchContent = useCallback(async () => {
+    if (!brandId) { setLoading(false); return; }
+
+    const supabase = createClient();
+    let query = supabase
+      .from("content")
+      .select("*")
+      .eq("brand_id", brandId)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (filters?.status) query = query.eq("status", filters.status);
+    if (filters?.format) query = query.eq("format", filters.format);
+
+    const { data, error } = await query;
+    if (error) console.error("useContent error:", error.message);
+    setContent(data || []);
+    setLoading(false);
+  }, [brandId, filters?.status, filters?.format]);
+
+  useEffect(() => {
+    fetchContent();
+
+    if (!brandId) return;
+
+    const supabase = createClient();
+    const channel = supabase
+      .channel("content-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "content", filter: `brand_id=eq.${brandId}` },
+        () => { fetchContent(); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [brandId, fetchContent]);
+
+  return { content, loading, refresh: fetchContent };
+}
+
+export function useAgentRuns(brandId: string | undefined) {
+  const [runs, setRuns] = useState<AgentRun[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchRuns = useCallback(async () => {
+    if (!brandId) { setLoading(false); return; }
+
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("agent_runs")
+      .select("*")
+      .eq("brand_id", brandId)
+      .order("created_at", { ascending: false })
+      .limit(20);
+
+    if (error) console.error("useAgentRuns error:", error.message);
+    setRuns(data || []);
+    setLoading(false);
+  }, [brandId]);
+
+  useEffect(() => {
+    fetchRuns();
+
+    if (!brandId) return;
+
+    const supabase = createClient();
+    const channel = supabase
+      .channel("agent-runs-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "agent_runs", filter: `brand_id=eq.${brandId}` },
+        () => { fetchRuns(); }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [brandId, fetchRuns]);
+
+  return { runs, loading, refresh: fetchRuns };
 }
