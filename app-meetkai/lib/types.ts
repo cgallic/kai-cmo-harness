@@ -173,7 +173,7 @@ export const PROVIDERS: ProviderConfig[] = [
     configRequired: { key: "google_ads_customer_id", label: "Customer ID", type: "text" },
   },
   {
-    channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing_api",
+    channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing",
     configRequired: { key: "meta_ads_account_id", label: "Ad Account ID", type: "text" },
   },
 ];
