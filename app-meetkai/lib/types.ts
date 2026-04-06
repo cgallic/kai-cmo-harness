@@ -167,7 +167,7 @@ export const PROVIDERS: ProviderConfig[] = [
     configRequired: { key: "facebook_page_id", label: "Page", type: "select", endpoint: "/api/sync/facebook/pages", responseKey: "pages", optionLabel: "name", optionValue: "id" },
   },
   {
-    channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "instagram_business",
+    channel: "social", provider: "instagram", name: "Instagram", icon: "Instagram", appSlug: "facebook_pages",
     configRequired: { key: "instagram_account_id", label: "Account", type: "select", endpoint: "/api/sync/instagram/accounts", responseKey: "accounts", optionLabel: "name", optionValue: "id" },
   },
   {
@@ -176,7 +176,7 @@ export const PROVIDERS: ProviderConfig[] = [
   },
   { channel: "social", provider: "tiktok", name: "TikTok", icon: "Music", appSlug: "", comingSoon: true },
   { channel: "social", provider: "youtube", name: "YouTube", icon: "Youtube", appSlug: "youtube_data_api" },
-  { channel: "social", provider: "twitter", name: "X / Twitter", icon: "Twitter", appSlug: "twitter" },
+  { channel: "social", provider: "twitter", name: "X / Twitter", icon: "Twitter", appSlug: "", comingSoon: true },
   { channel: "social", provider: "pinterest", name: "Pinterest", icon: "Pin", appSlug: "pinterest" },
   // Email
   { channel: "email", provider: "mailchimp", name: "Mailchimp", icon: "Mail", appSlug: "mailchimp" },
@@ -190,23 +190,23 @@ export const PROVIDERS: ProviderConfig[] = [
     configRequired: { key: "google_ads_customer_id", label: "Customer", type: "select", endpoint: "/api/sync/google-ads/customers", responseKey: "customers", optionLabel: "name", optionValue: "id" },
   },
   {
-    channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing",
+    channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_graph_api",
     configRequired: { key: "meta_ads_account_id", label: "Ad Account", type: "select", endpoint: "/api/sync/meta-ads/accounts", responseKey: "accounts", optionLabel: "name", optionValue: "id" },
   },
   // CRM
   { channel: "crm", provider: "hubspot", name: "HubSpot", icon: "UserCheck", appSlug: "hubspot" },
   // Notifications
-  { channel: "notifications", provider: "slack", name: "Slack", icon: "MessageSquare", appSlug: "slack" },
+  { channel: "notifications", provider: "slack", name: "Slack", icon: "MessageSquare", appSlug: "slack_v2" },
   // Payments
   {
     channel: "payments", provider: "stripe", name: "Stripe", icon: "CreditCard", appSlug: "stripe",
     configRequired: { key: "stripe_account_id", label: "Account ID", type: "text" },
   },
   // Scheduling
-  { channel: "scheduling", provider: "calendly", name: "Calendly", icon: "Calendar", appSlug: "calendly" },
+  { channel: "scheduling", provider: "calendly", name: "Calendly", icon: "Calendar", appSlug: "calendly_v2" },
   // Content
   { channel: "content", provider: "notion", name: "Notion", icon: "BookOpen", appSlug: "notion" },
-  { channel: "content", provider: "airtable", name: "Airtable", icon: "Table2", appSlug: "airtable" },
+  { channel: "content", provider: "airtable", name: "Airtable", icon: "Table2", appSlug: "airtable_oauth" },
   { channel: "content", provider: "google_sheets", name: "Google Sheets", icon: "Table2", appSlug: "google_sheets" },
   // Website (additional)
   { channel: "website", provider: "webflow", name: "Webflow", icon: "Layout", appSlug: "webflow" },
