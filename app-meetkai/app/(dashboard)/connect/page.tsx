@@ -13,12 +13,16 @@ import {
   BarChart3, Search, MapPin, Globe, ShoppingBag,
   Facebook, Instagram, Linkedin, Music, Youtube,
   Mail, Send, Megaphone, Target, Link2, RefreshCw, Check,
+  Twitter, Pin, Calendar, BookOpen, Table2, Layout,
+  SquareCode, Zap, UserCheck, CreditCard, MessageSquare,
 } from "lucide-react";
 
 const iconMap: Record<string, typeof BarChart3> = {
   BarChart3, Search, MapPin, Globe, ShoppingBag,
   Facebook, Instagram, Linkedin, Music, Youtube,
-  Mail, Send, Megaphone, Target,
+  Mail, Send, Megaphone, Target, Twitter, Pin,
+  Calendar, BookOpen, Table2, Layout, SquareCode,
+  Zap, UserCheck, CreditCard, MessageSquare,
 };
 
 export default function ConnectPage() {

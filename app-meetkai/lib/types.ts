@@ -164,9 +164,14 @@ export const PROVIDERS: ProviderConfig[] = [
   { channel: "social", provider: "linkedin", name: "Linkedin", icon: "Linkedin", appSlug: "linkedin" },
   { channel: "social", provider: "tiktok", name: "TikTok", icon: "Music", appSlug: "", comingSoon: true },
   { channel: "social", provider: "youtube", name: "YouTube", icon: "Youtube", appSlug: "youtube_data_api" },
+  { channel: "social", provider: "twitter", name: "X / Twitter", icon: "Twitter", appSlug: "twitter" },
+  { channel: "social", provider: "pinterest", name: "Pinterest", icon: "Pin", appSlug: "pinterest" },
   // Email
   { channel: "email", provider: "mailchimp", name: "Mailchimp", icon: "Mail", appSlug: "mailchimp" },
   { channel: "email", provider: "sendgrid", name: "SendGrid", icon: "Send", appSlug: "sendgrid" },
+  { channel: "email", provider: "klaviyo", name: "Klaviyo", icon: "Zap", appSlug: "klaviyo" },
+  { channel: "email", provider: "convertkit", name: "ConvertKit", icon: "UserCheck", appSlug: "convertkit" },
+  { channel: "email", provider: "activecampaign", name: "ActiveCampaign", icon: "Send", appSlug: "activecampaign" },
   // Paid Media
   {
     channel: "paid_media", provider: "google_ads", name: "Google Ads", icon: "Megaphone", appSlug: "google_ads",
@@ -176,6 +181,24 @@ export const PROVIDERS: ProviderConfig[] = [
     channel: "paid_media", provider: "meta_ads", name: "Meta Ads", icon: "Target", appSlug: "facebook_marketing",
     configRequired: { key: "meta_ads_account_id", label: "Ad Account ID", type: "text" },
   },
+  // CRM
+  { channel: "crm", provider: "hubspot", name: "HubSpot", icon: "UserCheck", appSlug: "hubspot" },
+  // Notifications
+  { channel: "notifications", provider: "slack", name: "Slack", icon: "MessageSquare", appSlug: "slack" },
+  // Payments
+  {
+    channel: "payments", provider: "stripe", name: "Stripe", icon: "CreditCard", appSlug: "stripe",
+    configRequired: { key: "stripe_account_id", label: "Account ID", type: "text" },
+  },
+  // Scheduling
+  { channel: "scheduling", provider: "calendly", name: "Calendly", icon: "Calendar", appSlug: "calendly" },
+  // Content
+  { channel: "content", provider: "notion", name: "Notion", icon: "BookOpen", appSlug: "notion" },
+  { channel: "content", provider: "airtable", name: "Airtable", icon: "Table2", appSlug: "airtable" },
+  { channel: "content", provider: "google_sheets", name: "Google Sheets", icon: "Table2", appSlug: "google_sheets" },
+  // Website (additional)
+  { channel: "website", provider: "webflow", name: "Webflow", icon: "Layout", appSlug: "webflow" },
+  { channel: "website", provider: "squarespace", name: "Squarespace", icon: "SquareCode", appSlug: "squarespace" },
 ];
 
 export interface ProviderConfigRequired {
@@ -205,4 +228,9 @@ export const CHANNEL_CATEGORIES: Record<string, string[]> = {
   Social: ["social"],
   Email: ["email"],
   "Paid Media": ["paid_media"],
+  CRM: ["crm"],
+  Content: ["content"],
+  Payments: ["payments"],
+  Scheduling: ["scheduling"],
+  Notifications: ["notifications"],
 };
