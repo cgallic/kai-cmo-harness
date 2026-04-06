@@ -89,6 +89,15 @@ create index idx_chat_brand_id on public.chat_messages(brand_id);
 create index idx_agent_runs_brand_id on public.agent_runs(brand_id);
 create index idx_agent_runs_status on public.agent_runs(status);
 
+-- Ensure update_updated_at() exists (may already exist from 003_hardening)
+create or replace function update_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
 -- Updated_at triggers
 create trigger content_updated_at before update on public.content
   for each row execute function update_updated_at();
