@@ -15,7 +15,7 @@ import {
   Facebook, Instagram, Linkedin, Music, Youtube,
   Mail, Send, Megaphone, Target, Link2, RefreshCw, Check,
   Twitter, Pin, Calendar, BookOpen, Table2, Layout,
-  SquareCode, Zap, UserCheck, CreditCard, MessageSquare,
+  SquareCode, Zap, UserCheck, CreditCard, MessageSquare, Wrench,
 } from "lucide-react";
 
 const iconMap: Record<string, typeof BarChart3> = {
@@ -30,6 +30,8 @@ export default function ConnectPage() {
   const { brand, loading: brandLoading } = useBrand();
   const { integrations, loading: intLoading } = useIntegrations(brand?.id);
   const searchParams = useSearchParams();
+  const [repairing, setRepairing] = useState(false);
+  const [repairResult, setRepairResult] = useState<string | null>(null);
 
   // Handle OAuth success redirect — confirm the connection
   useEffect(() => {
@@ -89,10 +91,46 @@ export default function ConnectPage() {
       <div className="card">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-text-secondary">Connection progress</span>
-          <span className="text-sm font-mono text-amber">
-            {integrations.filter((i) => i.status === "connected").length} / {PROVIDERS.length}
-          </span>
+          <div className="flex items-center gap-3">
+            {integrations.some((i) => i.status === "connected") && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={async () => {
+                  setRepairing(true);
+                  setRepairResult(null);
+                  try {
+                    const res = await fetch("/api/connections/repair", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ brand_id: brand!.id }),
+                    });
+                    const data = await res.json();
+                    if (data.repairs?.length > 0) {
+                      setRepairResult(`Fixed ${data.repairs.length} connection(s)`);
+                      setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                      setRepairResult("All connections OK");
+                    }
+                  } catch {
+                    setRepairResult("Repair failed");
+                  }
+                  setRepairing(false);
+                }}
+                loading={repairing}
+              >
+                <Wrench className="w-3.5 h-3.5" />
+                Repair
+              </Button>
+            )}
+            <span className="text-sm font-mono text-amber">
+              {integrations.filter((i) => i.status === "connected").length} / {PROVIDERS.length}
+            </span>
+          </div>
         </div>
+        {repairResult && (
+          <p className="text-xs text-text-secondary mb-2">{repairResult}</p>
+        )}
         <div className="h-2 bg-border rounded-full overflow-hidden">
           <div
             className="h-full bg-amber rounded-full transition-all duration-500"
