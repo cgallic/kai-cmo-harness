@@ -1,8 +1,4 @@
-"""
-CMO Agent System - Webhook Gateway
-
-FastAPI application exposing Python automation scripts via HTTP endpoints.
-"""
+"""Kai Runtime remote runner and connector gateway."""
 
 import sys
 from contextlib import asynccontextmanager
@@ -22,14 +18,15 @@ from gateway.models import WebhookResponse
 
 # Import routers
 from gateway.routers import analytics, tiktok, cold_email, tasks, clients, jobs
-from gateway.routers import whatsapp, agent, creative, stripe, generate
+from gateway.routers import whatsapp, agent, creative, stripe, generate, runtime, actions
+from gateway.routers import connections
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
-    print(f"CMO Gateway starting on {config.host}:{config.port}")
+    print(f"Kai Runtime Gateway starting on {config.host}:{config.port}")
     print(f"Debug mode: {config.debug}")
 
     # Cleanup old jobs on startup
@@ -38,14 +35,14 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    print("CMO Gateway shutting down...")
+    print("Kai Runtime Gateway shutting down...")
     job_queue.shutdown()
 
 
 # Create FastAPI app
 app = FastAPI(
-    title="CMO Agent System Gateway",
-    description="Webhook gateway for marketing automation scripts",
+    title="Kai Runtime Gateway",
+    description="Remote runner, connectors, and runtime metadata for the Kai marketing OS clone.",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs" if config.debug else None,
@@ -80,10 +77,11 @@ async def health_check():
 async def root():
     """Root endpoint with API info."""
     return {
-        "name": "CMO Agent System Gateway",
+        "name": "Kai Runtime Gateway",
         "version": "1.0.0",
         "docs": "/docs" if config.debug else "Disabled in production",
         "endpoints": {
+            "runtime": "/runtime/*",
             "health": "/health",
             "analytics": "/webhooks/analytics/*",
             "tiktok": "/webhooks/tiktok/*",
@@ -95,7 +93,9 @@ async def root():
             "clients": "/clients",
             "jobs": "/jobs/*",
             "agent": "/agent/*",
-            "generate": "/generate"
+            "generate": "/generate",
+            "ops": "/ops/*",
+            "connections": "/connections/*"
         }
     }
 
@@ -105,6 +105,13 @@ async def root():
 # ============================================================================
 
 # All webhook routes require API key
+app.include_router(
+    runtime.router,
+    prefix="/runtime",
+    tags=["Runtime"],
+    dependencies=[Depends(verify_api_key)]
+)
+
 app.include_router(
     analytics.router,
     prefix="/webhooks/analytics",
@@ -179,6 +186,20 @@ app.include_router(
     generate.router,
     prefix="/generate",
     tags=["Generate"],
+    dependencies=[Depends(verify_api_key)]
+)
+
+app.include_router(
+    actions.router,
+    prefix="/ops",
+    tags=["Operator"],
+    dependencies=[Depends(verify_api_key)]
+)
+
+app.include_router(
+    connections.router,
+    prefix="/connections",
+    tags=["Connections"],
     dependencies=[Depends(verify_api_key)]
 )
 

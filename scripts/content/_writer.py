@@ -250,6 +250,7 @@ def assemble_write_prompt(
     site_facts: str,
     learned_defaults: str,
     non_negotiables: str,
+    module_guidance: str = "",
     format_instructions: str | None = None,
 ) -> str:
     """Build the full write prompt from all context pieces. Pure function."""
@@ -280,6 +281,9 @@ Audience pain: {brief.get('audience_pain')}
 
 ## Verified proof points (use these — do not invent stats)
 {site_facts or brief.get('proof_available', '')}
+
+## Active modules
+{module_guidance or "No module-specific overlays active."}
 
 ## Format instructions
 {instructions}

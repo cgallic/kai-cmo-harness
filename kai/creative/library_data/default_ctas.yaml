@@ -1,0 +1,319 @@
+# Default CTA Library — Kai Marketing OS
+# Curated, proven CTAs organized by archetype and channel.
+# Each entry has archetype_tags, channel_tags, intent, urgency_level, and quality_score.
+
+ctas:
+  # ---------------------------------------------------------------------------
+  # Local-service CTAs (1-7)
+  # ---------------------------------------------------------------------------
+  - id: "cta-local-001"
+    text: "Call Now for a Free Quote"
+    short_text: "Call Now"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads"]
+    intent: "call"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.85
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-002"
+    text: "Schedule Your Free Estimate"
+    short_text: "Schedule Now"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "email"]
+    intent: "schedule"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.80
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-003"
+    text: "Get a Free Quote in 60 Seconds"
+    short_text: "Free Quote"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website"]
+    intent: "form_submit"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.82
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-004"
+    text: "Book Your Appointment"
+    short_text: "Book Now"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "social"]
+    intent: "schedule"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.75
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-005"
+    text: "Call {phone} — Available 24/7"
+    short_text: "Call 24/7"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website"]
+    intent: "call"
+    urgency_level: "high"
+    compliance_notes: "Ensure 24/7 availability claim is accurate."
+    quality_score: 0.88
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-006"
+    text: "See Our Work"
+    short_text: "Our Work"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "social"]
+    intent: "learn_more"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.65
+    source: "default"
+    metadata: {}
+
+  - id: "cta-local-007"
+    text: "Request a Callback"
+    short_text: "Callback"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website"]
+    intent: "form_submit"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.72
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Ecommerce CTAs (8-14)
+  # ---------------------------------------------------------------------------
+  - id: "cta-ecom-001"
+    text: "Add to Cart"
+    short_text: "Add"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website"]
+    intent: "purchase"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.90
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-002"
+    text: "Shop Now"
+    short_text: "Shop"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["ads", "social", "email"]
+    intent: "purchase"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.88
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-003"
+    text: "Claim Your Discount"
+    short_text: "Claim Discount"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["email", "ads"]
+    intent: "purchase"
+    urgency_level: "high"
+    compliance_notes: "Discount must be currently active and valid."
+    quality_score: 0.84
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-004"
+    text: "Buy Now — Free Shipping Over $50"
+    short_text: "Buy Now"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website"]
+    intent: "purchase"
+    urgency_level: "medium"
+    compliance_notes: "Free shipping threshold must be accurate."
+    quality_score: 0.83
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-005"
+    text: "Get 20% Off Your First Order"
+    short_text: "20% Off"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["ads", "email"]
+    intent: "purchase"
+    urgency_level: "high"
+    compliance_notes: "First-order discount must be honored. Specify terms."
+    quality_score: 0.86
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-006"
+    text: "Shop the Collection"
+    short_text: "Shop Collection"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["social"]
+    intent: "learn_more"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.70
+    source: "default"
+    metadata: {}
+
+  - id: "cta-ecom-007"
+    text: "Join the Waitlist"
+    short_text: "Join Waitlist"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "social"]
+    intent: "subscribe"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.76
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Professional-services CTAs (15-19)
+  # ---------------------------------------------------------------------------
+  - id: "cta-prof-001"
+    text: "Schedule a Consultation"
+    short_text: "Schedule"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website"]
+    intent: "schedule"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.82
+    source: "default"
+    metadata: {}
+
+  - id: "cta-prof-002"
+    text: "Book Your Free Strategy Session"
+    short_text: "Free Strategy Session"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website", "ads"]
+    intent: "schedule"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.85
+    source: "default"
+    metadata: {}
+
+  - id: "cta-prof-003"
+    text: "Get Started Today"
+    short_text: "Get Started"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website", "email"]
+    intent: "form_submit"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.78
+    source: "default"
+    metadata: {}
+
+  - id: "cta-prof-004"
+    text: "Download the Guide"
+    short_text: "Download"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website", "email"]
+    intent: "download"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.74
+    source: "default"
+    metadata: {}
+
+  - id: "cta-prof-005"
+    text: "Request a Proposal"
+    short_text: "Request Proposal"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website"]
+    intent: "form_submit"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.77
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Multi-location CTAs (20-22)
+  # ---------------------------------------------------------------------------
+  - id: "cta-multi-001"
+    text: "Find Your Nearest Location"
+    short_text: "Find Location"
+    archetype_tags: ["multi-location"]
+    channel_tags: ["website"]
+    intent: "learn_more"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.80
+    source: "default"
+    metadata: {}
+
+  - id: "cta-multi-002"
+    text: "Check Availability in Your Area"
+    short_text: "Check Availability"
+    archetype_tags: ["multi-location"]
+    channel_tags: ["website", "ads"]
+    intent: "form_submit"
+    urgency_level: "low"
+    compliance_notes: null
+    quality_score: 0.78
+    source: "default"
+    metadata: {}
+
+  - id: "cta-multi-003"
+    text: "Visit Us Today"
+    short_text: "Visit Us"
+    archetype_tags: ["multi-location"]
+    channel_tags: ["ads", "social"]
+    intent: "learn_more"
+    urgency_level: "medium"
+    compliance_notes: null
+    quality_score: 0.75
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Universal CTAs (23-25)
+  # ---------------------------------------------------------------------------
+  - id: "cta-univ-001"
+    text: "Learn More"
+    short_text: "Learn More"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["all"]
+    intent: "learn_more"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.60
+    source: "default"
+    metadata: {}
+
+  - id: "cta-univ-002"
+    text: "Subscribe for Updates"
+    short_text: "Subscribe"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website", "email"]
+    intent: "subscribe"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.62
+    source: "default"
+    metadata: {}
+
+  - id: "cta-univ-003"
+    text: "Contact Us"
+    short_text: "Contact"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website"]
+    intent: "form_submit"
+    urgency_level: "none"
+    compliance_notes: null
+    quality_score: 0.58
+    source: "default"
+    metadata: {}

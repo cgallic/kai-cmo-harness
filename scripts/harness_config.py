@@ -11,7 +11,12 @@ from pathlib import Path
 from typing import Dict, Optional
 
 import yaml
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - fallback for minimal runtimes
+    def load_dotenv(*args, **kwargs):
+        return False
 
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent

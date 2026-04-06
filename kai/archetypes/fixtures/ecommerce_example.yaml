@@ -1,0 +1,319 @@
+# Fixture: Ecommerce / DTC Brand — Clean Beauty Skincare
+# Archetype: ecommerce
+# Use: golden test case, operator onboarding example, development fixture
+# Business: Dew & Bloom, DTC skincare brand
+
+business_profile:
+  id: "dew-and-bloom-skincare"
+  profile_version: "1.0.0"
+
+  identity:
+    business_name: "Dew & Bloom"
+    dba: null
+    legal_entity: "Dew & Bloom Skincare Inc."
+    website_url: "https://dewandbloom.com"
+    phone: "(512) 555-0387"
+    email: "hello@dewandbloom.com"
+    logo_url: "https://cdn.dewandbloom.com/brand/logo-primary.svg"
+    tagline: "Clean Science. Real Results."
+    elevator_pitch: "Dew & Bloom makes clinically tested, clean skincare that actually works. Every formula is dermatologist-developed, cruelty-free, and backed by third-party efficacy testing. We sell direct on dewandbloom.com and ship nationwide from our Austin, TX facility."
+
+  classification:
+    industry: "beauty_skincare"
+    vertical: "clean_beauty"
+    business_model: "product"
+    archetype: "ecommerce"
+    stage: "growth"
+
+  offers:
+    - name: "Vitamin C Brightening Serum"
+      description: "20% L-ascorbic acid serum with ferulic acid and vitamin E. Clinically shown to improve skin brightness in 4 weeks. 1 oz glass dropper bottle."
+      price_range: "$42"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Add to Cart"
+      category: "serums"
+    - name: "Hydra-Barrier Moisturizer"
+      description: "Ceramide-rich daily moisturizer with squalane and hyaluronic acid. Fragrance-free, suitable for sensitive skin. 1.7 oz jar."
+      price_range: "$38"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Add to Cart"
+      category: "moisturizers"
+    - name: "Gentle Enzyme Cleanser"
+      description: "Papaya enzyme gel cleanser that removes makeup without stripping. pH-balanced at 5.5. 5 oz pump bottle."
+      price_range: "$28"
+      margin_tier: "medium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Add to Cart"
+      category: "cleansers"
+    - name: "The Glow Kit (Bestseller Bundle)"
+      description: "Vitamin C Serum + Hydra-Barrier Moisturizer + Gentle Enzyme Cleanser bundled at 15% off individual prices. Gift-boxed with a reusable cotton pouch."
+      price_range: "$92"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Shop the Kit"
+      category: "bundles"
+    - name: "Overnight Retinol Renewal"
+      description: "0.5% encapsulated retinol in a calming bakuchiol base. Reduces fine lines with less irritation. 1 oz airless pump."
+      price_range: "$48"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Add to Cart"
+      category: "treatments"
+    - name: "SPF 40 Mineral Sunscreen"
+      description: "Zinc oxide mineral sunscreen with no white cast. Reef-safe formula, lightweight finish. 1.7 oz tube."
+      price_range: "$34"
+      margin_tier: "medium"
+      is_seasonal: true
+      is_primary: false
+      primary_cta: "Add to Cart"
+      category: "sun_protection"
+
+  geography:
+    service_areas:
+      - "United States (all 50 states)"
+    locations:
+      - name: "HQ & Fulfillment Center"
+        address: "2900 E 12th St, Suite 110"
+        city: "Austin"
+        state: "TX"
+        zip_code: "78702"
+        country: "US"
+        phone: "(512) 555-0387"
+        hours:
+          monday: "9am-5pm"
+          tuesday: "9am-5pm"
+          wednesday: "9am-5pm"
+          thursday: "9am-5pm"
+          friday: "9am-5pm"
+          saturday: "Closed"
+          sunday: "Closed"
+        gbp_url: null
+        is_primary: true
+    geo_scope: "national"
+    is_mobile: false
+    has_storefront: false
+
+  personas:
+    - name: "Ingredient Investigator"
+      demographics: "Women 28-45, household income $80K+, college-educated, reads ingredient lists before buying, follows skincare influencers"
+      pain_points:
+        - "Most 'clean' brands don't actually work — sacrificing results for ingredients"
+        - "Hard to tell which clinical claims are real vs. marketing hype"
+        - "Overwhelmed by the number of serums and actives — doesn't know what to layer"
+        - "Sensitive skin reacts to fragrance and essential oils in 'natural' products"
+      buying_triggers:
+        - "Dermatologist or trusted influencer recommendation"
+        - "Third-party test results or clinical trial data"
+        - "Frustration with current product not delivering results"
+        - "Seasonal skin change (winter dryness, summer oiliness)"
+      objections:
+        - "How is this different from The Ordinary or Drunk Elephant?"
+        - "Is 20% vitamin C too strong for sensitive skin?"
+        - "What's your return policy if it breaks me out?"
+        - "Are these actually tested or just 'dermatologist-formulated'?"
+      channels_used: ["instagram", "google", "youtube", "reddit"]
+      decision_timeline: "3-7 days"
+      is_primary: true
+    - name: "Gift Giver"
+      demographics: "Men and women 25-55, buying skincare as a gift for partner, friend, or family member, less product knowledge, values presentation and curation"
+      pain_points:
+        - "Doesn't know what products the recipient already uses"
+        - "Worried about buying something that causes a reaction"
+        - "Wants the gift to feel premium without spending $200+"
+        - "Confused by skincare terminology and doesn't want to guess wrong"
+      buying_triggers:
+        - "Birthday, holiday, or anniversary approaching"
+        - "Saw a curated gift set that removes the guesswork"
+        - "Recommendation from someone who uses the brand"
+        - "Free shipping threshold close to gift budget"
+      objections:
+        - "What if they don't like it — can they return or exchange?"
+        - "Does this come in gift packaging?"
+        - "Will it arrive in time for [holiday/birthday]?"
+        - "Is this safe for all skin types?"
+      channels_used: ["google", "instagram", "email", "pinterest"]
+      decision_timeline: "same-day to 3 days"
+      is_primary: false
+
+  trust:
+    testimonials:
+      - signal_type: "testimonial"
+        title: "Finally, clean skincare that delivers"
+        content: "I've tried every 'clean' brand out there and nothing worked until Dew & Bloom. The Vitamin C serum cleared my dark spots in 5 weeks. I actually measured with photos. This is the real deal."
+        source: "Verified Purchase - Megan R., Austin TX"
+        url: null
+        date: "2026-02"
+      - signal_type: "testimonial"
+        title: null
+        content: "Bought The Glow Kit for my sister's birthday. She texted me three days later asking where I found it. Now we're both subscribers."
+        source: "Verified Purchase - David L., Portland OR"
+        url: null
+        date: "2026-01"
+      - signal_type: "testimonial"
+        title: null
+        content: "As an esthetician, I'm picky about ingredients. Dew & Bloom is one of the few DTC brands I actually recommend to clients. The retinol formula is exceptionally well-designed."
+        source: "Instagram DM - @skinbyjessica, Licensed Esthetician"
+        url: null
+        date: "2025-12"
+    case_studies: []
+    certifications:
+      - "Leaping Bunny Certified (cruelty-free)"
+      - "EWG Verified (all products)"
+      - "Climate Neutral Certified"
+    awards:
+      - "Allure Best of Beauty 2025 — Vitamin C Brightening Serum"
+      - "Byrdie Eco Beauty Award 2025 — The Glow Kit"
+    years_in_business: 3
+    team_size: "6-20"
+    notable_clients: []
+    insurance_details: "Product liability $2M, general liability $1M"
+    licenses: []
+
+  goals:
+    primary_goals:
+      - "Increase AOV from $48 to $62 through bundles and upsells"
+      - "Grow email list from 12,000 to 17,000 subscribers by Q4 2026"
+      - "Achieve 3.5x blended ROAS across Meta and Google"
+      - "Launch subscription program with 500 subscribers by end of year"
+    target_kpis:
+      aov: 62.00
+      conversion_rate: 3.2
+      cart_abandonment_rate: 65.0
+      repeat_purchase_rate: 30.0
+      roas: 3.5
+      email_revenue_pct: 30.0
+      email_list_growth_rate: 7.0
+      review_count_per_product: 50
+    timeframe: "Q2-Q4 2026"
+    north_star_metric: "aov"
+
+  channels:
+    - platform: "website"
+      url: "https://dewandbloom.com"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-30"
+      follower_count: null
+      notes: "Shopify Plus store. 2.8% conversion rate currently. Page speed score 72 on mobile."
+    - platform: "meta_ads"
+      url: null
+      is_connected: true
+      is_active: true
+      last_activity: "2026-03-30"
+      follower_count: null
+      notes: "Spending $4,200/mo. ROAS averaging 2.9x. Prospecting and retargeting running. UGC creative outperforming studio shots."
+    - platform: "instagram"
+      url: "https://instagram.com/dewandbloom"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-29"
+      follower_count: 14200
+      notes: "Posting 4x/week. Reels averaging 8K views. Stories engagement strong. Shop tab enabled."
+    - platform: "email"
+      url: null
+      is_connected: true
+      is_active: true
+      last_activity: "2026-03-28"
+      follower_count: 12000
+      notes: "Klaviyo. Welcome series (5 emails), cart abandonment (3 emails), post-purchase (2 emails). Open rate 38%, click rate 4.2%. Email drives 22% of revenue."
+    - platform: "tiktok"
+      url: "https://tiktok.com/@dewandbloom"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-25"
+      follower_count: 3100
+      notes: "Testing phase — posting 2x/week. One video hit 180K views in February. No TikTok Shop yet."
+    - platform: "google_ads"
+      url: null
+      is_connected: false
+      is_active: false
+      last_activity: "2025-12-15"
+      follower_count: null
+      notes: "Ran Shopping campaigns in Q4 2025, paused to focus budget on Meta. Plan to restart Q3 2026."
+    - platform: "pinterest"
+      url: "https://pinterest.com/dewandbloom"
+      is_connected: false
+      is_active: false
+      last_activity: "2025-09-01"
+      follower_count: 870
+      notes: "Organic pins only. Dormant — last pin 7 months ago."
+    - platform: "sms"
+      url: null
+      is_connected: false
+      is_active: false
+      follower_count: null
+      notes: "Not yet launched. Considering Klaviyo SMS. Estimated 2,500 opt-ins from existing email list."
+
+  constraints:
+    compliance_notes:
+      - "All product claims must be backed by clinical testing or published studies"
+      - "EWG Verified badge can only appear on products that maintain current certification"
+      - "Cruelty-free claims require active Leaping Bunny certification"
+    regulated_industry: false
+    claims_restrictions:
+      - "Cannot use the term 'anti-aging' without specific clinical evidence for that product"
+      - "No before/after photos that are retouched or taken under different lighting"
+      - "Sunscreen SPF claims regulated by FDA — must use exact tested SPF value"
+      - "Cannot claim products treat, cure, or prevent any disease or medical condition"
+    brand_voice_notes: "Warm, science-informed, empowering. We respect the customer's intelligence — no fearmongering about 'toxins' or shaming. We explain the science simply and let results speak."
+    topics_to_avoid:
+      - "Fearmongering about conventional skincare ingredients"
+      - "Making medical or disease-treatment claims"
+      - "Disparaging specific competitor brands by name"
+      - "Using terms like 'chemical-free' (everything is a chemical)"
+
+  budget:
+    monthly_marketing_budget: 8000.00
+    risk_tolerance: "moderate"
+    auto_execution_enabled: false
+    max_auto_spend_per_action: 250.00
+
+  sales_cycle:
+    buyer_type: "d2c"
+    sales_cycle_length: "same-day to 7 days"
+    average_deal_size: 48.00
+    decision_makers:
+      - "End consumer"
+    sales_process: "Awareness (social/ads) -> Product page browse -> Add to cart -> Checkout. Cart abandonment recovery via email. Post-purchase review request at day 14."
+
+  brand_voice:
+    tone_descriptors:
+      - "warm"
+      - "science-informed"
+      - "empowering"
+      - "approachable but not dumbed-down"
+    writing_samples:
+      - "Your skin doesn't need a 12-step routine. It needs the right 3 steps, backed by actual data."
+      - "We test every formula on real people (never animals) and publish the results. If it doesn't work, we don't sell it."
+    approved_messaging_blocks:
+      - "Clean Science. Real Results."
+      - "Dermatologist-Developed. Clinically Tested. Cruelty-Free."
+      - "Every Dew & Bloom product is EWG Verified and Leaping Bunny Certified"
+    competitor_differentiation: "Unlike most clean beauty brands, we invest in clinical testing and publish the results. We don't ask you to choose between clean ingredients and real efficacy. Our Vitamin C serum outperformed two prestige brands in a double-blind patch test."
+    personality_traits:
+      - "transparent"
+      - "curious"
+      - "science-driven"
+      - "optimistic"
+
+  operator:
+    operator_hours_per_week: 15.0
+    operator_skill_level: "intermediate"
+    preferred_channels:
+      - "meta_ads"
+      - "email"
+      - "instagram"
+    delegation_preferences: "I handle creative direction and ad creative review. Need help with email flows, SEO content, TikTok strategy, and analytics. Want weekly performance summaries."
+
+  raw_notes: "Founded by Dr. Lisa Chen (dermatologist) and her husband Marco (ex-Glossier marketing). Lisa develops formulas, Marco runs marketing. They bootstrapped with $40K and hit $600K revenue in year 2. Currently at ~$85K/mo revenue, growing 8% MoM. Fulfillment is 3PL in Austin. They want to reach $1.5M annual run rate by EOY 2026. The Vitamin C serum is 40% of revenue. They know they need to diversify but the serum is what drives acquisition."
+
+  metadata:
+    source: "onboarding_interview"
+    onboarded_date: "2026-03-20"

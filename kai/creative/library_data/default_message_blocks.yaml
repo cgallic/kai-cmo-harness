@@ -1,0 +1,184 @@
+# Default Message Block Library — Kai Marketing OS
+# Pre-approved, reusable copy blocks organized by type and archetype.
+# Variables in {braces} are placeholders to be filled by fill_variables().
+
+message_blocks:
+  # ---------------------------------------------------------------------------
+  # Trust statements (1-4)
+  # ---------------------------------------------------------------------------
+  - id: "msg-trust-001"
+    content: "Serving {city} for over {years} years with {review_count}+ five-star reviews."
+    block_type: "trust_statement"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Review count and years must be accurate and current."
+    quality_score: 0.88
+    variables: ["{city}", "{years}", "{review_count}"]
+    source: "default"
+    metadata: {}
+
+  - id: "msg-trust-002"
+    content: "Trusted by {client_count}+ businesses to deliver measurable results."
+    block_type: "trust_statement"
+    archetype_tags: ["professional-services", "saas"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Client count must be verifiable."
+    quality_score: 0.85
+    variables: ["{client_count}"]
+    source: "default"
+    metadata: {}
+
+  - id: "msg-trust-003"
+    content: "Licensed, bonded, and insured for your protection."
+    block_type: "trust_statement"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads"]
+    compliance_notes: "Only use if the business actually holds current license, bond, and insurance."
+    quality_score: 0.82
+    variables: []
+    source: "default"
+    metadata: {}
+
+  - id: "msg-trust-004"
+    content: "{review_count}+ happy customers and counting."
+    block_type: "trust_statement"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website", "social", "email"]
+    compliance_notes: "Customer count must be accurate."
+    quality_score: 0.78
+    variables: ["{review_count}"]
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Guarantee blocks (5-7)
+  # ---------------------------------------------------------------------------
+  - id: "msg-guarantee-001"
+    content: "100% Satisfaction Guarantee — If you're not happy, we'll make it right."
+    block_type: "guarantee"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Guarantee must be honored as stated."
+    quality_score: 0.86
+    variables: []
+    source: "default"
+    metadata: {}
+
+  - id: "msg-guarantee-002"
+    content: "30-Day Money-Back Guarantee — No questions asked."
+    block_type: "guarantee"
+    archetype_tags: ["ecommerce", "saas"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Refund window must match actual policy. 'No questions asked' means no conditions on refund."
+    quality_score: 0.88
+    variables: []
+    source: "default"
+    metadata: {}
+
+  - id: "msg-guarantee-003"
+    content: "Free revisions until you're satisfied."
+    block_type: "guarantee"
+    archetype_tags: ["professional-services", "creator"]
+    channel_tags: ["website", "email"]
+    compliance_notes: "Define what 'revisions' covers in the service agreement."
+    quality_score: 0.80
+    variables: []
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Urgency blocks (8-10)
+  # ---------------------------------------------------------------------------
+  - id: "msg-urgency-001"
+    content: "Limited availability — book your spot before we're fully scheduled."
+    block_type: "urgency"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Only use when capacity is genuinely limited."
+    quality_score: 0.82
+    variables: []
+    source: "default"
+    metadata: {}
+
+  - id: "msg-urgency-002"
+    content: "Offer ends {date}. Don't miss out."
+    block_type: "urgency"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website", "ads", "email", "social"]
+    compliance_notes: "Date must be accurate. Do not use evergreen fake deadlines."
+    quality_score: 0.84
+    variables: ["{date}"]
+    source: "default"
+    metadata: {}
+
+  - id: "msg-urgency-003"
+    content: "Only {count} spots remaining this month."
+    block_type: "urgency"
+    archetype_tags: ["professional-services", "creator"]
+    channel_tags: ["website", "email"]
+    compliance_notes: "Count must reflect actual remaining capacity. FTC prohibits false scarcity."
+    quality_score: 0.80
+    variables: ["{count}"]
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Social proof blocks (11-13)
+  # ---------------------------------------------------------------------------
+  - id: "msg-social-001"
+    content: "Rated {rating}/5 on Google with {review_count} reviews."
+    block_type: "social_proof"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Rating and review count must be current. Update at least monthly."
+    quality_score: 0.90
+    variables: ["{rating}", "{review_count}"]
+    source: "default"
+    metadata: {}
+
+  - id: "msg-social-002"
+    content: "Featured in {publication} as a top {industry} provider."
+    block_type: "social_proof"
+    archetype_tags: ["professional-services", "saas"]
+    channel_tags: ["website", "email"]
+    compliance_notes: "Must have verifiable publication mention. Include date of feature."
+    quality_score: 0.86
+    variables: ["{publication}", "{industry}"]
+    source: "default"
+    metadata: {}
+
+  - id: "msg-social-003"
+    content: "Join {subscriber_count}+ professionals who trust our insights."
+    block_type: "social_proof"
+    archetype_tags: ["saas", "creator", "professional-services"]
+    channel_tags: ["website", "email", "social"]
+    compliance_notes: "Subscriber count must be accurate."
+    quality_score: 0.82
+    variables: ["{subscriber_count}"]
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Value prop blocks (14-15)
+  # ---------------------------------------------------------------------------
+  - id: "msg-value-001"
+    content: "Same-day service available for emergencies."
+    block_type: "value_prop"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads"]
+    compliance_notes: "Only use if the business actually offers same-day emergency service."
+    quality_score: 0.85
+    variables: []
+    source: "default"
+    metadata: {}
+
+  - id: "msg-value-002"
+    content: "No hidden fees. The price we quote is the price you pay."
+    block_type: "value_prop"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "email"]
+    compliance_notes: "Pricing transparency claim must be accurate. No surprise charges allowed."
+    quality_score: 0.87
+    variables: []
+    source: "default"
+    metadata: {}

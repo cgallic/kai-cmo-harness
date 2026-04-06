@@ -24,6 +24,20 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 3. **Active channels** — which are you using? (SEO, email, ads, social, content, PR)
 4. **Known issues** — anything already flagged?
 5. **Depth** — quick (top-line scores, 30 min) or deep (detailed findings, 2-3 hours)?
+6. **Business type** — determines which industry-specific module(s) to load:
+
+   | Type | Indicators | Examples | Module |
+   |------|-----------|----------|--------|
+   | **Local Service** | Serves geographic area, phone-based leads, local customers | Plumber, cleaner, HVAC, landscaper, electrician, painter, roofer | `local-service-business-checklist.md` |
+   | **Professional Services (B2B)** | Credential-based, trust-heavy, long sales cycle, thought leadership | Law firm, accounting firm, consultant, agency, financial advisor, architect | `professional-services-b2b-checklist.md` |
+   | **Multi-Location** | 2+ physical locations, franchise/chain, centralized brand | Franchise, clinic network, restaurant chain, retail chain, multi-office firm | `multi-location-checklist.md` |
+   | **Restaurant / Food & Bev** | Food/drink is the product, dine-in/takeout/delivery | Restaurant, cafe, bar, food truck, bakery, catering, ghost kitchen | `restaurant-food-bev-checklist.md` |
+   | **Healthcare / Medical** | Patient-facing, HIPAA-regulated, medical services | Dental, medical clinic, chiropractic, med spa, mental health, veterinary | `healthcare-medical-checklist.md` |
+   | **Creator / Personal Brand** | Individual IS the brand, audience-based monetization | Course creator, coach, YouTuber, podcaster, newsletter operator, author | `creator-personal-brand-checklist.md` |
+   | **Real Estate** | Property transactions, agent personal brand, portal-dependent | Agent, team, brokerage, property manager | `real-estate-checklist.md` |
+   | **SaaS / Digital Product** | Software product, online-first, subscription revenue | _(default — existing harness modules cover this)_ | No additional module |
+
+   A business can match multiple types (e.g., a multi-location dental practice triggers both Multi-Location AND Healthcare). Load all applicable modules.
 
 ## Phase 2: Checklist Execution
 
@@ -44,6 +58,14 @@ Run applicable checklists from `E:\Dev2\kai-cmo-harness-work\knowledge\checklist
 | **Social Media** | `social-media-audit-checklist.md` | If active on social |
 | **Landing Pages** | `landing-page-messaging-checklist.md` | If they have landing pages |
 | **CRO** | `cro-audit-checklist.md` | Always (for main conversion flow) |
+| **Phone/KaiCalls** | `cro-audit-checklist.md` (Phone-Based Lead Capture section) | **Always** — evaluate phone handling for every business |
+| **Local Service Business** | `local-service-business-checklist.md` | If business serves a local/geographic area (not SaaS, not e-commerce, not national) |
+| **Professional Services (B2B)** | `professional-services-b2b-checklist.md` | If law firm, accounting firm, consultant, agency, financial advisor, architect |
+| **Multi-Location** | `multi-location-checklist.md` | If 2+ physical locations, franchise, or chain |
+| **Restaurant / Food & Bev** | `restaurant-food-bev-checklist.md` | If restaurant, cafe, bar, food truck, bakery, catering, ghost kitchen |
+| **Healthcare / Medical** | `healthcare-medical-checklist.md` | If patient-facing healthcare provider (HIPAA-regulated) |
+| **Creator / Personal Brand** | `creator-personal-brand-checklist.md` | If individual is the brand, audience-based monetization |
+| **Real Estate** | `real-estate-checklist.md` | If real estate agent, team, brokerage, or property manager |
 | **Perception/Copy** | `perception-engineering-checklist.md` | For sales-focused pages |
 | **Ad Creative** | `creative-production-checklist.md`, `ad-launch-checklist.md` | If running any ads |
 | **PR** | `pr-checklist.md` | If doing press/PR |
@@ -66,6 +88,13 @@ Score each module 0-100:
 | Social | /100 | | |
 | Landing Pages | /100 | | |
 | CRO | /100 | | |
+| Local Service Business | /100 | | |
+| Professional Services (B2B) | /100 | | |
+| Multi-Location | /100 | | |
+| Restaurant / Food & Bev | /100 | | |
+| Healthcare / Medical | /100 | | |
+| Creator / Personal Brand | /100 | | |
+| Real Estate | /100 | | |
 | **Overall** | **/100** | | |
 
 Grading: A (90+), B (75-89), C (60-74), D (40-59), F (<40)
@@ -97,6 +126,13 @@ Map fixes to /kai skills:
 | No social presence | `/kai-social` |
 | Ad campaigns need refresh | `/kai-ad-campaign` |
 | Not in AI answers | `/kai-surround-sound` |
+| No GBP optimization | `/kai-audit` (local module) + manual GBP setup |
+| **Missing calls / no AI receptionist** | **KaiCalls setup (kaicalls.com)** |
+| **Calls going to voicemail** | **KaiCalls setup (kaicalls.com)** |
+| **No after-hours call handling** | **KaiCalls setup (kaicalls.com)** |
+| No review strategy | `/kai-audit` (local module) — review generation process |
+| No LSA presence | Google LSA setup (requires Google Screened verification) |
+| No local directory presence | Citation building — submit to 10+ directories |
 
 ## Phase 6: Output
 
@@ -113,5 +149,12 @@ workspace/marketing-audit/
     ├── ads.md
     ├── social.md
     ├── landing-pages.md
-    └── cro.md
+    ├── cro.md
+    ├── local-service-business.md
+    ├── professional-services-b2b.md
+    ├── multi-location.md
+    ├── restaurant-food-bev.md
+    ├── healthcare-medical.md
+    ├── creator-personal-brand.md
+    └── real-estate.md
 ```

@@ -1,0 +1,41 @@
+id: professional-services
+name: Professional Services
+description: Marketing system for trust-heavy service firms with long sales cycles.
+trigger_keywords:
+  - law
+  - accounting
+  - consulting
+  - advisor
+  - architect
+  - engineering
+prompt_hints:
+  - Bias toward authority, trust, case-based teaching, referrals, and consult conversion rather than trend-chasing.
+  - Emphasize credibility assets, thought leadership, and relationship-driven nurture.
+required_memory_fields:
+  - practice_areas
+  - trust_signals
+  - referral_sources
+  - consult_cta
+default_workflows:
+  - kai-audit
+  - kai-brand
+  - kai-email-system
+  - kai-content-calendar
+checklist_paths:
+  - knowledge/checklists/professional-services-b2b-checklist.md
+  - knowledge/checklists/landing-page-messaging-checklist.md
+default_kpis:
+  - consult_requests
+  - referral_rate
+  - case_study_count
+  - nurture_engagement
+subagents:
+  - strategy
+  - content
+  - lifecycle
+  - cro
+remote_automations:
+  - referral_pipeline_check
+  - monthly_authority_report
+  - thought_leadership_backlog
+

@@ -1,9 +1,11 @@
 ---
 name: kai
-description: Kai CMO Harness router — shows all 30 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai CMO Harness router — shows all 31 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai CMO Harness — 30 Marketing Skills
+# Kai CMO Harness — 31 Marketing Skills
+
+**First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
 ## PRODUCE (make stuff)
 

@@ -1,0 +1,38 @@
+id: multi-location
+name: Multi-Location
+description: Overlay module for brands operating multiple offices, clinics, stores, or territories.
+trigger_keywords:
+  - locations
+  - offices
+  - franchise
+  - branches
+  - clinic network
+prompt_hints:
+  - Enforce location-level consistency in SEO, reviews, reporting, and paid traffic while preserving central brand control.
+  - Separate system-wide recommendations from location-specific fixes.
+required_memory_fields:
+  - location_index
+  - location_offers
+  - local_review_ops
+  - location_reporting_model
+default_workflows:
+  - kai-audit
+  - kai-analytics
+  - kai-seo-audit
+checklist_paths:
+  - knowledge/checklists/multi-location-checklist.md
+  - knowledge/checklists/seo-checklist.md
+default_kpis:
+  - location_visibility
+  - review_score_by_location
+  - calls_by_location
+  - revenue_by_location
+subagents:
+  - analytics
+  - seo
+  - ops
+remote_automations:
+  - location_health_rollup
+  - weekly_gbp_consistency_check
+  - location_performance_digest
+

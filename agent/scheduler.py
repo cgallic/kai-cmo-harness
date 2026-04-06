@@ -366,6 +366,19 @@ class Scheduler:
                 "task_type": "social_staleness_check",
                 "config": {"notify_on_complete": False, "extra": {"critical_only": True}}
             },
+            # Execution bridge tasks
+            {
+                "name": "Execute Approved Actions",
+                "cron_expression": "*/5 * * * *",  # Every 5 minutes
+                "task_type": "execute_approved_actions",
+                "config": {"notify_on_complete": False}
+            },
+            {
+                "name": "Connector Health Check",
+                "cron_expression": "0 7 * * *",  # 7 AM daily
+                "task_type": "connector_health_check",
+                "config": {"notify_on_complete": True}
+            },
         ]
 
         existing_tasks = {t.name for t in self.db.list_scheduled_tasks(enabled_only=False)}

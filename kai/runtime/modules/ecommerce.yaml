@@ -1,0 +1,42 @@
+id: ecommerce
+name: Ecommerce
+description: Marketing system for DTC and catalog-driven commerce brands.
+trigger_keywords:
+  - shopify
+  - ecommerce
+  - dtc
+  - skincare
+  - cart
+  - product page
+prompt_hints:
+  - Focus on offer strength, product page conversion, creative testing cadence, lifecycle retention, and merchandising.
+  - Treat paid social, email flows, and repeat purchase economics as core operating loops.
+required_memory_fields:
+  - hero_products
+  - price_points
+  - merchandising_calendar
+  - retention_flows
+default_workflows:
+  - kai-ad-campaign
+  - kai-email-system
+  - kai-retention
+  - kai-content-calendar
+checklist_paths:
+  - knowledge/checklists/paid-acquisition-checklist.md
+  - knowledge/checklists/content-checklist.md
+  - knowledge/checklists/landing-page-messaging-checklist.md
+default_kpis:
+  - roas
+  - aov
+  - repeat_purchase_rate
+  - blended_cac
+subagents:
+  - paid-media
+  - lifecycle
+  - content
+  - analytics
+remote_automations:
+  - creative_fatigue_watch
+  - weekly_retention_report
+  - offer_calendar_refresh
+

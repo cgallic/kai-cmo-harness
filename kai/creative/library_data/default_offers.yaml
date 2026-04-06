@@ -1,0 +1,225 @@
+# Default Offer Library — Kai Marketing OS
+# Curated offer templates organized by archetype and channel.
+
+offers:
+  # ---------------------------------------------------------------------------
+  # Local-service offers (1-5)
+  # ---------------------------------------------------------------------------
+  - id: "offer-local-001"
+    name: "Free Estimate"
+    description: "No-obligation, free on-site or virtual estimate for any service."
+    offer_type: "free_consultation"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "social"]
+    typical_value: "Free ($0)"
+    urgency_type: "none"
+    terms_template: "Free estimate with no obligation. Service area restrictions may apply."
+    compliance_notes: null
+    quality_score: 0.85
+    source: "default"
+    metadata: {}
+
+  - id: "offer-local-002"
+    name: "10% Off First Service"
+    description: "New customers receive 10% off their first service booking."
+    offer_type: "percentage_off"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads", "email"]
+    typical_value: "10% off"
+    urgency_type: "first_time_only"
+    terms_template: "Valid for new customers only. Cannot be combined with other offers. Mention this offer when booking."
+    compliance_notes: "Ensure discount is applied at checkout or invoicing."
+    quality_score: 0.80
+    source: "default"
+    metadata: {}
+
+  - id: "offer-local-003"
+    name: "$50 Off Any Service Over $300"
+    description: "Save $50 on any service totaling $300 or more."
+    offer_type: "dollar_off"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "ads"]
+    typical_value: "$50 off"
+    urgency_type: "none"
+    terms_template: "Valid on services totaling $300 or more before tax. One per customer per transaction."
+    compliance_notes: null
+    quality_score: 0.78
+    source: "default"
+    metadata: {}
+
+  - id: "offer-local-004"
+    name: "Free Safety Inspection"
+    description: "Complimentary safety inspection of your system or equipment."
+    offer_type: "free_consultation"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "email", "social"]
+    typical_value: "Free ($0)"
+    urgency_type: "none"
+    terms_template: "Free safety inspection for residential properties. Commercial properties quoted separately."
+    compliance_notes: null
+    quality_score: 0.76
+    source: "default"
+    metadata: {}
+
+  - id: "offer-local-005"
+    name: "Seasonal Tune-Up Special"
+    description: "Discounted seasonal maintenance tune-up to keep your systems running efficiently."
+    offer_type: "seasonal"
+    archetype_tags: ["local-service"]
+    channel_tags: ["website", "email", "ads"]
+    typical_value: "15-25% off"
+    urgency_type: "seasonal"
+    terms_template: "Available during {season} season only. Schedule by {end_date} to lock in pricing."
+    compliance_notes: "Update season and end date before publishing."
+    quality_score: 0.82
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Ecommerce offers (6-10)
+  # ---------------------------------------------------------------------------
+  - id: "offer-ecom-001"
+    name: "Free Shipping on Orders Over $50"
+    description: "All orders over $50 ship free within the continental US."
+    offer_type: "free_shipping"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "email", "ads"]
+    typical_value: "Free shipping"
+    urgency_type: "none"
+    terms_template: "Free standard shipping on orders over $50 within the continental US. Excludes Alaska, Hawaii, and international."
+    compliance_notes: "Shipping threshold and exclusions must be accurate."
+    quality_score: 0.88
+    source: "default"
+    metadata: {}
+
+  - id: "offer-ecom-002"
+    name: "Buy 2 Get 1 Free"
+    description: "Purchase any two items and receive the third (of equal or lesser value) free."
+    offer_type: "bogo"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "ads", "social"]
+    typical_value: "33% savings"
+    urgency_type: "time_limited"
+    terms_template: "Buy 2 get 1 free on select items. Free item must be of equal or lesser value. Offer ends {end_date}."
+    compliance_notes: "Specify which items are eligible. State end date clearly."
+    quality_score: 0.84
+    source: "default"
+    metadata: {}
+
+  - id: "offer-ecom-003"
+    name: "20% Off First Purchase"
+    description: "New customers get 20% off their first order with code."
+    offer_type: "percentage_off"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "email", "ads"]
+    typical_value: "20% off"
+    urgency_type: "first_time_only"
+    terms_template: "20% off your first order. Use code {code} at checkout. Cannot be combined with other discounts."
+    compliance_notes: "Promo code must be active and working before running ads."
+    quality_score: 0.86
+    source: "default"
+    metadata: {}
+
+  - id: "offer-ecom-004"
+    name: "Holiday Sale — Up to 40% Off"
+    description: "Seasonal holiday sale with discounts up to 40% on select items."
+    offer_type: "seasonal"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "email", "ads", "social"]
+    typical_value: "Up to 40% off"
+    urgency_type: "seasonal"
+    terms_template: "Holiday sale runs {start_date} through {end_date}. Discounts vary by product. While supplies last."
+    compliance_notes: "Up to language requires that at least some items are discounted at the maximum stated."
+    quality_score: 0.83
+    source: "default"
+    metadata: {}
+
+  - id: "offer-ecom-005"
+    name: "Free Returns Within 30 Days"
+    description: "Try it risk-free — return any item within 30 days for a full refund."
+    offer_type: "trial"
+    archetype_tags: ["ecommerce"]
+    channel_tags: ["website", "email"]
+    typical_value: "Risk-free purchase"
+    urgency_type: "none"
+    terms_template: "Items must be in original condition with tags attached. Return shipping is free for US orders."
+    compliance_notes: "Return policy must match actual business policy."
+    quality_score: 0.80
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Professional-services offers (11-14)
+  # ---------------------------------------------------------------------------
+  - id: "offer-prof-001"
+    name: "Free 30-Minute Consultation"
+    description: "Complimentary 30-minute phone or video consultation to discuss your needs."
+    offer_type: "free_consultation"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website", "ads", "email"]
+    typical_value: "Free ($0)"
+    urgency_type: "none"
+    terms_template: "Free 30-minute consultation by phone or video. No obligation. One per prospect."
+    compliance_notes: null
+    quality_score: 0.84
+    source: "default"
+    metadata: {}
+
+  - id: "offer-prof-002"
+    name: "Free Audit Report"
+    description: "Receive a complimentary audit report identifying key opportunities."
+    offer_type: "free_consultation"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["website", "email", "ads"]
+    typical_value: "Free ($0)"
+    urgency_type: "none"
+    terms_template: "Free audit report delivered within {delivery_days} business days. No obligation."
+    compliance_notes: null
+    quality_score: 0.82
+    source: "default"
+    metadata: {}
+
+  - id: "offer-prof-003"
+    name: "10% Off Annual Plans"
+    description: "Save 10% when you commit to an annual engagement."
+    offer_type: "percentage_off"
+    archetype_tags: ["professional-services", "saas"]
+    channel_tags: ["website", "email"]
+    typical_value: "10% off annual"
+    urgency_type: "none"
+    terms_template: "10% discount applied to annual plan pricing. Must commit to a 12-month agreement."
+    compliance_notes: null
+    quality_score: 0.78
+    source: "default"
+    metadata: {}
+
+  - id: "offer-prof-004"
+    name: "Refer a Friend, Get $100 Credit"
+    description: "Earn $100 service credit for every successful referral."
+    offer_type: "referral"
+    archetype_tags: ["professional-services"]
+    channel_tags: ["email", "website"]
+    typical_value: "$100 credit"
+    urgency_type: "none"
+    terms_template: "Referral must become an active client. Credit applied to your next invoice. No limit on referrals."
+    compliance_notes: "Check state regulations on referral incentives for regulated industries."
+    quality_score: 0.76
+    source: "default"
+    metadata: {}
+
+  # ---------------------------------------------------------------------------
+  # Universal offers (15)
+  # ---------------------------------------------------------------------------
+  - id: "offer-univ-001"
+    name: "Money-Back Guarantee"
+    description: "100% satisfaction guaranteed or your money back."
+    offer_type: "trial"
+    archetype_tags: ["local-service", "ecommerce", "professional-services", "multi-location", "creator", "saas"]
+    channel_tags: ["website", "email", "ads"]
+    typical_value: "Full refund"
+    urgency_type: "none"
+    terms_template: "If you are not completely satisfied, contact us within {days} days for a full refund."
+    compliance_notes: "Money-back guarantee must be honored as stated. Specify the refund window."
+    quality_score: 0.90
+    source: "default"
+    metadata: {}

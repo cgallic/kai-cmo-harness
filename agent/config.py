@@ -6,7 +6,11 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - fallback for minimal runtimes
+    def load_dotenv(*args, **kwargs):
+        return False
 
 # Load environment from scripts/.env and root .env
 _env_path = Path(__file__).parent.parent / "scripts" / ".env"

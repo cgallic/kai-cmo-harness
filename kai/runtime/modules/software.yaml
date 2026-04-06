@@ -1,0 +1,40 @@
+id: software
+name: Software
+description: Baseline module for SaaS and digital products when no vertical archetype dominates.
+trigger_keywords:
+  - saas
+  - software
+  - platform
+  - api
+  - dashboard
+prompt_hints:
+  - Treat content, lifecycle messaging, product narrative, and measurable acquisition loops as the core system.
+  - Optimize for category education, activation, retention, and proof-backed positioning.
+required_memory_fields:
+  - icp
+  - activation_event
+  - pricing_model
+  - proof_assets
+default_workflows:
+  - kai-growth-plan
+  - kai-email-system
+  - kai-content-calendar
+  - kai-analytics
+checklist_paths:
+  - knowledge/checklists/content-checklist.md
+  - knowledge/checklists/email-checklist.md
+  - knowledge/checklists/seo-checklist.md
+default_kpis:
+  - pipeline
+  - activation_rate
+  - trial_to_paid
+  - branded_search_growth
+subagents:
+  - strategy
+  - content
+  - lifecycle
+  - analytics
+remote_automations:
+  - weekly_pipeline_digest
+  - content_gap_scan
+  - lifecycle_dropoff_watch

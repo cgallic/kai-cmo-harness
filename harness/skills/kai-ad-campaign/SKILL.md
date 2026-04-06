@@ -1,9 +1,111 @@
 ---
 name: kai-ad-campaign
-description: Plan and produce a full paid ad campaign across platforms (Meta, Google, LinkedIn, TikTok, Microsoft, Pinterest, Snapchat, Amazon, X). Maps funnel stages (TOF/MOF/BOF), produces ad variants per platform with policy compliance, outputs ready-to-upload copy. Use when "ad campaign", "create ads", "run ads for", "paid campaign", "media plan", "launch ads", "Meta campaign", "Google Ads campaign", "multi-platform ads", or any request to systematically produce advertising across platforms and funnel stages.
+description: Plan, evaluate, and produce paid ad campaigns across platforms (Meta, Google, LinkedIn, TikTok, Microsoft, Pinterest, Snapchat, Amazon, X). Evaluate existing ads, map funnel stages (TOF/MOF/BOF), produce ad variants per platform with policy compliance, output ready-to-upload copy. Use when "ad campaign", "create ads", "run ads for", "paid campaign", "media plan", "launch ads", "Meta campaign", "Google Ads campaign", "multi-platform ads", "evaluate my ads", "how are my ads doing", "audit my ads", "ad performance", "analyze ads", or any request to evaluate existing or create new advertising.
 ---
 
-Plan and batch-produce a complete ad campaign across platforms and funnel stages. Every ad passes platform policy compliance + quality gates.
+Plan, evaluate, and batch-produce ad campaigns across platforms and funnel stages. Every ad passes platform policy compliance + quality gates.
+
+## Mode Detection
+
+Before loading product context, determine the mode:
+
+- **Evaluation mode** — user says "evaluate", "analyze", "audit", "how are my ads doing", "ad performance", "review my ads"
+- **Creation mode** — user says "create", "launch", "build", "new campaign", "run ads"
+- **Evaluate + Create** — user wants both (evaluation first, then create/fix based on findings)
+
+Evaluation mode does NOT require `MARKETING.md`. Creation mode does.
+
+---
+
+## Phase E: Ad Evaluation (Evaluation Mode Only)
+
+Skip this phase entirely if the user only wants to create new ads.
+
+### E.1 Pull Active Campaigns
+
+Load the Meta API reference: `harness/references/meta-ads-api-reference.md`
+
+1. Extract credentials from `.env.local` using grep (never `source`):
+   ```bash
+   META_TOKEN=$(grep '^META_ACCESS_TOKEN=' .env.local | cut -d= -f2-)
+   AD_ACCOUNT_ID=$(grep '^META_AD_ACCOUNT_ID=' .env.local | cut -d= -f2-)
+   ```
+
+2. List all active campaigns with insights:
+   ```bash
+   curl "https://graph.facebook.com/v21.0/act_${AD_ACCOUNT_ID}/campaigns?fields=id,name,objective,status,daily_budget,insights.date_preset(last_30d){impressions,clicks,spend,ctr,cpc,actions,cost_per_action_type}&filtering=[{\"field\":\"effective_status\",\"operator\":\"IN\",\"value\":[\"ACTIVE\"]}]&limit=50&access_token=${META_TOKEN}"
+   ```
+
+3. For each campaign, pull ad-level insights:
+   ```bash
+   curl "https://graph.facebook.com/v21.0/act_${AD_ACCOUNT_ID}/ads?fields=id,name,status,effective_status,campaign_id,creative{id,object_story_spec},insights.date_preset(last_30d){impressions,clicks,spend,ctr,cpc,actions,cost_per_action_type,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions}&filtering=[{\"field\":\"effective_status\",\"operator\":\"IN\",\"value\":[\"ACTIVE\"]}]&limit=100&access_token=${META_TOKEN}"
+   ```
+
+### E.2 Cross-Reference with PostHog
+
+Load: `harness/references/posthog-marketing-queries.md`
+
+Pull landing page data to cross-reference ad traffic with on-site behavior:
+- Pageviews with UTM breakdown (query #2)
+- Ad visitor journeys (query #5)
+- Campaign attribution / conversions (query #8)
+
+### E.3 Score Each Ad
+
+| Metric | Poor | OK | Good | Great |
+|--------|------|----|------|-------|
+| CTR | < 0.5% | 0.5–1% | 1–2% | > 2% |
+| CPC | > $5 | $3–5 | $1.50–3 | < $1.50 |
+| CPL | > $50 | $30–50 | $15–30 | < $15 |
+| Video 25% retained | < 30% | 30–50% | 50–70% | > 70% |
+| Video 75% retained | < 5% | 5–10% | 10–20% | > 20% |
+| Landing page bounce | > 80% | 60–80% | 40–60% | < 40% |
+
+Adjust benchmarks to the vertical (B2B SaaS, local service, ecommerce, etc.).
+
+### E.4 Generate Evaluation Report
+
+Output to `workspace/ads/_evaluation-report.md`:
+
+```markdown
+# Ad Evaluation Report — [Date]
+
+## Summary
+- Active campaigns: [N]
+- Active ads: [N]
+- Total 30-day spend: $[X]
+- Avg CTR: [X]% | Avg CPC: $[X] | Avg CPL: $[X]
+
+## Campaign Performance
+
+| Campaign | Objective | Spend | Impressions | Clicks | CTR | CPC | Leads | CPL |
+|----------|-----------|-------|-------------|--------|-----|-----|-------|-----|
+
+## Ad-Level Performance
+
+| Ad | Campaign | CTR | CPC | Spend | Leads | CPL | Verdict |
+|----|----------|-----|-----|-------|-------|-----|---------|
+
+## Recommendations
+
+### Keep (performing well)
+[List ads to keep running]
+
+### Optimize (underperforming but fixable)
+[List ads with specific fix recommendations — copy, creative, targeting]
+
+### Pause (not working)
+[List ads to turn off]
+
+### Create New
+[Gaps identified — missing funnel stages, untested hooks, audience segments]
+```
+
+### E.5 Transition to Creation
+
+If evaluation reveals gaps or the user wants new ads, transition to Phase 0 → Phase 1 below with the evaluation findings as context.
+
+---
 
 ## Phase 0: Load Product Context
 
@@ -41,19 +143,19 @@ Adapt to the actual product and platforms. Not every product needs every stage.
 
 ### Per-Platform Ad Specs
 
-Before writing any ad, load the platform's policy reference and skill contract:
+Before writing any ad, load the platform's policy reference and skill contract. For Meta, also load the API reference for execution:
 
-| Platform | Policy Reference | Contract | Key Constraints |
-|----------|-----------------|----------|-----------------|
-| Meta | `harness/references/meta-ads-rules.md` | `harness/skill-contracts/meta-ads.yaml` | Headline 27 chars, primary text 125 chars visible |
-| Google | `harness/references/google-ads-policy-reference.md` | `harness/skill-contracts/google-ads.yaml` | 15 headlines (30 chars), 4 descriptions (90 chars) |
-| LinkedIn | `harness/references/linkedin-ads-rules.md` | — | Professional context, B2B claim substantiation |
-| TikTok | `harness/references/tiktok-ads-policy-reference.md` | — | No political ads, AI disclosure required |
-| Microsoft | `harness/references/microsoft-ads-rules.md` | — | Similar to Google RSA format |
-| Pinterest | `harness/references/pinterest-ads-rules.md` | — | All weight loss banned, strict body image |
-| Snapchat | `harness/references/snapchat-ads-policy-reference.md` | — | Young audience protections |
-| Amazon | `harness/references/amazon-ads-policy-reference.md` | — | 18-month claim evidence rule |
-| X/Twitter | `harness/references/x-ads-policy-reference.md` | — | Verification tier affects access |
+| Platform | Policy Reference | API/Execution Reference | Contract | Key Constraints |
+|----------|-----------------|------------------------|----------|-----------------|
+| Meta | `harness/references/meta-ads-rules.md` | `harness/references/meta-ads-api-reference.md` | `harness/skill-contracts/meta-ads.yaml` | Headline 27 chars, primary text 125 chars visible |
+| Google | `harness/references/google-ads-policy-reference.md` | — | `harness/skill-contracts/google-ads.yaml` | 15 headlines (30 chars), 4 descriptions (90 chars) |
+| LinkedIn | `harness/references/linkedin-ads-rules.md` | — | — | Professional context, B2B claim substantiation |
+| TikTok | `harness/references/tiktok-ads-policy-reference.md` | — | — | No political ads, AI disclosure required |
+| Microsoft | `harness/references/microsoft-ads-rules.md` | — | — | Similar to Google RSA format |
+| Pinterest | `harness/references/pinterest-ads-rules.md` | — | — | All weight loss banned, strict body image |
+| Snapchat | `harness/references/snapchat-ads-policy-reference.md` | — | — | Young audience protections |
+| Amazon | `harness/references/amazon-ads-policy-reference.md` | — | — | 18-month claim evidence rule |
+| X/Twitter | `harness/references/x-ads-policy-reference.md` | — | — | Verification tier affects access |
 
 All paths relative to `E:\Dev2\kai-cmo-harness-work\`.
 
@@ -167,7 +269,44 @@ Generate `workspace/ads/_quality-report.md`:
 [Which variants to test first based on hook type diversity]
 ```
 
-## Phase 5: Platform Setup Notes
+## Phase 5: API Execution (Optional — Meta)
+
+If the user wants to create ads via API (not just produce copy), load `harness/references/meta-ads-api-reference.md` and follow this sequence:
+
+### Pre-Flight Checks
+
+1. **Verify credentials:** Extract all required env vars via `grep` from `.env.local`
+2. **Verify video IDs:** Before creating any video ad, query the video library first:
+   ```bash
+   curl "https://graph.facebook.com/v21.0/act_${AD_ACCOUNT_ID}/advideos?fields=id,title,created_time&limit=20&access_token=${META_TOKEN}"
+   ```
+   Never trust video IDs from logs or docs without verification — a single digit difference means a different (or nonexistent) video.
+3. **Verify Instagram account ID:** Pull from Page settings if not in `.env.local`
+4. **Set all ads to PAUSED initially** — review before activating
+
+### Execution Order
+
+```
+1. Create campaign (PAUSED)
+2. Create ad set(s) with targeting + budget
+3. For each ad:
+   a. If video ad → verify video_id exists in library
+   b. Create ad with inline creative (object_story_spec)
+   c. Use instagram_user_id (NOT instagram_actor_id)
+4. Review all created ads in Ads Manager
+5. Activate
+```
+
+### Cross-Reference with PostHog
+
+After ads are live, use `harness/references/posthog-marketing-queries.md` to track:
+- Landing page traffic from UTM parameters (query #2)
+- Visitor journeys from ad click to conversion (query #5)
+- Campaign attribution and conversion rates (query #8)
+
+---
+
+## Phase 6: Platform Setup Notes
 
 Generate `workspace/ads/_platform-setup.md` with:
 - Campaign structure per platform (campaigns, ad sets, ad groups)

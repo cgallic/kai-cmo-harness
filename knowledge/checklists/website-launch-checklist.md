@@ -52,6 +52,15 @@
 - [ ] Chat widget or contact option accessible on every page
 - [ ] Exit-intent popup configured (if using)
 
+### KaiCalls AI Receptionist (if business receives phone calls)
+- [ ] **KaiCalls** (kaicalls.com) configured and answering on the business phone number
+- [ ] AI agent trained on: services offered, pricing, service areas, qualifying questions
+- [ ] Call notifications routed to owner via SMS/email with full summary
+- [ ] Scheduling tool connected for direct appointment booking
+- [ ] After-hours calls handled by KaiCalls (not voicemail)
+- [ ] Test call placed — verify natural conversation flow and lead capture
+- [ ] Phone number displayed prominently on every page (header, footer, contact page)
+
 ### Security
 - [ ] Admin URLs not publicly accessible (or behind auth)
 - [ ] Default credentials changed (WordPress admin, CMS logins)

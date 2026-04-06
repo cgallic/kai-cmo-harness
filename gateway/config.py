@@ -1,13 +1,16 @@
-"""
-Gateway configuration - loads clients_config.json and environment variables.
-"""
+"""Gateway configuration for the Kai runtime remote surface."""
 
 import json
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - fallback for minimal runtimes
+    def load_dotenv(*args, **kwargs):
+        return False
+from kai.runtime import load_workspace_profile
 
 # Load environment from scripts/.env
 _env_path = Path(__file__).parent.parent / "scripts" / ".env"
@@ -19,10 +22,11 @@ load_dotenv(_root_env)
 
 
 class GatewayConfig:
-    """Configuration manager for the gateway."""
+    """Configuration manager for the Kai remote runner."""
 
     def __init__(self):
         self._clients_config: Optional[Dict] = None
+        self._workspace_profile = None
         self._config_path = Path(__file__).parent.parent / "clients" / "clients_config.json"
 
     @property
@@ -47,7 +51,7 @@ class GatewayConfig:
 
     @property
     def clients_config(self) -> Dict:
-        """Load and cache clients_config.json."""
+        """Load and cache legacy clients_config.json if present."""
         if self._clients_config is None:
             if self._config_path.exists():
                 with open(self._config_path) as f:
@@ -56,8 +60,33 @@ class GatewayConfig:
                 self._clients_config = {}
         return self._clients_config
 
+    @property
+    def workspace_profile(self):
+        """Load and cache the canonical runtime workspace profile."""
+        if self._workspace_profile is None:
+            self._workspace_profile = load_workspace_profile()
+        return self._workspace_profile
+
     def get_all_clients(self) -> List[Dict[str, Any]]:
-        """Get all clients from config with their category."""
+        """Get all brands from runtime profile, falling back to legacy config."""
+        if self.workspace_profile.brands:
+            return [
+                {
+                    "id": brand.id,
+                    "category": "brand",
+                    "name": brand.name,
+                    "description": brand.description,
+                    "url": brand.url,
+                    "ga_property": brand.ga_property,
+                    "gsc_site": brand.gsc_site,
+                    "primary_archetype": brand.primary_archetype,
+                    "module_ids": brand.module_ids,
+                    "active_channels": brand.active_channels,
+                    **brand.metadata,
+                }
+                for brand in self.workspace_profile.brands
+            ]
+
         clients = []
         config = self.clients_config
 
@@ -73,7 +102,23 @@ class GatewayConfig:
         return clients
 
     def get_client(self, client_id: str) -> Optional[Dict[str, Any]]:
-        """Get a specific client by ID."""
+        """Get a specific brand/client by ID."""
+        brand = self.workspace_profile.get_brand(client_id)
+        if brand:
+            return {
+                "id": brand.id,
+                "category": "brand",
+                "name": brand.name,
+                "description": brand.description,
+                "url": brand.url,
+                "ga_property": brand.ga_property,
+                "gsc_site": brand.gsc_site,
+                "primary_archetype": brand.primary_archetype,
+                "module_ids": brand.module_ids,
+                "active_channels": brand.active_channels,
+                **brand.metadata,
+            }
+
         config = self.clients_config
 
         for category in ["products", "clients", "leadgen", "personal", "internal"]:

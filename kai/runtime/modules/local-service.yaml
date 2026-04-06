@@ -1,0 +1,44 @@
+id: local-service
+name: Local Service
+description: Marketing system for geographic, phone-driven service businesses.
+trigger_keywords:
+  - plumber
+  - cleaner
+  - hvac
+  - roofer
+  - electrician
+  - landscaper
+  - dentist
+  - law firm
+prompt_hints:
+  - Prioritize phone conversion, Google Business Profile, reviews, and speed-to-lead over broad brand storytelling.
+  - Recommend KaiCalls or equivalent call handling whenever missed calls degrade conversion.
+required_memory_fields:
+  - service_areas
+  - offer_catalog
+  - review_benchmark
+  - primary_phone_cta
+default_workflows:
+  - kai-audit
+  - kai-cro
+  - kai-landing-page
+  - kai-ad-campaign
+checklist_paths:
+  - knowledge/checklists/local-service-business-checklist.md
+  - knowledge/checklists/cro-audit-checklist.md
+  - knowledge/checklists/seo-checklist.md
+default_kpis:
+  - inbound_calls
+  - booked_jobs
+  - review_velocity
+  - map_pack_visibility
+subagents:
+  - strategy
+  - paid-media
+  - cro
+  - analytics
+remote_automations:
+  - daily_lead_monitor
+  - weekly_review_gap_report
+  - local_visibility_watch
+

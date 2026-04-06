@@ -1,0 +1,260 @@
+# Fixture: Local Service Business — Residential Plumbing
+# Archetype: local-service
+# Use: golden test case, operator onboarding example, development fixture
+# Business: ClearFlow Plumbing, Houston TX metro area
+
+business_profile:
+  id: "clearflow-plumbing-houston"
+  profile_version: "1.0.0"
+
+  identity:
+    business_name: "ClearFlow Plumbing"
+    dba: null
+    legal_entity: "ClearFlow Plumbing LLC"
+    website_url: "https://clearflowplumbing.com"
+    phone: "(713) 555-0142"
+    email: "service@clearflowplumbing.com"
+    logo_url: null
+    tagline: "Fast, Fair, Fixed Right"
+    elevator_pitch: "ClearFlow Plumbing provides emergency and scheduled plumbing services to homeowners across the Greater Houston area. Licensed, insured, and backed by 15 years of 5-star service."
+
+  classification:
+    industry: "home_services"
+    vertical: "residential_plumbing"
+    business_model: "service"
+    archetype: "local-service"
+    stage: "growth"
+
+  offers:
+    - name: "Emergency Plumbing Repair"
+      description: "24/7 emergency response for burst pipes, major leaks, sewer backups, and water heater failures"
+      price_range: "$150-500"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Call Now"
+      category: "emergency"
+    - name: "Drain Cleaning"
+      description: "Professional drain cleaning for kitchen, bathroom, and main sewer lines"
+      price_range: "$99-250"
+      margin_tier: "medium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Book Online"
+      category: "maintenance"
+    - name: "Water Heater Installation"
+      description: "Tank and tankless water heater installation and replacement"
+      price_range: "$1,200-3,500"
+      margin_tier: "high"
+      is_seasonal: true
+      is_primary: false
+      primary_cta: "Get Free Estimate"
+      category: "installation"
+    - name: "Repiping"
+      description: "Whole-home repiping for homes with galvanized or polybutylene pipes"
+      price_range: "$4,000-12,000"
+      margin_tier: "premium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Schedule Inspection"
+      category: "major_project"
+
+  geography:
+    service_areas:
+      - "Houston, TX"
+      - "Katy, TX"
+      - "Sugar Land, TX"
+      - "The Woodlands, TX"
+      - "Pearland, TX"
+    locations:
+      - name: "Main Office"
+        address: "4521 Westheimer Rd"
+        city: "Houston"
+        state: "TX"
+        zip_code: "77027"
+        country: "US"
+        phone: "(713) 555-0142"
+        hours:
+          monday: "7am-6pm"
+          tuesday: "7am-6pm"
+          wednesday: "7am-6pm"
+          thursday: "7am-6pm"
+          friday: "7am-6pm"
+          saturday: "8am-2pm"
+          sunday: "Emergency Only"
+        gbp_url: "https://goo.gl/maps/example"
+        is_primary: true
+    geo_scope: "local"
+    is_mobile: true
+    has_storefront: false
+
+  personas:
+    - name: "Emergency Eddie"
+      demographics: "Homeowner, 35-60, household income $75K+, owns home built before 2000"
+      pain_points:
+        - "Pipe just burst and water is everywhere"
+        - "Can't find a plumber who answers on weekends"
+        - "Worried about being overcharged in an emergency"
+        - "Previous plumber did a bad job and now it's worse"
+      buying_triggers:
+        - "Active water emergency"
+        - "Water heater stopped working"
+        - "Sewer backup into house"
+      objections:
+        - "How fast can you get here?"
+        - "How much will this cost?"
+        - "Are you licensed and insured?"
+      channels_used: ["google", "nextdoor", "facebook"]
+      decision_timeline: "same-day"
+      is_primary: true
+    - name: "Planning Pam"
+      demographics: "Homeowner, 40-65, household income $100K+, proactive about home maintenance"
+      pain_points:
+        - "Water pressure has been dropping gradually"
+        - "Old galvanized pipes need replacing before they fail"
+        - "Want a water heater upgrade but unsure about tankless"
+      buying_triggers:
+        - "Noticed early signs of plumbing problems"
+        - "Neighbor had a major plumbing disaster"
+        - "Seasonal maintenance reminder"
+      objections:
+        - "Can I get multiple estimates?"
+        - "How long will the work take?"
+        - "What's the warranty?"
+      channels_used: ["google", "yelp", "email"]
+      decision_timeline: "1-2 weeks"
+      is_primary: false
+
+  trust:
+    testimonials:
+      - signal_type: "testimonial"
+        title: null
+        content: "ClearFlow saved us when our water heater burst at 11pm. Mike was here in 40 minutes and had it fixed by 1am. Fair price, professional work."
+        source: "Google Review - Sarah M."
+        url: null
+        date: "2025-11"
+      - signal_type: "testimonial"
+        title: null
+        content: "Best plumber in Houston. They repiped our entire 1970s home in 3 days. Clean, professional, and the price was exactly what they quoted."
+        source: "Google Review - James K."
+        url: null
+        date: "2025-09"
+    case_studies: []
+    certifications:
+      - "Texas Master Plumber License #MP-44821"
+      - "Rinnai Certified Installer"
+      - "State Licensed and Insured"
+    awards:
+      - "Best of Houston Plumbing 2024 - Houston Chronicle"
+    years_in_business: 15
+    team_size: "6-20"
+    notable_clients: []
+    insurance_details: "General liability $1M, workers comp active"
+    licenses:
+      - "TX Master Plumber MP-44821"
+      - "City of Houston Plumbing Contractor"
+
+  goals:
+    primary_goals:
+      - "Increase monthly leads from 40 to 60"
+      - "Grow Google reviews from 87 to 150 by Q4 2026"
+      - "Launch service in Conroe/Spring TX market"
+    target_kpis:
+      leads_per_month: 60
+      cost_per_lead: 75
+      review_count: 150
+      review_rating: 4.8
+      website_conversion_rate: 5.0
+    timeframe: "Q2-Q4 2026"
+    north_star_metric: "leads_per_month"
+
+  channels:
+    - platform: "website"
+      url: "https://clearflowplumbing.com"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-28"
+      follower_count: null
+      notes: "WordPress site, needs speed optimization"
+    - platform: "gbp"
+      url: "https://goo.gl/maps/example"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-15"
+      follower_count: null
+      notes: "87 reviews, 4.7 rating, posts inconsistent"
+    - platform: "facebook"
+      url: "https://facebook.com/clearflowplumbing"
+      is_connected: false
+      is_active: false
+      last_activity: "2025-11-01"
+      follower_count: 340
+      notes: "Dormant - last post 5 months ago"
+    - platform: "google_ads"
+      url: null
+      is_connected: false
+      is_active: false
+      follower_count: null
+      notes: "Ran briefly in 2024, stopped due to budget concerns"
+    - platform: "yelp"
+      url: "https://yelp.com/biz/clearflow-plumbing-houston"
+      is_connected: false
+      is_active: true
+      follower_count: null
+      notes: "23 reviews, 4.5 rating"
+
+  constraints:
+    compliance_notes:
+      - "Texas requires master plumber license number in all advertising"
+    regulated_industry: false
+    claims_restrictions:
+      - "Cannot claim 'guaranteed same-day service' — weather events can delay"
+    brand_voice_notes: "Friendly, direct, no corporate jargon. Talk like a trusted neighbor who happens to be an expert plumber."
+    topics_to_avoid:
+      - "DIY plumbing advice that could cause liability"
+      - "Criticizing other plumbing companies by name"
+
+  budget:
+    monthly_marketing_budget: 2500.00
+    risk_tolerance: "moderate"
+    auto_execution_enabled: false
+    max_auto_spend_per_action: 100.00
+
+  sales_cycle:
+    buyer_type: "b2c"
+    sales_cycle_length: "same-day to 2 weeks"
+    average_deal_size: 450.00
+    decision_makers:
+      - "Homeowner"
+      - "Spouse/partner"
+    sales_process: "Phone call or online form -> estimate (free for standard, $49 diagnostic fee for complex) -> service -> follow-up"
+
+  brand_voice:
+    tone_descriptors:
+      - "friendly"
+      - "direct"
+      - "trustworthy"
+      - "expert but not condescending"
+    writing_samples: []
+    approved_messaging_blocks:
+      - "Fast, Fair, Fixed Right — That's the ClearFlow Promise"
+      - "Licensed Master Plumber • 15 Years Serving Houston"
+    competitor_differentiation: "We answer the phone 24/7 with a real human (or AI receptionist), provide upfront pricing before work begins, and back everything with a 1-year labor warranty."
+    personality_traits:
+      - "reliable"
+      - "knowledgeable"
+      - "honest"
+
+  operator:
+    operator_hours_per_week: 5.0
+    operator_skill_level: "beginner"
+    preferred_channels:
+      - "gbp"
+      - "google_ads"
+    delegation_preferences: "Handle everything automated — I just want to approve ad spend and review monthly reports."
+
+  raw_notes: "Owner Mike has been in plumbing for 22 years, started ClearFlow 15 years ago. Wife Sarah handles the books. They have 4 trucks and 8 employees. Emergency calls are their best margin work. They want to grow but Mike doesn't have time for marketing."
+
+  metadata:
+    source: "onboarding_interview"
+    onboarded_date: "2026-03-15"

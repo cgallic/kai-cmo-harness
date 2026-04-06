@@ -1,0 +1,429 @@
+# Fixture: Multi-Location Business — Dental Practice (5 locations)
+# Archetype: multi-location
+# Use: golden test case, operator onboarding example, development fixture
+# Business: Bright Smile Dental, Dallas-Fort Worth metro
+
+business_profile:
+  id: "bright-smile-dental-dfw"
+  profile_version: "1.0.0"
+
+  identity:
+    business_name: "Bright Smile Dental"
+    dba: null
+    legal_entity: "Bright Smile Dental Group PLLC"
+    website_url: "https://brightsmiledentalgroup.com"
+    phone: "(972) 555-0100"
+    email: "info@brightsmiledentalgroup.com"
+    logo_url: "https://brightsmiledentalgroup.com/assets/logo.svg"
+    tagline: "Your Neighborhood Dentist. Every Location."
+    elevator_pitch: "Bright Smile Dental is a family-owned dental group with 5 locations across the Dallas-Fort Worth metro. We offer general, cosmetic, orthodontic, pediatric, and emergency dentistry with evening and Saturday hours at every office. Same-week appointments available."
+
+  classification:
+    industry: "healthcare"
+    vertical: "general_cosmetic_dentistry"
+    business_model: "service"
+    archetype: "multi-location"
+    stage: "scale"
+
+  offers:
+    - name: "General Dentistry"
+      description: "Comprehensive exams, cleanings, fillings, crowns, bridges, and preventive care. Accepts most PPO and Medicaid plans. New patient special: exam, x-rays, and cleaning for $99."
+      price_range: "$99-2,500"
+      margin_tier: "medium"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Book Your Visit"
+      category: "general"
+    - name: "Cosmetic Dentistry"
+      description: "Teeth whitening (in-office and take-home), porcelain veneers, dental bonding, and smile makeovers. Free cosmetic consultation."
+      price_range: "$300-15,000"
+      margin_tier: "premium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Free Smile Consultation"
+      category: "cosmetic"
+    - name: "Orthodontics"
+      description: "Traditional braces and Invisalign clear aligners for teens and adults. In-house orthodontist at Dallas and Plano locations, visiting orthodontist at other locations."
+      price_range: "$3,500-7,000"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Free Ortho Consult"
+      category: "orthodontics"
+    - name: "Pediatric Dentistry"
+      description: "Child-friendly dental care from first tooth through teen years. Sealants, fluoride treatments, and gentle approach for anxious kids. Dedicated kids area in every office."
+      price_range: "$75-1,200"
+      margin_tier: "medium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Schedule for Your Child"
+      category: "pediatric"
+    - name: "Emergency Dental Care"
+      description: "Same-day emergency appointments for toothaches, broken teeth, lost fillings, and dental trauma. Walk-ins accepted at all locations during business hours."
+      price_range: "$150-800"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Call Now"
+      category: "emergency"
+    - name: "Dental Implants"
+      description: "Single tooth implants, implant-supported bridges, and All-on-4 full-arch restoration. Oral surgeon on staff at Dallas and Fort Worth locations."
+      price_range: "$3,000-25,000"
+      margin_tier: "premium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Free Implant Consultation"
+      category: "implants"
+
+  geography:
+    service_areas:
+      - "Dallas, TX"
+      - "Plano, TX"
+      - "Arlington, TX"
+      - "Frisco, TX"
+      - "Fort Worth, TX"
+    locations:
+      - name: "Dallas - Uptown"
+        address: "3100 McKinney Ave, Suite 200"
+        city: "Dallas"
+        state: "TX"
+        zip_code: "75204"
+        country: "US"
+        phone: "(214) 555-0110"
+        hours:
+          monday: "8am-7pm"
+          tuesday: "8am-7pm"
+          wednesday: "8am-7pm"
+          thursday: "8am-7pm"
+          friday: "8am-5pm"
+          saturday: "9am-3pm"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/brightsmile-dallas"
+        is_primary: true
+      - name: "Plano"
+        address: "6100 W Parker Rd, Suite 140"
+        city: "Plano"
+        state: "TX"
+        zip_code: "75093"
+        country: "US"
+        phone: "(972) 555-0120"
+        hours:
+          monday: "8am-6pm"
+          tuesday: "8am-6pm"
+          wednesday: "8am-6pm"
+          thursday: "8am-6pm"
+          friday: "8am-5pm"
+          saturday: "9am-2pm"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/brightsmile-plano"
+        is_primary: false
+      - name: "Arlington"
+        address: "1501 N Collins St, Suite 350"
+        city: "Arlington"
+        state: "TX"
+        zip_code: "76011"
+        country: "US"
+        phone: "(817) 555-0130"
+        hours:
+          monday: "8am-6pm"
+          tuesday: "8am-6pm"
+          wednesday: "9am-7pm"
+          thursday: "8am-6pm"
+          friday: "8am-4pm"
+          saturday: "9am-2pm"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/brightsmile-arlington"
+        is_primary: false
+      - name: "Frisco"
+        address: "8750 Preston Rd, Suite 105"
+        city: "Frisco"
+        state: "TX"
+        zip_code: "75034"
+        country: "US"
+        phone: "(469) 555-0140"
+        hours:
+          monday: "8am-6pm"
+          tuesday: "8am-6pm"
+          wednesday: "8am-6pm"
+          thursday: "8am-6pm"
+          friday: "8am-5pm"
+          saturday: "10am-2pm"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/brightsmile-frisco"
+        is_primary: false
+      - name: "Fort Worth - Cultural District"
+        address: "2701 W 7th St, Suite 180"
+        city: "Fort Worth"
+        state: "TX"
+        zip_code: "76107"
+        country: "US"
+        phone: "(817) 555-0150"
+        hours:
+          monday: "8am-7pm"
+          tuesday: "8am-7pm"
+          wednesday: "8am-7pm"
+          thursday: "8am-7pm"
+          friday: "8am-5pm"
+          saturday: "9am-3pm"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/brightsmile-fortworth"
+        is_primary: false
+    geo_scope: "regional"
+    is_mobile: false
+    has_storefront: true
+
+  personas:
+    - name: "Anxious Adult Amanda"
+      demographics: "Adults 30-55, haven't been to the dentist in 2+ years due to anxiety, household income $60K+, often searching late at night when a toothache flares up"
+      pain_points:
+        - "Dental anxiety keeps postponing needed work — the longer I wait, the worse it gets"
+        - "Past bad experience with a judgmental or rough dentist"
+        - "Embarrassed about the current state of teeth after years of avoidance"
+        - "Worried about cost surprises — doesn't want to be upsold during the appointment"
+        - "Wants sedation options but doesn't know who offers them"
+      buying_triggers:
+        - "Tooth pain that won't go away with Advil"
+        - "Visible tooth damage (chip, crack, discoloration) causing embarrassment"
+        - "New insurance plan — looking for a fresh start with a new dentist"
+        - "Friend or family member had a good experience and recommended the practice"
+      objections:
+        - "Do you offer sedation or nitrous oxide?"
+        - "Will you judge me for not coming in for years?"
+        - "How much will this cost with my insurance?"
+        - "Can I see the same dentist every visit?"
+      channels_used: ["google", "yelp", "facebook", "nextdoor"]
+      decision_timeline: "1-7 days"
+      is_primary: true
+    - name: "Busy Parent Brian"
+      demographics: "Parents 30-50, 2+ children, dual-income household $90K+, values convenience and one-stop scheduling for the whole family"
+      pain_points:
+        - "Impossible to coordinate separate appointments for 4 family members"
+        - "Kids need a dentist who is patient and good with anxious children"
+        - "Can't take time off work — needs evening or Saturday appointments"
+        - "Current dentist is 30 minutes away — wants something closer to home or work"
+        - "Insurance coverage is confusing — never knows what's covered until the bill comes"
+      buying_triggers:
+        - "Child's school dental screening flagged an issue"
+        - "Family recently moved to a new neighborhood in DFW"
+        - "Open enrollment — switching to a new dental plan"
+        - "Saturday availability appears in a Google search"
+      objections:
+        - "Can we schedule the whole family in one visit?"
+        - "Do you see kids under 5?"
+        - "Which insurance plans do you accept?"
+        - "Is there a location near my kids' school?"
+      channels_used: ["google", "facebook", "nextdoor", "email"]
+      decision_timeline: "1-2 weeks"
+      is_primary: false
+
+  trust:
+    testimonials:
+      - signal_type: "testimonial"
+        title: null
+        content: "I hadn't been to a dentist in 6 years because of anxiety. Dr. Patel at the Dallas location was so patient and gentle. Zero judgment. I actually have my next cleaning already scheduled."
+        source: "Google Review - Stephanie R. (Dallas location)"
+        url: null
+        date: "2026-02"
+      - signal_type: "testimonial"
+        title: null
+        content: "We take all 3 kids plus my husband and me to the Plano office. They schedule us all back to back on Saturday mornings. In and out in 2 hours for the whole family."
+        source: "Google Review - Michelle T. (Plano location)"
+        url: null
+        date: "2026-01"
+      - signal_type: "testimonial"
+        title: null
+        content: "The Fort Worth location just opened and it's already great. Brand new equipment, friendly staff, and they got me in same-day for a broken crown. Highly recommend."
+        source: "Yelp Review - Carlos M. (Fort Worth location)"
+        url: null
+        date: "2025-12"
+      - signal_type: "testimonial"
+        title: null
+        content: "I got Invisalign at the Frisco office and the results are incredible. Dr. Nguyen is an artist. The monthly payment plan made it affordable. I smile in every photo now."
+        source: "Google Review - Priya K. (Frisco location)"
+        url: null
+        date: "2025-10"
+    case_studies: []
+    certifications:
+      - "ADA (American Dental Association) Member Practice"
+      - "Texas State Board of Dental Examiners — All dentists licensed and in good standing"
+      - "Invisalign Preferred Provider"
+      - "OSHA and HIPAA Compliant — Annual staff training"
+      - "Sedation Dentistry Certified — Dallas and Fort Worth locations"
+    awards:
+      - "Best Dentist in Dallas 2024, 2025 — D Magazine"
+      - "Top Dentist DFW 2025 — Fort Worth Magazine"
+      - "Patients' Choice Award 2025 — Vitals.com"
+    years_in_business: 11
+    team_size: "21-50"
+    notable_clients: []
+    insurance_details: "Professional liability $3M per occurrence per provider, general liability $2M per location"
+    licenses:
+      - "TX Dental License #38291 — Dr. Anita Patel, DDS (Dallas)"
+      - "TX Dental License #39104 — Dr. James Whitfield, DDS (Arlington, Plano)"
+      - "TX Dental License #40287 — Dr. Trang Nguyen, DDS (Frisco)"
+      - "TX Dental License #41552 — Dr. Omar Hassan, DDS (Fort Worth)"
+      - "TX Dental License #37845 — Dr. Rebecca Solis, DMD (Orthodontist, Dallas/Plano)"
+
+  goals:
+    primary_goals:
+      - "Bring all 5 locations to 4.5+ Google rating"
+      - "Reach 50+ Google reviews at every location (currently Frisco has 18, Fort Worth has 9)"
+      - "Increase new patient appointments to 40/month per location"
+      - "Launch Invisalign promotion across all locations — target 15 new starts/quarter"
+      - "Reduce location KPI variance — bring underperforming locations within 20% of top performer"
+    target_kpis:
+      per_location_leads: 40
+      location_review_avg: 4.6
+      total_review_count: 550
+      brand_consistency_score: 85
+      location_page_conversion: 5.0
+      aggregate_cost_per_lead: 65.00
+      review_velocity_per_location: 8
+      nap_consistency_score: 98
+    timeframe: "Q2-Q4 2026"
+    north_star_metric: "per_location_leads"
+
+  channels:
+    # --- Dallas (flagship) ---
+    - platform: "website"
+      url: "https://brightsmiledentalgroup.com"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-30"
+      follower_count: null
+      notes: "WordPress multisite. Dedicated location pages for all 5 offices. Dallas and Plano pages well-optimized. Arlington and Frisco pages are thin — template content with city name swapped. Fort Worth page just launched."
+    - platform: "gbp"
+      url: "https://goo.gl/maps/brightsmile-dallas"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-28"
+      follower_count: null
+      notes: "Dallas: 187 reviews, 4.7 rating, posts weekly. Plano: 124 reviews, 4.6 rating, posts bi-weekly. Arlington: 78 reviews, 4.4 rating, posts monthly. Frisco: 18 reviews, 4.3 rating, posts sporadic. Fort Worth: 9 reviews, 4.8 rating, just opened 4 months ago."
+    - platform: "google_ads"
+      url: null
+      is_connected: true
+      is_active: true
+      last_activity: "2026-03-30"
+      follower_count: null
+      notes: "Spending $12,000/mo across all locations. Dallas gets $4,000 (most competitive market). Plano $3,000. Arlington $2,500. Frisco $1,500. Fort Worth $1,000. CPL ranges from $45 (Plano) to $95 (Dallas). Conversion tracking needs work — not all locations have separate call tracking numbers."
+    - platform: "facebook"
+      url: "https://facebook.com/brightsmiledentalgroup"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-25"
+      follower_count: 2100
+      notes: "Single brand page (not per-location). Posts 2-3x/week. Mix of general dental tips and location-specific promotions. Engagement low — averaging 5-10 reactions per post."
+    - platform: "instagram"
+      url: "https://instagram.com/brightsmiledental"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-22"
+      follower_count: 980
+      notes: "Posting 1-2x/week. Mostly before/after photos (with consent) and team spotlights. Reels attempted but inconsistent."
+    - platform: "email"
+      url: null
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-15"
+      follower_count: 8500
+      notes: "Mailchimp. Monthly newsletter to all patients. No segmentation by location. Appointment reminders handled by practice management software (Dentrix), not email platform. Open rate 24%."
+    - platform: "yelp"
+      url: null
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-10"
+      follower_count: null
+      notes: "Dallas: 42 reviews, 4.5 rating. Plano: 28 reviews, 4.3 rating. Arlington: 15 reviews, 4.0 rating. Frisco: 6 reviews, 4.5 rating. Fort Worth: 2 reviews, 5.0 rating. Responses inconsistent — only Dallas location responds regularly."
+    - platform: "meta_ads"
+      url: null
+      is_connected: false
+      is_active: false
+      last_activity: "2025-10-15"
+      follower_count: null
+      notes: "Ran Facebook Ads for Invisalign promotion in Q4 2025. ROAS was unclear — attribution not set up properly. Paused to focus budget on Google Ads."
+    - platform: "nextdoor"
+      url: null
+      is_connected: false
+      is_active: false
+      follower_count: null
+      notes: "Claimed Dallas and Plano business pages. Never posted. Arlington, Frisco, and Fort Worth not claimed."
+    - platform: "sms"
+      url: null
+      is_connected: false
+      is_active: false
+      follower_count: null
+      notes: "Dentrix sends automated appointment reminders via SMS. No marketing SMS capability."
+
+  constraints:
+    compliance_notes:
+      - "HIPAA applies to all patient communications — no patient names, images, or health information without signed authorization"
+      - "Texas State Board of Dental Examiners advertising rules — must include dentist name and license number in ads"
+      - "Before/after photos require signed patient consent form specific to marketing use"
+      - "Sedation dentistry advertising requires dentist to hold active sedation permit"
+      - "Specialty claims (orthodontist, oral surgeon) must be for ADA-recognized specialties only"
+    regulated_industry: true
+    claims_restrictions:
+      - "Cannot guarantee treatment outcomes (e.g., 'painless dentistry' or 'guaranteed white teeth')"
+      - "Cannot advertise specific prices without disclosing what is and isn't included"
+      - "Invisalign ads must use approved trademark language per Align Technology guidelines"
+      - "New patient special pricing must clearly state what is included and any exclusions"
+      - "Cannot use patient testimonials that imply guaranteed clinical outcomes"
+    brand_voice_notes: "Warm, reassuring, family-friendly. We put nervous patients at ease. Professional but never clinical or intimidating. Each location should feel like your neighborhood dentist, not a corporate chain."
+    topics_to_avoid:
+      - "Graphic dental procedure images without clear patient consent"
+      - "Fear-based messaging about dental neglect"
+      - "Pricing comparisons with specific competitor practices"
+      - "Making claims about insurance coverage without verification"
+      - "Implying all locations offer identical specialty services"
+
+  budget:
+    monthly_marketing_budget: 25000.00
+    risk_tolerance: "moderate"
+    auto_execution_enabled: false
+    max_auto_spend_per_action: 500.00
+
+  sales_cycle:
+    buyer_type: "b2c"
+    sales_cycle_length: "same-day to 2 weeks for general, 2-8 weeks for cosmetic/ortho"
+    average_deal_size: 380.00
+    decision_makers:
+      - "Patient (adult)"
+      - "Parent (for pediatric)"
+      - "Spouse/partner (for major cosmetic work)"
+    sales_process: "Phone call or online booking -> new patient paperwork (digital) -> exam and treatment plan -> treatment acceptance. Cosmetic and ortho: free consultation -> treatment plan presentation -> financing discussion (CareCredit, in-house payment plans) -> treatment start."
+
+  brand_voice:
+    tone_descriptors:
+      - "warm"
+      - "reassuring"
+      - "family-friendly"
+      - "professional but approachable"
+    writing_samples:
+      - "We know the dentist isn't anyone's favorite place. That's why we made every Bright Smile office a place you actually don't mind visiting."
+      - "Your whole family, one Saturday morning, one office. That's Bright Smile Dental."
+    approved_messaging_blocks:
+      - "Your Neighborhood Dentist. Every Location."
+      - "5 Locations Across DFW. Evening & Saturday Hours."
+      - "New Patients Welcome — Same-Week Appointments Available"
+      - "Gentle Care for Anxious Patients — Sedation Options Available"
+    competitor_differentiation: "Unlike corporate dental chains, we are family-owned and every location is staffed by the same core team of dentists who rotate across offices. You see the same doctor every visit. We offer evening and Saturday hours at every location — not just select offices — and we never upsell treatments you don't need."
+    personality_traits:
+      - "caring"
+      - "patient"
+      - "reliable"
+      - "family-oriented"
+
+  operator:
+    operator_hours_per_week: 20.0
+    operator_skill_level: "intermediate"
+    preferred_channels:
+      - "google_ads"
+      - "gbp"
+      - "website"
+    delegation_preferences: "Office managers at each location handle GBP posts and review responses (with training). Central marketing coordinator manages ads, website, and email. Need help with location page SEO, review generation system, bringing underperforming locations up to standard, and building per-location reporting."
+
+  raw_notes: "Founded by Dr. Anita Patel in 2015 with the Dallas office. Expanded to Plano (2017), Arlington (2019), Frisco (2022), and Fort Worth (2025). Company-owned, not franchise. Dr. Patel is the managing partner and still practices 3 days/week in Dallas. The group employs 4 general dentists, 1 orthodontist, 12 hygienists, and 20 support staff across all locations. Dallas and Plano are mature and profitable. Arlington is steady. Frisco is growing slowly — competition is fierce in that market. Fort Worth just opened and needs patient acquisition fast. The biggest pain point is inconsistency — Dallas runs like a well-oiled machine but the newer locations don't have the same review count, GBP activity, or web presence. They want every location to perform like Dallas within 12 months."
+
+  metadata:
+    source: "onboarding_interview"
+    onboarded_date: "2026-03-25"

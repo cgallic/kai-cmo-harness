@@ -98,6 +98,17 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] Progress indicator for multi-step forms
 - [ ] Submit button text is specific ("Get My Free Trial" not "Submit")
 
+### Phone-Based Lead Capture (KaiCalls)
+- [ ] **KaiCalls AI receptionist** configured for missed call handling (kaicalls.com)
+- [ ] Phone number prominently displayed and clickable (`tel:` link)
+- [ ] After-hours calls answered by KaiCalls (not voicemail)
+- [ ] KaiCalls agent trained on business services, pricing, and service areas
+- [ ] Call summaries routed to email/SMS notification immediately
+- [ ] KaiCalls connected to scheduling tool for direct appointment booking
+- [ ] Phone CTA tested alongside form CTA (phone converts higher for local/service businesses)
+
+> **Why KaiCalls over forms?** Service businesses (lawyers, contractors, cleaners, medical) lose 40-60% of leads to voicemail. Callers don't leave messages — they call the next business. KaiCalls answers every call in under 1 second, captures lead details, and books appointments. It sounds natural — callers don't know it's AI.
+
 ### Post-Conversion
 - [ ] Thank-you page exists (not just inline "thanks" text)
 - [ ] Thank-you page sets next expectations ("Check your email")

@@ -1,0 +1,353 @@
+# Fixture: Professional Services — Personal Injury Law Firm
+# Archetype: professional-services
+# Use: golden test case, operator onboarding example, development fixture
+# Business: Reeves & Associates, personal injury attorneys
+
+business_profile:
+  id: "reeves-associates-pi-law"
+  profile_version: "1.0.0"
+
+  identity:
+    business_name: "Reeves & Associates"
+    dba: null
+    legal_entity: "Reeves & Associates PLLC"
+    website_url: "https://reevesinjurylaw.com"
+    phone: "(214) 555-0291"
+    email: "intake@reevesinjurylaw.com"
+    logo_url: "https://reevesinjurylaw.com/assets/logo.svg"
+    tagline: "When It Matters, We Fight"
+    elevator_pitch: "Reeves & Associates is a Dallas-based personal injury law firm that has recovered over $50 million for injured clients since 2012. We handle auto accidents, slip and fall, medical malpractice, and wrongful death on a contingency basis — you pay nothing unless we win."
+
+  classification:
+    industry: "legal_services"
+    vertical: "personal_injury"
+    business_model: "service"
+    archetype: "professional-services"
+    stage: "growth"
+
+  offers:
+    - name: "Auto Accident Claims"
+      description: "Representation for car, truck, motorcycle, and rideshare accident victims. Handles insurance negotiation, litigation, and trial when necessary. Contingency fee — no upfront cost."
+      price_range: "33-40% contingency"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: true
+      primary_cta: "Free Case Review"
+      category: "auto_accidents"
+    - name: "Slip and Fall / Premises Liability"
+      description: "Claims against property owners for injuries caused by unsafe conditions — wet floors, broken stairs, inadequate lighting, parking lot hazards."
+      price_range: "33-40% contingency"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Free Consultation"
+      category: "premises_liability"
+    - name: "Medical Malpractice"
+      description: "Claims against healthcare providers for surgical errors, misdiagnosis, medication errors, and birth injuries. Requires expert medical review — firm advances all costs."
+      price_range: "33-45% contingency"
+      margin_tier: "premium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Talk to an Attorney"
+      category: "medical_malpractice"
+    - name: "Wrongful Death"
+      description: "Claims on behalf of families who have lost a loved one due to negligence — vehicle accidents, workplace incidents, medical errors, or defective products."
+      price_range: "33-40% contingency"
+      margin_tier: "premium"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Speak With Us Today"
+      category: "wrongful_death"
+    - name: "Workplace Injury"
+      description: "Third-party liability claims for on-the-job injuries beyond workers compensation. Construction site accidents, equipment failures, and employer negligence."
+      price_range: "33-40% contingency"
+      margin_tier: "high"
+      is_seasonal: false
+      is_primary: false
+      primary_cta: "Free Case Evaluation"
+      category: "workplace_injury"
+
+  geography:
+    service_areas:
+      - "Dallas, TX"
+      - "Fort Worth, TX"
+      - "Plano, TX"
+      - "Arlington, TX"
+      - "Irving, TX"
+      - "McKinney, TX"
+      - "Denton, TX"
+    locations:
+      - name: "Main Office"
+        address: "3500 Maple Ave, Suite 1200"
+        city: "Dallas"
+        state: "TX"
+        zip_code: "75219"
+        country: "US"
+        phone: "(214) 555-0291"
+        hours:
+          monday: "8am-6pm"
+          tuesday: "8am-6pm"
+          wednesday: "8am-6pm"
+          thursday: "8am-6pm"
+          friday: "8am-6pm"
+          saturday: "By Appointment"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/reeves-dallas"
+        is_primary: true
+      - name: "Fort Worth Satellite"
+        address: "801 Cherry St, Suite 310"
+        city: "Fort Worth"
+        state: "TX"
+        zip_code: "76102"
+        country: "US"
+        phone: "(817) 555-0194"
+        hours:
+          monday: "9am-5pm"
+          tuesday: "9am-5pm"
+          wednesday: "9am-5pm"
+          thursday: "9am-5pm"
+          friday: "9am-5pm"
+          saturday: "Closed"
+          sunday: "Closed"
+        gbp_url: "https://goo.gl/maps/reeves-fortworth"
+        is_primary: false
+    geo_scope: "regional"
+    is_mobile: false
+    has_storefront: true
+
+  personas:
+    - name: "Accident Victim Andy"
+      demographics: "Adults 25-65, recently injured in an accident, may be dealing with medical bills and lost wages, searching from a hospital bed or at home recovering"
+      pain_points:
+        - "In pain and can't work — bills are piling up"
+        - "Insurance company made a lowball offer or denied the claim"
+        - "Doesn't know if the case is worth pursuing or what it's worth"
+        - "Afraid of going to court or dealing with a long legal process"
+        - "Worried about paying a lawyer when already financially stressed"
+      buying_triggers:
+        - "Insurance adjuster called and offered a quick settlement"
+        - "Medical bills arrived that insurance won't cover"
+        - "Employer is pressuring return to work before recovery"
+        - "Friend or family member recommended hiring a lawyer"
+        - "Saw a Google ad while searching 'what to do after car accident'"
+      objections:
+        - "I can't afford a lawyer right now"
+        - "How long will this take?"
+        - "The insurance company already offered me money — should I just take it?"
+        - "Will I have to go to court?"
+        - "How much is my case actually worth?"
+      channels_used: ["google", "facebook", "referral"]
+      decision_timeline: "1-7 days"
+      is_primary: true
+    - name: "Referral Attorney Rachel"
+      demographics: "Attorneys in family law, criminal defense, estate planning, or general practice who encounter personal injury cases outside their specialty"
+      pain_points:
+        - "Client has a PI case but it's outside my practice area"
+        - "Need a firm that will actually communicate with the referring attorney"
+        - "Want to make sure the referral fee arrangement is handled properly"
+        - "Concerned about my client being treated well by the receiving firm"
+      buying_triggers:
+        - "Current client mentions they were also injured in an accident"
+        - "Family law client's spouse was in a car wreck affecting the divorce"
+        - "Estate client's loved one died from potential negligence"
+      objections:
+        - "Will you keep me updated on my client's case?"
+        - "What's your referral fee structure?"
+        - "How do you handle my client — will they get partner-level attention?"
+        - "What's your track record on cases like this?"
+      channels_used: ["referral_network", "linkedin", "bar_association"]
+      decision_timeline: "1-3 days"
+      is_primary: false
+
+  trust:
+    testimonials:
+      - signal_type: "testimonial"
+        title: null
+        content: "After my truck accident, the insurance company offered me $12,000. Reeves & Associates got me $340,000. I couldn't have done it without them. They answered every call and explained everything in plain English."
+        source: "Google Review - Marcus T."
+        url: null
+        date: "2026-01"
+      - signal_type: "testimonial"
+        title: null
+        content: "I refer all my personal injury cases to Reeves & Associates. They treat my clients like their own, they communicate, and they get results. That's all I ask."
+        source: "Avvo Review - Jennifer S., Family Law Attorney"
+        url: null
+        date: "2025-11"
+      - signal_type: "testimonial"
+        title: null
+        content: "When my mother was injured in a nursing home, I didn't know where to turn. Robert Reeves took the case personally and fought for our family. We settled for $1.2 million and the facility changed their policies."
+        source: "Google Review - Patricia W."
+        url: null
+        date: "2025-08"
+    case_studies:
+      - signal_type: "case_study"
+        title: "Trucking Accident — $2.4M Settlement"
+        content: "Client suffered spinal injuries when an 18-wheeler ran a red light. Insurance initially offered $85,000. After 14 months of litigation including accident reconstruction and biomechanical experts, we secured a $2.4 million settlement before trial."
+        source: "Firm case records"
+        url: "https://reevesinjurylaw.com/results/trucking-accident-2-4m"
+        date: "2025-06"
+      - signal_type: "case_study"
+        title: "Medical Malpractice — $1.8M Verdict"
+        content: "Surgical error during routine gallbladder removal caused permanent nerve damage. Hospital denied responsibility. We took the case to trial and the jury awarded $1.8 million including future medical costs and lost earning capacity."
+        source: "Firm case records"
+        url: "https://reevesinjurylaw.com/results/medical-malpractice-1-8m"
+        date: "2025-03"
+    certifications:
+      - "State Bar of Texas — All attorneys in good standing"
+      - "Board Certified in Personal Injury Trial Law — Texas Board of Legal Specialization (Robert Reeves)"
+      - "Million Dollar Advocates Forum — Robert Reeves"
+      - "Multi-Million Dollar Advocates Forum — Robert Reeves"
+    awards:
+      - "Texas Super Lawyers 2024, 2025 — Robert Reeves"
+      - "Best Lawyers in America 2025 — Personal Injury Litigation"
+      - "National Trial Lawyers Top 40 Under 40 — Amanda Chen"
+      - "Dallas Bar Association Pro Bono Award 2024"
+    years_in_business: 14
+    team_size: "6-20"
+    notable_clients: []
+    insurance_details: "Professional liability (malpractice) $5M per occurrence, $10M aggregate"
+    licenses:
+      - "State Bar of Texas License #24087612 — Robert Reeves"
+      - "State Bar of Texas License #24098341 — Amanda Chen"
+      - "State Bar of Texas License #24102789 — Daniel Okafor"
+
+  goals:
+    primary_goals:
+      - "Increase qualified leads from 18 to 30 per month"
+      - "Improve consultation-to-signed-client close rate from 32% to 40%"
+      - "Build referral pipeline to 8-10 cases per month from other attorneys"
+      - "Rank page 1 for 'Dallas personal injury lawyer' and 'Fort Worth car accident attorney'"
+    target_kpis:
+      qualified_leads: 30
+      close_rate: 40.0
+      referral_rate: 35.0
+      average_engagement_value: 85000.00
+      time_to_close: 75
+      content_authority_score: 65
+    timeframe: "Q2-Q4 2026"
+    north_star_metric: "qualified_leads"
+
+  channels:
+    - platform: "website"
+      url: "https://reevesinjurylaw.com"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-28"
+      follower_count: null
+      notes: "WordPress site. Practice area pages, attorney bios, 15 case results published. Blog has 40 posts but hasn't been updated in 3 months. Conversion rate 2.1%."
+    - platform: "google_ads"
+      url: null
+      is_connected: true
+      is_active: true
+      last_activity: "2026-03-30"
+      follower_count: null
+      notes: "Spending $9,500/mo on search ads. Targeting 'personal injury lawyer dallas', 'car accident attorney', and practice area terms. CPL averaging $280. Quality score 6-7 on most keywords."
+    - platform: "gbp"
+      url: "https://goo.gl/maps/reeves-dallas"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-20"
+      follower_count: null
+      notes: "Dallas location: 54 reviews, 4.8 rating. Fort Worth: 12 reviews, 4.6 rating. Posts sporadic."
+    - platform: "linkedin"
+      url: "https://linkedin.com/company/reeves-associates"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-03-15"
+      follower_count: 890
+      notes: "Company page lightly active. Robert Reeves posts 1-2x/month on personal profile (2,400 connections). Amanda Chen more active — posts weekly on trial advocacy topics."
+    - platform: "facebook"
+      url: "https://facebook.com/reevesinjurylaw"
+      is_connected: false
+      is_active: false
+      last_activity: "2025-08-10"
+      follower_count: 620
+      notes: "Dormant. Last post 8 months ago. Some reviews still trickle in."
+    - platform: "avvo"
+      url: "https://avvo.com/attorneys/robert-reeves"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-02-01"
+      follower_count: null
+      notes: "Robert Reeves: 9.5 Avvo rating, 18 reviews. Amanda Chen: 8.8 rating, 7 reviews."
+    - platform: "yelp"
+      url: "https://yelp.com/biz/reeves-and-associates-dallas"
+      is_connected: false
+      is_active: true
+      last_activity: "2026-01-15"
+      follower_count: null
+      notes: "11 reviews, 4.5 rating. Not actively managed."
+
+  constraints:
+    compliance_notes:
+      - "Texas Disciplinary Rules of Professional Conduct govern all attorney advertising"
+      - "Must include 'principal office' disclosure in ads if firm has multiple locations"
+      - "Cannot designate a lawyer as 'specialist' or 'expert' unless board certified by Texas Board of Legal Specialization"
+      - "All ads must include the name of at least one lawyer responsible for content"
+      - "Testimonials in ads must include disclaimer: 'Results may vary. Each case is unique.'"
+    regulated_industry: true
+    claims_restrictions:
+      - "Cannot guarantee outcomes or imply guaranteed results"
+      - "Cannot state or imply that quality of services is superior to other lawyers unless it can be factually substantiated"
+      - "Past results do not guarantee future performance — must include disclaimer with case results"
+      - "Cannot solicit clients in person or by phone within 30 days of an accident (barratry rules)"
+      - "Medical malpractice ads must comply with Texas Civil Practice & Remedies Code Chapter 74"
+    brand_voice_notes: "Compassionate but authoritative. Fighter mentality — we stand up for people who got hurt. No ambulance-chaser energy. Speak plainly, not in legalese. Empathy first, credentials second."
+    topics_to_avoid:
+      - "Guaranteeing any specific case outcome or dollar amount"
+      - "Disparaging other law firms or specific attorneys"
+      - "Giving specific legal advice in marketing content (always say 'consult an attorney')"
+      - "Using scare tactics about statutes of limitations without proper context"
+      - "Discussing specific client cases without written consent"
+
+  budget:
+    monthly_marketing_budget: 15000.00
+    risk_tolerance: "moderate"
+    auto_execution_enabled: false
+    max_auto_spend_per_action: 500.00
+
+  sales_cycle:
+    buyer_type: "b2c"
+    sales_cycle_length: "30-90 days for direct clients, varies for referrals"
+    average_deal_size: 85000.00
+    decision_makers:
+      - "Injured person"
+      - "Spouse or family member"
+      - "Referring attorney (for referral cases)"
+    sales_process: "Intake call or web form -> free case evaluation (phone or in-person, 30 min) -> case review by attorney (1-3 days) -> engagement letter signed -> case proceeds. Referral cases: attorney calls Robert directly -> case details reviewed -> co-counsel or referral fee agreement signed."
+
+  brand_voice:
+    tone_descriptors:
+      - "compassionate"
+      - "authoritative"
+      - "fighter mentality"
+      - "plain-spoken"
+    writing_samples:
+      - "Insurance companies have teams of lawyers working to pay you as little as possible. You deserve someone fighting just as hard on your side."
+      - "We don't get paid unless you do. That's not a slogan — it's how we've operated for 14 years."
+    approved_messaging_blocks:
+      - "When It Matters, We Fight"
+      - "Over $50 Million Recovered for Injured Texans"
+      - "No Fee Unless We Win — Free Case Review"
+      - "Board Certified Personal Injury Trial Lawyer"
+    competitor_differentiation: "Unlike billboard firms that settle every case cheap, we prepare every case for trial. Insurance companies know the difference — our cases settle for more because adjusters know we'll go to court. Robert Reeves is Board Certified in Personal Injury Trial Law, a distinction held by less than 3% of Texas attorneys."
+    personality_traits:
+      - "protective"
+      - "tenacious"
+      - "empathetic"
+      - "straightforward"
+
+  operator:
+    operator_hours_per_week: 8.0
+    operator_skill_level: "intermediate"
+    preferred_channels:
+      - "google_ads"
+      - "website"
+      - "linkedin"
+    delegation_preferences: "Amanda handles LinkedIn content and thought leadership. Marketing coordinator handles GBP posts and review responses. Need help with SEO content strategy, ad optimization, and building the referral program. Robert reviews all ad copy before launch."
+
+  raw_notes: "Robert Reeves founded the firm in 2012 after 8 years at a large PI firm. He's board certified and does the heavy litigation. Amanda Chen joined in 2019 and handles trial work and the firm's growing med mal practice. Daniel Okafor joined in 2023 for auto accident volume. They have 2 paralegals, an intake coordinator, and a part-time marketing coordinator. The firm's best cases come from referrals but they don't have a system for it — it's all relationship-based. Google Ads drives most of the direct leads but CPL is climbing. They know they need SEO and content but haven't invested. Robert hates the 'billboard lawyer' image and wants the marketing to feel different from competitors."
+
+  metadata:
+    source: "onboarding_interview"
+    onboarded_date: "2026-03-22"

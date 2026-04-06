@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Kai — AI tools for founders who build alone</title>
+    <meta name="description" content="31 marketing commands for Claude Code. Type a slash command, get finished marketing. Free and open-source.">
+    <meta property="og:title" content="Meet Kai — Marketing team in your terminal">
+    <meta property="og:description" content="31 marketing slash commands for Claude Code. Emails, ads, content, SEO audits — all from your terminal. Free and open-source.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://meetkai.xyz">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Meet Kai — Marketing team in your terminal">
+    <meta name="twitter:description" content="31 marketing slash commands for Claude Code. Free and open-source.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0b;
+            --bg-card: #111113;
+            --bg-terminal: #0d1117;
+            --border: #1e1e22;
+            --text: #e4e4e7;
+            --text-dim: #71717a;
+            --text-muted: #52525b;
+            --accent: #22d3ee;
+            --accent-dim: #164e63;
+            --green: #4ade80;
+            --warm: #fb923c;
+            --warm-dim: #7c2d12;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Layout ────────────────────────────────────── */
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 96px 0;
+        }
+
+        section + section {
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Nav ───────────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        /* ── Hero ──────────────────────────────────────── */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 96px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(18px, 2.5vw, 22px);
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 12px;
+        }
+
+        .hero .subtext {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        /* ── Buttons ───────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            background: #67e8f9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            color: var(--text);
+        }
+
+        .btn-warm {
+            background: var(--warm);
+            color: var(--bg);
+        }
+
+        .btn-warm:hover {
+            background: #fdba74;
+            transform: translateY(-1px);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ── Terminal Block ─────────────────────────────── */
+        .terminal {
+            background: var(--bg-terminal);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin: 48px auto 0;
+            max-width: 720px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .terminal-dot:nth-child(1) { background: #ef4444; }
+        .terminal-dot:nth-child(2) { background: #eab308; }
+        .terminal-dot:nth-child(3) { background: #22c55e; }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .terminal-body .prompt { color: var(--green); }
+        .terminal-body .cmd { color: var(--text); }
+        .terminal-body .output { color: var(--text-dim); }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--border);
+            color: var(--text-dim);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: var(--text-muted); color: var(--text); }
+
+        .terminal-wrapper {
+            position: relative;
+        }
+
+        /* ── Section headers ───────────────────────────── */
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .section-label.warm { color: var(--warm); }
+
+        h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            font-size: 17px;
+            color: var(--text-dim);
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+
+        /* ── Cards ─────────────────────────────────────── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover { border-color: var(--text-muted); }
+
+        .card h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            background: var(--accent-dim);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            font-size: 15px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* ── Stats Strip ───────────────────────────────── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-number.cyan { color: var(--accent); }
+        .stat-number.warm { color: var(--warm); }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        /* ── KaiCalls section ──────────────────────────── */
+        .kaicalls-section {
+            background: linear-gradient(180deg, var(--bg) 0%, rgba(124, 45, 18, 0.05) 100%);
+        }
+
+        /* ── Social Proof ──────────────────────────────── */
+        .product-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .product-logos span {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dim);
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .product-logos span:hover { border-color: var(--text-muted); }
+
+        /* ── Services CTA ──────────────────────────────── */
+        .services {
+            text-align: center;
+        }
+
+        .services p {
+            color: var(--text-dim);
+            font-size: 17px;
+            margin-bottom: 32px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ── Footer ────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--text-dim);
+            text-decoration: none;
+        }
+
+        footer a:hover { color: var(--text); }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        /* ── Mobile ────────────────────────────────────── */
+        @media (max-width: 640px) {
+            section { padding: 64px 0; }
+            .hero { padding-top: 120px; }
+            .nav-links { gap: 20px; }
+            .nav-links a { font-size: 13px; }
+            .terminal-body { font-size: 11px; padding: 16px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .hero-buttons { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+    <div class="container">
+        <a href="#" class="nav-brand">Kai</a>
+        <ul class="nav-links">
+            <li><a href="#cmo">Kai CMO</a></li>
+            <li><a href="#kaicalls">KaiCalls</a></li>
+            <li><a href="https://github.com/cgallic/kai-cmo-harness" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <h1>Meet Kai.<br>AI tools for founders who build alone.</h1>
+        <p class="subtitle">Marketing that writes itself. A phone that answers itself. All from one team.</p>
+        <p class="subtext">Two products. One mission: kill the busywork so you can build.</p>
+        <div class="hero-buttons">
+            <a href="#cmo" class="btn btn-primary">Install Kai CMO &mdash; Free</a>
+            <a href="#kaicalls" class="btn btn-secondary">Learn about KaiCalls</a>
+        </div>
+    </div>
+</section>
+
+<!-- Kai CMO -->
+<section id="cmo">
+    <div class="container">
+        <div class="section-label">Kai CMO &mdash; Free &amp; Open-Source</div>
+        <h2>Your marketing team in a terminal.</h2>
+        <p class="section-sub">31 slash commands for Claude Code. Type what you need. Get finished marketing. No dashboards. No onboarding calls. No $4K/month agency.</p>
+
+        <!-- Install block -->
+        <div class="terminal-wrapper">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                    <span class="terminal-dot"></span>
+                </div>
+                <div class="terminal-body">
+                    <span class="prompt">$</span> <span class="cmd">git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install &amp;&amp; \</span><br>
+                    <span class="cmd">&nbsp;&nbsp;cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/ &amp;&amp; \</span><br>
+                    <span class="cmd">&nbsp;&nbsp;rm -rf /tmp/kai-install</span><br><br>
+                    <span class="output">Installed! Type /kai to start.</span>
+                </div>
+            </div>
+            <button class="copy-btn" onclick="copyInstall()">Copy</button>
+        </div>
+
+        <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 16px;">30-second install. Works with any Claude Code project.</p>
+
+        <!-- Use cases -->
+        <div class="card-grid" style="margin-top: 56px;">
+            <div class="card">
+                <h3>"Write all my emails"</h3>
+                <code>/kai-email-system</code>
+                <p>Maps every email your product needs &mdash; welcome, onboarding, trial expiring, win-back &mdash; writes them all, checks quality, outputs ready for your ESP.</p>
+            </div>
+            <div class="card">
+                <h3>"Create my ad campaign"</h3>
+                <code>/kai-ad-campaign</code>
+                <p>Plans ads across Meta, Google, LinkedIn, TikTok. Writes copy for each platform with character limits and policy compliance. TOF/MOF/BOF variants.</p>
+            </div>
+            <div class="card">
+                <h3>"Audit my marketing"</h3>
+                <code>/kai-audit</code>
+                <p>Runs 24 checklists across SEO, content, email, ads, social, and CRO. Gives you a health score and a prioritized fix list in 60 seconds.</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number cyan">153</div>
+                <div class="stat-label">knowledge files</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number cyan">3</div>
+                <div class="stat-label">quality gates</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number cyan">10</div>
+                <div class="stat-label">ad platform policies</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number cyan">5</div>
+                <div class="stat-label">products powered</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 48px;">
+            <a href="https://github.com/cgallic/kai-cmo-harness" class="btn btn-primary" target="_blank">Install Kai &mdash; Free, Open-Source</a>
+            <a href="https://github.com/cgallic/kai-cmo-harness" class="btn btn-secondary" target="_blank" style="margin-left: 12px;">Star on GitHub</a>
+        </div>
+    </div>
+</section>
+
+<!-- KaiCalls -->
+<section id="kaicalls" class="kaicalls-section">
+    <div class="container">
+        <div class="section-label warm">KaiCalls</div>
+        <h2>Your phone, answered by a person who never sleeps.</h2>
+        <p class="section-sub">Kai picks up your calls 24/7. Takes messages. Books appointments. Sounds human. Stop losing leads to voicemail.</p>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number warm">4,300+</div>
+                <div class="stat-label">calls handled</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number warm">4,900+</div>
+                <div class="stat-label">leads captured</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number warm">24/7</div>
+                <div class="stat-label">coverage</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 48px;">
+            <a href="#" class="btn btn-warm">Get Your AI Secretary</a>
+        </div>
+    </div>
+</section>
+
+<!-- Social Proof -->
+<section>
+    <div class="container" style="text-align: center;">
+        <div class="section-label">Built by a team that uses it every day</div>
+        <h2>Powers 5 live products.</h2>
+        <div class="product-logos">
+            <span>KaiCalls</span>
+            <span>BuildWithKai</span>
+            <span>Awesome Backyard Parties</span>
+            <span>VocalScribe</span>
+            <span>ConnorGallic.com</span>
+        </div>
+    </div>
+</section>
+
+<!-- Services CTA -->
+<section class="services">
+    <div class="container">
+        <h2>Need help? We'll run it for you.</h2>
+        <p>Some founders want the tool. Some want the outcome. If you'd rather hand off the marketing entirely, we'll run Kai for you. No pricing page. No packages. Tell us what you need.</p>
+        <a href="#" class="btn btn-secondary">Talk to Us</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p><strong>Kai</strong> &mdash; AI tools for founders who build alone.</p>
+        <div class="footer-links">
+            <a href="https://github.com/cgallic/kai-cmo-harness" target="_blank">GitHub</a>
+            <a href="#">X / Twitter</a>
+            <a href="#">LinkedIn</a>
+        </div>
+        <p style="margin-top: 16px;">Built by Connor Gallic.</p>
+    </div>
+</footer>
+
+<script>
+function copyInstall() {
+    const cmd = `git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install && cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/ && rm -rf /tmp/kai-install && echo "Installed! Type /kai to start."`;
+    navigator.clipboard.writeText(cmd).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,18 +1,33 @@
-# Kai Harness — Architecture
+# Kai Harness — Legacy Pipeline in the Kai Runtime
 
-> A CI/CD pipeline for marketing content. Brief → Write → Gate → Approve → Log → Learn.
+> This file now documents the legacy content pipeline as one subsystem inside the broader Kai Runtime architecture. The runtime/source-of-truth architecture now lives in `docs/ARCHITECTURE.md` and `kai/runtime/`.
 
 ---
 
 ## Overview
 
-The harness is a Python CLI (`kai_harness.py`) that orchestrates a content production pipeline. It enforces three laws:
+The harness remains the content-production subsystem. It is no longer the full product definition.
+
+Today it still enforces three useful laws:
 
 1. **No brief, no write** — every run starts with live GSC + GA4 data
 2. **No gate pass, no publish** — three blocking scripts run before any human sees the draft
 3. **No publish without logging** — every piece is tracked for 30-day performance review
 
 ---
+
+## Runtime position
+
+The content harness now sits under:
+
+1. **Kai Runtime**
+   Skills, workspace profile, modules, local/remote execution
+
+2. **Kai Marketing OS**
+   Outcome routing, quality gate, approvals, learning
+
+3. **Harness pipeline**
+   Brief → Write → Gate → Approve → Log → Learn
 
 ## Directory Layout
 

@@ -56,6 +56,10 @@ def log_entry(
     brief: dict | None = None,
     four_us: int = 0,
     notes: str = "",
+    source_run: str | None = None,
+    proposal_id: str | None = None,
+    module_set: list[str] | None = None,
+    artifact_refs: dict | None = None,
     log_file: str | None = None,
 ) -> dict:
     """Programmatic API to log a published content entry.
@@ -80,6 +84,10 @@ def log_entry(
         "angle": brief.get("angle"),
         "notes": notes,
         "performance_30d": None,
+        "source_run": source_run,
+        "proposal_id": proposal_id,
+        "module_set": module_set or [],
+        "artifact_refs": artifact_refs or {},
     }
 
     log = load_log(log_file)
@@ -104,13 +112,10 @@ def append_to_calendar(entry: dict):
 
 def schedule_30day_check(entry: dict):
     """Write a pending check file for the performance_check cron to pick up."""
-    checks_dir = "/opt/cmo-analytics/data/pending_checks"
+    checks_dir = str(_CFG.pending_checks_dir)
     os.makedirs(checks_dir, exist_ok=True)
     check_id = entry["id"]
     check_file = f"{checks_dir}/{check_id}.json"
-    check_due = datetime.now(timezone.utc).replace(
-        day=datetime.now(timezone.utc).day + 30
-    )
     # Approximate +30 days via timestamp
     from datetime import timedelta
     due_dt = datetime.now(timezone.utc) + timedelta(days=30)
@@ -122,6 +127,10 @@ def schedule_30day_check(entry: dict):
         "published_at": entry["published_at"],
         "check_due": due_dt.isoformat(),
         "status": "pending",
+        "source_run": entry.get("source_run"),
+        "proposal_id": entry.get("proposal_id"),
+        "module_set": entry.get("module_set", []),
+        "artifact_refs": entry.get("artifact_refs", {}),
     }
     with open(check_file, "w") as f:
         json.dump(check_data, f, indent=2)
@@ -139,6 +148,8 @@ def main():
     parser.add_argument("--brief-file")
     parser.add_argument("--four-us", type=int)
     parser.add_argument("--notes")
+    parser.add_argument("--source-run")
+    parser.add_argument("--proposal-id")
     args = parser.parse_args()
 
     brief = {}
@@ -163,6 +174,10 @@ def main():
         "angle": brief.get("angle"),
         "notes": args.notes,
         "performance_30d": None,  # populated by performance_check.py
+        "source_run": args.source_run,
+        "proposal_id": args.proposal_id,
+        "module_set": [],
+        "artifact_refs": {},
     }
 
     log = load_log()

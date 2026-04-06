@@ -125,15 +125,43 @@ class DailyAnalyticsTask(BaseTask):
         }
 
     async def _fetch_ga_data(self, client: Dict) -> Dict[str, Any]:
-        """Fetch Google Analytics data."""
+        """Fetch Google Analytics data.
+
+        Tries the GA4Connector first (returns MetricPoint objects).
+        Falls back to the scripts layer if the connector is not configured.
+        """
         ga_property = client.get("ga_property")
         if not ga_property:
             return {}
 
+        # Try connector-first path
+        try:
+            connector = self._get_ga4_connector(client)
+            if connector is not None:
+                from kai.connectors.analytics.base import DateRange
+                date_range = DateRange(start_date="7daysAgo", end_date="today")
+                overview = connector.get_metrics(
+                    date_range,
+                    dimensions=["date"],
+                    metrics=["sessions", "active_users", "bounce_rate", "conversions"],
+                )
+                sources = connector.get_traffic_sources(date_range)
+                pages = connector.get_landing_page_performance(date_range)
+                return {
+                    "source": "connector",
+                    "overview": [p.model_dump() for p in overview],
+                    "sources": [p.model_dump() for p in sources],
+                    "pages": [p.model_dump() for p in pages[:10]],
+                }
+        except Exception:
+            pass  # Fall through to script layer
+
+        # Fallback: use scripts layer
         try:
             from scripts.analytics.google_analytics import GoogleAnalytics
             ga = GoogleAnalytics()
             return {
+                "source": "script",
                 "overview": ga.get_overview(ga_property, days=7),
                 "sources": ga.get_traffic_sources(ga_property, days=7),
                 "pages": ga.get_top_pages(ga_property, days=7, limit=10),
@@ -142,20 +170,87 @@ class DailyAnalyticsTask(BaseTask):
             return {"error": str(e)}
 
     async def _fetch_gsc_data(self, client: Dict) -> Dict[str, Any]:
-        """Fetch Google Search Console data."""
+        """Fetch Google Search Console data.
+
+        Tries the GSCConnector first. Falls back to scripts layer.
+        """
         gsc_site = client.get("gsc_site")
         if not gsc_site:
             return {}
 
+        # Try connector-first path
+        try:
+            connector = self._get_gsc_connector(client)
+            if connector is not None:
+                from kai.connectors.analytics.base import DateRange
+                date_range = DateRange(start_date="7daysAgo", end_date="today")
+                queries = connector.get_top_queries(date_range, limit=20)
+                pages = connector.get_top_pages(date_range, limit=10)
+                return {
+                    "source": "connector",
+                    "queries": [p.model_dump() for p in queries],
+                    "pages": [p.model_dump() for p in pages],
+                }
+        except Exception:
+            pass  # Fall through to script layer
+
+        # Fallback: use scripts layer
         try:
             from scripts.analytics.search_console import SearchConsole
             gsc = SearchConsole()
             return {
+                "source": "script",
                 "queries": gsc.get_top_queries(gsc_site, days=7, limit=20),
                 "pages": gsc.get_top_pages(gsc_site, days=7, limit=10),
             }
         except Exception as e:
             return {"error": str(e)}
+
+    def _get_ga4_connector(self, client: Dict):
+        """Try to create a GA4Connector from the IntegrationRegistry."""
+        try:
+            from kai.execution.credentials import CredentialStore
+            from kai.execution.connector_factory import ConnectorFactory
+            from kai.runtime.integrations import IntegrationRegistry
+
+            registry = IntegrationRegistry()
+            brand_id = client.get("id", "")
+            integrations = registry.list_for_brand(brand_id, channel="analytics")
+            ga4_int = next(
+                (i for i in integrations if i.get("provider") == "ga4" and i.get("status") == "connected"),
+                None,
+            )
+            if ga4_int is None:
+                return None
+
+            cred_store = CredentialStore()
+            factory = ConnectorFactory(cred_store)
+            return factory.create(ga4_int, read_only=True)
+        except Exception:
+            return None
+
+    def _get_gsc_connector(self, client: Dict):
+        """Try to create a GSCConnector from the IntegrationRegistry."""
+        try:
+            from kai.execution.credentials import CredentialStore
+            from kai.execution.connector_factory import ConnectorFactory
+            from kai.runtime.integrations import IntegrationRegistry
+
+            registry = IntegrationRegistry()
+            brand_id = client.get("id", "")
+            integrations = registry.list_for_brand(brand_id, channel="analytics")
+            gsc_int = next(
+                (i for i in integrations if i.get("provider") == "gsc" and i.get("status") == "connected"),
+                None,
+            )
+            if gsc_int is None:
+                return None
+
+            cred_store = CredentialStore()
+            factory = ConnectorFactory(cred_store)
+            return factory.create(gsc_int, read_only=True)
+        except Exception:
+            return None
 
     async def _fetch_business_data(self, client: Dict) -> Dict[str, Any]:
         """Fetch business metrics from Supabase if configured."""
