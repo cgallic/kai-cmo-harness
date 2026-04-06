@@ -25,6 +25,9 @@
     "tailwind-merge": "^2.3.0",
     "zod": "^4.3.6"
   },
+  "engines": {
+    "node": ">=18 <24"
+  },
   "devDependencies": {
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.0",
