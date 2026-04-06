@@ -14,6 +14,7 @@ import {
   Facebook, Instagram, Linkedin, Youtube, Pin,
   Megaphone, Target, Mail, Send, Zap, UserCheck, CreditCard,
   ChevronDown, Twitter, Calendar, BookOpen, Table2,
+  MessageSquare, Layout, SquareCode, MapPin, Globe, ShoppingBag,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { ChannelSnapshot } from "@/lib/types";
@@ -285,6 +286,12 @@ export default function AnalyticsPage() {
   const notionSnap = getSnap(snapshots, "notion");
   const sheetsSnap = getSnap(snapshots, "google_sheets");
   const airtableSnap = getSnap(snapshots, "airtable");
+  const slackSnap = getSnap(snapshots, "slack");
+  const webflowSnap = getSnap(snapshots, "webflow");
+  const squarespaceSnap = getSnap(snapshots, "squarespace");
+  const gbpSnap = getSnap(snapshots, "gbp");
+  const wpSnap = getSnap(snapshots, "wordpress");
+  const shopifySnap = getSnap(snapshots, "shopify");
 
   // ---- GA4 overview (existing) ----
   const overview = {
@@ -318,6 +325,9 @@ export default function AnalyticsPage() {
   const hasPayments = stripeSnap;
   const hasScheduling = calendlySnap;
   const hasContent = notionSnap || sheetsSnap || airtableSnap;
+  const hasNotifications = slackSnap;
+  const hasWebsite = webflowSnap || squarespaceSnap || wpSnap || shopifySnap;
+  const hasLocal = gbpSnap;
 
   return (
     <div className="space-y-6">
@@ -750,6 +760,76 @@ export default function AnalyticsPage() {
             {airtableSnap && (
               <MetricCard icon={Table2} name="Airtable" color="text-blue-400" metrics={[
                 { label: "Bases", value: formatNumber(airtableSnap.bases_count as number) },
+              ]} />
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ============================================================ */}
+      {/*  Website                                                      */}
+      {/* ============================================================ */}
+
+      {hasWebsite && (
+        <Section title="Website">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {webflowSnap && (
+              <MetricCard icon={Layout} name="Webflow" color="text-blue-500" metrics={[
+                { label: "Sites", value: formatNumber(webflowSnap.sites_count as number) },
+                { label: "Pages", value: formatNumber(webflowSnap.total_pages as number) },
+                { label: "Collections", value: formatNumber(webflowSnap.total_collections as number) },
+              ]} />
+            )}
+            {squarespaceSnap && (
+              <MetricCard icon={SquareCode} name="Squarespace" color="text-gray-300" metrics={[
+                { label: "Products", value: formatNumber(squarespaceSnap.products_count as number) },
+                { label: "Orders (30d)", value: formatNumber(squarespaceSnap.orders_count_30d as number) },
+              ]} />
+            )}
+            {wpSnap && (
+              <MetricCard icon={Globe} name="WordPress" color="text-blue-400" metrics={[
+                { label: "Posts", value: formatNumber(wpSnap.posts_count as number) },
+                { label: "Pages", value: formatNumber(wpSnap.pages_count as number) },
+              ]} />
+            )}
+            {shopifySnap && (
+              <MetricCard icon={ShoppingBag} name="Shopify" color="text-green-500" metrics={[
+                { label: "Products", value: formatNumber(shopifySnap.products_count as number) },
+                { label: "Orders (30d)", value: formatNumber(shopifySnap.orders_count_30d as number) },
+              ]} />
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ============================================================ */}
+      {/*  Notifications                                                */}
+      {/* ============================================================ */}
+
+      {hasNotifications && (
+        <Section title="Notifications">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {slackSnap && (
+              <MetricCard icon={MessageSquare} name={`Slack — ${slackSnap.workspace_name || "Workspace"}`} color="text-purple" metrics={[
+                { label: "Members", value: formatNumber(slackSnap.members_count as number) },
+                { label: "Channels", value: formatNumber(slackSnap.channels_count as number) },
+              ]} />
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* ============================================================ */}
+      {/*  Local / Google Business                                      */}
+      {/* ============================================================ */}
+
+      {hasLocal && (
+        <Section title="Local / Google Business">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {gbpSnap && (
+              <MetricCard icon={MapPin} name="Google Business Profile" color="text-blue-500" metrics={[
+                { label: "Accounts", value: formatNumber(gbpSnap.accounts_count as number) },
+                { label: "Locations", value: formatNumber(gbpSnap.locations_count as number) },
               ]} />
             )}
           </div>

@@ -185,7 +185,7 @@ export function useSnapshots(brandId: string | undefined, channel?: string) {
       query = query.eq("channel", channel);
     }
 
-    const { data, error } = await query.limit(10);
+    const { data, error } = await query.limit(50);
     if (error) {
       console.error("useSnapshots error:", error.message);
     }
