@@ -37,6 +37,9 @@ Thumbs.db
 .idea/
 *.code-workspace
 
+# Claude Code
+.claude/
+
 # Temp
 /tmp/
 *.tmp
