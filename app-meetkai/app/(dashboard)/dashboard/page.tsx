@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useBrand, useAudit, useIntegrations, useActions, useSnapshots } from "@/lib/hooks";
-import { AuditScoreRing } from "@/components/dashboard/audit-score-ring";
-import { ConnectedAccounts } from "@/components/dashboard/connected-accounts";
+import { useBrand, useAudit, useIntegrations, useActions, useSnapshots, useAgentRuns } from "@/lib/hooks";
 import { QuickStats } from "@/components/dashboard/quick-stats";
+import { AttentionItems } from "@/components/dashboard/attention-items";
+import { AIActivity } from "@/components/dashboard/ai-activity";
+import { QuickActions } from "@/components/dashboard/quick-actions";
 import { PendingActions } from "@/components/dashboard/pending-actions";
-import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { cn, scoreColor } from "@/lib/utils";
+import { Search, Sparkles } from "lucide-react";
 import type { Audit } from "@/lib/types";
 
 export default function DashboardPage() {
@@ -18,6 +19,7 @@ export default function DashboardPage() {
   const { integrations } = useIntegrations(brand?.id);
   const { actions, refresh: refreshActions } = useActions(brand?.id);
   const { snapshots } = useSnapshots(brand?.id);
+  const { runs, loading: runsLoading } = useAgentRuns(brand?.id);
   const [auditRunning, setAuditRunning] = useState(false);
   const [auditError, setAuditError] = useState<string | null>(null);
 
@@ -32,15 +34,11 @@ export default function DashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ brand_id: brand.id, domain: brand.url }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
         setAuditError(data.error || "Audit failed");
         return;
       }
-
-      // Update local audit state with the returned data
       const newAudit: Audit = {
         id: data.audit_id,
         brand_id: brand.id,
@@ -59,42 +57,20 @@ export default function DashboardPage() {
   }, [brand, auditRunning, setAudit]);
 
   const [generating, setGenerating] = useState(false);
-  const [generateError, setGenerateError] = useState<string | null>(null);
-
-  const hasAudit = !!audit;
-  const hasActions = actions.length > 0;
-  const showGeneratePrompt = hasAudit && !hasActions && !auditLoading;
-
   const handleGenerate = useCallback(async () => {
     if (!brand?.id) return;
     setGenerating(true);
-    setGenerateError(null);
-
     try {
-      const res = await fetch("/api/actions/generate", {
+      await fetch("/api/actions/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ brand_id: brand.id, source: "audit" }),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setGenerateError(data.error || "Failed to generate actions");
-        return;
-      }
-
       await refreshActions();
-    } catch {
-      setGenerateError("Network error. Please try again.");
     } finally {
       setGenerating(false);
     }
   }, [brand?.id, refreshActions]);
-
-  const handleAuditComplete = useCallback(() => {
-    refreshAudit();
-  }, [refreshAudit]);
 
   if (brandLoading) {
     return (
@@ -123,68 +99,79 @@ export default function DashboardPage() {
     );
   }
 
-  // Determine effective audit (from hook or from run)
   const displayAudit = auditLoading ? null : audit;
+  const score = displayAudit?.overall_score;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight">{brand.name}</h1>
-        <p className="text-text-secondary text-sm mt-1">{brand.url || "Dashboard overview"}</p>
+      {/* Hero: Score + Brand + Actions */}
+      <div className="card flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="flex items-center gap-4 flex-1">
+          {/* Score ring */}
+          <div className="relative w-16 h-16 flex-shrink-0">
+            <svg viewBox="0 0 36 36" className="w-16 h-16 -rotate-90">
+              <path
+                d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="#1e1e1e"
+                strokeWidth="3"
+              />
+              {score != null && (
+                <path
+                  d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none"
+                  stroke={score >= 70 ? "#22c55e" : score >= 40 ? "#f59e0b" : "#ef4444"}
+                  strokeWidth="3"
+                  strokeDasharray={`${score}, 100`}
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+            <span className={cn(
+              "absolute inset-0 flex items-center justify-center font-mono text-lg font-bold",
+              score != null ? scoreColor(score) : "text-text-tertiary"
+            )}>
+              {score != null ? Math.round(score) : "—"}
+            </span>
+          </div>
+          <div>
+            <h1 className="font-display text-xl font-bold tracking-tight">{brand.name}</h1>
+            <p className="text-text-secondary text-sm">{brand.url || "No website set"}</p>
+            {score != null && (
+              <p className="text-xs text-text-tertiary mt-0.5">Marketing Health Score</p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" size="sm" onClick={runAudit} loading={auditRunning}>
+            <Search className="w-3.5 h-3.5" />
+            Run Audit
+          </Button>
+          {audit && actions.filter((a) => a.approval_state === "pending").length === 0 && (
+            <Button variant="primary" size="sm" onClick={handleGenerate} loading={generating}>
+              <Sparkles className="w-3.5 h-3.5" />
+              Generate Actions
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Quick stats */}
-      <QuickStats audit={displayAudit} integrations={integrations} actions={actions} snapshots={snapshots} />
-
-      {/* Audit error */}
       {auditError && (
         <div className="bg-error-dim border border-error/20 rounded-[12px] px-4 py-3 text-sm text-error">
           {auditError}
         </div>
       )}
 
-      {/* Generate actions prompt */}
-      {showGeneratePrompt && (
-        <div className="bg-amber-dim/50 border border-amber/20 rounded-[12px] p-5 flex items-center gap-4">
-          <div className="flex-1">
-            <h3 className="text-sm font-semibold text-foreground mb-1">
-              Audit complete — generate recommended actions?
-            </h3>
-            <p className="text-xs text-text-secondary">
-              MiKai found findings in your audit. Generate action proposals to start fixing issues.
-            </p>
-            {generateError && (
-              <p className="text-xs text-error mt-1">{generateError}</p>
-            )}
-          </div>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={handleGenerate}
-            loading={generating}
-          >
-            <Sparkles className="w-4 h-4" />
-            Generate Actions
-          </Button>
-        </div>
-      )}
-
-      {/* Main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AuditScoreRing
-          audit={audit}
-          brandUrl={brand.url}
-          brandId={brand.id}
-          onAuditComplete={handleAuditComplete}
-        />
-        <ConnectedAccounts integrations={integrations} />
-      </div>
+      <QuickStats audit={displayAudit} integrations={integrations} actions={actions} snapshots={snapshots} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PendingActions actions={actions} />
-        <ActivityFeed actions={actions} audit={audit} integrations={integrations} />
+        <AttentionItems actions={actions} integrations={integrations} />
+        <AIActivity runs={runs} loading={runsLoading} />
       </div>
+
+      <QuickActions />
+
+      <PendingActions actions={actions} />
     </div>
   );
 }
