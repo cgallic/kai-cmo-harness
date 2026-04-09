@@ -22,6 +22,7 @@ from .seo_optimization import SEOOptimizationTask
 from .weekly_report import WeeklyReportTask
 from .creative_assets import CreativeAssetsTask
 from .social_staleness import SocialStalenessTask
+from .claude_agent import ClaudeAgentTask
 
 # Task type to handler mapping (generic handlers only)
 TASK_HANDLERS: dict[str, type[BaseTask]] = {
@@ -35,6 +36,13 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "creative_assets": CreativeAssetsTask,
     "og_image": CreativeAssetsTask,
     "social_staleness_check": SocialStalenessTask,
+    # Claude Agent SDK — autonomous marketing tasks
+    "claude_agent": ClaudeAgentTask,
+    "claude_audit": ClaudeAgentTask,
+    "claude_content": ClaudeAgentTask,
+    "claude_seo": ClaudeAgentTask,
+    "claude_ads": ClaudeAgentTask,
+    "claude_competitors": ClaudeAgentTask,
 }
 
 
@@ -77,6 +85,7 @@ __all__ = [
     "WeeklyReportTask",
     "CreativeAssetsTask",
     "SocialStalenessTask",
+    "ClaudeAgentTask",
     "register_task",
     "get_task_handler",
 ]

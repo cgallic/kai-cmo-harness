@@ -19,7 +19,7 @@ from gateway.models import WebhookResponse
 # Import routers
 from gateway.routers import analytics, tiktok, cold_email, tasks, clients, jobs
 from gateway.routers import whatsapp, agent, creative, stripe, generate, runtime, actions
-from gateway.routers import connections
+from gateway.routers import connections, daemon
 
 
 @asynccontextmanager
@@ -95,7 +95,8 @@ async def root():
             "agent": "/agent/*",
             "generate": "/generate",
             "ops": "/ops/*",
-            "connections": "/connections/*"
+            "connections": "/connections/*",
+            "daemon": "/daemon/*"
         }
     }
 
@@ -200,6 +201,13 @@ app.include_router(
     connections.router,
     prefix="/connections",
     tags=["Connections"],
+    dependencies=[Depends(verify_api_key)]
+)
+
+app.include_router(
+    daemon.router,
+    prefix="/daemon",
+    tags=["Daemon"],
     dependencies=[Depends(verify_api_key)]
 )
 
