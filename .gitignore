@@ -55,3 +55,8 @@ pnpm-lock.yaml
 # Uncomment if you want to keep rendered files out of git:
 # workspace/agents/*.md
 # !workspace/agents/*.md.j2
+
+# Ad platform pull data and mutation logs (contains account data / tokens)
+workspace/ads/pulls/
+workspace/ads/mutations/
+.vercel

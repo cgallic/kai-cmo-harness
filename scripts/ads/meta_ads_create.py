@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 """
+DEPRECATED — Use scripts/ads/meta.py instead.
+
+    python scripts/ads/meta.py upload-image --file=/path/to/img.png
+    python scripts/ads/meta.py pause --id=X --execute
+    python scripts/ads/meta.py create-ad --adset-id=X --name="..." --creative-json='...' --execute
+
+This file is kept for reference only. It depends on /opt/cmo-analytics
+(a remote server) and will not work locally.
+"""
+import sys
+print("DEPRECATED: Use scripts/ads/meta.py instead. See meta_ads_create.py header for details.", file=sys.stderr)
+sys.exit(1)
+"""
+OLD CODE BELOW (kept for reference)
+---
+
 Meta Ads — Create, upload, and publish ads via Marketing API.
 
 Usage:
