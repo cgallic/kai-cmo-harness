@@ -49,6 +49,30 @@ Map where your brand appears (and doesn't) across LLM training/retrieval sources
 | **Academic/research** | Papers, case studies, whitepapers cited | [Y/N] | [who?] |
 | **Press/media** | News articles, press releases, interviews | [Y/N] | [who?] |
 
+### Own-Domain Agent-Readiness Audit
+
+Before you can surround-sound from third parties, your own site has to be legible to the agents routing back. If ChatGPT can't parse your homepage, every pulse you build elsewhere dead-ends.
+
+Load: `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\agent-readiness-checklist.md`
+
+Run the checklist against the user's primary domain. Report:
+
+| Check | Status | Evidence |
+|-------|--------|----------|
+| `/robots.txt` explicit AI bot rules | [Pass/Partial/Fail] | [what's there] |
+| `/llms.txt` entrypoint exists and valid | [Pass/Partial/Fail] | [url or missing] |
+| Markdown mirrors of core docs | [Pass/Partial/Fail] | [sample url] |
+| Content not JS-gated (`curl` test) | [Pass/Partial/Fail] | [what renders] |
+| Capability signaling in plain text | [Pass/Partial/Fail] | [missing fields] |
+| `Organization` + product JSON-LD | [Pass/Partial/Fail] | [what's present] |
+
+**Auto-run the linter if available:**
+```bash
+python scripts/quality_gates/agent_readiness_lint.py https://<their-domain>
+```
+
+Any P0 failure blocks the rest of the plan until fixed — surround-sound spend on a site that agents can't read is wasted.
+
 ### Prestige Pulse Score
 
 Each mention type generates a "pulse" of authority:
@@ -63,6 +87,20 @@ Estimate your total pulse score vs top 3 competitors.
 ## Phase 3: Consensus Building Plan
 
 Generate a 90-day plan to build your consensus web:
+
+### Month 0: Fix Own-Domain Agent-Readiness (P0 only)
+
+Remediate every P0 failure from the agent-readiness audit before spending on outbound surround sound.
+
+| Action | Platform | Goal |
+|--------|----------|------|
+| Ship `/robots.txt` with explicit AI bot rules | Your site | Deliberate allow/block per bot |
+| Ship `/llms.txt` entrypoint pointing at core docs + API + auth model | Your site | One-fetch map for agents |
+| Add markdown mirrors for top 10 doc pages | Your site | Agents can read without JS |
+| Move capability signaling (what, who-for, API, auth, pricing) into plain text above the fold | Your site | Research agents get the summary right |
+| Add `Organization` + product JSON-LD | Your site | Knowledge graph reconciliation |
+
+Skip to Month 1 only if the linter reports Pass on P0.
 
 ### Month 1: Foundation (Entity Establishment)
 

@@ -588,6 +588,30 @@ Additional context about the site, target audience, or usage notes.
 | JavaScript rendering | SSR preferred | AI crawlers have JS limitations |
 | Mobile-first | Required | Google's primary index |
 
+### D. Agent-Readiness Audit (run this before shipping any AEO content)
+
+Config alone is not enough — the site has to pass an audit for agents to actually use it. The **agent-readiness checklist** turns the technical configuration above into a scored audit covering crawler access, llms.txt validity, markdown mirrors, JS-gating, capability signaling, schema, and token cost.
+
+**Rubric:** `knowledge/checklists/agent-readiness-checklist.md`
+
+**Scoring:**
+- Pass: all P0 items + 80% of P1
+- Partial: all P0 items + 50% of P1
+- Fail: any P0 missing
+
+**Automation:**
+```bash
+python scripts/quality_gates/agent_readiness_lint.py https://<your-domain>
+```
+
+Any P0 regression should block a deploy. Wire the linter into CI alongside `seo_lint.py` and `four_us_score.py`.
+
+**When to run the audit:**
+- Before starting any AEO content production (baseline)
+- Before starting a `kai-surround-sound` engagement (Month 0 gate)
+- On every production deploy (regression check)
+- Monthly audit against the rubric (drift check)
+
 ---
 
 ## 7. Content Quality Gate

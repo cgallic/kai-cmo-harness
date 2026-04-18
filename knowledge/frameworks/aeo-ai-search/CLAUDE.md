@@ -14,6 +14,7 @@ Answer Engine Optimization (AEO) frameworks for ranking in AI Overviews, Perplex
 | `entity-seo-knowledge-graph-deep-dive.md` | Entity Home, Wikidata, Schema.org |
 | `quality-rater-guidelines-deep-analysis.md` | QRG 4.6.x, Ray Update, E-E-A-T signals |
 | `ai-crawlers-technical-reference.md` | llms.txt spec, AI crawler user agents, robots.txt |
+| `../../checklists/agent-readiness-checklist.md` | Audit rubric for site agent-legibility (pairs with the above) |
 | `query-fan-out-guide.md` | Google AI Mode sub-query decomposition |
 | `hidden-aeo-edges.md` | Advanced AEO tactics and hidden signals |
 

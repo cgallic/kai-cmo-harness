@@ -70,6 +70,7 @@ When you need to create content, find the right framework here. Load the primary
 | Press release | `knowledge/channels/press-releases.md` | `knowledge/checklists/pr-checklist.md` |
 | Sales/landing page | `knowledge/frameworks/content-copywriting/perception-engineering.md` | `knowledge/checklists/perception-engineering-checklist.md` |
 | Technical SEO audit | `knowledge/checklists/technical-seo-audit-sop.md` | `knowledge/checklists/seo-checklist.md` |
+| Agent-readiness audit (llms.txt, AI crawlers, capability signaling) | `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` + `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` | `knowledge/checklists/agent-readiness-checklist.md` |
 | Podcast setup | `knowledge/channels/podcast.md` | — |
 | Site architecture | `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `knowledge/checklists/seo-checklist.md` |
 | Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/cro-audit-checklist.md` |
@@ -134,6 +135,14 @@ Write content --> four_us_score.py --> banned_word_check.py --> seo_lint.py (if 
 ```
 
 Max 2 auto-retry cycles. After 2 failures, surface to a human with the specific failures listed.
+
+### Agent-Readiness Gate (surround sound + AEO workflows)
+
+For any `kai-surround-sound`, `kai-seo-audit`, or site-level AEO engagement, audit the target domain against the **agent-readiness checklist** before planning outbound work. If the target site isn't legible to ChatGPT / Claude / Perplexity, surround-sound spend dead-ends.
+
+Run: `python scripts/quality_gates/agent_readiness_lint.py https://<domain>`
+
+Checks `/robots.txt`, `/llms.txt`, JS-gating, capability signaling, Organization JSON-LD. Any P0 failure blocks the plan until remediated. Rubric: `knowledge/checklists/agent-readiness-checklist.md`.
 
 ### Ad Policy Compliance Gate
 
@@ -311,7 +320,8 @@ kai-cmo-harness/
 │   └── quality_gates/                     # Automated content validation
 │       ├── four_us_score.py               # Four U's scorer (12/16 threshold)
 │       ├── banned_word_check.py           # Banned word detection
-│       └── seo_lint.py                    # SEO rule linter
+│       ├── seo_lint.py                    # SEO rule linter
+│       └── agent_readiness_lint.py        # Agent-readiness linter (robots.txt, llms.txt, JS-gating, schema)
 │
 ├── agent/                                 # OpenClaw autonomous agent config
 ├── gateway/                               # Webhook gateway (FastAPI)

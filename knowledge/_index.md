@@ -187,6 +187,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `checklists/cro-audit-checklist.md` | **CRO audit** - Technical, above-fold, trust, forms, content, navigation scoring (1-5 per section, /30 total) |
 | `checklists/google-ads-launch-checklist.md` | **Google Ads** - Account setup, Search/PMax/Display/YouTube config, keywords, ad copy, extensions, landing page, post-launch |
 | `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
+| `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - robots.txt / llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
 
 ---
 
