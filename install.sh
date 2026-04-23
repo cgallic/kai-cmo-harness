@@ -4,7 +4,7 @@ set -euo pipefail
 # ============================================================================
 # Kai CMO Harness — Installer
 # ============================================================================
-# Installs 32 marketing slash commands into Claude Code.
+# Installs 33 marketing slash commands into Claude Code.
 # Works on macOS, Linux, and Windows (Git Bash / WSL).
 #
 # Usage:

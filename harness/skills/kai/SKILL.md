@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai CMO Harness router — shows all 32 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai CMO Harness router — shows all 33 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai CMO Harness — 32 Marketing Skills
+# Kai CMO Harness — 33 Marketing Skills
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
@@ -22,6 +22,7 @@ description: Kai CMO Harness router — shows all 32 marketing skills organized 
 | `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
 | `/kai-newsletter` | Newsletter editions — content, subject lines, scheduling |
 | `/kai-case-study` | Customer case studies from interview/data |
+| `/kai-product-maker` | Ship a Gumroad-ready digital product — ebook, card deck, flipbook |
 | `/kai-repurpose` | 1 pillar → 15-25 assets across all channels |
 | `/kai-launch` | Full product launch (orchestrates everything above) |
 | `/kai-retarget` | Retargeting/remarketing campaigns |
