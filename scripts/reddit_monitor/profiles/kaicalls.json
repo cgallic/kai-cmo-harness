@@ -1,0 +1,35 @@
+{
+  "name": "kaicalls",
+  "alert_title": "Reddit Opportunity (KaiCalls)",
+  "model": "gpt-4o-mini",
+  "discord_webhook_env": "REDDIT_MONITOR_DISCORD_WEBHOOK_KAICALLS",
+  "prompt_file": "kaicalls.prompt.md",
+  "seen_limit": 2000,
+  "posts_per_sub": 25,
+  "content_max_chars": 1200,
+  "subreddits": [
+    "AIReceptionists", "VoiceAutomationAI", "AI_Agents",
+    "gtmengineering", "coldemail", "sales", "b2bsales",
+    "leadgeneration", "outbound",
+    "NoCodeSaaS", "SaaS", "startups",
+    "smallbusiness", "Entrepreneur", "sweatystartup",
+    "LawFirm", "lawyers",
+    "HVAC", "Plumbing", "electricians", "contractor",
+    "RealEstate", "realtors", "Insurance",
+    "msp"
+  ],
+  "trigger_keywords": [
+    "voice ai", "ai receptionist", "virtual receptionist",
+    "vapi", "twilio", "voice agent", "phone bot",
+    "ai phone", "ai answering", "voice automation",
+    "latency", "interruption handling", "prompt engineering",
+    "transcription", "speech to text", "text to speech",
+    "building", "stack", "architecture", "what do you use",
+    "recommendations", "comparison", "best tool",
+    "missed calls", "missing calls", "after hours",
+    "answer the phone", "answering calls", "voicemail",
+    "receptionist", "front desk", "overflow",
+    "too busy to answer", "on job site", "in the field",
+    "speed to lead", "lead response", "callback"
+  ]
+}

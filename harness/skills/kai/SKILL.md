@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai CMO Harness router — shows all 31 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai CMO Harness router — shows all 32 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai CMO Harness — 31 Marketing Skills
+# Kai CMO Harness — 32 Marketing Skills
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
@@ -19,6 +19,7 @@ description: Kai CMO Harness router — shows all 31 marketing skills organized 
 | `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
 | `/kai-video` | Video scripts + clipping plans for short/long-form |
 | `/kai-cold-outreach` | Cold email outreach sequences |
+| `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
 | `/kai-newsletter` | Newsletter editions — content, subject lines, scheduling |
 | `/kai-case-study` | Customer case studies from interview/data |
 | `/kai-repurpose` | 1 pillar → 15-25 assets across all channels |
@@ -60,7 +61,7 @@ description: Kai CMO Harness router — shows all 31 marketing skills organized 
 ## By Business Stage
 
 ### Pre-Launch ($0)
-`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-brand`
+`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-reddit-listen` → `/kai-brand`
 
 ### Launch ($0-$10K MRR)
 `/kai-launch` → `/kai-email-system` → `/kai-ad-campaign` → `/kai-social`

@@ -47,7 +47,7 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install && cp 
 
 **First run:** Type `/kai-start` for guided setup. It reads your codebase, creates `MARKETING.md`, and recommends your first command.
 
-Or type `/kai` to see all 31 commands.
+Or type `/kai` to see all 32 commands.
 
 ## Product shape
 
@@ -125,7 +125,7 @@ Implementation
 
 The new canonical runtime models live in `kai/runtime/`.
 
-## All 31 commands (Claude Code skills)
+## All 32 commands (Claude Code skills)
 
 These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. They do not invoke the kai/ Python runtime directly.
 
@@ -141,6 +141,7 @@ These commands work through Claude Code's skill system. They load knowledge file
 | `/kai-social` | Week/month of social posts for all platforms |
 | `/kai-video` | Video scripts for TikTok, YouTube, Reels |
 | `/kai-cold-outreach` | Cold email sequences |
+| `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
 | `/kai-newsletter` | Newsletter editions |
 | `/kai-case-study` | Customer success stories |
 | `/kai-repurpose` | 1 piece → 15-25 pieces across platforms |
