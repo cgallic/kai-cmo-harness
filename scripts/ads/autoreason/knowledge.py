@@ -3,8 +3,7 @@
 Three jobs:
 1. Brand-lock + banned-phrase validators (pure, no API).
 2. Live Meta loaders (Insights, ad-set perf, top/bottom comps).
-3. A fixture path for dry-runs when the Meta token lacks `ads_read` scope
-   (current state — see README).
+3. A fixture path for dry-runs and CI.
 """
 
 from __future__ import annotations
@@ -178,14 +177,14 @@ def load_perf(ad_set_id: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Fixture (used while Meta token lacks ads_read; clearly labeled in trace)
+# Fixture (clearly labeled in trace)
 # ---------------------------------------------------------------------------
 
 def fixture_bundle() -> dict:
     """A stand-in KaiCalls ad and grounding pack for dry-run validation.
 
     Models a real underperforming ad shape so the loop has something to push
-    on. Replace with `live_bundle()` once the Meta token has `ads_read`.
+    on. Switch to `live_bundle()` for live runs.
     """
     incumbent = AdCopy(
         headline="Never Miss a Call Again",
@@ -259,8 +258,7 @@ def live_bundle() -> dict:
     """Pull the lowest-CTR active KaiCalls ad set + comps from Meta."""
     if not _ads_read_ok():
         raise RuntimeError(
-            "Meta token lacks ads_read scope. "
-            "Use fixture_bundle() or refresh the token in Business Manager."
+            "Meta token cannot read ad insights. Use fixture_bundle() instead."
         )
     ad_sets = list_kaicalls_ad_sets()
     if not ad_sets:

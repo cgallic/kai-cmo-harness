@@ -128,7 +128,7 @@ def main() -> int:
         Path(args.json_out).write_text(trace_to_json(passes))
         print(f"\nFull trace JSON: {args.json_out}")
 
-    fixture_banner = "  ⚠ FIXTURE DATA — Meta token needs `ads_read` scope for live runs.\n" if bundle["is_fixture"] else ""
+    fixture_banner = "  ⚠ FIXTURE DATA — not from a live ad set.\n" if bundle["is_fixture"] else ""
     discord_msg = fixture_banner + format_discord_trace(
         passes=passes,
         ad_set_name=bundle["ad_set_name"],

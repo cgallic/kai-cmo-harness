@@ -48,8 +48,7 @@ python -m scripts.ads.autoreason.run --ad-set-id 120211234567890 --json-out /tmp
 Reads from `kai-cmo-harness/.env` (gitignored — never commit):
 
 - `OPENROUTER_API_KEY` — Haiku 3.5 routes via `anthropic/claude-3.5-haiku`
-- `META_ACCESS_TOKEN` — must have `ads_read`
-- `META_AD_ACCOUNT_ID`
+- `META_ACCESS_TOKEN` + `META_AD_ACCOUNT_ID` — for live ad-set perf reads
 - `DISCORD_BOT_TOKEN` — for the trace post
 - `AUTOREASON_DISCORD_CHANNEL` — destination channel id (or pass `--discord-channel`)
 
