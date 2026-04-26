@@ -28,6 +28,9 @@ scipy>=1.11.0
 # Quality gates
 # (no additional deps — these use stdlib + basic NLP)
 
+# AutoReason ad loop (scripts/ads/autoreason/)
+json-repair>=0.30.0
+
 # Gateway (optional — install if running the webhook server)
 # fastapi>=0.100.0
 # uvicorn>=0.23.0
