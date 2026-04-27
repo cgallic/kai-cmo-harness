@@ -5,6 +5,8 @@ description: Run the full quality gate on any content file. Score against 28 rul
 
 # /content-gate — Quality Assurance
 
+> **See also:** `/voice-gate` — the complementary subjective-voice pass. Run `/content-gate` first for mechanical rule checks (banned words, SEO lint, Four U's), then `/voice-gate` for cadence, signature-move overuse, and voice-guide violations that require interpretation.
+
 Run the full quality gate on any content. Scores against 28 rules across 4 categories, applies the approval policy, and produces a detailed scorecard with fix suggestions.
 
 Can be used standalone on any file, or as part of the content sprint chain after `/content-write`.
