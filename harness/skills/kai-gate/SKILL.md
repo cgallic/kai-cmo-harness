@@ -30,7 +30,34 @@ Score each dimension 1-4:
 
 Flag exact locations of violations.
 
-### 3. SEO Lint (search content only)
+### 3. Voice Pattern Check (programmatic — DO NOT skip)
+
+Binary clichés ("X-not-Y" / "It's not X, it's Y" / "isn't X — it's Y") read as LinkedIn slop and slip past subjective scoring. Run these regexes against the file with the Grep tool. Any match = FAIL.
+
+| Pattern | Catches |
+|---|---|
+| `, not [a-z]` | "X, not Y" |
+| `— not [a-z]` | "X — not Y" |
+| `\bisn'?t [a-z][^.\n]+ — it'?s\b` | "isn't X — it's Y" |
+| `\baren'?t [a-z][^.\n]+ — they'?re\b` | "aren't X — they're Y" |
+| `\bIt'?s (a\|the\|an) [^.\n]+, not (a\|the\|an)\b` | "It's a/the X, not a/the Y" |
+| `\bThat'?s (a\|the\|an) [^.\n]+, not (a\|the\|an)\b` | "That's a/the X, not a/the Y" |
+| `\bIf you [a-z][^,.]+, [a-z]` | "If you X, Y" rhetorical |
+| `\bHere'?s the thing\b` | LinkedIn slop |
+| `\bI'?ll be honest\b` | LinkedIn slop |
+| `\bLet that sink in\b` | LinkedIn slop |
+| `\bHot take\b` | LinkedIn slop |
+
+Skip matches inside HTML comments (`<!-- ... -->`) and code fences (```` ``` ````) — those are scorecard / metadata blocks.
+
+**Replacements that work:**
+- Collapse to a single load-bearing claim.
+- Use parallel-positive contrast where both halves are positive: *"Description is passive. State is something the agent can act on."*
+- Use a metaphor: *"expensive webhook"* not symmetrical reversal.
+
+**Project hook integration:** if the project has `.claude/hooks/voice-gate.py`, that hook fires PostToolUse on Edit/Write and catches these patterns at draft time. The gate step still runs the regexes — belt and suspenders.
+
+### 4. SEO Lint (search content only)
 
 Apply only if the content targets search engines. Check against Algorithmic Authorship rules:
 - Conditions after main clause
@@ -57,6 +84,9 @@ For full rule set, read `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\conte
 
 **AI Slop:** [PASS/FAIL]
 - [list violations with line numbers, or "None found"]
+
+**Voice Patterns:** [PASS/FAIL]
+- [list X-not-Y / LinkedIn-slop violations with line numbers, or "None found"]
 
 **SEO Lint:** [PASS/FAIL/SKIPPED]
 - [list violations, or "All rules pass"]

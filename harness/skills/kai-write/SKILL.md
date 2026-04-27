@@ -47,6 +47,7 @@ For ad copy, also confirm the platform so the right policy reference gets loaded
 Apply the framework rules. Key universal rules:
 - No banned words (leverage, utilize, synergy, innovative, deep dive, circle back, touch base, moving forward, at the end of the day)
 - No AI slop ("In conclusion", "It's important to note", "In today's rapidly evolving")
+- **No X-not-Y binary clichés** — every form: "X, not Y" / "isn't X — it's Y" / "It's a Y, not a Z" / "X — not Y". The pattern reads as LinkedIn slop and slips past subjective scoring. Use parallel-positive contrast or a single load-bearing claim instead.
 - Match the persona's language patterns and pain points
 - Single primary CTA
 - Follow word count from the skill contract
@@ -64,7 +65,19 @@ Score and validate before delivering:
 1. **Four U's** — Unique, Useful, Ultra-specific, Urgent (each 1-4). Min 12/16 for blog/SEO, 10/16 for email/ads.
 2. **Banned words** — zero Tier 1 violations
 3. **AI slop** — zero instances
-4. **Format-specific gates** — from the skill contract (subject line length, word count, CTA count, etc.)
+4. **Voice patterns (programmatic — DO NOT skip)** — grep the draft with the Grep tool for these regexes. Any hit fails the gate.
+   - `, not [a-z]` (catches "X, not Y")
+   - `— not [a-z]` (catches "X — not Y")
+   - `\bisn'?t [a-z][^.\n]+ — it'?s\b` (catches "isn't X — it's Y")
+   - `\bIt'?s (a\|the\|an) [^.\n]+, not (a\|the\|an)\b` (catches "It's a X, not a Y")
+   - `\bIf you [a-z][^,.]+, [a-z]` (catches "If you X, Y")
+   - `\bHere'?s the thing\b` / `\bLet that sink in\b` / `\bHot take\b` / `\bI'?ll be honest\b` (LinkedIn slop)
+
+   Skip matches inside HTML comments and code fences. Replacements: collapse to a single load-bearing claim, or use parallel-positive contrast where both halves are affirmative.
+
+5. **Format-specific gates** — from the skill contract (subject line length, word count, CTA count, etc.).
+
+**Hook integration:** if the project has `.claude/hooks/voice-gate.py`, the hook fires PostToolUse on Edit/Write and catches voice violations at draft time. The gate step still runs the regexes — belt and suspenders.
 
 If the piece fails, fix the specific issues and re-score. Max 2 retries. After 2 failures, deliver with failures noted.
 
