@@ -14,6 +14,22 @@ Today it still enforces three useful laws:
 2. **No gate pass, no publish** — three blocking scripts run before any human sees the draft
 3. **No publish without logging** — every piece is tracked for 30-day performance review
 
+### Canonical content pipeline (with Voice Gate)
+
+```
+draft agent  →  /content-gate (rule-based)  →  /voice-gate (LLM-as-judge)  →  human review  →  publish
+```
+
+- `/content-gate` enforces mechanical rules: Four U's score, banned-word detection, SEO lint. Cheap, fast, deterministic.
+- `/voice-gate` is the complementary subjective pass. Claude Code's session reads the client's voice guide (e.g., `clients/<client>/outputs/personas/<writer>-writing-guide.md`) and the draft, then applies `voice-gate/judge-prompt.md` inline to produce `<draft-stem>.VOICE-GATE.md`. No external API, no Python, no env vars — the OAuth session is the judge.
+- Human review is the final filter. Voice Gate is not a publish-without-human step.
+
+### Voice Gate — when to use it
+
+Use `/voice-gate` for every client that has a written voice guide (DOs/DON'Ts, forbidden vocab, signature-move caps, structural patterns). Use it on blog posts, LinkedIn articles, newsletters, long-form content.
+
+Skip `/voice-gate` for ad copy (claim-compliance matters more than voice), technical documentation, or any content without a written voice standard — the gate has nothing to score against.
+
 ---
 
 ## Runtime position
