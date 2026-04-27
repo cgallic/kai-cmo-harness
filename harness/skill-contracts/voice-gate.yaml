@@ -1,0 +1,56 @@
+skill: voice-gate
+version: 1.1
+harness: kai-harness
+
+description: >
+  Subjective voice-consistency review. Complements the rule-based content-gate
+  by catching sing-songy cadence, signature-move over-use, receipt gaps, voice
+  drift, FAQ atomicity breaks, and Algorithmic Authorship misses that can't be
+  scored mechanically. Executes inline inside Claude Code — no external API,
+  no Python, no env vars. Pipeline position:
+  draft-agent → content-gate → voice-gate → human review → publish.
+
+inputs:
+  required:
+    - draft_path: string              # path to the markdown draft under review
+  required_or_autodiscovered:
+    - voice_guide_path: string        # auto-discovered from nearest outputs/personas/*-writing-guide.md if omitted
+  optional:
+    - persona_path: string            # companion persona file (biographical context)
+    - max_issues: int                 # default 30
+
+outputs:
+  report_path: string                 # <draft-stem>.VOICE-GATE.md written alongside the draft
+  verdict: string                     # PASS | HOLD | FAIL
+  severity_breakdown:
+    high: int
+    medium: int
+    low: int
+  total_issues: int
+
+# This skill IS a gate. It has no quality_gates of its own.
+quality_gates: []
+
+verdict_policy:
+  PASS: "high == 0 AND medium <= 3"
+  HOLD: "(high == 0 AND medium > 3) OR (1 <= high <= 2)"
+  FAIL: "high >= 3 OR voice_guide_hard_rule_violated"
+
+# Voice-guide hard rules that trigger FAIL on a single occurrence:
+#   - Tier-1 banned vocabulary from the voice guide's DON'T list
+#   - Year-count inconsistency (e.g., "13 years" where the guide mandates "15+ years")
+#   - AI-slop phrase the voice guide explicitly flags
+#   - Cold-open rule violated on an SEO post (e.g., "Hey guys" warmup opener)
+
+hooks:
+  pre_run: resolve_and_validate_paths   # validate draft, resolve voice_guide (auto-discover if omitted), resolve optional persona, load judge-prompt.md
+  execute: run_judge_prompt_inline      # Claude Code session applies judge-prompt.md to (draft, voice_guide, persona, max_issues) — no external API call
+  post_run: write_report_and_log        # write <draft-stem>.VOICE-GATE.md; append ~/.kai-marketing/gates/{date}-{slug}-voice.json
+  on_fail: surface_to_user
+  on_hold: surface_top_issues
+  on_pass: chain_next_station           # human review
+
+notes:
+  - Pure skill. No Python. No Anthropic SDK. No env vars. No CLI wrapper.
+  - Voice guide is REQUIRED per invocation (explicit flag or auto-discovery). Judge prompt is client-agnostic.
+  - Run AFTER /content-gate has cleared rule-based checks. Do not duplicate mechanical scoring.
