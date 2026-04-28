@@ -247,7 +247,7 @@ def load_incumbent(ad_set_id: str) -> AdCopy | None:
     r = requests.get(
         f"{BASE}/{ad_set_id}/ads",
         params={
-            "fields": "id,name,effective_status,creative{object_story_spec,effective_object_story_id,title,body,description,call_to_action_type,link_url}",
+            "fields": "id,name,effective_status,creative{object_story_spec,title,body,call_to_action_type}",
             "limit": "20",
             "access_token": _token(),
         },
@@ -259,13 +259,22 @@ def load_incumbent(ad_set_id: str) -> AdCopy | None:
         return None
     creative = ads[0].get("creative", {})
     spec = creative.get("object_story_spec", {})
-    link_data = spec.get("link_data", {}) if isinstance(spec, dict) else {}
+    if isinstance(spec, dict):
+        # link_data for image/link ads, video_data for video ads — same shape
+        # for our purposes (message, name, description, link, call_to_action).
+        link_data = spec.get("link_data") or spec.get("video_data") or {}
+    else:
+        link_data = {}
+    # description and link_url top-level fields were removed from AdCreative
+    # in Graph API v21 — pull both from the object_story_spec instead.
+    cta_obj = link_data.get("call_to_action") or {}
+    cta_value = cta_obj.get("value") or {}
     return AdCopy(
         headline=creative.get("title") or link_data.get("name", "") or "",
         primary_text=creative.get("body") or link_data.get("message", "") or "",
-        description=creative.get("description") or link_data.get("description", "") or "",
-        cta=creative.get("call_to_action_type") or "LEARN_MORE",
-        link=creative.get("link_url") or link_data.get("link", "https://kaicalls.com"),
+        description=link_data.get("description") or link_data.get("link_description", "") or "",
+        cta=creative.get("call_to_action_type") or cta_obj.get("type") or "LEARN_MORE",
+        link=cta_value.get("link") or link_data.get("link", "https://kaicalls.com"),
     )
 
 
@@ -393,11 +402,17 @@ def live_bundle() -> dict:
 
 
 def _comp_ads(exclude_ad_set_id: str) -> tuple[list[dict], list[dict]]:
+    """Pull comparable ads in the account, ranked by CTR. v21 dropped the
+    creative.description field and rejects an effective_status filter on
+    /{account}/ads — fetch wider and filter client-side."""
     r = requests.get(
         f"{BASE}/{_account()}/ads",
         params={
-            "fields": "id,name,adset_id,creative{title,body,description},insights.date_preset(last_90d){ctr,cpc,actions,impressions}",
-            "filtering": '[{"field":"effective_status","operator":"IN","value":["ACTIVE","PAUSED"]}]',
+            "fields": (
+                "id,name,adset_id,effective_status,"
+                "creative{title,body},"
+                "insights.date_preset(last_90d){ctr,cpc,actions,impressions}"
+            ),
             "limit": "100",
             "access_token": _token(),
         },
@@ -407,6 +422,8 @@ def _comp_ads(exclude_ad_set_id: str) -> tuple[list[dict], list[dict]]:
     items = []
     for a in r.json().get("data", []):
         if a.get("adset_id") == exclude_ad_set_id:
+            continue
+        if a.get("effective_status") not in ("ACTIVE", "PAUSED"):
             continue
         ins = (a.get("insights", {}).get("data") or [{}])[0]
         impressions = int(ins.get("impressions") or 0)
