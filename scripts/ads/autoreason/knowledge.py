@@ -9,6 +9,7 @@ Three jobs:
 from __future__ import annotations
 
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -38,11 +39,115 @@ RECEPTIONIST_DRIFT_PHRASES = [
     "robo-receptionist",
 ]
 
+# Splits a blob of ad copy into sentence-ish chunks. Ad copy is rarely well
+# punctuated, so we also break on newlines and bullet/dash list separators.
+_SENTENCE_SPLIT = re.compile(r"(?:[.!?]+|\n+|\s+\|\s+|\s+•\s+|\s+-\s+)")
+
+# Matches the brand subject as a whole word: "kai", "kaicalls", "kai calls".
+_KAI = r"(?:kaicalls?|kai\s+calls|kai)"
+
+# Words that signal a sentence is contrasting the drift phrase against
+# something else (typically Kai or "us"), rather than claiming Kai *is* it.
+# Presence of any of these in the same sentence as the drift phrase flips
+# the default-reject into an allow.
+_CONTRAST_CUES = [
+    r"\bvs\b", r"\bversus\b", r"\bthan\b", r"\binstead of\b", r"\brather than\b",
+    r"\bunlike\b", r"\bcompared to\b", r"\bnot (?:a|an|just|the|your|our)\b",
+    r"\bmost\b", r"\bthose\b", r"\bevery\b", r"\ball (?:other|the)\b",
+    r"\btried\b", r"\bused to\b",
+    r"\btheir\b", r"\bcompetitors?\b",
+    r"\bother\b",
+    # Pricing comparison: a $-number or per-month/per-minute token is a strong
+    # signal of "X costs Y, Kai costs Z" anchoring.
+    r"\$\s*\d", r"/\s*mo\b", r"per minute\b", r"per month\b", r"/\s*month\b",
+]
+_CONTRAST_RE = re.compile("|".join(_CONTRAST_CUES))
+
+
+def _is_comparison_usage(
+    sentences: list[str], idx: int, phrase: str
+) -> bool:
+    """True iff the drift phrase in `sentences[idx]` is being used as a
+    competitor/category anchor rather than as a description of Kai's identity.
+
+    Decision (in order):
+      1. If the sentence itself contains a contrast cue (vs / than /
+         instead of / $price / /mo / "tried" / "most" / etc.) → comparison.
+      2. If the sentence mentions both the phrase AND Kai with no contrast
+         cue → identity drift (e.g. "Kai is an AI receptionist").
+      3. If the sentence mentions only the phrase (no Kai), check the
+         neighbour sentences (idx-1 and idx+1) for either Kai with a
+         contrast cue, or a contrast cue near a price token. That's the
+         "Tried answering services. Then I tried Kai." cross-sentence
+         contrast pattern, or the "Receptionist: $3,500/mo." line in a
+         multi-line price block.
+      4. Otherwise → identity drift. Default-reject is the safer policy,
+         which matches the fixture-incumbent regression case.
+    """
+    sentence = sentences[idx]
+    if phrase not in sentence:
+        return False
+
+    has_kai = bool(re.search(rf"\b{_KAI}\b", sentence))
+    has_contrast = bool(_CONTRAST_RE.search(sentence))
+
+    # Rule 1: same-sentence contrast cue
+    if has_contrast:
+        return True
+
+    # Rule 2: Kai in the same sentence with no contrast → identity drift
+    if has_kai:
+        return False
+
+    # Rule 3: cross-sentence contrast — look at the immediate neighbours
+    neighbours = []
+    if idx > 0:
+        neighbours.append(sentences[idx - 1])
+    if idx + 1 < len(sentences):
+        neighbours.append(sentences[idx + 1])
+    for n in neighbours:
+        n_has_kai = bool(re.search(rf"\b{_KAI}\b", n))
+        n_has_contrast = bool(_CONTRAST_RE.search(n))
+        # Either Kai-with-contrast next door (e.g. "Then I tried Kai.") or
+        # a contrast-with-price next door (e.g. "Kai: $69" on the next row of
+        # a price-comparison list).
+        if n_has_kai and n_has_contrast:
+            return True
+        if n_has_kai and re.search(r"\$\s*\d|/\s*mo\b|/\s*month\b", n):
+            return True
+
+    # Rule 4: default-reject
+    return False
+
 
 def validate_brand_lock(ad: AdCopy) -> list[str]:
-    """Return a list of brand-lock violations. Empty list = clean."""
+    """Return a list of brand-lock violations. Empty list = clean.
+
+    Default policy: a drift phrase in the copy is identity drift and should be
+    rejected. A drift phrase escapes rejection only when it's clearly being
+    used as a competitor or category anchor — either via a same-sentence
+    contrast cue (vs / than / instead of / $price / /mo / "tried" / etc.) or
+    via cross-sentence contrast (a neighbour sentence has Kai + a contrast
+    cue or a price). See `_is_comparison_usage` for the full rule set, and
+    `test_brand_lock.py` for the canonical examples.
+    """
     blob = " ".join([ad.headline, ad.primary_text, ad.description]).lower()
-    return [p for p in RECEPTIONIST_DRIFT_PHRASES if p in blob]
+    sentences = [s.strip() for s in _SENTENCE_SPLIT.split(blob) if s.strip()]
+
+    hits: list[str] = []
+    for phrase in RECEPTIONIST_DRIFT_PHRASES:
+        if phrase not in blob:
+            continue
+        phrase_idxs = [i for i, s in enumerate(sentences) if phrase in s]
+        if not phrase_idxs:
+            # Phrase straddled a sentence break — be conservative and flag it.
+            hits.append(phrase)
+            continue
+        # If every occurrence is comparison usage it's clean, else it's drift.
+        if all(_is_comparison_usage(sentences, i, phrase) for i in phrase_idxs):
+            continue
+        hits.append(phrase)
+    return hits
 
 
 # ---------------------------------------------------------------------------
