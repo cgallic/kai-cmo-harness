@@ -239,19 +239,22 @@ def lowest_ctr_ad_set(ad_sets: list[dict]) -> dict | None:
 
 
 def load_incumbent(ad_set_id: str) -> AdCopy | None:
-    """Pull the first active ad in an ad set as the incumbent."""
+    """Pull the first active ad in an ad set as the incumbent.
+
+    effective_status is not a filterable field on /{adset}/ads in v21 — the
+    API returns 400. Filter client-side instead.
+    """
     r = requests.get(
         f"{BASE}/{ad_set_id}/ads",
         params={
-            "fields": "id,name,creative{object_story_spec,effective_object_story_id,title,body,description,call_to_action_type,link_url}",
-            "filtering": '[{"field":"effective_status","operator":"IN","value":["ACTIVE"]}]',
-            "limit": "5",
+            "fields": "id,name,effective_status,creative{object_story_spec,effective_object_story_id,title,body,description,call_to_action_type,link_url}",
+            "limit": "20",
             "access_token": _token(),
         },
         timeout=30,
     )
     r.raise_for_status()
-    ads = r.json().get("data", [])
+    ads = [a for a in r.json().get("data", []) if a.get("effective_status") == "ACTIVE"]
     if not ads:
         return None
     creative = ads[0].get("creative", {})
