@@ -39,11 +39,17 @@ export function statusColor(status: string): string {
     case "completed":
     case "approved":
     case "auto_approved":
+    case "executed":
+    case "verified":
+    case "learned":
+    case "operational":
       return "text-success";
     case "pending":
     case "pending_auth":
     case "executing":
     case "needs_setup":
+    case "drafted":
+    case "gated":
       return "text-amber";
     case "degraded":
     case "held":
@@ -64,11 +70,17 @@ export function statusBgColor(status: string): string {
     case "connected":
     case "completed":
     case "approved":
+    case "executed":
+    case "verified":
+    case "learned":
+    case "operational":
       return "bg-success-dim";
     case "pending":
     case "pending_auth":
     case "executing":
     case "needs_setup":
+    case "drafted":
+    case "gated":
       return "bg-amber-dim";
     case "degraded":
     case "held":

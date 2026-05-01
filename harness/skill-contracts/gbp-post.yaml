@@ -1,0 +1,12 @@
+format: gbp-post
+word_count: 80-250
+min_four_us: 10
+seo_lint: false
+required_sections:
+  - post_type
+  - post_copy
+  - cta
+constraints:
+  - Final copy only; no bracketed placeholders.
+  - Name the local service area when available.
+  - Avoid unverifiable superlatives.

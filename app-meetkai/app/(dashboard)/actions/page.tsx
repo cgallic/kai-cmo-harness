@@ -147,6 +147,7 @@ function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
         .from("actions")
         .update({
           approval_state: "approved",
+          metadata: { ...(action.metadata || {}), operating_state: "approved" },
           updated_at: new Date().toISOString(),
         })
         .eq("id", action.id);
@@ -171,6 +172,7 @@ function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
         .from("actions")
         .update({
           approval_state: "rejected",
+          metadata: { ...(action.metadata || {}), operating_state: "gated" },
           updated_at: new Date().toISOString(),
         })
         .eq("id", action.id);
@@ -182,6 +184,11 @@ function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
   }
 
   const resultSummary = action.result_summary as Record<string, unknown> | null;
+  const operatingState =
+    action.operating_state ||
+    (typeof action.metadata?.operating_state === "string"
+      ? action.metadata.operating_state
+      : null);
 
   return (
     <Card>
@@ -191,6 +198,7 @@ function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
           <div className="flex items-center gap-2 flex-wrap mb-2">
             <h3 className="text-sm font-semibold">{action.intent || action.action_type}</h3>
             <RiskBadge tier={action.risk_tier} />
+            {operatingState && <Badge status={operatingState} label={operatingState} />}
             <Badge status={action.approval_state} />
             {action.execution_state !== "pending" && (
               <Badge status={action.execution_state} label={action.execution_state} />

@@ -56,6 +56,11 @@ def _load_skill_contract(fmt: str, workspace: Path) -> dict:
         "cold-email": "cold-email",
         "meta-ads": "meta-ads",
         "google-ads": "google-ads",
+        "landing-page": "landing-page",
+        "gbp-post": "gbp-post",
+        "review-response": "review-response",
+        "call-script": "call-script",
+        "review-request-sequence": "review-request-sequence",
     }.get(fmt, fmt)
     contract_path = workspace / "harness" / "skill-contracts" / f"{slug}.yaml"
     if contract_path.exists():

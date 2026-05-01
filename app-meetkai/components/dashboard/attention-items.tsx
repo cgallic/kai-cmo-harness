@@ -50,6 +50,20 @@ export function AttentionItems({ actions, integrations }: AttentionItemsProps) {
       });
     });
 
+    const needsProof = integrations.filter(
+      (i) => i.status === "connected" && !i.operational
+    );
+    needsProof.forEach((i) => {
+      result.push({
+        id: `unverified-${i.id}`,
+        icon: AlertTriangle,
+        iconColor: "text-amber",
+        title: `${i.provider} needs a successful sync`,
+        subtitle: "Connected auth is not operational until read or verify passes",
+        href: "/connect",
+      });
+    });
+
     return result;
   }, [actions, integrations]);
 

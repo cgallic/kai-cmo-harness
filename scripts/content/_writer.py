@@ -13,7 +13,17 @@ import logging
 _wlog = logging.getLogger("writer")
 
 # Short-form formats (ad/email) — lower Four U's threshold, no SEO lint
-SHORT_FORM = {"meta-ads", "google-ads", "cold-email", "email-lifecycle", "tiktok"}
+SHORT_FORM = {
+    "meta-ads",
+    "google-ads",
+    "cold-email",
+    "email-lifecycle",
+    "tiktok",
+    "gbp-post",
+    "review-response",
+    "call-script",
+    "review-request-sequence",
+}
 
 
 def get_format_instructions(fmt: str) -> str | None:
@@ -226,6 +236,104 @@ HARD CTA (52-60s): [Point to link in bio or product]
 
 Notes for creator: [3-5 specific visual direction notes]
 Hashtags (5 max, specific): #[tag1] #[tag2] #[tag3] #[tag4] #[tag5]""",
+
+    "landing-page": """OUTPUT: Markdown execution asset for a local-service landing page.
+
+STRUCTURE:
+# [Page title]
+Meta: [150-160 char description]
+
+## Hero
+Headline:
+Subheadline:
+Primary CTA:
+Secondary CTA:
+Proof line:
+
+## Service Fit
+[3-5 bullets naming who this is for and when to call]
+
+## Proof Block
+[Specific local proof, review proof, response-time proof, or guarantee]
+
+## Conversion Section
+[2-3 short paragraphs that answer objections]
+
+## Call Capture
+[Phone CTA, after-hours CTA, missed-call handling note, KaiCalls setup recommendation when calls matter]
+
+## FAQ
+[4 questions with short answers]
+
+REQUIREMENTS:
+- Write final copy, not notes.
+- Include one phone-first CTA.
+- Include KaiCalls when missed calls, after-hours demand, or phone qualification appears in the brief.
+- No bracketed placeholders in final copy.""",
+
+    "gbp-post": """OUTPUT: Google Business Profile post ready to paste.
+
+STRUCTURE:
+Post type: [Update | Offer | Event]
+Post copy: [80-250 words]
+CTA: [Call now | Book | Learn more | Get quote]
+UTM URL:
+Image direction:
+
+REQUIREMENTS:
+- Name the service area or neighborhood if provided.
+- Mention one timely reason to act.
+- No exaggerated claims or unverifiable superlatives.
+- No bracketed placeholders in final copy.""",
+
+    "review-response": """OUTPUT: Review response drafts.
+
+STRUCTURE:
+Positive review response:
+[60-120 words]
+
+Critical review response:
+[80-140 words]
+
+Neutral review response:
+[60-120 words]
+
+REQUIREMENTS:
+- Sound like the business owner, not a support script.
+- Never disclose private customer details.
+- Invite phone follow-up when the issue needs resolution.
+- No bracketed placeholders in final copy.""",
+
+    "call-script": """OUTPUT: Phone-handling script for a local-service business.
+
+STRUCTURE:
+Opening:
+Qualification questions:
+Missed-call callback:
+After-hours voicemail/SMS:
+Booking handoff:
+Escalation rule:
+
+REQUIREMENTS:
+- Keep spoken lines short.
+- Ask for name, phone, service need, location, urgency, and preferred time.
+- Include KaiCalls setup guidance when coverage gaps exist.
+- No bracketed placeholders in final copy.""",
+
+    "review-request-sequence": """OUTPUT: Review request sequence.
+
+STRUCTURE:
+SMS 1:
+Email 1:
+SMS follow-up:
+Email follow-up:
+Owner note:
+
+REQUIREMENTS:
+- Ask only satisfied customers.
+- Do not offer incentives for reviews.
+- Keep SMS under 300 characters.
+- No bracketed placeholders in final copy.""",
 }
 
 # Format → quality gate policy mapping
@@ -239,6 +347,11 @@ FORMAT_TO_POLICY = {
     "tiktok":          "tiktok-script",
     "meta-ads":        "meta-ad",
     "google-ads":      "google-ad",
+    "landing-page":    "landing-page",
+    "gbp-post":        "local-service-asset",
+    "review-response": "local-service-asset",
+    "call-script":     "local-service-asset",
+    "review-request-sequence": "cold-email",
 }
 
 

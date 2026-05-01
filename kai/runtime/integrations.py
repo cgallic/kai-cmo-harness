@@ -54,6 +54,41 @@ def _new_id(prefix: str) -> str:
 
 
 INTEGRATION_STATUSES = ("pending_auth", "connected", "degraded", "disconnected", "error")
+CAPABILITY_STATES = (
+    "connected",
+    "configured",
+    "read_sync_ok",
+    "write_supported",
+    "verified",
+    "degraded",
+)
+
+
+def derive_capability_state(record: dict) -> Dict[str, bool]:
+    """Return provider capability health flags for dashboard clients."""
+
+    capabilities = set(record.get("capabilities") or [])
+    status = record.get("status")
+    kill_switch = bool(record.get("kill_switch", False))
+    last_sync_at = record.get("last_sync_at")
+    last_verified_at = record.get("last_verified_at")
+    last_error = record.get("last_error")
+
+    return {
+        "connected": status in ("connected", "degraded"),
+        "configured": bool(record.get("config") or record.get("connected_account_id")),
+        "read_sync_ok": bool(last_sync_at) and status in ("connected", "degraded"),
+        "write_supported": bool(capabilities.intersection({"write", "publish", "schedule", "budget"})) and not kill_switch,
+        "verified": bool(last_verified_at or last_sync_at) and status == "connected" and not kill_switch,
+        "degraded": status in ("degraded", "error") or bool(last_error) or kill_switch,
+    }
+
+
+def is_operational(record: dict) -> bool:
+    """Return True only when a provider has proven read or verify health."""
+
+    state = derive_capability_state(record)
+    return state["connected"] and state["configured"] and (state["read_sync_ok"] or state["verified"])
 
 
 @dataclass
@@ -235,6 +270,8 @@ class IntegrationRegistry:
                 "status": rec.get("status"),
                 "kill_switch": rec.get("kill_switch", False),
                 "capabilities": rec.get("capabilities", []),
+                "capability_state": derive_capability_state(rec),
+                "operational": is_operational(rec),
                 "scopes": rec.get("scopes", []),
                 "last_verified_at": rec.get("last_verified_at"),
                 "last_sync_at": rec.get("last_sync_at"),

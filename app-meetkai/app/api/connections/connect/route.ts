@@ -1,6 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { PipedreamClient } from "@pipedream/sdk";
+import { z } from "zod";
+
+const connectRequestSchema = z.object({
+  brand_id: z.string().uuid(),
+  channel: z.string().min(1),
+  provider: z.string().min(1),
+  app_slug: z.string().optional(),
+});
 
 function getPipedreamClient() {
   return new PipedreamClient({
@@ -20,8 +28,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized", code: "UNAUTHORIZED" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { brand_id, channel, provider, app_slug } = body;
+  const parsed = connectRequestSchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid request body", code: "INVALID_BODY", issues: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+  const { brand_id, channel, provider, app_slug } = parsed.data;
 
   // Verify user owns this brand
   const { data: brand, error: brandErr } = await supabase

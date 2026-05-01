@@ -14,13 +14,29 @@ export interface AsyncJobResponse {
 
 export interface JobInfo {
   job_id: string;
+  run_id?: string;
   status: "pending" | "running" | "completed" | "failed";
+  run_status?: string | null;
+  approval_state?: string | null;
   command: string;
+  client?: string | null;
+  workflow?: string | null;
+  brand_id?: string | null;
+  surface?: string | null;
+  module_set?: string[];
+  inputs?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+  runtime_metadata?: Record<string, unknown>;
   result: unknown;
+  run_outputs?: Record<string, unknown>;
   error: string | null;
   created_at: string;
+  started_at?: string | null;
   completed_at: string | null;
-  artifacts: ArtifactInfo[];
+  lineage_run_ids?: string[];
+  artifact_ids?: string[];
+  artifact_count?: number;
+  artifacts?: ArtifactInfo[];
 }
 
 export interface ArtifactInfo {

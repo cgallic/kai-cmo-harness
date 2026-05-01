@@ -5,6 +5,33 @@ import { createClient } from "@/lib/supabase/client";
 import type { Brand, Integration, Action, Audit, ChannelSnapshot, Content, AgentRun } from "@/lib/types";
 import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
+function enrichIntegrationHealth(integration: Integration): Integration {
+  const capabilities = new Set(integration.capabilities || []);
+  const connected = integration.status === "connected" || integration.status === "degraded";
+  const configured =
+    Object.keys(integration.config || {}).length > 0 ||
+    Boolean(integration.connected_account_id);
+  const readSyncOk = Boolean(integration.last_sync_at) && connected;
+  const writeSupported = ["write", "publish", "schedule", "budget"].some((capability) =>
+    capabilities.has(capability),
+  );
+  const degraded = integration.status === "degraded" || integration.status === "error";
+  const capabilityState = {
+    connected,
+    configured,
+    read_sync_ok: readSyncOk,
+    write_supported: writeSupported,
+    verified: connected && configured && readSyncOk && !degraded,
+    degraded,
+  };
+
+  return {
+    ...integration,
+    capability_state: capabilityState,
+    operational: connected && configured && (readSyncOk || capabilityState.verified) && !degraded,
+  };
+}
+
 export function useBrand() {
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,7 +111,7 @@ export function useIntegrations(brandId: string | undefined) {
       if (error) {
         console.error("useIntegrations error:", error.message);
       }
-      setIntegrations(data || []);
+      setIntegrations((data || []).map(enrichIntegrationHealth));
       setLoading(false);
     }
     fetch();
@@ -98,10 +125,14 @@ export function useIntegrations(brandId: string | undefined) {
         { event: "*", schema: "public", table: "integrations", filter: `brand_id=eq.${brandId}` },
         (payload: RealtimePostgresChangesPayload<Integration>) => {
           if (payload.eventType === "INSERT") {
-            setIntegrations((prev) => [...prev, payload.new as Integration]);
+            setIntegrations((prev) => [...prev, enrichIntegrationHealth(payload.new as Integration)]);
           } else if (payload.eventType === "UPDATE") {
             setIntegrations((prev) =>
-              prev.map((i) => (i.id === (payload.new as Integration).id ? (payload.new as Integration) : i))
+              prev.map((i) =>
+                i.id === (payload.new as Integration).id
+                  ? enrichIntegrationHealth(payload.new as Integration)
+                  : i
+              )
             );
           } else if (payload.eventType === "DELETE") {
             setIntegrations((prev) => prev.filter((i) => i.id !== (payload.old as Integration).id));

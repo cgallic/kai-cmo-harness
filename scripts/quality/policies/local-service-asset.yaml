@@ -1,0 +1,13 @@
+# Low-risk local-service asset gate: GBP posts, review replies, call scripts
+id: local-service-asset
+auto_approve_above: 82
+hold_between: [60, 82]
+reject_below: 60
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "it's important to note"
+  - "in conclusion"
+  - "guaranteed results"
+  - "limited time only"
+  - "act now"

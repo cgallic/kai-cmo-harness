@@ -16,6 +16,10 @@ from scripts.harness_config import get_config
 from .models import SerializableModel
 
 
+EXECUTION_STATES = ("pending", "executing", "completed", "failed", "rolled_back")
+OPERATING_STATES = ("drafted", "gated", "approved", "executed", "verified", "learned")
+
+
 # ---------------------------------------------------------------------------
 # Helpers (mirrors store.py conventions)
 # ---------------------------------------------------------------------------
@@ -48,6 +52,26 @@ def _new_id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:12]}"
 
 
+def derive_operating_state(record: dict) -> str:
+    """Return the marketing-OS lifecycle state for a stored action."""
+
+    metadata = record.get("metadata") or {}
+    explicit = metadata.get("operating_state")
+    if explicit in OPERATING_STATES:
+        return explicit
+    if record.get("memory_writeback_ids"):
+        return "learned"
+    if record.get("verification_result"):
+        return "verified"
+    if record.get("execution_state") == "completed":
+        return "executed"
+    if record.get("approval_state") in ("approved", "auto_approved"):
+        return "approved"
+    if record.get("policy_result"):
+        return "gated"
+    return "drafted"
+
+
 # ---------------------------------------------------------------------------
 # Dataclass
 # ---------------------------------------------------------------------------
@@ -63,13 +87,18 @@ class ActionProposal(SerializableModel):
     action_type: str = ""  # update_page_copy, publish_social_post, etc.
     intent: str = ""
     proposed_changes: Dict[str, Any] = field(default_factory=dict)
+    evidence: List[Dict[str, Any]] = field(default_factory=list)
     source_run_id: Optional[str] = None
     risk_tier: Literal["low", "medium", "high"] = "low"
     policy_result: Dict[str, Any] = field(default_factory=lambda: {"passed": True, "checks": [], "violations": []})
+    preview_artifact: Optional[Dict[str, Any]] = None
     approval_state: Literal["pending", "approved", "rejected", "auto_approved", "held"] = "pending"
     execution_state: Literal["pending", "executing", "completed", "failed", "rolled_back"] = "pending"
+    verification_criteria: List[Dict[str, Any]] = field(default_factory=list)
+    verification_result: Optional[Dict[str, Any]] = None
     rollback_reference: Optional[Dict[str, Any]] = None
     result_summary: Optional[Dict[str, Any]] = None
+    memory_writeback_ids: List[str] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: str = ""
     updated_at: str = ""
@@ -121,10 +150,15 @@ class ActionStore:
         record.setdefault("created_at", now)
         record["updated_at"] = now
         record["execution_state"] = "pending"
+        record["metadata"].setdefault(
+            "operating_state",
+            "gated" if record.get("policy_result") else "drafted",
+        )
 
         # Determine initial approval state
         if self.auto_approve_low_risk and record.get("risk_tier") == "low":
             record["approval_state"] = "auto_approved"
+            record["metadata"]["operating_state"] = "approved"
         else:
             record.setdefault("approval_state", "pending")
 
@@ -155,6 +189,7 @@ class ActionStore:
             record["updated_at"] = _utc_now()
             if note:
                 record["metadata"]["approval_note"] = note
+            record["metadata"]["operating_state"] = "approved"
             self._write_action(record)
             self._append_log(action_id, prev, "approved", "approval_state", actor="human", note=note)
             return record
@@ -205,6 +240,7 @@ class ActionStore:
             prev = record["execution_state"]
             record["execution_state"] = "executing"
             record["updated_at"] = _utc_now()
+            record["metadata"]["operating_state"] = "approved"
             self._write_action(record)
             self._append_log(action_id, prev, "executing", "execution_state", actor="system")
             return record
@@ -221,6 +257,7 @@ class ActionStore:
             now = _utc_now()
             record["updated_at"] = now
             record["executed_at"] = now
+            record["metadata"]["operating_state"] = "executed"
             self._write_action(record)
             self._append_log(action_id, prev, "completed", "execution_state", actor="system")
             return record
@@ -237,6 +274,7 @@ class ActionStore:
             now = _utc_now()
             record["updated_at"] = now
             record["executed_at"] = now
+            record["metadata"]["operating_state"] = "gated"
             self._write_action(record)
             self._append_log(action_id, prev, "failed", "execution_state", actor="system", note=error)
             return record
@@ -251,8 +289,37 @@ class ActionStore:
             record["execution_state"] = "rolled_back"
             record["result_summary"] = rollback_result
             record["updated_at"] = _utc_now()
+            record["metadata"]["operating_state"] = "executed"
             self._write_action(record)
             self._append_log(action_id, prev, "rolled_back", "execution_state", actor="system")
+            return record
+
+    def mark_verified(self, action_id: str, verification_result: dict) -> dict:
+        """Attach a verification result to an executed action."""
+        with self._lock:
+            record = self._require_action(action_id)
+            if record["execution_state"] != "completed":
+                raise ValueError(f"Cannot verify action in execution_state '{record['execution_state']}'")
+            prev = derive_operating_state(record)
+            record["verification_result"] = verification_result
+            record["metadata"]["operating_state"] = "verified"
+            record["updated_at"] = _utc_now()
+            self._write_action(record)
+            self._append_log(action_id, prev, "verified", "operating_state", actor="system")
+            return record
+
+    def mark_learned(self, action_id: str, memory_writeback_ids: List[str]) -> dict:
+        """Attach memory writeback references after verification."""
+        with self._lock:
+            record = self._require_action(action_id)
+            if derive_operating_state(record) != "verified":
+                raise ValueError("Cannot learn from an action before verification")
+            prev = derive_operating_state(record)
+            record["memory_writeback_ids"] = list(memory_writeback_ids)
+            record["metadata"]["operating_state"] = "learned"
+            record["updated_at"] = _utc_now()
+            self._write_action(record)
+            self._append_log(action_id, prev, "learned", "operating_state", actor="system")
             return record
 
     # ------------------------------------------------------------------
@@ -350,7 +417,12 @@ class ActionStore:
         if isinstance(proposal, dict):
             result = dict(proposal)
             result.setdefault("proposed_changes", {})
+            result.setdefault("evidence", [])
             result.setdefault("policy_result", {"passed": True, "checks": [], "violations": []})
+            result.setdefault("preview_artifact", None)
+            result.setdefault("verification_criteria", [])
+            result.setdefault("verification_result", None)
+            result.setdefault("memory_writeback_ids", [])
             result.setdefault("metadata", {})
             result.setdefault("risk_tier", "low")
             result.setdefault("rollback_reference", None)

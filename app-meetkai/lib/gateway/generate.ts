@@ -1,5 +1,21 @@
 import { gateway } from "./client";
-import type { AsyncJobResponse, JobInfo } from "./types";
+import type { AsyncJobResponse, GatewayResponse, JobInfo } from "./types";
+
+function unwrapGatewayResponse<T>(payload: T | GatewayResponse<T>): T {
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "success" in payload &&
+    "data" in payload
+  ) {
+    const wrapped = payload as GatewayResponse<T>;
+    if (!wrapped.success) {
+      throw new Error(wrapped.error || "Gateway request failed");
+    }
+    return wrapped.data;
+  }
+  return payload as T;
+}
 
 export async function generateContent(req: {
   format: string;
@@ -18,9 +34,13 @@ export async function generateContent(req: {
 }
 
 export async function getGenerateJob(jobId: string): Promise<JobInfo> {
-  return gateway<JobInfo>(`/jobs/${jobId}`);
+  const payload = await gateway<JobInfo | GatewayResponse<JobInfo>>(`/jobs/${jobId}`);
+  return unwrapGatewayResponse(payload);
 }
 
 export async function getJobArtifacts(jobId: string) {
-  return gateway<{ artifacts: unknown[] }>(`/jobs/${jobId}/artifacts`);
+  const payload = await gateway<
+    { artifacts: unknown[] } | GatewayResponse<{ artifacts: unknown[] }>
+  >(`/jobs/${jobId}/artifacts`);
+  return unwrapGatewayResponse(payload);
 }

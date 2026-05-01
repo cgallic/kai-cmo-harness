@@ -1,0 +1,15 @@
+format: tiktok
+word_count: 250-450
+min_four_us: 10
+seo_lint: false
+required_sections:
+  - hook
+  - soft_cta
+  - problem
+  - demo
+  - fomo
+  - hard_cta
+constraints:
+  - Must work on mute.
+  - Include visual directions.
+  - No bracketed placeholders.

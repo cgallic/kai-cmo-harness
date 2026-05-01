@@ -39,10 +39,21 @@ export interface Integration {
   capabilities: string[];
   config: Record<string, unknown>;
   metadata: Record<string, unknown>;
+  capability_state?: IntegrationCapabilityState;
+  operational?: boolean;
   connected_at: string | null;
   last_sync_at: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface IntegrationCapabilityState {
+  connected: boolean;
+  configured: boolean;
+  read_sync_ok: boolean;
+  write_supported: boolean;
+  verified: boolean;
+  degraded: boolean;
 }
 
 export type IntegrationStatus =
@@ -64,6 +75,8 @@ export interface Action {
   proposed_changes: Record<string, unknown>;
   result_summary: Record<string, unknown> | null;
   metadata: Record<string, unknown>;
+  operating_state?: OperatingState;
+  verification_result?: Record<string, unknown> | null;
   created_at: string;
   updated_at: string;
   executed_at: string | null;
@@ -82,6 +95,14 @@ export type ExecutionState =
   | "completed"
   | "failed"
   | "rolled_back";
+
+export type OperatingState =
+  | "drafted"
+  | "gated"
+  | "approved"
+  | "executed"
+  | "verified"
+  | "learned";
 
 export interface ChannelSnapshot {
   id: string;
@@ -152,6 +173,8 @@ export const PROVIDERS: ProviderConfig[] = [
     configRequired: { key: "gsc_site_url", label: "Site", type: "select", endpoint: "/api/analytics/gsc-sites", responseKey: "sites", optionLabel: "site_url", optionValue: "site_url" },
   },
   { channel: "analytics", provider: "gbp", name: "Google Business", icon: "MapPin", appSlug: "google_my_business" },
+  { channel: "gbp", provider: "google_business_profile", name: "Google Business Profile", icon: "MapPin", appSlug: "google_my_business" },
+  { channel: "calls", provider: "kaicalls", name: "KaiCalls", icon: "PhoneCall", appSlug: "kaicalls" },
   // Website
   {
     channel: "website", provider: "wordpress", name: "WordPress", icon: "Globe", appSlug: "wordpress_org",
@@ -237,6 +260,8 @@ export interface ProviderConfig {
 export const CHANNEL_CATEGORIES: Record<string, string[]> = {
   Analytics: ["analytics"],
   Website: ["website"],
+  "GBP & Reviews": ["gbp"],
+  Calls: ["calls"],
   Social: ["social"],
   Email: ["email"],
   "Paid Media": ["paid_media"],

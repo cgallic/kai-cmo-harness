@@ -2,6 +2,12 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { PipedreamClient } from "@pipedream/sdk";
 import { PROVIDERS } from "@/lib/types";
+import { z } from "zod";
+
+const confirmRequestSchema = z.object({
+  brand_id: z.string().uuid(),
+  provider: z.string().min(1),
+});
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -12,7 +18,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized", code: "UNAUTHORIZED" }, { status: 401 });
   }
 
-  const { brand_id, provider } = await request.json();
+  const parsed = confirmRequestSchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid request body", code: "INVALID_BODY", issues: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+  const { brand_id, provider } = parsed.data;
   console.log("Confirming connection:", { brand_id, provider, user_id: user.id });
 
   // Verify ownership
