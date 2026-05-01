@@ -16,6 +16,7 @@ import {
   Mail, Send, Megaphone, Target, Link2, RefreshCw, Check,
   Twitter, Pin, Calendar, BookOpen, Table2, Layout,
   SquareCode, Zap, UserCheck, CreditCard, MessageSquare, Wrench,
+  PhoneCall,
 } from "lucide-react";
 
 const iconMap: Record<string, typeof BarChart3> = {
@@ -23,7 +24,7 @@ const iconMap: Record<string, typeof BarChart3> = {
   Facebook, Instagram, Linkedin, Music, Youtube,
   Mail, Send, Megaphone, Target, Twitter, Pin,
   Calendar, BookOpen, Table2, Layout, SquareCode,
-  Zap, UserCheck, CreditCard, MessageSquare,
+  Zap, UserCheck, CreditCard, MessageSquare, PhoneCall,
 };
 
 export default function ConnectPage() {
@@ -124,7 +125,7 @@ export default function ConnectPage() {
               </Button>
             )}
             <span className="text-sm font-mono text-amber">
-              {integrations.filter((i) => i.status === "connected").length} / {PROVIDERS.length}
+              {integrations.filter((i) => i.operational).length} / {PROVIDERS.length}
             </span>
           </div>
         </div>
@@ -135,7 +136,7 @@ export default function ConnectPage() {
           <div
             className="h-full bg-amber rounded-full transition-all duration-500"
             style={{
-              width: `${(integrations.filter((i) => i.status === "connected").length / PROVIDERS.length) * 100}%`,
+              width: `${(integrations.filter((i) => i.operational).length / PROVIDERS.length) * 100}%`,
             }}
           />
         </div>
@@ -316,6 +317,7 @@ const SYNC_ENDPOINTS: Record<string, string> = {
   squarespace: "/api/sync/squarespace",
   slack: "/api/sync/slack",
   gbp: "/api/sync/gbp",
+  google_business_profile: "/api/sync/gbp",
 };
 
 function ProviderCard({
@@ -340,7 +342,8 @@ function ProviderCard({
     ? ((integration?.config as Record<string, string> | undefined)?.[cfg.key] ?? "")
     : "";
   const needsSetup = status === "connected" && !!cfg && !configuredValue;
-  const isFullyActive = status === "connected" && (!cfg || !!configuredValue);
+  const needsSync = status === "connected" && !needsSetup && !integration?.operational;
+  const isFullyActive = status === "connected" && (!cfg || !!configuredValue) && !needsSync;
 
   // Force reload integration data after config save
   function handleConfigSaved() {
@@ -461,8 +464,8 @@ function ProviderCard({
   }
 
   // Determine which badge to show
-  const badgeStatus = needsSetup ? "needs_setup" : integration?.status;
-  const badgeLabel = needsSetup ? "Needs setup" : isFullyActive ? "Active" : undefined;
+  const badgeStatus = needsSetup ? "needs_setup" : needsSync ? "degraded" : integration?.status;
+  const badgeLabel = needsSetup ? "Needs setup" : needsSync ? "Needs sync" : isFullyActive ? "Operational" : undefined;
 
   return (
     <Card className="flex flex-col">

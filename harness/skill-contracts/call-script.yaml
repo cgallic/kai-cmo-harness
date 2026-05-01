@@ -1,0 +1,14 @@
+format: call-script
+word_count: 250-500
+min_four_us: 10
+seo_lint: false
+required_sections:
+  - opening
+  - qualification_questions
+  - missed_call_callback
+  - after_hours
+  - booking_handoff
+constraints:
+  - Keep spoken lines short.
+  - Ask for contact, service, location, urgency, and preferred time.
+  - Include KaiCalls setup guidance when coverage gaps exist.

@@ -1,0 +1,13 @@
+# Local-service landing page and website section gate
+id: landing-page
+auto_approve_above: 88
+hold_between: [65, 88]
+reject_below: 65
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "it's important to note"
+  - "in conclusion"
+  - "guaranteed results"
+  - "best in the industry"
+  - "revolutionary"

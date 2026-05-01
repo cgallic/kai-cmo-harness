@@ -1,18 +1,23 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import type { AuditFinding } from "@/lib/types";
+import { z } from "zod";
 
 type ActionSource = "audit" | "analytics" | "manual";
 
-interface GenerateRequest {
-  brand_id: string;
-  source: ActionSource;
-}
+const generateRequestSchema = z.object({
+  brand_id: z.string().uuid(),
+  source: z.enum(["audit", "analytics", "manual"]),
+});
 
 interface ProposedChanges {
   finding: string;
   recommendation: string;
   affected_url: string;
+  workflow_id: string;
+  evidence: Record<string, unknown>;
+  verification_criteria: Array<Record<string, unknown>>;
+  preview_artifact: Record<string, unknown>;
 }
 
 interface ActionInsert {
@@ -24,6 +29,7 @@ interface ActionInsert {
   proposed_changes: ProposedChanges;
   approval_state: "pending";
   execution_state: "pending";
+  metadata: Record<string, unknown>;
 }
 
 function mapFindingToActionType(finding: AuditFinding): string {
@@ -31,6 +37,11 @@ function mapFindingToActionType(finding: AuditFinding): string {
   const desc = finding.description.toLowerCase();
   const combined = `${title} ${desc}`;
 
+  if (combined.includes("missed") && combined.includes("call")) return "setup_kaicalls";
+  if (combined.includes("speed to lead") || combined.includes("lead response") || combined.includes("response time")) return "improve_speed_to_lead";
+  if (combined.includes("review request") || combined.includes("review velocity")) return "launch_review_request_sequence";
+  if (combined.includes("review")) return "draft_review_responses";
+  if (combined.includes("google business") || combined.includes("gbp") || combined.includes("local pack")) return "publish_gbp_update";
   if (combined.includes("cta") || combined.includes("call to action")) return "fix_cta";
   if (combined.includes("schema") || combined.includes("structured data") || combined.includes("json-ld")) return "add_schema";
   if (combined.includes("speed") || combined.includes("performance") || combined.includes("load time") || combined.includes("core web vitals")) return "improve_speed";
@@ -44,8 +55,47 @@ function mapFindingToActionType(finding: AuditFinding): string {
   return "general_improvement";
 }
 
-function mapCategoryToChannel(category: string): string {
-  const cat = category.toLowerCase();
+function mapActionTypeToWorkflow(actionType: string): string {
+  switch (actionType) {
+    case "setup_kaicalls":
+    case "improve_speed_to_lead": return "call-script";
+    case "publish_gbp_update": return "gbp-post";
+    case "draft_review_responses": return "review-response";
+    case "launch_review_request_sequence": return "review-request-sequence";
+    case "update_copy":
+    case "fix_cta": return "landing-page";
+    default: return "blog";
+  }
+}
+
+function verificationCriteria(actionType: string): Array<Record<string, unknown>> {
+  switch (actionType) {
+    case "setup_kaicalls":
+      return [
+        { metric: "missed_call_rate", direction: "down" },
+        { metric: "captured_calls", direction: "up" },
+      ];
+    case "improve_speed_to_lead":
+      return [{ metric: "median_first_response_minutes", direction: "down" }];
+    case "publish_gbp_update":
+      return [{ metric: "gbp_actions", direction: "up" }];
+    case "draft_review_responses":
+      return [{ metric: "review_response_rate", direction: "up" }];
+    case "launch_review_request_sequence":
+      return [{ metric: "new_reviews_30d", direction: "up" }];
+    case "fix_cta":
+    case "update_copy":
+      return [{ metric: "website_leads", direction: "up" }];
+    default:
+      return [{ metric: "finding_resolved", direction: "true" }];
+  }
+}
+
+function mapCategoryToChannel(finding: AuditFinding, actionType: string): string {
+  const cat = `${finding.category} ${finding.title} ${finding.description}`.toLowerCase();
+
+  if (actionType === "setup_kaicalls" || actionType === "improve_speed_to_lead") return "calls";
+  if (actionType === "publish_gbp_update" || actionType.includes("review")) return "gbp";
 
   if (cat.includes("seo") || cat.includes("search")) return "seo";
   if (cat.includes("social")) return "social";
@@ -56,6 +106,12 @@ function mapCategoryToChannel(category: string): string {
   if (cat.includes("performance") || cat.includes("speed") || cat.includes("technical")) return "website";
   if (cat.includes("design") || cat.includes("ux") || cat.includes("ui")) return "website";
   return "website";
+}
+
+function mapRiskTier(finding: AuditFinding, actionType: string): "low" | "medium" | "high" {
+  if (actionType === "draft_review_responses" || actionType === "publish_gbp_update") return "low";
+  if (finding.severity === "critical") return "high";
+  return "medium";
 }
 
 function generateHumanReadableIntent(finding: AuditFinding): string {
@@ -77,15 +133,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body: GenerateRequest = await request.json();
-  const { brand_id, source } = body;
-
-  if (!brand_id || !source) {
+  const parsed = generateRequestSchema.safeParse(await request.json());
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "brand_id and source are required" },
+      { error: "Invalid request body", issues: parsed.error.issues },
       { status: 400 }
     );
   }
+  const { brand_id, source } = parsed.data;
 
   // Verify brand ownership
   const { data: brand, error: brandErr } = await supabase
@@ -135,20 +190,43 @@ export async function POST(request: Request) {
   }
 
   // Build action proposals
-  const actionsToInsert: ActionInsert[] = actionableFindings.map((finding) => ({
-    brand_id,
-    action_type: mapFindingToActionType(finding),
-    channel: mapCategoryToChannel(finding.category),
-    intent: generateHumanReadableIntent(finding),
-    risk_tier: finding.severity === "critical" ? "high" : "medium",
-    proposed_changes: {
-      finding: finding.description,
-      recommendation: finding.recommendation || "",
-      affected_url: brand.url || "",
-    },
-    approval_state: "pending" as const,
-    execution_state: "pending" as const,
-  }));
+  const actionsToInsert: ActionInsert[] = actionableFindings.map((finding) => {
+    const actionType = mapFindingToActionType(finding);
+    const workflowId = mapActionTypeToWorkflow(actionType);
+    const verification = verificationCriteria(actionType);
+
+    return {
+      brand_id,
+      action_type: actionType,
+      channel: mapCategoryToChannel(finding, actionType),
+      intent: generateHumanReadableIntent(finding),
+      risk_tier: mapRiskTier(finding, actionType),
+      proposed_changes: {
+        finding: finding.description,
+        recommendation: finding.recommendation || "",
+        affected_url: brand.url || "",
+        workflow_id: workflowId,
+        evidence: {
+          title: finding.title,
+          category: finding.category,
+          severity: finding.severity,
+        },
+        verification_criteria: verification,
+        preview_artifact: {
+          artifact_type: "preview_request",
+          workflow_id: workflowId,
+        },
+      },
+      approval_state: "pending" as const,
+      execution_state: "pending" as const,
+      metadata: {
+        operating_state: "gated",
+        source,
+        archetype: "local-service",
+        verification_criteria: verification,
+      },
+    };
+  });
 
   // Insert via service role to bypass RLS
   const serviceClient = await createServiceClient();

@@ -1,0 +1,13 @@
+format: review-request-sequence
+word_count: 250-450
+min_four_us: 10
+seo_lint: false
+required_sections:
+  - sms_1
+  - email_1
+  - sms_follow_up
+  - email_follow_up
+constraints:
+  - Ask only satisfied customers.
+  - Do not offer incentives for reviews.
+  - Keep SMS messages under 300 characters.

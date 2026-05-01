@@ -10,12 +10,21 @@ Usage:
 """
 
 import asyncio
+import json
 import logging
+import re
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from kai.runtime import get_default_runtime_store, load_module_manifests, load_workspace_profile
+from kai.runtime.workflows import (
+    GENERATION_FRAMEWORK_MAP,
+    get_framework_paths,
+    get_generation_workflow,
+    list_generation_formats,
+)
+from kai.runtime.local_service import retrieve_memory_entries
 from scripts.harness_config import get_config
 from scripts.content.persona_resolver import resolve_persona
 from scripts.content.approval_policy import resolve_policy, apply_approval
@@ -33,22 +42,28 @@ from scripts.content._writer import (
 log = logging.getLogger("outcome-engine")
 
 # ── Framework map — which knowledge files to load per format ─────────────
-FRAMEWORK_MAP = {
-    "blog":            ["knowledge/frameworks/content-copywriting/algorithmic-authorship.md"],
-    "linkedin":        ["knowledge/channels/linkedin-articles.md"],
-    "email-lifecycle": ["knowledge/channels/email-lifecycle.md"],
-    "cold-email":      ["knowledge/channels/email-lifecycle.md",
-                        "harness/references/cold-email-rules.md"],
-    "tiktok":          ["knowledge/channels/tiktok-algorithm.md"],
-    "meta-ads":        ["knowledge/channels/meta-advertising.md"],
-    "google-ads":      ["knowledge/channels/paid-acquisition.md",
-                        "harness/references/google-ads-rules.md"],
-    "press":           ["knowledge/channels/press-releases.md"],
-    "seo":             ["knowledge/frameworks/content-copywriting/algorithmic-authorship.md",
-                        "knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md"],
-}
+FRAMEWORK_MAP = {key: list(paths) for key, paths in GENERATION_FRAMEWORK_MAP.items()}
+VALID_FORMATS = set(list_generation_formats())
 
-VALID_FORMATS = set(FRAMEWORK_MAP.keys())
+PLACEHOLDER_TERMS = re.compile(
+    r"\b(company|business|brand|service|city|location|page|title|keyword|name|"
+    r"cta|url|date|number|proof|review|offer|headline|subheadline|insert|"
+    r"placeholder|example)\b",
+    re.IGNORECASE,
+)
+
+
+def _find_bracket_placeholders(content: str) -> list[str]:
+    """Find bracketed template placeholders that should never ship."""
+
+    placeholders = []
+    for match in re.finditer(r"\[([^\]\n]{2,80})\]", content or ""):
+        if match.end() < len(content) and content[match.end()] == "(":
+            continue
+        value = match.group(1).strip()
+        if PLACEHOLDER_TERMS.search(value):
+            placeholders.append(match.group(0))
+    return placeholders[:10]
 
 
 @dataclass
@@ -82,7 +97,7 @@ def _make_gemini_fn():
 
 def _load_framework_texts(fmt: str, repo_root: Path, workspace: Path) -> str:
     """Load and concatenate framework files for a format."""
-    rel_paths = FRAMEWORK_MAP.get(fmt, [])
+    rel_paths = get_framework_paths(fmt)
     texts = []
     for rel in rel_paths:
         # Try workspace first (deployed), then repo root (dev)
@@ -145,6 +160,11 @@ def _load_skill_contract(fmt: str, workspace: Path) -> dict:
         "cold-email": "cold-email",
         "meta-ads": "meta-ads",
         "google-ads": "google-ads",
+        "landing-page": "landing-page",
+        "gbp-post": "gbp-post",
+        "review-response": "review-response",
+        "call-script": "call-script",
+        "review-request-sequence": "review-request-sequence",
     }.get(fmt, fmt)
     path = workspace / "harness" / "skill-contracts" / f"{slug}.yaml"
     if path.exists():
@@ -196,6 +216,21 @@ def _load_marketing_md(workspace: Path) -> tuple[str, str]:
     return non_neg, learned
 
 
+def _load_runtime_memory(site: str, fmt: str, runtime_store) -> str:
+    """Load compact brand memory for the next creative proposal."""
+
+    entries = retrieve_memory_entries(
+        runtime_store.base_dir,
+        brand_id=site,
+        tags=[fmt, "local-service"],
+    )
+    if not entries:
+        entries = retrieve_memory_entries(runtime_store.base_dir, brand_id=site)
+    if not entries:
+        return ""
+    return json.dumps(entries[-8:], indent=2, sort_keys=True)[:2000]
+
+
 async def generate(
     format: str,
     site: str,
@@ -236,6 +271,10 @@ async def generate(
     cfg = get_config()
     workspace_profile = load_workspace_profile()
     runtime_store = get_default_runtime_store()
+    requested_format = format
+    workflow_definition = get_generation_workflow(format)
+    if workflow_definition and workflow_definition.content_format:
+        format = workflow_definition.content_format
     brand = workspace_profile.get_brand(site)
     valid_sites = [workspace_brand.id for workspace_brand in workspace_profile.brands]
 
@@ -248,6 +287,8 @@ async def generate(
             "module_set": brand.module_ids if brand else [],
             "inputs": {
                 "format": format,
+                "requested_format": requested_format,
+                "workflow_id": workflow_definition.workflow_id if workflow_definition else None,
                 "keyword": keyword,
                 "persona": persona,
                 "angle": angle,
@@ -267,19 +308,21 @@ async def generate(
     run_id = run_record["run_id"]
 
     # 1. Validate inputs
-    if format not in VALID_FORMATS:
+    if not workflow_definition or format not in VALID_FORMATS:
+        valid = sorted(VALID_FORMATS)
         runtime_store.complete_run(
             run_id,
             status="failed",
             outputs={
-                "error": f"Invalid format '{format}'. Valid: {sorted(VALID_FORMATS)}",
+                "error": f"Invalid format '{requested_format}'. Valid: {valid}",
             },
         )
         return GenerateResult(
             content="", brief={}, gate_report=None,
             status="error", proposal_id=proposal_id,
             metadata={
-                "error": f"Invalid format '{format}'. Valid: {sorted(VALID_FORMATS)}",
+                "error": f"Invalid format '{requested_format}'. Valid: {valid}",
+                "requested_format": requested_format,
                 "run_id": run_id,
                 "surface": surface,
             },
@@ -313,6 +356,11 @@ async def generate(
         contract = _load_skill_contract(format, workspace)
         site_facts = _load_site_facts(site, repo_root)
         non_negotiables, learned_defaults = _load_marketing_md(workspace)
+        runtime_memory = _load_runtime_memory(site, format, runtime_store)
+        if runtime_memory:
+            learned_defaults = "\n\n".join(
+                part for part in [learned_defaults, f"Runtime memory:\n{runtime_memory}"] if part
+            )
         module_guidance, active_modules = _format_module_guidance(site)
 
         # 4. Generate brief
@@ -426,7 +474,7 @@ async def generate(
             )
 
         # 8. Run quality gate with retry loop
-        policy_name = FORMAT_TO_POLICY.get(format, "default")
+        policy_name = workflow_definition.quality_policy or FORMAT_TO_POLICY.get(format, "default")
         gate_report = None
         max_retries = 2
 
@@ -465,6 +513,29 @@ async def generate(
 
         # 9. Apply approval policy
         gate_status = gate_report.get("status", "rejected") if gate_report else "rejected"
+        placeholders = _find_bracket_placeholders(draft)
+        if placeholders:
+            gate_status = "rejected"
+            gate_report = gate_report or {
+                "proposal_id": proposal_id,
+                "score": None,
+                "grade": None,
+                "status": "rejected",
+                "violations": [],
+                "violation_count": 0,
+                "policy": policy_name,
+                "attempt": 0,
+            }
+            gate_report["status"] = "rejected"
+            gate_report["violation_count"] = gate_report.get("violation_count", 0) + len(placeholders)
+            gate_report.setdefault("violations", []).append(
+                {
+                    "rule_id": "NO_BRACKET_PLACEHOLDERS",
+                    "rule_name": "Bracketed placeholder output is blocked",
+                    "suggestion": "Replace placeholders with final execution-ready copy.",
+                    "examples": placeholders,
+                }
+            )
         policy = resolve_policy(format, site)
         final_status = apply_approval(gate_status, policy)
         gate_artifact = runtime_store.record_artifact(
@@ -563,6 +634,8 @@ async def generate(
                 "runtime": "kai.runtime",
                 "product_mode": workspace_profile.product_mode,
                 "format": format,
+                "requested_format": requested_format,
+                "workflow_definition": workflow_definition.model_dump(),
                 "site": site,
                 "keyword": keyword,
                 "persona": brief.get("persona"),

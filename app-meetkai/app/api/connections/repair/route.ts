@@ -2,6 +2,11 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { PipedreamClient } from "@pipedream/sdk";
 import { PROVIDERS } from "@/lib/types";
+import { z } from "zod";
+
+const repairRequestSchema = z.object({
+  brand_id: z.string().uuid(),
+});
 
 /**
  * POST /api/connections/repair
@@ -15,7 +20,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { brand_id } = await request.json();
+  const parsed = repairRequestSchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid request body", issues: parsed.error.issues },
+      { status: 400 },
+    );
+  }
+  const { brand_id } = parsed.data;
 
   const { data: brand } = await supabase
     .from("brands")

@@ -253,11 +253,26 @@ export async function POST(req: Request) {
         }),
         execute: async (input: { skill: string; context?: string }) => {
           if (!brand) return { error: "No brand profile found." };
+          const generationFormatBySkill: Record<string, string> = {
+            "kai-landing-page": "landing-page",
+            "kai-email-system": "email-lifecycle",
+            "kai-ad-campaign": "meta-ads",
+            "kai-social": "tiktok",
+            "kai-cold-outreach": "cold-email",
+            "kai-content-calendar": "blog",
+          };
+          const format = generationFormatBySkill[input.skill];
+          if (!format) {
+            return {
+              error: `${input.skill} is not a content-generation workflow yet. Use run_audit or propose_actions for audit/planning skills.`,
+            };
+          }
           try {
             const res = await gateway("/generate", {
               method: "POST",
               body: {
-                format: input.skill,
+                format,
+                workflow: input.skill,
                 keyword: input.context || brand.name,
                 site: brand.name.toLowerCase().replace(/\s+/g, "-"),
                 brand_id: brand.id,

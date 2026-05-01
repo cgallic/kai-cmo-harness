@@ -1,6 +1,7 @@
 """SQLite-backed job queue with canonical run and artifact tracking."""
 
 import asyncio
+import gc
 import json
 import sqlite3
 import threading
@@ -162,10 +163,11 @@ class JobQueue:
     def _fetch_run_row(self, job_id: str):
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
-            return conn.execute(
+            row = conn.execute(
                 "SELECT * FROM runs WHERE job_id = ? OR run_id = ?",
                 (job_id, job_id),
             ).fetchone()
+        return dict(row) if row else None
 
     def _load_artifact_ids(self, run_id: str) -> List[str]:
         with sqlite3.connect(self.db_path) as conn:
@@ -174,7 +176,8 @@ class JobQueue:
                 "SELECT artifact_id FROM artifacts WHERE run_id = ? ORDER BY created_at ASC",
                 (run_id,),
             ).fetchall()
-        return [row["artifact_id"] for row in rows]
+            artifact_ids = [row["artifact_id"] for row in rows]
+        return artifact_ids
 
     def get_job(self, job_id: str) -> Optional[JobInfo]:
         """Get job information by ID, joined with canonical run state."""
@@ -184,6 +187,7 @@ class JobQueue:
                 "SELECT * FROM jobs WHERE job_id = ?",
                 (job_id,),
             ).fetchone()
+        row = dict(row) if row else None
 
         if not row:
             return None
@@ -270,6 +274,7 @@ class JobQueue:
                     "SELECT * FROM jobs ORDER BY created_at DESC LIMIT ?",
                     (limit,),
                 ).fetchall()
+        rows = [dict(row) for row in rows]
 
         return [self.get_job(row["job_id"]) or self._row_to_jobinfo(row) for row in rows]
 
@@ -463,6 +468,7 @@ class JobQueue:
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(query, params).fetchall()
+        rows = [dict(row) for row in rows]
 
         artifacts = []
         for row in rows:
@@ -495,7 +501,8 @@ class JobQueue:
 
     def shutdown(self):
         """Shutdown the executor."""
-        self._executor.shutdown(wait=True)
+        self._executor.shutdown(wait=True, cancel_futures=True)
+        gc.collect()
 
 
 job_queue = JobQueue()

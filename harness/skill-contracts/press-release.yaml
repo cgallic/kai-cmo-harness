@@ -1,0 +1,14 @@
+format: press
+word_count: 500-800
+min_four_us: 12
+seo_lint: false
+required_sections:
+  - headline
+  - lede
+  - quote
+  - boilerplate
+  - media_contact
+constraints:
+  - Present tense headline.
+  - Factual claims only.
+  - No bracketed placeholders.

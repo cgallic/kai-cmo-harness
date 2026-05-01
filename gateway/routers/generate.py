@@ -3,9 +3,10 @@
 import asyncio
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from kai.runtime import get_default_runtime_store
+from kai.runtime.workflows import get_generation_workflow, list_generation_formats
 from gateway.config import config
 from gateway.jobs import job_queue
 from gateway.models import (
@@ -159,16 +160,33 @@ def _run_generate(
 async def create_generate_job(req: GenerateRequest):
     """Queue a content generation job."""
     workspace = config.workspace_profile
+    workflow_definition = get_generation_workflow(req.format)
+    if not workflow_definition or not workflow_definition.content_format:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": f"Unsupported workflow or format: {req.format}",
+                "valid_formats": sorted(list_generation_formats()),
+            },
+        )
+    canonical_format = workflow_definition.content_format
     brand = workspace.get_brand(req.brand_id or req.site)
     module_set = req.module_set or (brand.module_ids if brand else [])
+    canonical_workflow = (
+        workflow_definition.workflow_id
+        if req.workflow == "content-generate"
+        else req.workflow
+    )
     run_context = RunRequest(
-        intent=f"Generate {req.format} for {req.site}: {req.keyword}",
-        workflow=req.workflow,
+        intent=f"Generate {canonical_format} for {req.site}: {req.keyword}",
+        workflow=canonical_workflow,
         brand_id=req.brand_id or req.site,
         surface=req.surface,
         module_set=module_set,
         inputs={
-            "format": req.format,
+            "format": canonical_format,
+            "requested_format": req.format,
+            "workflow_id": workflow_definition.workflow_id,
             "site": req.site,
             "keyword": req.keyword,
             "persona": req.persona,
@@ -178,6 +196,7 @@ async def create_generate_job(req: GenerateRequest):
         metadata={
             "source": "gateway.generate",
             "workspace_id": workspace.workspace_id,
+            "workflow_definition": workflow_definition.model_dump(),
         },
     )
     run_context_payload = run_context.model_dump() | {
@@ -196,7 +215,7 @@ async def create_generate_job(req: GenerateRequest):
     job_queue.submit_job(
         job_id,
         _run_generate,
-        req.format,
+        canonical_format,
         req.site,
         req.keyword,
         req.persona,
@@ -210,7 +229,7 @@ async def create_generate_job(req: GenerateRequest):
         job_id=job_id,
         run_id=job_id,
         status="queued",
-        message=f"Generating {req.format} for {req.site}: {req.keyword}",
+        message=f"Generating {canonical_format} for {req.site}: {req.keyword}",
     )
 
 

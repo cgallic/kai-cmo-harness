@@ -1,0 +1,12 @@
+format: review-response
+word_count: 180-360
+min_four_us: 10
+seo_lint: false
+required_sections:
+  - positive_review_response
+  - critical_review_response
+  - neutral_review_response
+constraints:
+  - Never disclose private customer details.
+  - Invite direct follow-up for unresolved issues.
+  - Final copy only; no bracketed placeholders.

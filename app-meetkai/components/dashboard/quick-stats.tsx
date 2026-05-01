@@ -21,7 +21,7 @@ interface QuickStatsProps {
 
 export function QuickStats({ audit, integrations, actions, snapshots }: QuickStatsProps) {
   const router = useRouter();
-  const connected = integrations.filter((i) => i.status === "connected").length;
+  const connected = integrations.filter((i) => i.operational).length;
   const pending = actions.filter((a) => a.approval_state === "pending").length;
 
   // Extract sessions from latest GA4 snapshot
@@ -51,7 +51,7 @@ export function QuickStats({ audit, integrations, actions, snapshots }: QuickSta
       href: "/analytics",
     },
     {
-      label: "Connected",
+      label: "Operational Arms",
       value: connected,
       color: connected > 0 ? "text-success" : "text-text-tertiary",
       subtitle: null,

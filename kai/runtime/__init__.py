@@ -1,6 +1,12 @@
 """Kai Runtime public helpers."""
 
-from .actions import ActionProposal, ActionStore, get_default_action_store
+from .actions import (
+    OPERATING_STATES,
+    ActionProposal,
+    ActionStore,
+    derive_operating_state,
+    get_default_action_store,
+)
 from .application_flow import (
     ProposedAction,
     ReviewBundle,
@@ -21,8 +27,23 @@ from .business_profile import (
     load_andon_window_cleaning_fixture,
     load_local_service_fixture,
 )
-from .integrations import IntegrationEntry, IntegrationRegistry, get_default_integration_registry
+from .integrations import (
+    CAPABILITY_STATES,
+    IntegrationEntry,
+    IntegrationRegistry,
+    derive_capability_state,
+    get_default_integration_registry,
+    is_operational,
+)
 from .loader import load_module_manifests, load_workspace_profile
+from .local_service import (
+    IntegrationCapability,
+    LocalServiceSnapshot,
+    MemoryEntry,
+    action_from_finding,
+    normalize_snapshot,
+    retrieve_memory_entries,
+)
 from .memory import write_back_memory
 from .models import (
     KaiArtifactRecord,
@@ -34,14 +55,29 @@ from .models import (
     KaiWorkspaceProfile,
 )
 from .store import RuntimeStore, get_default_runtime_store
+from .workflows import (
+    WorkflowDefinition,
+    get_content_format,
+    get_framework_paths,
+    get_generation_workflow,
+    get_workflow,
+    list_generation_formats,
+    list_workflows,
+    normalize_workflow_id,
+)
 
 __all__ = [
     "ActionProposal",
     "ANDON_WINDOW_CLEANING_FIXTURE",
     "ActionStore",
+    "OPERATING_STATES",
     "BusinessProfile",
+    "CAPABILITY_STATES",
     "IntegrationEntry",
     "IntegrationRegistry",
+    "IntegrationCapability",
+    "LocalServiceSnapshot",
+    "MemoryEntry",
     "ProposedAction",
     "KaiArtifactRecord",
     "KaiBrandProfile",
@@ -52,6 +88,7 @@ __all__ = [
     "KaiWorkspaceProfile",
     "ReviewBundle",
     "RuntimeStore",
+    "WorkflowDefinition",
     "build_audit_summary",
     "build_business_profile",
     "build_business_profile_from_brand",
@@ -59,13 +96,26 @@ __all__ = [
     "build_local_service_audit_input",
     "build_proposed_actions",
     "build_review_bundle",
+    "action_from_finding",
     "get_default_action_store",
     "get_default_integration_registry",
     "get_default_runtime_store",
+    "get_content_format",
+    "get_framework_paths",
+    "get_generation_workflow",
+    "get_workflow",
+    "derive_operating_state",
+    "derive_capability_state",
     "load_andon_window_cleaning_fixture",
     "load_local_service_fixture",
+    "list_generation_formats",
+    "list_workflows",
     "load_module_manifests",
     "load_workspace_profile",
+    "normalize_workflow_id",
+    "normalize_snapshot",
+    "retrieve_memory_entries",
+    "is_operational",
     "persist_proposed_actions",
     "run_local_service_audit",
     "run_local_service_review_flow",

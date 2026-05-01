@@ -1,0 +1,14 @@
+format: landing-page
+word_count: 700-1200
+min_four_us: 12
+seo_lint: false
+required_sections:
+  - hero
+  - proof_block
+  - conversion_section
+  - call_capture
+  - faq
+constraints:
+  - Final copy only; no bracketed placeholders.
+  - Include one phone-first CTA when the business receives calls.
+  - Mention KaiCalls when missed-call, after-hours, or qualification risk exists.
