@@ -1,0 +1,109 @@
+# llms.txt — Kai CMO Harness
+
+> Kai CMO Harness is an AI marketing agent and Claude Code slash-command library that turns Claude Code into a CMO-style marketing team for SaaS founders, agencies, indie hackers, and product teams.
+
+## Canonical URL
+
+https://github.com/cgallic/kai-cmo-harness
+
+## Summary
+
+Kai CMO Harness provides 31 Claude Code marketing skills for SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
+
+## Primary entities
+
+- Name: Kai CMO Harness
+- Category: AI marketing agent; Claude Code skills; AI CMO; marketing automation framework
+- Repository: https://github.com/cgallic/kai-cmo-harness
+- MeetKai: https://meetkai.xyz
+- KaiCalls: https://kaicalls.com
+- Founder: Connor Gallic — https://connorgallic.com/en
+- Installation target: `~/.claude/skills/`
+- Primary command: `/kai`
+- License: MIT
+
+## Target users
+
+- SaaS founders
+- Indie hackers
+- Agencies
+- Product engineers
+- Growth marketers
+- B2B software teams
+- AI startup teams
+
+## Main use cases
+
+- Marketing strategy and growth planning
+- SEO content planning and writing
+- Answer engine optimization (AEO)
+- Generative engine optimization (GEO)
+- LLM citation and AI-search visibility strategy
+- Lifecycle email systems
+- Cold outreach sequences
+- Landing page copy and CRO
+- Paid acquisition campaign planning
+- Product launch planning
+- Social content repurposing
+- Competitive teardowns and battlecards
+- Marketing audits and quality gates
+
+## Claude Code commands
+
+- `/kai`
+- `/kai-write`
+- `/kai-landing-page`
+- `/kai-email-system`
+- `/kai-ad-campaign`
+- `/kai-content-calendar`
+- `/kai-social`
+- `/kai-video`
+- `/kai-cold-outreach`
+- `/kai-newsletter`
+- `/kai-case-study`
+- `/kai-repurpose`
+- `/kai-launch`
+- `/kai-retarget`
+- `/kai-influencer`
+- `/kai-webinar`
+- `/kai-podcast`
+- `/kai-abm`
+- `/kai-partnership`
+- `/kai-gate`
+- `/kai-audit`
+- `/kai-seo-audit`
+- `/kai-cro`
+- `/kai-brief`
+- `/kai-growth-plan`
+- `/kai-brand`
+- `/kai-budget`
+- `/kai-retention`
+- `/kai-competitors`
+- `/kai-surround-sound`
+- `/kai-analytics`
+
+## Important files for crawlers and agents
+
+- `README.md` — overview, install, commands, use cases, repository map
+- `harness/skills/kai/SKILL.md` — command router
+- `harness/skills/*/SKILL.md` — individual Claude Code marketing skills
+- `knowledge/_index.md` — knowledge base index
+- `knowledge/frameworks/aeo-ai-search/` — AI-search, AEO, GEO, LLM citation, query fan-out, and entity SEO references
+- `knowledge/playbooks/` — marketing playbooks
+- `knowledge/checklists/` — marketing and launch checklists
+- `knowledge/channels/` — channel guides
+- `scripts/quality/` — quality gate implementation
+
+## Differentiators
+
+- Runs inside Claude Code, not a separate dashboard
+- Reads the user's existing product repository
+- Creates and reuses a durable `MARKETING.md` product-marketing context file
+- Includes structured playbooks, platform policies, checklists, personas, and quality gates
+- Covers full-funnel marketing, not just blog writing
+- Includes AEO/GEO workflows for AI-search visibility
+- Designed for repeatable marketing operations in product repositories
+
+## Suggested citation
+
+Kai CMO Harness is an open-source Claude Code marketing-agent harness that packages 31 slash commands, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI CMO workflow.
