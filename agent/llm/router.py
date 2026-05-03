@@ -13,6 +13,7 @@ import os
 from openai import OpenAI
 
 from ..config import agent_config
+from ..traces import SpanKind, tracer
 
 
 class ModelTier(str, Enum):
@@ -104,6 +105,8 @@ class LLMRouter:
         system: Optional[str] = None,
         max_tokens: int = 4096,
         temperature: float = 0.7,
+        prompt_name: Optional[str] = None,
+        prompt_version: Optional[str] = None,
         **kwargs
     ) -> str:
         """
@@ -116,6 +119,8 @@ class LLMRouter:
             system: System prompt
             max_tokens: Maximum tokens to generate
             temperature: Sampling temperature
+            prompt_name: Identifier for the prompt template (for HALO).
+            prompt_version: Optional version tag for the prompt template.
 
         Returns:
             Generated text response
@@ -134,15 +139,41 @@ class LLMRouter:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        # Make API call via OpenRouter
-        response = self.client.chat.completions.create(
-            model=model,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            messages=messages
-        )
+        async with tracer.span(
+            f"llm.complete:{prompt_name or task_type or 'unnamed'}",
+            kind=SpanKind.LLM,
+            inputs={
+                "model": model,
+                "task_type": task_type,
+                "prompt_name": prompt_name,
+                "prompt_version": prompt_version,
+                "prompt_chars": len(prompt),
+                "system_chars": len(system) if system else 0,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            },
+        ) as span:
+            response = self.client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=messages,
+            )
 
-        return response.choices[0].message.content
+            content = response.choices[0].message.content
+            usage = getattr(response, "usage", None)
+            input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
+            output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+
+            span.add_attributes(
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                total_tokens=getattr(usage, "total_tokens", input_tokens + output_tokens) if usage else None,
+                estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
+                finish_reason=getattr(response.choices[0], "finish_reason", None),
+            )
+            span.set_output(content)
+            return content
 
     async def chat(
         self,
@@ -152,6 +183,8 @@ class LLMRouter:
         system: Optional[str] = None,
         max_tokens: int = 4096,
         temperature: float = 0.7,
+        prompt_name: Optional[str] = None,
+        prompt_version: Optional[str] = None,
         **kwargs
     ) -> str:
         """
@@ -164,6 +197,8 @@ class LLMRouter:
             system: System prompt
             max_tokens: Maximum tokens to generate
             temperature: Sampling temperature
+            prompt_name: Identifier for the prompt template (for HALO).
+            prompt_version: Optional version tag for the prompt template.
 
         Returns:
             Assistant's response
@@ -182,15 +217,40 @@ class LLMRouter:
             full_messages.append({"role": "system", "content": system})
         full_messages.extend(messages)
 
-        # Make API call
-        response = self.client.chat.completions.create(
-            model=model,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            messages=full_messages
-        )
+        async with tracer.span(
+            f"llm.chat:{prompt_name or task_type or 'unnamed'}",
+            kind=SpanKind.LLM,
+            inputs={
+                "model": model,
+                "task_type": task_type,
+                "prompt_name": prompt_name,
+                "prompt_version": prompt_version,
+                "message_count": len(messages),
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            },
+        ) as span:
+            response = self.client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=full_messages,
+            )
 
-        return response.choices[0].message.content
+            content = response.choices[0].message.content
+            usage = getattr(response, "usage", None)
+            input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
+            output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+
+            span.add_attributes(
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                total_tokens=getattr(usage, "total_tokens", input_tokens + output_tokens) if usage else None,
+                estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
+                finish_reason=getattr(response.choices[0], "finish_reason", None),
+            )
+            span.set_output(content)
+            return content
 
     def estimate_cost(
         self,
