@@ -19,7 +19,7 @@ export function PendingActions({ actions }: PendingActionsProps) {
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="section-title">Pending Actions</h3>
+        <h3 className="section-title">Approval Queue</h3>
         {actions.length > 0 && (
           <Link href="/actions" className="text-amber text-sm hover:underline">
             View all
@@ -30,7 +30,7 @@ export function PendingActions({ actions }: PendingActionsProps) {
       {pending.length === 0 ? (
         <div className="flex flex-col items-center py-8 text-text-tertiary">
           <Zap className="w-8 h-8 mb-2 opacity-40" />
-          <p className="text-sm">No pending actions</p>
+          <p className="text-sm">Nothing waiting for approval</p>
         </div>
       ) : (
         <div className="space-y-3">

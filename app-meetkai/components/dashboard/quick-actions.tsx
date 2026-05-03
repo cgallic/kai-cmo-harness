@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { FileText, Calendar, Search, Megaphone, Mail, Users } from "lucide-react";
 
 const quickActions = [
-  { label: "Write Content", icon: FileText, description: "Blog, email, social, ads", href: "/content?action=write" },
+  { label: "Draft Brief", icon: FileText, description: "Blog, email, social, ads", href: "/content?action=write" },
   { label: "Plan Calendar", icon: Calendar, description: "Monthly content calendar", href: "/content?action=calendar" },
-  { label: "Audit Page", icon: Search, description: "CRO or SEO audit", href: "/analytics" },
-  { label: "Run Ads", icon: Megaphone, description: "Ad campaign copy", href: "/content?action=ads" },
-  { label: "Cold Outreach", icon: Mail, description: "Email sequences", href: "/content?action=outreach" },
-  { label: "Competitor Intel", icon: Users, description: "Competitive analysis", href: "/content?action=competitors" },
+  { label: "Run Audit", icon: Search, description: "CRO or SEO findings", href: "/analytics" },
+  { label: "Plan Ads", icon: Megaphone, description: "Policy-checked variants", href: "/content?action=ads" },
+  { label: "Write Outreach", icon: Mail, description: "Cold email sequences", href: "/content?action=outreach" },
+  { label: "Map Competitors", icon: Users, description: "Battlecards and gaps", href: "/content?action=competitors" },
 ];
 
 export function QuickActions() {
@@ -17,7 +17,7 @@ export function QuickActions() {
 
   return (
     <div className="card">
-      <h3 className="section-title mb-4">Quick Actions</h3>
+      <h3 className="section-title mb-4">Operator Shortcuts</h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {quickActions.map((action) => {
           const Icon = action.icon;

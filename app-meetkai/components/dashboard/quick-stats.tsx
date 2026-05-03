@@ -42,8 +42,8 @@ export function QuickStats({ audit, integrations, actions, snapshots }: QuickSta
 
   const stats: StatItem[] = [
     {
-      label: "Audit Score",
-      value: audit?.overall_score != null ? Math.round(audit.overall_score) : "—",
+      label: "Audit score",
+      value: audit?.overall_score != null ? Math.round(audit.overall_score) : "-",
       color: audit?.overall_score != null
         ? audit.overall_score >= 70 ? "text-success" : audit.overall_score >= 40 ? "text-amber" : "text-error"
         : "text-text-tertiary",
@@ -51,22 +51,22 @@ export function QuickStats({ audit, integrations, actions, snapshots }: QuickSta
       href: "/analytics",
     },
     {
-      label: "Connected",
+      label: "Connections",
       value: connected,
       color: connected > 0 ? "text-success" : "text-text-tertiary",
       subtitle: null,
       href: "/connect",
     },
     {
-      label: "Pending Actions",
+      label: "Approvals",
       value: pending,
       color: pending > 0 ? "text-amber" : "text-text-tertiary",
       subtitle: null,
       href: "/actions",
     },
     {
-      label: "Sessions (28d)",
-      value: sessions !== null ? formatNumber(sessions) : "—",
+      label: "Traffic (28d)",
+      value: sessions !== null ? formatNumber(sessions) : "-",
       color: "text-foreground",
       subtitle: sessionsSyncLabel,
       href: "/analytics",

@@ -8,7 +8,7 @@ export function Card({ className, hover, children, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-card border border-border rounded-[12px] p-6",
+        "bg-card border border-border rounded-lg p-6",
         hover && "transition-colors hover:bg-card-hover hover:border-border-hover cursor-pointer",
         className
       )}

@@ -6,3 +6,57 @@ Disallow: /connect
 Disallow: /actions
 Disallow: /analytics
 Disallow: /settings
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings
+
+User-agent: Claude-User
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /connect
+Disallow: /actions
+Disallow: /analytics
+Disallow: /settings

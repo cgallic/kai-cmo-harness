@@ -49,9 +49,9 @@ export default function ContentPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight">Content & Actions</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight">Library</h1>
         <p className="text-text-secondary text-sm mt-1">
-          AI-generated content and marketing actions.
+          Drafts, approved content, and executed marketing work.
         </p>
       </div>
 
@@ -85,8 +85,8 @@ function ContentLibrary({ content }: { content: Content[] }) {
     return (
       <div className="flex flex-col items-center py-16 text-text-tertiary">
         <FileText className="w-10 h-10 mb-3 opacity-30" />
-        <p className="text-sm">No content generated yet</p>
-        <p className="text-xs mt-1">Content will appear here after actions are executed.</p>
+        <p className="text-sm">No content in the library yet</p>
+        <p className="text-xs mt-1">Approved drafts appear here after they run through the gate.</p>
       </div>
     );
   }
@@ -216,7 +216,7 @@ function ActionCard({
             <>
               <Button variant="primary" size="sm" onClick={handleApprove} loading={loading === "approved"}>
                 <Play className="w-4 h-4" />
-                Approve
+                Approve and Run
               </Button>
               <Button variant="danger" size="sm" onClick={handleReject} loading={loading === "rejected"}>
                 <X className="w-4 h-4" />

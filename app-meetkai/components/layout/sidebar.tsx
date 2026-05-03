@@ -19,11 +19,11 @@ import {
 import { useState } from "react";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/connect", label: "Connect", icon: Link2 },
-  { href: "/content", label: "Content", icon: FileText },
-  { href: "/actions", label: "Actions", icon: Zap },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard", label: "Command Center", icon: LayoutDashboard },
+  { href: "/connect", label: "Connections", icon: Link2 },
+  { href: "/content", label: "Library", icon: FileText },
+  { href: "/actions", label: "Approvals", icon: Zap },
+  { href: "/analytics", label: "Signal", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -71,9 +71,10 @@ export function Sidebar({ userEmail }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <Link href="/dashboard" className="flex items-center gap-2.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-icon.svg" alt="" width={24} height={24} className="shrink-0" />
-            <span className="font-display text-xl font-bold tracking-tight">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-cream/20 bg-amber font-display text-lg font-black text-background shadow-[2px_2px_0_rgba(255,250,240,0.18)]">
+              K
+            </span>
+            <span className="font-display text-xl font-bold tracking-normal">
               Meet<span className="text-amber">Kai</span>
             </span>
           </Link>
@@ -99,7 +100,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
                 )}
               >
                 <item.icon className="w-4.5 h-4.5" />
-                {item.label}
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}

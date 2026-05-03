@@ -90,9 +90,9 @@ export default function DashboardPage() {
   if (!brand) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <h2 className="font-display text-2xl font-semibold mb-2">Welcome to MeetKai</h2>
-        <p className="text-text-secondary mb-6">Set up your business profile to get started.</p>
-        <a href="/settings?onboarding=true" className="inline-flex items-center px-6 py-3 bg-amber text-background font-semibold rounded-[12px] hover:bg-amber-light transition-colors">
+        <h2 className="font-display text-2xl font-semibold mb-2">Build the workspace profile first</h2>
+        <p className="text-text-secondary mb-6">Kai needs the business, channels, and operating defaults before it can score or propose work.</p>
+        <a href="/settings?onboarding=true" className="inline-flex items-center px-6 py-3 bg-amber text-background font-semibold rounded-lg hover:bg-amber-light transition-colors">
           Set up your profile
         </a>
       </div>
@@ -138,7 +138,7 @@ export default function DashboardPage() {
             <h1 className="font-display text-xl font-bold tracking-tight">{brand.name}</h1>
             <p className="text-text-secondary text-sm">{brand.url || "No website set"}</p>
             {score != null && (
-              <p className="text-xs text-text-tertiary mt-0.5">Marketing Health Score</p>
+              <p className="text-xs text-text-tertiary mt-0.5">Marketing health score</p>
             )}
           </div>
         </div>
@@ -150,14 +150,14 @@ export default function DashboardPage() {
           {audit && actions.filter((a) => a.approval_state === "pending").length === 0 && (
             <Button variant="primary" size="sm" onClick={handleGenerate} loading={generating}>
               <Sparkles className="w-3.5 h-3.5" />
-              Generate Actions
+              Draft Actions
             </Button>
           )}
         </div>
       </div>
 
       {auditError && (
-        <div className="bg-error-dim border border-error/20 rounded-[12px] px-4 py-3 text-sm text-error">
+        <div className="bg-error-dim border border-error/20 rounded-lg px-4 py-3 text-sm text-error">
           {auditError}
         </div>
       )}

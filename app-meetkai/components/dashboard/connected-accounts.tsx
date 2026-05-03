@@ -38,10 +38,10 @@ function healthTitle(integration: Integration): string {
     const syncRef = integration.last_sync_at || integration.updated_at;
     if (syncRef) {
       const hoursSinceSync = (Date.now() - new Date(syncRef).getTime()) / (1000 * 60 * 60);
-      if (hoursSinceSync <= 24) return "Healthy — synced recently";
-      return `Stale — last synced ${Math.round(hoursSinceSync)}h ago`;
+      if (hoursSinceSync <= 24) return "Healthy - synced recently";
+      return `Stale - last synced ${Math.round(hoursSinceSync)}h ago`;
     }
-    return "Connected — never synced";
+    return "Connected - never synced";
   }
   return integration.status;
 }

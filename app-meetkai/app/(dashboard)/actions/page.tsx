@@ -76,9 +76,9 @@ export default function ActionsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight">Actions</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Approvals</h1>
           <p className="text-text-secondary text-sm mt-1">
-            Review and approve AI-proposed marketing actions.
+            Review, reject, or run proposed marketing changes.
           </p>
         </div>
         {brand && audit && (
@@ -89,7 +89,7 @@ export default function ActionsPage() {
             loading={generating}
           >
             <Sparkles className="w-4 h-4" />
-            Generate Actions
+            Draft Actions
           </Button>
         )}
       </div>
@@ -105,10 +105,10 @@ export default function ActionsPage() {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center py-16 text-text-tertiary">
           <Zap className="w-10 h-10 mb-3 opacity-30" />
-          <p className="text-sm">No {activeTab} actions</p>
+          <p className="text-sm">No {activeTab} proposals</p>
           {activeTab === "pending" && audit && actions.length === 0 && (
             <p className="text-xs mt-2">
-              Click &quot;Generate Actions&quot; to create proposals from your latest audit.
+              Draft proposals from the latest audit when you are ready.
             </p>
           )}
         </div>
@@ -218,7 +218,7 @@ function ActionCard({ action, showActions, onUpdate }: ActionCardProps) {
                 loading={loading === "approved"}
               >
                 <Play className="w-4 h-4" />
-                Approve & Run
+                Approve and Run
               </Button>
               <Button
                 variant="danger"

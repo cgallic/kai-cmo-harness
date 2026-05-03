@@ -20,7 +20,7 @@ export function AIActivity({ runs, loading }: AIActivityProps) {
   if (loading) {
     return (
       <div className="card">
-        <h3 className="section-title mb-4">AI Activity (24h)</h3>
+        <h3 className="section-title mb-4">Run Ledger (24h)</h3>
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-10 bg-bg-elevated rounded-lg animate-pulse" />
@@ -35,9 +35,9 @@ export function AIActivity({ runs, loading }: AIActivityProps) {
 
   return (
     <div className="card">
-      <h3 className="section-title mb-4">AI Activity (24h)</h3>
+      <h3 className="section-title mb-4">Run Ledger (24h)</h3>
       {recent.length === 0 ? (
-        <p className="text-text-tertiary text-sm py-4 text-center">No agent activity in the last 24 hours</p>
+        <p className="text-text-tertiary text-sm py-4 text-center">No runs in the last 24 hours</p>
       ) : (
         <div className="space-y-1">
           {recent.map((run) => {

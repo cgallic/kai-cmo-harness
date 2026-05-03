@@ -57,7 +57,7 @@ function auditToEvent(audit: Audit): FeedEvent {
   return {
     id: `audit-${audit.id}`,
     type: "audit",
-    title: `Audit completed — score: ${Math.round(score)}`,
+    title: `Audit completed - score: ${Math.round(score)}`,
     subtitle: timeAgo(audit.created_at),
     timestamp: audit.created_at,
     icon: ClipboardCheck,

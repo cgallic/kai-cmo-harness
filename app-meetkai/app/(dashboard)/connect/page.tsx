@@ -66,7 +66,7 @@ export default function ConnectPage() {
   if (!brand) {
     return (
       <div className="text-center py-20">
-        <p className="text-text-secondary">Set up your business profile first.</p>
+        <p className="text-text-secondary">Set up your business profile before connecting accounts.</p>
         <a href="/settings?onboarding=true" className="text-amber hover:underline text-sm mt-2 inline-block">
           Go to Settings
         </a>
@@ -81,9 +81,9 @@ export default function ConnectPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight">Connect Accounts</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight">Connections</h1>
         <p className="text-text-secondary text-sm mt-1">
-          Link your marketing platforms to unlock AI-powered insights and actions.
+          Link the places where marketing signal, publishing, revenue, and call data live.
         </p>
       </div>
 
