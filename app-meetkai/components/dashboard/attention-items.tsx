@@ -30,7 +30,7 @@ export function AttentionItems({ actions, integrations }: AttentionItemsProps) {
         id: "pending-actions",
         icon: Clock,
         iconColor: "text-amber",
-        title: `${pending.length} action${pending.length > 1 ? "s" : ""} pending approval`,
+        title: `${pending.length} proposal${pending.length > 1 ? "s" : ""} waiting for approval`,
         subtitle: `Oldest: ${timeAgo(pending[pending.length - 1].created_at)}`,
         href: "/actions",
       });
@@ -69,9 +69,9 @@ export function AttentionItems({ actions, integrations }: AttentionItemsProps) {
 
   return (
     <div className="card">
-      <h3 className="section-title mb-4">Needs Your Attention</h3>
+      <h3 className="section-title mb-4">Attention</h3>
       {items.length === 0 ? (
-        <p className="text-text-tertiary text-sm py-4 text-center">All clear</p>
+        <p className="text-text-tertiary text-sm py-4 text-center">No approvals or broken connections</p>
       ) : (
         <div className="space-y-2">
           {items.map((item) => {

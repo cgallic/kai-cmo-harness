@@ -334,8 +334,8 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-text-secondary text-sm mt-1">Traffic, engagement, and marketing performance across all channels.</p>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Signal</h1>
+          <p className="text-text-secondary text-sm mt-1">Traffic, search, paid media, email, revenue, and channel snapshots.</p>
         </div>
         <div className="flex items-center gap-3">
           {connectedProviders.length > 2 && (

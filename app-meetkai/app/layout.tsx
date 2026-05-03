@@ -25,23 +25,23 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "MeetKai Dashboard",
+    default: "MeetKai - Marketing OS Dashboard",
     template: "%s | MeetKai",
   },
-  description: "AI CMO Dashboard — connect your marketing accounts, see what AI finds, approve actions.",
+  description: "Hosted dashboard for Kai Marketing OS: connect accounts, inspect audits, approve marketing actions, and track runs.",
   metadataBase: new URL("https://app.meetkai.xyz"),
   openGraph: {
-    title: "MeetKai — AI CMO Dashboard",
-    description: "Connect your marketing accounts. Get AI-powered audits. Approve actions with one click.",
+    title: "MeetKai - Marketing OS Dashboard",
+    description: "Connect accounts, inspect audits, approve proposed work, and track Kai Marketing OS runs.",
     url: "https://app.meetkai.xyz",
     siteName: "MeetKai",
-    images: [{ url: "/logo.svg", width: 160, height: 40 }],
+    images: [{ url: "/images/kai-lean.png", width: 1024, height: 1024 }],
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "MeetKai — AI CMO Dashboard",
-    description: "Connect your marketing accounts. Get AI-powered audits. Approve actions with one click.",
+    title: "MeetKai - Marketing OS Dashboard",
+    description: "Hosted dashboard for Kai Marketing OS approvals, integrations, audits, and run history.",
   },
   icons: {
     icon: "/favicon.svg",
@@ -50,7 +50,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${fraunces.variable} ${outfit.variable} ${jetbrains.variable}`}>
+    <html
+      lang="en"
+      data-theme="light"
+      className={`dark ${fraunces.variable} ${outfit.variable} ${jetbrains.variable}`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen font-body antialiased">
         {children}
       </body>

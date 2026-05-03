@@ -110,7 +110,7 @@ export function AuditScoreRing({ audit, brandUrl, brandId, onAuditComplete }: Au
               <circle cx="50" cy="50" r="45" fill="none" stroke="#1e1e1e" strokeWidth="6" />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-mono text-3xl font-bold text-text-tertiary">—</span>
+              <span className="font-mono text-3xl font-bold text-text-tertiary">-</span>
             </div>
           </div>
           {hasUrl ? (

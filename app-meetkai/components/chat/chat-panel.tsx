@@ -8,7 +8,7 @@ import { readUIMessageStream, generateId } from "ai";
 import type { UIMessage } from "ai";
 
 // ---------------------------------------------------------------------------
-// Custom useChat hook — v6 compatible, no @ai-sdk/react required
+// Custom useChat hook - v6 compatible, no @ai-sdk/react required
 // Uses readUIMessageStream to consume the UIMessageStream protocol that
 // toUIMessageStreamResponse() emits on the server.
 // ---------------------------------------------------------------------------
@@ -187,7 +187,7 @@ export function ChatPanel() {
       {/* Chat panel */}
       <div
         className={cn(
-          "fixed bottom-20 right-6 z-50 w-96 h-[600px] max-h-[80vh] bg-card border border-border rounded-[16px] shadow-2xl flex flex-col transition-all duration-200",
+          "fixed bottom-20 right-6 z-50 w-96 h-[600px] max-h-[80vh] bg-card border border-border rounded-lg shadow-2xl flex flex-col transition-all duration-200",
           open
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none",
@@ -200,7 +200,7 @@ export function ChatPanel() {
           </div>
           <div>
             <p className="text-sm font-semibold">Kai</p>
-            <p className="text-[10px] text-text-tertiary">AI CMO Assistant</p>
+            <p className="text-[10px] text-text-tertiary">Marketing operator</p>
           </div>
         </div>
 
@@ -214,9 +214,8 @@ export function ChatPanel() {
               </div>
               <div className="bg-bg-elevated px-3 py-2 rounded-lg rounded-tl-none text-sm">
                 <p>
-                  Hey! I&apos;m Kai, your AI CMO. Ask me about your marketing
-                  score, or tell me to write content, run an audit, or generate
-                  action proposals.
+                  Hey, I&apos;m Kai. Ask me to explain the score, draft a brief,
+                  run an audit, or prepare proposals for the approval queue.
                 </p>
               </div>
             </div>
@@ -245,7 +244,7 @@ export function ChatPanel() {
               type="text"
               value={input}
               onChange={handleInputChange}
-              placeholder="Ask Kai anything..."
+              placeholder="Ask Kai for the next move..."
               className="flex-1 px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors"
               disabled={isLoading}
             />

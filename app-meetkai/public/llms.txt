@@ -1,0 +1,50 @@
+# Kai Marketing OS
+
+> Kai Marketing OS adds `/kai` marketing skills to Codex and agent workspaces. Kai reads a repo, creates `MARKETING.md`, then runs audits, plans, briefs, landing pages, ad campaigns, SEO audits, content calendars, quality gates, and approvals.
+
+## Public Pages
+
+- `/` - public product homepage for `/kai` skills, first-run setup, SEO commands, stage paths, KaiCalls, MeetKai, FAQ, and sign-in.
+- `/llms.txt` - crawler and agent summary.
+- `/auth/callback` - authentication callback.
+
+## Primary /kai Skills
+
+- `/kai-start` - first-run setup. Reads the repo, creates `MARKETING.md`, and recommends the first useful command.
+- `/kai` - command router. Shows the marketing skills by Make, Check, Plan, and Learn.
+- `/kai-audit` - full marketing audit across checklists.
+- `/kai-seo-audit` - technical SEO audit with prioritized fixes.
+- `/kai-topical-map` - topic and content architecture planning.
+- `/kai-surround-sound` - plan mentions and citations for AI answer visibility.
+- `/kai-growth-plan` - stage-specific marketing plan.
+- `/kai-landing-page` - landing page copy and conversion structure.
+- `/kai-ad-campaign` - paid campaign plan and assets.
+- `/kai-content-calendar` - month or quarter of SEO and channel content.
+- `/kai-gate` - Four U's, banned words, SEO lint, policy checks, and approval state.
+
+## Private Surfaces
+
+- `/dashboard` - marketing health score, recommended actions, attention items, and run history.
+- `/actions` - proposed marketing changes that need review or approval.
+- `/content` - approved content, drafts, and completed work.
+- `/analytics` - website, SEO, ads, email, and channel performance.
+- `/connect` - integrations for analytics, ads, CRM, email, site data, and phone lead capture.
+- `/settings` - workspace settings.
+
+## Core Topics
+
+- Codex marketing skills
+- `/kai` skills
+- AI CMO harness
+- SEO audit software
+- AI search and AEO visibility
+- Content approval workflow
+- MeetKai marketing dashboard
+- KaiCalls missed-call answering and phone lead qualification
+
+## Agent Access
+
+- Public crawlers may read `/`, `/llms.txt`, and public assets.
+- Authenticated dashboard routes are not public documentation.
+- API routes are blocked from crawlers.
+- Source docs live at `https://github.com/cgallic/kai-cmo-harness`.

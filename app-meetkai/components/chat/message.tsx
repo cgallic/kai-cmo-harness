@@ -99,7 +99,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             );
           }
 
-          // input-streaming or input-available — show spinner
+          // input-streaming or input-available - show spinner
           return (
             <div
               key={i}

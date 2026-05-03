@@ -32,11 +32,11 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-2xl">
       <div>
         <h1 className="font-display text-2xl font-bold tracking-tight">
-          {isOnboarding ? "Set Up Your Business" : "Settings"}
+          {isOnboarding ? "Set Up Your Workspace" : "Settings"}
         </h1>
         {isOnboarding && (
           <p className="text-text-secondary text-sm mt-1">
-            Tell us about your business to get personalized marketing recommendations.
+            Give Kai enough context to score, route, and govern marketing work.
           </p>
         )}
       </div>
@@ -166,7 +166,7 @@ function BusinessProfileForm({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <User className="w-4 h-4 text-amber" />
-          Business Profile
+          Workspace Profile
         </CardTitle>
       </CardHeader>
 
@@ -179,7 +179,7 @@ function BusinessProfileForm({
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
             placeholder="Acme Marketing Co."
-            className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors"
           />
         </div>
 
@@ -190,7 +190,7 @@ function BusinessProfileForm({
             value={form.url}
             onChange={(e) => setForm({ ...form, url: e.target.value })}
             placeholder="https://example.com"
-            className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors"
           />
         </div>
 
@@ -199,7 +199,7 @@ function BusinessProfileForm({
           <select
             value={form.archetype}
             onChange={(e) => setForm({ ...form, archetype: e.target.value })}
-            className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground focus:outline-none focus:border-amber transition-colors"
+            className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-amber transition-colors"
           >
             {archetypes.map((a) => (
               <option key={a.value} value={a.value}>{a.label}</option>
@@ -212,19 +212,19 @@ function BusinessProfileForm({
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
-            placeholder="Brief description of your business..."
+            placeholder="What do you sell, who buys it, and where does growth come from?"
             rows={3}
-            className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors resize-none"
+            className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-text-tertiary focus:outline-none focus:border-amber transition-colors resize-none"
           />
         </div>
 
         <Button type="submit" loading={saving} className="w-full">
           <Save className="w-4 h-4" />
-          {isOnboarding ? "Create Profile & Continue" : "Save Changes"}
+          {isOnboarding ? "Create Profile and Continue" : "Save Changes"}
         </Button>
       </form>
 
-      {/* Audit section — shown after profile exists */}
+      {/* Audit section - shown after profile exists */}
       {!isOnboarding && brand && (
         <div className="mt-6 pt-6 border-t border-border">
           <div className="flex items-center justify-between mb-3">
@@ -233,7 +233,7 @@ function BusinessProfileForm({
               <div className="flex items-center gap-2 text-xs text-text-tertiary">
                 <span>Last run: {timeAgo(audit.created_at)}</span>
                 <span className={cn("font-mono font-semibold", scoreColor(audit.overall_score ?? 0))}>
-                  {audit.overall_score ?? "—"}/100
+                  {audit.overall_score ?? "-"}/100
                 </span>
               </div>
             )}
@@ -427,7 +427,7 @@ function AnalyticsConfiguration({
                   value={selectedGa4Property || ""}
                   onChange={(e) => handleSelectGa4(e.target.value)}
                   disabled={savingGa4}
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
                 >
                   <option value="">Select a property...</option>
                   {ga4Properties.map((prop) => (
@@ -465,7 +465,7 @@ function AnalyticsConfiguration({
                   value={selectedGscSite || ""}
                   onChange={(e) => handleSelectGsc(e.target.value)}
                   disabled={savingGsc}
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-[12px] text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
+                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-amber transition-colors disabled:opacity-50"
                 >
                   <option value="">Select a site...</option>
                   {gscSites.map((site) => (
@@ -496,9 +496,9 @@ function AutonomySettings({ brand }: { brand: ReturnType<typeof useBrand>["brand
   const [saving, setSaving] = useState(false);
 
   const modes: { value: AutonomyMode; label: string; desc: string }[] = [
-    { value: "supervised", label: "Supervised", desc: "All actions require approval" },
-    { value: "balanced", label: "Balanced", desc: "Low-risk auto-executes, medium+ needs approval" },
-    { value: "autonomous", label: "Autonomous", desc: "Only high-risk actions need approval" },
+    { value: "supervised", label: "Supervised", desc: "Every proposed action waits for approval" },
+    { value: "balanced", label: "Balanced", desc: "Low-risk work can run, medium and high risk waits" },
+    { value: "autonomous", label: "Autonomous", desc: "Only high-risk work waits for approval" },
   ];
 
   async function handleChange(newMode: AutonomyMode) {
@@ -517,11 +517,11 @@ function AutonomySettings({ brand }: { brand: ReturnType<typeof useBrand>["brand
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="w-4 h-4 text-amber" />
-          AI Autonomy
+          Run Authority
         </CardTitle>
       </CardHeader>
       <p className="text-xs text-text-tertiary mb-4">
-        Control how much the AI CMO can do without your approval.
+        Control what Kai can run without asking first.
       </p>
       <div className="space-y-2">
         {modes.map((m) => (

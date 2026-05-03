@@ -10,20 +10,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a",
-        "bg-elevated": "#111111",
-        card: "#141414",
-        "card-hover": "#181818",
-        border: "#1e1e1e",
-        "border-hover": "#2a2a2a",
-        foreground: "#fafafa",
-        "text-secondary": "#a1a1a1",
-        "text-tertiary": "#6b6b6b",
-        cream: "#f2efe8",
+        background: "#101218",
+        "bg-elevated": "#171a22",
+        card: "#1c1f28",
+        "card-hover": "#242833",
+        border: "#303440",
+        "border-hover": "#4a5160",
+        foreground: "#fffaf0",
+        "text-secondary": "#c2c0b8",
+        "text-tertiary": "#82857f",
+        cream: "#fffaf0",
         amber: {
-          DEFAULT: "#f59e0b",
-          light: "#fbbf24",
-          dim: "rgba(245,158,11,0.12)",
+          DEFAULT: "#5c8cff",
+          light: "#8fb0ff",
+          dim: "rgba(92,140,255,0.14)",
+        },
+        coral: {
+          DEFAULT: "#f17c51",
+          dim: "rgba(241,124,81,0.14)",
         },
         success: {
           DEFAULT: "#22c55e",
@@ -34,8 +38,8 @@ const config: Config = {
           dim: "rgba(239,68,68,0.12)",
         },
         info: {
-          DEFAULT: "#3b82f6",
-          dim: "rgba(59,130,246,0.12)",
+          DEFAULT: "#68c1d9",
+          dim: "rgba(104,193,217,0.12)",
         },
         purple: {
           DEFAULT: "#a78bfa",
@@ -48,8 +52,8 @@ const config: Config = {
         mono: ["var(--font-jetbrains)", "monospace"],
       },
       borderRadius: {
-        DEFAULT: "12px",
-        lg: "16px",
+        DEFAULT: "8px",
+        lg: "12px",
       },
     },
   },
