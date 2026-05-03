@@ -379,6 +379,17 @@ class Scheduler:
                 "task_type": "connector_health_check",
                 "config": {"notify_on_complete": True}
             },
+            # HALO-style weekly harness review
+            {
+                "name": "Weekly Harness Review",
+                "cron_expression": "0 10 * * 1",  # 10 AM Mondays
+                "task_type": "harness_review",
+                "config": {
+                    "model": "opus",
+                    "notify_on_complete": True,
+                    "extra": {"window_days": 7},
+                },
+            },
         ]
 
         existing_tasks = {t.name for t in self.db.list_scheduled_tasks(enabled_only=False)}

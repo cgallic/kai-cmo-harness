@@ -17,6 +17,7 @@ from .config import agent_config
 from .models import TaskExecution, TaskStatus, agent_db
 from .scheduler import scheduler
 from .state import state_manager
+from .traces import SpanKind, SpanStatus, tracer
 
 
 class AgentLoop:
@@ -112,14 +113,21 @@ class AgentLoop:
             return
 
         # Check for due tasks
-        due_tasks = scheduler.get_due_tasks()
+        async with tracer.span(
+            "scheduler.tick",
+            kind=SpanKind.SCHEDULER,
+        ) as scheduler_span:
+            due_tasks = scheduler.get_due_tasks()
+            running_count = len(state_manager.get_running_tasks())
+            available_slots = agent_config.max_concurrent_tasks - running_count
+            scheduler_span.add_attributes(
+                due_count=len(due_tasks),
+                running_count=running_count,
+                available_slots=max(available_slots, 0),
+            )
+
         if not due_tasks:
             return
-
-        # Get currently running task count
-        running_count = len(state_manager.get_running_tasks())
-        available_slots = agent_config.max_concurrent_tasks - running_count
-
         if available_slots <= 0:
             return
 
@@ -153,47 +161,80 @@ class AgentLoop:
         )
         agent_db.create_execution(execution)
 
-        try:
-            # Get the task handler
-            handler = get_task_handler(task.task_type)
-            if handler is None:
-                raise ValueError(f"Unknown task type: {task.task_type}")
+        async with tracer.trace(
+            task_id=task.task_type,
+            execution_id=execution_id,
+            client=task.client,
+            root_span_name=f"task:{task.task_type}",
+            root_span_kind=SpanKind.TASK,
+            inputs={
+                "scheduled_task_id": task.id,
+                "name": task.name,
+                "cron": task.cron_expression,
+                "config_extra": task.config.extra,
+            },
+        ) as trace_handle:
+            try:
+                # Get the task handler
+                handler = get_task_handler(task.task_type)
+                if handler is None:
+                    raise ValueError(f"Unknown task type: {task.task_type}")
 
-            # Execute with timeout
-            timeout = task.config.timeout or agent_config.task_timeout
-            result = await asyncio.wait_for(
-                handler.execute(task),
-                timeout=timeout
-            )
+                # Execute with timeout
+                timeout = task.config.timeout or agent_config.task_timeout
+                async with tracer.span(
+                    "task.execute",
+                    kind=SpanKind.TASK,
+                    inputs={"timeout_s": timeout},
+                ) as exec_span:
+                    result = await asyncio.wait_for(
+                        handler.execute(task),
+                        timeout=timeout,
+                    )
+                    exec_span.set_output(result)
+                    exec_span.add_attributes(
+                        success=bool(result and result.get("success", True)),
+                    )
 
-            # Success
-            agent_db.update_execution(
-                execution_id,
-                status=TaskStatus.COMPLETED,
-                completed_at=datetime.utcnow(),
-                result=result or {}
-            )
-            state_manager.increment_stat("tasks_completed")
+                # Success
+                agent_db.update_execution(
+                    execution_id,
+                    status=TaskStatus.COMPLETED,
+                    completed_at=datetime.utcnow(),
+                    result=result or {}
+                )
+                state_manager.increment_stat("tasks_completed")
 
-            print(f"[{datetime.now()}] Task completed: {task.name}")
+                print(f"[{datetime.now()}] Task completed: {task.name}")
 
-            # Send notification if configured
-            if task.config.notify_on_complete:
-                await self._notify_completion(task, result)
+                # Send notification if configured
+                if task.config.notify_on_complete:
+                    async with tracer.span(
+                        "notification.send",
+                        kind=SpanKind.NOTIFICATION,
+                        inputs={"reason": "complete"},
+                    ):
+                        await self._notify_completion(task, result)
 
-        except asyncio.TimeoutError:
-            error = f"Task timed out after {timeout}s"
-            print(f"[{datetime.now()}] Task timeout: {task.name}")
-            await self._handle_task_failure(task, execution_id, error)
+            except asyncio.TimeoutError:
+                error = f"Task timed out after {timeout}s"
+                print(f"[{datetime.now()}] Task timeout: {task.name}")
+                async with tracer.span(
+                    "task.timeout",
+                    kind=SpanKind.RETRY,
+                    attributes={"timeout_s": timeout},
+                ) as timeout_span:
+                    timeout_span.set_status(SpanStatus.TIMEOUT)
+                await self._handle_task_failure(task, execution_id, error)
 
-        except Exception as e:
-            error = str(e)
-            print(f"[{datetime.now()}] Task failed: {task.name} - {error}")
-            traceback.print_exc()
-            await self._handle_task_failure(task, execution_id, error)
+            except Exception as e:
+                error = str(e)
+                print(f"[{datetime.now()}] Task failed: {task.name} - {error}")
+                traceback.print_exc()
+                await self._handle_task_failure(task, execution_id, error)
 
-        finally:
-            state_manager.remove_running_task(task.id)
+            finally:
+                state_manager.remove_running_task(task.id)
 
     async def _handle_task_failure(self, task, execution_id: str, error: str):
         """Handle a task failure with retry logic."""

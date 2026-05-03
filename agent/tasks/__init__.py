@@ -23,6 +23,7 @@ from .weekly_report import WeeklyReportTask
 from .creative_assets import CreativeAssetsTask
 from .social_staleness import SocialStalenessTask
 from .claude_agent import ClaudeAgentTask
+from .harness_review import HarnessReviewTask
 
 # Task type to handler mapping (generic handlers only)
 TASK_HANDLERS: dict[str, type[BaseTask]] = {
@@ -43,6 +44,8 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "claude_seo": ClaudeAgentTask,
     "claude_ads": ClaudeAgentTask,
     "claude_competitors": ClaudeAgentTask,
+    # HALO-style harness review
+    "harness_review": HarnessReviewTask,
 }
 
 
@@ -86,6 +89,7 @@ __all__ = [
     "CreativeAssetsTask",
     "SocialStalenessTask",
     "ClaudeAgentTask",
+    "HarnessReviewTask",
     "register_task",
     "get_task_handler",
 ]
