@@ -7,6 +7,18 @@ description: Kai CMO Harness router — shows all 33 marketing skills organized 
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
+## Data Rule
+
+Any Kai workflow that uses review counts, ratings, rankings, traffic, conversions, calls, backlinks, Core Web Vitals, schema findings, local pack claims, ad metrics, or other quantitative client-facing claims must run the shared source-backed collector first:
+
+```bash
+python -m kai.source_data.collect --url "<url>" --workflow "<workflow>" --out "workspace/<workflow>-data"
+```
+
+Use `--third-party-sources all` or a comma list such as `serpapi,similarweb,builtwith,wappalyzer,yelp,meta-ads` when licensed vendor data is needed. Third-party API data is labeled `third_party_estimate`; user exports are labeled `user_provided`.
+
+Use `kai-data.json` for general Kai workflows. Audit/deck workflows also get the identical `audit-data.json` alias. `python -m scripts.audit.collect` remains supported for existing audit automations. Missing credentials are data gaps, never estimates.
+
 ## PRODUCE (make stuff)
 
 | Skill | What It Does |

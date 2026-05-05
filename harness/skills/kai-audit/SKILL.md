@@ -5,6 +5,60 @@ description: Full marketing audit — runs all relevant checklists against your 
 
 One-click full marketing audit. Runs all relevant harness checklists and produces a health report.
 
+## Non-Negotiable: Kai Data Provenance
+
+Before writing any finding, load `E:\Dev2\kai-cmo-harness-work\harness\references\audit-data-provenance.md`.
+
+Every audit must declare one of these modes:
+
+| Mode | Use When | Client-Facing Label |
+|------|----------|---------------------|
+| `sales_external` | Prospect or sales process before private access is granted | Sales intelligence audit - external-only |
+| `onboarding_connected` | Client has signed and granted GSC, GA4, GBP, ads, CRM, or call data access | Client onboarding audit |
+| `internal_demo` | Showing the shape of a workflow before data is connected | Internal demo - sample data |
+
+Default to `sales_external` if access is unclear.
+
+Hard rules:
+
+1. Do not publish numbers without a source. Review counts, ratings, rankings, traffic, conversions, calls, Core Web Vitals, Domain Rating, referring domains, AI Overview visibility, and local pack placement need source, retrieval date, and artifact/API note.
+2. Do not score what was not measured. Missing GSC, GA4, GBP, call tracking, backlink, or ad-platform data becomes a data gap, not an invented estimate.
+3. Do not turn inference into fact. Hypotheses must be labeled `score_eligible: false` and kept out of client-facing health scores.
+4. Do not cite a tool unless it actually ran. If the report says Ahrefs, DataForSEO, PageSpeed Insights, BuiltWith, Google Places, GSC, GA4, GBP, CallRail, or CRM, include retrieved date and raw artifact path or response summary.
+5. Every deck slide with a number needs a source footer. Every audit folder needs `_data-sources.md` and `_data-gaps.md`.
+
+Run before handoff:
+
+```bash
+python scripts/quality_gates/audit_provenance_lint.py workspace/marketing-audit --audit-dir
+```
+
+## Phase 0.5: Source-Backed Data Acquisition
+
+Before writing the audit, run the source-backed Kai collector. The collector is shared by all Kai workflows, not audit-only; this audit must consume its `audit-data.json` alias. Existing audit automations may keep using `python -m scripts.audit.collect`; non-audit Kai workflows should prefer `python -m kai.source_data.collect` and read `kai-data.json`.
+
+```bash
+python -m scripts.audit.collect --url "<url>" --firm-name "<firm_name>" --mode sales_external --workflow audit --out workspace/marketing-audit --pagespeed
+```
+
+Use `--mode onboarding_connected` only when the client has granted private access. Add optional collectors only when the workflow needs those facts:
+
+```bash
+python -m scripts.audit.collect --url "<url>" --firm-name "<firm_name>" --mode onboarding_connected --workflow audit --out workspace/marketing-audit --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --keywords "<kw1>,<kw2>" --location "<city, state>" --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"
+```
+
+Add `--third-party-sources all` or a comma list such as `serpapi,similarweb,builtwith,wappalyzer,brightlocal,yext,yelp,trustpilot,google-ads,meta-ads,tiktok-ads,linkedin-ads,twilio` when the audit needs licensed vendor data. Treat API vendor values as `third_party_estimate`; treat supplied exports as `user_provided`.
+
+The collector writes:
+
+- `workspace/marketing-audit/kai-data.json`
+- `workspace/marketing-audit/audit-data.json`
+- `workspace/marketing-audit/_data-sources.md`
+- `workspace/marketing-audit/_data-gaps.md`
+- `workspace/marketing-audit/raw/`
+
+All findings, health scores, and deck numbers must come from `audit-data.json`. Do not use numbers discovered conversationally, in snippets, or from model memory. If the metric is not present in `audit-data.json`, add it as a data gap instead of estimating it. Missing credentials for Places, DataForSEO, SEO platforms, GSC, GA4, call tracking, ads, or CRM must remain data gaps until the collector records a sourced metric.
+
 ## Phase 0: Load Product Context
 
 Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).
@@ -24,7 +78,9 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 3. **Active channels** — which are you using? (SEO, email, ads, social, content, PR)
 4. **Known issues** — anything already flagged?
 5. **Depth** — quick (top-line scores, 30 min) or deep (detailed findings, 2-3 hours)?
-6. **Business type** — determines which industry-specific module(s) to load:
+6. **Audit mode** — `sales_external`, `onboarding_connected`, or `internal_demo`
+7. **Available data** — public-only, Ahrefs/Semrush/DataForSEO, PageSpeed Insights, BuiltWith, Google Places, GSC, GA4, GBP, ads, CRM, CallRail, exports/screenshots
+8. **Business type** — determines which industry-specific module(s) to load:
 
    | Type | Indicators | Examples | Module |
    |------|-----------|----------|--------|
@@ -73,6 +129,21 @@ Run applicable checklists from `E:\Dev2\kai-cmo-harness-work\knowledge\checklist
 | **2026 Readiness** | `2026-readiness-checklist.md` | Always |
 
 Load each applicable checklist and evaluate. Use browse/gstack to view the live site if available.
+
+For every check, record:
+
+```yaml
+claim: ""
+source_tier: connected | public_observed | user_provided | inferred | missing_data
+source_name: ""
+source_url: ""
+retrieved_at: ""
+confidence: high | medium | low
+evidence_artifact: ""
+score_eligible: true | false
+```
+
+Only `connected`, `public_observed`, and `user_provided` findings can affect health scores. `inferred` and `missing_data` findings are scope notes unless the user explicitly asks for internal hypotheses.
 
 ## Phase 3: Health Scores
 
@@ -138,6 +209,8 @@ Map fixes to /kai skills:
 
 ```
 workspace/marketing-audit/
+├── _data-sources.md             # Source inventory: tier, access, retrieved_at, artifact
+├── _data-gaps.md                # Missing data and how sales/onboarding handles it
 ├── _executive-summary.md        # Health scores + top 5 fixes
 ├── _detailed-findings.md        # Module-by-module results
 ├── _prioritized-fixes.md        # Full fix list
