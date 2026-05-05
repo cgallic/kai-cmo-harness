@@ -1,597 +1,1673 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet Kai — AI tools for founders who build alone</title>
-    <meta name="description" content="31 marketing commands for Claude Code. Type a slash command, get finished marketing. Free and open-source.">
-    <meta property="og:title" content="Meet Kai — Marketing team in your terminal">
-    <meta property="og:description" content="31 marketing slash commands for Claude Code. Emails, ads, content, SEO audits — all from your terminal. Free and open-source.">
+    <title>Meet Kai | Marketing assistant for small teams</title>
+    <meta name="description" content="Meet Kai is a marketing assistant for business owners and lean teams. Build a plan, audit gaps, draft marketing work, review before launch, connect tools, and capture phone leads with KaiCalls.">
+    <link rel="canonical" href="https://meetkai.xyz/">
+    <meta property="og:title" content="Meet Kai | Marketing assistant for small teams">
+    <meta property="og:description" content="Kai turns marketing needs into plans, audits, drafts, approvals, connected tools, and phone lead capture.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://meetkai.xyz">
+    <meta property="og:url" content="https://meetkai.xyz/">
+    <meta property="og:image" content="https://meetkai.xyz/assets/kai-phone.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Meet Kai — Marketing team in your terminal">
-    <meta name="twitter:description" content="31 marketing slash commands for Claude Code. Free and open-source.">
+    <meta name="twitter:title" content="Meet Kai">
+    <meta name="twitter:description" content="A marketing assistant that starts with a plan, not a blank chat box.">
+    <meta name="theme-color" content="#f7f1e6">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://meetkai.xyz/#organization",
+          "name": "Kai",
+          "url": "https://meetkai.xyz/",
+          "sameAs": [
+            "https://github.com/cgallic/kai-cmo-harness",
+            "https://kaicalls.com"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://meetkai.xyz/#software",
+          "name": "Meet Kai",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web, local agent workspaces",
+          "url": "https://meetkai.xyz/",
+          "description": "Meet Kai helps business owners and lean teams plan marketing, audit gaps, create campaign work, review it before launch, connect existing tools, and capture phone leads with KaiCalls.",
+          "publisher": {
+            "@id": "https://meetkai.xyz/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Marketing plan creation",
+            "Website, SEO, content, ads, analytics, and call follow-up audits",
+            "Landing page, email, ad, SEO brief, social, and campaign drafting",
+            "Human approval queue before launch",
+            "Analytics, CRM, ads, email, website, calendar, and phone lead integrations",
+            "KaiCalls phone lead capture recommendations"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://meetkai.xyz/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Kai?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kai is a marketing assistant for business owners and lean teams. It helps create a plan, find the biggest marketing gaps, draft the next work, and send that work to a human review queue before anything launches."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Kai only a chat box?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Kai is built around marketing workflows. The /kai skills create briefs, run audits, draft campaigns, check quality and policy, and keep a record of what was approved."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who is Kai for?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kai is for founders, local service businesses, ecommerce operators, agencies, and lean marketing teams that need a clear next marketing action without hiring a full department."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does Kai use SEO and AI search?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kai includes SEO audits, content briefs, search linting, answer-engine readiness checks, FAQ structure, schema, and llms.txt support so search engines and AI answer systems can understand the product."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is KaiCalls?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "KaiCalls is the phone lead capture layer for businesses that receive calls. It helps answer missed calls, qualify leads, route requests, and sync call outcomes back into the marketing system."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #0a0a0b;
-            --bg-card: #111113;
-            --bg-terminal: #0d1117;
-            --border: #1e1e22;
-            --text: #e4e4e7;
-            --text-dim: #71717a;
-            --text-muted: #52525b;
-            --accent: #22d3ee;
-            --accent-dim: #164e63;
-            --green: #4ade80;
-            --warm: #fb923c;
-            --warm-dim: #7c2d12;
+        * {
+            box-sizing: border-box;
         }
 
-        html { scroll-behavior: smooth; }
+        :root {
+            color-scheme: light;
+            --bg: #f7f1e6;
+            --bg-soft: #fffaf0;
+            --bg-strong: #e9f3df;
+            --text: #181915;
+            --muted: #62675f;
+            --line: #d8cebc;
+            --card: rgba(255, 250, 240, 0.9);
+            --card-solid: #fffaf0;
+            --blue: #256eb8;
+            --blue-ink: #123e67;
+            --green: #40745b;
+            --coral: #d55f45;
+            --gold: #c78d22;
+            --shadow: 0 20px 50px rgba(35, 31, 24, 0.12);
+            --shadow-hard: 5px 5px 0 rgba(24, 25, 21, 0.95);
+            --nav: rgba(247, 241, 230, 0.88);
+            --terminal: #171b1f;
+            --terminal-text: #f9f0df;
+            --focus: #86b7ff;
+        }
+
+        [data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #121416;
+            --bg-soft: #1b1f22;
+            --bg-strong: #16251f;
+            --text: #f8efe1;
+            --muted: #bac0b7;
+            --line: #343a3e;
+            --card: rgba(29, 33, 36, 0.9);
+            --card-solid: #1d2124;
+            --blue: #7bb7ff;
+            --blue-ink: #b7d7ff;
+            --green: #91c7a5;
+            --coral: #ff967a;
+            --gold: #f1c46b;
+            --shadow: 0 24px 58px rgba(0, 0, 0, 0.34);
+            --shadow-hard: 5px 5px 0 rgba(248, 239, 225, 0.9);
+            --nav: rgba(18, 20, 22, 0.88);
+            --terminal: #0d1012;
+            --terminal-text: #f8efe1;
+            --focus: #f1c46b;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            max-width: 100%;
             color: var(--text);
-            line-height: 1.6;
+            background:
+                linear-gradient(90deg, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
+                linear-gradient(color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
+                var(--bg);
+            background-size: 42px 42px;
+            font-family: "Manrope", system-ui, sans-serif;
+            line-height: 1.55;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Layout ────────────────────────────────────── */
-        .container {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        section {
-            padding: 96px 0;
-        }
-
-        section + section {
-            border-top: 1px solid var(--border);
-        }
-
-        /* ── Nav ───────────────────────────────────────── */
-        nav {
+        body::before {
+            content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(10, 10, 11, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 0;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.13;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+            z-index: 10;
         }
 
-        nav .container {
+        [data-theme="dark"] body::before {
+            opacity: 0.08;
+            mix-blend-mode: screen;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        summary:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 4px;
+        }
+
+        .wrap {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+            background: var(--nav);
+            backdrop-filter: blur(16px);
+        }
+
+        .nav-inner {
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 20px;
         }
 
-        .nav-brand {
-            font-weight: 700;
-            font-size: 18px;
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             color: var(--text);
             text-decoration: none;
+            font-weight: 800;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border: 2px solid var(--text);
+            border-radius: 8px;
+            background: var(--blue);
+            color: #fffaf0;
+            box-shadow: 3px 3px 0 var(--text);
+            font-weight: 800;
+        }
+
+        [data-theme="dark"] .brand-mark {
+            color: #0d1012;
+            box-shadow: 3px 3px 0 var(--gold);
         }
 
         .nav-links {
             display: flex;
-            gap: 32px;
+            align-items: center;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
             list-style: none;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
         }
 
         .nav-links a {
-            color: var(--text-dim);
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
+            border-bottom: 2px solid transparent;
         }
 
-        .nav-links a:hover { color: var(--text); }
-
-        /* ── Hero ──────────────────────────────────────── */
-        .hero {
-            padding-top: 160px;
-            padding-bottom: 96px;
-            text-align: center;
+        .nav-links a:hover {
+            color: var(--text);
+            border-color: var(--gold);
         }
 
-        .hero h1 {
-            font-size: clamp(36px, 5vw, 56px);
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .hero .subtitle {
-            font-size: clamp(18px, 2.5vw, 22px);
-            color: var(--text-dim);
-            max-width: 600px;
-            margin: 0 auto 12px;
-        }
-
-        .hero .subtext {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 48px;
-        }
-
-        /* ── Buttons ───────────────────────────────────── */
-        .btn {
+        .theme-toggle {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
+            gap: 4px;
+            padding: 4px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--card);
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .btn-primary:hover {
-            background: #67e8f9;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
+        .theme-toggle button {
+            min-width: 58px;
+            min-height: 34px;
+            border: 0;
+            border-radius: 999px;
             background: transparent;
-            color: var(--text-dim);
-            border: 1px solid var(--border);
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
         }
 
-        .btn-secondary:hover {
-            border-color: var(--text-muted);
-            color: var(--text);
+        .theme-toggle button[aria-pressed="true"] {
+            background: var(--text);
+            color: var(--bg-soft);
         }
 
-        .btn-warm {
-            background: var(--warm);
-            color: var(--bg);
-        }
-
-        .btn-warm:hover {
-            background: #fdba74;
-            transform: translateY(-1px);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
+        .btn {
+            display: inline-flex;
+            min-height: 48px;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
+            gap: 10px;
+            padding: 12px 18px;
+            border: 1px solid var(--text);
+            border-radius: 8px;
+            background: var(--card-solid);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 800;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
         }
 
-        /* ── Terminal Block ─────────────────────────────── */
-        .terminal {
-            background: var(--bg-terminal);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            margin: 48px auto 0;
-            max-width: 720px;
+        .btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .btn.primary {
+            background: var(--blue);
+            color: #fffaf0;
+        }
+
+        [data-theme="dark"] .btn.primary {
+            color: #0d1012;
+        }
+
+        .btn.ghost {
+            background: transparent;
+        }
+
+        .hero {
+            min-height: min(820px, 82vh);
+            display: grid;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
             overflow: hidden;
         }
 
-        .terminal-header {
-            display: flex;
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.96fr) minmax(320px, 0.74fr);
+            gap: clamp(32px, 5vw, 74px);
             align-items: center;
-            gap: 6px;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.03);
-            border-bottom: 1px solid var(--border);
+            padding: 70px 0 54px;
         }
 
-        .terminal-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--text-muted);
+        .hero-grid > *,
+        .section-head > *,
+        .app-grid > *,
+        .app-preview-grid > *,
+        .mascot-grid > *,
+        .calls > * {
+            min-width: 0;
         }
 
-        .terminal-dot:nth-child(1) { background: #ef4444; }
-        .terminal-dot:nth-child(2) { background: #eab308; }
-        .terminal-dot:nth-child(3) { background: #22c55e; }
-
-        .terminal-body {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            line-height: 1.7;
-            overflow-x: auto;
-        }
-
-        .terminal-body .prompt { color: var(--green); }
-        .terminal-body .cmd { color: var(--text); }
-        .terminal-body .output { color: var(--text-dim); }
-
-        .copy-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--border);
-            color: var(--text-dim);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover { background: var(--text-muted); color: var(--text); }
-
-        .terminal-wrapper {
-            position: relative;
-        }
-
-        /* ── Section headers ───────────────────────────── */
-        .section-label {
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--blue-ink);
+            font-family: "IBM Plex Mono", monospace;
             font-size: 13px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent);
-            margin-bottom: 12px;
+            letter-spacing: 0;
+            margin-bottom: 18px;
         }
 
-        .section-label.warm { color: var(--warm); }
+        .eyebrow::before {
+            content: "";
+            width: 28px;
+            height: 2px;
+            background: var(--coral);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        h1,
+        h2,
+        h3 {
+            letter-spacing: 0;
+            line-height: 1.02;
+        }
+
+        h1 {
+            max-width: 780px;
+            font-size: clamp(58px, 9vw, 126px);
+            font-weight: 800;
+        }
 
         h2 {
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 700;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            margin-bottom: 12px;
+            max-width: 900px;
+            font-size: clamp(36px, 5.3vw, 72px);
+            font-weight: 800;
         }
 
-        .section-sub {
-            font-size: 17px;
-            color: var(--text-dim);
-            max-width: 640px;
-            margin-bottom: 48px;
+        h3 {
+            font-size: 24px;
+            font-weight: 800;
         }
 
-        /* ── Cards ─────────────────────────────────────── */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .hero-sub {
+            max-width: 700px;
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: clamp(18px, 2vw, 24px);
+            overflow-wrap: break-word;
         }
 
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 28px;
-            transition: border-color 0.2s;
+        .hero-sub strong {
+            color: var(--text);
         }
 
-        .card:hover { border-color: var(--text-muted); }
-
-        .card h3 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .card code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: var(--accent);
-            background: var(--accent-dim);
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-
-        .card p {
-            font-size: 15px;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        /* ── Stats Strip ───────────────────────────────── */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 24px;
-            margin-top: 48px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .stat-number.cyan { color: var(--accent); }
-        .stat-number.warm { color: var(--warm); }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-dim);
-            margin-top: 4px;
-        }
-
-        /* ── KaiCalls section ──────────────────────────── */
-        .kaicalls-section {
-            background: linear-gradient(180deg, var(--bg) 0%, rgba(124, 45, 18, 0.05) 100%);
-        }
-
-        /* ── Social Proof ──────────────────────────────── */
-        .product-logos {
+        .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 32px;
-            justify-content: center;
-            align-items: center;
+            gap: 12px;
             margin-top: 32px;
         }
 
-        .product-logos span {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-dim);
-            padding: 12px 20px;
-            border: 1px solid var(--border);
+        .proof-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 6px 11px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--card-solid) 84%, transparent);
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .hero-art {
+            position: relative;
+            min-height: 560px;
+            display: grid;
+            place-items: end center;
+        }
+
+        .hero-art::before {
+            content: "";
+            position: absolute;
+            left: 6%;
+            right: 2%;
+            bottom: 34px;
+            height: 62%;
+            border: 1px solid var(--line);
             border-radius: 8px;
-            transition: border-color 0.2s;
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--green) 19%, transparent), transparent 56%),
+                var(--bg-strong);
+            box-shadow: var(--shadow);
+            z-index: -1;
         }
 
-        .product-logos span:hover { border-color: var(--text-muted); }
-
-        /* ── Services CTA ──────────────────────────────── */
-        .services {
-            text-align: center;
+        .hero-art img {
+            width: min(100%, 520px);
+            height: auto;
+            filter: drop-shadow(0 18px 28px rgba(24, 25, 21, 0.18));
         }
 
-        .services p {
-            color: var(--text-dim);
-            font-size: 17px;
-            margin-bottom: 32px;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
+        [data-theme="dark"] .hero-art img {
+            filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.45));
         }
 
-        /* ── Footer ────────────────────────────────────── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 48px 0;
-            text-align: center;
+        .caption-strip {
+            border-top: 1px solid var(--line);
+            background: color-mix(in srgb, var(--card-solid) 82%, transparent);
         }
 
-        footer p {
-            color: var(--text-muted);
+        .caption-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--line);
+        }
+
+        .caption-item {
+            min-height: 92px;
+            padding: 18px;
+            background: var(--card-solid);
+        }
+
+        .caption-item b {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--blue-ink);
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 12px;
+        }
+
+        .caption-item span {
+            color: var(--muted);
             font-size: 14px;
         }
 
-        footer a {
-            color: var(--text-dim);
-            text-decoration: none;
+        section {
+            padding: 86px 0;
+            border-bottom: 1px solid var(--line);
         }
 
-        footer a:hover { color: var(--text); }
+        .section-head {
+            display: grid;
+            grid-template-columns: minmax(0, 0.86fr) minmax(280px, 0.54fr);
+            align-items: end;
+            gap: 48px;
+            margin-bottom: 44px;
+        }
+
+        .section-copy {
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        .step-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 76px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 22px;
+            min-height: 112px;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+            box-shadow: 0 1px 0 color-mix(in srgb, white 55%, transparent) inset;
+        }
+
+        .step-number {
+            color: var(--blue-ink);
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .step h3 {
+            margin-bottom: 7px;
+        }
+
+        .step p {
+            color: var(--muted);
+        }
+
+        .step code,
+        .command-grid code,
+        .mini-code,
+        .app-row code {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 5px 9px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--blue) 9%, var(--card-solid));
+            color: var(--blue-ink);
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .audience-grid,
+        .command-grid,
+        .gate-grid,
+        .seo-grid,
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .audience-card,
+        .command-card,
+        .gate-card,
+        .seo-card,
+        details,
+        .call-panel {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .audience-card,
+        .command-card,
+        .gate-card,
+        .seo-card {
+            padding: 22px;
+        }
+
+        .audience-card h3,
+        .command-card h3,
+        .gate-card h3,
+        .seo-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .audience-card p,
+        .command-card p,
+        .gate-card p,
+        .seo-card p {
+            color: var(--muted);
+        }
+
+        .command-card {
+            display: grid;
+            min-height: 238px;
+            align-content: start;
+            gap: 16px;
+        }
+
+        .command-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .app-section {
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--blue) 12%, transparent), transparent 52%),
+                var(--bg);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1fr);
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .terminal {
+            border: 1px solid color-mix(in srgb, var(--line) 45%, #000);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--terminal);
+            color: var(--terminal-text);
+            box-shadow: var(--shadow);
+        }
+
+        .terminal-head {
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            color: #b8c3cc;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 12px;
+        }
+
+        .copy-btn {
+            min-height: 30px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--terminal-text);
+            cursor: pointer;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 12px;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        .prompt {
+            color: #93d7a1;
+        }
+
+        .terminal .blue {
+            color: #8ec3ff;
+        }
+
+        .terminal .muted {
+            color: #aeb8c1;
+        }
+
+        .app-preview {
+            min-height: 440px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card-solid);
+            box-shadow: var(--shadow);
+        }
+
+        .app-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .app-preview-grid {
+            display: grid;
+            grid-template-columns: 0.72fr 1fr;
+            gap: 14px;
+        }
+
+        .health-panel,
+        .queue-panel {
+            min-height: 338px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--card) 88%, transparent);
+            padding: 18px;
+        }
+
+        .score {
+            width: 118px;
+            height: 118px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+            border: 12px solid color-mix(in srgb, var(--green) 55%, var(--line));
+            border-right-color: color-mix(in srgb, var(--gold) 70%, var(--line));
+            border-radius: 50%;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .app-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .app-row:last-child {
+            border-bottom: 0;
+        }
+
+        .app-row strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .app-row span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .mascot-band {
+            background:
+                linear-gradient(180deg, color-mix(in srgb, var(--green) 12%, transparent), transparent 64%),
+                var(--bg);
+        }
+
+        .mascot-grid {
+            display: grid;
+            grid-template-columns: minmax(260px, 0.54fr) 1fr minmax(220px, 0.42fr);
+            gap: 18px;
+            align-items: end;
+        }
+
+        .mascot-panel {
+            min-height: 380px;
+            display: grid;
+            place-items: end center;
+            padding: 22px 16px 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card-solid);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .mascot-panel.main {
+            min-height: 460px;
+            align-items: center;
+        }
+
+        .mascot-panel img {
+            width: min(100%, 300px);
+            filter: drop-shadow(0 14px 22px rgba(24, 25, 21, 0.14));
+        }
+
+        .mascot-panel.main img {
+            width: min(100%, 450px);
+        }
+
+        .small-note {
+            display: grid;
+            gap: 12px;
+            align-self: stretch;
+        }
+
+        .small-note div {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+        }
+
+        .small-note p {
+            color: var(--muted);
+        }
+
+        .gate-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .gate-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 16px;
+            border: 1px solid var(--text);
+            border-radius: 8px;
+            background: var(--gold);
+            color: #181915;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 3px 3px 0 var(--text);
+        }
+
+        .seo-section {
+            background:
+                linear-gradient(180deg, color-mix(in srgb, var(--gold) 10%, transparent), transparent 68%),
+                var(--bg);
+        }
+
+        .seo-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .faq-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        details {
+            padding: 20px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        details p {
+            margin-top: 12px;
+            color: var(--muted);
+        }
+
+        .calls {
+            display: grid;
+            grid-template-columns: minmax(0, 0.78fr) minmax(310px, 0.56fr);
+            gap: 34px;
+            align-items: center;
+        }
+
+        .call-panel {
+            position: relative;
+            min-height: 360px;
+            padding: 26px;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, color-mix(in srgb, var(--coral) 15%, transparent), transparent 60%),
+                var(--card-solid);
+        }
+
+        .call-panel::before {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 140px;
+            right: -42px;
+            top: 34px;
+            border: 14px solid var(--text);
+            border-bottom: 0;
+            border-radius: 120px 120px 0 0;
+            opacity: 0.12;
+        }
+
+        .call-panel .big {
+            position: relative;
+            max-width: 380px;
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 0.98;
+            font-weight: 800;
+        }
+
+        .call-panel p {
+            position: relative;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        .footer {
+            padding: 48px 0;
+            background: #141719;
+            color: #fffaf0;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .footer p {
+            margin-top: 6px;
+            color: #b8c0c5;
+        }
 
         .footer-links {
             display: flex;
-            gap: 24px;
-            justify-content: center;
-            margin-top: 12px;
+            flex-wrap: wrap;
+            gap: 18px;
+            color: #d6dde3;
+            font-size: 14px;
+            font-weight: 700;
         }
 
-        /* ── Mobile ────────────────────────────────────── */
-        @media (max-width: 640px) {
-            section { padding: 64px 0; }
-            .hero { padding-top: 120px; }
-            .nav-links { gap: 20px; }
-            .nav-links a { font-size: 13px; }
-            .terminal-body { font-size: 11px; padding: 16px; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
-            .hero-buttons { flex-direction: column; align-items: center; }
+        .footer a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .footer a:hover {
+            border-color: #d6dde3;
+        }
+
+        @media (max-width: 1040px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-grid,
+            .section-head,
+            .app-grid,
+            .calls {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: auto;
+            }
+
+            .hero-art {
+                min-height: 460px;
+            }
+
+            .caption-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .audience-grid,
+            .command-grid,
+            .gate-grid,
+            .seo-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .mascot-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .mascot-panel.main {
+                grid-column: 1 / -1;
+                grid-row: 1;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .wrap {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .nav-inner {
+                width: 100%;
+                gap: 10px;
+            }
+
+            .brand span:last-child {
+                display: none;
+            }
+
+            .nav-actions .btn {
+                display: none;
+            }
+
+            .nav-actions {
+                margin-left: auto;
+                min-width: 0;
+            }
+
+            .theme-toggle button {
+                min-width: 38px;
+                padding: 0 7px;
+                font-size: 12px;
+            }
+
+            .hero-grid {
+                padding-top: 50px;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .hero-grid > div:first-child {
+                width: 100%;
+                max-width: calc(100vw - 28px);
+            }
+
+            h1 {
+                font-size: clamp(52px, 18vw, 78px);
+            }
+
+            h2 {
+                font-size: clamp(34px, 12vw, 54px);
+            }
+
+            .hero-art {
+                min-height: 360px;
+                place-items: center;
+            }
+
+            .hero-art::before {
+                left: 0;
+                right: 0;
+                bottom: 18px;
+                height: 68%;
+            }
+
+            .hero-art img {
+                width: min(100%, 330px);
+            }
+
+            .caption-grid,
+            .audience-grid,
+            .command-grid,
+            .gate-grid,
+            .seo-grid,
+            .faq-grid,
+            .app-preview-grid,
+            .mascot-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .caption-item:nth-child(n+3) {
+                display: none;
+            }
+
+            .step {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .step code {
+                width: max-content;
+            }
+
+            section {
+                padding: 64px 0;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Nav -->
-<nav>
-    <div class="container">
-        <a href="#" class="nav-brand">Kai</a>
-        <ul class="nav-links">
-            <li><a href="#cmo">Kai CMO</a></li>
-            <li><a href="#kaicalls">KaiCalls</a></li>
-            <li><a href="https://github.com/cgallic/kai-cmo-harness" target="_blank">GitHub</a></li>
-        </ul>
-    </div>
-</nav>
-
-<!-- Hero -->
-<section class="hero">
-    <div class="container">
-        <h1>Meet Kai.<br>AI tools for founders who build alone.</h1>
-        <p class="subtitle">Marketing that writes itself. A phone that answers itself. All from one team.</p>
-        <p class="subtext">Two products. One mission: kill the busywork so you can build.</p>
-        <div class="hero-buttons">
-            <a href="#cmo" class="btn btn-primary">Install Kai CMO &mdash; Free</a>
-            <a href="#kaicalls" class="btn btn-secondary">Learn about KaiCalls</a>
-        </div>
-    </div>
-</section>
-
-<!-- Kai CMO -->
-<section id="cmo">
-    <div class="container">
-        <div class="section-label">Kai CMO &mdash; Free &amp; Open-Source</div>
-        <h2>Your marketing team in a terminal.</h2>
-        <p class="section-sub">31 slash commands for Claude Code. Type what you need. Get finished marketing. No dashboards. No onboarding calls. No $4K/month agency.</p>
-
-        <!-- Install block -->
-        <div class="terminal-wrapper">
-            <div class="terminal">
-                <div class="terminal-header">
-                    <span class="terminal-dot"></span>
-                    <span class="terminal-dot"></span>
-                    <span class="terminal-dot"></span>
+    <header class="nav">
+        <div class="wrap nav-inner">
+            <a href="#" class="brand" aria-label="Meet Kai home">
+                <span class="brand-mark">K</span>
+                <span>Meet Kai</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#how">How it works</a></li>
+                <li><a href="#skills">/kai skills</a></li>
+                <li><a href="#app">App</a></li>
+                <li><a href="#search">SEO value</a></li>
+                <li><a href="#kaicalls">KaiCalls</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="theme-toggle" aria-label="Theme options">
+                    <button type="button" data-theme-choice="light" aria-pressed="true">Light</button>
+                    <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
                 </div>
-                <div class="terminal-body">
-                    <span class="prompt">$</span> <span class="cmd">git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install &amp;&amp; \</span><br>
-                    <span class="cmd">&nbsp;&nbsp;cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/ &amp;&amp; \</span><br>
-                    <span class="cmd">&nbsp;&nbsp;rm -rf /tmp/kai-install</span><br><br>
-                    <span class="output">Installed! Type /kai to start.</span>
+                <a class="btn" href="https://github.com/cgallic/kai-cmo-harness" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="wrap hero-grid">
+                <div>
+                    <div class="eyebrow">marketing assistant for small teams</div>
+                    <h1 id="hero-title">Meet Kai</h1>
+                    <p class="hero-sub">
+                        <strong>Marketing help that starts with a plan.</strong>
+                        Kai helps business owners and lean teams decide what to do next, draft the work,
+                        and review it before anything goes live.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn primary" href="#how">See how Kai works</a>
+                        <a class="btn ghost" href="https://app.meetkai.xyz" target="_blank" rel="noreferrer">Open the app</a>
+                    </div>
+                    <div class="proof-row" aria-label="Kai product highlights">
+                        <span class="pill">Plans</span>
+                        <span class="pill">Audits</span>
+                        <span class="pill">Drafts</span>
+                        <span class="pill">Approval queue</span>
+                        <span class="pill">Tool connections</span>
+                        <span class="pill">KaiCalls</span>
+                    </div>
+                </div>
+                <figure class="hero-art" aria-label="Kai mascot beside a phone">
+                    <img src="assets/kai-phone.png" alt="Kai standing beside a rotary phone">
+                </figure>
+            </div>
+            <div class="caption-strip">
+                <div class="wrap caption-grid">
+                    <div class="caption-item"><b>Plan</b><span>Turn the offer, audience, and channels into a simple marketing plan.</span></div>
+                    <div class="caption-item"><b>Find gaps</b><span>Audit the website, SEO, content, ads, analytics, and missed calls.</span></div>
+                    <div class="caption-item"><b>Create</b><span>Draft pages, emails, ads, posts, briefs, and campaign plans from the same context.</span></div>
+                    <div class="caption-item"><b>Approve</b><span>Send work through a human review queue before launch.</span></div>
                 </div>
             </div>
-            <button class="copy-btn" onclick="copyInstall()">Copy</button>
+        </section>
+
+        <section id="how">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">plain path to the next move</div>
+                        <h2>A practical marketing assistant, not another blank chat box.</h2>
+                    </div>
+                    <p class="section-copy">
+                        Kai gives business owners and lean teams a simple route from "we need more customers"
+                        to "this is the next marketing action to approve."
+                    </p>
+                </div>
+
+                <div class="step-list">
+                    <article class="step">
+                        <div class="step-number">01</div>
+                        <div>
+                            <h3>Build a marketing plan</h3>
+                            <p>Tell Kai what you sell, who you serve, and which channels matter. Kai turns that into a clear plan instead of a pile of random tasks.</p>
+                        </div>
+                        <code>/kai-start</code>
+                    </article>
+                    <article class="step">
+                        <div class="step-number">02</div>
+                        <div>
+                            <h3>Find the biggest gaps</h3>
+                            <p>Run audits for your website, SEO, content, ads, analytics, and missed-call follow-up so you know what to fix first.</p>
+                        </div>
+                        <code>/kai-audit</code>
+                    </article>
+                    <article class="step">
+                        <div class="step-number">03</div>
+                        <div>
+                            <h3>Create the work</h3>
+                            <p>Draft landing pages, emails, ads, SEO briefs, social posts, competitor notes, and campaign plans from the same business context.</p>
+                        </div>
+                        <code>/kai-write</code>
+                    </article>
+                    <article class="step">
+                        <div class="step-number">04</div>
+                        <div>
+                            <h3>Review before launch</h3>
+                            <p>Kai sends proposed work to an approval queue so a human can check claims, tone, timing, and risk before publishing.</p>
+                        </div>
+                        <code>/kai-gate</code>
+                    </article>
+                    <article class="step">
+                        <div class="step-number">05</div>
+                        <div>
+                            <h3>Connect the tools you already use</h3>
+                            <p>Bring in analytics, CRM, ads, email, website, calendar, and phone lead data so the system learns from real results.</p>
+                        </div>
+                        <code>connect tools</code>
+                    </article>
+                    <article class="step">
+                        <div class="step-number">06</div>
+                        <div>
+                            <h3>Capture phone leads</h3>
+                            <p>When prospects still call, Kai routes missed-call and after-hours follow-up to KaiCalls so phone leads do not disappear.</p>
+                        </div>
+                        <code>KaiCalls</code>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">who it helps</div>
+                        <h2>Built for teams that need marketing output without a marketing department.</h2>
+                    </div>
+                    <p class="section-copy">
+                        Kai is for people who know the business but do not want to manage a mess of prompts,
+                        freelancers, spreadsheets, and unfinished campaign ideas.
+                    </p>
+                </div>
+
+                <div class="audience-grid">
+                    <article class="audience-card">
+                        <h3>Local service businesses</h3>
+                        <p>Get help with landing pages, search gaps, review requests, follow-up, and missed-call capture.</p>
+                    </article>
+                    <article class="audience-card">
+                        <h3>Founders and operators</h3>
+                        <p>Turn product context into launch plans, emails, content, ads, and weekly marketing priorities.</p>
+                    </article>
+                    <article class="audience-card">
+                        <h3>Lean agencies</h3>
+                        <p>Use a repeatable brief-to-approval process without rebuilding the same marketing checklist for every client.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">/kai skills</div>
+                        <h2>The commands are there, but the page explains the outcome.</h2>
+                    </div>
+                    <p class="section-copy">
+                        The local skills are the operator surface. They load the right marketing rules, collect the right
+                        context, and route the work through quality checks instead of starting from an empty prompt.
+                    </p>
+                </div>
+
+                <div class="command-grid">
+                    <article class="command-card">
+                        <div>
+                            <h3>Plan the business</h3>
+                            <p>Create a working brief, growth plan, brand position, budget, and launch path.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>/kai-start</code>
+                            <code>/kai-brief</code>
+                            <code>/kai-growth-plan</code>
+                            <code>/kai-brand</code>
+                        </div>
+                    </article>
+                    <article class="command-card">
+                        <div>
+                            <h3>Audit what exists</h3>
+                            <p>Find weak pages, search gaps, CRO issues, analytics holes, and follow-up problems.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>/kai-audit</code>
+                            <code>/kai-seo-audit</code>
+                            <code>/kai-cro</code>
+                            <code>/kai-analytics</code>
+                        </div>
+                    </article>
+                    <article class="command-card">
+                        <div>
+                            <h3>Create campaign assets</h3>
+                            <p>Draft the page, post, email, ad, video, case study, or newsletter from the same business memory.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>/kai-write</code>
+                            <code>/kai-landing-page</code>
+                            <code>/kai-email-system</code>
+                            <code>/kai-video</code>
+                        </div>
+                    </article>
+                    <article class="command-card">
+                        <div>
+                            <h3>Run paid and outbound</h3>
+                            <p>Build campaigns with platform rules loaded before copy is written.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>/kai-ad-campaign</code>
+                            <code>/kai-cold-outreach</code>
+                            <code>/kai-retarget</code>
+                            <code>/kai-abm</code>
+                        </div>
+                    </article>
+                    <article class="command-card">
+                        <div>
+                            <h3>Check before publishing</h3>
+                            <p>Score usefulness, catch banned words, lint search content, and block risky claims.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>/kai-gate</code>
+                            <code>four_us_score.py</code>
+                            <code>seo_lint.py</code>
+                        </div>
+                    </article>
+                    <article class="command-card">
+                        <div>
+                            <h3>Learn from results</h3>
+                            <p>Keep a record of approved work, connected signals, and the next actions that need review.</p>
+                        </div>
+                        <div class="command-list">
+                            <code>memory</code>
+                            <code>traces</code>
+                            <code>approval queue</code>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="app" class="app-section">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">the app is the control room</div>
+                        <h2>The homepage explains Kai before asking anyone to log in.</h2>
+                    </div>
+                    <p class="section-copy">
+                        The hosted app is where connected accounts, audit findings, proposed work, approvals,
+                        and campaign history live. The public page should help visitors understand that first.
+                    </p>
+                </div>
+
+                <div class="app-grid">
+                    <div class="terminal" aria-label="Kai skill route example">
+                        <div class="terminal-head">
+                            <span>local skill route</span>
+                            <button class="copy-btn" type="button" onclick="copyInstall()">copy install</button>
+                        </div>
+                        <div class="terminal-body">
+                            <span class="prompt">$</span> <span class="blue">/kai-start</span><br>
+                            <span class="muted">Create the marketing file every skill uses.</span><br><br>
+                            <span class="prompt">$</span> <span class="blue">/kai-audit</span><br>
+                            <span class="muted">Score website, SEO, content, ads, analytics, and phone follow-up.</span><br><br>
+                            <span class="prompt">$</span> <span class="blue">/kai-gate</span><br>
+                            <span class="muted">Check quality, claims, policy, search structure, and approval state.</span>
+                        </div>
+                    </div>
+
+                    <div class="app-preview" aria-label="MeetKai app preview">
+                        <div class="app-top">
+                            <span>MeetKai app</span>
+                            <span class="pill">review before launch</span>
+                        </div>
+                        <div class="app-preview-grid">
+                            <div class="health-panel">
+                                <div class="score">82</div>
+                                <h3>Marketing health</h3>
+                                <p class="section-copy">Website, search, content, ads, analytics, CRM, email, and phone lead signals in one place.</p>
+                            </div>
+                            <div class="queue-panel">
+                                <div class="app-row">
+                                    <div>
+                                        <strong>Rewrite service page offer</strong>
+                                        <span>CRO gap found. Needs human review.</span>
+                                    </div>
+                                    <code>review</code>
+                                </div>
+                                <div class="app-row">
+                                    <div>
+                                        <strong>Draft follow-up email</strong>
+                                        <span>Uses the same business brief.</span>
+                                    </div>
+                                    <code>approve</code>
+                                </div>
+                                <div class="app-row">
+                                    <div>
+                                        <strong>Add missed-call capture</strong>
+                                        <span>Phone leads route to KaiCalls.</span>
+                                    </div>
+                                    <code>route</code>
+                                </div>
+                                <div class="app-row">
+                                    <div>
+                                        <strong>Publish gated post</strong>
+                                        <span>Quality score passed.</span>
+                                    </div>
+                                    <code>ship</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mascot-band" aria-labelledby="mascot-heading">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">Kai should feel human</div>
+                        <h2 id="mascot-heading">Less robot. More calm marketing operator.</h2>
+                    </div>
+                    <p class="section-copy">
+                        The mascot system gives the product a recognizable face without letting the character cover
+                        the message. Kai supports the page. Kai does not hide the page.
+                    </p>
+                </div>
+
+                <div class="mascot-grid">
+                    <div class="mascot-panel">
+                        <img src="assets/kai-front.png" alt="Kai standing forward">
+                    </div>
+                    <div class="mascot-panel main">
+                        <img src="assets/kai-sitting.png" alt="Kai sitting on a stool">
+                    </div>
+                    <div class="small-note">
+                        <div>
+                            <h3>Clear role</h3>
+                            <p>Kai is the assistant who turns messy marketing work into the next reviewable action.</p>
+                        </div>
+                        <div>
+                            <h3>Plain visuals</h3>
+                            <p>No fake dashboards as a hero. No mystery jargon before the visitor knows what the product does.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">approval gates</div>
+                        <h2>Kai helps create marketing work, then checks it before it ships.</h2>
+                    </div>
+                    <p class="section-copy">
+                        Business owners should not have to trust raw AI output. Kai uses quality gates,
+                        policy references, and human approval steps before work is ready to publish.
+                    </p>
+                </div>
+
+                <div class="gate-grid">
+                    <article class="gate-card">
+                        <div class="gate-icon">4U</div>
+                        <h3>Usefulness</h3>
+                        <p>Every draft is scored for being unique, useful, specific, and urgent enough to matter.</p>
+                    </article>
+                    <article class="gate-card">
+                        <div class="gate-icon">CLA</div>
+                        <h3>Claim check</h3>
+                        <p>Risky claims, weak proof, banned words, and generic filler get caught before launch.</p>
+                    </article>
+                    <article class="gate-card">
+                        <div class="gate-icon">POL</div>
+                        <h3>Ad policy</h3>
+                        <p>Google, Meta, TikTok, LinkedIn, and other channel rules are loaded when ads are created.</p>
+                    </article>
+                    <article class="gate-card">
+                        <div class="gate-icon">HITL</div>
+                        <h3>Human approval</h3>
+                        <p>Kai proposes the work. A person still checks tone, timing, risk, and final publish decisions.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="search" class="seo-section">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">search value lower on the page</div>
+                        <h2>SEO and AI search value is built in without leading the pitch.</h2>
+                    </div>
+                    <p class="section-copy">
+                        Search engines and answer engines need clear public content. This page now explains the product,
+                        use cases, process, skills, FAQ answers, schema, and important internal paths in plain HTML.
+                    </p>
+                </div>
+
+                <div class="seo-grid">
+                    <article class="seo-card">
+                        <h3>Clear product answers</h3>
+                        <p>The page says what Kai is, who it is for, what problems it solves, and how the product works.</p>
+                    </article>
+                    <article class="seo-card">
+                        <h3>Search-friendly sections</h3>
+                        <p>Headings cover marketing assistant software, audits, content approval, skills, integrations, and KaiCalls.</p>
+                    </article>
+                    <article class="seo-card">
+                        <h3>FAQ and schema</h3>
+                        <p>FAQPage and SoftwareApplication schema help Google and answer engines understand the offer.</p>
+                    </article>
+                    <article class="seo-card">
+                        <h3>Useful paths</h3>
+                        <p>The page links to the app, GitHub runtime, llms.txt, and KaiCalls instead of trapping visitors at login.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="kaicalls">
+            <div class="wrap calls">
+                <div>
+                    <div class="eyebrow">phone lead capture</div>
+                    <h2>KaiCalls closes the loop when people still call.</h2>
+                    <p class="section-copy" style="margin-top: 24px;">
+                        For call-driven businesses, marketing does not end at a form fill. Kai audits the phone lead path
+                        and routes missed-call, after-hours, and qualification gaps to KaiCalls.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="https://kaicalls.com" class="btn primary" target="_blank" rel="noreferrer">Visit KaiCalls</a>
+                        <a href="#search" class="btn ghost">See search value</a>
+                    </div>
+                </div>
+                <div class="call-panel" aria-label="KaiCalls phone lead flow">
+                    <div class="big">No lead should disappear into voicemail.</div>
+                    <p>Answer, qualify, route, and log phone leads so the marketing system can act on them.</p>
+                    <div class="proof-row">
+                        <span class="pill">Missed calls</span>
+                        <span class="pill">After-hours</span>
+                        <span class="pill">Lead routing</span>
+                        <span class="pill">CRM sync</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">answers for visitors and crawlers</div>
+                        <h2>Frequently asked questions</h2>
+                    </div>
+                    <p class="section-copy">
+                        The public homepage should answer the basic questions before anyone reaches a login screen.
+                    </p>
+                </div>
+
+                <div class="faq-grid">
+                    <details>
+                        <summary>What is Kai?</summary>
+                        <p>Kai is a marketing assistant for business owners and lean teams. It helps build a plan, find gaps, draft the work, and review the next marketing action.</p>
+                    </details>
+                    <details>
+                        <summary>Is Kai only a chat box?</summary>
+                        <p>No. Kai is built around marketing workflows. The /kai skills create briefs, run audits, draft campaigns, check quality and policy, and keep a record of approved work.</p>
+                    </details>
+                    <details>
+                        <summary>What can Kai create?</summary>
+                        <p>Kai can draft landing pages, emails, ads, SEO briefs, social posts, newsletters, competitor notes, case studies, launch plans, and campaign plans.</p>
+                    </details>
+                    <details>
+                        <summary>What does Kai check?</summary>
+                        <p>Kai checks usefulness, specificity, claims, banned words, search structure, ad policy, approval status, analytics gaps, and phone lead capture.</p>
+                    </details>
+                    <details>
+                        <summary>What tools can Kai connect?</summary>
+                        <p>Kai is designed to connect analytics, CRM, ads, email, website, calendar, phone lead, and publishing tools so recommendations can use real business signals.</p>
+                    </details>
+                    <details>
+                        <summary>Where does KaiCalls fit?</summary>
+                        <p>KaiCalls handles missed calls, after-hours answering, and phone-based lead qualification for businesses that still win customers by phone.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <div>
+                <strong>Meet Kai</strong>
+                <p>Marketing plans, audits, drafts, approvals, connected signals, and phone lead capture.</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://app.meetkai.xyz" target="_blank" rel="noreferrer">App</a>
+                <a href="https://github.com/cgallic/kai-cmo-harness" target="_blank" rel="noreferrer">GitHub</a>
+                <a href="llms.txt">llms.txt</a>
+                <a href="robots.txt">robots.txt</a>
+                <a href="https://kaicalls.com" target="_blank" rel="noreferrer">KaiCalls</a>
+            </div>
         </div>
+    </footer>
 
-        <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 16px;">30-second install. Works with any Claude Code project.</p>
+    <script>
+        const root = document.documentElement;
+        const themeButtons = Array.from(document.querySelectorAll("[data-theme-choice]"));
+        const savedTheme = localStorage.getItem("kai-theme");
+        const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-        <!-- Use cases -->
-        <div class="card-grid" style="margin-top: 56px;">
-            <div class="card">
-                <h3>"Write all my emails"</h3>
-                <code>/kai-email-system</code>
-                <p>Maps every email your product needs &mdash; welcome, onboarding, trial expiring, win-back &mdash; writes them all, checks quality, outputs ready for your ESP.</p>
-            </div>
-            <div class="card">
-                <h3>"Create my ad campaign"</h3>
-                <code>/kai-ad-campaign</code>
-                <p>Plans ads across Meta, Google, LinkedIn, TikTok. Writes copy for each platform with character limits and policy compliance. TOF/MOF/BOF variants.</p>
-            </div>
-            <div class="card">
-                <h3>"Audit my marketing"</h3>
-                <code>/kai-audit</code>
-                <p>Runs 24 checklists across SEO, content, email, ads, social, and CRO. Gives you a health score and a prioritized fix list in 60 seconds.</p>
-            </div>
-        </div>
+        function setTheme(theme) {
+            root.dataset.theme = theme;
+            localStorage.setItem("kai-theme", theme);
+            themeButtons.forEach((button) => {
+                button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme));
+            });
+            document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "dark" ? "#121416" : "#f7f1e6");
+        }
 
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number cyan">153</div>
-                <div class="stat-label">knowledge files</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number cyan">3</div>
-                <div class="stat-label">quality gates</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number cyan">10</div>
-                <div class="stat-label">ad platform policies</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number cyan">5</div>
-                <div class="stat-label">products powered</div>
-            </div>
-        </div>
+        themeButtons.forEach((button) => {
+            button.addEventListener("click", () => setTheme(button.dataset.themeChoice));
+        });
 
-        <div style="text-align: center; margin-top: 48px;">
-            <a href="https://github.com/cgallic/kai-cmo-harness" class="btn btn-primary" target="_blank">Install Kai &mdash; Free, Open-Source</a>
-            <a href="https://github.com/cgallic/kai-cmo-harness" class="btn btn-secondary" target="_blank" style="margin-left: 12px;">Star on GitHub</a>
-        </div>
-    </div>
-</section>
+        setTheme(savedTheme || preferredTheme);
 
-<!-- KaiCalls -->
-<section id="kaicalls" class="kaicalls-section">
-    <div class="container">
-        <div class="section-label warm">KaiCalls</div>
-        <h2>Your phone, answered by a person who never sleeps.</h2>
-        <p class="section-sub">Kai picks up your calls 24/7. Takes messages. Books appointments. Sounds human. Stop losing leads to voicemail.</p>
-
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-number warm">4,300+</div>
-                <div class="stat-label">calls handled</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number warm">4,900+</div>
-                <div class="stat-label">leads captured</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number warm">24/7</div>
-                <div class="stat-label">coverage</div>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 48px;">
-            <a href="#" class="btn btn-warm">Get Your AI Secretary</a>
-        </div>
-    </div>
-</section>
-
-<!-- Social Proof -->
-<section>
-    <div class="container" style="text-align: center;">
-        <div class="section-label">Built by a team that uses it every day</div>
-        <h2>Powers 5 live products.</h2>
-        <div class="product-logos">
-            <span>KaiCalls</span>
-            <span>BuildWithKai</span>
-            <span>Awesome Backyard Parties</span>
-            <span>VocalScribe</span>
-            <span>ConnorGallic.com</span>
-        </div>
-    </div>
-</section>
-
-<!-- Services CTA -->
-<section class="services">
-    <div class="container">
-        <h2>Need help? We'll run it for you.</h2>
-        <p>Some founders want the tool. Some want the outcome. If you'd rather hand off the marketing entirely, we'll run Kai for you. No pricing page. No packages. Tell us what you need.</p>
-        <a href="#" class="btn btn-secondary">Talk to Us</a>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <p><strong>Kai</strong> &mdash; AI tools for founders who build alone.</p>
-        <div class="footer-links">
-            <a href="https://github.com/cgallic/kai-cmo-harness" target="_blank">GitHub</a>
-            <a href="#">X / Twitter</a>
-            <a href="#">LinkedIn</a>
-        </div>
-        <p style="margin-top: 16px;">Built by Connor Gallic.</p>
-    </div>
-</footer>
-
-<script>
-function copyInstall() {
-    const cmd = `git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install && cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/ && rm -rf /tmp/kai-install && echo "Installed! Type /kai to start."`;
-    navigator.clipboard.writeText(cmd).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-}
-</script>
-
+        function copyInstall() {
+            const cmd = "curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash";
+            navigator.clipboard.writeText(cmd).then(() => {
+                const btn = document.querySelector(".copy-btn");
+                btn.textContent = "copied";
+                setTimeout(() => {
+                    btn.textContent = "copy install";
+                }, 1500);
+            });
+        }
+    </script>
 </body>
 </html>
