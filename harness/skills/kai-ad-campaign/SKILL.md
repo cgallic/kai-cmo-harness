@@ -127,6 +127,20 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 4. **Landing page** — where do ads send traffic?
 5. **Existing assets** — any images/video already available?
 
+### Meta Creative Testing Add-On
+
+If the platform is Meta and the request includes 10+ creatives, API creation, video batches, existing winners, low budgets, or a "best solution" question, load:
+
+- `knowledge/playbooks/meta-creative-testing-decision-framework.md`
+
+Before recommending activation or creating live ads:
+
+- Separate "create paused for review" from "activate for spend."
+- Compare daily budget against target CPA and recent CPA.
+- Protect existing winning ad sets unless the user explicitly wants a refresh test.
+- Recommend a staged active subset when budget cannot fairly test the full batch.
+- Produce `workspace/ads/_meta-creative-testing-decision.md` when writing workspace artifacts.
+
 ## Phase 2: Campaign Architecture
 
 Generate `workspace/ads/_campaign-map.md` with:
@@ -272,6 +286,22 @@ Generate `workspace/ads/_quality-report.md`:
 ## Phase 5: API Execution (Optional — Meta)
 
 If the user wants to create ads via API (not just produce copy), load `harness/references/meta-ads-api-reference.md` and follow this sequence:
+
+### Launch Decision Gate
+
+Before creating or activating Meta ads by API, load `knowledge/playbooks/meta-creative-testing-decision-framework.md` when any of these are true:
+
+- 10 or more ads/creatives will be created.
+- The ad set daily budget is below the recent or target CPA.
+- Existing winners are already producing leads, purchases, or qualified calls.
+- The user asks whether to push all, push a subset, pause all, or find the best launch structure.
+
+For those cases, write or present a decision memo before execution. Default behavior for large batches is:
+
+- Create all requested ads as `PAUSED` when staging is useful.
+- Activate only the recommended subset when budget is tight.
+- Keep proven winner ad sets separate from exploratory batches.
+- Strip organic-only captions, hashtags, and comment-keyword CTAs from paid copy.
 
 ### Pre-Flight Checks
 

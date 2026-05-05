@@ -64,6 +64,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `meta-gem-deep-dive.md` | Understanding generative ads model |
 | `meta-lattice-deep-dive.md` | Understanding prediction/ranking system |
 | `meta-breakdown-effect-deep-dive.md` | Understanding budget allocation mechanics |
+| `playbooks/meta-creative-testing-decision-framework.md` | Deciding how many Meta creatives to activate, pause, or stage when budget and learning volume matter |
 
 ---
 
@@ -129,6 +130,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/video-clipping-automation-workflow.md` | Automated video clipping and multi-platform posting with OpusClip + Repurpose.io |
 | `playbooks/ad-creative-best-practices.md` | **Ad creatives** - Copy formulas (PAS, AIDA, BAB), testing framework (3x3 matrix), platform format specs, budget/bidding, creative fatigue signals |
 | `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
+| `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
 | `playbooks/social-media-strategy.md` | **Organic social** - LinkedIn, Instagram, X/Twitter, TikTok, YouTube best practices, content pillars, calendar template, platform benchmarks |
 | `playbooks/video-content-creation.md` | **Video production** - Short-form scripts (15/30/60s), long-form structure, testimonials, production tiers, editing rules, repurposing framework |
 | `playbooks/launch-playbook.md` | **Product launches** - Pre-launch (4 weeks), launch day hour-by-hour, post-launch optimization, crisis playbook |
@@ -220,7 +222,7 @@ Original source files preserved in `archive/` for reference.
 | **Persona research** | `personas/_persona-index.md` | individual persona file |
 | **Email campaigns** | `channels/email-lifecycle.md` | `frameworks/content-copywriting/perception-engineering.md` |
 | **Paid ads** | `channels/paid-acquisition.md` | `frameworks/content-copywriting/headline-formulas.md` |
-| **Meta/Facebook ads** | `channels/meta-advertising.md` | `frameworks/meta-advertising/` |
+| **Meta/Facebook ads** | `channels/meta-advertising.md` + `playbooks/meta-creative-testing-decision-framework.md` | `frameworks/meta-advertising/` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |
 | **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` | `checklists/seo-checklist.md` |
 | **Technical SEO security** | `checklists/SEO Expert-technical-seo-checklist.md` | - |
@@ -235,6 +237,7 @@ Original source files preserved in `archive/` for reference.
 | **Ad creative production** | `playbooks/ad-creative-best-practices.md` | `checklists/creative-production-checklist.md` |
 | **Ad campaign setup** | `playbooks/ad-campaign-management.md` | `checklists/ad-launch-checklist.md` |
 | **Ad creative testing** | `playbooks/ad-creative-best-practices.md` | `playbooks/ad-campaign-management.md` |
+| **Meta creative batch launch** | `playbooks/meta-creative-testing-decision-framework.md` | `checklists/meta-advertising-checklist.md` |
 | **Competitor ad analysis** | Use `/ad-research` skill | `playbooks/ad-creative-best-practices.md` |
 | **Social media strategy** | `playbooks/social-media-strategy.md` | platform-specific channel guide |
 | **Video content** | `playbooks/video-content-creation.md` | `playbooks/video-clipping-automation-workflow.md` |
