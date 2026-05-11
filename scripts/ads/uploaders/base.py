@@ -17,6 +17,15 @@ class UploadError(RuntimeError):
 
 
 @dataclass
+class ApprovalContext:
+    """Human approval metadata required for live paid-media writes."""
+
+    approval_id: str
+    evidence: Optional[str] = None
+    rollback_reference: Optional[str] = None
+
+
+@dataclass
 class CreativeAsset:
     """A media file to be uploaded to a platform's ad library.
 
@@ -90,18 +99,52 @@ class AdUploader(ABC):
 
     Implementations should:
     - Use the platform's existing CLI (scripts/ads/{platform}.py) where possible.
-    - Default `execute=False` (dry-run) on create_ad; live calls still produce PAUSED ads.
+    - Default `execute=False` (dry-run) at the orchestration layer; dry-run must
+      not upload assets or create platform objects.
+    - Live calls still produce PAUSED ads and must be tied to a human approval id.
     - Append every mutation to workspace/ads/mutations/YYYY-MM-DD.jsonl via the
       underlying CLI's mutation log.
     """
 
     platform: str  # subclasses set this
+    _approval_context: Optional[ApprovalContext] = None
+
+    def set_approval_context(
+        self,
+        approval_id: str,
+        *,
+        evidence: Optional[str] = None,
+        rollback_reference: Optional[str] = None,
+    ) -> None:
+        """Attach human approval metadata before any live upload/create call."""
+        if not approval_id or not approval_id.strip():
+            raise UploadError("Live ad writes require a non-empty approval_id")
+        self._approval_context = ApprovalContext(
+            approval_id=approval_id.strip(),
+            evidence=evidence,
+            rollback_reference=rollback_reference,
+        )
+
+    def clear_approval_context(self) -> None:
+        """Clear approval metadata after a live mutation scope ends."""
+        self._approval_context = None
+
+    def _require_approval_context(self, operation: str) -> ApprovalContext:
+        """Fail closed when an importer tries a live write without approval."""
+        if self._approval_context is None:
+            raise UploadError(
+                f"{self.platform}.{operation} requires approval context. "
+                "Call set_approval_context(approval_id=...) before live writes."
+            )
+        return self._approval_context
 
     @abstractmethod
     def upload_asset(self, asset: CreativeAsset) -> UploadResult:
-        """Upload an image or video to the platform. Always live (no dry-run)
-        — uploads are non-destructive and the platform-side asset is unused
-        until referenced by an ad."""
+        """Upload an image or video to the platform.
+
+        This method performs a live platform write. Callers must not invoke it
+        during dry-run previews.
+        """
 
     @abstractmethod
     def create_ad(

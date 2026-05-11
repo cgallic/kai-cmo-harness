@@ -54,6 +54,14 @@ from .models import (
     KaiRuntimeState,
     KaiWorkspaceProfile,
 )
+from .policy_bootstrap import (
+    activate_paid_media_accounts,
+    brand_policy_path,
+    build_initial_brand_policy,
+    ensure_brand_policy,
+    load_brand_policy,
+    write_brand_policy,
+)
 from .store import RuntimeStore, get_default_runtime_store
 from .workflows import (
     WorkflowDefinition,
@@ -96,7 +104,11 @@ __all__ = [
     "build_local_service_audit_input",
     "build_proposed_actions",
     "build_review_bundle",
+    "activate_paid_media_accounts",
     "action_from_finding",
+    "brand_policy_path",
+    "build_initial_brand_policy",
+    "ensure_brand_policy",
     "get_default_action_store",
     "get_default_integration_registry",
     "get_default_runtime_store",
@@ -107,6 +119,7 @@ __all__ = [
     "derive_operating_state",
     "derive_capability_state",
     "load_andon_window_cleaning_fixture",
+    "load_brand_policy",
     "load_local_service_fixture",
     "list_generation_formats",
     "list_workflows",
@@ -120,4 +133,5 @@ __all__ = [
     "run_local_service_audit",
     "run_local_service_review_flow",
     "write_back_memory",
+    "write_brand_policy",
 ]

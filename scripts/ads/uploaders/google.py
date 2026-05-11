@@ -194,6 +194,7 @@ class GoogleUploader(AdUploader):
         return resp.json()
 
     def upload_asset(self, asset: CreativeAsset) -> UploadResult:
+        approval = self._require_approval_context("upload_asset")
         # YouTube video registration path (no file upload — already on YouTube).
         if asset.kind == "video":
             yt_id = asset.external_id
@@ -214,7 +215,12 @@ class GoogleUploader(AdUploader):
             }
             result = self._mutate([op], label="upload-video")
             resource_name = self._extract_resource_name(result, "assetResult")
-            _log_mutation("upload-video", resource_name, {"youtube_video_id": yt_id}, result)
+            _log_mutation(
+                "upload-video",
+                resource_name,
+                {"youtube_video_id": yt_id, "approval_id": approval.approval_id},
+                result,
+            )
             return UploadResult(platform="google", kind="video", ref=resource_name, raw=result)
 
         # Image: upload bytes inline as base64.
@@ -243,7 +249,12 @@ class GoogleUploader(AdUploader):
         }
         result = self._mutate([op], label="upload-image")
         resource_name = self._extract_resource_name(result, "assetResult")
-        _log_mutation("upload-image", resource_name, {"file": str(asset.path)}, result)
+        _log_mutation(
+            "upload-image",
+            resource_name,
+            {"file": str(asset.path), "approval_id": approval.approval_id},
+            result,
+        )
         return UploadResult(platform="google", kind="image", ref=resource_name, raw=result)
 
     def create_ad(
@@ -324,9 +335,15 @@ class GoogleUploader(AdUploader):
                 raw={"would_post": url, "body": {"mutateOperations": [op]}},
             )
 
+        approval = self._require_approval_context("create_ad")
         result = self._mutate([op], label="create-ad")
         resource_name = self._extract_resource_name(result, "adGroupAdResult")
-        _log_mutation("create-ad", resource_name, op, result)
+        _log_mutation(
+            "create-ad",
+            resource_name,
+            {"operation": op, "approval_id": approval.approval_id},
+            result,
+        )
         return AdRef(
             platform="google",
             ad_id=resource_name,

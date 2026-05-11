@@ -56,6 +56,9 @@ from _pull_common import (
     REPO_ROOT,
 )
 
+sys.path.insert(0, str(REPO_ROOT))
+from kai.runtime.policy import PolicyEngine
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -251,6 +254,52 @@ def run_gaql(
 # ---------------------------------------------------------------------------
 
 _MICROS = 1_000_000
+
+
+def _policy_preflight(
+    args: argparse.Namespace,
+    *,
+    account_id: str,
+    action_type: str,
+    proposed_changes: dict[str, Any],
+    rollback_reference: str | None = None,
+) -> bool:
+    """Run paid-media execution through the shared policy guard."""
+    if not getattr(args, "execute", False):
+        return True
+    if not getattr(args, "approval_id", None):
+        log("ERROR: --execute requires --approval-id for paid-media auditability")
+        return False
+
+    proposed = {
+        "account_id": account_id,
+        **proposed_changes,
+    }
+    if rollback_reference:
+        proposed["rollback_reference"] = rollback_reference
+
+    result = PolicyEngine(
+        brand_policies={
+            "paid_media_guardrails": {
+                "allowed_accounts": [account_id],
+            }
+        }
+    ).evaluate({
+        "channel": "paid_media",
+        "action_type": action_type,
+        "execution_requested": True,
+        "metadata": {"approval_id": args.approval_id},
+        "proposed_changes": proposed,
+        "evidence": [{"source": f"approval:{args.approval_id}"}],
+    })
+
+    if result["passed"]:
+        return True
+
+    log("ERROR: Paid-media policy preflight failed:")
+    for violation in result["violations"]:
+        log(f"  - {violation}")
+    return False
 
 
 def _micros_to_usd(micros: Any) -> Optional[float]:
@@ -863,6 +912,10 @@ def _build_status_payload(
 
 def cmd_pause(args: argparse.Namespace) -> int:
     """Pause a campaign, ad group, or ad."""
+    if args.execute and not args.approval_id:
+        log("ERROR: --execute requires --approval-id for paid-media auditability")
+        return 1
+
     cred_error = check_credentials()
     if cred_error:
         log(f"ERROR: {cred_error}")
@@ -876,6 +929,19 @@ def cmd_pause(args: argparse.Namespace) -> int:
     _, resource_name, payload = _build_status_payload(
         clean_cid, resource_type, entity_id, "PAUSED"
     )
+    policy_entity = "adset" if resource_type == "ad_group" else resource_type
+    if not _policy_preflight(
+        args,
+        account_id=clean_cid,
+        action_type=f"pause_{policy_entity}",
+        proposed_changes={
+            "campaign_id": entity_id if resource_type == "campaign" else None,
+            "change_diff": {"status": {"before": "ENABLED", "after": "PAUSED"}},
+            "target_status": "PAUSED",
+        },
+        rollback_reference=args.rollback_reference,
+    ):
+        return 1
 
     url = MUTATE_URL.format(version=API_VERSION, customer_id=clean_cid)
 
@@ -896,7 +962,7 @@ def cmd_pause(args: argparse.Namespace) -> int:
         log(f"ERROR: {e}")
         return 1
 
-    _log_mutation("pause", entity_id, payload, resp)
+    _log_mutation("pause", entity_id, {**payload, "approval_id": args.approval_id}, resp)
     log(f"  Paused {resource_type}: {entity_id}")
     print(json.dumps(resp, indent=2))
     return 0
@@ -904,6 +970,10 @@ def cmd_pause(args: argparse.Namespace) -> int:
 
 def cmd_activate(args: argparse.Namespace) -> int:
     """Activate (enable) a campaign, ad group, or ad."""
+    if args.execute and not args.approval_id:
+        log("ERROR: --execute requires --approval-id for paid-media auditability")
+        return 1
+
     cred_error = check_credentials()
     if cred_error:
         log(f"ERROR: {cred_error}")
@@ -917,6 +987,19 @@ def cmd_activate(args: argparse.Namespace) -> int:
     _, resource_name, payload = _build_status_payload(
         clean_cid, resource_type, entity_id, "ENABLED"
     )
+    policy_entity = "adset" if resource_type == "ad_group" else resource_type
+    if not _policy_preflight(
+        args,
+        account_id=clean_cid,
+        action_type=f"activate_{policy_entity}",
+        proposed_changes={
+            "campaign_id": entity_id if resource_type == "campaign" else None,
+            "change_diff": {"status": {"before": "PAUSED", "after": "ENABLED"}},
+            "target_status": "ENABLED",
+        },
+        rollback_reference=args.rollback_reference,
+    ):
+        return 1
 
     url = MUTATE_URL.format(version=API_VERSION, customer_id=clean_cid)
 
@@ -937,7 +1020,7 @@ def cmd_activate(args: argparse.Namespace) -> int:
         log(f"ERROR: {e}")
         return 1
 
-    _log_mutation("activate", entity_id, payload, resp)
+    _log_mutation("activate", entity_id, {**payload, "approval_id": args.approval_id}, resp)
     log(f"  Activated {resource_type}: {entity_id}")
     print(json.dumps(resp, indent=2))
     return 0
@@ -945,6 +1028,10 @@ def cmd_activate(args: argparse.Namespace) -> int:
 
 def cmd_budget(args: argparse.Namespace) -> int:
     """Change a campaign's daily budget."""
+    if args.execute and not args.approval_id:
+        log("ERROR: --execute requires --approval-id for paid-media auditability")
+        return 1
+
     cred_error = check_credentials()
     if cred_error:
         log(f"ERROR: {cred_error}")
@@ -1018,6 +1105,19 @@ def cmd_budget(args: argparse.Namespace) -> int:
 
     log(f"  Budget resource: {budget_resource}")
     log(f"  Current amount : ${old_usd}/day ({old_micros} micros)")
+    if not _policy_preflight(
+        args,
+        account_id=clean_cid,
+        action_type="adjust_budget",
+        proposed_changes={
+            "campaign_id": campaign_id,
+            "direction": "increase" if amount_usd > old_usd else "reduce",
+            "current_daily_budget": old_usd,
+            "new_daily_budget": amount_usd,
+            "change_diff": {"daily_budget": {"before": old_usd, "after": amount_usd}},
+        },
+    ):
+        return 1
 
     # Build the mutate payload
     payload = {
@@ -1040,7 +1140,7 @@ def cmd_budget(args: argparse.Namespace) -> int:
         log(f"ERROR: {e}")
         return 1
 
-    _log_mutation("budget", campaign_id, payload, resp)
+    _log_mutation("budget", campaign_id, {**payload, "approval_id": args.approval_id}, resp)
     log(f"  Budget updated: ${old_usd} -> ${amount_usd:.2f}/day")
     print(json.dumps(resp, indent=2))
     return 0
@@ -1048,6 +1148,10 @@ def cmd_budget(args: argparse.Namespace) -> int:
 
 def cmd_add_negative(args: argparse.Namespace) -> int:
     """Add a negative keyword to a campaign."""
+    if args.execute and not args.approval_id:
+        log("ERROR: --execute requires --approval-id for paid-media auditability")
+        return 1
+
     cred_error = check_credentials()
     if cred_error:
         log(f"ERROR: {cred_error}")
@@ -1081,6 +1185,18 @@ def cmd_add_negative(args: argparse.Namespace) -> int:
     }
 
     url = MUTATE_URL.format(version=API_VERSION, customer_id=clean_cid)
+    if not _policy_preflight(
+        args,
+        account_id=clean_cid,
+        action_type="add_keyword",
+        proposed_changes={
+            "campaign_id": campaign_id,
+            "keyword": keyword,
+            "negative": True,
+            "change_diff": {"negative_keyword": {"before": None, "after": keyword}},
+        },
+    ):
+        return 1
 
     if not args.execute:
         log_section("Google Ads — Add Negative Keyword (DRY RUN)")
@@ -1103,7 +1219,7 @@ def cmd_add_negative(args: argparse.Namespace) -> int:
         log(f"ERROR: {e}")
         return 1
 
-    _log_mutation("add-negative", campaign_id, payload, resp)
+    _log_mutation("add-negative", campaign_id, {**payload, "approval_id": args.approval_id}, resp)
     log(f"  Negative keyword added: \"{keyword}\" ({match_type})")
     print(json.dumps(resp, indent=2))
     return 0
@@ -1153,6 +1269,16 @@ def main() -> None:
         default=False,
         help="Actually execute the mutation (default: dry-run).",
     )
+    pause_parser.add_argument(
+        "--approval-id",
+        default=None,
+        help="Required with --execute. Links the write to a human-approved action.",
+    )
+    pause_parser.add_argument(
+        "--rollback-reference",
+        default=None,
+        help="Required with --execute for pause actions. Command/runbook to reverse the change.",
+    )
 
     # ---- activate ----
     activate_parser = subparsers.add_parser(
@@ -1176,6 +1302,16 @@ def main() -> None:
         default=False,
         help="Actually execute the mutation (default: dry-run).",
     )
+    activate_parser.add_argument(
+        "--approval-id",
+        default=None,
+        help="Required with --execute. Links the write to a human-approved action.",
+    )
+    activate_parser.add_argument(
+        "--rollback-reference",
+        default=None,
+        help="Required with --execute for activation. Command/runbook to reverse the change.",
+    )
 
     # ---- budget ----
     budget_parser = subparsers.add_parser(
@@ -1198,6 +1334,11 @@ def main() -> None:
         action="store_true",
         default=False,
         help="Actually execute the mutation (default: dry-run).",
+    )
+    budget_parser.add_argument(
+        "--approval-id",
+        default=None,
+        help="Required with --execute. Links the write to a human-approved action.",
     )
 
     # ---- add-negative ----
@@ -1228,6 +1369,11 @@ def main() -> None:
         action="store_true",
         default=False,
         help="Actually execute the mutation (default: dry-run).",
+    )
+    neg_parser.add_argument(
+        "--approval-id",
+        default=None,
+        help="Required with --execute. Links the write to a human-approved action.",
     )
 
     # ---- Parse and dispatch ----

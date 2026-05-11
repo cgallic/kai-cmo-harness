@@ -54,6 +54,9 @@ from _pull_common import (
     write_pull,
 )
 
+sys.path.insert(0, str(REPO_ROOT))
+from kai.runtime.policy import PolicyEngine
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -447,15 +450,82 @@ def _dry_run_banner(method: str, url: str, payload: dict) -> None:
     log(f"  Add --execute to apply this change.")
 
 
+def _require_approval_id(args: argparse.Namespace) -> bool:
+    """Return False when a live paid-media write lacks approval metadata."""
+    if not getattr(args, "approval_id", None):
+        print("ERROR: live paid-media writes require --approval-id", file=sys.stderr)
+        return False
+    return True
+
+
+def _policy_preflight(
+    args: argparse.Namespace,
+    *,
+    action_type: str,
+    proposed_changes: dict[str, Any],
+    rollback_reference: str | None = None,
+) -> bool:
+    """Run live Meta writes through the shared paid-media policy engine."""
+    if not getattr(args, "execute", False) and action_type not in {"upload_ad_asset"}:
+        return True
+    if not _require_approval_id(args):
+        return False
+
+    account_id = _account_id()
+    proposed = {
+        "account_id": account_id,
+        **proposed_changes,
+    }
+    if rollback_reference:
+        proposed["rollback_reference"] = rollback_reference
+
+    result = PolicyEngine(
+        brand_policies={
+            "paid_media_guardrails": {
+                "allowed_accounts": [account_id],
+            }
+        }
+    ).evaluate({
+        "channel": "paid_media",
+        "action_type": action_type,
+        "execution_requested": True,
+        "metadata": {"approval_id": args.approval_id},
+        "proposed_changes": proposed,
+        "evidence": [{"source": f"approval:{args.approval_id}"}],
+    })
+
+    if result["passed"]:
+        return True
+
+    print("ERROR: Paid-media policy preflight failed:", file=sys.stderr)
+    for violation in result["violations"]:
+        print(f"  - {violation}", file=sys.stderr)
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Mutation commands
 # ---------------------------------------------------------------------------
 
 def cmd_pause(args: argparse.Namespace) -> None:
     """Pause a campaign, ad set, or ad."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     entity_id = args.id
     url = f"{BASE_URL}/{entity_id}"
     payload = {"status": "PAUSED", "access_token": _token()}
+    if not _policy_preflight(
+        args,
+        action_type="pause_campaign",
+        proposed_changes={
+            "campaign_id": entity_id,
+            "target_status": "PAUSED",
+            "change_diff": {"status": {"before": "ACTIVE", "after": "PAUSED"}},
+        },
+        rollback_reference=args.rollback_reference,
+    ):
+        sys.exit(1)
 
     if not args.execute:
         _dry_run_banner("POST", url, payload)
@@ -463,15 +533,29 @@ def cmd_pause(args: argparse.Namespace) -> None:
 
     resp = api_post(url, data=payload, label=f"pause/{entity_id}")
     log(f"Paused: {entity_id}")
-    _log_mutation("pause", entity_id, {"status": "PAUSED"}, resp)
+    _log_mutation("pause", entity_id, {"status": "PAUSED", "approval_id": args.approval_id}, resp)
     print(json.dumps(resp, indent=2))
 
 
 def cmd_activate(args: argparse.Namespace) -> None:
     """Activate a campaign, ad set, or ad."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     entity_id = args.id
     url = f"{BASE_URL}/{entity_id}"
     payload = {"status": "ACTIVE", "access_token": _token()}
+    if not _policy_preflight(
+        args,
+        action_type="activate_campaign",
+        proposed_changes={
+            "campaign_id": entity_id,
+            "target_status": "ACTIVE",
+            "change_diff": {"status": {"before": "PAUSED", "after": "ACTIVE"}},
+        },
+        rollback_reference=args.rollback_reference,
+    ):
+        sys.exit(1)
 
     if not args.execute:
         _dry_run_banner("POST", url, payload)
@@ -479,12 +563,15 @@ def cmd_activate(args: argparse.Namespace) -> None:
 
     resp = api_post(url, data=payload, label=f"activate/{entity_id}")
     log(f"Activated: {entity_id}")
-    _log_mutation("activate", entity_id, {"status": "ACTIVE"}, resp)
+    _log_mutation("activate", entity_id, {"status": "ACTIVE", "approval_id": args.approval_id}, resp)
     print(json.dumps(resp, indent=2))
 
 
 def cmd_budget(args: argparse.Namespace) -> None:
     """Change daily budget on an ad set or campaign. Amount in dollars."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     entity_id = args.id
     amount_cents = int(float(args.amount) * 100)
     url = f"{BASE_URL}/{entity_id}"
@@ -495,14 +582,49 @@ def cmd_budget(args: argparse.Namespace) -> None:
         log(f"  (${args.amount} = {amount_cents} cents)")
         return
 
+    before = api_get(
+        f"{BASE_URL}/{entity_id}?fields=daily_budget,status,effective_status&access_token={_token()}",
+        label=f"budget_before/{entity_id}",
+    )
+    current_cents = int(before.get("daily_budget") or 0)
+    current_daily = current_cents / 100
+    new_daily = amount_cents / 100
+    if current_cents <= 0:
+        print("ERROR: Cannot verify current daily budget before mutation; failing closed.", file=sys.stderr)
+        sys.exit(1)
+    if not _policy_preflight(
+        args,
+        action_type="adjust_budget",
+        proposed_changes={
+            "campaign_id": entity_id,
+            "direction": "increase" if new_daily > current_daily else "reduce",
+            "current_daily_budget": current_daily,
+            "new_daily_budget": new_daily,
+            "campaign_status": before.get("effective_status") or before.get("status"),
+            "change_diff": {"daily_budget": {"before": current_daily, "after": new_daily}},
+        },
+    ):
+        sys.exit(1)
+
     resp = api_post(url, data=payload, label=f"budget/{entity_id}")
     log(f"Budget updated: {entity_id} -> ${args.amount}/day ({amount_cents} cents)")
-    _log_mutation("budget", entity_id, {"daily_budget": amount_cents}, resp)
+    _log_mutation(
+        "budget",
+        entity_id,
+        {"daily_budget": amount_cents, "approval_id": args.approval_id},
+        resp,
+    )
     print(json.dumps(resp, indent=2))
 
 
 def cmd_create_campaign(args: argparse.Namespace) -> None:
     """Create a new campaign. Always PAUSED by default."""
+    if args.status and args.status.upper() == "ACTIVE":
+        print("ERROR: Meta campaign create cannot use ACTIVE status; create PAUSED and activate separately.", file=sys.stderr)
+        sys.exit(1)
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     url = f"{BASE_URL}/{_account_id()}/campaigns"
     payload = {
         "name": args.name,
@@ -515,16 +637,30 @@ def cmd_create_campaign(args: argparse.Namespace) -> None:
     if not args.execute:
         _dry_run_banner("POST", url, payload)
         return
+    if not _policy_preflight(
+        args,
+        action_type="create_paused_campaign",
+        proposed_changes={
+            "status": payload["status"],
+            "change_diff": {"campaign": {"before": None, "after": {"name": args.name}}},
+        },
+    ):
+        sys.exit(1)
 
     resp = api_post(url, data=payload, label="create-campaign")
     campaign_id = resp.get("id", "unknown")
     log(f"Campaign created: {campaign_id} ({args.name})")
-    _log_mutation("create-campaign", campaign_id, {k: v for k, v in payload.items() if k != "access_token"}, resp)
+    log_payload = {k: v for k, v in payload.items() if k != "access_token"}
+    log_payload["approval_id"] = args.approval_id
+    _log_mutation("create-campaign", campaign_id, log_payload, resp)
     print(json.dumps(resp, indent=2))
 
 
 def cmd_create_adset(args: argparse.Namespace) -> None:
     """Create a new ad set. Budget in dollars, converted to cents."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     url = f"{BASE_URL}/{_account_id()}/adsets"
     budget_cents = int(float(args.daily_budget) * 100)
     payload = {
@@ -544,16 +680,31 @@ def cmd_create_adset(args: argparse.Namespace) -> None:
         _dry_run_banner("POST", url, payload)
         log(f"  (${args.daily_budget}/day = {budget_cents} cents)")
         return
+    if not _policy_preflight(
+        args,
+        action_type="create_paused_adset",
+        proposed_changes={
+            "campaign_id": args.campaign_id,
+            "status": "PAUSED",
+            "change_diff": {"adset": {"before": None, "after": {"name": args.name}}},
+        },
+    ):
+        sys.exit(1)
 
     resp = api_post(url, data=payload, label="create-adset")
     adset_id = resp.get("id", "unknown")
     log(f"Ad set created: {adset_id} ({args.name})")
-    _log_mutation("create-adset", adset_id, {k: v for k, v in payload.items() if k != "access_token"}, resp)
+    log_payload = {k: v for k, v in payload.items() if k != "access_token"}
+    log_payload["approval_id"] = args.approval_id
+    _log_mutation("create-adset", adset_id, log_payload, resp)
     print(json.dumps(resp, indent=2))
 
 
 def cmd_create_ad(args: argparse.Namespace) -> None:
     """Create a new ad in an ad set. Creative spec as JSON string."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     url = f"{BASE_URL}/{_account_id()}/ads"
     payload = {
         "name": args.name,
@@ -566,16 +717,38 @@ def cmd_create_ad(args: argparse.Namespace) -> None:
     if not args.execute:
         _dry_run_banner("POST", url, payload)
         return
+    if not _policy_preflight(
+        args,
+        action_type="create_paused_ad",
+        proposed_changes={
+            "adset_id": args.adset_id,
+            "status": "PAUSED",
+            "change_diff": {"ad": {"before": None, "after": {"name": args.name}}},
+        },
+    ):
+        sys.exit(1)
 
     resp = api_post(url, data=payload, label="create-ad")
     ad_id = resp.get("id", "unknown")
     log(f"Ad created: {ad_id} ({args.name})")
-    _log_mutation("create-ad", ad_id, {k: v for k, v in payload.items() if k != "access_token"}, resp)
+    log_payload = {k: v for k, v in payload.items() if k != "access_token"}
+    log_payload["approval_id"] = args.approval_id
+    _log_mutation("create-ad", ad_id, log_payload, resp)
     print(json.dumps(resp, indent=2))
 
 
 def cmd_upload_image(args: argparse.Namespace) -> None:
     """Upload an image file. Returns image_hash. Not dry-runnable (safe operation)."""
+    if not _policy_preflight(
+        args,
+        action_type="upload_ad_asset",
+        proposed_changes={
+            "status": "PAUSED",
+            "change_diff": {"asset": {"before": None, "after": args.file}},
+        },
+    ):
+        sys.exit(1)
+
     import requests as req
 
     url = f"{BASE_URL}/{_account_id()}/adimages"
@@ -595,7 +768,12 @@ def cmd_upload_image(args: argparse.Namespace) -> None:
     for fname, data in images.items():
         log(f"Uploaded: {fname}")
         log(f"Hash: {data['hash']}")
-        _log_mutation("upload-image", data["hash"], {"file": args.file}, {"hash": data["hash"], "filename": fname})
+        _log_mutation(
+            "upload-image",
+            data["hash"],
+            {"file": args.file, "approval_id": args.approval_id},
+            {"hash": data["hash"], "filename": fname},
+        )
         print(data["hash"])  # stdout: machine-readable
         return
 
@@ -606,6 +784,16 @@ def cmd_upload_image(args: argparse.Namespace) -> None:
 
 def cmd_upload_video(args: argparse.Namespace) -> None:
     """Upload a video file. Not dry-runnable (safe operation)."""
+    if not _policy_preflight(
+        args,
+        action_type="upload_ad_asset",
+        proposed_changes={
+            "status": "PAUSED",
+            "change_diff": {"asset": {"before": None, "after": args.file}},
+        },
+    ):
+        sys.exit(1)
+
     import requests as req
 
     url = f"{BASE_URL}/{_account_id()}/advideos"
@@ -627,12 +815,20 @@ def cmd_upload_video(args: argparse.Namespace) -> None:
 
     video_id = body.get("id", "unknown")
     log(f"Uploaded video: {video_id}")
-    _log_mutation("upload-video", video_id, {"file": args.file, "title": args.title}, body)
+    _log_mutation(
+        "upload-video",
+        video_id,
+        {"file": args.file, "title": args.title, "approval_id": args.approval_id},
+        body,
+    )
     print(json.dumps(body, indent=2))
 
 
 def cmd_duplicate_adset(args: argparse.Namespace) -> None:
     """Duplicate an ad set: read source config, create new with different name/budget."""
+    if args.execute and not _require_approval_id(args):
+        sys.exit(1)
+
     # Read source ad set
     source_url = (
         f"{BASE_URL}/{args.id}"
@@ -664,11 +860,23 @@ def cmd_duplicate_adset(args: argparse.Namespace) -> None:
         log(f"  Source ad set: {args.id}")
         log(f"  Budget: ${int(budget) / 100:.2f}/day" if budget else "  Budget: (inherited from source)")
         return
+    if not _policy_preflight(
+        args,
+        action_type="create_paused_adset",
+        proposed_changes={
+            "campaign_id": source["campaign_id"],
+            "status": "PAUSED",
+            "change_diff": {"adset": {"before": args.id, "after": {"name": args.name}}},
+        },
+    ):
+        sys.exit(1)
 
     resp = api_post(url, data=payload, label=f"duplicate-adset/{args.id}")
     new_id = resp.get("id", "unknown")
     log(f"Ad set duplicated: {args.id} -> {new_id} ({args.name})")
-    _log_mutation("duplicate-adset", new_id, {k: v for k, v in payload.items() if k != "access_token"}, resp)
+    log_payload = {k: v for k, v in payload.items() if k != "access_token"}
+    log_payload["approval_id"] = args.approval_id
+    _log_mutation("duplicate-adset", new_id, log_payload, resp)
     print(json.dumps(resp, indent=2))
 
 
@@ -694,6 +902,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_pause.add_argument("--id", required=True, help="Entity ID to pause")
     p_pause.add_argument("--execute", action="store_true", default=False,
                          help="Actually execute (default: dry run)")
+    p_pause.add_argument("--approval-id", default=None,
+                         help="Required with --execute. Links the write to a human-approved action.")
+    p_pause.add_argument("--rollback-reference", default=None,
+                         help="Required with --execute. Command/runbook to reverse the pause.")
     p_pause.set_defaults(func=cmd_pause)
 
     # ---- activate ----
@@ -701,6 +913,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_activate.add_argument("--id", required=True, help="Entity ID to activate")
     p_activate.add_argument("--execute", action="store_true", default=False,
                             help="Actually execute (default: dry run)")
+    p_activate.add_argument("--approval-id", default=None,
+                            help="Required with --execute. Links the write to a human-approved action.")
+    p_activate.add_argument("--rollback-reference", default=None,
+                            help="Required with --execute. Command/runbook to reverse the activation.")
     p_activate.set_defaults(func=cmd_activate)
 
     # ---- budget ----
@@ -709,6 +925,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_budget.add_argument("--amount", required=True, help="Daily budget in dollars (e.g. 25.00)")
     p_budget.add_argument("--execute", action="store_true", default=False,
                           help="Actually execute (default: dry run)")
+    p_budget.add_argument("--approval-id", default=None,
+                          help="Required with --execute. Links the write to a human-approved action.")
     p_budget.set_defaults(func=cmd_budget)
 
     # ---- create-campaign ----
@@ -722,6 +940,8 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Initial status (default: PAUSED)")
     p_cc.add_argument("--execute", action="store_true", default=False,
                       help="Actually execute (default: dry run)")
+    p_cc.add_argument("--approval-id", default=None,
+                      help="Required with --execute. Links the write to a human-approved action.")
     p_cc.set_defaults(func=cmd_create_campaign)
 
     # ---- create-adset ----
@@ -737,6 +957,8 @@ def build_parser() -> argparse.ArgumentParser:
                        help='Promoted object JSON string (e.g. \'{"page_id":"123456"}\')')
     p_cas.add_argument("--execute", action="store_true", default=False,
                        help="Actually execute (default: dry run)")
+    p_cas.add_argument("--approval-id", default=None,
+                       help="Required with --execute. Links the write to a human-approved action.")
     p_cas.set_defaults(func=cmd_create_adset)
 
     # ---- create-ad ----
@@ -747,17 +969,23 @@ def build_parser() -> argparse.ArgumentParser:
                       help='Creative JSON string (e.g. \'{"object_story_spec":{...}}\')')
     p_ca.add_argument("--execute", action="store_true", default=False,
                       help="Actually execute (default: dry run)")
+    p_ca.add_argument("--approval-id", default=None,
+                      help="Required with --execute. Links the write to a human-approved action.")
     p_ca.set_defaults(func=cmd_create_ad)
 
     # ---- upload-image ----
     p_ui = subparsers.add_parser("upload-image", help="Upload an image file (returns image_hash)")
     p_ui.add_argument("--file", required=True, help="Path to image file (png, jpg, etc.)")
+    p_ui.add_argument("--approval-id", required=True,
+                      help="Required. Links the live upload to a human-approved action.")
     p_ui.set_defaults(func=cmd_upload_image)
 
     # ---- upload-video ----
     p_uv = subparsers.add_parser("upload-video", help="Upload a video file")
     p_uv.add_argument("--file", required=True, help="Path to video file (mp4, etc.)")
     p_uv.add_argument("--title", default=None, help="Video title/name")
+    p_uv.add_argument("--approval-id", required=True,
+                      help="Required. Links the live upload to a human-approved action.")
     p_uv.set_defaults(func=cmd_upload_video)
 
     # ---- duplicate-adset ----
@@ -768,6 +996,8 @@ def build_parser() -> argparse.ArgumentParser:
                        help="New daily budget in dollars (default: same as source)")
     p_dup.add_argument("--execute", action="store_true", default=False,
                        help="Actually execute (default: dry run)")
+    p_dup.add_argument("--approval-id", default=None,
+                       help="Required with --execute. Links the write to a human-approved action.")
     p_dup.set_defaults(func=cmd_duplicate_adset)
 
     return parser

@@ -89,9 +89,15 @@ class MetaUploader(AdUploader):
     platform = "meta"
 
     def upload_asset(self, asset: CreativeAsset) -> UploadResult:
+        approval = self._require_approval_context("upload_asset")
         title = asset.title or asset.path.stem
         if asset.kind == "video":
-            proc = _run_meta("upload-video", "--file", str(asset.path), "--title", title)
+            proc = _run_meta(
+                "upload-video",
+                "--file", str(asset.path),
+                "--title", title,
+                "--approval-id", approval.approval_id,
+            )
             if proc.returncode != 0:
                 raise UploadError(f"meta upload-video failed: {proc.stderr or proc.stdout}")
             video_id = _parse_video_id(proc.stdout)
@@ -103,7 +109,11 @@ class MetaUploader(AdUploader):
             )
 
         # image
-        proc = _run_meta("upload-image", "--file", str(asset.path))
+        proc = _run_meta(
+            "upload-image",
+            "--file", str(asset.path),
+            "--approval-id", approval.approval_id,
+        )
         if proc.returncode != 0:
             raise UploadError(f"meta upload-image failed: {proc.stderr or proc.stdout}")
         image_hash = _parse_image_hash(proc.stdout)
@@ -166,7 +176,9 @@ class MetaUploader(AdUploader):
             "--creative-json", json.dumps(creative_payload),
         ]
         if execute:
+            approval = self._require_approval_context("create_ad")
             meta_args.append("--execute")
+            meta_args.extend(["--approval-id", approval.approval_id])
 
         proc = _run_meta(*meta_args)
         if proc.returncode != 0:

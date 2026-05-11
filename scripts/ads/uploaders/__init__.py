@@ -10,15 +10,25 @@ Public surface:
     asset_ref = uploader.upload_asset(CreativeAsset(path="/tmp/clip.mp4", kind="video"))
     ad_ref    = uploader.create_ad(adset_id="123", creative=spec, asset=asset_ref, execute=False)
 
-All `create_ad` calls default `execute=False` (dry-run). Pass `execute=True`
-to actually publish — and even then the ad lands PAUSED, awaiting human approval.
+The top-level `scripts.ads.upload` CLI does not call `upload_asset` during
+dry-run. Live upload/create flows require an approval id and still land PAUSED,
+awaiting a separate activation approval.
 """
 
-from .base import AdUploader, CreativeAsset, CreativeSpec, UploadResult, AdRef, UploadError
+from .base import (
+    AdRef,
+    AdUploader,
+    ApprovalContext,
+    CreativeAsset,
+    CreativeSpec,
+    UploadError,
+    UploadResult,
+)
 from .registry import get_uploader, list_platforms
 
 __all__ = [
     "AdUploader",
+    "ApprovalContext",
     "CreativeAsset",
     "CreativeSpec",
     "UploadResult",

@@ -424,8 +424,27 @@ class AdPlatformConnector(ABC):
         warnings: List[str] = []
         blocks: List[str] = []
 
-        # Determine current spend (best-effort from last known budget status)
-        current_daily_total = 0.0
+        # Live budget writes must be based on a real account snapshot. Fail
+        # closed if the read-side evidence cannot be fetched.
+        try:
+            budget_status = self.get_budget_status()
+        except Exception as exc:  # pragma: no cover - concrete connectors vary
+            blocks.append(
+                f"Unable to fetch current budget status before {operation}: {exc}"
+            )
+            return SpendSafetyCheck(
+                operation=operation,
+                requested_amount=requested_amount,
+                current_daily_total=0.0,
+                new_daily_total_if_approved=0.0,
+                monthly_cap=self.config.max_monthly_spend_usd,
+                projected_monthly_if_approved=0.0,
+                is_safe=False,
+                warnings=warnings,
+                blocks=blocks,
+            )
+
+        current_daily_total = float(getattr(budget_status, "daily_budget_total", 0.0) or 0.0)
         new_daily_total = current_daily_total
 
         if requested_amount is not None:

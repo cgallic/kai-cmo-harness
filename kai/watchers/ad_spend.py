@@ -495,13 +495,14 @@ class SpendAnomalyWatcher(Watcher):
                 "platform": platform,
             },
             proposed_action={
-                "action_type": "reduce_budget" if severity == "warning" else "pause_campaign",
+                "action_type": "adjust_budget" if severity == "warning" else "pause_campaign",
                 "description": (
                     "Reduce daily budget to prevent further overspend."
                     if severity == "warning"
                     else "Pause campaign immediately and investigate the spend anomaly."
                 ),
-                "auto_eligible": True,
+                "direction": "reduce" if severity == "warning" else None,
+                "auto_eligible": False,
             },
         )
 
@@ -558,12 +559,14 @@ class SpendAnomalyWatcher(Watcher):
                 "days_remaining": days_remaining,
             },
             proposed_action={
-                "action_type": "reduce_budgets",
+                "action_type": "adjust_budget",
                 "description": (
                     "Reduce daily budgets proportionally across campaigns "
                     "to stay within the monthly cap."
                 ),
-                "auto_eligible": True,
+                "direction": "reduce",
+                "scope": "all_campaigns",
+                "auto_eligible": False,
             },
         )
 

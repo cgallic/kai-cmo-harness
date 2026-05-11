@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from kai.runtime.policy import (
     DEFAULT_MAX_BUDGET_INCREASE_PCT,
     BANNED_WORDS,
+    PAID_MEDIA_MUTATION_ACTIONS,
     REGULATED_CLAIM_KEYWORDS,
     RISK_TIER_MAP,
     PolicyEngine,
@@ -428,6 +429,7 @@ class TestFullEvaluate(unittest.TestCase):
             "budget_limits",
             "content_compliance",
             "channel_policy",
+            "paid_media_guardrails",
             "frequency_limits",
             "brand_constraints",
         }
@@ -615,7 +617,7 @@ class TestChannelPolicy(unittest.TestCase):
     def test_superlative_with_proof_passes(self) -> None:
         action = {
             "channel": "paid_media",
-            "action_type": "create_ad_creative",
+            "action_type": "read_performance",
             "proposed_changes": {
                 "body": "The best marketing tool available.",
                 "proof_substantiation": "Rated #1 by G2 in Q1 2026",
@@ -632,6 +634,186 @@ class TestChannelPolicy(unittest.TestCase):
         }
         result = self.engine.check_channel_policy(action)
         self.assertTrue(result["passed"])
+
+
+class TestPaidMediaGuardrails(unittest.TestCase):
+    """Paid media mutations require stricter write-side guardrails."""
+
+    def test_read_only_paid_media_action_passes_guardrail(self) -> None:
+        result = self.engine.check_paid_media_guardrails({
+            "channel": "paid_media",
+            "action_type": "evaluate_ads",
+            "proposed_changes": {},
+        })
+        self.assertTrue(result["passed"])
+        self.assertIn("Read-only", result["detail"])
+
+    def setUp(self) -> None:
+        self.engine = PolicyEngine(
+            brand_policies={
+                "paid_media_guardrails": {
+                    "allowed_accounts": ["act_123"],
+                    "allowed_campaigns": ["camp_1"],
+                    "allowed_adsets": ["adset_1"],
+                    "max_budget_increase_pct": 20.0,
+                    "max_single_budget_change_usd": 50.0,
+                    "max_daily_budget": 200.0,
+                    "max_bid_increase_pct": 10.0,
+                }
+            }
+        )
+
+    def test_create_paused_ad_with_preview_evidence_and_allowlist_passes(self) -> None:
+        action = {
+            "channel": "paid_media",
+            "action_type": "create_paused_ad",
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "adset_id": "adset_1",
+                "status": "PAUSED",
+                "change_diff": {"before": None, "after": {"name": "Variant A"}},
+            },
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        }
+        result = self.engine.check_paid_media_guardrails(action)
+        self.assertTrue(result["passed"])
+
+    def test_paid_media_mutation_without_preview_or_allowlist_fails(self) -> None:
+        action = {
+            "channel": "paid_media",
+            "action_type": "create_paused_ad",
+            "proposed_changes": {"account_id": "act_999", "status": "PAUSED"},
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        }
+        result = self.engine.check_paid_media_guardrails(action)
+        self.assertFalse(result["passed"])
+        self.assertIn("Missing dry-run preview", result["detail"])
+        self.assertIn("not allowlisted", result["detail"])
+
+    def test_auto_approved_paid_media_write_is_blocked(self) -> None:
+        action = {
+            "channel": "paid_media",
+            "action_type": "create_paused_ad",
+            "approval_state": "auto_approved",
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "adset_id": "adset_1",
+                "status": "PAUSED",
+                "change_diff": {"before": None, "after": {"name": "Variant A"}},
+            },
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        }
+        result = self.engine.evaluate(action)
+        self.assertFalse(result["passed"])
+        self.assertTrue(result["requires_approval"])
+        self.assertFalse(result["auto_eligible"])
+        self.assertIn("Paid media mutations cannot be auto-approved", result["violations"][0])
+
+    def test_budget_change_requires_before_after_and_caps(self) -> None:
+        action = {
+            "channel": "paid_media",
+            "action_type": "adjust_budget",
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "current_daily_budget": 100,
+                "new_daily_budget": 180,
+                "change_diff": {"daily_budget": {"before": 100, "after": 180}},
+            },
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        }
+        result = self.engine.check_paid_media_guardrails(action)
+        self.assertFalse(result["passed"])
+        self.assertIn("Budget change $80", result["detail"])
+
+    def test_bid_change_above_cap_escalates_to_high(self) -> None:
+        result = self.engine.evaluate({
+            "channel": "paid_media",
+            "action_type": "adjust_bidding",
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "current_bid": 2.0,
+                "new_bid": 2.5,
+                "bid_increase_pct": 25.0,
+                "change_diff": {"bid": {"before": 2.0, "after": 2.5}},
+            },
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        })
+        self.assertEqual(result["risk_tier"], "high")
+        self.assertFalse(result["passed"])
+
+    def test_bid_increase_live_execution_without_approval_fails(self) -> None:
+        result = self.engine.evaluate({
+            "channel": "paid_media",
+            "action_type": "increase_bid",
+            "execution_requested": True,
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "current_bid": 2.0,
+                "new_bid": 2.1,
+                "change_diff": {"bid": {"before": 2.0, "after": 2.1}},
+            },
+            "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+        })
+        self.assertFalse(result["passed"])
+        self.assertIn("Live paid media mutations require approval_id", result["violations"][0])
+
+    def test_emergency_pause_with_rollback_and_allowlist_passes_guardrail(self) -> None:
+        result = self.engine.check_paid_media_guardrails({
+            "channel": "paid_media",
+            "action_type": "pause_campaign",
+            "proposed_changes": {
+                "account_id": "act_123",
+                "campaign_id": "camp_1",
+                "change_diff": {"status": {"before": "ACTIVE", "after": "PAUSED"}},
+            },
+            "rollback_reference": "scripts/ads/meta.py activate --id camp_1 --execute --approval-id <id>",
+            "evidence": [{"source": "workspace/ads/anomalies/overspend.json"}],
+        })
+        self.assertTrue(result["passed"], result["detail"])
+
+    def test_paid_media_writes_are_never_auto_eligible(self) -> None:
+        for action_type in PAID_MEDIA_MUTATION_ACTIONS:
+            if action_type in {
+                "adjust_budget",
+                "increase_budget",
+                "reduce_budget",
+                "adjust_bidding",
+                "adjust_bid",
+                "increase_bid",
+                "reduce_bid",
+                "change_bid_strategy",
+                "adjust_target_cpa",
+                "adjust_target_roas",
+                "activate_campaign",
+                "activate_adset",
+                "activate_ad",
+                "launch_campaign",
+                "pause_campaign",
+                "pause_adset",
+                "pause_ad",
+            }:
+                continue
+            action = {
+                "channel": "paid_media",
+                "action_type": action_type,
+                "proposed_changes": {
+                    "account_id": "act_123",
+                    "campaign_id": "camp_1",
+                    "adset_id": "adset_1",
+                    "status": "PAUSED",
+                    "change_diff": {"before": None, "after": {"name": action_type}},
+                },
+                "evidence": [{"source": "workspace/ads/pull/meta/2026-05-11.json"}],
+            }
+            result = self.engine.evaluate(action)
+            self.assertTrue(result["passed"], action_type)
+            self.assertFalse(result["auto_eligible"], action_type)
+            self.assertTrue(result["requires_approval"], action_type)
 
 
 class TestFrequencyLimits(unittest.TestCase):

@@ -102,6 +102,7 @@ class TikTokUploader(AdUploader):
         return {"Access-Token": self.token}
 
     def upload_asset(self, asset: CreativeAsset) -> UploadResult:
+        approval = self._require_approval_context("upload_asset")
         # Verified against AdsMCP/tiktok-ads-mcp-server/src/tiktok_ads_mcp/tiktok_client.py:
         # advertiser_id rides in the URL query string, NOT the multipart body. The
         # MD5 signature is optional (omitted by AdsMCP) but we keep it for upload
@@ -134,7 +135,12 @@ class TikTokUploader(AdUploader):
             video_id = data[0].get("video_id")
             if not video_id:
                 raise UploadError(f"TikTok video upload missing video_id: {body}")
-            _log_mutation("upload-video", video_id, {"file": str(asset.path)}, body)
+            _log_mutation(
+                "upload-video",
+                video_id,
+                {"file": str(asset.path), "approval_id": approval.approval_id},
+                body,
+            )
             return UploadResult(platform="tiktok", kind="video", ref=video_id, raw=body)
 
         # image
@@ -156,7 +162,12 @@ class TikTokUploader(AdUploader):
         image_id = (body.get("data") or {}).get("image_id")
         if not image_id:
             raise UploadError(f"TikTok image upload missing image_id: {body}")
-        _log_mutation("upload-image", image_id, {"file": str(asset.path)}, body)
+        _log_mutation(
+            "upload-image",
+            image_id,
+            {"file": str(asset.path), "approval_id": approval.approval_id},
+            body,
+        )
         return UploadResult(platform="tiktok", kind="image", ref=image_id, raw=body)
 
     def create_ad(
@@ -224,6 +235,7 @@ class TikTokUploader(AdUploader):
                 raw={"would_post": f"{API_BASE}/ad/create/", "body": body},
             )
 
+        approval = self._require_approval_context("create_ad")
         resp = requests.post(
             f"{API_BASE}/ad/create/",
             headers=self._headers_json(),
@@ -239,7 +251,12 @@ class TikTokUploader(AdUploader):
         if not ad_ids:
             raise UploadError(f"TikTok ad/create returned no ad_ids: {result}")
         ad_id = ad_ids[0]
-        _log_mutation("create-ad", ad_id, body, result)
+        _log_mutation(
+            "create-ad",
+            ad_id,
+            {"body": body, "approval_id": approval.approval_id},
+            result,
+        )
         return AdRef(
             platform="tiktok",
             ad_id=ad_id,

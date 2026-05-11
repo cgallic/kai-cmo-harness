@@ -32,12 +32,36 @@ RISK_TIER_MAP: dict[tuple[str, str], str] = {
     ("social", "publish_social_post"): "medium",
     ("social", "schedule_social_post"): "medium",
     # Paid media actions
+    ("paid_media", "read_performance"): "low",
+    ("paid_media", "evaluate_ads"): "low",
+    ("paid_media", "generate_recommendations"): "low",
+    ("paid_media", "validate_ad_upload"): "low",
     ("paid_media", "publish_approved_variant"): "low",
+    ("paid_media", "upload_ad_asset"): "medium",
+    ("paid_media", "create_paused_campaign"): "medium",
+    ("paid_media", "create_paused_adset"): "medium",
+    ("paid_media", "create_paused_ad"): "medium",
     ("paid_media", "create_ad_creative"): "medium",
     ("paid_media", "adjust_bidding"): "medium",
+    ("paid_media", "adjust_bid"): "medium",
+    ("paid_media", "reduce_bid"): "medium",
+    ("paid_media", "increase_bid"): "high",
+    ("paid_media", "change_bid_strategy"): "high",
+    ("paid_media", "adjust_target_cpa"): "high",
+    ("paid_media", "adjust_target_roas"): "high",
     ("paid_media", "adjust_budget"): "high",
+    ("paid_media", "reduce_budget"): "high",
+    ("paid_media", "increase_budget"): "high",
+    ("paid_media", "activate_campaign"): "high",
+    ("paid_media", "activate_adset"): "high",
+    ("paid_media", "activate_ad"): "high",
     ("paid_media", "pause_campaign"): "high",
+    ("paid_media", "pause_adset"): "high",
+    ("paid_media", "pause_ad"): "high",
     ("paid_media", "launch_campaign"): "high",
+    ("paid_media", "expand_targeting"): "high",
+    ("paid_media", "add_keyword"): "high",
+    ("paid_media", "add_audience"): "high",
     # Email actions
     ("email", "send_approved_template"): "low",
     ("email", "update_nurture_copy"): "medium",
@@ -155,6 +179,74 @@ PERSONAL_ATTRIBUTE_PATTERNS: list[str] = [
 # ---------------------------------------------------------------------------
 
 DEFAULT_MAX_BUDGET_INCREASE_PCT: float = 20.0  # >20% increase = high risk
+DEFAULT_MAX_BID_INCREASE_PCT: float = 10.0  # >10% bid increase = high risk
+DEFAULT_MAX_SINGLE_BUDGET_CHANGE_USD: float = 100.0
+
+PAID_MEDIA_READ_ONLY_ACTIONS: set[str] = {
+    "read_performance",
+    "evaluate_ads",
+    "generate_recommendations",
+    "validate_ad_upload",
+}
+
+PAID_MEDIA_MUTATION_ACTIONS: set[str] = {
+    "publish_approved_variant",
+    "upload_ad_asset",
+    "create_paused_campaign",
+    "create_paused_adset",
+    "create_paused_ad",
+    "create_ad_creative",
+    "adjust_bidding",
+    "adjust_bid",
+    "increase_bid",
+    "reduce_bid",
+    "change_bid_strategy",
+    "adjust_target_cpa",
+    "adjust_target_roas",
+    "adjust_budget",
+    "increase_budget",
+    "reduce_budget",
+    "activate_campaign",
+    "activate_adset",
+    "activate_ad",
+    "pause_campaign",
+    "pause_adset",
+    "pause_ad",
+    "launch_campaign",
+    "expand_targeting",
+    "add_keyword",
+    "add_audience",
+}
+
+PAID_MEDIA_SPEND_ACTIONS: set[str] = {
+    "adjust_bidding",
+    "adjust_bid",
+    "increase_bid",
+    "reduce_bid",
+    "change_bid_strategy",
+    "adjust_target_cpa",
+    "adjust_target_roas",
+    "adjust_budget",
+    "increase_budget",
+    "reduce_budget",
+    "activate_campaign",
+    "activate_adset",
+    "activate_ad",
+    "launch_campaign",
+}
+
+PAID_MEDIA_BUDGET_ACTIONS: set[str] = {
+    "adjust_budget",
+    "increase_budget",
+    "reduce_budget",
+}
+
+PAID_MEDIA_BID_ACTIONS: set[str] = {
+    "adjust_bidding",
+    "adjust_bid",
+    "increase_bid",
+    "reduce_bid",
+}
 
 # ---------------------------------------------------------------------------
 # Default frequency limits (actions per channel per day)
@@ -183,6 +275,9 @@ class PolicyEngine:
         - ``allowed_channels``: list of channels the brand may use
         - ``banned_words_extra``: additional banned words beyond the defaults
         - ``auto_execute_low_risk``: bool, whether low-risk actions can skip approval
+        - ``paid_media_guardrails``: dict with allowed_accounts,
+          allowed_campaigns, allowed_adsets, max_bid_increase_pct,
+          max_single_budget_change_usd, and require_rollback_for_activation
         """
         self._brand_policies: dict[str, Any] = brand_policies or {}
 
@@ -230,6 +325,11 @@ class PolicyEngine:
         if not channel_result["passed"]:
             violations.append(channel_result["detail"])
 
+        paid_media_result = self.check_paid_media_guardrails(action)
+        checks.append(paid_media_result)
+        if not paid_media_result["passed"]:
+            violations.append(paid_media_result["detail"])
+
         frequency_result = self.check_frequency_limits(action)
         checks.append(frequency_result)
         if not frequency_result["passed"]:
@@ -251,12 +351,20 @@ class PolicyEngine:
                     break
 
         passed = all_checks_passed
+        auto_execute_allowed = self._brand_policies.get("auto_execute_low_risk", True)
+        if channel == "paid_media" and action_type in PAID_MEDIA_MUTATION_ACTIONS:
+            # Paid media writes can spend real money or disrupt a working ad
+            # account. Even low-risk write helpers stay human-approved.
+            auto_execute_allowed = False
+
         auto_eligible = (
             risk_tier == "low"
             and all_checks_passed
-            and self._brand_policies.get("auto_execute_low_risk", True)
+            and auto_execute_allowed
         )
         requires_approval = risk_tier in ("medium", "high") or not all_checks_passed
+        if channel == "paid_media" and action_type in PAID_MEDIA_MUTATION_ACTIONS:
+            requires_approval = True
 
         return {
             "passed": passed,
@@ -295,6 +403,14 @@ class PolicyEngine:
                 "max_budget_increase_pct", DEFAULT_MAX_BUDGET_INCREASE_PCT
             )
             if proposed_changes["budget_increase_pct"] > threshold:
+                tier = "high"
+
+        if "bid_increase_pct" in proposed_changes:
+            paid_media_policy = self._brand_policies.get("paid_media_guardrails", {})
+            threshold = paid_media_policy.get(
+                "max_bid_increase_pct", DEFAULT_MAX_BID_INCREASE_PCT
+            )
+            if proposed_changes["bid_increase_pct"] > threshold:
                 tier = "high"
 
         return tier
@@ -440,6 +556,213 @@ class PolicyEngine:
             "detail": detail,
         }
 
+    def check_paid_media_guardrails(self, action: dict[str, Any]) -> dict[str, Any]:
+        """Enforce paid-media write guardrails before live platform mutation.
+
+        Read/evaluation actions pass through. Any paid-media mutation must
+        provide a dry-run preview or diff, cite evidence, stay inside account
+        allowlists, and avoid auto-approved execution. Budget and bid changes
+        also need numeric before/after values and hard caps.
+        """
+        channel = action.get("channel", "")
+        action_type = action.get("action_type", "")
+
+        if channel != "paid_media":
+            return {
+                "dimension": "paid_media_guardrails",
+                "passed": True,
+                "detail": "Not a paid media action",
+            }
+
+        if action_type in PAID_MEDIA_READ_ONLY_ACTIONS:
+            return {
+                "dimension": "paid_media_guardrails",
+                "passed": True,
+                "detail": "Read-only paid media action",
+            }
+
+        if action_type not in PAID_MEDIA_MUTATION_ACTIONS:
+            return {
+                "dimension": "paid_media_guardrails",
+                "passed": False,
+                "detail": (
+                    f"Unknown paid media action '{action_type}' is blocked "
+                    "until classified as read-only or mutation"
+                ),
+                "escalate_to_high": True,
+            }
+
+        proposed = action.get("proposed_changes", {})
+        metadata = action.get("metadata", {})
+        guardrails = self._brand_policies.get("paid_media_guardrails", {})
+        issues: list[str] = []
+
+        approval_state = action.get("approval_state")
+        if approval_state == "auto_approved":
+            issues.append("Paid media mutations cannot be auto-approved")
+
+        if _truthy(proposed.get("activate_on_create")):
+            issues.append("Ads/campaigns must be created paused; activation is a separate approval")
+
+        status = str(proposed.get("status") or proposed.get("target_status") or "").upper()
+        if action_type in {
+            "create_ad_creative",
+            "create_paused_campaign",
+            "create_paused_adset",
+            "create_paused_ad",
+            "upload_ad_asset",
+        } and status == "ACTIVE":
+            issues.append("Creation/upload actions cannot set ACTIVE status")
+
+        if not _has_preview_or_diff(action):
+            issues.append("Missing dry-run preview or before/after change diff")
+
+        if not _has_evidence(action):
+            issues.append("Missing evidence source for the recommendation")
+
+        account_id = _first_present(action, proposed, metadata, "account_id", "ad_account_id")
+        allowed_accounts = guardrails.get("allowed_accounts")
+        if not allowed_accounts:
+            issues.append("Missing paid_media_guardrails.allowed_accounts")
+        elif account_id not in allowed_accounts:
+            issues.append(f"Ad account '{account_id or '(missing)'}' is not allowlisted")
+
+        for field, policy_key in (
+            ("campaign_id", "allowed_campaigns"),
+            ("adset_id", "allowed_adsets"),
+            ("ad_group_id", "allowed_ad_groups"),
+        ):
+            entity_id = _first_present(action, proposed, metadata, field)
+            allowlist = guardrails.get(policy_key)
+            if entity_id and allowlist is not None and entity_id not in allowlist:
+                issues.append(f"{field} '{entity_id}' is not in {policy_key}")
+
+        if _execution_requested(action) and action_type in PAID_MEDIA_MUTATION_ACTIONS:
+            approval_id = _first_present(action, proposed, metadata, "approval_id", "approval-id")
+            if not approval_id:
+                issues.append("Live paid media mutations require approval_id")
+
+        if action_type in PAID_MEDIA_SPEND_ACTIONS:
+            issues.extend(self._paid_media_spend_issues(action, guardrails))
+
+        requires_rollback = guardrails.get("require_rollback_for_activation", True)
+        if requires_rollback and action_type in {
+            "activate_campaign",
+            "activate_adset",
+            "activate_ad",
+            "launch_campaign",
+            "pause_campaign",
+            "pause_adset",
+            "pause_ad",
+        }:
+            rollback = action.get("rollback_reference") or proposed.get("rollback_reference")
+            if not rollback:
+                issues.append("Missing rollback_reference for activation/pause action")
+
+        passed = len(issues) == 0
+        result: dict[str, Any] = {
+            "dimension": "paid_media_guardrails",
+            "passed": passed,
+            "detail": "; ".join(issues) if issues else "Paid media guardrails clear",
+        }
+        if not passed and action_type in PAID_MEDIA_SPEND_ACTIONS:
+            result["escalate_to_high"] = True
+        return result
+
+    def _paid_media_spend_issues(
+        self,
+        action: dict[str, Any],
+        guardrails: dict[str, Any],
+    ) -> list[str]:
+        proposed = action.get("proposed_changes", {})
+        issues: list[str] = []
+
+        max_daily = guardrails.get("max_daily_budget", self._brand_policies.get("max_daily_budget"))
+        max_budget_increase = guardrails.get(
+            "max_budget_increase_pct",
+            self._brand_policies.get("max_budget_increase_pct", DEFAULT_MAX_BUDGET_INCREASE_PCT),
+        )
+        max_single_change = guardrails.get(
+            "max_single_budget_change_usd",
+            DEFAULT_MAX_SINGLE_BUDGET_CHANGE_USD,
+        )
+        max_bid_increase = guardrails.get(
+            "max_bid_increase_pct",
+            DEFAULT_MAX_BID_INCREASE_PCT,
+        )
+
+        action_type = action.get("action_type")
+
+        if action_type in PAID_MEDIA_BUDGET_ACTIONS:
+            current_daily = _to_float(proposed.get("current_daily_budget"))
+            new_daily = _to_float(proposed.get("new_daily_budget"))
+            increase_pct = _to_float(proposed.get("budget_increase_pct"))
+            direction = str(proposed.get("direction") or "").lower()
+
+            if current_daily is None or new_daily is None:
+                issues.append("Budget changes require current_daily_budget and new_daily_budget")
+            else:
+                if action_type == "increase_budget" and new_daily <= current_daily:
+                    issues.append("increase_budget must raise new_daily_budget above current_daily_budget")
+                if action_type == "reduce_budget" and new_daily >= current_daily:
+                    issues.append("reduce_budget must lower new_daily_budget below current_daily_budget")
+                if direction == "increase" and new_daily <= current_daily:
+                    issues.append("Budget direction=increase must raise the daily budget")
+                if direction in {"reduce", "decrease"} and new_daily >= current_daily:
+                    issues.append("Budget direction=reduce must lower the daily budget")
+
+                single_change = abs(new_daily - current_daily)
+                if single_change > max_single_change:
+                    issues.append(
+                        f"Budget change ${single_change:g} exceeds per-change cap ${max_single_change:g}"
+                    )
+                if max_daily is not None and new_daily > float(max_daily):
+                    issues.append(
+                        f"New daily budget ${new_daily:g} exceeds cap ${float(max_daily):g}"
+                    )
+                if new_daily > current_daily and increase_pct is None and current_daily > 0:
+                    increase_pct = ((new_daily - current_daily) / current_daily) * 100
+                if new_daily < current_daily:
+                    max_reduction_pct = guardrails.get("max_budget_reduction_pct", 50.0)
+                    reduction_pct = ((current_daily - new_daily) / current_daily) * 100 if current_daily > 0 else 0
+                    if reduction_pct > max_reduction_pct:
+                        issues.append(
+                            f"Budget reduction {reduction_pct:g}% exceeds cap {max_reduction_pct:g}%"
+                        )
+
+            if increase_pct is not None and increase_pct > max_budget_increase:
+                issues.append(
+                    f"Budget increase {increase_pct:g}% exceeds cap {max_budget_increase:g}%"
+                )
+
+        if action_type in PAID_MEDIA_BID_ACTIONS:
+            current_bid = _to_float(proposed.get("current_bid"))
+            new_bid = _to_float(proposed.get("new_bid"))
+            increase_pct = _to_float(proposed.get("bid_increase_pct"))
+
+            if current_bid is None or new_bid is None:
+                issues.append("Bid changes require current_bid and new_bid")
+            else:
+                if action_type == "increase_bid" and new_bid <= current_bid:
+                    issues.append("increase_bid must raise new_bid above current_bid")
+                if action_type == "reduce_bid" and new_bid >= current_bid:
+                    issues.append("reduce_bid must lower new_bid below current_bid")
+                if new_bid > current_bid and increase_pct is None and current_bid > 0:
+                    increase_pct = ((new_bid - current_bid) / current_bid) * 100
+
+            if increase_pct is not None and increase_pct > max_bid_increase:
+                issues.append(
+                    f"Bid increase {increase_pct:g}% exceeds cap {max_bid_increase:g}%"
+                )
+
+        if action_type in {"change_bid_strategy", "adjust_target_cpa", "adjust_target_roas"}:
+            before = proposed.get("current_bid_strategy") or proposed.get("current_target")
+            after = proposed.get("new_bid_strategy") or proposed.get("new_target")
+            if before in (None, "") or after in (None, ""):
+                issues.append(f"{action_type} requires current and proposed bid strategy/target values")
+
+        return issues
+
     def check_frequency_limits(self, action: dict[str, Any]) -> dict[str, Any]:
         """Check if action exceeds rate limits for the channel.
 
@@ -526,3 +849,67 @@ def _extract_text(data: Any, _depth: int = 0) -> str:
         for item in data:
             parts.append(_extract_text(item, _depth + 1))
     return " ".join(p for p in parts if p)
+
+
+def _truthy(value: Any) -> bool:
+    """Return True for common truthy bool/string values."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "y", "on"}
+    return bool(value)
+
+
+def _to_float(value: Any) -> Optional[float]:
+    """Convert a numeric input to float, returning None when absent/invalid."""
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _first_present(
+    action: dict[str, Any],
+    proposed: dict[str, Any],
+    metadata: dict[str, Any],
+    *keys: str,
+) -> Any:
+    """Find the first non-empty value across action, proposed changes, metadata."""
+    for source in (proposed, metadata, action):
+        for key in keys:
+            value = source.get(key)
+            if value not in (None, ""):
+                return value
+    return None
+
+
+def _has_preview_or_diff(action: dict[str, Any]) -> bool:
+    proposed = action.get("proposed_changes", {})
+    preview = action.get("preview_artifact") or proposed.get("dry_run_preview")
+    diff = proposed.get("change_diff") or proposed.get("before_after_diff")
+    return bool(preview or diff)
+
+
+def _has_evidence(action: dict[str, Any]) -> bool:
+    evidence = action.get("evidence") or []
+    if not evidence:
+        return False
+    for item in evidence:
+        if not isinstance(item, dict):
+            continue
+        if item.get("source") or item.get("collector") or item.get("path") or item.get("url"):
+            return True
+    return False
+
+
+def _execution_requested(action: dict[str, Any]) -> bool:
+    metadata = action.get("metadata", {})
+    return _truthy(
+        action.get("execute")
+        or action.get("execution_requested")
+        or metadata.get("execute")
+        or metadata.get("execution_requested")
+        or metadata.get("live_mutation")
+    )

@@ -1,8 +1,7 @@
 """Unified ad upload CLI — single entrypoint across all platforms.
 
 Usage:
-    # Dry-run (default): prints intended payload, never hits the live API beyond
-    # uploading the asset (asset uploads are non-destructive).
+    # Dry-run (default): prints intended payload and never hits the live API.
     python -m scripts.ads.upload \\
         --platform meta \\
         --asset /path/to/clip.mp4 \\
@@ -14,8 +13,9 @@ Usage:
         --link https://kaicalls.com/?ref=ad \\
         --cta SIGN_UP
 
-    # Live: still creates the ad in PAUSED state. Human approval required to flip ACTIVE.
-    python -m scripts.ads.upload --platform meta ... --execute
+    # Live: requires an approval id and still creates the ad in PAUSED state.
+    # Human approval is required again to flip ACTIVE.
+    python -m scripts.ads.upload --platform meta ... --execute --approval-id act_...
 
 Supported platforms (from registry):
     meta       — implemented
@@ -35,6 +35,7 @@ from .uploaders import (
     CreativeAsset,
     CreativeSpec,
     UploadError,
+    UploadResult,
     get_uploader,
     list_platforms,
 )
@@ -62,9 +63,19 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--aspect", default=None, help="Aspect ratio hint: 9:16 / 1:1 / 16:9")
     p.add_argument("--execute", action="store_true",
                    help="Actually create the ad (still PAUSED). Default: dry-run.")
+    p.add_argument("--approval-id", default=None,
+                   help="Required with --execute. Links this write to a human-approved action.")
+    p.add_argument("--evidence", default=None,
+                   help="Optional evidence artifact/snapshot linked to the approval.")
+    p.add_argument("--rollback-reference", default=None,
+                   help="Optional rollback command or runbook reference for the approved write.")
     p.add_argument("--json", action="store_true", help="Emit machine-readable JSON to stdout")
 
     args = p.parse_args(argv)
+
+    if args.execute and not args.approval_id:
+        print("ERROR: --execute requires --approval-id for auditability", file=sys.stderr)
+        return 1
 
     asset = CreativeAsset(
         path=args.asset,
@@ -84,11 +95,30 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     uploader = get_uploader(args.platform)
+    if args.execute and hasattr(uploader, "set_approval_context"):
+        uploader.set_approval_context(
+            args.approval_id,
+            evidence=args.evidence,
+            rollback_reference=args.rollback_reference,
+        )
 
     try:
-        print(f"[1/2] Uploading {args.kind} to {args.platform}: {args.asset}", file=sys.stderr)
-        upload = uploader.upload_asset(asset)
-        print(f"      → ref={upload.ref}", file=sys.stderr)
+        if args.execute:
+            print(f"[1/2] Uploading {args.kind} to {args.platform}: {args.asset}", file=sys.stderr)
+            upload = uploader.upload_asset(asset)
+            print(f"      → ref={upload.ref}", file=sys.stderr)
+        else:
+            print(f"[1/2] Dry-run asset preview for {args.platform}: {args.asset}", file=sys.stderr)
+            upload = UploadResult(
+                platform=args.platform,
+                kind=args.kind,
+                ref=f"DRY_RUN_{args.kind.upper()}_REF",
+                raw={
+                    "dry_run": True,
+                    "asset": str(args.asset),
+                    "guardrail": "No upload performed without --execute and --approval-id",
+                },
+            )
 
         print(f"[2/2] Creating ad in {args.adset_id} (execute={args.execute})", file=sys.stderr)
         ad = uploader.create_ad(args.adset_id, spec, upload, execute=args.execute)
@@ -99,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
     except NotImplementedError as e:
         print(f"NOT IMPLEMENTED: {e}", file=sys.stderr)
         return 2
+    finally:
+        if args.execute and hasattr(uploader, "clear_approval_context"):
+            uploader.clear_approval_context()
 
     if args.json:
         print(json.dumps({
@@ -107,11 +140,12 @@ def main(argv: list[str] | None = None) -> int:
             "ad_id": ad.ad_id,
             "adset_id": ad.adset_id,
             "status": ad.status,
+            "approval_id": args.approval_id,
         }))
     else:
         print(f"\nDone. status={ad.status}")
         if ad.status == "DRY_RUN":
-            print("Re-run with --execute to actually create the ad (it will land PAUSED).")
+            print("No asset was uploaded. Re-run with --execute --approval-id <id> to create the ad PAUSED.")
         else:
             print(f"Ad {ad.ad_id} is PAUSED. Approve via Discord/console to flip ACTIVE.")
     return 0
