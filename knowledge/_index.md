@@ -137,6 +137,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/influencer-marketing.md` | **Influencer/UGC** - Tiers (nano→mega), campaign types, creator briefs, contracts, FTC compliance, ROI measurement |
 | `playbooks/pr-comms-strategy.md` | **PR & comms** - PESO model, pitch framework, media list building, thought leadership calendar, crisis communications |
 | `playbooks/conversion-rate-optimization.md` | **CRO** - 5-layer optimization stack, form optimization, A/B testing methodology, CTA best practices, quick-win checklist |
+| `playbooks/funnel-hack-offer-architecture.md` | **Funnel hack / offer architecture** - Competitor funnel evidence, offer/pricing matrix, conversion mechanics extraction, and A/B test hypotheses for ecommerce/CRO |
 | `playbooks/analytics-attribution.md` | **Analytics** - UTM standards, attribution models, GA4 setup, dashboard templates, blended CAC, reporting cadence |
 | `playbooks/retargeting-remarketing.md` | **Retargeting** - Funnel segmentation, Meta/Google/email setup, creative strategy by segment, budget allocation, incrementality testing |
 | `playbooks/marketing-automation.md` | **Marketing automation** - 6 essential workflows (welcome, nurture, abandoned, re-engagement, post-purchase, event), lead scoring, segmentation, tool selection |
@@ -222,6 +223,7 @@ Original source files preserved in `archive/` for reference.
 | **Persona research** | `personas/_persona-index.md` | individual persona file |
 | **Email campaigns** | `channels/email-lifecycle.md` | `frameworks/content-copywriting/perception-engineering.md` |
 | **Paid ads** | `channels/paid-acquisition.md` | `frameworks/content-copywriting/headline-formulas.md` |
+| **Ecommerce CRO / offer architecture** | `playbooks/funnel-hack-offer-architecture.md` | `playbooks/ecommerce-marketing.md` + `playbooks/conversion-rate-optimization.md` |
 | **Meta/Facebook ads** | `channels/meta-advertising.md` + `playbooks/meta-creative-testing-decision-framework.md` | `frameworks/meta-advertising/` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |
 | **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` | `checklists/seo-checklist.md` |

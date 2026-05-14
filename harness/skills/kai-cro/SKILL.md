@@ -29,8 +29,22 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Load these before starting:
 - `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\conversion-rate-optimization.md`
+- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\funnel-hack-offer-architecture.md`
 - `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\cro-audit-checklist.md`
 - `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\landing-page-messaging-checklist.md`
+
+### Competitor Funnel-Hack Step (required for ecommerce/CRO)
+
+Before recommending product-page, pricing, checkout, or subscription changes:
+
+1. Identify scaled competitors or adjacent ecommerce brands with active paid spend.
+2. Inspect Meta Ads Library, Google ads, TikTok Shop, Amazon, or other visible demand sources where available.
+3. Save source URLs, screenshots, or archived notes for each inspected funnel.
+4. Build an offer/pricing matrix: path, price, billing model, quantity, default status, bonuses, retention hook, risk reversal.
+5. Extract conversion mechanics separately from visual taste.
+6. Turn each mechanic into a concrete A/B test recommendation.
+
+If source evidence, checkout access, pricing, or ad visibility is missing, list it in the audit data gaps. Do not replace it with guesses.
 
 ### 5-Layer CRO Stack (audit bottom-up)
 
@@ -51,6 +65,9 @@ Load these before starting:
 - Value prop vs price — is it a no-brainer?
 - Risk reversal (guarantee, free trial, money-back)
 - Urgency — any reason to act now?
+- For ecommerce/subscription: what winning competitor mechanics should be tested?
+- Does the audit include an offer/pricing matrix from sourced competitor funnels?
+- Are subscription defaults, one-time anchors, bonus stacks, retention hooks, upsells, and risk reversal separated from visual taste?
 
 **Layer 4: Design & Layout**
 - Visual hierarchy — does the eye flow to the CTA?
@@ -106,6 +123,9 @@ Save to `workspace/cro-audit/[page-slug].md`.
 Include:
 - Overall health score (/50)
 - Layer-by-layer analysis
+- Competitor funnel-hack sources (URLs, screenshots, or archived notes)
+- Offer/pricing matrix
+- Extracted conversion mechanics, not generic competitor inspiration
 - Prioritized fix list
 - Before/after copy suggestions for the top 3 copy fixes
 - A/B test recommendations (what to test first)

@@ -101,7 +101,39 @@ WEAK OFFER:                    STRONG OFFER:
                                + Money-back guarantee
 ```
 
-### Pricing Page Best Practices
+### Funnel Hack / Offer Architecture
+
+For ecommerce, DTC, subscription, and paid-traffic CRO audits, inspect winning external funnels before recommending changes. Use `knowledge/playbooks/funnel-hack-offer-architecture.md`.
+
+Required steps:
+
+1. Identify scaled competitors or adjacent brands with active paid spend.
+2. Capture source URLs, screenshots, or archived notes for each funnel.
+3. Build an offer/pricing matrix before critiquing design.
+4. Extract conversion mechanics separately from visual taste.
+5. Turn each mechanic into a specific A/B test hypothesis.
+
+Mechanics to extract:
+
+- Default purchase path
+- Subscription vs one-time framing
+- Price anchoring
+- Bonus/free-gift stacking
+- Forced-choice architecture
+- Checkout friction/removal
+- Upsell/downsell structure
+- Retention incentives
+- Risk reversal
+
+Offer/pricing matrix:
+
+| Brand | Source | Purchase Path | Price | Billing Model | Quantity / Term | Default? | Bonuses | Retention Hook | Risk Reversal |
+|-------|--------|---------------|-------|---------------|-----------------|----------|---------|----------------|---------------|
+| [Competitor] | [URL/screenshot] | [Subscription / one-time / bundle] | [Observed price] | [Model] | [Quantity] | [Yes/No] | [Observed] | [Observed] | [Observed] |
+
+**Rule:** Do not copy a competitor's aesthetic until the audit has named the mechanic. A page can look unintuitive and still convert because the offer architecture makes the desired choice obvious.
+
+### Pricing Page Rules
 - 3 tiers maximum (Good/Better/Best)
 - Highlight the recommended tier visually (larger, colored, "Most Popular" badge)
 - Annual pricing shown by default with monthly available (anchor to the annual savings)
@@ -146,7 +178,7 @@ Users scan the top, then left side. Place headlines and CTAs accordingly.
 [Headline]──────[CTA Button]
 ```
 
-### CTA Best Practices
+### CTA Rules
 - **One primary CTA** per page (not three competing options)
 - **Action-oriented text**: "Start Free Trial" > "Submit" > "Learn More"
 - **First-person framing**: "Start My Free Trial" > "Start Your Free Trial"

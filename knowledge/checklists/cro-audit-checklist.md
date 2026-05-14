@@ -38,7 +38,7 @@
 Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] What is this? (product/service identification)
 - [ ] Who is it for? (target audience)
-- [ ] Why should I care? (value proposition)
+- [ ] Why should I care? (core benefit)
 
 ### Headline
 - [ ] Headline communicates primary benefit (not feature)
@@ -118,6 +118,38 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 
 ---
 
+## Offer Architecture & Funnel Hack
+
+### Competitor Funnel Evidence
+- [ ] At least 2 scaled competitors or adjacent brands inspected for ecommerce/CRO audits
+- [ ] Active paid spend or peer imitation signal noted when available
+- [ ] Source URL, screenshot, or archived notes saved for each inspected funnel
+- [ ] Meta Ads Library, Google ads, TikTok Shop, Amazon, or other visible demand source checked where relevant
+
+### Offer / Pricing Matrix
+- [ ] Purchase paths listed separately (subscription, one-time, bundle, trial, sample, upsell)
+- [ ] Price, billing model, quantity/term, and default status recorded
+- [ ] Bonuses/free gifts listed per path
+- [ ] Retention incentives listed (continuity gifts, credits, loyalty perks, replenishment)
+- [ ] Risk reversal listed (guarantee, returns, trial, cancel-anytime copy)
+
+### Mechanics vs Taste
+- [ ] Default purchase path identified
+- [ ] Subscription vs one-time framing identified
+- [ ] Price anchoring identified
+- [ ] Bonus/free-gift stacking identified
+- [ ] Checkout friction/removal identified
+- [ ] Upsell/downsell structure identified
+- [ ] Visual taste separated from conversion mechanics
+
+### Test Planning
+- [ ] Every borrowed mechanic becomes an A/B test hypothesis
+- [ ] Primary metric selected (purchase conversion, AOV, subscription attach rate)
+- [ ] Guardrail metric selected (refund rate, churn, complaints, support tickets)
+- [ ] Missing source data listed as a data gap, not replaced with guesses
+
+---
+
 ## Page Content
 
 ### Copy Quality
@@ -166,12 +198,13 @@ Rate each section 1-5:
 | Above the Fold | | |
 | Trust & Social Proof | | |
 | Forms & Conversion Flow | | |
+| Offer Architecture & Funnel Hack | | |
 | Page Content | | |
 | Navigation & UX | | |
-| **TOTAL** | **/30** | |
+| **TOTAL** | **/35** | |
 
 **Interpretation:**
-- 25-30: Excellent — focus on A/B testing incremental improvements
-- 18-24: Good — fix 2-3 specific gaps for significant lift
-- 12-17: Needs work — prioritize above-fold + CTA + trust
-- < 12: Critical — fundamental redesign needed before optimization
+- 30-35: Excellent — focus on A/B testing incremental improvements
+- 23-29: Good — fix 2-3 specific gaps for significant lift
+- 16-22: Needs work — prioritize above-fold + CTA + trust
+- < 16: Critical — fundamental redesign needed before optimization

@@ -55,6 +55,7 @@ GENERATION_FRAMEWORK_MAP: Dict[str, Tuple[str, ...]] = {
     ),
     "landing-page": (
         "knowledge/frameworks/content-copywriting/perception-engineering.md",
+        "knowledge/playbooks/funnel-hack-offer-architecture.md",
         "knowledge/checklists/perception-engineering-checklist.md",
     ),
     "gbp-post": (

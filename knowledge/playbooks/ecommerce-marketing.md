@@ -67,6 +67,29 @@ RETENTION (10% of budget):
 
 ## Conversion Optimization
 
+### Funnel Hack / Offer Architecture
+
+Before changing product pages or checkout, inspect scaled competitor or adjacent-brand funnels. The goal is to find commercial mechanics, not design inspiration. Use `knowledge/playbooks/funnel-hack-offer-architecture.md`.
+
+Required audit output:
+
+- Source URLs, screenshots, or archived notes for each inspected funnel
+- Offer/pricing matrix
+- Default purchase path and subscription vs one-time framing
+- Price anchors, bonuses, retention hooks, upsells, and risk reversal
+- A/B test hypotheses tied to conversion rate, AOV, subscription attach rate, refunds, and retention
+
+Ecommerce offer mechanics to look for:
+
+- Subscription preselected as the default
+- One-time purchase priced high to anchor subscription
+- Larger supply or bundle getting the best gift stack
+- Free shipping threshold placed just above normal cart size
+- Post-purchase upsell tied to the product just bought
+- Continuity gift or credit unlocked on later shipments
+
+Do not mark a competitor page as a model because it "looks better." Name the mechanic that may be causing the conversion lift.
+
 ### Product Page Checklist
 
 - [ ] High-quality images (5+, multiple angles, lifestyle + product shots)

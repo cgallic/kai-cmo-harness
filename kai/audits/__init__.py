@@ -35,6 +35,9 @@ Available engines
   status, pixel/tag verification, audience definitions, budget allocation,
   creative assets, offer/CTA clarity, competitor landscape advisory,
   compliance pre-check, and per-platform readiness assessments.
+- **offer_architecture** -- Competitor funnel-hack evidence, offer/pricing
+  matrix capture, conversion mechanics extraction, and A/B test hypotheses for
+  ecommerce/CRO audits.
 """
 
 # Lazy imports to avoid ImportError when a sibling engine file has not
@@ -146,6 +149,24 @@ try:
         "audit_paid_media_readiness",
         "get_platform_prerequisites",
         "score_paid_media_readiness",
+    ]
+except ImportError:
+    pass
+
+try:
+    from kai.audits.offer_architecture import (
+        audit_offer_architecture,
+        build_offer_pricing_matrix,
+        extract_conversion_mechanics,
+        generate_ab_test_hypotheses,
+        score_offer_architecture,
+    )
+    __all__ += [
+        "audit_offer_architecture",
+        "build_offer_pricing_matrix",
+        "extract_conversion_mechanics",
+        "generate_ab_test_hypotheses",
+        "score_offer_architecture",
     ]
 except ImportError:
     pass
