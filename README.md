@@ -9,6 +9,7 @@ If you searched for **AI marketing agent**, **Claude Code marketing skills**, **
 - [MeetKai](https://meetkai.xyz) — the operator layer behind Kai CMO workflows.
 - [KaiCalls](https://kaicalls.com) — AI voice agents for small-business phone answering and lead capture.
 - [Connor Gallic](https://connorgallic.com) — founder building Kai, KaiCalls, and AI automation systems.
+- [AI-powered paid media system](docs/AI_POWERED_ADS_SYSTEM.md) — plain-English explanation of how Kai lowers the operating cost around paid acquisition.
 
 ## What Kai is
 
