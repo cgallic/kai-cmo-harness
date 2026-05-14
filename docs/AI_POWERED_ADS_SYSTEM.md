@@ -1,129 +1,168 @@
-# AI-Powered Paid Media System
+# How Kai Runs Paid Ads
 
-This page explains the paid media system in plain English.
+This page explains the paid media workflow in plain English.
 
-Kai is built for any business that needs paid acquisition: ecommerce, SaaS, local services, digital products, subscriptions, marketplaces, agencies, and founder-led companies.
+Kai is built for business owners, marketers, agencies, and developers who want a repeatable way to plan, create, check, and improve paid ads from the same workspace where the rest of the business context lives.
 
-Paid ads are still the acquisition channel. Kai is the operating layer around the ads. It helps a team plan campaigns, produce creative variants, check policy risk, review performance, and decide what to test next without hiring a full paid media team before the channel is proven.
+Paid ads are still paid ads. Kai does not make Meta, Google, TikTok, LinkedIn, or any other ad auction cheaper.
 
-## The Honest Claim
+Kai lowers the work around the ad spend: campaign planning, creative variants, landing page copy, policy checks, quality checks, performance review, and next-step recommendations.
 
-Kai does not make ad auctions cheaper.
+## The Simple Version
 
-Meta, Google, TikTok, LinkedIn, and other platforms still charge what their markets charge. Kai lowers the cost around the ad spend: planning time, copy production, creative testing, campaign review, reporting, and iteration.
+Most small teams run into the same paid ads problem.
 
-That distinction matters.
+They need to test offers, hooks, pages, and audiences, but every test needs more writing, creative direction, reporting, and review. That labor gets expensive before the business knows what works.
 
-The real advantage is lower fixed operating cost while a business is still learning which offers, audiences, hooks, and landing pages convert.
+Kai turns that work into a repeatable system:
+
+1. Read the business.
+2. Map the campaign.
+3. Draft the ad variants.
+4. Check policy and quality.
+5. Review performance.
+6. Recommend the next test.
+
+Humans still approve budgets, claims, creative, and launch decisions. Kai handles the structured prep and review work that slows teams down.
+
+## Who This Helps
+
+| Reader | What you care about | How Kai helps |
+| --- | --- | --- |
+| Business owner | "Can this help me get customers without wasting money?" | Kai creates a controlled test plan before spend scales. |
+| Marketer | "Can I get more angles, variants, and reports out faster?" | Kai drafts campaign assets and review notes from one brief. |
+| Developer | "Is this real software or a prompt pack?" | Kai includes skill contracts, policy references, quality gates, and paid media modules. |
+| Agency | "Can I repeat this across clients?" | Kai gives each client repo a reusable marketing workspace. |
 
 ## What Exists In This Repo
 
-Kai's paid media workflow is grounded in files that already exist in this repository:
+The paid media workflow is grounded in real files in this repository:
 
 - `/kai-ad-campaign` plans, evaluates, and produces paid campaigns across platforms.
-- `/kai-daily-ad-review` pulls ad data, compares performance, and creates a daily action summary when platform credentials are configured.
-- `harness/references/` contains platform policy references for Meta, Google, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, and X.
+- `/kai-daily-ad-review` pulls ad data and creates performance summaries when credentials are configured.
+- `harness/references/` stores policy references for Meta, Google, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, and X.
 - `harness/skill-contracts/` defines ad output rules for formats like Meta ads and Google Ads.
-- `scripts/quality_gates/` checks banned words, Four U's quality, SEO rules, and other publishing standards.
-- `kai/paid_media/` contains paid media controls, monitoring, budget safety, readiness checks, and variant logic.
+- `scripts/quality_gates/` checks banned words, Four U's quality, SEO rules, and publishing standards.
+- `kai/paid_media/` contains controls, monitoring, budget safety, readiness checks, and variant logic.
 
-Kai is not presented here as a guaranteed ROAS engine or a fully autonomous media buyer. It is a structured AI operating system for running the work around paid acquisition with more speed and less fixed labor.
+This is not a claim that Kai automatically buys ads profitably. The repo contains a structured operating layer for the work around paid acquisition.
 
-## How The System Works
+## How The Workflow Runs
 
-Kai turns a paid media test into a repeatable loop:
+### 1. Business Context
 
-1. **Profile the business**
-   Kai reads the product, audience, price point, proof points, landing page, offer, and channel constraints.
+Kai starts from the product and market:
 
-2. **Map the campaign**
-   Kai creates a campaign map by platform, funnel stage, audience, objective, and number of variants.
+- What is being sold
+- Who the buyer is
+- What the offer is
+- Which proof points are allowed
+- Which landing page will receive traffic
+- Which platform rules apply
+- What the budget and goal are
 
-3. **Produce creative variants**
-   Kai drafts hooks, headlines, primary text, search ads, scripts, landing page sections, follow-up copy, and retargeting messages.
+That context can come from `MARKETING.md`, the repo, a user brief, or connected data sources.
 
-4. **Check the work before spend**
-   Kai checks character limits, banned words, platform policy rules, claim risk, CTA clarity, and quality thresholds before assets are used.
+### 2. Campaign Map
 
-5. **Launch with human approval**
-   Humans approve budgets, claims, creative, and final campaign setup. Where scripts support platform actions, mutation commands are dry-run by default unless explicitly executed.
+Kai turns the brief into a campaign structure:
 
-6. **Review performance**
-   Kai can pull or read performance data, then flag spend pace, CTR changes, CPC spikes, conversion gaps, frequency issues, and weak creative.
+- Platform
+- Funnel stage
+- Audience
+- Objective
+- Offer angle
+- Number of variants
+- Required checks before launch
 
-7. **Decide the next test**
-   Kai recommends what to keep, pause, rewrite, split, retarget, or scale based on the available data.
+This prevents the usual blank-page ad workflow where every new campaign starts from scratch.
+
+### 3. Creative Variants
+
+Kai can draft:
+
+- Meta ad copy
+- Google search ad copy
+- LinkedIn ad copy
+- TikTok-style scripts
+- Landing page sections
+- Retargeting copy
+- Follow-up emails
+- Creative briefs
+- Hook tests
+
+The point is not to publish every draft. The point is to create enough good options for a human to pick, edit, and test.
+
+### 4. Policy And Quality Checks
+
+Before ads go live, Kai checks for:
+
+- Platform policy risk
+- Character limits
+- Unsupported claims
+- Banned words
+- Weak or vague copy
+- CTA clarity
+- Missing proof
+- Landing page mismatch
+
+This helps teams catch obvious problems before they spend money sending traffic to them.
+
+### 5. Performance Review
+
+When ad data is available, Kai can review:
+
+- Spend pace
+- CTR
+- CPC
+- Conversion rate
+- CPA or CPL
+- Frequency
+- Landing page behavior
+- Search terms
+- Creative fatigue
+- Budget waste
+
+The output is more than a dashboard. Kai turns the review into action notes: keep, pause, rewrite, split, retarget, or scale.
 
 ## Why This Keeps Costs Down
 
-Most paid media programs are expensive before they are proven because the business pays for setup labor first.
+Kai does not lower media prices. It lowers the human workload needed to find useful tests.
 
-Kai changes the cost structure.
-
-| Cost area | Without Kai | With Kai |
+| Cost area | Typical workflow | Kai workflow |
 | --- | --- | --- |
-| Campaign planning | Starts from a blank brief | Starts from a structured campaign map |
-| Copy production | Human writes every first draft | AI drafts variants for human review |
-| Creative testing | Limited by team capacity | More angles can be prepared at low fixed cost |
-| Compliance checks | Often reviewed late | Policy and quality checks happen before launch |
-| Reporting | Manual weekly readouts | Structured reviews and action notes |
-| Learning | Scattered across docs and chats | Captured as reusable campaign knowledge |
+| Planning | Build a new campaign from scratch | Start from a structured campaign map |
+| Copy | Write every first draft manually | Generate variants for review |
+| Compliance | Check late or miss issues | Check before launch |
+| Reporting | Summarize by hand | Produce structured review notes |
+| Learning | Lose insights across docs and chats | Keep campaign context in the workspace |
+| Scaling | Guess what deserves more budget | Use test results to pick next moves |
 
-The savings are not from skipping strategy. The savings come from making strategy, production, review, and iteration less labor-heavy.
+The business still needs a real offer, tracking, budget discipline, and human judgment. Kai makes the operating loop lighter.
 
-## What It Can Sell
+## What It Can Support
 
-The system is offer-agnostic. It can support paid acquisition for:
+Kai can support paid acquisition for:
 
-- One-time products
+- Ecommerce products
 - Subscriptions
-- Service businesses
+- SaaS trials
+- Local services
 - Lead generation
 - Courses and digital products
 - Events and launches
 - Marketplaces
 - B2B demos
-- Local businesses
-- Retargeting and win-back campaigns
+- Retargeting campaigns
 
-The same loop applies across offers: define the buyer, write multiple angles, match each angle to a page, check the work, run a controlled test, read the data, and improve the next batch.
+The workflow is the same: define the buyer, write multiple angles, match the page to the ad, check the work, run the test, read the data, and improve the next batch.
 
-## What Investors Or Partners Should Understand
+## What To Say In Plain English
 
-Kai is a cost-control and learning-speed advantage for paid acquisition.
+Kai is an AI marketing workspace for paid ads. It helps teams plan campaigns, create ad variants, check platform rules, review performance, and decide what to test next. It does not replace ad platforms or human approval. It reduces the manual work around paid acquisition so teams can test more carefully before they scale spend.
 
-It helps a business test more ideas before committing to large agency retainers, large creative teams, or large media budgets. The company still needs real products, real offers, real tracking, and real judgment. Kai makes the campaign operation lighter and more repeatable.
-
-The practical questions Kai helps answer are:
-
-- Which offers are worth paid traffic?
-- Which audiences respond first?
-- Which hooks lower wasted spend?
-- Which landing pages match the ad promise?
-- Which claims are too risky or unsupported?
-- Which campaigns deserve more budget?
-- Which tests should stop before they burn more cash?
-
-## Deck-Ready Explanation
-
-> Kai is an AI-powered paid media operating system. It does not replace ad platforms or promise guaranteed ROAS. It lowers the fixed cost of running paid acquisition by generating campaign maps, ad variants, landing page copy, follow-up messages, quality checks, policy checks, and performance reviews. Human operators approve what goes live, while Kai handles the repetitive campaign production and analysis work. That lets a business test more offers per dollar and scale only after the data shows real demand.
-
-## Deck Bullets
-
-- Paid ads remain the channel; Kai lowers the operating cost around the channel.
-- Kai creates campaign maps, ad variants, landing page copy, retargeting copy, and review notes.
-- Policy and quality checks happen before spend is committed.
-- Campaigns are judged by real metrics such as CPC, CTR, conversion rate, CPA, order value, payback, or lead quality.
-- Weak tests can be flagged earlier, so budget moves toward stronger offers and messages.
-- The system is built to support products, subscriptions, services, lead generation, launches, and local businesses.
-- Humans keep approval over budget, claims, creative, and launch decisions.
-
-## One-Sentence Version
-
-Kai helps businesses run paid acquisition with lower fixed labor cost by using AI to plan campaigns, produce variants, check risk, review data, and recommend the next test before spend is scaled.
-
-## What Not To Overclaim
+## What Not To Claim
 
 Do not claim Kai guarantees ROAS, replaces media buyers, or automatically buys ads profitably.
 
-The grounded claim is this: Kai reduces the manual workload around paid media testing, creates more structured experiments, adds policy and quality checks before launch, and helps teams learn which campaigns deserve more budget.
+The grounded claim is simpler: Kai makes paid media work more structured, faster to prepare, easier to review, and easier to repeat.

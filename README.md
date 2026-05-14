@@ -9,7 +9,20 @@ If you searched for **AI marketing agent**, **Claude Code marketing skills**, **
 - [MeetKai](https://meetkai.xyz) — the operator layer behind Kai CMO workflows.
 - [KaiCalls](https://kaicalls.com) — AI voice agents for small-business phone answering and lead capture.
 - [Connor Gallic](https://connorgallic.com) — founder building Kai, KaiCalls, and AI automation systems.
-- [AI-powered paid media system](docs/AI_POWERED_ADS_SYSTEM.md) — plain-English explanation of how Kai lowers the operating cost around paid acquisition.
+- [How Kai runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md) — plain-English explanation of the paid media workflow.
+
+## Start here
+
+Kai is for people who need marketing work done from the repo, not from a blank chat window.
+
+| You are | What Kai helps with | Start with |
+|---|---|---|
+| **Business owner** | Turn "we need more customers" into a clear plan, campaigns, pages, emails, and follow-up work | `/kai-growth-plan` |
+| **Marketing operator** | Produce briefs, ads, content, landing pages, email systems, audits, and quality reports from one workspace | `/kai` |
+| **Developer** | Give an AI agent structured product context, policy checks, files, workflows, and repeatable commands | `README.md` + `harness/skills/` |
+| **Agency or consultant** | Install a reusable marketing operating system inside client repos | `docs/QUICK_START.md` |
+
+The simplest way to understand Kai: it reads the business, chooses the right marketing workflow, creates the work, checks it, and leaves a record so the next run is smarter.
 
 ## What Kai is
 
