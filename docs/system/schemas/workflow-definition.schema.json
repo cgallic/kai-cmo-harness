@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/workflow-definition.schema.json",
+  "title": "WorkflowDefinition",
+  "description": "A product workflow that can be invoked from Kai surfaces.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workflow_id", "handler", "input_schema"],
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "handler": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Python import path or handler id."
+    },
+    "input_schema": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path to the workflow input contract."
+    },
+    "output_artifacts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "quality_policy": {
+      "type": "string",
+      "default": "default"
+    },
+    "supported_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["local", "remote", "dashboard"]
+      },
+      "default": ["local", "remote", "dashboard"]
+    },
+    "content_format": {
+      "type": ["string", "null"]
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "local_service_asset": {
+      "type": ["string", "null"]
+    },
+    "risk_tier": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "default": "medium"
+    },
+    "auto_run_allowed": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
+

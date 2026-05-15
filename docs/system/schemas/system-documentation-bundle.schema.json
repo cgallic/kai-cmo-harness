@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/system-documentation-bundle.schema.json",
+  "title": "SystemDocumentationBundle",
+  "description": "Optional manifest for a Kai system documentation pack.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "version", "pages", "schemas"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "path"],
+        "properties": {
+          "title": { "type": "string" },
+          "path": { "type": "string" },
+          "audience": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "diagrams": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          }
+        }
+      }
+    },
+    "schemas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "path"],
+        "properties": {
+          "title": { "type": "string" },
+          "path": { "type": "string" },
+          "code_shape": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
+

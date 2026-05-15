@@ -10,6 +10,7 @@ If you searched for **AI marketing agent**, **Claude Code marketing skills**, **
 - [KaiCalls](https://kaicalls.com) — AI voice agents for small-business phone answering and lead capture.
 - [Connor Gallic](https://connorgallic.com) — founder building Kai, KaiCalls, and AI automation systems.
 - [How Kai runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md) — plain-English explanation of the paid media workflow.
+- [System guide](docs/system/README.md) — architecture pages, Mermaid diagrams, and runtime schemas.
 
 ## Start here
 
