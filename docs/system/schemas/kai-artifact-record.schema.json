@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-artifact-record.schema.json",
+  "title": "KaiArtifactRecord",
+  "description": "Canonical artifact contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_id", "artifact_type", "brand_id", "workflow"],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": [
+        "brief",
+        "draft",
+        "audit_findings",
+        "campaign_plan",
+        "gate_proposal",
+        "approved_asset",
+        "published_asset",
+        "performance_snapshot",
+        "learned_pattern"
+      ]
+    },
+    "brand_id": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "module_set": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "source_run": {
+      "type": ["string", "null"]
+    },
+    "parent_artifact_id": {
+      "type": ["string", "null"]
+    },
+    "lineage_run_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
+

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-workspace-profile.schema.json",
+  "title": "KaiWorkspaceProfile",
+  "description": "Canonical workspace profile for local and remote execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workspace_id", "name"],
+  "properties": {
+    "workspace_id": {
+      "type": "string",
+      "minLength": 1,
+      "default": "kai-marketing-os"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "default": "Kai Marketing OS"
+    },
+    "description": {
+      "type": "string",
+      "default": "Marketing-native Claude Code-style runtime"
+    },
+    "primary_user": {
+      "type": "string",
+      "default": "operator_saas"
+    },
+    "product_mode": {
+      "type": "string",
+      "default": "clone"
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["local", "remote", "dashboard"]
+      },
+      "default": ["local", "remote"]
+    },
+    "brands": {
+      "type": "array",
+      "items": { "$ref": "kai-brand-profile.schema.json" },
+      "default": []
+    },
+    "enabled_plugins": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["kai-marketing"]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
+
