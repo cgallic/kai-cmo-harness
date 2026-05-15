@@ -67,6 +67,16 @@
 
 ## 3. Creative Engine
 
+### Concept Bench Layer
+
+Before writing or producing ads, build a P.D.A. bench from `knowledge/playbooks/combinatorial-creative-bench.md`:
+
+```
+concept_count = personas x desires x angles
+```
+
+Use this layer to choose which concepts deserve production, assign 60/30/10 portfolio buckets, and name kill rules before spend starts.
+
 ### The 7-Hook Framework
 
 | Hook Type | Mechanism | Example |

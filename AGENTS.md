@@ -58,6 +58,7 @@ When you need to create content, find the right framework here. Load the primary
 | Email (cold outreach) | `knowledge/channels/email-lifecycle.md` + `harness/references/cold-email-rules.md` | — |
 | SEO content | `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` + `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` | `knowledge/checklists/seo-checklist.md` |
 | Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `knowledge/playbooks/meta-creative-testing-decision-framework.md` + `harness/references/meta-ads-rules.md` + `harness/references/meta-ads-api-reference.md` | `knowledge/checklists/meta-advertising-checklist.md` |
+| Paid creative bench / concept testing | `knowledge/playbooks/combinatorial-creative-bench.md` + `knowledge/playbooks/ad-creative-best-practices.md` | `knowledge/checklists/ad-launch-checklist.md` |
 | Google ads | `knowledge/channels/paid-acquisition.md` + `harness/references/google-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | LinkedIn ads | `knowledge/channels/linkedin-articles.md` + `harness/references/linkedin-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Microsoft/Bing ads | `knowledge/channels/paid-acquisition.md` + `harness/references/microsoft-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |

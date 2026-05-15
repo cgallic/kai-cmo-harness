@@ -449,6 +449,14 @@ Result: Most accurate attribution possible
 
 Andromeda punishes same-looking ads with higher CPMs. The algorithm measures "Creative Similarity" - if high, it treats your ads as duplicates.
 
+Use `knowledge/playbooks/combinatorial-creative-bench.md` to generate true concept diversity before production:
+
+```
+concept_count = personas x desires x angles
+```
+
+This P.D.A. bench prevents the common mistake of treating caption edits, crop changes, or minor hook swaps as separate concepts.
+
 ```
 Creative Variation Spectrum:
 

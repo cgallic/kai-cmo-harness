@@ -23,6 +23,8 @@ outputs:
   description: string       # up to 27 chars
   cta_button: string        # See More | Learn More | Get Quote | Book Now | Sign Up | etc.
   hook_type: string         # pattern_interrupt | social_proof | pain_agitate | direct_offer | story
+  concept_id: string        # PDA concept id from ad_concept_bench when available
+  portfolio_bucket: string  # winner | adjacent | experiment when running a concept bench
 
 quality_gates:
   - four_us_total >= 10     # lower bar — short format
@@ -33,7 +35,7 @@ quality_gates:
 
 word_count: 50-200 per variant
 hooks:
-  pre_write: load_brief + load_meta_advertising_channel + load_meta_frameworks + load_meta_checklist
+  pre_write: load_brief + load_meta_advertising_channel + load_combinatorial_creative_bench + load_meta_frameworks + load_meta_checklist
   post_write: run_quality_gate
   on_fail: revise_with_failure_report
   on_pass: post_for_approval

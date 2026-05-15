@@ -13,6 +13,8 @@
 - [ ] Campaign naming convention applied: `{PLATFORM}_{OBJECTIVE}_{AUDIENCE}_{DATE}`
 - [ ] KPI targets defined (CPA, ROAS, CTR)
 - [ ] Test plan documented (what variable are you testing first?)
+- [ ] Concept bench documented for ad batches: Persona x Desire x Angle
+- [ ] Portfolio bucket assigned to each concept: winner, adjacent, or experiment
 
 ### Creative
 - [ ] 3+ ad variants per ad set (minimum for algorithm optimization)
@@ -23,6 +25,7 @@
 - [ ] Mobile preview checked (most impressions are mobile)
 - [ ] No banned words from quality gate
 - [ ] A/B test matrix structured (test one variable at a time)
+- [ ] Kill rule named before launch (spend, CTR, CPA, fatigue, or tracking)
 
 ### Compliance
 - [ ] Platform TOS checked (run `/ad-copy` with platform policy loaded)
@@ -103,6 +106,7 @@
 | No conversions | Kill ad variant | After 2x CPA budget spent |
 | Low CTR (Meta) | Kill or refresh creative | < 0.5% after 1000 impressions |
 | Low CTR (Google) | Kill or improve Quality Score | < 1% after 500 impressions |
+| High CPA with volume | Kill or reduce hard | > 1.5x target after 72h and 50+ conversions |
 | High CPA | Pause, investigate audience/creative | > 1.5x target for 7 consecutive days |
 | High frequency | Refresh creative | > 3 on same audience |
 | Rising CPA trend | Expand audience or refresh creative | 20%+ week-over-week increase |

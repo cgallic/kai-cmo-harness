@@ -17,6 +17,7 @@ This is the decision layer for Meta creative testing. It sits between strategy a
 Load this with:
 
 - `knowledge/channels/meta-advertising.md`
+- `knowledge/playbooks/combinatorial-creative-bench.md`
 - `knowledge/playbooks/ad-creative-best-practices.md`
 - `knowledge/playbooks/ad-campaign-management.md`
 - `knowledge/checklists/meta-advertising-checklist.md`
@@ -87,6 +88,7 @@ These are defaults, not laws. Override them only with account evidence.
 3. Check creative diversity.
    - Count ideas, not files.
    - Different captions over similar footage are iterations, not distinct tests.
+   - Tag each candidate with Persona, Desire, and Angle when the batch is concept-heavy.
    - Prioritize different hooks, visual openings, proof types, personas, and offers.
 
 4. Pick the launch mode.
@@ -178,6 +180,7 @@ Evaluate the ad set first, then individual ads.
 - Day 3: remove obvious dead creative only if it has spend and no useful signal.
 - Day 7: compare CPA, CTR, CPC, hook retention, and lead quality.
 - Kill an ad after it spends 2x target CPA with no conversion, or after 1,000 impressions with CTR below the account threshold.
+- For high-volume tests, kill a concept when CPA is more than 1.5x target after 72 hours and 50+ conversions.
 - Keep high-spend ads that support the best blended CPA, even when another ad has a lower isolated CPA at tiny spend.
 
 ## Anti-Patterns

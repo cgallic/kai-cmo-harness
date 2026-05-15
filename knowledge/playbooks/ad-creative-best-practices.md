@@ -136,6 +136,18 @@ An irresistible offer with mediocre creative will outperform brilliant creative 
 
 ## Creative Testing Framework
 
+### Concept Bench Before Variants
+
+Use `knowledge/playbooks/combinatorial-creative-bench.md` before production when the request involves a batch of paid concepts.
+
+Concept math:
+
+```
+concept_count = personas x desires x angles
+```
+
+A 3x3 hook / creative matrix tests execution variants. A P.D.A. bench tests strategic concepts. Build the P.D.A. bench first, then use the 3x3 matrix for the highest-scoring rows.
+
 ### The 3x3 Matrix
 
 Test systematically. Run 3 hooks × 3 creatives = 9 variations per campaign.
@@ -157,6 +169,7 @@ Test systematically. Run 3 hooks × 3 creatives = 9 variations per campaign.
 
 ### When to Kill a Creative
 - After 2x the expected CPA with no conversions → kill
+- CPA > 1.5x target after 72 hours and 50+ conversions → kill or reduce hard
 - CTR < 0.5% after 1000 impressions → kill (for Meta)
 - CTR < 1% for search ads → kill (for Google)
 - Frequency > 3 on same audience → refresh creative

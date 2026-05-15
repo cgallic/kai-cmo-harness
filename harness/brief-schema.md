@@ -31,6 +31,27 @@ Save to `/tmp/harness_brief.json` before passing to write agent.
   "proof_available": "data, stories, or examples we can use",
   "cta": "what we want them to do after reading",
 
+  "ad_concept_bench": {
+    "use_when": "required for paid ad batches; omit for non-ad content",
+    "personas": ["3-5 situational or psychographic personas"],
+    "desires": ["3-5 customer-language desired outcomes"],
+    "angles": ["4-8 story, proof, or mechanism frames"],
+    "concept_math": "personas x desires x angles = total possible concepts",
+    "portfolio_rule": "60% winners, 30% adjacent tests, 10% experiments",
+    "selected_concepts": [
+      {
+        "concept_id": "PDA-persona-desire-angle-01",
+        "persona": "who this ad speaks to",
+        "desire": "the progress they want",
+        "angle": "the story/proof/frame",
+        "format": "video | static | carousel | UGC | founder | demo",
+        "hook": "first line or first 3 seconds",
+        "portfolio_bucket": "winner | adjacent | experiment",
+        "kill_rule": "named threshold before launch"
+      }
+    ]
+  },
+
   "word_count_target": 1400,
   "publish_date": "YYYY-MM-DD",
   "internal_links": [

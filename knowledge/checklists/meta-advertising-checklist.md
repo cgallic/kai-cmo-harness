@@ -26,7 +26,13 @@ Use this checklist before launching, during optimization, and for auditing Meta 
 
 ### Creative Preparation
 
+- [ ] P.D.A. concept grid completed for creative batches:
+  - [ ] Persona
+  - [ ] Desire
+  - [ ] Angle
 - [ ] Minimum 5-10 genuinely diverse creative concepts
+- [ ] Each concept has a `concept_id` for reporting and UTMs
+- [ ] Portfolio allocation set: 60% winners, 30% adjacent tests, 10% experiments
 - [ ] Multiple format variants (1:1, 4:5, 9:16)
 - [ ] Video versions (6-15 seconds for Stories/Reels)
 - [ ] Four creative archetypes represented:

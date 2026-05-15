@@ -46,6 +46,32 @@ Score content 1-4 on each dimension. Target: 12+/16
 
 ---
 
+## Combinatorial Creative Bench
+
+Use between ad brief and production bench.
+
+```
+concept_count = personas x desires x angles
+```
+
+Example: `5 personas x 4 desires x 6 angles = 120` possible concepts.
+
+**P.D.A. fields:**
+
+| Field | Question |
+|-------|----------|
+| Persona | Who is this message for? |
+| Desire | What progress do they want? |
+| Angle | What story, proof, or frame connects the two? |
+
+**Portfolio rule:** 60% winners-iterate, 30% adjacent concepts, 10% experiments.
+
+**Default kill rule:** Kill when CPA is `>1.5x target` after 72h and 50+ conversions. For low-volume tests, use spend and impression floors first.
+
+Full playbook: `playbooks/combinatorial-creative-bench.md`
+
+---
+
 ## Headline Formulas
 
 **Number Headlines:**

@@ -129,6 +129,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/business-model-marketing.md` | Marketing strategy by business model (B2B SaaS, DTC, Fintech, Crypto, Marketplace) |
 | `playbooks/video-clipping-automation-workflow.md` | Automated video clipping and multi-platform posting with OpusClip + Repurpose.io |
 | `playbooks/ad-creative-best-practices.md` | **Ad creatives** - Copy formulas (PAS, AIDA, BAB), testing framework (3x3 matrix), platform format specs, budget/bidding, creative fatigue signals |
+| `playbooks/combinatorial-creative-bench.md` | **Combinatorial creative bench** - P.D.A. concept math, 60/30/10 portfolio allocation, named kill / graduate / iterate rules |
 | `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
 | `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
 | `playbooks/social-media-strategy.md` | **Organic social** - LinkedIn, Instagram, X/Twitter, TikTok, YouTube best practices, content pillars, calendar template, platform benchmarks |
@@ -238,7 +239,7 @@ Original source files preserved in `archive/` for reference.
 | **Image optimization** | `frameworks/image-optimization-indexation.md` | - |
 | **Ad creative production** | `playbooks/ad-creative-best-practices.md` | `checklists/creative-production-checklist.md` |
 | **Ad campaign setup** | `playbooks/ad-campaign-management.md` | `checklists/ad-launch-checklist.md` |
-| **Ad creative testing** | `playbooks/ad-creative-best-practices.md` | `playbooks/ad-campaign-management.md` |
+| **Ad concept bench / creative testing** | `playbooks/combinatorial-creative-bench.md` | `playbooks/ad-creative-best-practices.md` + `playbooks/ad-campaign-management.md` |
 | **Meta creative batch launch** | `playbooks/meta-creative-testing-decision-framework.md` | `checklists/meta-advertising-checklist.md` |
 | **Competitor ad analysis** | Use `/ad-research` skill | `playbooks/ad-creative-best-practices.md` |
 | **Social media strategy** | `playbooks/social-media-strategy.md` | platform-specific channel guide |
@@ -295,7 +296,7 @@ Original source files preserved in `archive/` for reference.
 | **Design consumer fintech** | `design/b2c-fintech-design.md` |
 | **TikTok virality** | `channels/tiktok-algorithm.md`, `channels/tiktok-shop.md` |
 | **Nurture & retain users** | `channels/email-lifecycle.md` |
-| **Scale acquisition** | `channels/paid-acquisition.md` |
+| **Scale acquisition** | `channels/paid-acquisition.md`, `playbooks/combinatorial-creative-bench.md` |
 | **Meta ad optimization** | `channels/meta-advertising.md`, `frameworks/meta-advertising/` |
 | **2026 readiness** | `playbooks/2026-marketing-playbook.md` |
 | **Business model strategy** | `playbooks/business-model-marketing.md` |
