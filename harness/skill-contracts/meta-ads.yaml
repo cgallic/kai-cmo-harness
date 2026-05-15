@@ -24,6 +24,7 @@ outputs:
   cta_button: string        # See More | Learn More | Get Quote | Book Now | Sign Up | etc.
   hook_type: string         # pattern_interrupt | social_proof | pain_agitate | direct_offer | story
   concept_id: string        # PDA concept id from ad_concept_bench when available
+  awareness_stage: string   # unaware | problem-aware | solution-aware | product-aware | most-aware
   portfolio_bucket: string  # winner | adjacent | experiment when running a concept bench
 
 quality_gates:

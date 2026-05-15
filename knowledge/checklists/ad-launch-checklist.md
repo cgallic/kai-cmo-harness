@@ -14,7 +14,10 @@
 - [ ] KPI targets defined (CPA, ROAS, CTR)
 - [ ] Test plan documented (what variable are you testing first?)
 - [ ] Concept bench documented for ad batches: Persona x Desire x Angle
+- [ ] Awareness stage tagged for each paid social concept
 - [ ] Portfolio bucket assigned to each concept: winner, adjacent, or experiment
+- [ ] Control or historical baseline named before launch
+- [ ] Data floors and read windows documented before launch
 
 ### Creative
 - [ ] 3+ ad variants per ad set (minimum for algorithm optimization)
@@ -26,6 +29,7 @@
 - [ ] No banned words from quality gate
 - [ ] A/B test matrix structured (test one variable at a time)
 - [ ] Kill rule named before launch (spend, CTR, CPA, fatigue, or tracking)
+- [ ] Ledger fields available: concept ID, hook, proof type, mechanic, offer, and landing match
 
 ### Compliance
 - [ ] Platform TOS checked (run `/ad-copy` with platform policy loaded)
@@ -84,6 +88,8 @@
 ### Weekly (30 min)
 - [ ] Review CPA, ROAS, CTR by ad set
 - [ ] Pause underperformers (CPA > 1.5x target for 7+ days)
+- [ ] Mark each active test as kill / iterate / graduate / inconclusive / invalid
+- [ ] Add resolved tests to the creative intelligence ledger
 - [ ] Check frequency (>2.5 = creative fatigue)
 - [ ] Refresh creative if needed
 - [ ] Adjust budgets (+/- 20% max per day)

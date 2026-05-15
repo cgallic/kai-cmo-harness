@@ -148,6 +148,8 @@ concept_count = personas x desires x angles
 
 A 3x3 hook / creative matrix tests execution variants. A P.D.A. bench tests strategic concepts. Build the P.D.A. bench first, then use the 3x3 matrix for the highest-scoring rows.
 
+After launch, use `knowledge/playbooks/creative-test-resolution-protocol.md` to decide whether each test resolved. Write resolved learnings to `knowledge/playbooks/creative-intelligence-ledger.md` before planning the next batch.
+
 ### The 3x3 Matrix
 
 Test systematically. Run 3 hooks × 3 creatives = 9 variations per campaign.

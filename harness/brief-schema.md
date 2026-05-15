@@ -44,6 +44,7 @@ Save to `/tmp/harness_brief.json` before passing to write agent.
         "persona": "who this ad speaks to",
         "desire": "the progress they want",
         "angle": "the story/proof/frame",
+        "awareness_stage": "unaware | problem-aware | solution-aware | product-aware | most-aware",
         "format": "video | static | carousel | UGC | founder | demo",
         "hook": "first line or first 3 seconds",
         "portfolio_bucket": "winner | adjacent | experiment",

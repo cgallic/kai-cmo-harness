@@ -68,6 +68,8 @@ Example: `5 personas x 4 desires x 6 angles = 120` possible concepts.
 
 **Default kill rule:** Kill when CPA is `>1.5x target` after 72h and 50+ conversions. For low-volume tests, use spend and impression floors first.
 
+**Readout flow:** Use `playbooks/creative-test-resolution-protocol.md` to decide whether a test resolved, then write the lesson to `playbooks/creative-intelligence-ledger.md`.
+
 Full playbook: `playbooks/combinatorial-creative-bench.md`
 
 ---

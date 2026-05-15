@@ -25,6 +25,8 @@ A concept is a distinct `Persona x Desire x Angle` hypothesis. Format, creator, 
 Load this with:
 
 - `knowledge/playbooks/ad-creative-best-practices.md`
+- `knowledge/playbooks/creative-test-resolution-protocol.md`
+- `knowledge/playbooks/creative-intelligence-ledger.md`
 - `knowledge/playbooks/meta-creative-testing-decision-framework.md` for Meta batch activation decisions
 - `knowledge/channels/paid-acquisition.md`
 - `knowledge/checklists/ad-launch-checklist.md`
@@ -42,6 +44,8 @@ External reference points:
   Source: https://www.attnagency.com/blog/2026-roas-benchmarks-industry-vertical-performance-standards
 - ATTN audience scaling thresholds: pause when CPA exceeds target by 50%.
   Source: https://www.attnagency.com/blog/lookalike-audiences-vs-broad-targeting
+- Motion creative strategy / reverse-engineering: tag concepts by pain or desire, persona, messaging angle, awareness stage, hook, format, and creative mechanic.
+  Sources: https://motionapp.com/library/frameworks/creative-strategy-engine and https://motionapp.com/library/frameworks/creative-analysis
 
 The exact `72h + 50 conversions + 1.5x CPA` kill rule below is Kai's default operating rule. Treat it as a decision threshold to calibrate with account history, not platform policy.
 
@@ -79,7 +83,25 @@ The argument, story, proof type, or frame that connects persona to desire:
 - Contrast: "Voicemail collects problems; receptionist AI routes revenue"
 - Time math: "The first 60 seconds decide whether the lead stays yours"
 
-### Optional Fourth Axis: Format
+### Optional Fourth Axis: Awareness Stage
+
+Add awareness stage when a batch risks over-indexing on one funnel moment:
+
+- Unaware
+- Problem-aware
+- Solution-aware
+- Product-aware
+- Most-aware
+
+Expanded math:
+
+```
+concept_count = personas x desires x angles x awareness_stages
+```
+
+Use the 3-axis P.D.A. grid for concept supply. Add awareness stage when planning cold vs retargeting, educational vs offer-led, or creative for multiple funnel stages.
+
+### Optional Fifth Axis: Format
 
 Add format after the P.D.A. grid exists:
 
@@ -104,6 +126,7 @@ Every concept row should answer:
 | `persona` | Yes | Use a persona slug or short situational label |
 | `desire` | Yes | Customer-language desired progress |
 | `angle` | Yes | Message frame, proof type, or story route |
+| `awareness_stage` | Yes for paid social | Unaware, problem-aware, solution-aware, product-aware, or most-aware |
 | `format` | Yes | Video, static, carousel, UGC, founder, demo, etc. |
 | `hook` | Yes | First line or first 3 seconds |
 | `proof` | Yes | Review, demo, data point, mechanism, example, or "needs proof" |
@@ -127,6 +150,7 @@ Score each concept 0-2.
 | Visual distinction | Same as current ads | Some change | Distinct pattern |
 | Persona clarity | Generic | Segment implied | Persona obvious in 3 seconds |
 | Desire intensity | Nice-to-have | Useful | Urgent business or emotional pressure |
+| Awareness-stage fit | Mismatched | Plausible | Right stage for placement |
 | Proof availability | None | Indirect | Specific proof ready |
 | Landing match | Weak | Acceptable | Same promise and CTA |
 | Production speed | Slow | Moderate | Can ship this week |
@@ -190,7 +214,8 @@ Use this weekly loop for active paid social programs:
 4. Thursday: launch or stage ads with UTMs, policy checks, and kill rules.
 5. Day 1: verify delivery, links, UTMs, pixels, spend, and approvals.
 6. Day 3 / 72h: kill obvious losers only after data floors are met.
-7. Day 7: graduate, iterate, reduce, or archive.
+7. Day 7: resolve the test, then graduate, iterate, reduce, or archive.
+8. After resolution: write the learning to the creative intelligence ledger.
 
 ---
 
@@ -206,6 +231,8 @@ Minimum floors:
 - Impression floor: `1,000 impressions` for CTR reads.
 - Conversion floor: `50+ conversions` for CPA confidence.
 - Time floor: `72 hours` for early high-volume judgment.
+
+For a full decision protocol, use `knowledge/playbooks/creative-test-resolution-protocol.md`.
 
 ### Kill Rules
 
@@ -239,6 +266,7 @@ Iterate winners by changing one execution variable at a time:
 - Hook: first line, opening frame, or first 3 seconds.
 - Proof: review, demo, data point, founder claim, customer story.
 - Format: UGC, founder, static, carousel, screen recording.
+- Awareness stage: cold education, problem framing, product proof, offer close.
 - CTA: quote, demo, call, trial, audit, shop.
 - Creator: customer, employee, founder, expert, operator.
 
@@ -255,12 +283,14 @@ For KaiCalls:
 | Personas | 4 | Admin Martyr, System Manager, local business owner, office manager |
 | Desires | 5 | capture missed calls, qualify leads, reduce admin load, book appointments, sound responsive |
 | Angles | 6 | loss math, after-hours proof, staff relief, mechanism demo, owner story, voicemail contrast |
+| Awareness stages | 3 | problem-aware, solution-aware, product-aware |
 
 ```
 4 personas x 5 desires x 6 angles = 120 possible concepts
+4 personas x 5 desires x 6 angles x 3 awareness stages = 360 possible staged concepts
 ```
 
-Ship a first batch from the highest-scoring 8-12 rows. Do not produce all 120. The grid creates options; the bench chooses work.
+Ship a first batch from the highest-scoring 8-12 rows. Do not produce all 120 or 360. The grid creates options; the bench chooses work.
 
 ---
 
@@ -270,10 +300,12 @@ Before a paid creative batch ships:
 
 - [ ] P.D.A. grid exists.
 - [ ] Each ad has a `concept_id`.
+- [ ] Awareness stage is tagged for paid social batches.
 - [ ] Selected concepts include real conceptual diversity, not only caption or crop changes.
 - [ ] Portfolio bucket is assigned: winner, adjacent, or experiment.
 - [ ] Budget can support the active count.
 - [ ] Kill rule is named for each active row.
+- [ ] Test resolution memo has a control, variable, data floor, and read window.
 - [ ] Landing page matches the concept promise.
 - [ ] Platform policy reference has been checked.
 - [ ] UTMs identify concept, format, and hook.
@@ -288,4 +320,5 @@ Before a paid creative batch ships:
 - Letting a winner die because there is no adjacent backlog.
 - Killing ads by clock time before the data floor is met.
 - Scaling an ad with cheap leads but poor lead quality.
+- Repeating a loser because the lesson was never written to a ledger.
 - Testing new concepts against a landing page that does not match the promise.
