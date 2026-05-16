@@ -1,0 +1,215 @@
+{
+  "project": "Kai Agentic Marketing Control Plane",
+  "mode": "open-source-first",
+  "source_prd": "docs/plans/2026-05-15-agentic-marketing-control-plane-prd.md",
+  "source_strategy": "workspace/agentic-world-gap-plan-2026-05-15.md",
+  "run_log_dir": "workspace/agentic-control-plane-build/runs",
+  "rules": [
+    "Build one bounded task slice per automation run.",
+    "Prefer local file-backed or SQLite-backed implementation before SaaS assumptions.",
+    "Do not require hosted auth, billing, dashboards, or live connector credentials for the OSS MVP.",
+    "Use fixture-based tests and dry-run modes for risky actions.",
+    "Extend existing Kai runtime, agent, quality, and gateway modules instead of creating parallel systems.",
+    "Do not revert unrelated user work."
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "name": "Agent Registry",
+      "priority": "P0",
+      "status": "done",
+      "dependencies": [],
+      "first_targets": [
+        "kai/runtime/agents.py",
+        "kai/runtime/models.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Local agent profile registry exists, supports create/list/get/revoke/check_scope, and has fixture tests."
+    },
+    {
+      "id": "T02",
+      "name": "Mandate Ledger",
+      "priority": "P0",
+      "status": "done",
+      "dependencies": [
+        "T01"
+      ],
+      "first_targets": [
+        "kai/runtime/mandates.py",
+        "kai/runtime/actions.py",
+        "kai/runtime/policy.py",
+        "kai/execution/executor.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Structured local mandates exist and selected high-risk actions require valid mandates before execution."
+    },
+    {
+      "id": "T03",
+      "name": "Workflow SKU Manifests",
+      "priority": "P0",
+      "status": "done",
+      "dependencies": [
+        "T01"
+      ],
+      "first_targets": [
+        "harness/workflow-skus/",
+        "kai/runtime/workflow_skus.py",
+        "llms.txt",
+        "docs/AGENT_MARKETPLACE.md"
+      ],
+      "acceptance_summary": "At least five valid workflow SKU manifests exist and a loader validates required fields."
+    },
+    {
+      "id": "T04",
+      "name": "Connector Health Gate",
+      "priority": "P0",
+      "status": "ready_for_review",
+      "dependencies": [
+        "T01"
+      ],
+      "first_targets": [
+        "kai/runtime/connector_health.py",
+        "gateway/routers/connections.py",
+        "agent/tasks/connector_health.py",
+        "kai/execution/executor.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Execution can be blocked or warned based on local connector health states with fixture tests."
+    },
+    {
+      "id": "T05",
+      "name": "Scheduled Handler Registration",
+      "priority": "P0",
+      "status": "pending",
+      "dependencies": [
+        "T04"
+      ],
+      "first_targets": [
+        "agent/scheduler.py",
+        "agent/tasks/__init__.py",
+        "agent/tasks/execute_approved.py",
+        "agent/tasks/connector_health.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Every default scheduled task resolves to a registered handler or fails loudly in validation."
+    },
+    {
+      "id": "T06",
+      "name": "Local Lead OS Package",
+      "priority": "P1",
+      "status": "pending",
+      "dependencies": [
+        "T03",
+        "T04"
+      ],
+      "first_targets": [
+        "workspace/packages/local-lead-os/",
+        "harness/workflow-skus/local-lead-os.yaml",
+        "kai/runtime/modules/local-service.yaml",
+        "knowledge/playbooks/phone-lead-capture.md"
+      ],
+      "acceptance_summary": "Local Lead OS has docs, a workflow manifest, sample outputs, fixture data, and KaiCalls phone capture guidance."
+    },
+    {
+      "id": "T07",
+      "name": "Agentic Commerce Readiness Audit",
+      "priority": "P1",
+      "status": "ready_for_review",
+      "dependencies": [
+        "T03"
+      ],
+      "first_targets": [
+        "kai/audits/agentic_commerce.py",
+        "knowledge/checklists/agentic-commerce-checklist.md",
+        "scripts/quality_gates/agent_commerce_lint.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Fixture-friendly commerce readiness audit scores catalog, checkout, offer, policy, and AI crawler gaps."
+    },
+    {
+      "id": "T08",
+      "name": "AI Referral Attribution",
+      "priority": "P1",
+      "status": "pending",
+      "dependencies": [
+        "T07"
+      ],
+      "first_targets": [
+        "kai/analytics/ai_referrals.py",
+        "scripts/analytics/ai_referrals.py",
+        "gateway/routers/analytics.py",
+        "knowledge/playbooks/ai-referral-attribution.md",
+        "tests/"
+      ],
+      "acceptance_summary": "AI, creator, affiliate, shopping, form, and call source classes are normalized with fixture tests."
+    },
+    {
+      "id": "T09",
+      "name": "Evidence Pack Exporter",
+      "priority": "P1",
+      "status": "ready",
+      "dependencies": [
+        "T01",
+        "T02"
+      ],
+      "first_targets": [
+        "kai/provenance/",
+        "kai/runtime/store.py",
+        "kai/runtime/actions.py",
+        "agent/traces/models.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Markdown and JSON evidence packs export run metadata, claims, gates, approvals, mandates, connector health, and action results."
+    },
+    {
+      "id": "T10",
+      "name": "Creator Commerce Ops",
+      "priority": "P2",
+      "status": "ready",
+      "dependencies": [
+        "T03"
+      ],
+      "first_targets": [
+        "kai/audits/creator_commerce.py",
+        "kai/archetypes/overlays/creator.py",
+        "knowledge/playbooks/creator-commerce-ops.md",
+        "harness/references/creator-disclosure.md",
+        "kai/memory/schemas.py",
+        "tests/"
+      ],
+      "acceptance_summary": "Creator commerce audit and playbook cover fit, audience quality, rates, rights, disclosure, affiliate setup, GMV, and reuse."
+    },
+    {
+      "id": "T11",
+      "name": "Micropayment Monetization Playbook",
+      "priority": "P2",
+      "status": "pending",
+      "dependencies": [
+        "T07"
+      ],
+      "first_targets": [
+        "knowledge/playbooks/micropayment-monetization.md",
+        "harness/references/x402-agent-payments.md",
+        "knowledge/checklists/micropayment-readiness-checklist.md"
+      ],
+      "acceptance_summary": "Standalone GitHub docs cover pay-per-crawl, x402, paid APIs, paid MCP tools, content licensing, pricing tests, and risks."
+    },
+    {
+      "id": "T12",
+      "name": "Agentic Security Evals",
+      "priority": "P2",
+      "status": "pending",
+      "dependencies": [
+        "T01",
+        "T02",
+        "T04"
+      ],
+      "first_targets": [
+        "tests/agentic_security/",
+        "scripts/quality/rules/agentic_security.py",
+        "docs/SECURITY_EVALS.md"
+      ],
+      "acceptance_summary": "Local evals cover prompt injection, tool poisoning, fake sources, mandate bypass, spend cap bypass, connector degradation, and cross-client leakage."
+    }
+  ]
+}

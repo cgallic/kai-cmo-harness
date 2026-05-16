@@ -134,6 +134,8 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/creative-intelligence-ledger.md` | **Creative intelligence ledger** - Durable memory for hooks, angles, awareness stages, mechanics, results, and next actions |
 | `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
 | `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
+| `playbooks/paid-media-launch-playbook.md` | **Paid media launch** - Measurement-first Meta and Google launch flow, target CPA x 50 budget rule, creative matrix, first 14-day checks |
+| `playbooks/local-business-claymation-ads.md` | **Local claymation ad wedge** - Discover local leads, score weak creative, generate sample AI video concepts, pitch retainers |
 | `playbooks/social-media-strategy.md` | **Organic social** - LinkedIn, Instagram, X/Twitter, TikTok, YouTube best practices, content pillars, calendar template, platform benchmarks |
 | `playbooks/video-content-creation.md` | **Video production** - Short-form scripts (15/30/60s), long-form structure, testimonials, production tiers, editing rules, repurposing framework |
 | `playbooks/launch-playbook.md` | **Product launches** - Pre-launch (4 weeks), launch day hour-by-hour, post-launch optimization, crisis playbook |
@@ -226,6 +228,8 @@ Original source files preserved in `archive/` for reference.
 | **Persona research** | `personas/_persona-index.md` | individual persona file |
 | **Email campaigns** | `channels/email-lifecycle.md` | `frameworks/content-copywriting/perception-engineering.md` |
 | **Paid ads** | `channels/paid-acquisition.md` | `frameworks/content-copywriting/headline-formulas.md` |
+| **Paid media launch** | `playbooks/paid-media-launch-playbook.md` | `playbooks/ad-campaign-management.md` |
+| **Local business sample ad outreach** | `playbooks/local-business-claymation-ads.md` | `playbooks/ad-creative-best-practices.md` |
 | **Ecommerce CRO / offer architecture** | `playbooks/funnel-hack-offer-architecture.md` | `playbooks/ecommerce-marketing.md` + `playbooks/conversion-rate-optimization.md` |
 | **Meta/Facebook ads** | `channels/meta-advertising.md` + `playbooks/meta-creative-testing-decision-framework.md` | `frameworks/meta-advertising/` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |

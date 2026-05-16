@@ -21,6 +21,8 @@ Evaluation mode does NOT require `MARKETING.md`. Creation mode does.
 
 Skip this phase entirely if the user only wants to create new ads.
 
+Evaluation mode is read-only. Do not create, pause, activate, change bids, change budgets, upload assets, add keywords, or mutate targeting while evaluating performance.
+
 ### E.1 Pull Active Campaigns
 
 Load the Meta API reference: `harness/references/meta-ads-api-reference.md`
@@ -127,6 +129,21 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 4. **Landing page** — where do ads send traffic?
 5. **Existing assets** — any images/video already available?
 
+### New Launch Add-On
+
+If the campaign is for a new brand, new product, first paid test, or "launch ads" request, load:
+
+- `knowledge/playbooks/paid-media-launch-playbook.md`
+
+Apply these launch defaults before writing ads:
+
+- Use `Target CPA x 50` as the minimum test budget.
+- Build the measurement checklist before campaign copy.
+- Start Meta with one campaign per product plus simple retargeting.
+- Start Google with branded search, non-branded search per product/problem, and shopping only when feed quality is ready.
+- Avoid Performance Max until the account has baseline data.
+- Produce `workspace/ads/_launch-brief.md` and `workspace/ads/_measurement-checklist.md`.
+
 ### Meta Creative Testing Add-On
 
 If the platform is Meta and the request includes 10+ creatives, API creation, video batches, existing winners, low budgets, or a "best solution" question, load:
@@ -174,6 +191,8 @@ Before writing any ad, load the platform's policy reference and skill contract. 
 All paths relative to `E:\Dev2\kai-cmo-harness-work\`.
 
 Also load: `harness/references/advertising-compliance.md` for FTC/GDPR/CAN-SPAM requirements that apply to ALL platforms.
+
+Also load: `harness/references/ad-write-guardrails.md` for any workflow that may upload assets, create ads, create campaigns/ad sets/ad groups, activate/pause entities, or change bids/budgets.
 
 ### Approval Gate
 
@@ -287,6 +306,8 @@ Generate `workspace/ads/_quality-report.md`:
 
 If the user wants to create ads via API (not just produce copy), load `harness/references/meta-ads-api-reference.md` and follow this sequence:
 
+Load `harness/references/ad-write-guardrails.md` before API execution. Default to read-only reports, dry-run previews, upload validation, and recommendations. Live write access is approval-gated and never auto-approved.
+
 ### Launch Decision Gate
 
 Before creating or activating Meta ads by API, load `knowledge/playbooks/meta-creative-testing-decision-framework.md` when any of these are true:
@@ -313,6 +334,8 @@ For those cases, write or present a decision memo before execution. Default beha
    Never trust video IDs from logs or docs without verification — a single digit difference means a different (or nonexistent) video.
 3. **Verify Instagram account ID:** Pull from Page settings if not in `.env.local`
 4. **Set all ads to PAUSED initially** — review before activating
+5. **Build the write guardrail packet:** include account allowlist, target campaign/ad set IDs, dry-run payload, before/after diff, evidence source, platform policy result, rollback reference, and human approval note.
+6. **Block bid/budget writes unless capped:** include current value, proposed value, percent change, daily cap, per-change cap, and rollback path. Never auto-approve bid or budget changes.
 
 ### Execution Order
 
@@ -326,6 +349,8 @@ For those cases, write or present a decision memo before execution. Default beha
 4. Review all created ads in Ads Manager
 5. Activate
 ```
+
+Activation is a separate high-risk action. Do not activate in the same action that creates or uploads assets.
 
 ### Cross-Reference with PostHog
 

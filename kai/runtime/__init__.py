@@ -19,6 +19,11 @@ from .application_flow import (
     run_local_service_audit,
     run_local_service_review_flow,
 )
+from .agents import (
+    AgentRegistry,
+    default_agent_profiles,
+    get_default_agent_registry,
+)
 from .business_profile import (
     ANDON_WINDOW_CLEANING_FIXTURE,
     BusinessProfile,
@@ -35,6 +40,11 @@ from .integrations import (
     get_default_integration_registry,
     is_operational,
 )
+from .connector_health import (
+    CONNECTOR_HEALTH_STATES,
+    ConnectorHealthDashboard,
+    evaluate_connector_health_gate,
+)
 from .loader import load_module_manifests, load_workspace_profile
 from .local_service import (
     IntegrationCapability,
@@ -44,9 +54,15 @@ from .local_service import (
     normalize_snapshot,
     retrieve_memory_entries,
 )
+from .mandates import (
+    MandateLedger,
+    get_default_mandate_ledger,
+)
 from .memory import write_back_memory
 from .models import (
+    ActionMandate,
     KaiArtifactRecord,
+    KaiAgentProfile,
     KaiBrandProfile,
     KaiModuleManifest,
     KaiRunRecord,
@@ -73,11 +89,21 @@ from .workflows import (
     list_workflows,
     normalize_workflow_id,
 )
+from .workflow_skus import (
+    WorkflowSKUManifest,
+    WorkflowSKUValidationError,
+    get_workflow_sku,
+    load_workflow_skus,
+    validate_workflow_sku_payload,
+)
 
 __all__ = [
     "ActionProposal",
+    "ActionMandate",
     "ANDON_WINDOW_CLEANING_FIXTURE",
+    "AgentRegistry",
     "ActionStore",
+    "CONNECTOR_HEALTH_STATES",
     "OPERATING_STATES",
     "BusinessProfile",
     "CAPABILITY_STATES",
@@ -85,8 +111,10 @@ __all__ = [
     "IntegrationRegistry",
     "IntegrationCapability",
     "LocalServiceSnapshot",
+    "MandateLedger",
     "MemoryEntry",
     "ProposedAction",
+    "KaiAgentProfile",
     "KaiArtifactRecord",
     "KaiBrandProfile",
     "KaiModuleManifest",
@@ -94,9 +122,12 @@ __all__ = [
     "KaiRunRequest",
     "KaiRuntimeState",
     "KaiWorkspaceProfile",
+    "ConnectorHealthDashboard",
     "ReviewBundle",
     "RuntimeStore",
     "WorkflowDefinition",
+    "WorkflowSKUManifest",
+    "WorkflowSKUValidationError",
     "build_audit_summary",
     "build_business_profile",
     "build_business_profile_from_brand",
@@ -110,19 +141,25 @@ __all__ = [
     "build_initial_brand_policy",
     "ensure_brand_policy",
     "get_default_action_store",
+    "get_default_agent_registry",
     "get_default_integration_registry",
+    "get_default_mandate_ledger",
     "get_default_runtime_store",
     "get_content_format",
     "get_framework_paths",
     "get_generation_workflow",
     "get_workflow",
+    "get_workflow_sku",
     "derive_operating_state",
     "derive_capability_state",
+    "default_agent_profiles",
+    "evaluate_connector_health_gate",
     "load_andon_window_cleaning_fixture",
     "load_brand_policy",
     "load_local_service_fixture",
     "list_generation_formats",
     "list_workflows",
+    "load_workflow_skus",
     "load_module_manifests",
     "load_workspace_profile",
     "normalize_workflow_id",
@@ -134,4 +171,5 @@ __all__ = [
     "run_local_service_review_flow",
     "write_back_memory",
     "write_brand_policy",
+    "validate_workflow_sku_payload",
 ]

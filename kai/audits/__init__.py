@@ -38,6 +38,9 @@ Available engines
 - **offer_architecture** -- Competitor funnel-hack evidence, offer/pricing
   matrix capture, conversion mechanics extraction, and A/B test hypotheses for
   ecommerce/CRO audits.
+- **agentic_commerce** -- Fixture-friendly readiness audit for AI shopping:
+  product schema, catalog fields, checkout prerequisites, offer clarity,
+  crawler policy, and protocol readiness (ACP/UCP/AP2/x402).
 """
 
 # Lazy imports to avoid ImportError when a sibling engine file has not
@@ -167,6 +170,20 @@ try:
         "extract_conversion_mechanics",
         "generate_ab_test_hypotheses",
         "score_offer_architecture",
+    ]
+except ImportError:
+    pass
+
+try:
+    from kai.audits.agentic_commerce import (
+        audit_agentic_commerce_readiness,
+        score_agentic_commerce_readiness,
+        summarize_agentic_commerce_findings,
+    )
+    __all__ += [
+        "audit_agentic_commerce_readiness",
+        "score_agentic_commerce_readiness",
+        "summarize_agentic_commerce_findings",
     ]
 except ImportError:
     pass

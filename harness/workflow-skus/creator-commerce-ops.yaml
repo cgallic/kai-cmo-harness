@@ -1,0 +1,36 @@
+id: creator-commerce-ops
+name: Creator Commerce Ops
+description: Evaluate creator fit, rights, disclosures, affiliate readiness, and GMV tracking.
+stage: phase-4-expansion
+inputs:
+  - name: creator_campaign_fixture
+    type: object
+    required: true
+    description: Fixture payload for creator campaign analysis.
+  - name: channels
+    type: list
+    required: false
+    description: Target channels such as TikTok Shop, YouTube Shopping, Amazon.
+outputs:
+  - creator_scorecard
+  - disclosure_gaps
+  - rights_and_reuse_plan
+artifacts:
+  - creator-commerce-report.md
+  - creator-commerce-actions.json
+risk_tier: high
+required_scopes:
+  - audit:creator
+  - compliance:disclosure
+quality_gates:
+  - scripts/quality_gates/audit_provenance_lint.py
+  - scripts/quality_gates/banned_word_check.py
+approval_rule: human-approve-outbound-and-whitelisting-actions
+estimated_runtime: 20-35m
+oss_price_band: free-oss
+saas_later:
+  - creator_crm
+  - affiliate_revenue_dashboards
+docs:
+  - knowledge/playbooks/creator-commerce-ops.md
+  - harness/references/creator-disclosure.md

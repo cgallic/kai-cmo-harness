@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import contextlib
-import json
 import os
 import sys
 import tempfile
 import textwrap
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -18,6 +18,7 @@ import scripts.harness_config as harness_config
 from kai.runtime.loader import load_workspace_profile
 from kai.runtime.actions import ActionStore
 from kai.runtime.integrations import IntegrationRegistry
+from kai.runtime.mandates import MandateLedger
 from kai.runtime.policy import PolicyEngine
 from kai.execution.credentials import CredentialStore
 from kai.execution.connector_factory import ConnectorFactory
@@ -76,6 +77,7 @@ def _make_executor(tmp_path, *, dry_run=True, auto_approve=False):
     """Create a fully wired ActionExecutor backed by temp dirs."""
     action_store = ActionStore(base_dir=tmp_path / "runtime", auto_approve_low_risk=auto_approve)
     registry = IntegrationRegistry(base_dir=tmp_path / "runtime")
+    mandates = MandateLedger(base_dir=tmp_path / "runtime")
     cred_store = CredentialStore(vault_path=tmp_path / "creds.json")
     factory = ConnectorFactory(cred_store)
     policy = PolicyEngine()
@@ -84,9 +86,10 @@ def _make_executor(tmp_path, *, dry_run=True, auto_approve=False):
         integration_registry=registry,
         connector_factory=factory,
         policy_engine=policy,
+        mandate_ledger=mandates,
         dry_run=dry_run,
     )
-    return executor, action_store, registry, cred_store
+    return executor, action_store, registry, mandates, cred_store
 
 
 def _register_wordpress_integration(registry, cred_store, brand_id="testbrand"):
@@ -104,6 +107,7 @@ def _register_wordpress_integration(registry, cred_store, brand_id="testbrand"):
         "credentials_ref": "wp_test",
         "config": {"site_url": "https://test.example.com"},
         "capabilities": ["read", "write"],
+        "last_verified_at": datetime.now(timezone.utc).isoformat(),
     })
 
 
@@ -129,7 +133,7 @@ class TestExecutorNotFound:
 class TestExecutorApprovalGuard:
     def test_pending_action_rejected(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
             action = store.propose_action({
@@ -147,7 +151,7 @@ class TestExecutorApprovalGuard:
 
     def test_rejected_action_blocked(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
             action = store.propose_action({
@@ -177,34 +181,111 @@ class TestExecutorIntegrationGuard:
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
-                "action_type": "update_page_copy",
+                "action_type": "update_metadata",
                 "intent": "Test",
+                "proposed_changes": {"page_id": "1", "meta": {"title": "Test"}},
                 "risk_tier": "low",
             })
             store.approve_action(action["action_id"])
 
             result = executor.execute(action["action_id"])
             assert result.success is False
-            assert "no active integration" in result.error.lower()
+            assert "connector health gate blocked execution" in result.error.lower()
 
     def test_kill_switch_blocks_execution(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
             registry.activate_kill_switch("testbrand", "website")
 
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
-                "action_type": "update_page_copy",
+                "action_type": "update_metadata",
                 "intent": "Test",
+                "proposed_changes": {"page_id": "1", "meta": {"title": "Test"}},
                 "risk_tier": "low",
             })
             store.approve_action(action["action_id"])
 
             result = executor.execute(action["action_id"])
             assert result.success is False
-            assert "no active integration" in result.error.lower() or "kill switch" in result.error.lower()
+            assert (
+                "connector health gate blocked execution" in result.error.lower()
+                or "kill switch" in result.error.lower()
+            )
+
+
+class TestExecutorConnectorHealthGate:
+    def test_degraded_blocks_high_risk_actions(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            executor, store, registry, mandates, cred_store = _make_executor(tmp_path)
+            _register_wordpress_integration(registry, cred_store)
+
+            integration = registry.list_for_brand("testbrand", channel="website")[0]
+            registry.update(
+                integration["integration_id"],
+                status="degraded",
+                last_error="OAuth token expired",
+            )
+
+            mandate = mandates.create({
+                "agent_id": "agent_kai_operator",
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_types": ["update_page_copy"],
+                "created_by": "ops@kai.test",
+            })
+            mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
+
+            action = store.propose_action({
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_type": "update_page_copy",
+                "intent": "Update hero headline",
+                "proposed_changes": {"page_id": "1", "section_id": "hero", "new_content": "New"},
+                "risk_tier": "high",
+                "mandate_id": mandate["mandate_id"],
+            })
+            store.approve_action(action["action_id"])
+
+            executor._factory = MagicMock()
+            result = executor.execute(action["action_id"])
+
+            assert result.success is False
+            assert "connector health gate blocked execution" in (result.error or "").lower()
+            assert "degraded" in (result.error or "").lower()
+            executor._factory.create.assert_not_called()
+
+    def test_degraded_allows_low_risk_with_warning(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
+            _register_wordpress_integration(registry, cred_store)
+            integration = registry.list_for_brand("testbrand", channel="website")[0]
+            registry.update(
+                integration["integration_id"],
+                status="degraded",
+                last_error="Rate limit encountered",
+            )
+
+            action = store.propose_action({
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_type": "update_metadata",
+                "intent": "Refresh metadata",
+                "proposed_changes": {"page_id": "2", "meta": {"title": "Updated"}},
+                "risk_tier": "low",
+            })
+            store.approve_action(action["action_id"])
+
+            mock_connector = MagicMock()
+            mock_connector.update_metadata.return_value = {"success": True}
+            executor._factory = MagicMock()
+            executor._factory.create.return_value = mock_connector
+
+            result = executor.execute(action["action_id"])
+            assert result.success is True
+            executor._factory.create.assert_called_once()
 
 
 # ---------------------------------------------------------------------------
@@ -216,9 +297,17 @@ class TestExecutorSuccess:
     def test_approved_action_executes(self, tmp_path):
         """Full lifecycle: propose -> approve -> execute with mocked connector."""
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, mandates, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
+            mandate = mandates.create({
+                "agent_id": "agent_kai_operator",
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_types": ["update_page_copy"],
+                "created_by": "ops@kai.test",
+            })
+            mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
@@ -230,6 +319,7 @@ class TestExecutorSuccess:
                     "new_content": "<h1>New Headline</h1>",
                 },
                 "risk_tier": "medium",
+                "mandate_id": mandate["mandate_id"],
             })
             store.approve_action(action["action_id"])
 
@@ -266,11 +356,19 @@ class TestExecutorSuccess:
     def test_auto_approved_executes(self, tmp_path):
         """Auto-approved low-risk actions should execute."""
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(
+            executor, store, registry, mandates, cred_store = _make_executor(
                 tmp_path, auto_approve=True
             )
             _register_wordpress_integration(registry, cred_store)
 
+            mandate = mandates.create({
+                "agent_id": "agent_kai_operator",
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_types": ["fix_broken_link"],
+                "created_by": "ops@kai.test",
+            })
+            mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
@@ -282,6 +380,7 @@ class TestExecutorSuccess:
                     "new_content": '<a href="/contact">Contact</a>',
                 },
                 "risk_tier": "low",
+                "mandate_id": mandate["mandate_id"],
             })
             assert action["approval_state"] == "auto_approved"
 
@@ -303,9 +402,17 @@ class TestExecutorSuccess:
 class TestExecutorFailure:
     def test_connector_exception_marks_failed(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, mandates, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
+            mandate = mandates.create({
+                "agent_id": "agent_kai_operator",
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_types": ["update_page_copy"],
+                "created_by": "ops@kai.test",
+            })
+            mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
@@ -313,6 +420,7 @@ class TestExecutorFailure:
                 "intent": "Test",
                 "proposed_changes": {"page_id": "1", "section_id": "hero", "new_content": "x"},
                 "risk_tier": "medium",
+                "mandate_id": mandate["mandate_id"],
             })
             store.approve_action(action["action_id"])
 
@@ -331,9 +439,17 @@ class TestExecutorFailure:
 
     def test_connector_creation_failure(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, mandates, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
+            mandate = mandates.create({
+                "agent_id": "agent_kai_operator",
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_types": ["update_page_copy"],
+                "created_by": "ops@kai.test",
+            })
+            mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
             action = store.propose_action({
                 "brand_id": "testbrand",
                 "channel": "website",
@@ -341,6 +457,7 @@ class TestExecutorFailure:
                 "intent": "Test",
                 "proposed_changes": {"page_id": "1", "section_id": "hero", "new_content": "x"},
                 "risk_tier": "medium",
+                "mandate_id": mandate["mandate_id"],
             })
             store.approve_action(action["action_id"])
 
@@ -363,7 +480,7 @@ class TestExecutorFailure:
 class TestExecutorBatch:
     def test_batch_processes_all(self, tmp_path):
         with _with_config(YAML_CONTENT):
-            executor, store, registry, cred_store = _make_executor(tmp_path)
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
             _register_wordpress_integration(registry, cred_store)
 
             ids = []
@@ -387,6 +504,50 @@ class TestExecutorBatch:
             results = executor.execute_batch(ids)
             assert len(results) == 3
             assert all(r.success for r in results)
+
+
+class TestExecutorMandates:
+    def test_high_risk_action_requires_mandate(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
+            _register_wordpress_integration(registry, cred_store)
+
+            action = store.propose_action({
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_type": "update_page_copy",
+                "intent": "Update homepage hero copy",
+                "proposed_changes": {"page_id": "1", "section_id": "hero", "new_content": "Hello"},
+                "risk_tier": "medium",
+            })
+            store.approve_action(action["action_id"])
+
+            result = executor.execute(action["action_id"])
+            assert result.success is False
+            assert "mandate validation failed" in (result.error or "").lower()
+
+    def test_low_risk_read_only_action_does_not_require_mandate(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            executor, store, registry, _, cred_store = _make_executor(tmp_path)
+            _register_wordpress_integration(registry, cred_store)
+
+            action = store.propose_action({
+                "brand_id": "testbrand",
+                "channel": "website",
+                "action_type": "update_metadata",
+                "intent": "Refresh metadata tags",
+                "proposed_changes": {"page_id": "9", "meta": {"title": "New"}},
+                "risk_tier": "low",
+            })
+            store.approve_action(action["action_id"])
+
+            mock_connector = MagicMock()
+            mock_connector.update_metadata.return_value = {"success": True}
+            executor._factory = MagicMock()
+            executor._factory.create.return_value = mock_connector
+
+            result = executor.execute(action["action_id"])
+            assert result.success is True
 
 
 # ---------------------------------------------------------------------------

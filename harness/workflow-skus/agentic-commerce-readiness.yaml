@@ -1,0 +1,36 @@
+id: agentic-commerce-readiness
+name: Agentic Commerce Readiness Audit
+description: Assess catalog, checkout, offer, policy, and AI agent compatibility for commerce surfaces.
+stage: phase-3-commerce
+inputs:
+  - name: target_url
+    type: url
+    required: true
+    description: Storefront or product catalog URL.
+  - name: catalog_fixture
+    type: object
+    required: false
+    description: Optional local catalog fixture for offline scoring.
+outputs:
+  - readiness_score
+  - severity_findings
+  - prioritized_remediations
+artifacts:
+  - agentic-commerce-readiness-report.md
+  - agentic-commerce-findings.json
+risk_tier: medium
+required_scopes:
+  - audit:commerce
+  - policy:offers
+quality_gates:
+  - scripts/quality_gates/agent_commerce_lint.py
+  - scripts/quality_gates/audit_provenance_lint.py
+approval_rule: auto-approve-audit; human-approve-live-mutations
+estimated_runtime: 15-25m
+oss_price_band: free-oss
+saas_later:
+  - merchant_center_connected_mode
+  - attribution_dashboard
+docs:
+  - knowledge/checklists/agentic-commerce-checklist.md
+  - docs/plans/2026-05-15-agentic-marketing-control-plane-prd.md

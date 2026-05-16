@@ -145,3 +145,14 @@ from kai.creative.qa_pipeline import (  # noqa: F401
     check_quality_gates,
     run_qa_pipeline,
 )
+from kai.creative.claymation_pipeline import (  # noqa: F401
+    ClaymationAdConcept,
+    ClaymationLead,
+    OutboundPitchPackage,
+    WeakAdScore,
+    build_retainer_packages,
+    generate_claymation_ad_concept,
+    generate_outbound_pitch,
+    run_dry_run,
+    score_weak_ad_opportunity,
+)

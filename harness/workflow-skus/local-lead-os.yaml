@@ -1,0 +1,37 @@
+id: local-lead-os
+name: Local Lead OS
+description: Local-service lead system covering GBP, reviews, CRO, calls, and paid readiness.
+stage: phase-2-first-wedge
+inputs:
+  - name: business_profile
+    type: object
+    required: true
+    description: Structured business profile for local-service operator.
+  - name: fixture_mode
+    type: boolean
+    required: false
+    description: Use local fixtures without live connector credentials.
+outputs:
+  - prioritized_action_queue
+  - call_capture_plan
+  - local_growth_report
+artifacts:
+  - local-lead-os-report.md
+  - local-lead-os-actions.json
+risk_tier: medium
+required_scopes:
+  - workflow:local-lead-os
+  - channel:calls
+  - channel:local-seo
+quality_gates:
+  - scripts/quality_gates/four_us_score.py
+  - scripts/quality_gates/banned_word_check.py
+approval_rule: human-approve-any-publish-or-spend
+estimated_runtime: 20-30m
+oss_price_band: free-oss
+saas_later:
+  - hosted_client_reports
+  - kaicalls_checkout_flow
+docs:
+  - knowledge/playbooks/phone-lead-capture.md
+  - workspace/packages/local-lead-os/README.md

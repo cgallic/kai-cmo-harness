@@ -93,6 +93,8 @@ Kai CMO Harness provides 31 Claude Code marketing skills for SEO, content, email
 - `knowledge/checklists/` — marketing and launch checklists
 - `knowledge/channels/` — channel guides
 - `scripts/quality/` — quality gate implementation
+- `harness/workflow-skus/` — machine-readable workflow SKU manifests
+- `docs/AGENT_MARKETPLACE.md` — workflow SKU contract and loader usage
 
 ## Differentiators
 

@@ -89,6 +89,7 @@ class ActionProposal(SerializableModel):
     proposed_changes: Dict[str, Any] = field(default_factory=dict)
     evidence: List[Dict[str, Any]] = field(default_factory=list)
     source_run_id: Optional[str] = None
+    mandate_id: Optional[str] = None
     risk_tier: Literal["low", "medium", "high"] = "low"
     policy_result: Dict[str, Any] = field(default_factory=lambda: {"passed": True, "checks": [], "violations": []})
     preview_artifact: Optional[Dict[str, Any]] = None
@@ -416,6 +417,7 @@ class ActionStore:
             return asdict(proposal)
         if isinstance(proposal, dict):
             result = dict(proposal)
+            result.setdefault("mandate_id", None)
             result.setdefault("proposed_changes", {})
             result.setdefault("evidence", [])
             result.setdefault("policy_result", {"passed": True, "checks": [], "violations": []})

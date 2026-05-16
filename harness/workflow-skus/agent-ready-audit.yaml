@@ -1,0 +1,37 @@
+id: agent-ready-audit
+name: Agent-Ready Audit
+description: Audit site legibility for AI agents with crawler, schema, and capability checks.
+stage: phase-0-trust-spine
+inputs:
+  - name: target_url
+    type: url
+    required: true
+    description: Canonical domain URL to audit.
+  - name: mode
+    type: enum
+    required: true
+    options: [sales_external, onboarding_connected, internal_demo]
+    description: Data provenance mode for claims.
+outputs:
+  - agent_readiness_score
+  - prioritized_fixes
+  - data_gaps
+artifacts:
+  - audit-data.json
+  - agent-readiness-report.md
+risk_tier: medium
+required_scopes:
+  - audit:agent-readiness
+  - brand:read
+quality_gates:
+  - scripts/quality_gates/agent_readiness_lint.py
+  - scripts/quality_gates/audit_provenance_lint.py
+approval_rule: auto-approve-draft; human-approve-client-delivery
+estimated_runtime: 10-15m
+oss_price_band: free-oss
+saas_later:
+  - hosted_scan_scheduler
+  - team_approval_inbox
+docs:
+  - knowledge/checklists/agent-readiness-checklist.md
+  - knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md

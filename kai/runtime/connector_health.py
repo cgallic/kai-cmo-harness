@@ -11,7 +11,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from .integrations import IntegrationRegistry, _ensure_dir, _utc_now, _write_json_atomic
 
@@ -33,6 +33,15 @@ ERROR_CATEGORIES = {
     "unsupported_action": "This action type is not mapped for this provider",
     "unknown": "Unclassified error — check raw details",
 }
+
+CONNECTOR_HEALTH_STATES = (
+    "missing",
+    "unverified",
+    "healthy",
+    "degraded",
+    "stale",
+    "error",
+)
 
 
 def classify_integration_error(error_kind: Optional[str]) -> Dict[str, str]:
@@ -59,6 +68,98 @@ def _action_for_error(kind: str) -> str:
         "unknown": "investigate",
     }
     return actions.get(kind, "investigate")
+
+
+# ---------------------------------------------------------------------------
+# Health gate
+# ---------------------------------------------------------------------------
+
+
+def evaluate_connector_health_gate(
+    integrations: Sequence[Dict[str, Any]],
+    *,
+    required_scopes: Optional[Sequence[str]] = None,
+    risk_tier: str = "high",
+    stale_after_hours: int = 24,
+) -> Dict[str, Any]:
+    """Evaluate whether execution should proceed for a channel integration set.
+
+    Returns a decision dict containing:
+    - state: one of CONNECTOR_HEALTH_STATES
+    - allowed: bool
+    - blocked: bool
+    - reason: human-readable explanation
+    - warning: optional warning string when execution is allowed with caution
+    """
+    normalized_scopes = _normalize_required_scopes(required_scopes)
+    tier = _normalize_risk_tier(risk_tier)
+
+    if not integrations:
+        return {
+            "state": "missing",
+            "allowed": False,
+            "blocked": True,
+            "reason": "No integration configured for this channel",
+            "warning": None,
+            "required_scopes": normalized_scopes,
+            "missing_scopes": normalized_scopes,
+            "integration_id": None,
+            "provider": None,
+            "risk_tier": tier,
+        }
+
+    assessments = [
+        _assess_integration_state(
+            integration=record,
+            required_scopes=normalized_scopes,
+            stale_after_hours=stale_after_hours,
+        )
+        for record in integrations
+    ]
+    assessments.sort(key=lambda item: _state_rank(item["state"]))
+    best = assessments[0]
+    state = best["state"]
+
+    if state in {"healthy"}:
+        return {
+            **best,
+            "allowed": True,
+            "blocked": False,
+            "warning": None,
+            "risk_tier": tier,
+        }
+
+    if state in {"missing", "error"}:
+        return {
+            **best,
+            "allowed": False,
+            "blocked": True,
+            "warning": None,
+            "risk_tier": tier,
+        }
+
+    should_block = False
+    if state == "degraded":
+        should_block = tier in {"medium", "high"}
+    elif state == "stale":
+        should_block = tier in {"high"}
+    elif state == "unverified":
+        should_block = tier in {"high"}
+
+    warning = None
+    if not should_block:
+        warning = (
+            f"Connector health state '{state}' is allowed with caution for risk tier '{tier}'. "
+            f"Reason: {best['reason']}"
+        )
+
+    return {
+        **best,
+        "allowed": not should_block,
+        "blocked": should_block,
+        "warning": warning,
+        "risk_tier": tier,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -308,3 +409,165 @@ def _infer_error_kind(errors: List[Dict[str, Any]]) -> Optional[str]:
     if errors:
         return errors[-1].get("error_kind")
     return None
+
+
+def _state_rank(state: str) -> int:
+    ranking = {
+        "healthy": 0,
+        "unverified": 1,
+        "stale": 2,
+        "degraded": 3,
+        "error": 4,
+        "missing": 5,
+    }
+    return ranking.get(state, 6)
+
+
+def _normalize_risk_tier(risk_tier: str) -> str:
+    tier = (risk_tier or "").strip().lower()
+    if tier not in {"low", "medium", "high"}:
+        return "high"
+    return tier
+
+
+def _normalize_required_scopes(required_scopes: Optional[Sequence[str]]) -> List[str]:
+    if not required_scopes:
+        return []
+    deduped: List[str] = []
+    seen = set()
+    for scope in required_scopes:
+        normalized = str(scope).strip()
+        if not normalized:
+            continue
+        lowered = normalized.lower()
+        if lowered in seen:
+            continue
+        deduped.append(lowered)
+        seen.add(lowered)
+    return deduped
+
+
+def _assess_integration_state(
+    *,
+    integration: Dict[str, Any],
+    required_scopes: Sequence[str],
+    stale_after_hours: int,
+) -> Dict[str, Any]:
+    status = str(integration.get("status") or "").lower()
+    integration_id = integration.get("integration_id")
+    provider = integration.get("provider")
+    scopes = {
+        str(scope).strip().lower()
+        for scope in (integration.get("scopes") or [])
+        if str(scope).strip()
+    }
+    capabilities = {
+        str(cap).strip().lower()
+        for cap in (integration.get("capabilities") or [])
+        if str(cap).strip()
+    }
+
+    missing_scopes = sorted(
+        scope for scope in required_scopes if scope not in scopes and scope not in capabilities
+    )
+
+    if status == "error":
+        return {
+            "state": "error",
+            "reason": integration.get("last_error") or "Integration is in error state",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if status in {"disconnected"}:
+        return {
+            "state": "missing",
+            "reason": "Integration is disconnected",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if status in {"pending_auth"}:
+        return {
+            "state": "unverified",
+            "reason": "Integration is pending authentication",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if integration.get("kill_switch", False):
+        return {
+            "state": "error",
+            "reason": "Integration kill switch is active",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if status == "degraded":
+        reason = integration.get("last_error") or "Integration reported degraded health"
+        return {
+            "state": "degraded",
+            "reason": reason,
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if status != "connected":
+        return {
+            "state": "missing",
+            "reason": f"Unsupported integration status '{status or 'unknown'}'",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if missing_scopes:
+        return {
+            "state": "unverified",
+            "reason": f"Missing required scopes/capabilities: {', '.join(missing_scopes)}",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    last_health_at = integration.get("last_verified_at") or integration.get("last_sync_at")
+    if not last_health_at:
+        return {
+            "state": "unverified",
+            "reason": "Integration is connected but has not been verified or synced yet",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    if _is_stale(last_health_at, max_age_hours=stale_after_hours):
+        return {
+            "state": "stale",
+            "reason": f"Integration health signal is older than {stale_after_hours}h",
+            "required_scopes": list(required_scopes),
+            "missing_scopes": missing_scopes,
+            "integration_id": integration_id,
+            "provider": provider,
+        }
+
+    return {
+        "state": "healthy",
+        "reason": "Integration is connected, scoped, and recently verified",
+        "required_scopes": list(required_scopes),
+        "missing_scopes": missing_scopes,
+        "integration_id": integration_id,
+        "provider": provider,
+    }

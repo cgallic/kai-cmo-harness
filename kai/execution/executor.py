@@ -17,7 +17,9 @@ import time
 from typing import Any, Dict, List, Optional
 
 from kai.runtime.actions import ActionStore
+from kai.runtime.connector_health import evaluate_connector_health_gate
 from kai.runtime.integrations import IntegrationRegistry
+from kai.runtime.mandates import MandateLedger, get_default_mandate_ledger
 from kai.runtime.policy import PolicyEngine
 
 from .connector_factory import ConnectorFactory
@@ -77,6 +79,15 @@ _DISPATCH_TABLE: Dict[tuple, str] = {
     ("analytics", "update_goals"): "get_metrics",
 }
 
+_READ_ACTION_TYPES = {
+    ("analytics", "fix_tracking"),
+    ("analytics", "update_goals"),
+    ("paid_media", "read_performance"),
+    ("paid_media", "evaluate_ads"),
+    ("paid_media", "generate_recommendations"),
+    ("paid_media", "validate_ad_upload"),
+}
+
 
 class ActionExecutor:
     """Dispatches approved actions to the correct connector.
@@ -101,12 +112,14 @@ class ActionExecutor:
         integration_registry: IntegrationRegistry,
         connector_factory: ConnectorFactory,
         policy_engine: Optional[PolicyEngine] = None,
+        mandate_ledger: Optional[MandateLedger] = None,
         dry_run: bool = True,
     ) -> None:
         self._store = action_store
         self._integrations = integration_registry
         self._factory = connector_factory
         self._policy = policy_engine or PolicyEngine()
+        self._mandates = mandate_ledger or get_default_mandate_ledger()
         self._dry_run = dry_run
 
     # ------------------------------------------------------------------
@@ -149,19 +162,72 @@ class ActionExecutor:
                 error=f"Action not approved (state: {approval})",
             )
 
-        # 3. Integration guard
+        mandate_validation = self._mandates.validate_for_action(action)
+        if not mandate_validation.get("allowed", False):
+            return ExecutionResult(
+                action_id=action_id,
+                success=False,
+                error=f"Mandate validation failed: {mandate_validation.get('reason', 'unknown reason')}",
+            )
+
+        # 3. Connector health gate
         integrations = self._integrations.list_for_brand(brand_id, channel=channel)
-        active = [
-            i for i in integrations
-            if i.get("status") == "connected" and not i.get("kill_switch", False)
-        ]
-        if not active:
+        risk_tier = self._policy.assess_risk_tier(
+            channel,
+            action_type,
+            action.get("proposed_changes", {}),
+        )
+        required_scopes = _infer_required_scopes(action)
+        health_decision = evaluate_connector_health_gate(
+            integrations,
+            required_scopes=required_scopes,
+            risk_tier=risk_tier,
+        )
+
+        if not health_decision.get("allowed", False):
+            self._log_blocked_execution(
+                brand_id=brand_id,
+                channel=channel,
+                action_type=action_type,
+                action_id=action_id,
+                reason=f"Connector health gate blocked execution: state={health_decision.get('state')} reason={health_decision.get('reason')}",
+                gate=health_decision,
+            )
+            return ExecutionResult(
+                action_id=action_id,
+                success=False,
+                error=(
+                    "Connector health gate blocked execution: "
+                    f"state={health_decision.get('state')} reason={health_decision.get('reason')}"
+                ),
+            )
+
+        integration = _select_integration(
+            integrations=integrations,
+            preferred_integration_id=health_decision.get("integration_id"),
+        )
+        if integration is None:
+            self._log_blocked_execution(
+                brand_id=brand_id,
+                channel=channel,
+                action_type=action_type,
+                action_id=action_id,
+                reason="Connector health gate could not resolve an integration",
+                gate=health_decision,
+            )
             return ExecutionResult(
                 action_id=action_id,
                 success=False,
                 error=f"No active integration for brand={brand_id} channel={channel}",
             )
-        integration = active[0]
+
+        warning = health_decision.get("warning")
+        if warning:
+            logger.warning(
+                "Proceeding with connector health warning for action %s: %s",
+                action_id,
+                warning,
+            )
 
         # Check kill switch explicitly
         if integration.get("kill_switch", False):
@@ -413,6 +479,35 @@ class ActionExecutor:
         except Exception:
             logger.debug("Failed to write execution log entry", exc_info=True)
 
+    @staticmethod
+    def _log_blocked_execution(
+        *,
+        brand_id: str,
+        channel: str,
+        action_type: str,
+        action_id: str,
+        reason: str,
+        gate: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        exec_log = _get_execution_log()
+        if exec_log is None:
+            return
+        try:
+            exec_log.append(
+                brand_id,
+                {
+                    "action_id": action_id,
+                    "channel": channel,
+                    "action_type": action_type,
+                    "success": False,
+                    "blocked": True,
+                    "error": reason,
+                    "gate": gate or {},
+                },
+            )
+        except Exception:
+            logger.debug("Failed to write blocked execution log entry", exc_info=True)
+
     def execute_batch(self, action_ids: List[str]) -> List[ExecutionResult]:
         """Execute multiple approved actions sequentially."""
         return [self.execute(aid) for aid in action_ids]
@@ -567,3 +662,35 @@ class ActionExecutor:
 
         result = response.model_dump() if hasattr(response, "model_dump") else response
         return {"method": method_name, "response": result if isinstance(result, dict) else {"result": str(result)}}
+
+
+def _infer_required_scopes(action: Dict[str, Any]) -> List[str]:
+    metadata = action.get("metadata") or {}
+    proposed = action.get("proposed_changes") or {}
+    declared = (
+        metadata.get("required_scopes")
+        or proposed.get("required_scopes")
+        or action.get("required_scopes")
+    )
+    if isinstance(declared, list):
+        return [str(scope).strip().lower() for scope in declared if str(scope).strip()]
+
+    channel = action.get("channel", "")
+    action_type = action.get("action_type", "")
+    if (channel, action_type) in _READ_ACTION_TYPES:
+        return ["read"]
+    return ["write"]
+
+
+def _select_integration(
+    *,
+    integrations: List[Dict[str, Any]],
+    preferred_integration_id: Optional[str],
+) -> Optional[Dict[str, Any]]:
+    if preferred_integration_id:
+        for integration in integrations:
+            if integration.get("integration_id") == preferred_integration_id:
+                return integration
+    if integrations:
+        return integrations[0]
+    return None

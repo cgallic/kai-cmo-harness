@@ -126,6 +126,8 @@ class FindingSource(str, Enum):
 
     STATIC = "static"           # Determined from profile data alone (no live data needed)
     CONNECTED = "connected"     # Determined from connected integration data (analytics, reviews, etc.)
+    PUBLIC_OBSERVED = "public_observed"  # Determined from a public crawl, SERP capture, or public API response
+    USER_PROVIDED = "user_provided"      # Determined from a user/client supplied file, export, screenshot, or brief
     INFERRED = "inferred"       # Inferred from indirect signals (not directly observed)
     MISSING_DATA = "missing_data"  # The audit could not assess this area due to missing data
 
@@ -179,6 +181,11 @@ class Evidence(BaseModel):
     value: str          # The evidence content (text, URL, metric value, etc.)
     context: Optional[str] = None        # Additional context explaining why this evidence matters
     source_label: Optional[str] = None   # Where this evidence came from (e.g., "Google Business Profile", "Website homepage")
+    source_url: Optional[str] = None     # URL or API endpoint behind this evidence, when available
+    retrieved_at: Optional[str] = None   # ISO timestamp or date when the evidence was observed/retrieved
+    artifact_path: Optional[str] = None  # Local raw artifact/export/screenshot path
+    confidence: Optional[str] = None     # high, medium, low
+    score_eligible: bool = True          # False for hypotheses, demos, and missing-data notes
 
 
 class AuditFinding(BaseModel):

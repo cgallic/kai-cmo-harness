@@ -1,0 +1,38 @@
+id: content-gate
+name: Content Quality Gate
+description: Run quality and compliance gates for draft assets before approval or publication.
+stage: phase-0-trust-spine
+inputs:
+  - name: draft_path
+    type: path
+    required: true
+    description: Local file path to draft content.
+  - name: channel
+    type: enum
+    required: true
+    options: [blog, email, paid_social, paid_search, landing_page]
+    description: Channel context used for policy checks.
+outputs:
+  - four_us_score
+  - compliance_findings
+  - approval_recommendation
+artifacts:
+  - quality-gate-report.json
+  - quality-gate-summary.md
+risk_tier: low
+required_scopes:
+  - quality:run
+  - policy:read
+quality_gates:
+  - scripts/quality_gates/four_us_score.py
+  - scripts/quality_gates/banned_word_check.py
+  - scripts/quality_gates/seo_lint.py
+approval_rule: auto-approve-low-risk-draft; hold-on-policy-failure
+estimated_runtime: 2-5m
+oss_price_band: free-oss
+saas_later:
+  - hosted_approval_inbox
+  - policy_version_analytics
+docs:
+  - knowledge/checklists/content-checklist.md
+  - harness/skill-contracts/blog-post.yaml

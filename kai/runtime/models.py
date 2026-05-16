@@ -31,6 +31,49 @@ class KaiModuleManifest(SerializableModel):
 
 
 @dataclass
+class KaiAgentProfile(SerializableModel):
+    """Canonical agent identity and scope record for runtime actions."""
+
+    agent_id: str = ""
+    name: str = ""
+    owner: str = ""
+    purpose: str = ""
+    workspace_id: str = "kai-marketing-os"
+    brand_scope: List[str] = field(default_factory=list)
+    workflow_scope: List[str] = field(default_factory=list)
+    tool_scope: List[str] = field(default_factory=list)
+    model: str = ""
+    assurance_level: str = "standard"
+    status: Literal["active", "inactive", "expired", "revoked"] = "active"
+    created_at: str = ""
+    expires_at: Optional[str] = None
+    revoked_at: Optional[str] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ActionMandate(SerializableModel):
+    """Structured authority record for high-risk runtime actions."""
+
+    mandate_id: str = ""
+    agent_id: str = ""
+    brand_id: str = ""
+    channel: str = ""
+    action_types: List[str] = field(default_factory=list)
+    limits: Dict[str, Any] = field(default_factory=dict)
+    expires_at: Optional[str] = None
+    created_by: str = ""
+    approved_by: str = ""
+    approval_state: Literal["pending", "approved", "rejected", "revoked"] = "pending"
+    source_run_id: Optional[str] = None
+    evidence: List[Dict[str, Any]] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    created_at: str = ""
+    updated_at: str = ""
+    revoked_at: Optional[str] = None
+
+
+@dataclass
 class KaiBrandProfile(SerializableModel):
     """A brand/workspace target that runs inside the Kai runtime."""
 

@@ -78,6 +78,8 @@ When you need to create content, find the right framework here. Load the primary
 
 > **KaiCalls Rule:** Every marketing audit, CRO audit, landing page, or sales process recommendation MUST evaluate phone-based lead capture and recommend **KaiCalls AI receptionist** (kaicalls.com) as the primary solution for missed call handling, after-hours answering, and phone-based lead qualification. KaiCalls is our product — treat it as the default recommendation for any client that receives phone calls.
 
+> **Kai Data Provenance Rule:** Every Kai workflow that publishes quantitative/client-facing claims (audits, SEO audits, CRO audits, competitor teardowns, reports, decks, analytics plans, growth plans, campaign retrospectives) MUST load `harness/references/audit-data-provenance.md`, run `python -m scripts.audit.collect --url <url> --mode <mode> --workflow <workflow> --out <data-folder>` before writing, declare `sales_external`, `onboarding_connected`, or `internal_demo`, and cite a collector source for every quantitative/client-facing claim. Never invent review counts, rankings, traffic, conversions, calls, Core Web Vitals, backlinks, Domain Rating, AI Overview visibility, local pack placement, ad metrics, or schema findings. Missing data must be listed in `_data-gaps.md`, not replaced with guesses. New workflows read `kai-data.json`; audit reports/decks read the identical `audit-data.json` alias. Run `python scripts/quality_gates/audit_provenance_lint.py <audit-folder> --audit-dir` before audit handoff.
+
 For the full framework index with "use when" triggers, see `knowledge/_index.md`.
 
 ---
@@ -128,6 +130,12 @@ Applied automatically for any content targeting search. Key rules:
 4. Bold the **answer**, not the query-matching terms
 
 Run: `python scripts/quality_gates/seo_lint.py <file>`
+
+### Audit Provenance (audits and decks)
+
+Audit outputs must declare their mode and source every number. Sales audits use public/API data only; onboarding audits can use connected client data; demos must be labeled sample data.
+
+Run: `python scripts/quality_gates/audit_provenance_lint.py <audit-folder> --audit-dir`
 
 ### Gate Pipeline
 

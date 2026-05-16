@@ -644,12 +644,14 @@ class TestExecutorPipedreamRouting:
             with _with_config(_MINIMAL_YAML.format(tmp=tmp)):
                 from kai.runtime.actions import ActionStore
                 from kai.runtime.integrations import IntegrationRegistry
+                from kai.runtime.mandates import MandateLedger
                 from kai.runtime.policy import PolicyEngine
                 from kai.execution.connector_factory import ConnectorFactory
                 from kai.execution.executor import ActionExecutor
 
                 store = ActionStore(base_dir=Path(tmp))
                 reg = IntegrationRegistry(base_dir=Path(tmp))
+                mandates = MandateLedger(base_dir=Path(tmp))
                 factory = ConnectorFactory(credential_store=MagicMock())
 
                 # Register integration WITH connected_account_id
@@ -660,6 +662,14 @@ class TestExecutorPipedreamRouting:
                     "status": "connected",
                     "connected_account_id": "apn_wp_001",
                 })
+                mandate = mandates.create({
+                    "agent_id": "agent_kai_operator",
+                    "brand_id": "b1",
+                    "channel": "website",
+                    "action_types": ["update_page_copy"],
+                    "created_by": "ops@kai.test",
+                })
+                mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
 
                 # Create an approved action
                 proposal = store.propose_action({
@@ -669,6 +679,7 @@ class TestExecutorPipedreamRouting:
                     "intent": "Fix CTA text",
                     "proposed_changes": {"page_id": "1", "new_content": "Call now"},
                     "risk_tier": "low",
+                    "mandate_id": mandate["mandate_id"],
                 })
                 action_id = proposal["action_id"]
                 store.approve_action(action_id)
@@ -677,6 +688,7 @@ class TestExecutorPipedreamRouting:
                     action_store=store,
                     integration_registry=reg,
                     connector_factory=factory,
+                    mandate_ledger=mandates,
                     dry_run=True,
                 )
 
@@ -705,11 +717,13 @@ class TestExecutorPipedreamRouting:
             with _with_config(_MINIMAL_YAML.format(tmp=tmp)):
                 from kai.runtime.actions import ActionStore
                 from kai.runtime.integrations import IntegrationRegistry
+                from kai.runtime.mandates import MandateLedger
                 from kai.execution.connector_factory import ConnectorFactory
                 from kai.execution.executor import ActionExecutor
 
                 store = ActionStore(base_dir=Path(tmp))
                 reg = IntegrationRegistry(base_dir=Path(tmp))
+                mandates = MandateLedger(base_dir=Path(tmp))
                 factory = ConnectorFactory(credential_store=MagicMock())
 
                 # Register WITHOUT connected_account_id
@@ -719,6 +733,14 @@ class TestExecutorPipedreamRouting:
                     "provider": "wordpress",
                     "status": "connected",
                 })
+                mandate = mandates.create({
+                    "agent_id": "agent_kai_operator",
+                    "brand_id": "b1",
+                    "channel": "website",
+                    "action_types": ["update_page_copy"],
+                    "created_by": "ops@kai.test",
+                })
+                mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
 
                 proposal = store.propose_action({
                     "brand_id": "b1",
@@ -727,6 +749,7 @@ class TestExecutorPipedreamRouting:
                     "intent": "Fix copy",
                     "proposed_changes": {"page_id": "1", "new_content": "Hi"},
                     "risk_tier": "low",
+                    "mandate_id": mandate["mandate_id"],
                 })
                 action_id = proposal["action_id"]
                 store.approve_action(action_id)
@@ -740,6 +763,7 @@ class TestExecutorPipedreamRouting:
                     action_store=store,
                     integration_registry=reg,
                     connector_factory=factory,
+                    mandate_ledger=mandates,
                     dry_run=True,
                 )
 
