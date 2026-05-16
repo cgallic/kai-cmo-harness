@@ -173,6 +173,48 @@ def render_digest_markdown(digest: Dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def diagnose_spans(spans: List[Any]) -> str:
+    """Return a local heuristic diagnosis for lightweight recorder spans."""
+    if not spans:
+        return "## Trace digest\n_No spans provided._\n"
+
+    error_spans = [span for span in spans if getattr(span, "status", "") == "error"]
+    llm_spans = [
+        span for span in spans
+        if str(getattr(span, "span", getattr(span, "name", ""))).startswith("llm.")
+    ]
+    missing_prompt_metadata = [
+        span for span in llm_spans
+        if not (getattr(span, "metadata", {}) or {}).get("prompt_name")
+        or not (getattr(span, "metadata", {}) or {}).get("prompt_version")
+    ]
+
+    lines = [
+        "## Recurring Failures",
+        f"- error spans: {len(error_spans)}",
+    ]
+    for span in error_spans[:5]:
+        lines.append(
+            f"- {getattr(span, 'span', getattr(span, 'name', '<unknown>'))}: "
+            f"{getattr(span, 'error', '') or 'unknown error'}"
+        )
+
+    lines.extend(["", "## Prompt/Tool Boundaries"])
+    if missing_prompt_metadata:
+        lines.append(
+            "- LLM spans should pass `prompt_name` and `prompt_version` so trace diagnosis can link failures to prompt templates."
+        )
+    else:
+        lines.append("- LLM prompt metadata is present on recorded spans.")
+
+    lines.extend([
+        "",
+        "## Next Harness Changes",
+        "- Add or repair metadata at the span boundary before changing downstream diagnosis prompts.",
+    ])
+    return "\n".join(lines) + "\n"
+
+
 async def diagnose(
     *,
     since: Optional[datetime],

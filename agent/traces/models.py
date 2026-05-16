@@ -117,6 +117,7 @@ class TraceStore:
 
     def _init_db(self) -> None:
         with sqlite3.connect(self.db_path) as conn:
+            self._move_incompatible_legacy_table(conn)
             conn.execute(
                 """
                 CREATE TABLE IF NOT EXISTS task_spans (
@@ -167,6 +168,34 @@ class TraceStore:
                 "CREATE INDEX IF NOT EXISTS idx_spans_kind ON task_spans(kind)"
             )
             conn.commit()
+
+    @staticmethod
+    def _move_incompatible_legacy_table(conn: sqlite3.Connection) -> None:
+        existing = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'task_spans'"
+        ).fetchone()
+        if not existing:
+            return
+
+        columns = {
+            row[1]
+            for row in conn.execute("PRAGMA table_info(task_spans)").fetchall()
+        }
+        required = {"span_id", "trace_id", "name", "kind", "status", "started_at"}
+        if required.issubset(columns):
+            return
+
+        suffix = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        legacy_name = f"task_spans_legacy_{suffix}"
+        for index_name in (
+            "idx_spans_trace",
+            "idx_spans_task",
+            "idx_spans_started",
+            "idx_spans_status",
+            "idx_spans_kind",
+        ):
+            conn.execute(f"DROP INDEX IF EXISTS {index_name}")
+        conn.execute(f"ALTER TABLE task_spans RENAME TO {legacy_name}")
 
     # ------------------------------------------------------------------
     # Span persistence

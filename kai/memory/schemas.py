@@ -1,6 +1,6 @@
 """Structured memory layer schemas for the Kai Marketing OS.
 
-Six memory layers organize raw learnings from the writeback system
+Seven memory layers organize raw learnings from the writeback system
 (Task 073) into queryable, domain-specific stores:
 
 1. **BusinessFactMemory** -- confirmed facts about the business
@@ -15,6 +15,8 @@ Six memory layers organize raw learnings from the writeback system
    with seasonal relevance and audience segment data.
 6. **AudienceLearningMemory** -- audience segment insights including
    response patterns, preferred channels, and lifetime value.
+7. **CreatorPerformanceMemory** -- creator campaign performance, disclosure
+   compliance, usage-rights expiry, and ROAS slices.
 
 Each entry carries :class:`MemoryMetadata` with creation/update
 timestamps, contributing learning IDs, confirmation count, staleness
@@ -624,6 +626,98 @@ class AudienceLearningMemory(_SerializableModel):
 
 
 # =========================================================================
+# Layer 7 -- Creator Performance Learnings
+# =========================================================================
+
+
+@dataclass
+class CreatorPerformanceEntry(_SerializableModel):
+    """A creator-commerce performance record for one creator/campaign slice."""
+
+    entry_id: str = ""
+    creator_id: str = ""
+    creator_name: Optional[str] = None
+    platform: str = ""
+    campaign_id: Optional[str] = None
+    content_asset_id: Optional[str] = None
+    period_start: Optional[str] = None
+    period_end: Optional[str] = None
+    spend_usd: Optional[float] = None
+    attributed_revenue_usd: Optional[float] = None
+    attributed_orders: Optional[int] = None
+    affiliate_clicks: Optional[int] = None
+    affiliate_conversions: Optional[int] = None
+    gmv_usd: Optional[float] = None
+    disclosure_compliant: bool = False
+    usage_rights_expires_at: Optional[str] = None
+    whitelisting_enabled: bool = False
+    metadata: MemoryMetadata = field(default_factory=MemoryMetadata)
+
+    def __post_init__(self) -> None:
+        if not self.entry_id:
+            self.entry_id = _new_id("crp")
+        if not self.metadata.created_at:
+            self.metadata.created_at = _utc_now()
+            self.metadata.updated_at = self.metadata.created_at
+        self.metadata.staleness_days = 60
+
+    @property
+    def roas(self) -> Optional[float]:
+        """Return return-on-ad-spend when spend and revenue are available."""
+        if self.spend_usd is None or self.attributed_revenue_usd is None:
+            return None
+        if self.spend_usd <= 0:
+            return None
+        return float(self.attributed_revenue_usd) / float(self.spend_usd)
+
+
+@dataclass
+class CreatorPerformanceMemory(_SerializableModel):
+    """Memory layer: creator-commerce campaign and compliance performance."""
+
+    business_id: str = ""
+    entries: List[CreatorPerformanceEntry] = field(default_factory=list)
+
+    def get_non_compliant_disclosures(self) -> List[CreatorPerformanceEntry]:
+        """Return active entries where disclosure compliance is false."""
+        return [
+            entry for entry in self.entries
+            if not entry.disclosure_compliant
+            and entry.metadata.status != MemoryStatus.ARCHIVED.value
+        ]
+
+    def get_rights_expiring_within(self, days: int = 14) -> List[CreatorPerformanceEntry]:
+        """Return active entries with usage rights expiring within *days*."""
+        expiring: List[CreatorPerformanceEntry] = []
+        now = datetime.now(timezone.utc)
+        for entry in self.entries:
+            if entry.metadata.status == MemoryStatus.ARCHIVED.value:
+                continue
+            if not entry.usage_rights_expires_at:
+                continue
+            try:
+                expiry = datetime.fromisoformat(entry.usage_rights_expires_at)
+                if expiry.tzinfo is None:
+                    expiry = expiry.replace(tzinfo=timezone.utc)
+            except (TypeError, ValueError):
+                continue
+            delta = expiry - now
+            if timedelta(0) <= delta <= timedelta(days=days):
+                expiring.append(entry)
+        return expiring
+
+    def get_top_creators_by_roas(self, limit: int = 5) -> List[CreatorPerformanceEntry]:
+        """Return the highest-ROAS creator slices with available spend/revenue data."""
+        scored = [
+            entry for entry in self.entries
+            if entry.metadata.status != MemoryStatus.ARCHIVED.value
+            and entry.roas is not None
+        ]
+        scored.sort(key=lambda entry: entry.roas or 0.0, reverse=True)
+        return scored[:limit]
+
+
+# =========================================================================
 # Layer name -> model class registry
 # =========================================================================
 
@@ -635,6 +729,7 @@ _LAYER_REGISTRY: Dict[str, type] = {
     "channel_learnings": ChannelLearningMemory,
     "offer_learnings": OfferLearningMemory,
     "audience_learnings": AudienceLearningMemory,
+    "creator_performance": CreatorPerformanceMemory,
 }
 
 _LAYER_LIST_FIELD: Dict[str, str] = {
@@ -644,6 +739,7 @@ _LAYER_LIST_FIELD: Dict[str, str] = {
     "channel_learnings": "learnings",
     "offer_learnings": "learnings",
     "audience_learnings": "learnings",
+    "creator_performance": "entries",
 }
 
 _LAYER_ENTRY_CLASS: Dict[str, type] = {
@@ -653,6 +749,7 @@ _LAYER_ENTRY_CLASS: Dict[str, type] = {
     "channel_learnings": ChannelLearningEntry,
     "offer_learnings": OfferLearningEntry,
     "audience_learnings": AudienceLearningEntry,
+    "creator_performance": CreatorPerformanceEntry,
 }
 
 
@@ -734,7 +831,8 @@ def load_memory_layer(business_id: str, layer_name: str, base_dir: str) -> Any:
         Business identifier.
     layer_name : str
         One of: ``business_facts``, ``brand_constraints``, ``proof_assets``,
-        ``channel_learnings``, ``offer_learnings``, ``audience_learnings``.
+        ``channel_learnings``, ``offer_learnings``, ``audience_learnings``,
+        ``creator_performance``.
     base_dir : str
         Root workspace directory (layers live under
         ``{base_dir}/{business_id}/memory/``).

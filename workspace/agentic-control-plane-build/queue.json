@@ -147,7 +147,7 @@
       "id": "T09",
       "name": "Evidence Pack Exporter",
       "priority": "P1",
-      "status": "ready",
+      "status": "ready_for_review",
       "dependencies": [
         "T01",
         "T02"
@@ -165,7 +165,7 @@
       "id": "T10",
       "name": "Creator Commerce Ops",
       "priority": "P2",
-      "status": "ready",
+      "status": "ready_for_review",
       "dependencies": [
         "T03"
       ],

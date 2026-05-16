@@ -9,11 +9,13 @@ Cost optimization strategy:
 from enum import Enum
 from typing import Any, Dict, List, Optional
 import os
+from contextlib import nullcontext
 
 from openai import OpenAI
 
 from ..config import agent_config
 from ..traces import SpanKind, tracer
+from ..traces import recorder
 
 
 class ModelTier(str, Enum):
@@ -139,41 +141,71 @@ class LLMRouter:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": prompt})
 
-        async with tracer.span(
-            f"llm.complete:{prompt_name or task_type or 'unnamed'}",
-            kind=SpanKind.LLM,
-            inputs={
-                "model": model,
-                "task_type": task_type,
-                "prompt_name": prompt_name,
-                "prompt_version": prompt_version,
-                "prompt_chars": len(prompt),
-                "system_chars": len(system) if system else 0,
-                "max_tokens": max_tokens,
-                "temperature": temperature,
-            },
-        ) as span:
-            response = self.client.chat.completions.create(
-                model=model,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                messages=messages,
+        recorder_active = recorder.current_trace_context().get("trace_id") is not None
+        recorder_scope = (
+            recorder.trace_span(
+                "llm.complete",
+                metadata={
+                    "model": model,
+                    "task_type": task_type,
+                    "prompt_name": prompt_name,
+                    "prompt_version": prompt_version,
+                },
             )
+            if recorder_active
+            else nullcontext()
+        )
 
-            content = response.choices[0].message.content
-            usage = getattr(response, "usage", None)
-            input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
-            output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+        with recorder_scope as recorded_span:
+            async with tracer.span(
+                f"llm.complete:{prompt_name or task_type or 'unnamed'}",
+                kind=SpanKind.LLM,
+                inputs={
+                    "model": model,
+                    "task_type": task_type,
+                    "prompt_name": prompt_name,
+                    "prompt_version": prompt_version,
+                    "prompt_chars": len(prompt),
+                    "system_chars": len(system) if system else 0,
+                    "max_tokens": max_tokens,
+                    "temperature": temperature,
+                },
+            ) as span:
+                response = self.client.chat.completions.create(
+                    model=model,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    messages=messages,
+                )
 
-            span.add_attributes(
-                input_tokens=input_tokens,
-                output_tokens=output_tokens,
-                total_tokens=getattr(usage, "total_tokens", input_tokens + output_tokens) if usage else None,
-                estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
-                finish_reason=getattr(response.choices[0], "finish_reason", None),
-            )
-            span.set_output(content)
-            return content
+                content = response.choices[0].message.content
+                usage = getattr(response, "usage", None)
+                input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
+                output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+                total_tokens = (
+                    getattr(usage, "total_tokens", input_tokens + output_tokens)
+                    if usage
+                    else None
+                )
+
+                span.add_attributes(
+                    input_tokens=input_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=total_tokens,
+                    estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
+                    finish_reason=getattr(response.choices[0], "finish_reason", None),
+                )
+                span.set_output(content)
+                if recorded_span is not None:
+                    recorded_span.add_metadata(
+                        token_usage={
+                            "prompt_tokens": input_tokens,
+                            "completion_tokens": output_tokens,
+                            "total_tokens": total_tokens,
+                        },
+                    )
+                    recorded_span.set_output(content)
+                return content
 
     async def chat(
         self,

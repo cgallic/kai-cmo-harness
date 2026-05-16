@@ -76,6 +76,7 @@ class Span:
         client: Optional[str],
         inputs: Optional[Dict[str, Any]] = None,
         attributes: Optional[Dict[str, Any]] = None,
+        store: Any = None,
     ):
         self.span_id = uuid4().hex[:16]
         self.trace_id = trace_id
@@ -94,6 +95,7 @@ class Span:
         self.completed_at: Optional[datetime] = None
         self._t0 = time.monotonic()
         self._closed = False
+        self._store = store or trace_store
 
     # -- mutation API used inside the `with` block ---------------------
     def add_attributes(self, **kwargs: Any) -> None:
@@ -139,7 +141,7 @@ class Span:
             error=self.error,
         )
         try:
-            trace_store.save_span(span)
+            self._store.save_span(span)
         except Exception as exc:  # pragma: no cover - storage best-effort
             # Tracing must never take down the agent loop.
             print(f"[traces] failed to persist span {self.name}: {exc}")
@@ -151,8 +153,9 @@ class _TraceHandle:
     open child spans that inherit task/client metadata automatically.
     """
 
-    def __init__(self, trace_id: str):
+    def __init__(self, trace_id: str, store: Any):
         self.trace_id = trace_id
+        self._store = store
 
     def span(self, name: str, *, kind: SpanKind = SpanKind.OTHER, **kwargs: Any):
         return tracer.span(name, kind=kind, **kwargs)
@@ -165,7 +168,7 @@ class _TraceHandle:
         source: Optional[str] = None,
     ) -> None:
         """Attach a downstream usefulness label to this trace."""
-        trace_store.record_quality(self.trace_id, label, note=note, source=source)
+        self._store.record_quality(self.trace_id, label, note=note, source=source)
 
 
 class Tracer:
@@ -173,6 +176,9 @@ class Tracer:
     Front-end facade that opens traces and child spans against the
     process-global trace store.
     """
+
+    def __init__(self, store: Any = None):
+        self.trace_store = store or trace_store
 
     @asynccontextmanager
     async def trace(
@@ -207,11 +213,12 @@ class Tracer:
             execution_id=execution_id,
             client=client,
             inputs=inputs,
+            store=self.trace_store,
         )
         token_parent = _current_parent_span_id.set(root.span_id)
 
         try:
-            yield _TraceHandle(tid)
+            yield _TraceHandle(tid, self.trace_store)
             root._finalize()
         except BaseException as exc:
             root._finalize(error=exc)
@@ -250,6 +257,7 @@ class Tracer:
             client=_current_client.get(),
             inputs=inputs,
             attributes=attributes,
+            store=self.trace_store,
         )
         token_parent = _current_parent_span_id.set(s.span_id)
         try:
@@ -284,6 +292,7 @@ class Tracer:
             client=_current_client.get(),
             inputs=inputs,
             attributes=attributes,
+            store=self.trace_store,
         )
         token_parent = _current_parent_span_id.set(s.span_id)
         try:

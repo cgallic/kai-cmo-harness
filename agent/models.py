@@ -14,6 +14,9 @@ from pydantic import BaseModel, Field
 from .config import agent_config
 
 
+TASK_SPAN_RECORDS_TABLE = "task_span_records"
+
+
 # =============================================================================
 # Enums
 # =============================================================================
@@ -81,6 +84,24 @@ class TaskExecution(BaseModel):
     result: Optional[Dict[str, Any]] = None
     error: Optional[str] = None
     retry_count: int = 0
+
+
+class TaskSpan(BaseModel):
+    """Structured span emitted during a task execution."""
+    id: str
+    trace_id: str
+    task_id: str
+    span: str
+    status: str = "running"
+    started_at: datetime
+    execution_id: Optional[str] = None
+    client: Optional[str] = None
+    ended_at: Optional[datetime] = None
+    duration_ms: Optional[int] = None
+    inputs: Dict[str, Any] = Field(default_factory=dict)
+    outputs_summary: Optional[str] = None
+    error: Optional[str] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 # =============================================================================
@@ -164,6 +185,26 @@ class AgentDatabase:
                 )
             """)
 
+            # Lightweight recorder spans. The HALO trace store owns task_spans.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS task_span_records (
+                    id TEXT PRIMARY KEY,
+                    trace_id TEXT NOT NULL,
+                    execution_id TEXT,
+                    task_id TEXT NOT NULL,
+                    client TEXT,
+                    span TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    started_at TEXT NOT NULL,
+                    ended_at TEXT,
+                    duration_ms INTEGER,
+                    inputs TEXT,
+                    outputs_summary TEXT,
+                    error TEXT,
+                    metadata TEXT
+                )
+            """)
+
             # Conversations table
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS conversations (
@@ -202,6 +243,22 @@ class AgentDatabase:
             conn.execute("""
                 CREATE INDEX IF NOT EXISTS idx_executions_status
                 ON task_executions(status)
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_span_records_trace
+                ON task_span_records(trace_id)
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_span_records_execution
+                ON task_span_records(execution_id)
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_span_records_task
+                ON task_span_records(task_id)
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_span_records_started
+                ON task_span_records(started_at)
             """)
             conn.execute("""
                 CREATE INDEX IF NOT EXISTS idx_conversations_phone
@@ -453,6 +510,147 @@ class AgentDatabase:
         ]
 
     # -------------------------------------------------------------------------
+    # Task Spans CRUD
+    # -------------------------------------------------------------------------
+    def create_span(self, span: TaskSpan) -> str:
+        """Create a new trace span record."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute("""
+                INSERT INTO task_span_records
+                (id, trace_id, execution_id, task_id, client, span, status,
+                 started_at, ended_at, duration_ms, inputs, outputs_summary,
+                 error, metadata)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                span.id,
+                span.trace_id,
+                span.execution_id,
+                span.task_id,
+                span.client,
+                span.span,
+                span.status,
+                span.started_at.isoformat(),
+                span.ended_at.isoformat() if span.ended_at else None,
+                span.duration_ms,
+                self._to_json(span.inputs),
+                span.outputs_summary,
+                span.error,
+                self._to_json(span.metadata),
+            ))
+            conn.commit()
+        return span.id
+
+    def update_span(
+        self,
+        span_id: str,
+        *,
+        status: Optional[str] = None,
+        ended_at: Optional[datetime] = None,
+        duration_ms: Optional[int] = None,
+        inputs: Optional[Dict[str, Any]] = None,
+        outputs_summary: Optional[str] = None,
+        error: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        """Update a trace span record."""
+        updates = []
+        params = []
+
+        if status is not None:
+            updates.append("status = ?")
+            params.append(status)
+        if ended_at is not None:
+            updates.append("ended_at = ?")
+            params.append(ended_at.isoformat())
+        if duration_ms is not None:
+            updates.append("duration_ms = ?")
+            params.append(duration_ms)
+        if inputs is not None:
+            updates.append("inputs = ?")
+            params.append(self._to_json(inputs))
+        if outputs_summary is not None:
+            updates.append("outputs_summary = ?")
+            params.append(outputs_summary)
+        if error is not None:
+            updates.append("error = ?")
+            params.append(error)
+        if metadata is not None:
+            updates.append("metadata = ?")
+            params.append(self._to_json(metadata))
+
+        if not updates:
+            return
+
+        params.append(span_id)
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute(
+                f"UPDATE {TASK_SPAN_RECORDS_TABLE} SET {', '.join(updates)} WHERE id = ?",
+                params
+            )
+            conn.commit()
+
+    def list_spans(
+        self,
+        *,
+        since: Optional[datetime] = None,
+        task_id: Optional[str] = None,
+        trace_id: Optional[str] = None,
+        execution_id: Optional[str] = None,
+        client: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 1000,
+    ) -> List[TaskSpan]:
+        """List trace spans with optional filters."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            query = f"SELECT * FROM {TASK_SPAN_RECORDS_TABLE} WHERE 1=1"
+            params: List[Any] = []
+
+            if since is not None:
+                query += " AND started_at >= ?"
+                params.append(since.isoformat())
+            if task_id is not None:
+                query += " AND task_id = ?"
+                params.append(task_id)
+            if trace_id is not None:
+                query += " AND trace_id = ?"
+                params.append(trace_id)
+            if execution_id is not None:
+                query += " AND execution_id = ?"
+                params.append(execution_id)
+            if client is not None:
+                query += " AND client = ?"
+                params.append(client)
+            if status is not None:
+                query += " AND status = ?"
+                params.append(status)
+
+            query += " ORDER BY started_at ASC LIMIT ?"
+            params.append(limit)
+            rows = conn.execute(query, params).fetchall()
+
+        return [self._row_to_task_span(row) for row in rows]
+
+    def _row_to_task_span(self, row: sqlite3.Row) -> TaskSpan:
+        """Convert a database row to a TaskSpan."""
+        return TaskSpan(
+            id=row["id"],
+            trace_id=row["trace_id"],
+            execution_id=row["execution_id"],
+            task_id=row["task_id"],
+            client=row["client"],
+            span=row["span"],
+            status=row["status"],
+            started_at=datetime.fromisoformat(row["started_at"]),
+            ended_at=datetime.fromisoformat(row["ended_at"]) if row["ended_at"] else None,
+            duration_ms=row["duration_ms"],
+            inputs=self._from_json(row["inputs"]) or {},
+            outputs_summary=row["outputs_summary"],
+            error=row["error"],
+            metadata=self._from_json(row["metadata"]) or {},
+        )
+
+    # -------------------------------------------------------------------------
     # Conversations CRUD
     # -------------------------------------------------------------------------
     def save_message(self, message: ConversationMessage) -> int:
@@ -551,6 +749,10 @@ class AgentDatabase:
         with sqlite3.connect(self.db_path) as conn:
             conn.execute(
                 "DELETE FROM task_executions WHERE started_at < ?",
+                (cutoff,)
+            )
+            conn.execute(
+                f"DELETE FROM {TASK_SPAN_RECORDS_TABLE} WHERE started_at < ?",
                 (cutoff,)
             )
             conn.execute(

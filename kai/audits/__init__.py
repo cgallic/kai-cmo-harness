@@ -41,6 +41,9 @@ Available engines
 - **agentic_commerce** -- Fixture-friendly readiness audit for AI shopping:
   product schema, catalog fields, checkout prerequisites, offer clarity,
   crawler policy, and protocol readiness (ACP/UCP/AP2/x402).
+- **creator_commerce** -- Fixture-friendly creator ops audit for partner fit,
+  audience quality, rate-card hygiene, rights/disclosure controls, affiliate
+  attribution setup, and GMV data coverage.
 """
 
 # Lazy imports to avoid ImportError when a sibling engine file has not
@@ -184,6 +187,20 @@ try:
         "audit_agentic_commerce_readiness",
         "score_agentic_commerce_readiness",
         "summarize_agentic_commerce_findings",
+    ]
+except ImportError:
+    pass
+
+try:
+    from kai.audits.creator_commerce import (
+        audit_creator_commerce_ops,
+        score_creator_commerce_ops,
+        summarize_creator_commerce_findings,
+    )
+    __all__ += [
+        "audit_creator_commerce_ops",
+        "score_creator_commerce_ops",
+        "summarize_creator_commerce_findings",
     ]
 except ImportError:
     pass
