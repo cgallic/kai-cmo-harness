@@ -1,0 +1,219 @@
+id: kai.evidence_ladder
+version: 0.1.0
+status: draft
+owner: runtime-evals
+purpose: >
+  Standardize how Kai labels, cites, and gates claims before they appear in
+  client-facing work, recommendations, ads, audits, or strategy documents.
+
+claim_classes:
+  client_facing_quantitative:
+    examples:
+      - rankings
+      - traffic
+      - backlinks
+      - domain authority or domain rating
+      - Core Web Vitals
+      - conversion rates
+      - call volume
+      - platform ROAS
+      - incremental lift
+      - AI Overview or AI citation visibility
+    allowed_tiers:
+      - official_requirement
+      - official_best_practice
+      - law_regulation_court_status
+      - academic_study
+      - vendor_platform_study
+      - practitioner_benchmark
+      - internal_measurement
+    required_metadata:
+      - source_url_or_system
+      - source_title
+      - publisher_or_owner
+      - retrieval_date
+      - measurement_window_when_applicable
+      - method_or_query_when_applicable
+      - confidence_label
+    disallowed_tiers:
+      - inference_hypothesis
+      - missing_data
+    missing_data_behavior: >
+      State the data gap, list the required source or integration, and avoid
+      substituting estimates or benchmarks unless clearly labeled as examples.
+
+  client_facing_recommendation:
+    allowed_tiers:
+      - official_requirement
+      - official_best_practice
+      - law_regulation_court_status
+      - academic_study
+      - vendor_platform_study
+      - practitioner_benchmark
+      - internal_measurement
+      - inference_hypothesis
+    required_metadata:
+      - evidence_tier
+      - source_or_reasoning
+      - confidence_label
+      - caveat_or_next_test
+    missing_data_behavior: >
+      Reframe as an experiment or discovery step when the evidence is not
+      strong enough for a recommendation.
+
+  internal_hypothesis:
+    allowed_tiers:
+      - academic_study
+      - vendor_platform_study
+      - practitioner_benchmark
+      - internal_measurement
+      - inference_hypothesis
+      - missing_data
+    required_metadata:
+      - hypothesis
+      - falsification_test
+      - decision_threshold
+    missing_data_behavior: >
+      Capture the missing evidence and define the smallest next measurement.
+
+tiers:
+  official_requirement:
+    rank: 1
+    label: Official platform requirement
+    definition: >
+      A binding requirement from an official platform, regulator, standards body,
+      or product documentation that directly governs the recommendation.
+    client_facing_use: required action
+    confidence_default: high
+    examples:
+      - Google Search Central requirements for crawlability and indexing
+      - Meta ad policy prohibitions
+      - Gmail bulk sender authentication requirements
+
+  official_best_practice:
+    rank: 2
+    label: Official platform best practice
+    definition: >
+      Official guidance that is recommended but not presented as a strict rule.
+    client_facing_use: high-confidence best practice
+    confidence_default: medium_high
+    examples:
+      - platform optimization guides
+      - official implementation recommendations
+
+  law_regulation_court_status:
+    rank: 3
+    label: Law, regulation, or court status
+    definition: >
+      Current legal or regulatory guidance, including status notes when rules are
+      stayed, vacated, appealed, proposed, or jurisdiction-specific.
+    client_facing_use: compliance caveat or legal-review trigger
+    confidence_default: medium
+    required_metadata:
+      - jurisdiction
+      - effective_or_status_date
+      - primary_source_or_legal_review_source
+      - legal_review_recommended
+
+  academic_study:
+    rank: 4
+    label: Academic study
+    definition: >
+      Peer-reviewed or preprint research with method details and limitations.
+    client_facing_use: supporting evidence with caveats
+    confidence_default: medium
+    required_metadata:
+      - authors
+      - publication_date
+      - method_summary
+      - limitation_summary
+
+  vendor_platform_study:
+    rank: 5
+    label: Vendor or platform study
+    definition: >
+      Research from a vendor, platform, or measurement provider with a possible
+      commercial incentive.
+    client_facing_use: directional evidence
+    confidence_default: medium
+    required_metadata:
+      - sponsor_or_publisher
+      - sample_description
+      - conflict_or_bias_note
+
+  practitioner_benchmark:
+    rank: 6
+    label: Practitioner benchmark
+    definition: >
+      Field observation, benchmark, or expert practice pattern from a credible
+      operator or firm.
+    client_facing_use: contextual benchmark only
+    confidence_default: low_medium
+    required_metadata:
+      - practitioner_or_firm
+      - context_match
+      - caveat
+
+  internal_measurement:
+    rank: 7
+    label: Internal measurement
+    definition: >
+      First-party data from Kai, a client integration, a collector, or an
+      approved audit source.
+    client_facing_use: direct evidence when provenance is complete
+    confidence_default: medium_high
+    required_metadata:
+      - collector_or_system
+      - measurement_window
+      - query_or_collection_method
+      - data_quality_notes
+
+  inference_hypothesis:
+    rank: 8
+    label: Inference or hypothesis
+    definition: >
+      A reasoned but unverified conclusion drawn from partial evidence.
+    client_facing_use: experiment proposal only
+    confidence_default: low
+    required_metadata:
+      - reasoning_chain
+      - falsification_test
+      - data_needed
+
+  missing_data:
+    rank: 9
+    label: Missing data
+    definition: >
+      The evidence required to make the claim or recommendation is absent.
+    client_facing_use: data gap only
+    confidence_default: none
+    required_metadata:
+      - missing_source
+      - impact_on_decision
+      - next_collection_step
+
+confidence_labels:
+  high: Source directly supports the claim and is current for the use case.
+  medium_high: Source is strong, but context or implementation details may vary.
+  medium: Source is relevant but limited, indirect, or jurisdiction-specific.
+  low_medium: Source is directional and requires validation before strong action.
+  low: Hypothesis only; do not state as fact.
+  none: No claim should be made.
+
+hard_rules:
+  - id: no_invented_metrics
+    rule: >
+      Never invent rankings, traffic, backlinks, Core Web Vitals, conversion
+      rates, call volume, ad metrics, or AI visibility when source data is absent.
+  - id: no_ai_visibility_guarantees
+    rule: >
+      Never guarantee ranking, inclusion, or citation in ChatGPT, Claude,
+      Perplexity, Google AI Overviews, Bing Copilot, or other AI answer systems.
+  - id: separate_roas_from_incrementality
+    rule: >
+      Platform-attributed ROAS must not be presented as incremental profit or
+      causal lift without a valid incrementality design.
+  - id: status_date_for_unstable_policy
+    rule: >
+      Legal, platform policy, and compliance claims need a status date when the
+      issue is temporally unstable.

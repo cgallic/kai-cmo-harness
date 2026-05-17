@@ -1,27 +1,109 @@
 skill: email-lifecycle
-version: 2.0
+version: 3.0
 harness: kai-harness
+risk_tier: medium
+word_count: 200-500
+min_four_us: 10
+seo_lint: false
 
 description: >
-  Lifecycle / nurture emails for existing subscribers and trial users.
-  Covers onboarding, activation, upsell, win-back, and newsletter sequences.
-  Sent via Loops.
+  Lifecycle and nurture emails for subscribers, customers, leads, and trial
+  users. Covers onboarding, activation, upsell, win-back, newsletters, and
+  announcements with behavioral triggers, suppressions, holdouts, and Loops
+  delivery controls.
+
+required_sources:
+  - brief
+  - knowledge/channels/email-lifecycle.md
+  - knowledge/checklists/email-checklist.md
+  - lifecycle_trigger_map
+  - segment_definition
+  - suppression_rules
+  - experiment_or_holdout_plan
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  trigger_must_match_lifecycle_stage: true
+  segment_definition_required: true
+  suppression_rules_required: true
+  holdout_required_for_experiment_or_major_flow_change: true
+  claims_must_trace_to_evidence: true
+  unsubscribe_required: true
+  missing_sources_action: block_and_request_sources
 
 inputs:
   required:
     - brief: object
-    - email_type: string    # onboarding | activation | upsell | winback | newsletter | announcement
-    - list_segment: string  # kaicalls_leads | bwk_users | abp_vendors | newsletter
-    - trigger: string       # signed_up | day_3 | day_7 | churned | manual
+    - email_type: string
+    - list_segment: string
+    - trigger: string
+    - suppression_rules: list[string]
   optional:
-    - personalization_fields: list[string]  # Loops custom fields to use
+    - personalization_fields: list[string]
+    - lifecycle_stage: string
+    - holdout_percentage: number
+    - experiment_id: string
+    - send_window: string
+    - claim_evidence_log: list[object]
 
 outputs:
   subject: string
-  preview_text: string       # 40-90 chars shown in inbox before open
+  preview_text: string
   body: markdown
-  subject_variants: list[string]  # 3 A/B variants
+  plain_text_body: string
+  subject_variants: list[string]
   send_time_recommendation: string
+  suppression_notes: list[string]
+  holdout_plan: object
+
+output_schema:
+  type: object
+  required:
+    - subject
+    - preview_text
+    - body
+    - plain_text_body
+    - primary_cta
+    - subject_variants
+    - trigger_logic
+    - suppression_logic
+    - holdout_plan
+    - compliance_notes
+  properties:
+    subject: string
+    preview_text: string
+    body: markdown
+    plain_text_body: string
+    primary_cta: string
+    subject_variants: list[string]
+    trigger_logic:
+      type: object
+      properties:
+        trigger: string
+        lifecycle_stage: string
+        entry_conditions: list[string]
+        exit_conditions: list[string]
+    suppression_logic:
+      type: object
+      properties:
+        global_unsubscribe: boolean
+        customer_status_suppression: list[string]
+        recent_send_suppression: string
+        conversion_suppression: list[string]
+    holdout_plan:
+      type: object
+      properties:
+        required: boolean
+        percentage: number
+        experiment_id: string
+        success_metric: string
+    claims:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        risk_level: string
+    compliance_notes: list[string]
 
 quality_gates:
   - four_us_total >= 10
@@ -31,12 +113,155 @@ quality_gates:
   - word_count <= 500
   - single_primary_cta == true
   - has_plain_text_version == true
+  - has_unsubscribe == true
+  - suppression_rules_present == true
+  - trigger_logic_present == true
 
-word_count: 200-500
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "200 <= word_count <= 500"
+  - id: subject_length
+    evaluator: script
+    pass_when: "subject char_count <= 50 and every subject_variant char_count <= 50"
+  - id: preview_length
+    evaluator: script
+    pass_when: "preview_text char_count <= 90"
+  - id: plain_text_present
+    evaluator: schema
+    pass_when: "plain_text_body is non_empty"
+  - id: single_primary_cta
+    evaluator: static
+    pass_when: "exactly one primary_cta is present"
+  - id: trigger_logic_present
+    evaluator: schema
+    pass_when: "trigger_logic.trigger and trigger_logic.entry_conditions are non_empty"
+  - id: suppression_logic_present
+    evaluator: schema
+    pass_when: "suppression_logic.global_unsubscribe == true and suppression_rules are non_empty"
+  - id: holdout_present_when_required
+    evaluator: static
+    pass_when: "experiment_id is empty or holdout_plan.required == true"
+  - id: claim_evidence_ids_present
+    evaluator: static
+    pass_when: "every claims item has evidence_id"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: lifecycle_fit
+      question: "Does the email match the user's actual stage, behavior, and likely intent?"
+    - name: trigger_safety
+      question: "Are entry, exit, and suppression rules clear enough to prevent wrong-recipient sends?"
+    - name: message_quality
+      question: "Is the body useful, specific, and focused on one action?"
+    - name: experiment_design
+      question: "Are holdouts and success metrics defined when the flow changes behavior or tests an offer?"
+
+human_review_required_when:
+  - email_type in ["winback", "announcement", "upsell"]
+  - pricing_or_contract_change == true
+  - major_flow_change == true
+  - holdout_percentage < 5 and experiment_id is present
+  - regulated_claim_present == true
+  - sends_to_inactive_or_churned_users == true
+  - suppression_rules changed
+
+golden_situations:
+  - name: day_3_activation
+    expectation: "Uses signed-up trigger, activation-specific CTA, recent-send suppression, and conversion exit condition."
+  - name: winback_churned_users
+    expectation: "Requires inactive-user review, opt-out visibility, offer evidence, and careful frequency cap."
+  - name: experiment_without_holdout
+    expectation: "Fails when A/B test or major flow change lacks a holdout plan."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_missing_suppression_rules: 0
+  max_missing_plain_text_versions: 0
+  max_missing_unsubscribe: 0
+  max_missing_holdouts_when_required: 0
+
+claim_policy:
+  allowed:
+    - product education
+    - onboarding guidance
+    - behavior-based recommendations
+    - sourced customer proof
+  requires_evidence:
+    - savings, revenue, conversion, time, or performance claims
+    - customer outcomes
+    - pricing, discounts, or deadline-based offers
+    - security, privacy, legal, or compliance statements
+  forbidden:
+    - claiming behavior that is not present in the trigger data
+    - implying consent where none exists
+    - hiding unsubscribe language
+    - fake deadlines or fake scarcity
+    - sending win-back offers to active paying customers
+
+provenance_policy:
+  claim_trace_required: true
+  trigger_trace_required: true
+  suppression_trace_required: true
+  required_trace_fields:
+    - trigger_id
+    - segment_id
+    - suppression_rule_ids
+    - experiment_id
+    - evidence_id
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - emailing globally unsubscribed contacts
+  - sending across suppression windows
+  - using behavioral claims not supported by event data
+  - stacking multiple CTAs in one lifecycle email
+  - changing flow logic without documenting exits and holdouts
+  - using guilt, shame, or manipulative urgency
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - lifecycle_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_suppression_rules
+    - missing_unsubscribe
+    - missing_trigger_logic
+    - missing_holdout_when_required
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - email_type
+  - lifecycle_stage
+  - trigger_id
+  - segment_id
+  - suppression_rule_ids
+  - experiment_id
+  - holdout_percentage
+  - evidence_ids
+  - reviewer
+  - approval_status
+  - loops_campaign_id
+
 hooks:
   pre_write: load_brief + load_email_lifecycle_channel + load_email_checklist
   post_write: run_quality_gate
   on_fail: revise_with_failure_report
   on_pass: post_for_approval
   on_approve: send_via_loops + content_log
-  on_send: schedule_open_rate_check  # 7-day check
+  on_send: schedule_open_rate_check

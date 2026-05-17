@@ -1,12 +1,229 @@
+skill: gbp-post
+version: 3.0
+harness: kai-harness
 format: gbp-post
+risk_tier: medium
 word_count: 80-250
 min_four_us: 10
 seo_lint: false
+
+description: >
+  Google Business Profile posts for local updates, offers, events, products,
+  and service-area promotions. Optimized for local relevance, policy safety,
+  photo readiness, CTA accuracy, and UTM tracking.
+
+required_sources:
+  - brief
+  - google_business_profile_profile_data
+  - local_service_area_list
+  - offer_or_event_terms
+  - photo_asset_log
+  - landing_page_url
+source_policy:
+  load_before_writing: true
+  nap_must_match_profile: true
+  location_claims_must_match_service_area: true
+  offer_requires_terms_and_dates: true
+  event_requires_start_and_end_datetime: true
+  photo_requires_rights_and_relevance: true
+  cta_url_requires_utm_parameters: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - post_type: string
+    - business_name: string
+    - primary_location: string
+    - cta_url: string
+  optional:
+    - service_area: list[string]
+    - offer_terms: object
+    - event_details: object
+    - photo_asset_id: string
+    - product_or_service: string
+    - utm_campaign: string
+
 required_sections:
   - post_type
   - post_copy
   - cta
+
+output_schema:
+  type: object
+  required:
+    - post_type
+    - post_copy
+    - cta
+    - cta_url
+    - local_relevance
+    - photo_recommendation
+    - offer_event_fields
+    - utm_fields
+    - compliance_notes
+  properties:
+    post_type: string
+    post_copy: string
+    cta: string
+    cta_url: string
+    local_relevance:
+      type: object
+      properties:
+        business_name: string
+        primary_location: string
+        service_area_mentions: list[string]
+    photo_recommendation:
+      type: object
+      properties:
+        asset_id: string
+        description: string
+        rights_status: string
+    offer_event_fields:
+      type: object
+      properties:
+        offer_terms: string
+        start_datetime: string
+        end_datetime: string
+        redemption_details: string
+    utm_fields:
+      type: object
+      properties:
+        utm_source: string
+        utm_medium: string
+        utm_campaign: string
+    compliance_notes: list[string]
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "80 <= word_count <= 250"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "post_type, post_copy, and cta are non_empty"
+  - id: local_area_present
+    evaluator: static
+    pass_when: "primary_location is mentioned or service_area_mentions is non_empty"
+  - id: offer_dates_present
+    evaluator: static
+    pass_when: "post_type != 'offer' or offer_terms and start_datetime and end_datetime are non_empty"
+  - id: event_dates_present
+    evaluator: static
+    pass_when: "post_type != 'event' or start_datetime and end_datetime are non_empty"
+  - id: photo_rights_present
+    evaluator: static
+    pass_when: "photo_asset_id is empty or photo_recommendation.rights_status == 'approved'"
+  - id: utm_present
+    evaluator: regex
+    pass_when: "cta_url contains 'utm_source=gbp' and 'utm_medium=organic'"
+  - id: no_unverified_superlatives
+    evaluator: llm_static
+    pass_when: "superlatives are absent unless evidence is cited"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 13
+  criteria:
+    - name: local_relevance
+      question: "Does the post clearly connect the offer, event, or update to the real local service area?"
+    - name: gbp_policy_fit
+      question: "Does the post avoid misleading, regulated, offensive, or prohibited content?"
+    - name: action_clarity
+      question: "Is the CTA specific and supported by a matching landing page?"
+    - name: asset_fit
+      question: "Is the recommended photo relevant, owned or licensed, and useful for local searchers?"
+
+human_review_required_when:
+  - post_type in ["offer", "event"]
+  - regulated_service == true
+  - multiple_locations == true
+  - photo_rights_status != approved
+  - discount_or_price_claim_present == true
+  - legal_or_medical_claim_present == true
+
+golden_situations:
+  - name: local_offer
+    expectation: "Includes terms, start and end dates, local service area, approved photo, and GBP UTM URL."
+  - name: event_post
+    expectation: "Includes start and end time, address or service area, matching CTA, and no missing details."
+  - name: generic_update
+    expectation: "Fails when copy could apply to any city or business."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 13
+  max_missing_utm_urls: 0
+  max_missing_offer_event_dates: 0
+  max_location_mismatch: 0
+
+claim_policy:
+  allowed:
+    - local service availability
+    - specific offers with terms
+    - events with dates, times, and location details
+    - verifiable product or service details
+  requires_evidence:
+    - discounts and pricing
+    - emergency availability
+    - awards, ratings, or review counts
+    - fastest, best, cheapest, or similar comparisons
+  forbidden:
+    - fake locations or service areas
+    - review gating or review incentives
+    - misleading pricing or unavailable offers
+    - phone stuffing, keyword stuffing, or irrelevant city stuffing
+
+provenance_policy:
+  claim_trace_required: true
+  location_trace_required: true
+  required_trace_fields:
+    - profile_id
+    - location_id
+    - evidence_id
+    - asset_id
+    - cta_url
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - adding cities the business does not serve
+  - inventing discounts, dates, ratings, or review counts
+  - using stock photos as if they show the location or team
+  - sending GBP traffic to a nonmatching landing page
+  - using all-caps urgency or false scarcity
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - local_marketing_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_utm
+    - missing_offer_or_event_terms
+    - unapproved_photo
+    - profile_location_mismatch
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - profile_id
+  - location_id
+  - post_type
+  - cta_url
+  - utm_campaign
+  - photo_asset_id
+  - evidence_ids
+  - reviewer
+  - approval_status
+  - published_url
+
 constraints:
   - Final copy only; no bracketed placeholders.
   - Name the local service area when available.
   - Avoid unverifiable superlatives.
+  - Offers must include terms and dates.
+  - Events must include start and end date-time details.
+  - CTA links must include GBP UTM parameters.

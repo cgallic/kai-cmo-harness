@@ -1,57 +1,79 @@
-# How We Increased Organic Traffic 340% in 90 Days Using Entity SEO
+# Build a Source-Backed Local Service Page in 3 Hours
 
-What happens when you stop chasing keywords and start building entities? Our traffic tripled. Here's exactly how you can do the same thing — with real numbers.
+Why do local service pages rank poorly even after a rewrite? The failure often happens before copy matters. Google has to crawl the page, understand the business, and trust that the page matches a real service area. Fix those 3 jobs before adding another keyword section.
 
-## The Entity SEO Framework That Changed Everything
+This checklist is for a one-location service business, such as a plumber, heating, ventilation, and air conditioning (HVAC) contractor, roofer, med spa, accountant, or law office. You can finish the first pass in 3 hours if the business already has a logo, phone number, address, and service list.
 
-Google's Knowledge Graph processes 500 billion facts about 5 billion entities, according to Google's 2024 Search documentation. Traditional SEO targets keywords. Entity SEO targets the connections between concepts.
+## Step 1: Confirm Google Can Access the Page
 
-"The shift from strings to things fundamentally changed how Google understands content," says John Mueller, Google Search Advocate. You need to understand this shift to compete in 2026.
+Start with crawl access. Google Search Central groups Search Essentials into "technical requirements," "spam policies," and "key best practices." Google Search Central says Googlebot must not be blocked, the page must return a successful Hypertext Transfer Protocol (HTTP) status, and the page must contain indexable text. Source: https://developers.google.com/search/docs/essentials
 
-Build your entity map before writing a single word. Start with your primary entity (your brand or topic), then connect it to related entities using Schema.org markup. Use Wikidata to verify entity relationships.
+Check crawl access before editing copy.
 
-## Step 1: Audit Your Entity Presence
+1. Check the page in an incognito browser window.
+2. Check that the main service description appears as text.
+3. Check that robots.txt does not block the page.
+4. Check that the canonical tag points to the live service page.
+5. Check the page with Google Search Console URL Inspection if you have access.
 
-Check your Google Knowledge Panel status first. Run a branded search and note whether Google shows a Knowledge Panel. 73% of businesses that established Knowledge Panels saw a 28% increase in click-through rates, according to research from Semrush.
+Do not write a long FAQ until this works. A blocked page creates wasted work and missed leads because search systems cannot inspect the answer.
 
-"Entity authority is the new domain authority," notes Lily Ray, VP of SEO at Amsive Digital. Your entity needs a canonical home page — one URL that Google treats as the definitive source.
+## Step 2: Put the Business Entity on the Page
 
-Verify these three things on your entity home page:
+Add 1 business identity block near the footer or contact section. Use the same business name, address, phone number, and service area that appear on the Google Business Profile and main website contact page. Repeat the Google Business Profile name exactly.
 
-1. Add Organization schema markup with your official name, logo, and founding date.
-2. Include sameAs links to your Wikipedia page, Wikidata entry, and social profiles.
-3. Publish a comprehensive "About" page that matches your Knowledge Graph data.
+Schema.org's Organization type supports properties such as name, legalName, url, logo, contactPoint, address, and sameAs. Schema.org describes sameAs as a URL for a reference page that indicates the item's identity. Source: https://schema.org/Organization
 
-## Step 2: Build Entity Connections Through Content
+Use this entity checklist during the 30-minute entity pass.
 
-Create content clusters that reinforce entity relationships. Each cluster should target one entity connection. Map your content to the Knowledge Graph's predicate structure.
+1. Add the business name exactly once in the H1 or first paragraph.
+2. Add the primary phone number in visible text.
+3. Add the service area in plain language.
+4. Add a link to the official contact page.
+5. Add sameAs links only for profiles the business controls.
 
-HubSpot increased their featured snippet appearances by 42% after restructuring content around entity clusters. Ahrefs found that pages with proper entity markup received 37% more AI Overview citations than unmarked pages.
+Entity consistency gives search systems a clearer business record. Entity consistency gives a buyer confidence that the company serves their location.
 
-"Content that connects entities gets preferential treatment in AI-generated answers," according to research published by the Stanford NLP Group in 2025. This applies to Google's AI Overviews, Perplexity, and ChatGPT's browsing mode.
+## Step 3: Write the Service Answer First
 
-Use these entity connection strategies:
+Answer the buyer's question in the first 100 words. A water-heater page should say who repairs water heaters, which water-heater types are covered, where the company works, and how to request help.
 
-1. Reference related entities by full name at least twice before using pronouns.
-2. Link to authoritative entity home pages (Wikipedia, official sites) in your body content.
-3. Add structured data that explicitly maps relationships between entities.
-4. Include co-occurrence signals by mentioning related entities in the same paragraph.
+Use this 4-part opening pattern.
 
-## Step 3: Measure Entity Authority
+1. Service: "We repair and replace tank and tankless water heaters."
+2. Location: "Our technicians serve Plano, Frisco, and McKinney."
+3. Constraint: "Same-day appointments depend on parts and technician availability."
+4. Action: "Call the number on this page or request a visit online."
 
-Track these specific metrics weekly:
+This pattern avoids fake certainty. It gives a direct answer without promising rankings, response times, or outcomes the business cannot support.
 
-1. **Knowledge Panel accuracy**: Compare displayed facts against your submitted data. Target 95%+ accuracy.
-2. **Entity mention velocity**: Count how many third-party sites mention your entity per month. Aim for 15+ new mentions monthly.
-3. **Schema validation score**: Run Google's Rich Results Test on every key page. Fix all errors within 48 hours.
-4. **AI citation rate**: Monitor how often AI search engines cite your content. Use Perplexity's developer API to track mentions.
+## Step 4: Add Proof You Can Verify
 
-Our entity authority score increased from 23 to 78 (on a 100-point scale) in 12 weeks. This correlated directly with a 340% increase in organic traffic and a 156% increase in AI Overview appearances.
+Use proof that the business can defend. Defensible proof includes license numbers, manufacturer certifications, photos from completed jobs, warranty terms, office hours, service boundaries, and links to policy pages.
 
-## Your 30-Day Action Plan
+Google Search Central says structured data helps Google understand page information and can make a page eligible for rich results. Google Search Central also recommends testing structured data before release. Source: https://developers.google.com/search/docs/guides/search-gallery
 
-Start with your entity home page this week. Don't wait — Google's March 2026 Core Update specifically rewards entity-rich content. Schema markup alone increased our ranking positions by an average of 4.2 spots across 127 tracked keywords.
+Add proof in this order during the 45-minute proof pass.
 
-"The window for establishing entity authority is closing," warns Rand Fishkin, CEO of SparkToro. "First-movers in entity SEO will have compounding advantages that are nearly impossible to replicate."
+1. Business facts: license, address, phone number, service area, and office hours.
+2. Service facts: equipment brands, job types, parts availability, and warranty limits.
+3. Process facts: inspection, quote, approval, repair, cleanup, and follow-up.
+4. Customer facts: reviews or testimonials only when you can link to the original source.
 
-Implement these changes in the next 30 days, or watch competitors claim your entity space in Google's Knowledge Graph. The data shows entities established before Q2 2026 receive 3.7x more AI citations than those established after.
+Remove any claim the business cannot source. "Trusted by thousands" is weaker than one visible license number and three original job photos.
+
+## Step 5: Publish a Maintenance Note
+
+End with a maintenance note for the operator. Review the page every 90 days or whenever the business changes service areas, pricing rules, hours, license status, or phone routing.
+
+Use this 15-minute review.
+
+1. Test the phone number.
+2. Check the contact form.
+3. Open every sameAs profile.
+4. Validate structured data with Google's Rich Results Test.
+5. Confirm that the service area still matches the business operation.
+
+The page should stay boringly accurate. Search engines and buyers can both work with boring accuracy.
+
+Schedule a 30-minute page review this week if this checklist finds 3 or more gaps.

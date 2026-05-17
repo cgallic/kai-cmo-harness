@@ -2,7 +2,7 @@
 
 **Last updated**: March 2026
 **Scope**: FTC, GDPR, CAN-SPAM, CASL, CCPA/CPRA, COPPA, TCPA, FINRA, FDA, ADA, DSA, NAD
-**Purpose**: Comprehensive compliance rules for all digital advertising and marketing
+**Purpose**: Operational compliance guidance for digital advertising and marketing. This is not legal advice; verify current requirements with qualified counsel before relying on it for a specific campaign, jurisdiction, or offer.
 
 ---
 
@@ -303,12 +303,12 @@ California allows "Made in USA" when:
 
 ## 6. FTC: Free Offers, Trials & Click-to-Cancel
 
-**Authority**: FTC Negative Option Rule (16 CFR Part 425), amended October 2024 ("Click-to-Cancel Rule")
-**Enforced by**: Federal Trade Commission
+**Authority**: FTC Act Section 5; Restore Online Shoppers' Confidence Act (ROSCA); state automatic renewal and negative-option laws. The FTC's October 2024 amended Negative Option Rule ("Click-to-Cancel Rule") was vacated by the Eighth Circuit on July 8, 2025 before its July 14, 2025 compliance date.
+**Enforced by**: FTC, state AGs, private litigants where state law allows
 
 ### Scope
 
-The rule applies to ALL negative option programs in ANY medium:
+Use this operating standard for negative option programs in any medium:
 - Free trial conversions to paid subscriptions
 - Automatic renewals
 - Continuity plans (recurring product shipments)
@@ -316,52 +316,53 @@ The rule applies to ALL negative option programs in ANY medium:
 - Both B2C and B2B transactions
 - Online, phone, and in-person signups
 
-### Key Requirements
+### Operational Standards
 
 #### Pre-Purchase Disclosures
-Before obtaining billing information, sellers MUST clearly disclose:
+Before obtaining billing information, disclose clearly and conspicuously:
 - That the consumer will be charged (and the amount)
 - The deadline to cancel to avoid being charged
 - How to cancel
 - The frequency and amount of recurring charges
 
 #### Informed Consent
-- Must obtain **affirmative, express consent** to the negative option features specifically
-- Consent must be obtained separately from other terms (cannot bury in general T&C)
-- Must keep records of consumer consent
+- Obtain **affirmative, express consent** to recurring billing or other negative option features
+- Present consent separately enough that it is not buried in general terms
+- Keep timestamped records of the terms shown and the consumer action indicating consent
 
-#### Simple Cancellation ("Click-to-Cancel")
-- Cancellation must be **at least as easy as signup**
-- Online signup = online cancellation option REQUIRED
-- Cannot require consumers to call, chat, or mail to cancel if they signed up online
-- Cannot require consumers to listen to a "save" pitch before canceling (no mandatory retention offers during the cancellation flow as a barrier)
-- Cannot impose unreasonable barriers (e.g., long hold times, multiple steps, buried cancel links)
+#### Simple Cancellation
+- Treat cancellation that is **at least as easy as signup** as the operational baseline
+- Provide online cancellation for online signups unless counsel confirms a narrower state-law rule applies
+- Avoid forcing consumers to call, chat, or mail to cancel when they signed up online
+- Do not make a "save" pitch, survey, login loop, long hold, buried link, or multi-step maze a barrier to cancellation
+- Retention offers can be optional after the consumer has a clear path to cancel
 
 #### Annual Reminders
 - For subscriptions with automatic renewal, many states require annual reminders before renewal (California, Colorado, Connecticut, and others)
 
-### Prohibited Practices
+### High-Risk Practices
 - Misrepresenting any material fact about the negative option
 - Misrepresenting the cancellation process
-- Failing to provide simple cancellation
+- Making cancellation materially harder than signup
 - Charging consumers without clear disclosure and consent
 
-### Timeline
+### Court Status
 
 - Rule finalized: October 16, 2024
-- Full compliance deadline: **July 14, 2025** (extended from May 14, 2025)
-- Note: The Click-to-Cancel rule was challenged in court; as of early 2026, core FTC Act enforcement against deceptive subscription practices continues regardless, and 25+ states have their own auto-renewal laws
+- Scheduled full compliance deadline: **July 14, 2025** (extended from May 14, 2025)
+- Vacatur: On **July 8, 2025**, the Eighth Circuit vacated the amended rule on procedural grounds. Do not describe the FTC Click-to-Cancel Rule as a currently effective federal rule.
+- Operational note: The vacatur does not remove FTC Act deception/unfairness risk, ROSCA risk for online negative-option offers, state automatic renewal laws, payment-network rules, or private class-action exposure.
 
 ### State Auto-Renewal Laws
 
-Over **25 states** now have auto-renewal and free trial laws, including notably:
+Many states have auto-renewal and free trial laws, including notably:
 - **California** (ARL): Requires express affirmative consent, easy online cancellation, annual reminders
 - **Colorado, Connecticut, Maine**: Strengthened protections in 2024-2025 amendments
 - **New York**: Requires clear disclosure of auto-renewal terms before purchase
 
 ### Penalties
 
-- FTC: up to **$53,088 per violation**
+- FTC: remedies depend on the authority used; verify penalty authority before citing a per-violation number
 - State AGs: penalties vary by state (California up to $2,500 per violation; some states allow treble damages)
 - Private class actions increasingly target subscription compliance failures
 
@@ -581,8 +582,9 @@ Required for:
 
 PEWC must include:
 - **Clear and conspicuous written agreement**
-- Authorization for **no more than one identified seller** (one-to-one consent, effective January 27, 2025)
-- Calls/texts must be **logically and topically associated** with the interaction that prompted consent
+- Authorization for the identified seller(s) to deliver marketing calls/texts using regulated technology
+- The telephone number covered by the authorization
+- A statement that consent is not required as a condition of purchase
 - Signature (electronic signatures accepted)
 
 #### Prior Express Consent (verbal OK)
@@ -590,17 +592,18 @@ PEWC must include:
 Required for:
 - Non-marketing autodialed calls/texts to cell phones (e.g., appointment reminders, account alerts)
 
-### One-to-One Consent Rule (effective January 27, 2025)
+### One-to-One Consent Rule (Vacated Before Taking Effect)
 
-- Consent forms can authorize calls from **only one seller** at a time
-- The old practice of "lead gen" consent forms authorizing dozens of companies to call is **no longer compliant**
-- Each seller must be specifically identified and consented to
+- Court status: The FCC's one-to-one consent and "logically and topically associated" requirements were scheduled to take effect on **January 27, 2025**, but the Eleventh Circuit vacated those requirements on **January 24, 2025** in *Insurance Marketing Coalition Ltd. v. FCC*. Do not describe them as current federal TCPA requirements.
+- Practical lead-gen guidance: Treat one seller per consent, clear seller identification, topical relevance, and auditable consent records as the risk-control baseline for comparison-shopping and lead-transfer funnels.
+- Avoid broad consent language that purports to authorize calls or texts from dozens of unnamed or loosely affiliated sellers.
+- For transferred leads, retain the exact page, disclosure, timestamp, IP/user agent, phone number, seller list shown, and consent action. Reject leads when the consent record cannot prove who was authorized to call or text.
 
 ### Revocation Rights
 
 - Consumers can revoke consent **by any reasonable method** (including "STOP," "UNSUBSCRIBE," verbal request, email, etc.)
 - Businesses must honor revocation within **10 business days** (at most)
-- **"Revoke all" rule**: FCC rule requiring consent revocation to apply to all communications from a seller (implementation delayed until April 2026)
+- **"Revoke all" rule**: FCC rule requiring revocation in response to one type of message to apply to all future robocalls and robotexts from the same caller on unrelated matters is delayed until **January 31, 2027**. Treat centralized suppression as the operationally safer design even before the delayed rule takes effect.
 
 ### Do Not Call (DNC) Requirements
 
@@ -634,7 +637,7 @@ Notable state laws with additional requirements or steeper penalties:
 
 - Class actions spiked in 2025 after courts gained independence to interpret TCPA without deference to FCC guidance (following Supreme Court ruling on Chevron deference)
 - AI-generated voice calls are a primary enforcement target
-- Lead generation consent practices under heavy scrutiny due to one-to-one consent rule
+- Lead generation consent practices remain high risk despite vacatur of the federal one-to-one rule because plaintiffs, state AGs, platforms, and call partners scrutinize proof of consent, seller identity, revocation handling, DNC suppression, and state mini-TCPA compliance
 
 ---
 
@@ -1349,9 +1352,9 @@ Additional requirements:
 ### Subscription / Free Trial Offers
 
 - [ ] All material terms disclosed before collecting billing info
-- [ ] Cancellation as easy as signup
-- [ ] Online cancellation available for online signups
-- [ ] No mandatory retention offers blocking cancellation
+- [ ] Cancellation is at least as easy as signup as an operational baseline
+- [ ] Online cancellation available for online signups where required by state law or selected as policy
+- [ ] No mandatory retention offers, surveys, or support queues block cancellation
 - [ ] Express consent to recurring charges obtained separately
 - [ ] Annual renewal reminders sent (where state law requires)
 
@@ -1416,8 +1419,8 @@ Additional requirements:
 - [FTC Health Products Compliance Guidance](https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance)
 - [FTC Green Guides Summary](https://www.ftc.gov/business-guidance/resources/environmental-claims-summary-green-guides)
 - [FTC Made in USA Standard](https://www.ftc.gov/business-guidance/resources/complying-made-usa-standard)
-- [FTC Click-to-Cancel Rule Announcement](https://www.ftc.gov/news-events/news/press-releases/2024/10/federal-trade-commission-announces-final-click-cancel-rule-making-it-easier-consumers-end-recurring)
-- [FTC Click-to-Cancel Business Guidance](https://www.ftc.gov/business-guidance/blog/2024/10/click-cancel-ftcs-amended-negative-option-rule-what-it-means-your-business)
+- [FTC Click-to-Cancel Rule Announcement (vacated July 8, 2025)](https://www.ftc.gov/news-events/news/press-releases/2024/10/federal-trade-commission-announces-final-click-cancel-rule-making-it-easier-consumers-end-recurring)
+- [FTC Click-to-Cancel Business Guidance (historical; rule vacated July 8, 2025)](https://www.ftc.gov/business-guidance/blog/2024/10/click-cancel-ftcs-amended-negative-option-rule-what-it-means-your-business)
 - [FTC CAN-SPAM Compliance Guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business)
 - [FTC Consumer Reviews and Testimonials Rule Q&A](https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers)
 - [FTC Earnings Claims Proposed Rulemaking](https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-proposes-rule-changes-new-rule-deter-deceptive-earnings-claims-multilevel-marketers-money-making)
@@ -1425,6 +1428,7 @@ Additional requirements:
 - [FTC Disclosures 101 for Social Media Influencers](https://www.ftc.gov/system/files/documents/plain-language/1001a-influencer-guide-508_1.pdf)
 - [FTC Environmental Marketing Guidance](https://www.ftc.gov/business-guidance/advertising-marketing/environmental-marketing)
 - [FTC Consumer Review Rule Warning Letters (Dec 2025)](https://www.ftc.gov/business-guidance/blog/2025/12/warning-letter-or-ten-businesses-comply-ftcs-consumer-review-rule)
+- [Eighth Circuit opinion vacating FTC Click-to-Cancel Rule](https://www.uschamber.com/assets/documents/Opinion-Custom-Communications-Inc.-v.-FTC-Eighth-Circuit.pdf)
 
 ### GDPR & EU Resources
 - [GDPR Compliance Guide for Marketing Agencies 2026](https://secureprivacy.ai/blog/gdpr-compliance-for-marketing-agencies)
@@ -1455,6 +1459,7 @@ Additional requirements:
 
 ### TCPA Resources
 - [FCC Telemarketing and Robocalls](https://www.fcc.gov/general/telemarketing-and-robocalls)
+- [Eleventh Circuit opinion vacating TCPA one-to-one consent rule](https://law.justia.com/cases/federal/appellate-courts/ca11/24-10277/24-10277-2025-01-24.html)
 - [TCPA Overview and 2025 Updates](https://natlawreview.com/article/what-tcpa-heres-quick-background-americas-anti-robocall-statute-every-call-center)
 - [How 2025 Redefined Telemarketing Compliance](https://www.corporatecomplianceinsights.com/how-2025-redefined-telemarketing-compliance/)
 - [New Robotext and Robocall Rules 2025](https://www.fisherphillips.com/en/news-insights/new-robotext-and-robocall-rules-coming-online-in-2025.html)

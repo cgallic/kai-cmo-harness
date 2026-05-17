@@ -1,34 +1,242 @@
 skill: cold-email
-version: 2.0
+version: 3.0
 harness: kai-harness
+risk_tier: high
+word_count: 1-150 per touch
+min_four_us: 10
+seo_lint: false
 
 description: >
-  TCPA-compliant cold outreach sequences. 3-touch structure.
-  Hook + Bridge + CTA. Max 150 words per touch.
+  Compliance-aware cold outreach sequences for net-new prospects. Uses a
+  1-3 touch Hook + Bridge + CTA structure, real relevance proof, clear sender
+  identity, opt-out language, and sender-risk controls.
+
+required_sources:
+  - brief
+  - harness/references/cold-email-rules.md
+  - knowledge/channels/email-lifecycle.md
+  - knowledge/checklists/email-checklist.md
+  - prospect_list_source
+  - sender_identity
+  - suppression_list
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  prospect_source_must_be_lawful_and_named: true
+  personalization_requires_source_field: true
+  opt_out_required_each_touch: true
+  sender_identity_required: true
+  suppression_list_must_be_checked: true
+  claims_must_trace_to_evidence: true
+  missing_sources_action: block_and_request_sources
 
 inputs:
   required:
     - brief: object
-    - list_segment: string    # job title, industry, or named segment
-    - sequence_length: int    # 1-3 touches
-  optional:
+    - list_segment: string
+    - sequence_length: int
     - sender_name: string
-    - product: string         # kaicalls | buildwithkai | abp
+    - sender_company: string
+    - sender_physical_address: string
+    - prospect_list_source: string
+  optional:
+    - product: string
+    - personalization_fields: list[string]
+    - sending_domain: string
+    - daily_send_volume: int
+    - suppression_list_id: string
+    - claim_evidence_log: list[object]
 
 outputs:
-  sequence: list              # touch 1, 2, 3
-  subject_lines: list[string] # 3 variants per touch for A/B
+  sequence: list
+  subject_lines: list[string]
   word_count_per_touch: list[int]
-  personalization_tokens: list[string]  # e.g. {{company}}, {{city}}, {{pain_point}}
+  personalization_tokens: list[string]
+  opt_out_language: string
+  sender_risk_notes: list[string]
+
+output_schema:
+  type: object
+  required:
+    - sequence
+    - subject_lines
+    - personalization_tokens
+    - opt_out_language
+    - sender_identity
+    - compliance_notes
+    - sender_risk_score
+  properties:
+    sequence:
+      type: list
+      item_schema:
+        touch_number: int
+        subject: string
+        preview_text: string
+        body: string
+        hook: string
+        bridge: string
+        cta: string
+        opt_out: string
+        personalization_evidence: list[string]
+        claims: list[object]
+    subject_lines: list[string]
+    personalization_tokens: list[string]
+    opt_out_language: string
+    sender_identity:
+      type: object
+      properties:
+        name: string
+        company: string
+        reply_to: string
+        physical_address: string
+    compliance_notes: list[string]
+    sender_risk_score: string
 
 quality_gates:
   - all_touches_word_count <= 150
   - subject_line_char_count <= 50
   - has_personalization_token == true
-  - first_line_not_generic == true   # no "I hope this finds you well"
+  - first_line_not_generic == true
   - single_cta_per_touch == true
   - banned_words_tier1 == 0
   - no_multiple_ctAs == true
+  - has_opt_out_each_touch == true
+  - has_sender_physical_address == true
+  - suppression_checked == true
+
+deterministic_checks:
+  - id: sequence_length
+    evaluator: schema
+    pass_when: "1 <= sequence_length <= 3"
+  - id: word_count_per_touch
+    evaluator: script
+    pass_when: "every touch word_count <= 150"
+  - id: subject_line_length
+    evaluator: script
+    pass_when: "every subject char_count <= 50"
+  - id: opt_out_each_touch
+    evaluator: regex
+    pass_when: "every touch contains opt-out language"
+  - id: sender_identity_complete
+    evaluator: schema
+    pass_when: "sender_name, sender_company, reply_to, and sender_physical_address are non_empty"
+  - id: personalization_source_present
+    evaluator: static
+    pass_when: "every personalization token maps to a source field"
+  - id: suppression_checked
+    evaluator: static
+    pass_when: "suppression_list_id is non_empty and suppression_checked == true"
+  - id: no_deceptive_subjects
+    evaluator: regex
+    pass_when: "subjects do not start with 'Re:' or 'Fwd:' unless part of a real thread"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: relevance
+      question: "Does the first line prove a real reason this prospect is receiving the email?"
+    - name: consent_and_compliance
+      question: "Is sender identity clear, opt-out simple, and suppression risk handled?"
+    - name: tone
+      question: "Is the email direct and respectful without fake familiarity or pressure?"
+    - name: deliverability
+      question: "Does the copy avoid spam patterns, excessive links, attachments, and risky formatting?"
+
+human_review_required_when:
+  - daily_send_volume > 500
+  - new_sending_domain == true
+  - list_source_confidence != high
+  - regulated_industry == true
+  - sensitive_personal_data_used == true
+  - claim_risk_level == high
+  - opt_out_language_changed == true
+
+golden_situations:
+  - name: high_relevance_b2b_touch
+    expectation: "Uses one sourced personalization point, one clear CTA, sender identity, and opt-out language."
+  - name: scraped_list_low_confidence
+    expectation: "Blocks send and asks for list source, suppression proof, and sender-risk review."
+  - name: deceptive_reply_subject
+    expectation: "Fails deterministic check when subject pretends to be an existing thread."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_missing_opt_outs: 0
+  max_deceptive_subject_lines: 0
+  max_missing_personalization_sources: 0
+  max_sender_identity_gaps: 0
+
+claim_policy:
+  allowed:
+    - sourced relevance observations
+    - truthful product capabilities
+    - light social proof with evidence
+  requires_evidence:
+    - ROI, revenue, conversion, time savings, or cost savings
+    - customer names, logos, or outcomes
+    - competitor comparisons
+  forbidden:
+    - fabricated familiarity
+    - false urgency
+    - misleading Re or Fwd subject lines
+    - claims based on sensitive personal attributes
+    - guaranteed results
+
+provenance_policy:
+  claim_trace_required: true
+  personalization_trace_required: true
+  required_trace_fields:
+    - prospect_source_id
+    - personalization_field
+    - evidence_id
+    - suppression_list_id
+    - sender_identity_id
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - buying or using lists without a named lawful source
+  - emailing suppressed, unsubscribed, bounced, or do-not-contact records
+  - hiding identity or omitting physical address where required
+  - using more than one primary CTA per touch
+  - adding attachments to first-touch cold outreach
+  - shaming, fear-based threats, or fake deadlines
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - lifecycle_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_opt_out
+    - missing_sender_identity
+    - suppression_not_checked
+    - list_source_missing
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - sequence_id
+  - list_segment
+  - prospect_source_id
+  - suppression_list_id
+  - sending_domain
+  - sender_identity_id
+  - evidence_ids
+  - reviewer
+  - approval_status
+  - esp_campaign_id
 
 hooks:
   pre_write: load_brief + load_cold_email_rules + load_email_lifecycle

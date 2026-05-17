@@ -1,260 +1,335 @@
-# Hidden AEO Edges: 20 Unconventional Levers
+# Hidden AEO Edges: 20 White-Hat Visibility Levers
 
-> Contrarian tactics extracted from 8 deep research files. These feel slightly wrong but aren't against TOS. Mechanical exploits over content quality.
+These AEO levers preserve the useful strategic intent from the earlier "hidden edges" document while removing manipulative, platform-abuse, and mechanical-exploit guidance. The standard is simple: improve retrieval, citation, and entity understanding by publishing better evidence in better sources.
 
----
+Use evidence labels:
 
-## EDGE 1: The Rank 5 Leapfrog
-**Source:** geo-academic-research-synthesis.md, Section 2.2
-**The Insight:** The GEO paper found that citation optimization (+115%) works DRAMATICALLY better for lower-ranked sites (position 5+) than for #1 sites. The #1 site's visibility actually DECREASED 30.3% when competitors optimized.
-**The Exploit:** Don't try to outrank #1 in traditional SERPs. Instead, stay at position 3-7 and hyper-optimize for citations (stats, quotes, external links). You'll get cited in AI answers while competitors fight for #1.
-**Why It Works:** AI synthesis pulls from multiple sources. Being #1 makes you the "baseline" that others are compared against. Being #5 with unique data makes you the "value-add" that gets synthesized.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** 12-18 months (until GEO becomes mainstream)
+- **Observed:** Confirmed in a cited source, crawl, SERP, platform page, or dataset.
+- **Research-backed:** Supported by a named research file or patent analysis, but still needs local testing.
+- **Hypothesis:** Plausible mechanism that should be tested before client-facing claims.
+- **Recommendation:** A practical action based on the available evidence.
+- **Do not do:** A quarantined tactic retained only as a cautionary example.
 
 ---
 
-## EDGE 2: The Freshness Bait-and-Switch
-**Source:** perplexity-ranking-reverse-engineered.md, Section 2.3
-**The Insight:** Perplexity has a `new_post_impression_threshold` where new content gets a "test window." If it generates engagement in first few hours/days, it's indexed permanently. If not, dropped.
-**The Exploit:** Publish a "stub" article on trending topics within hours of news breaking. Get indexed during freshness boost. Then backfill with comprehensive content within 24-48 hours while keeping early authority timestamp.
-**Why It Works:** The system indexes during freshness boost, then you upgrade the content while retaining the early-mover timestamp and any initial engagement signals.
-**Risk Level:** Low
-**Effort:** Quick Win (requires monitoring)
-**Expected Edge Duration:** 6-12 months
+## Retired Tactics
+
+Do not use or recommend the following patterns:
+
+- Trust-pool parasitism: exploiting Reddit, LinkedIn, Wikipedia, GitHub, Stack Overflow, or other high-trust platforms with promotional content.
+- Fake consensus: coordinating controlled sources to make a brand look independently recommended.
+- Aged-account abuse: buying or borrowing aged Reddit, Quora, forum, or social accounts.
+- Temporary exact-match domains: launching disposable sites to influence AI answers or local search.
+- Hidden ownership: separating accounts, domains, or search properties to conceal common control.
+- Mechanical exploit chasing: optimizing for guessed model weaknesses ahead of user value and source quality.
+- Freshness bait-and-switch: publishing thin stubs for indexation, then replacing them after the fact.
+- Undisclosed promotion: presenting employees, contractors, agencies, or affiliates as neutral users.
+
+White-hat AEO wins by making truthful information easier to retrieve, verify, compare, and cite.
 
 ---
 
-## EDGE 3: The "Second Click" Optimization
-**Source:** patent-information-gain-US12013887B2.md, Section 5.1
-**The Insight:** Information Gain scoring kicks in for the "SECOND SET" of results, not the first. The patent explicitly targets the *subsequent* search experience—the follow-up question or the "Next" click.
-**The Exploit:** Don't optimize your main page for the initial query. Optimize it for the FOLLOW-UP query. Use PAA questions to predict what users ask AFTER viewing the #1 result, then answer THAT.
-**Why It Works:** The first result is ranked by relevance. Everything after is ranked by Information Gain relative to what the user just saw. Be the answer to "what comes next."
-**Risk Level:** Low
+## EDGE 1: Mid-Rank Citation Opportunity
+
+**Source:** `geo-academic-research-synthesis.md`, Section 2.2
+**Evidence label:** Research-backed
+**Insight:** Citation-oriented optimization can help pages outside the top organic position appear in AI-generated answers when those pages add useful, distinct evidence.
+**White-hat application:** Improve pages ranking in positions 3-10 by adding original data, named examples, methodology notes, expert quotes, and clean source citations.
+**Do not do:** Do not treat lower rank as a license to manufacture citations or artificial third-party mentions.
+**Why it helps:** AI synthesis often needs more than the baseline result. A page with unique evidence can become the cited source for a specific claim.
+**Effort:** Quick win
+**Durability:** Medium to high
+
+---
+
+## EDGE 2: Timely Expert Update
+
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 2.3
+**Evidence label:** Hypothesis
+**Insight:** Some answer systems test fresh content when topics change quickly.
+**White-hat application:** Publish timely expert analysis only when you can add real context, data, or interpretation. Add a visible update date and preserve editorial history where practical.
+**Do not do:** Do not publish thin stubs or bait-and-switch articles just to capture freshness.
+**Why it helps:** Fresh content is useful when the page explains what changed, what is known, what is uncertain, and what readers should do next.
 **Effort:** Medium
-**Expected Edge Duration:** 18+ months (patent-protected mechanic)
+**Durability:** Medium
 
 ---
 
-## EDGE 4: The Trust Pool Parasite
-**Source:** perplexity-ranking-reverse-engineered.md, Section 2.2
-**The Insight:** Perplexity HARDCODES Reddit, LinkedIn, Wikipedia, GitHub, Stack Overflow as Tier 1 trust. Your new blog is Tier 3. The L3 Reranker gives inherent authority boosts to Trust Pool domains.
-**The Exploit:** For competitive queries, post comprehensive answers on Reddit or LinkedIn BEFORE creating content on your own site. Perplexity will cite your Reddit post. Then reference/link your Reddit answer from your main site.
-**Why It Works:** You're borrowing hardcoded trust. A detailed Reddit thread with citations beats a high-quality blog post from an unknown domain. You can still capture traffic via your profile links.
-**Risk Level:** Medium (platform dependency)
-**Effort:** Quick Win
-**Expected Edge Duration:** 12+ months (until Perplexity adjusts Trust Pool)
+## EDGE 3: Follow-Up Query Coverage
 
----
-
-## EDGE 5: The Entity Loop Speedrun
-**Source:** entity-seo-knowledge-graph-deep-dive.md, Section 4.1
-**The Insight:** Jason Barnard's research shows Knowledge Panel triggering requires an "infinite loop" of confirmation between Entity Home ↔ Corroborating Sources. But the loop can be artificially accelerated.
-**The Exploit:** Create the loop simultaneously:
-1. Day 1: Create Wikidata item (lower threshold than Wikipedia)
-2. Day 1: Update LinkedIn with EXACT same description
-3. Day 1: Entity Home with `sameAs` pointing to both
-4. Day 2: Update Wikidata with `official website` pointing to Entity Home
-5. Day 3: Get a press release on a wire service mentioning entity + Entity Home URL
-
-This creates bidirectional confirmation in ~1 week vs. 3 months organically.
-**Why It Works:** The Knowledge Graph API `resultScore` increases with corroboration velocity. Rapid simultaneous signals from multiple trusted sources accelerates confidence scoring.
-**Risk Level:** Low
+**Source:** `patent-information-gain-US12013887B2.md`, Section 5.1
+**Evidence label:** Research-backed
+**Insight:** Information Gain concepts reward content that adds something after a user has seen the obvious answer.
+**White-hat application:** Use People Also Ask, site search, sales calls, support tickets, and community questions to identify follow-up questions. Answer those questions directly.
+**Do not do:** Do not ignore the main query or hide basic information to force additional clicks.
+**Why it helps:** Strong AEO content answers the next question a buyer, journalist, or model is likely to ask.
 **Effort:** Medium
-**Expected Edge Duration:** Permanent (architectural mechanic)
+**Durability:** High
 
 ---
 
-## EDGE 6: The LSTM Forgetting Gate Exploit
-**Source:** patent-information-gain-US12013887B2.md, Section 4.4
-**The Insight:** The Information Gain patent uses LSTM-like "forgetting gate" architecture. The influence of viewed content on the state vector DIMINISHES as session context shifts to new sub-topics.
-**The Exploit:** Create content that deliberately shifts the topic slightly. If user viewed "best running shoes," your article on "running shoes for specific foot conditions" is in adjacent semantic space but different enough that the forgetting gate reduces the penalty for overlap.
-**Why It Works:** You're exploiting the decay function. Same semantic neighborhood, but different enough that the session state doesn't fully penalize you for covering similar ground.
-**Risk Level:** Low
+## EDGE 4: Trusted Platform Participation
+
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 2.2
+**Evidence label:** Hypothesis
+**Insight:** High-trust platforms often appear in retrieval sets because they contain active communities, moderation, or authoritative public records.
+**White-hat application:** Participate transparently on relevant platforms. Share expertise, cite sources, disclose affiliation, and respect moderation rules.
+**Do not do:** Do not exploit high-trust domains with promotional posts, fake recommendations, account farming, or undisclosed affiliation.
+**Why it helps:** Useful contributions can become durable public evidence while also serving the community.
 **Effort:** Medium
-**Expected Edge Duration:** 18+ months
+**Durability:** Medium
 
 ---
 
-## EDGE 7: The Drop Threshold Density Play
-**Source:** perplexity-ranking-reverse-engineered.md, Section 2.1
-**The Insight:** Perplexity's L3 Reranker has a `drop_threshold`. If content doesn't meet a specific information density score, the ENTIRE result set might be scrapped in favor of a new search.
-**The Exploit:** Your first 100 words must be brutally dense with atomic facts. No intros, no "In today's fast-paced world." Start with a statistic, a quote, or a direct definition. The L3 Reranker evaluates early content to decide if the page survives.
-**Why It Works:** The L3 filter makes a binary keep/drop decision quickly. Fluffy intros = page dropped before the LLM ever sees it. Dense intro = page passes to synthesis phase.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** 12+ months
+## EDGE 5: Entity Confirmation Loop
 
----
-
-## EDGE 8: The Entropy Diversity Signal
-**Source:** perplexity-ranking-reverse-engineered.md, Section 3.2
-**The Insight:** Denis Yarats (Perplexity CTO) stated the system retrieves documents with DIFFERENT entropy rather than five documents saying the same thing. It actively looks for counter-viewpoints.
-**The Exploit:** Don't write consensus content. Write "The contrarian view on X" or "Why the common advice about X is wrong." Perplexity's diversity-seeking retrieval will include your contrarian take to balance the consensus sources.
-**Why It Works:** The system is tuned to maximize information diversity. Being contrarian (with evidence) makes you the "different entropy" source that gets included for balance.
-**Risk Level:** Medium (requires solid evidence)
+**Source:** `entity-seo-knowledge-graph-deep-dive.md`, Section 4.1
+**Evidence label:** Research-backed
+**Insight:** Entity systems gain confidence when the entity home and corroborating sources agree.
+**White-hat application:** Align official website, LinkedIn, directories, press pages, schema, author bios, and professional profiles around accurate facts.
+**Do not do:** Do not create low-quality reference profiles or press releases solely to simulate corroboration.
+**Why it helps:** Consistent, verifiable facts reduce ambiguity about names, categories, founders, locations, and offerings.
 **Effort:** Medium
-**Expected Edge Duration:** 12+ months
+**Durability:** High
 
 ---
 
-## EDGE 9: The Chunk Size Alignment
-**Source:** geo-academic-research-synthesis.md, Section 5.2
-**The Insight:** RAG systems chunk content into ~60-100 word passages before embedding. Chunks that are too long get truncated; chunks too short lack context. Your content structure should align with chunking.
-**The Exploit:** Write in 60-80 word paragraphs, each making ONE complete point. Start each paragraph with the key fact. This ensures your chunks are clean, complete, and extractable without cutting off mid-thought.
-**Why It Works:** When PerplexityBot or Google chunks your content, each chunk is a self-contained unit of value. Misaligned chunking = your key point gets cut in half.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** Permanent
+## EDGE 6: Adjacent-Intent Expansion
 
----
-
-## EDGE 10: The Focus Mode Exploit
-**Source:** perplexity-ranking-reverse-engineered.md, Section 3.3
-**The Insight:** Perplexity's Focus modes act as HARD FILTERS. "Academic" mode restricts to Semantic Scholar/PubMed. "Reddit" mode = site:reddit.com only.
-**The Exploit:** For academic/research queries, get your content onto ResearchGate, SSRN, or Medium (academic tag). For opinion queries, optimize Reddit posts. Each Focus mode is a separate ranking battlefield with different competition.
-**Why It Works:** You're optimizing for a filtered index. In Academic mode, your blog doesn't exist. But your ResearchGate preprint does.
-**Risk Level:** Low
+**Source:** `patent-information-gain-US12013887B2.md`, Section 4.4
+**Evidence label:** Hypothesis
+**Insight:** Content that covers adjacent but distinct subtopics can add value beyond the dominant answer.
+**White-hat application:** Build pages for real adjacent intents: "for enterprise teams," "for regulated industries," "for first-time buyers," "for local service areas," or "for implementation teams."
+**Do not do:** Do not create near-duplicate pages with slightly changed phrasing.
+**Why it helps:** Adjacent-intent content gives answer engines a more specific source when the broad page is too generic.
 **Effort:** Medium
-**Expected Edge Duration:** 12+ months
+**Durability:** High
 
 ---
 
-## EDGE 11: The Inline vs. Sidebar Citation Trigger
-**Source:** perplexity-ranking-reverse-engineered.md, Section 3.1
-**The Insight:** Perplexity cites sources TWO ways: inline (in the answer) or sidebar (listed but not directly quoted). Inline citations require a UNIQUE FACT or STATISTIC that contributed to synthesis.
-**The Exploit:** Every page should have at least one unique, quotable data point that doesn't exist elsewhere. A proprietary stat, a specific case study number, a unique survey result. This becomes your "citation anchor."
-**Why It Works:** The LLM needs something to cite. Generic info gets synthesized without attribution. Unique data REQUIRES attribution to avoid hallucination penalties.
-**Risk Level:** Low
+## EDGE 7: Dense Opening Answer
+
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 2.1
+**Evidence label:** Hypothesis
+**Insight:** Retrieval and reranking systems may evaluate early content heavily. Readers also do.
+**White-hat application:** Start pages with a concise answer, definition, statistic, or decision rule. Put caveats and support immediately after the answer.
+**Do not do:** Do not stuff the first paragraph with keywords or unsupported numbers.
+**Why it helps:** Clear openings improve human comprehension and machine extractability.
+**Effort:** Quick win
+**Durability:** High
+
+---
+
+## EDGE 8: Evidence-Based Contrarian Angle
+
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 3.2
+**Evidence label:** Hypothesis
+**Insight:** AI systems may include sources that add different information or perspective.
+**White-hat application:** Publish contrarian content only when you have evidence, examples, or first-hand experience that challenges weak consensus.
+**Do not do:** Do not create controversy for attention or make claims that outpace proof.
+**Why it helps:** A well-supported minority view can supply information gain and earn citations.
 **Effort:** Medium
-**Expected Edge Duration:** Permanent
+**Durability:** Medium
 
 ---
 
-## EDGE 12: The Google-Extended Loophole
-**Source:** ai-crawlers-technical-reference.md, Section 3.3
-**The Insight:** `Google-Extended` is NOT a user agent string. It's a robots.txt token. You cannot block it at the WAF level because the string doesn't exist in HTTP headers.
-**The Exploit:** Competitors who think they've "blocked AI training" via WAF rules for "Google-Extended" haven't blocked anything. Only robots.txt works. You can scan competitors' WAF configs to see if they've made this mistake—their content is still being used for training despite their intent.
-**Why It Works:** Technical misunderstanding creates asymmetric information. Competitors believe they're protected when they're not.
-**Risk Level:** Low (informational)
-**Effort:** Quick Win
-**Expected Edge Duration:** Until Google changes architecture
+## EDGE 9: Passage-Level Completeness
+
+**Source:** `geo-academic-research-synthesis.md`, Section 5.2
+**Evidence label:** Research-backed
+**Insight:** RAG systems often retrieve passages or chunks, not whole pages.
+**White-hat application:** Write paragraphs that make one complete point. Include the entity, claim, qualifier, and evidence in the same passage when practical.
+**Do not do:** Do not fragment context so claims become misleading when quoted alone.
+**Why it helps:** Complete passages are easier to retrieve, cite, and verify.
+**Effort:** Quick win
+**Durability:** High
 
 ---
 
-## EDGE 13: The Experience Evidence Factory
-**Source:** quality-rater-guidelines-deep-analysis.md, Section 3.1
-**The Insight:** "Experience" in E-E-A-T requires evidence AI cannot fake: original photos, first-person specifics like "the button was stiff when my hands were wet," unique idiosyncratic details.
-**The Exploit:** Systematically photograph everything. Every product test, every location visit, every process step. Create a library of "Experience Evidence" that can be embedded into content. This is a moat competitors can't replicate with AI.
-**Why It Works:** Quality raters are trained to spot "generic first-person narratives" from AI. Your EXIF-tagged, location-stamped photos prove human experience.
-**Risk Level:** Low
-**Effort:** Medium (ongoing)
-**Expected Edge Duration:** Permanent (anti-AI moat)
+## EDGE 10: Source-Specific Format Fit
 
----
-
-## EDGE 14: The Recursive Gap-Fill Trigger
-**Source:** query-fan-out-guide.md, Section 2.3
-**The Insight:** Google's AI Mode checks its work after initial fan-out. If it detects GAPS, it issues MORE searches to fill them. This recursive search is a second chance to get cited.
-**The Exploit:** Identify gap topics that the top results DON'T cover. Create dedicated content for these gaps. Even if you're not cited in the first wave, the recursive gap-fill search might find you.
-**Why It Works:** The system is actively looking for missing information. Being the only source that covers the gap = automatic inclusion in recursive fill.
-**Risk Level:** Low
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 3.3
+**Evidence label:** Hypothesis
+**Insight:** Different AI modes and vertical search experiences favor different source types.
+**White-hat application:** Match the asset to the source: research reports for academic-style queries, documentation for implementation queries, community answers for lived-experience questions, and comparison pages for buyer queries.
+**Do not do:** Do not upload promotional material to academic or community platforms that do not fit the platform's purpose.
+**Why it helps:** The right format in the right venue is more useful and more likely to be retrieved.
 **Effort:** Medium
-**Expected Edge Duration:** 18+ months
+**Durability:** Medium
 
 ---
 
-## EDGE 15: The PAA Verbatim Match
-**Source:** query-fan-out-guide.md, Section 4.2
-**The Insight:** PAA questions reveal the exact phrasing of sub-queries that AI Mode generates. The sub-queries are often verbatim PAA questions.
-**The Exploit:** Use PAA questions as H2 headers EXACTLY as phrased. "How much does X cost?" not "X Pricing" or "Cost of X." Match the natural language query pattern.
-**Why It Works:** Query Fan-Out decomposes to sub-queries. If your H2 is a verbatim match to the sub-query, the passage-level relevance score spikes.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** 12+ months
+## EDGE 11: Unique Citation Anchor
 
----
-
-## EDGE 16: The Semantic Triple Press Release
-**Source:** entity-seo-knowledge-graph-deep-dive.md, Section 5.1
-**The Insight:** Press releases create "Semantic Triples" (Subject-Predicate-Object) in trusted corpus. "Company A appoints Person B as CEO" is a structured fact that feeds Knowledge Graph.
-**The Exploit:** Write press releases that explicitly state entity relationships in Subject-Predicate-Object form. Don't bury the relationship in narrative. Lead with the triple.
-**Why It Works:** The Knowledge Graph extracts triples. Your prose-heavy PR might miss extraction. Your triple-first PR gets parsed correctly.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** Permanent
-
----
-
-## EDGE 17: The Position-Weighted Early Answer
-**Source:** geo-academic-research-synthesis.md, Section 5.4
-**The Insight:** PAWC (Position-Adjusted Word Count) weights earlier mentions higher. LLMs also show "Lost in the Middle" bias—more attention to beginning and END of context.
-**The Exploit:** Structure content with your best, most citable information in FIRST and LAST paragraphs. The middle can be supporting detail. Put your unique stat or quote in the opening AND closing.
-**Why It Works:** You're gaming the attention distribution of the LLM. The middle gets less weight; the edges get more. Optimize the edges.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** Permanent (architectural)
-
----
-
-## EDGE 18: The `IsSup` Token Simplification
-**Source:** geo-academic-research-synthesis.md, Section 4.1
-**The Insight:** Self-RAG uses an `IsSup` (Is Supported) token to verify generated text is supported by source. Complex sentences with ambiguous pronouns lower `IsSup` score.
-**The Exploit:** Write with zero ambiguity. No "it," "this," "they" without immediate antecedent. Every sentence should be verifiable in isolation. "The iPhone 15 has a 48MP camera" not "It has a better camera."
-**Why It Works:** The `IsSup` verification is sentence-level. If the model can't confidently link your sentence to its generated claim, it drops your citation.
-**Risk Level:** Low
-**Effort:** Quick Win
-**Expected Edge Duration:** Permanent
-
----
-
-## EDGE 19: The Multi-Platform Entity Co-occurrence
-**Source:** entity-seo-knowledge-graph-deep-dive.md, Section 5.2
-**The Insight:** Podcasts are transcribed by Google. Speaking alongside recognized experts creates "Context Vectors" that validate your entity's expertise.
-**The Exploit:** Guest on podcasts with Knowledge Graph-recognized hosts. The transcript associates your name with the host's entity AND the topic entities discussed. This builds your "Context Vector" in the embedding space.
-**Why It Works:** Bill Slawski's patent analysis shows Google uses co-occurrence to disambiguate entities. Appearing alongside known experts transfers semantic association.
-**Risk Level:** Low
+**Source:** `perplexity-ranking-reverse-engineered.md`, Section 3.1
+**Evidence label:** Research-backed
+**Insight:** Inline citations often need a specific fact, statistic, example, or quote.
+**White-hat application:** Add one or more original citation anchors to important pages: survey results, benchmark data, customer-approved outcome data, expert quotes, process screenshots, or dated market observations.
+**Do not do:** Do not invent numbers or present estimates as measured data.
+**Why it helps:** Unique, supportable facts give answer engines a reason to cite the source.
 **Effort:** Medium
-**Expected Edge Duration:** Permanent
+**Durability:** High
 
 ---
 
-## EDGE 20: The Attribution Irrelevance Exploit
-**Source:** quality-rater-guidelines-deep-analysis.md, Section 2.2
-**The Insight:** QRG 4.6.6 states content triggers "Lowest Quality" even if the page assigns credit to the source. Attribution is IRRELEVANT to the quality rating.
-**The Exploit:** Don't waste effort on elaborate AI disclaimers or citations if your content is thin. The rating is about VALUE, not transparency. Instead, spend that effort adding unique human value. A page saying "Generated by AI, edited by humans" still fails if there's no added value.
-**Why It Works:** Raters don't give credit for honesty about AI use. They rate the content itself. Your disclosure doesn't save low-effort content.
-**Risk Level:** Low (removes wasted effort)
-**Effort:** Quick Win
-**Expected Edge Duration:** Permanent
+## EDGE 12: Crawler Policy Clarity
+
+**Source:** `ai-crawlers-technical-reference.md`, Section 3.3
+**Evidence label:** Observed
+**Insight:** AI and search crawler controls differ by platform and implementation. Misconfigured robots rules can create unintended access or unintended blocking.
+**White-hat application:** Audit your own robots.txt, llms.txt where used, meta robots, canonical tags, WAF rules, and server responses. Document what each crawler can access.
+**Do not do:** Do not scan or exploit competitor crawler misconfigurations.
+**Why it helps:** Clear crawler policy protects brand intent and prevents accidental invisibility.
+**Effort:** Quick win
+**Durability:** Medium
+
+---
+
+## EDGE 13: Experience Evidence Library
+
+**Source:** `quality-rater-guidelines-deep-analysis.md`, Section 3.1
+**Evidence label:** Research-backed
+**Insight:** Experience signals are strongest when they show first-hand work that generic AI content cannot replicate.
+**White-hat application:** Build a library of original photos, screenshots, test notes, field observations, implementation logs, customer interviews, and expert review notes.
+**Do not do:** Do not fake first-hand experience or use stock imagery as proof.
+**Why it helps:** First-hand evidence strengthens E-E-A-T and gives content specific details worth citing.
+**Effort:** Medium and ongoing
+**Durability:** High
+
+---
+
+## EDGE 14: Gap-Fill Content
+
+**Source:** `query-fan-out-guide.md`, Section 2.3
+**Evidence label:** Research-backed
+**Insight:** AI search systems may run additional searches when initial results leave gaps.
+**White-hat application:** Identify unanswered buyer, technical, compliance, pricing, implementation, and comparison questions. Publish complete answers with evidence.
+**Do not do:** Do not create thin pages for every possible query variation.
+**Why it helps:** Gap pages become useful when the obvious sources omit a necessary detail.
+**Effort:** Medium
+**Durability:** High
+
+---
+
+## EDGE 15: Natural Question Alignment
+
+**Source:** `query-fan-out-guide.md`, Section 4.2
+**Evidence label:** Research-backed
+**Insight:** People Also Ask and similar features reveal how users phrase sub-questions.
+**White-hat application:** Use natural-language headings for real questions, then answer immediately under the heading.
+**Do not do:** Do not copy irrelevant questions or overfit headings at the expense of readability.
+**Why it helps:** Clear question-answer structure supports passage retrieval and user comprehension.
+**Effort:** Quick win
+**Durability:** Medium
+
+---
+
+## EDGE 16: Entity Relationship Statements
+
+**Source:** `entity-seo-knowledge-graph-deep-dive.md`, Section 5.1
+**Evidence label:** Research-backed
+**Insight:** Knowledge systems extract relationships such as founder, product, location, parent company, certification, and partnership.
+**White-hat application:** State important relationships plainly on official pages and legitimate announcements. Example: "[Company] appointed [Person] as [Role] on [Date]."
+**Do not do:** Do not overproduce press releases for non-newsworthy relationship statements.
+**Why it helps:** Clear relationship language helps systems disambiguate entities.
+**Effort:** Quick win
+**Durability:** High
+
+---
+
+## EDGE 17: Edge-Positioned Key Evidence
+
+**Source:** `geo-academic-research-synthesis.md`, Section 5.4
+**Evidence label:** Research-backed
+**Insight:** Earlier and later content positions can receive more attention from readers and some model contexts.
+**White-hat application:** Place the most important answer, data point, or decision rule near the top. End with a concise summary of the evidence and next action.
+**Do not do:** Do not repeat the same claim unnaturally to game attention.
+**Why it helps:** Readers and systems can find the core evidence without digging through filler.
+**Effort:** Quick win
+**Durability:** High
+
+---
+
+## EDGE 18: Sentence-Level Verifiability
+
+**Source:** `geo-academic-research-synthesis.md`, Section 4.1
+**Evidence label:** Research-backed
+**Insight:** Supported-generation systems need claims that can be matched to source text.
+**White-hat application:** Write specific sentences with clear subjects, dates, units, and qualifiers. Replace vague pronouns with entity names when ambiguity is possible.
+**Do not do:** Do not oversimplify until nuance or legal accuracy is lost.
+**Why it helps:** Verifiable sentences are easier to support, quote, and cite.
+**Effort:** Quick win
+**Durability:** High
+
+---
+
+## EDGE 19: Expert Co-Occurrence
+
+**Source:** `entity-seo-knowledge-graph-deep-dive.md`, Section 5.2
+**Evidence label:** Research-backed
+**Insight:** Appearing with recognized people, organizations, and topics can clarify an expert's topical context.
+**White-hat application:** Earn podcast guest spots, panel appearances, webinars, partner articles, and interviews where the expert contributes real insight.
+**Do not do:** Do not pay for irrelevant appearances or imply endorsement from co-participants.
+**Why it helps:** Legitimate co-occurrence reinforces expertise and entity disambiguation.
+**Effort:** Medium
+**Durability:** High
+
+---
+
+## EDGE 20: Value Before Disclosure Optimization
+
+**Source:** `quality-rater-guidelines-deep-analysis.md`, Section 2.2
+**Evidence label:** Research-backed
+**Insight:** Transparency does not redeem thin or unhelpful content.
+**White-hat application:** Add unique value first: original evidence, expert review, examples, decision criteria, and limitations. Then disclose AI assistance, sponsorship, or methodology where relevant.
+**Do not do:** Do not rely on AI disclaimers, citations, or author boxes as a substitute for useful content.
+**Why it helps:** Quality is judged by usefulness, trust, and evidence, not by disclosure language alone.
+**Effort:** Quick win
+**Durability:** High
 
 ---
 
 ## Prioritized Quick Wins
 
-| Edge | Effort | Impact | Do First |
-|------|--------|--------|----------|
-| #7 Drop Threshold Density | Quick | High | Yes |
-| #15 PAA Verbatim Match | Quick | High | Yes |
-| #17 Position-Weighted Edges | Quick | Medium | Yes |
-| #18 IsSup Token Simplification | Quick | Medium | Yes |
-| #9 Chunk Size Alignment | Quick | Medium | Yes |
-| #1 Rank 5 Leapfrog | Quick | High | Yes (if rank 3-7) |
-| #4 Trust Pool Parasite | Quick | High | Yes (for Perplexity) |
-| #2 Freshness Bait-and-Switch | Quick | Medium | Monitor trends |
+| Edge | Effort | Impact | Do First When |
+|------|--------|--------|---------------|
+| #7 Dense Opening Answer | Quick | High | Pages have intros before answers. |
+| #15 Natural Question Alignment | Quick | High | Pages target buyer or support questions. |
+| #18 Sentence-Level Verifiability | Quick | Medium | Pages use vague pronouns or unsupported claims. |
+| #9 Passage-Level Completeness | Quick | Medium | Pages rely on long, mixed-topic paragraphs. |
+| #17 Edge-Positioned Key Evidence | Quick | Medium | Key data is buried mid-page. |
+| #1 Mid-Rank Citation Opportunity | Quick | High | Pages rank 3-10 and have room for better evidence. |
+| #12 Crawler Policy Clarity | Quick | High | AI/search visibility is inconsistent. |
+| #11 Unique Citation Anchor | Medium | High | Pages lack proprietary data or quotable specifics. |
 
 ---
 
-## The Negative Space: What NO ONE Is Doing
+## Source-Quality Checklist
 
-1. **Optimizing for Focus modes** — No one targets Perplexity Academic or Reddit mode specifically
-2. **Measuring KG `resultScore`** via API — Trackable metric that no competitor monitors
-3. **Wikidata-first entity building** — Everyone chases Wikipedia; Wikidata is faster
-4. **Contrarian content for entropy diversity** — Everyone writes consensus; be the balance
-5. **Press releases as semantic triples** — PR is for traffic; no one optimizes for KG extraction
-6. **Second-click optimization** — Everyone optimizes for first query, not follow-up
+- [ ] The source has a real audience, editorial standard, moderation layer, or professional relevance.
+- [ ] Ownership, sponsorship, affiliation, and incentives are disclosed.
+- [ ] Claims are supported by primary sources, original data, or named expert review.
+- [ ] The asset is durable enough to remain accurate and maintained.
+- [ ] The content serves readers even if no AI system cites it.
+- [ ] The page can be quoted in isolation without becoming misleading.
+- [ ] Platform rules allow the content and the participation model.
+- [ ] The strategy does not depend on fake accounts, fake reviews, hidden ownership, or coordinated promotion.
 
 ---
 
-*Extracted from 8 deep research files. Use at own discretion. Test incrementally.*
+## The Negative Space: Underused White-Hat Moves
+
+1. **Methodology pages** that explain how rankings, comparisons, surveys, and benchmarks were produced.
+2. **Data dictionaries** that define metrics, units, dates, exclusions, and confidence levels.
+3. **Source correction workflows** for inaccurate directories, outdated profiles, and AI-cited third-party pages.
+4. **First-hand evidence libraries** with original screenshots, photos, notes, and expert observations.
+5. **Comparison pages with non-fit criteria** that say who should not buy.
+6. **Community participation logs** that track where experts are helping and what questions recur.
+7. **Entity consistency audits** across official profiles, schema, author pages, directories, and press.
+8. **Claim inventories** that map every public quantitative claim to a source.
+
+---
+
+## Summary Principle
+
+AEO advantage comes from being the clearest reliable source, not from exploiting a platform's trust. Build assets that a human expert would be comfortable defending, and AI visibility becomes a measurement layer rather than the ethical center of the strategy.

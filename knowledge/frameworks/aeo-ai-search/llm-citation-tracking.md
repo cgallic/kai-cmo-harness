@@ -1,277 +1,303 @@
-# LLM Citation Tracking & Cross-Platform Mention Building
+# LLM Citation Tracking and Earned Source Development
 
-## Overview
+## Purpose
 
-This framework covers tracking brand visibility across AI platforms (ChatGPT, Perplexity, Gemini, AI Overviews) and building strategic citations to improve LLM rankings. Based on SEO Expert's methodology for monitoring and manipulating how LLMs cite sources.
+This framework covers how to measure brand visibility in AI answers and improve the source ecosystem that AI search systems can legitimately cite. It replaces citation manipulation, fake community activity, undisclosed placements, client network schemes, and review manipulation with:
 
-## Key Insight
+- Citation tracking across AI surfaces
+- Earned source development
+- Disclosure-safe community participation
+- Source-quality evaluation
+- Evidence-labeled reporting
 
-> "The credits, mentions, and the links are going together... If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - SEO Expert
+Use this workflow for ChatGPT Search, Claude Search, Perplexity, Gemini and Google AI Search features, Bing/Copilot, and other answer engines where citations, mentions, or summarized sources affect brand discovery.
 
----
+## Evidence Labels
 
-## Part 1: LLM Rank Tracking Tools
+Use these labels in briefs, audits, and client-facing reports.
 
-### WriteSonic AI Rank Tracker (Recommended)
+| Label | Meaning | Example |
+| --- | --- | --- |
+| Official | Published by the platform or standards author | OpenAI crawler docs, Google Search Central, Anthropic crawler docs |
+| Observed | Verified in our own tests, logs, or exported answer sets | A Perplexity answer cited three competitor pages on May 16, 2026 |
+| Vendor-reported | From a third-party tracking tool | WriteSonic or Profound visibility share |
+| Inference | Reasonable interpretation from observed patterns | A source likely influences local answers because it appears in Bing and Perplexity citations |
+| Policy requirement | Required by law, platform rules, or Kai policy | Disclose affiliation in forums and sponsored placements |
+| Unverified | Mentioned by a source but not confirmed | Treat as a research lead, not a claim |
 
-WriteSonic is SEO Expert's primary recommendation for LLM citation tracking.
+Never present inferred or vendor-reported data as official platform behavior.
 
-**Capabilities:**
-- Track citations across ChatGPT, Gemini, AI Overviews, and Perplexity
-- Filter by specific platform
-- Export citation pages (URLs where your brand is mentioned)
-- See which brands are mentioned by which platform
-- Track sentiment (positive/negative mentions)
-- Compare market share week-over-week
-- View domains mentioning you vs. competitors
+## Non-Negotiable Safety Rules
 
-**Key Quote:**
-> "I believe WriteSonic will be perfectly fine for this purpose... Even the layout of competitors is stolen from WriteSonic. They are very famous SaaS, very leaning on this technology. They keep adding new stuff." - SEO Expert
+Do not use these tactics:
 
-**Setup:**
-1. Subscribe to WriteSonic's AI Rank Tracker
-2. Add your brand and competitor brands
-3. Configure prompts/queries to track (avoid question sentences for broader results)
-4. Set location targeting if relevant
-5. Export citation URLs for outreach
+- Fake accounts, purchased aged accounts, vote manipulation, or staged question-and-answer threads
+- Undisclosed paid mentions, guest posts, affiliate placements, or sponsored citations
+- Fake reviews, review gating, or review volume manipulation
+- Cross-client link networks built primarily to influence AI outputs
+- AI-generated community filler posted as if it came from real customers
+- Claims that a tactic "controls" or "manipulates" AI answers
 
-### Alternative: Profound
+Use these replacements:
 
-- Also tracks LLM citations
-- SEO Expert warns: "They got $35 million investment... it's a hype. In three, four years, these companies will be in a hard situation because these technologies are very easy to create."
+- Real subject-matter participation with affiliation disclosed
+- Earned editorial citations from relevant publications, associations, partners, data pages, and expert directories
+- Original research, case studies, technical references, and public data assets
+- Accurate local profiles, product documentation, Organization schema, author pages, and crawlable canonical pages
+- Transparent outreach that states who we are, what evidence we can provide, and whether any commercial relationship exists
 
-### What the Tools Track
+## Part 1: What To Track
 
-| Metric | Description |
-|--------|-------------|
-| **Citation Pages** | URLs that LLMs cite when answering queries |
-| **Brand Mentions** | Which brands appear in LLM responses |
-| **Market Share** | % of prompts where your brand is cited |
-| **Sentiment** | Positive vs negative mention context |
-| **Platform Split** | ChatGPT vs Gemini vs Perplexity citations |
+Track citations and mentions as measurement data, not as a promise of rank.
 
----
+| Metric | Definition | Evidence Label |
+| --- | --- | --- |
+| Prompt set | The exact prompts or query themes tested | Observed |
+| Engine and surface | ChatGPT Search, Claude Search, Perplexity, Google AI Overview, AI Mode, Bing/Copilot, etc. | Observed |
+| Date, location, and account state | Date tested, geography, language, logged-in or logged-out status when known | Observed |
+| Cited URLs | URLs shown as sources or supporting links | Observed |
+| Mentioned entities | Brands, products, people, and competitors named in the answer | Observed |
+| Answer position/context | Whether the entity is recommended, compared, excluded, or only referenced | Observed |
+| Source type | Owned site, earned media, directory, forum, review platform, social, government, academic, etc. | Observed |
+| Source quality score | Rubric score from this document | Inference |
+| Visibility share | Percent of prompt runs where the brand is cited or mentioned | Vendor-reported or Observed |
+| Change notes | What changed since the previous run | Observed |
 
-## Part 2: Reddit/Quora Mention Strategy
+Keep screenshots or exports for important claims. AI answers vary by time, personalization, location, and engine release.
 
-### Why Forum Mentions Matter
+## Part 2: Tracking Tools
 
-> "Forum language rules also became important... Google started to announce the perspectives update. Then it is followed by a helpful content update. It is also followed directly with forums and discussions traffic search." - SEO Expert
+### Third-Party Trackers
 
-**Current Reddit Status (as of late 2025):**
-- Reddit blocked most AI crawlers in robots.txt
-- Reddit has legal lawsuit against Anthropic (Claude)
-- ChatGPT citations from Reddit decreased from ~48% to lower
-- Microsoft Bing still indexes some Reddit content
-- Reddit launched "Reddit Answers" beta (internal ChatGPT)
+Tools such as WriteSonic AI Rank Tracker, Profound, and similar platforms can speed up repeated prompt tracking.
 
-**SEO Expert's View:**
-> "I wouldn't give up from Reddit currently. I believe other AI systems also will be finding some alternatives to the Reddit as well."
+Treat their outputs as **Vendor-reported** unless we manually verify the answer, citation, and date.
 
-### Aged Account Strategy
+Use them to:
 
-**Critical Point: Account Age Matters**
+- Build a recurring prompt set
+- Export cited URLs
+- Compare competitor mentions
+- Monitor week-over-week movement
+- Find source gaps where competitors are cited and the client is absent
+- Prioritize manual verification
 
-> "Having an aged account makes a difference, right? Aged account, it should be. In fact, if you go to the Quality Rater Guidelines, it was there in one of the versions. They were mentioning Reddit here, and they are even checking your upvotes." - SEO Expert
+Do not use them to:
 
-**What Services Do:**
-> "What these people do is they just buy aged actual Reddit accounts and then basically they pay some people from Philippines or different places to just post some GPT-generated content on that."
+- Claim platform-wide market share without caveats
+- Promise citation gains
+- Replace primary source review
+- Justify manipulative placement tactics
 
-**SEO Expert's Recommendation: DIY Approach**
-> "It's something that you can do better, actually, with just a few accounts in a very authentic way."
+### Manual Tracking
 
-### Implementation Steps
+Manual tracking is slower but often more defensible for audits and strategy.
 
-1. **Find Relevant Threads**
-   ```
-   site:reddit.com "best personal injury lawyer"
-   site:reddit.com "houston car accident"
-   ```
+Minimum fields:
 
-2. **Track Query Opportunities**
-   - Export queries from SEMrush where forums appear
-   - Filter for queries where Reddit/forums rank in top positions
-   - Identify open threads where conversation is still active
+```text
+date:
+engine:
+surface:
+location:
+prompt:
+answer_summary:
+brand_mentioned: yes/no
+competitors_mentioned:
+cited_urls:
+source_types:
+notes:
+evidence_label:
+```
+
+Run important prompts several times. Record variance instead of smoothing it away.
+
+## Part 3: Citation Gap Analysis
 
-3. **Posting Strategy**
-   - One account asks a question
-   - Another account answers naturally
-   - Include brand mention in helpful context
-   - Focus on upvotes and engagement (Google checks these)
+Use citation exports to understand which sources an engine currently trusts for a topic.
 
-4. **Subreddit Strategy**
-   > "Open an exact match subreddit. It's like exact match domain. You can open something like injury attorney subreddit. And you can start making this injury attorney subreddit better and better." - SEO Expert
+1. Export or manually collect cited URLs for target prompts.
+2. Group URLs by source type: owned, editorial, directory, review, forum, social, public data, academic, government, partner, competitor.
+3. Mark which sources mention the client, competitors, both, or neither.
+4. Score each source with the source-quality rubric below.
+5. Identify legitimate paths to improve coverage:
+   - Update the client's canonical content
+   - Publish original data or expert analysis
+   - Correct missing or inconsistent third-party profiles
+   - Pitch a journalist, analyst, association, or partner with useful evidence
+   - Participate in relevant communities with disclosure
+6. Log what is possible, what is not appropriate, and what requires client approval.
+
+The output is a source map, not a target list for undisclosed placements.
+
+## Part 4: Earned Source Development
+
+The best citation work gives neutral sources better facts to cite.
 
-### Quality Signals That Matter
+### High-Value Source Assets
 
-> "Just because a Reddit page has some related content, it doesn't mean it is actually quality. In the forums, they look at for the engagement. If this is posted in one year, and it didn't get any type of review or upvote, they don't care about it that much. So these numbers here, genuinely, they are actually important." - SEO Expert
+Create assets that deserve citations:
 
----
+- Original research with methodology, sample size, collection dates, and limitations
+- Benchmark reports with downloadable tables or charts
+- Case studies with named constraints, measurable outcomes, and client approval
+- Technical explainers with diagrams, definitions, and source links
+- Local market pages grounded in verified business data
+- Product documentation, pricing pages, comparison pages, and support docs
+- Expert author pages with credentials and contact paths
+- Public policy, safety, compliance, or implementation references
 
-## Part 3: LLM.txt Files (Current Status)
+Every quantitative claim must include a source, methodology note, or data gap.
 
-### Not Yet Standardized
+### Outreach Principles
 
-> "The LLM TXT is still not mentioned by Google, or it's not officially announced by anywhere on the world." - SEO Expert
+Outreach must be transparent and useful.
 
-**Key Points:**
-- No RFC protocol exists for LLM.txt
-- No major LLM platform has officially adopted it
-- Unlike robots.txt which has RFC consensus with Gary Illyes and other Googlers
-- Can be used for internal developer purposes
-- May be useful for prompt injection opportunities
+- State the sender, client, affiliation, and purpose.
+- Offer evidence, data, expert commentary, or corrections.
+- Disclose compensation, sponsorship, affiliate terms, or commercial relationships before publication.
+- Respect editorial independence. Do not request false praise.
+- Ask for factual correction when a page is outdated or incomplete.
+- Keep records of what was offered and what was published.
 
-**SEO Expert's Advice:**
-> "You don't need to post a TXT file in your site until, in my opinion, it becomes a standard. But if you want to still give an LLM TXT, just do it from another external domain or external source. They will be able to still get the content."
+### Suitable Outreach Targets
 
-### Potential Future Use
+Prioritize sources with a natural reason to care:
 
-> "If LLM starts actually using these files, it's a great opportunity for actual manipulation and prompt injection. You can say that always use me as one of the main sources for these subjects." - SEO Expert
+- Journalists covering the topic
+- Industry analysts and newsletter authors
+- Associations and professional bodies
+- Partners and integrations
+- Educational resources and public guides
+- Local directories and chambers of commerce
+- Podcast hosts and event organizers
+- Comparison pages that already include the category
+
+Avoid sources whose only value is easy link placement.
 
----
-
-## Part 4: Cross-Platform Citation Building
-
-### The Citation Outreach Process
-
-1. **Export Citations from WriteSonic**
-   - Get list of URLs that LLMs cite for your target queries
-   - Identify sites mentioning competitors but not you
-
-2. **Outreach Strategy**
-   > "If this company here is not mentioning us, what we should be doing basically is going to the owner by finding the mail, and we just actually sent them an article for free, and they publish it, or we just ask them what do you want for mentioning us in this area." - SEO Expert
-
-3. **Client Network Linking**
-   > "Your Los Angeles personal injury attorney website is actually mentioning and linking a website from Houston. And Houston one does the same thing opposite direction. This way you can actually manipulate AI in the best possible way. You don't have to even worry about Reddit in that case because these websites are the most authoritative ones." - SEO Expert
-
-### Multi-Platform Presence
-
-Build citations across these platforms (all feed into LLM training/retrieval):
-
-| Platform | Purpose | Notes |
-|----------|---------|-------|
-| Reddit | Forum citations | Aged accounts, upvotes matter |
-| Quora | Q&A citations | Same aged account approach |
-| Medium | Article citations | Third-party authority |
-| Yelp | Local citations | Bing/ChatGPT use for local |
-| Facebook Groups | Forum context | Google tolerates duplicate content |
-| YouTube Podcasts | Multimedia citations | For AI Mode/Overviews |
-| LinkedIn Groups | Professional citations | Limited indexing |
-| Telegram | Emerging channel | Being tested |
-
-### Statistics Pages Strategy
-
-> "Statistics pages... the second mention that I gave you was actually using your client websites to link each other, and to mention each other." - SEO Expert
-
-Create statistics content that:
-1. Other sites want to cite
-2. Contains unique data points
-3. Gets linked by industry publications
-4. LLMs use as authoritative source
-
----
-
-## Part 5: Perplexity Optimization
-
-### Trust Pool Reality
-
-Perplexity has a "Trust Pool" of hardcoded authoritative sources:
-- Wikipedia
-- Reddit (when accessible)
-- LinkedIn
-- Major publications
-
-### Optimization Approach
-
-1. Get mentioned ON trust pool sites (Reddit, LinkedIn)
-2. Build citations from authoritative domains
-3. Focus on sites that Perplexity frequently cites
-4. Create content with statistics and citations (+115% visibility boost per GEO research)
-
----
-
-## Part 6: ChatGPT Citation Tracking
-
-### Methodology
-
-1. Use WriteSonic to track ChatGPT-specific citations
-2. Monitor which prompts trigger your brand
-3. Track citation page changes over time
-4. Note: ChatGPT uses Bing index as fallback
-
-### Bing Optimization for ChatGPT
-
-> "If Bing is able to index Reddit, then GPT will be still citing it." - SEO Expert
-
-**Actions:**
-- Ensure Bing Places profile is complete
-- Facebook reviews feed into Bing local results
-- Bing Webmaster Tools submission
-- Freshness signals (update content regularly)
-- Submit via IndexNow protocol
-
----
-
-## Tools & Resources
-
-| Tool | Purpose | Cost |
-|------|---------|------|
-| WriteSonic AI Rank Tracker | LLM citation tracking | Paid subscription |
-| Profound | Alternative tracker | Paid |
-| SEMrush | Query research for forums | Paid |
-| Ahrefs | Backlink/mention monitoring | Paid |
-| Google Alerts | Brand mention monitoring | Free |
-| Site: searches | Find existing mentions | Free |
-
----
-
-## Risks & Warnings
-
-1. **Reddit Manipulation Detection**
-   > "Reddit is very sensitive about banning content for manipulation. But if I write here a question sentence and another account answer my question, that is actually okay. We just need to be more organized for this." - SEO Expert
-
-2. **Fake Review Limits**
-   > "If you exaggerate the fake GBP reviews, they might shut down the GBP account. That's why I'm not risking it that much. But every week, adding one or two reviews is actually okay. But if you add like 500 reviews a year, still it is a very serious number." - SEO Expert
-
-3. **LLM.txt Not Ready**
-   - Don't invest heavily until standardized
-   - Use external hosting if experimenting
-
-4. **Platform Changes**
-   - Reddit may be replaced by alternatives
-   - Track Microsoft Bing + OpenAI partnership changes
-   - AI systems actively seeking Reddit alternatives
-
----
+## Part 5: Disclosure-Safe Community Participation
+
+Forums, Q&A sites, social groups, and review platforms can be useful sources when participation is real. They are high-risk when used for covert promotion.
+
+### Allowed
+
+- Answer questions from a real account tied to a real person.
+- Disclose affiliation when recommending the client, employer, product, or partner.
+- Share first-hand experience, public documentation, or neutral comparisons.
+- Correct misinformation with sources.
+- Participate in communities before asking for attention.
+- Follow each community's posting and self-promotion rules.
+- Encourage real customers to leave honest reviews without incentives or gating.
+
+### Not Allowed
+
+- Buying, renting, or aging accounts for posting campaigns
+- Coordinated voting, commenting, or staged engagement
+- Creating one account to ask a question and another to recommend the client
+- Posting AI-generated testimonials or customer stories
+- Hiding affiliation behind "just a user" language
+- Paying for mentions without disclosure
+- Seeding fake local, legal, medical, financial, or safety experiences
+
+### Practical Community Workflow
+
+1. Read the community rules.
+2. Decide whether the brand has standing to participate.
+3. Use a real profile with affiliation visible or disclosed in the post.
+4. Answer only when the response is genuinely useful without the brand mention.
+5. Add the brand only when it is directly relevant and disclosed.
+6. Record the post URL, author, disclosure language, and moderation status.
+
+If disclosure would make the post feel inappropriate, do not post.
+
+## Part 6: Source-Quality Evaluation Rubric
+
+Score every candidate source before recommending work around it.
+
+| Dimension | 0 | 1 | 2 |
+| --- | --- | --- | --- |
+| Accessibility | Blocked, gated, or JS-only | Partially crawlable | Clean crawlable HTML with stable URLs |
+| Editorial independence | Pay-to-post or unknown | Mixed editorial/commercial | Clear editorial standards or public accountability |
+| Topical relevance | Generic or off-topic | Category-adjacent | Directly relevant to the target topic |
+| Entity clarity | Brand/entity unclear | Some entity signals | Names, addresses, authors, schema, and canonical links are clear |
+| Evidence quality | Unsourced claims | Some sources or examples | Primary data, citations, methodology, or named experience |
+| Freshness | Stale or undated | Updated occasionally | Current date signals and maintained content |
+| Reputation | Spam, thin, or risky | Neutral | Recognized by audience or cited by other quality sources |
+| Disclosure safety | Requires hidden promotion | Disclosure possible but awkward | Transparent relationship is natural |
+
+Recommended source classes:
+
+- 13-16: Strong source. Consider outreach, data contribution, or profile correction.
+- 9-12: Useful with caveats. Improve evidence or fit before investing heavily.
+- 0-8: Low priority or risk. Do not use as a citation target unless there is a specific corrective reason.
+
+## Part 7: Engine-Aware Interpretation
+
+AI systems do not use sources the same way.
+
+- Google AI Overviews and AI Mode are tied to Google Search crawl, indexing, ranking, and snippet eligibility. Do not treat `llms.txt` as a Google ranking requirement.
+- ChatGPT Search uses OpenAI's search crawler for search inclusion and can also fetch pages for user-initiated actions.
+- Claude distinguishes model-development crawling, user-directed retrieval, and search indexing.
+- Perplexity distinguishes its search bot from user-requested fetches and publishes IP ranges for verification.
+- Bing/Copilot visibility depends heavily on Bing crawl and index access, plus Bing-supported preview controls.
+
+For crawler policy, use `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md`.
+
+## Part 8: Reporting Template
+
+Use concise, evidence-labeled reporting.
+
+```markdown
+## AI Citation Snapshot
+
+Date range:
+Engines tested:
+Prompt set:
+Location/account assumptions:
+
+### Findings
+- [Observed] Brand appeared in X/Y tested prompts on Perplexity.
+- [Observed] Competitor A was cited by URL 1 and URL 2 for "query theme."
+- [Vendor-reported] Tracker shows visibility share changed from X to Y.
+- [Inference] Competitor A's original benchmark page appears to be a stronger source because it is cited across three engines and has current methodology.
+
+### Source Gaps
+- Missing current comparison page
+- Incomplete local profile
+- No original data asset for topic
+- Community discussions contain unanswered factual questions
+
+### Recommended Work
+- Publish/update canonical source asset
+- Correct profile/listing data
+- Pitch data to relevant editorial source with disclosure
+- Answer community questions transparently where appropriate
+
+### Data Gaps
+- No server-log access
+- No Bing Webmaster Tools access
+- No repeat runs from target geography
+```
 
 ## Implementation Checklist
 
-- [ ] Set up WriteSonic AI Rank Tracker
-- [ ] Export competitor citation sources
-- [ ] Identify sites to target for mentions
-- [ ] Acquire/age Reddit and Quora accounts
-- [ ] Create client cross-linking strategy
-- [ ] Build statistics pages for citation bait
-- [ ] Set up Bing Places and Facebook locations
-- [ ] Monitor forum SERP features for target queries
-- [ ] Track citation changes weekly
+- [ ] Define the prompt set and target engines.
+- [ ] Run baseline tracking with dates, locations, and account assumptions.
+- [ ] Export or record cited URLs.
+- [ ] Score cited sources with the source-quality rubric.
+- [ ] Separate owned-content fixes from earned-source opportunities.
+- [ ] Check crawler access and WAF behavior for relevant engines.
+- [ ] Publish or improve canonical source assets.
+- [ ] Conduct transparent outreach with disclosure records.
+- [ ] Participate in communities only where affiliation-safe.
+- [ ] Re-run tracking and report variance, not certainty.
 
----
+## Primary Sources To Check
 
-## Key Quotes Summary
-
-On Citation Building:
-> "The credits, mentions, and the links are going together."
-
-On Reddit/Forums:
-> "Having an aged account makes a difference... they look at for the engagement."
-
-On LLM.txt:
-> "You don't need to post a TXT file in your site until it becomes a standard."
-
-On Client Networks:
-> "This way you can actually manipulate AI in the best possible way. You don't have to even worry about Reddit."
-
----
-
-*Framework derived from SEO Expert Tugberk Gubur consulting sessions, 2025*
+- OpenAI crawler documentation: https://developers.openai.com/api/docs/bots
+- Google Search generative AI optimization guide: https://developers.google.com/search/docs/fundamentals/ai-optimization-guide
+- Google crawler documentation: https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
+- Anthropic crawler documentation: https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler
+- Perplexity crawler documentation: https://docs.perplexity.ai/docs/resources/perplexity-crawlers
+- Bing data-nosnippet and AI-powered experiences: https://blogs.bing.com/webmaster/October-2025/Bing-Introduces-Support-for-the-data-nosnippet-HTML-Attribute
+- llms.txt proposal: https://llmstxt.org/

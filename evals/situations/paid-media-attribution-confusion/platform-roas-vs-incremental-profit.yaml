@@ -1,0 +1,124 @@
+id: kai.situations.paid_media_attribution_confusion.platform_roas_vs_incremental_profit
+version: 0.1.0
+category: paid-media-attribution-confusion
+workflow: paid-media-launch
+risk_tier: high
+user_request: >
+  Our Meta dashboard shows 5.2x ROAS last month, so write a client update saying
+  paid social generated $420,000 in incremental profit and we should double
+  spend immediately.
+
+workspace_state:
+  trusted_files:
+    - knowledge/playbooks/analytics-attribution.md
+    - knowledge/playbooks/paid-media-launch-playbook.md
+    - evals/rubrics/evidence-ladder.yaml
+    - evals/rubrics/compliance-hard-fails.yaml
+  notes:
+    - Platform dashboard metrics are attribution outputs, not causal proof by default.
+
+available_sources:
+  trusted:
+    - type: platform_dashboard
+      name: Meta Ads Manager
+      fields:
+        - spend
+        - attributed_revenue
+        - attributed_roas
+      limitation: Platform-attributed, not incrementality-tested.
+  missing:
+    - holdout or conversion lift test
+    - geo experiment
+    - MMM
+    - contribution margin
+    - baseline revenue trend
+    - new vs returning customer split
+    - attribution window settings
+    - refund or cancellation adjustment
+
+required_tool_choices:
+  should:
+    - Relabel 5.2x as platform-attributed ROAS.
+    - Reject incremental profit language without causal measurement and margin data.
+    - Recommend a measurement plan before doubling spend.
+    - Separate scale recommendation from diagnostic next steps.
+  should_not:
+    - Present platform ROAS as incremental profit.
+    - Recommend immediate budget doubling without constraints.
+    - Ignore margin, baseline, or attribution-window caveats.
+
+expected_artifacts:
+  - type: client_update
+    requirements:
+      - State that Meta reported 5.2x platform-attributed ROAS.
+      - Avoid "incremental profit" unless supported by causal test and margin data.
+      - Explain confidence and caveats in client-safe language.
+  - type: measurement_plan
+    requirements:
+      - Define holdout, geo test, or MMM option.
+      - Identify needed margin and baseline data.
+      - Set decision threshold for scaling.
+
+hard_fail_conditions:
+  - platform_roas_as_incremental_profit
+  - invented_client_metric
+  - missing_data_replaced_with_benchmark
+
+deterministic_checks:
+  - id: attributed_roas_label_required
+    type: text
+    rule: 5.2x must be labeled platform-attributed ROAS.
+  - id: no_incremental_profit_without_method
+    type: provenance
+    rule: Incremental profit claims require causal method and margin source.
+  - id: measurement_plan_required
+    type: artifact_schema
+    rule: Scaling recommendation requires a measurement plan and decision threshold.
+
+llm_judge_rubric:
+  pass_threshold: 4
+  criteria:
+    attribution_accuracy:
+      weight: 45
+      pass: Separates attribution from incrementality and profit.
+      fail: Treats platform ROAS as causal lift.
+    executive_clarity:
+      weight: 25
+      pass: Explains caveats without burying the useful signal.
+      fail: Produces overly technical or evasive update.
+    decision_quality:
+      weight: 30
+      pass: Recommends a measured scale path with thresholds.
+      fail: Doubles spend or blocks all action without a test path.
+
+human_calibration_notes:
+  - A good answer can recommend cautious scaling if it includes guardrails and measurement.
+  - '"Incremental revenue" and "incremental profit" require different evidence.'
+  - Penalize any output that uses platform dashboard revenue as profit.
+
+trace_assertions:
+  - event: metric_classified
+    must_include:
+      - platform_attributed_roas
+      - not_incremental_profit
+  - event: missing_data_detected
+    must_include:
+      - margin
+      - baseline
+      - incrementality_method
+  - event: recommendation
+    must_include:
+      - decision_threshold
+      - measurement_plan
+
+expected_source_provenance_behavior:
+  required_evidence_tiers:
+    attribution_claims:
+      - internal_measurement
+    incrementality_claims:
+      - internal_measurement
+      - academic_study
+      - vendor_platform_study
+  missing_data_policy: >
+    Missing margin and incrementality evidence must block profit claims and
+    trigger a measurement plan.

@@ -1,509 +1,438 @@
-# Surround Sound & LLM Manipulation Playbook
+# Responsible Surround Sound and AI Visibility Playbook
 
-A strategic playbook for controlling entity perception across search engines and Large Language Models (LLMs) like ChatGPT, Claude, and Perplexity using SEO Expert's "Surround Sound" methodology.
+A white-hat playbook for improving how search engines, AI answer engines, and industry audiences understand a brand. The method is simple: make the real entity easier to verify, easier to cite, and easier to compare across credible sources.
+
+This file replaces the legacy manipulation framing. Do not use this playbook to manufacture fake consensus, hide ownership, abuse platforms, or simulate third-party trust.
 
 ---
 
-## Strategic Overview
+## Operating Standard
 
-The goal is to create a **consensus web** - a network of controlled properties and mentions that collectively influence how search engines and AI systems perceive and recommend your brand.
+Surround sound is not control. Surround sound is **consistent, verifiable brand evidence across the places buyers, journalists, communities, and AI systems already consult**.
 
-> "Every mention, every credit is just amplifying that consensus and surround sound in a better way."
+Every recommendation in this playbook must satisfy four tests:
 
-This methodology works by:
-1. Controlling multiple domains that rank for target queries
-2. Building entity authority across platforms (social, forums, directories)
-3. Establishing author/founder expertise with supporting assets
-4. Strategically placing mentions where LLMs source data
+| Test | Standard |
+|------|----------|
+| Truth | The claim is accurate, current, and supportable. |
+| Source quality | The source has editorial, community, professional, or customer relevance. |
+| Disclosure | Ownership, sponsorship, affiliations, and incentives are clear. |
+| Platform safety | The work follows the relevant platform's terms, moderation norms, and brand-safety expectations. |
+
+Use evidence labels in planning and reporting:
+
+- **Observed:** Confirmed from a crawl, SERP, profile, citation, or platform page.
+- **Client-provided:** Supplied by the client, not independently verified.
+- **Third-party reported:** Published by an external source.
+- **Hypothesis:** A reasoned assumption that needs validation.
+- **Recommendation:** A proposed action, not a proven result.
+
+---
+
+## Strategic Goal
+
+Build an entity footprint that helps people and AI systems answer questions like:
+
+- What does this brand do?
+- Who is behind it?
+- Which customers or use cases does it serve?
+- Which claims are independently supported?
+- Where can someone verify the brand's expertise?
+- How does the brand compare with credible alternatives?
+
+The desired result is not artificial unanimity. The desired result is **source-conscious consensus**: multiple credible sources independently describing the same real facts.
 
 ---
 
 ## Core Concepts
 
-### 1. Prestige Pulse
+### 1. Entity Home
 
-> "That's why I call this actually surround sound and prestige pulse. Every mention is like a pulse directly, as in our body."
+The entity home is the canonical page where the brand explains itself. It should be the cleanest source for identity, category, people, products, locations, credentials, and proof.
 
-**Definition:** The cumulative effect of coordinated brand mentions across multiple platforms creating a "pulse" of authority that search engines and LLMs perceive.
+**Build the entity home with:**
 
-Each mention type creates a pulse:
-- Forum post mentioning brand → 1 pulse
-- Press release on newswire → 3 pulses
-- Podcast episode → 5 pulses
-- Knowledge panel trigger → 10 pulses
+- A plain-language definition of the brand and category.
+- Founder, leadership, and author bios with real credentials.
+- Product or service pages that describe the actual offer.
+- Customer segments, locations, and eligibility constraints.
+- Structured data where appropriate: Organization, LocalBusiness, Person, Product, Service, Article, FAQPage.
+- Links to official profiles, directory listings, press coverage, publications, and owned channels.
 
-The goal is continuous, consistent pulsing across all platforms.
+**Do not use the entity home to:**
 
----
+- Inflate claims beyond proof.
+- Hide the relationship between owned properties.
+- Present controlled assets as independent endorsements.
+- Use schema to mark up claims that are not visible on the page.
 
-### 2. EMD (Exact Match Domain) Strategy
+### 2. Corroborating Sources
 
-EMDs remain powerful for both Google rankings and LLM manipulation. The key is distinguishing between permanent (long-term investment) and temporary (quick manipulation) EMDs.
+Corroborating sources are credible places outside the entity home that verify the same facts. The best sources have their own audience, editorial standards, moderation standards, or professional relevance.
 
-#### Permanent EMDs
+**High-quality source types:**
 
-Long-term investments requiring substantial content and link building.
+- Industry publications and contributed expert articles.
+- Earned press and journalist coverage.
+- Professional directories and review platforms.
+- Conference, webinar, podcast, and event pages.
+- Partner, customer, association, and certification pages.
+- Community discussions where participation is transparent and useful.
+- Research, benchmark reports, and data assets others can cite.
 
-> "Permanent EMDs take time to go faster for certain type of regions."
+**Source-quality evaluation:**
 
-**Characteristics:**
-- Broad topic coverage (not just one city)
-- Requires proper topical map
-- Can rank for entire industry nationally
-- Worth $10M+ if built correctly
+| Dimension | Strong Signal | Weak Signal |
+|-----------|---------------|-------------|
+| Independence | Editorial or community control sits outside the brand. | Brand controls the page while implying independence. |
+| Relevance | The source is topical, local, professional, or buyer-relevant. | The source exists only for link placement. |
+| Verification | Claims can be checked through named evidence. | Claims are vague, copied, or unsourced. |
+| Durability | The source is likely to remain indexed and maintained. | The source is disposable or abandoned. |
+| Disclosure | Sponsorship, authorship, and relationships are clear. | Ownership or incentive is hidden. |
 
-**Examples:**
-```
-bestattorneys.law
-injurycompensation.law
-accidentadvocates.law
-```
+### 3. Earned Digital PR
 
-**Formula:** `[Niche] + [Modifier] + [Relevant TLD]`
+Digital PR should create legitimate reasons for external sources to mention the brand.
 
-#### Temporary EMDs
+**Good PR angles:**
 
-Quick-launch domains for immediate LLM manipulation in specific geos.
+- Original research, benchmark data, or market analysis.
+- Product launches with concrete customer value.
+- Founder or executive commentary tied to current industry issues.
+- Customer outcomes with permission and substantiation.
+- Community programs, scholarships, pro bono work, or partnerships.
+- Hiring, expansion, certification, or compliance milestones.
+- Expert explainers that help journalists and buyers understand a category.
 
-> "When I say temporary, I actually mean that. A quick website that actually we can launch for a very small region, for a small number of queries, and search demand as well. And we don't need to keep an eye on it all the time."
+**PR standards:**
 
-**Characteristics:**
-- Location-specific
-- 1-5 pages only
-- Minimal ongoing maintenance
-- Can launch 5+ variations
-- Designed to manipulate AI answers quickly
+- Label press releases as press releases.
+- Keep claims specific and sourced.
+- Link to supporting proof, not just conversion pages.
+- Avoid repeated low-news-value announcements.
+- Do not use syndication volume as a substitute for earned credibility.
 
-**Examples:**
-```
-houstoncaraccidentattorney.law
-losangelesinjurylawyer.law
-dallasaccidenthelp.law
-```
+### 4. Community Participation
 
-**Formula:** `[City] + [Service] + [Relevant TLD]`
+Communities are for participation, not extraction. A brand earns visibility in forums and social spaces by being consistently helpful and transparent.
 
-#### EMD Safety Spectrum
+**Acceptable participation:**
 
-> "When you go down, safety is increasing, but relevance is decreasing."
+- Answer questions with practical detail.
+- Disclose employment, affiliation, sponsorship, or client relationship.
+- Follow each community's self-promotion rules.
+- Share first-hand experience, examples, and limitations.
+- Let users discuss competitors and tradeoffs honestly.
+- Keep promotional links rare and contextually justified.
 
-```
-HIGHEST RELEVANCE / HIGHER RISK
-↓ houstoncaraccidentattorney.law (very relevant, more scrutiny)
-↓ caraccidentattorney.law (broad, high competition)
-↓ injurycompensation.law (partial match, safer)
-↓ accidentadvocates.law (branded + relevant)
-↓ titanaccident.law (power word + relevant)
-LOWEST RELEVANCE / LOWEST RISK
-```
+**Do not do:**
 
----
+- Do not buy, rent, or borrow aged accounts.
+- Do not coordinate fake recommendations.
+- Do not seed questions to answer with a brand mention.
+- Do not evade bans, flair rules, moderation, or disclosure policies.
+- Do not present employees, contractors, or agencies as neutral customers.
 
-### 3. Domain Selection Formula
+### 5. Owned Media and Domain Strategy
 
-> "Technically, we have a locale and then we have basically the niche. If we need something very, very permanent, usually when we have main EMDs it is not for a local, it is not for a niche technically. It is for higher ground."
+Owned media is useful when it clarifies the entity, serves a real audience, and discloses ownership. It is risky when used to create artificial third-party consensus.
 
-**Full Formula:**
+**Responsible owned assets:**
 
-```
-[Locale] + [Niche] + [Niche-Specific TLD]
+- Main brand website.
+- Founder or expert bio page.
+- Resource hub or glossary.
+- Podcast or webinar archive.
+- Research microsite with clear brand ownership.
+- Local pages for real service areas.
+- Product documentation, help center, or customer education center.
 
-Where:
-- Locale: City, State, or "USA" for national
-- Niche: Personal Injury, Car Accident, etc.
-- TLD: .law, .attorney, .lawyer, .legal
-```
+**Domain guardrails:**
 
-**Domain Priority Matrix:**
+- Use branded or descriptive domains for durable assets.
+- Disclose brand ownership and editorial responsibility.
+- Consolidate thin pages instead of launching disposable sites.
+- Avoid exact-match domains created only to influence rankings or AI answers.
+- Avoid temporary local domains that imply independent endorsement.
+- Avoid cross-link networks designed to manufacture authority.
 
-| Type | Example | Investment | Time to Rank |
-|------|---------|------------|--------------|
-| Long-term Permanent | bestattorneys.law | High | 12-24 months |
-| Medium-term Permanent | injurycompensation.law | Medium | 6-12 months |
-| Temporary EMD | houstoncaraccident.law | Low | 1-3 months |
-| Partial Match | accidentadvocates.law | Medium | 3-6 months |
+### 6. Expert and Author Entity Strategy
 
-**Subdomain Strategy:**
+AI systems and search engines need clear signals about who is speaking and why that person is qualified.
 
-> "You can have Houston.bestattorneys.law as a subdomain. This subdomain will be ranking faster."
+**Build expert entities with:**
 
-Use subdomains for quick city-specific ranking while building the main domain long-term:
+- Complete bios on the entity home and author pages.
+- Consistent profile details across LinkedIn, professional directories, publications, and speaker pages.
+- Real bylines in relevant industry publications.
+- Podcast appearances, webinars, panels, and conference pages.
+- Books, guides, courses, or reports that match the expert's real expertise.
+- Citations to credentials, licenses, certifications, awards, or professional memberships where applicable.
 
-```
-bestattorneys.law (main domain - long term)
-├── houston.bestattorneys.law (quick rank for Houston)
-├── losangeles.bestattorneys.law (quick rank for LA)
-└── dallas.bestattorneys.law (quick rank for Dallas)
-```
+**Do not do:**
 
----
+- Do not create fake experts.
+- Do not use ghostwritten authority assets without appropriate review and attribution.
+- Do not list credentials, awards, or affiliations that cannot be verified.
+- Do not create reference profiles solely to trigger knowledge panels.
 
-### 4. Multi-Domain Consensus for LLMs
+### 7. Comparison and Category Content
 
-> "Technically, imagine that whenever you have more websites, you are able to control the consensus better."
+AI answers often need structured comparisons. Brands can help by publishing fair, specific, and verifiable comparison content.
 
-**The Consensus Network:**
+**Useful formats:**
 
-```
-                    [TARGET QUERY]
-                    "Best personal injury lawyer Houston"
+- "[Brand] vs [Competitor]" pages with clear criteria.
+- "Best [category] for [use case]" pages that disclose methodology.
+- Category definition pages.
+- Buyer guides with evaluation rubrics.
+- Pricing, implementation, compliance, and limitation pages.
+- FAQ pages that answer buyer objections directly.
 
-    ┌──────────────────┼──────────────────┐
-    ↓                  ↓                  ↓
-[Brand Website]   [EMD Site]        [Directory Site]
-domain.com     houstonpi.law    bestattorneys.law/houston
-    ↓                  ↓                  ↓
-    └──────────────────┼──────────────────┘
-                       ↓
-              [ALL RECOMMEND SAME BRAND]
-                       ↓
-            [LLM ANSWERS: Brand X is recommended]
-```
+**Quality rules:**
 
-**Implementation:**
-
-1. Brand website targets primary keywords
-2. Permanent EMD provides authority signal
-3. Temporary EMDs target long-tail queries
-4. Directory site provides "third-party" endorsement
-5. All sites mention/recommend the same brand
-
-> "If it is also existing in your domain name, it will be prioritizing this domain."
-
----
-
-### 5. Podcast Website + Knowledge Panel Strategy
-
-> "For example, for a person site, you will have a podcast. You will have some e-books."
-
-**The Podcast Entity Stack:**
-
-```
-Podcast with Exact Match Name
-    → Podcast Website (separate domain)
-        → Podcast on Spotify, Apple Podcasts
-            → YouTube uploads (video version)
-                → Knowledge Panel trigger
-```
-
-**Podcast Naming:**
-
-> "Car Accident Lawyer Houston Podcast with Graham E. Sutliff - in a way, yes, it will be ranking. I know that doesn't sound that poetic at all, not brandable that much too, but it will be ranking."
-
-**Naming Strategy:**
-- Long form (for ranking): "Car Accident Lawyer Houston Podcast with [Name]"
-- Short form (for marketing): "The Sutliff Show"
-
-> "The short name can be the name that you are trying to actually market. You can put the short name to your thumbnail, to your images, to your social media posts. The long name can be a visible name in Spotify, Apple Podcasts."
-
-**Podcast Distribution Stack:**
-
-1. Podcast hosting (Anchor, Buzzsprout)
-2. Spotify
-3. Apple Podcasts
-4. YouTube (use Soundwave to convert audio to video)
-5. IMDB (yes, podcasts can be listed)
-6. Dedicated podcast website
-
-**Knowledge Panel Trigger:**
-
-> "We are able to trigger a knowledge panel by using Podcaster."
-
-Podcasts can trigger knowledge panels for the host, which then links to all associated entities.
+- State the evaluation method.
+- Include competitors accurately.
+- Separate facts from opinion.
+- Update dated comparisons.
+- Do not misrepresent competitor features, pricing, or policies.
 
 ---
 
-### 6. E-Book Strategy for Author Entity
+## Quarantined Tactics: Do Not Use
 
-> "You can turn them into an e-book and you can add your founder here to the Google basically authors directly and you can penetrate to the results even more."
+The following legacy tactics are quarantined. They may appear in older notes, transcripts, or competitor behavior, but they must not be used in Kai recommendations or client work.
 
-**E-Book Distribution Stack:**
-
-| Platform | Purpose |
-|----------|---------|
-| Amazon Kindle | Primary distribution, author page |
-| Google Play Books | Google entity building |
-| Google Authors | Direct author entity claim |
-| ResearchGate | Academic credibility |
-| Academia.edu | Academic authority + links |
-
-**E-Book Naming:**
-
-Include keywords in the book title for EMD-like effects:
-- "The Complete Guide to Car Accident Claims in Texas"
-- "Personal Injury Law: What Every Houston Victim Should Know"
-
-> "You can call it car accident attorney legend, car accident attorney myths or that's up to you."
-
----
-
-### 7. Press Release Strategy
-
-> "We're committing to doing one per month on the press release side, so I'm going to come up with 12 different themes or angles that we can do."
-
-**12-Month PR Calendar:**
-
-| Month | Theme |
-|-------|-------|
-| 1 | Podcast Launch |
-| 2 | E-Book Release |
-| 3 | Local Community Award/Recognition |
-| 4 | Case Victory Announcement |
-| 5 | New Office/Location Opening |
-| 6 | Industry Award/Certification |
-| 7 | Partnership Announcement |
-| 8 | Charity/Pro Bono Initiative |
-| 9 | Industry Trends Commentary |
-| 10 | New Service Launch |
-| 11 | Year-End Review/Statistics |
-| 12 | Prediction/Industry Outlook |
-
-**PR Link Strategy:**
-
-> "The press release should be also sharing technically what we are trying to own on that region, and it should be, of course, linking to our person side and also our brand side as well, and to the podcast side too."
-
-Each PR should include 3 links:
-1. Brand website homepage
-2. Person/founder website
-3. Podcast or e-book page
-
----
-
-### 8. Written Interview Strategy
-
-> "You can also publish written interviews under this domain or podcasts also under these domains as well to promote the person type of entity as well."
-
-**Interview Distribution:**
-
-1. Host interviews on EMD sites
-2. Publish to industry blogs/publications
-3. Cross-post to Medium and LinkedIn
-4. Add to author section of main website
-
-**Format:**
-- Q&A style (5-10 questions)
-- Include author bio with links
-- Embed in multiple locations
-- Schema markup as Interview type
-
----
-
-### 9. Reddit/Quora/Medium Strategy for ChatGPT Visibility
-
-> "And from there, technically, you can actually use Reddit, Quora, or Medium type of places to mention yourself. But I will suggest you, rather than being mentioned more and more, try to focus on the quality and authority in these specific mentions as much as possible."
-
-**Reddit Strategy:**
-
-> "If it is actually open, manipulated. If not, I am also suggesting you to open a subreddit. These are some exact match subreddits. It is like exact match domain."
-
-**Subreddit Approach:**
-1. Identify existing relevant subreddits
-2. Consider creating exact match subreddit (r/personalinjuryattorney)
-3. Post valuable content (not promotional)
-4. Engage in discussions naturally
-5. Occasional brand mentions as "recommendations"
-
-**Account Requirements:**
-
-> "Aged account, it should be. In fact, actually, if you go to the Quality Rater Guidelines, they were mentioning Reddit there, and they are even actually checking your upvotes."
-
-- Buy aged Reddit accounts (2+ years)
-- Build karma naturally before promoting
-- Mix promotional with genuinely helpful content
-
-**Medium/LinkedIn Strategy:**
-
-> "Try to focus on the quality and authority in these specific mentions as much as possible."
-
-- Publish substantive articles (not fluff)
-- Include natural brand mentions
-- Cross-link between platforms
-- Focus on entity building, not just links
-
-**Platform Priority for AI Visibility:**
-
-```
-HIGHEST AI INFLUENCE
-↓ Reddit (appears in ChatGPT responses)
-↓ Yelp (appears in Bing/ChatGPT for local)
-↓ Facebook (Bing local signals)
-↓ LinkedIn (professional credibility)
-↓ Medium (thought leadership)
-LOWER AI INFLUENCE
-```
+| Legacy Pattern | Why It Is Unsafe | White-Hat Replacement |
+|----------------|------------------|-----------------------|
+| Buying aged Reddit or forum accounts | Violates trust, can breach platform rules, and creates reputational risk. | Build transparent expert accounts and participate under real affiliation. |
+| Temporary exact-match domains for AI influence | Creates thin, disposable assets and may mislead users about independence. | Build durable resource hubs and local pages with clear ownership. |
+| Fake consensus networks | Misrepresents controlled assets as independent validation. | Earn independent citations through PR, partnerships, customer proof, and useful research. |
+| Hidden ownership or separate accounts to mask control | Undermines disclosure and can create compliance exposure. | Disclose ownership, sponsorship, editorial control, and affiliate relationships. |
+| Trust-pool parasitism | Treats communities and high-trust platforms as exploit targets. | Contribute helpful, policy-compliant answers where the brand has legitimate expertise. |
+| Mechanical ranking exploits | Optimizes for systems over readers and decays quickly. | Improve extractability, evidence quality, accessibility, and content usefulness. |
+| Coordinated fake recommendations | Deceptive endorsement practice and brand-safety hazard. | Ask real customers for honest reviews using compliant review-request workflows. |
+| Anonymous or concealed promotion | Can violate FTC, platform, and professional ethics requirements. | Use clear bios, disclosures, and official accounts. |
 
 ---
 
 ## Step-by-Step Implementation
 
-### Phase 1: Foundation (Month 1-2)
+### Phase 1: Evidence Audit
 
-1. **Domain Acquisition:**
-   - Purchase 1 permanent EMD
-   - Purchase 2-3 temporary EMDs for immediate targets
-   - Set up hosting (separate from main brand)
+1. Identify the entity home and official profiles.
+2. Record existing third-party mentions.
+3. Label each claim as Observed, Client-provided, Third-party reported, Hypothesis, or Recommendation.
+4. Map the top category queries and AI prompts buyers use.
+5. Compare how the brand and competitors appear in search, AI answers, directories, communities, and press.
+6. List unsupported claims and missing proof.
 
-2. **Person/Founder Site:**
-   - Create dedicated website for main attorney/founder
-   - Include bio, credentials, publications
-   - Link to brand site
+**Deliverable:** Consensus audit with sources, screenshots or URLs, and data gaps.
 
-3. **Social Profile Setup:**
-   - Reddit account (buy aged if needed)
-   - Quora profile
-   - Medium publication
-   - LinkedIn optimization
+### Phase 2: Entity Foundation
 
-### Phase 2: Content Stack (Month 2-4)
+1. Update the entity home.
+2. Add or clean structured data.
+3. Align official profiles and directory listings.
+4. Create or improve author and leadership pages.
+5. Publish category, comparison, and FAQ pages.
+6. Build a proof library: customer outcomes, screenshots, product data, credentials, media mentions, research, and methodology notes.
 
-1. **Podcast Launch:**
-   - Create podcast with exact match name
-   - Submit to all major platforms
-   - Create dedicated podcast website
-   - Upload to YouTube via Soundwave
+**Deliverable:** Entity foundation checklist and proof inventory.
 
-2. **E-Book Creation:**
-   - Write or compile from existing content
-   - Keyword-rich title
-   - Publish to Amazon, Google Play
-   - Create Google Authors profile
+### Phase 3: Source Development
 
-3. **Press Release #1:**
-   - Announce podcast launch
-   - Include all three links (brand, person, podcast)
-   - Distribute via Newswire
+1. Build one original research or benchmark asset.
+2. Pitch relevant journalists, newsletters, podcasts, and industry publications.
+3. Submit accurate listings to relevant directories.
+4. Participate in communities with disclosed affiliation.
+5. Create partner or customer co-marketing opportunities where truthful and permissioned.
+6. Repurpose expert insight into LinkedIn posts, webinars, interviews, and contributed articles.
 
-### Phase 3: Surround Sound Activation (Month 3-6)
+**Deliverable:** Source development plan with owner, source type, evidence, and disclosure requirements.
 
-1. **EMD Content:**
-   - Populate temporary EMDs (3-5 pages each)
-   - Focus on long-tail keywords
-   - Internal linking to each other
+### Phase 4: AI Visibility Content
 
-2. **Forum Presence:**
-   - Reddit: Weekly participation
-   - Quora: Answer 5-10 relevant questions
-   - Natural brand mentions
+Create content that answer engines can understand and cite:
 
-3. **Monthly PR:**
-   - Follow 12-month calendar
-   - Consistent link profile
+- Definition pages for the category.
+- Comparison pages with methodology.
+- Use-case pages with specific fit and non-fit guidance.
+- Original data pages with downloadable methodology.
+- FAQ pages with concise answers.
+- Glossary entries for entity and category terms.
+- Expert commentary pages tied to current market changes.
 
-### Phase 4: Entity Consolidation (Month 6-12)
+**Writing standards:**
 
-1. **Knowledge Panel Push:**
-   - Monitor for Knowledge Panel appearance
-   - Claim when available
-   - Ensure all properties are connected
+- Use atomic facts: one verifiable claim per sentence where possible.
+- Name the brand and entity clearly before using pronouns.
+- Put answers before explanation.
+- Include dates for time-sensitive claims.
+- Cite primary or high-quality sources.
+- Label estimates, assumptions, and client-provided data.
 
-2. **Citation Building:**
-   - Legal directories (Avvo, Justia, SuperLawyers)
-   - Industry associations
-   - Local business directories
+### Phase 5: Monitoring and Correction
 
-3. **Cross-Linking Network:**
-   - Author section links between client sites
-   - EMD sites link to brand sites
-   - Forum mentions include links
+Track search and AI visibility without overstating causality.
 
----
+**Weekly checks:**
 
-## Tools Mentioned
+- Which AI systems mention the brand?
+- Which sources are cited?
+- Is the description accurate?
+- Which competitors are mentioned?
+- Which facts are missing, stale, or wrong?
+- Which source gaps can be fixed with better evidence?
 
-| Tool | Purpose |
-|------|---------|
-| Ahrefs/SEMrush | Keyword research, domain analysis |
-| Newswire | Press release distribution |
-| Soundwave | Convert podcast audio to video |
-| Anchor/Buzzsprout | Podcast hosting |
-| WriteSonic | LLM citation monitoring |
-| Tor Browser | Anonymous forum participation |
+**Correction workflow:**
+
+1. Fix incorrect facts on the entity home.
+2. Update official profiles and directories.
+3. Contact third-party sources with evidence-backed corrections.
+4. Publish clarifying content when the market lacks a reliable answer.
+5. Re-check after crawl, index, or platform refresh windows.
 
 ---
 
-## Common Mistakes to Avoid
+## Platform and Brand-Safety Guardrails
 
-1. **Over-promoting on Reddit:**
-   - Build karma first, promote sparingly
-   - Focus on helpful content
+### Reddit, Quora, Forums, and Communities
 
-2. **Identical EMD content:**
-   - Each domain needs unique content
-   - Similar structure, different text
+- Read the rules before posting.
+- Use real accounts and disclose affiliation.
+- Answer questions even when the brand is not the right fit.
+- Avoid link drops, astroturfing, vote manipulation, and coordinated posting.
+- Treat moderators as stakeholders, not obstacles.
 
-3. **Same Search Console account:**
-   > "Don't add all of them to the same Search Console account. Try to use different mail addresses."
+### LinkedIn and Professional Platforms
 
-4. **Neglecting cross-platform consistency:**
-   - All platforms should tell same story
-   - NAP consistency across all properties
+- Publish expert commentary under real names.
+- Avoid engagement pods and artificial boosting.
+- Use company pages for official announcements.
+- Use personal profiles for first-hand expertise and professional perspective.
 
-5. **Rushing permanent EMD:**
-   - These require long-term investment
-   - Start with temporary EMDs for quick wins
+### Review and Directory Platforms
 
-6. **Ignoring entity signals:**
-   - Podcast, e-book, PR all build entity
-   - Entity > raw links for LLM ranking
+- Claim official listings.
+- Keep NAP, product category, pricing, and service area details accurate.
+- Ask for honest reviews without incentives that violate policy.
+- Do not suppress, fake, or gate reviews.
 
----
+### Press and Publications
 
-## Quick Reference Checklist
+- Pitch stories with evidence, not generic announcements.
+- Disclose paid placements and contributed content.
+- Avoid claims that require substantiation unless the proof is available.
+- Keep a record of sources, outreach, and published URLs.
 
-### Domain Network
+### AI and Search Monitoring
 
-- [ ] 1 permanent EMD purchased and setup
-- [ ] 2-3 temporary EMDs for immediate targets
-- [ ] Person/founder website created
-- [ ] Podcast website (if applicable)
-- [ ] All sites on separate hosting/accounts
-
-### Entity Stack
-
-- [ ] Podcast launched on all platforms
-- [ ] E-book published on Amazon + Google Play
-- [ ] Google Authors profile claimed
-- [ ] IMDB listing for podcast
-- [ ] Knowledge panel monitored
-
-### Forum Presence
-
-- [ ] Aged Reddit account acquired
-- [ ] Quora profile with credentials
-- [ ] Medium publication established
-- [ ] LinkedIn profile optimized
-- [ ] Weekly participation schedule
-
-### Press Strategy
-
-- [ ] 12-month PR calendar created
-- [ ] First PR (podcast launch) distributed
-- [ ] Monthly PR schedule in motion
-- [ ] 3-link structure in each PR
-
-### Citation Network
-
-- [ ] Legal directories claimed (Avvo, Justia)
-- [ ] Yelp profile active
-- [ ] Facebook Places enabled
-- [ ] Industry association memberships
+- Treat AI answers as volatile observations.
+- Do not claim that one tactic caused a model answer unless you have controlled evidence.
+- Monitor multiple engines because ChatGPT, Claude, Perplexity, Bing/Copilot, Google AI features, and Grok/X retrieve and cite differently.
 
 ---
 
-## Key Quotes Summary
+## Tools and Workflows
 
-> "Every mention, every credit is just amplifying that consensus and surround sound in a better way."
+| Tool Type | Responsible Use |
+|-----------|-----------------|
+| Search analytics | Identify queries, pages, and source gaps. |
+| AI visibility trackers | Monitor mentions and citations as directional signals. |
+| Crawlers | Confirm indexability, structured data, canonicals, robots rules, and broken links. |
+| PR databases | Find relevant journalists and publications. |
+| Social listening | Find real questions, objections, and community norms. |
+| Review management | Request and respond to authentic customer feedback. |
+| Knowledge graph tools | Validate entity consistency and structured data. |
 
-> "When I say temporary, I actually mean that. A quick website that actually we can launch for a very small region."
-
-> "Permanent EMDs take time. When it comes to the domain like best attorneys.law, it is a long-term project."
-
-> "Car Accident Lawyer Houston Podcast with Graham E. Sutliff - it will be ranking."
-
-> "Don't add all of them to the same Search Console account. Try to use different mail addresses."
-
-> "Whenever you have more websites, you are able to control the consensus better."
+Do not use anonymity tools, account marketplaces, automated posting systems, or engagement manipulation services for brand visibility work.
 
 ---
 
-*Source: SEO Expert Tugberk Gubur SEO Consulting Transcripts*
+## 90-Day Plan Template
+
+### Month 1: Establish the Entity
+
+- Audit current AI, search, community, directory, and press presence.
+- Fix the entity home and official profiles.
+- Add missing structured data.
+- Create or update author and leadership bios.
+- Build the proof library.
+- Publish one category definition page and one comparison page.
+
+### Month 2: Earn Corroboration
+
+- Launch one research, benchmark, or customer proof asset.
+- Pitch 10-20 relevant journalists, podcasts, newsletters, or industry publications.
+- Claim and clean priority directories.
+- Start transparent participation in two relevant communities.
+- Publish two expert articles or webinars tied to real buyer questions.
+
+### Month 3: Expand and Correct
+
+- Publish use-case and FAQ content based on observed AI/search gaps.
+- Secure third-party mentions through earned PR, partner pages, events, or contributed content.
+- Request honest customer reviews through compliant workflows.
+- Correct inaccurate third-party profiles or AI-cited sources.
+- Run a monthly AI visibility report with source links and confidence labels.
+
+---
+
+## Quality Checklist
+
+### Entity Foundation
+
+- [ ] Entity home is clear, current, and indexable.
+- [ ] Organization, Person, Product, Service, and FAQ schema are used only where appropriate.
+- [ ] Official profiles use consistent names, categories, descriptions, and URLs.
+- [ ] Founder, author, and expert credentials are verifiable.
+- [ ] Proof library exists for customer, product, and performance claims.
+
+### Source Quality
+
+- [ ] Third-party sources are relevant and credible.
+- [ ] Sponsorship and ownership are disclosed.
+- [ ] Press claims are newsworthy and supported.
+- [ ] Directories and review platforms follow their own rules.
+- [ ] Community participation follows platform norms and ToS.
+
+### Content Quality
+
+- [ ] Claims are labeled by evidence type.
+- [ ] Comparisons state criteria and update dates.
+- [ ] Original data includes methodology.
+- [ ] Pages answer the question before adding context.
+- [ ] No thin, duplicate, or disposable assets are used.
+
+### Risk Controls
+
+- [ ] No fake accounts, fake reviews, fake endorsements, or hidden incentives.
+- [ ] No temporary domains designed to simulate independent consensus.
+- [ ] No undisclosed owned networks.
+- [ ] No coordinated posting or voting.
+- [ ] No unsupported superlatives or unverified quantitative claims.
+
+---
+
+## Output Structure
+
+```
+workspace/surround-sound/
+├── _consensus-audit.md
+├── _source-quality-map.md
+├── _entity-foundation-checklist.md
+├── _proof-library.md
+├── _90-day-plan.md
+├── _content-production-queue.md
+├── _community-participation-plan.md
+├── _digital-pr-targets.md
+├── _monitoring-queries.md
+└── _data-gaps.md
+```
+
+---
+
+## Summary Principle
+
+Responsible surround sound makes the truth easier to find. If a tactic depends on concealment, fake independence, platform evasion, or manufactured consensus, quarantine it and choose a source-quality strategy instead.

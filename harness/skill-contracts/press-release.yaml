@@ -1,14 +1,227 @@
+skill: press-release
+version: 3.0
+harness: kai-harness
 format: press
+risk_tier: high
 word_count: 500-800
 min_four_us: 12
 seo_lint: false
+
+description: >
+  Newsworthy press releases for launches, funding, partnerships, research,
+  executive announcements, and major customer milestones. Written for media
+  pickup, legal substantiation, and quote approval.
+
+required_sources:
+  - brief
+  - knowledge/channels/press-releases.md
+  - knowledge/checklists/pr-checklist.md
+  - approved_company_boilerplate
+  - approved_media_contact
+  - quote_approval_log
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  news_event_must_be_named_and_dated: true
+  quote_sources_must_be_named_people: true
+  all_material_claims_require_evidence: true
+  legal_or_financial_claims_require_legal_review: true
+  embargo_requires_explicit_release_time: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - announcement_type: string
+    - company_name: string
+    - release_date: string
+    - media_contact: object
+  optional:
+    - embargo_until: string
+    - dateline_city: string
+    - quote_sources: list[object]
+    - claim_evidence_log: list[object]
+    - boilerplate: string
+    - investor_or_legal_notes: string
+
 required_sections:
   - headline
   - lede
   - quote
   - boilerplate
   - media_contact
+
+output_schema:
+  type: object
+  required:
+    - headline
+    - subheadline
+    - dateline
+    - lede
+    - body
+    - quotes
+    - boilerplate
+    - media_contact
+    - claim_table
+    - legal_review_status
+  properties:
+    headline: string
+    subheadline: string
+    dateline: string
+    lede: string
+    body: markdown
+    quotes:
+      type: list
+      item_schema:
+        speaker_name: string
+        speaker_title: string
+        quote: string
+        approval_id: string
+    boilerplate: string
+    media_contact:
+      type: object
+      properties:
+        name: string
+        email: string
+        phone: string
+    claim_table:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        materiality: string
+    legal_review_status: string
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "500 <= word_count <= 800"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "all required_sections have non_empty output values"
+  - id: headline_present_tense
+    evaluator: llm_static
+    pass_when: "headline is present tense and not clickbait"
+  - id: dateline_present
+    evaluator: schema
+    pass_when: "dateline is non_empty"
+  - id: media_contact_complete
+    evaluator: schema
+    pass_when: "media_contact.email and media_contact.name are non_empty"
+  - id: quote_approvals_present
+    evaluator: static
+    pass_when: "every quote has approval_id"
+  - id: claim_evidence_ids_present
+    evaluator: static
+    pass_when: "every material claim has evidence_id"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: newsworthiness
+      question: "Is there a clear event a reporter could cover now?"
+    - name: factual_precision
+      question: "Are all claims specific, attributed, dated, and free of promotional padding?"
+    - name: quote_quality
+      question: "Do quotes add context or stakes instead of repeating the headline?"
+    - name: legal_safety
+      question: "Are material, financial, investor, customer, and competitive claims substantiated?"
+
+human_review_required_when:
+  - announcement_type in ["funding", "acquisition", "partnership", "research", "legal", "executive_change"]
+  - public_company_or_investor_claim == true
+  - customer_name_or_logo_used == true
+  - quote_approval_log is missing
+  - claim_risk_level == high
+  - embargo_until is present
+
+golden_situations:
+  - name: product_launch
+    expectation: "Identifies release date, audience, availability, and one approved executive quote without exaggerated market claims."
+  - name: funding_announcement
+    expectation: "Requires legal review, investor quote approval, exact round details, and no forward-looking claims without review."
+  - name: weak_news_hook
+    expectation: "Fails newsworthiness and asks for a stronger event before drafting."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_unsubstantiated_claims: 0
+  max_unapproved_quotes: 0
+  max_missing_required_sections: 0
+
+claim_policy:
+  allowed:
+    - dated announcements
+    - approved executive quotes
+    - sourced product availability and feature statements
+    - sourced customer, partner, or investor statements
+  requires_evidence:
+    - market size
+    - ranking or category leadership
+    - revenue, growth, funding, valuation, or customer count
+    - customer outcomes
+    - competitive comparisons
+  forbidden:
+    - unsupported superlatives
+    - fabricated quotes
+    - undisclosed paid endorsements
+    - forward-looking financial claims without legal review
+
+provenance_policy:
+  claim_trace_required: true
+  quote_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - quote_approval_id
+    - source_name
+    - source_type
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - turning an ad into a press release
+  - inventing customer, investor, analyst, or partner validation
+  - adding awards, rankings, or market leadership claims without proof
+  - burying missing legal review in compliance notes
+  - using embargo language without a release timestamp
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - pr_owner
+    - legal_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_quote_approval
+    - unsubstantiated_material_claim
+    - missing_media_contact
+    - missing_news_event
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - announcement_type
+  - release_date
+  - embargo_until
+  - evidence_ids
+  - quote_approval_ids
+  - boilerplate_version
+  - legal_reviewer
+  - approval_status
+  - distribution_url
+
 constraints:
   - Present tense headline.
   - Factual claims only.
   - No bracketed placeholders.
+  - Do not publish without approved quotes and a complete media contact.
+  - Do not present a routine update as news unless the event is clear and dated.
