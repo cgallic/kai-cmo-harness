@@ -1,16 +1,17 @@
-# Kai CMO Harness — AI Marketing OS for Claude Code
+# Kai Marketing OS — Marketing, From The Repo
 
-**Kai CMO Harness turns Claude Code into an AI marketing team:** 33 slash commands plus a tested marketing runtime for SEO, content, email, paid ads, landing pages, product launches, lifecycle marketing, competitive research, CRO, and AI-search/GEO strategy.
+**Kai Marketing OS is a repo-native marketing runtime for Claude Code.** It turns a product repository into a marketing workspace with briefs, playbooks, skill contracts, platform policy references, quality gates, and reusable marketing memory.
 
-If you searched for **AI marketing agent**, **Claude Code marketing skills**, **AI CMO**, **marketing automation for startups**, **SEO content agent**, **GEO / AEO agent**, **LLM citation strategy**, or **AI growth marketing assistant**, this is the repo you wanted.
+If you searched for **AI marketing agent**, **Claude Code marketing skills**, **AI CMO**, **repo-native marketing OS**, **marketing automation for startups**, **SEO content agent**, **GEO / AEO agent**, **LLM citation strategy**, or **AI growth marketing assistant**, this is the repo you wanted.
 
 ## Related links
 
-- [MeetKai](https://meetkai.xyz) — the operator layer behind Kai CMO workflows.
-- [KaiCalls](https://kaicalls.com) — AI voice agents for small-business phone answering and lead capture.
+- [MeetKai](https://meetkai.xyz) — the operator layer behind Kai Marketing OS workflows.
+- [KaiCalls](https://kaicalls.com) — a Kai-owned AI voice agent product for small-business phone answering and lead capture when the business is phone-led.
 - [Connor Gallic](https://connorgallic.com) — founder building Kai, KaiCalls, and AI automation systems.
 - [How Kai runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md) — plain-English explanation of the paid media workflow.
 - [System guide](docs/system/README.md) — architecture pages, Mermaid diagrams, and runtime schemas.
+- [Public skill manifest](docs/skill-manifest/README.md) — versioned API-style docs for every canonical `kai-*` skill.
 
 ## Start here
 
@@ -25,9 +26,20 @@ Kai is for people who need marketing work done from the repo, not from a blank c
 
 The simplest way to understand Kai: it reads the business, chooses the right marketing workflow, creates the work, checks it, and leaves a record so the next run is smarter.
 
+## 3-minute demo loop
+
+Run this in a product repo when you want to see the core workflow:
+
+```text
+/kai-start
+/kai-growth-plan
+```
+
+The first command creates or refreshes `MARKETING.md` from the repo. The second command turns that context into a stage-specific growth plan, skill routing, metrics, budget notes, and anti-patterns. See [workspace/growth-plan](workspace/growth-plan) for a sample output generated from this repo.
+
 ## What Kai is
 
-Kai is a **marketing operating system that runs inside Claude Code**.
+Kai is a **repo-native marketing operating system that runs inside Claude Code**.
 
 It uses Claude Code's operator experience — skills, subagents, hooks, memory, and terminal-native workflows — and adds marketing-specific infrastructure:
 
@@ -37,10 +49,14 @@ It uses Claude Code's operator experience — skills, subagents, hooks, memory, 
 - **Approval workflows** with risk-based auto-approval and state machine enforcement
 - **Compliance checking** with 100+ rules and regex pattern matching
 - **Quality gates**: Four U's scoring, banned-word detection, SEO linting, proof density, and AI-slop checks
-- **168 marketing knowledge files**: playbooks, frameworks, checklists, channel guides, personas, and ad platform policies
+- **Current inventory**: 39 skill directories, 37 canonical `kai-*` skill docs, 33 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts
 - **Claude Code marketing skills** for content, ads, lifecycle, SEO, GEO/AEO, audits, launches, and growth planning
 
 It is built for founders, indie hackers, SaaS teams, agencies, and product engineers who want Claude Code to help with actual growth work instead of generic copy generation.
+
+## What this is not
+
+Kai is not a prompt pack, a standalone chatbot, or a content spinner. It is a local operating surface for marketing work that needs source context, policy checks, quality gates, and repeatable workflows.
 
 ## Current status (v1.0.0, April 2026)
 
@@ -52,7 +68,7 @@ It is built for founders, indie hackers, SaaS teams, agencies, and product engin
 | Approval + action lifecycle | Built | State machine enforced, tested |
 | Compliance engine | Built | 100+ rules, 50+ regex patterns |
 | Content pipeline + quality gates | Built | LLM-backed via `scripts/content/engine.py` |
-| Knowledge base | Built | 168 files, production-grade marketing intelligence |
+| Knowledge base | Built | Current inventory is documented in `docs/system/governance-and-quality.md` |
 | Connector business logic | Partial | Request construction complete, HTTP transport not wired |
 | Creative module | Partial | Generates briefs/templates, not final content |
 | Watchers/monitoring | Partial | Threshold logic real, data feeds not connected |
@@ -80,7 +96,7 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
 
 **First run:** open Claude Code in any product repo and type `/kai-start` for guided setup. It reads your codebase, creates `MARKETING.md`, and recommends your first command.
 
-Or type `/kai` to see all 33 commands.
+Or type `/kai` to see the 33 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 37 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
 
 ## Why this exists
 
@@ -124,7 +140,7 @@ The marketing-specific operating system:
 | "Write all my product emails" | `/kai-email-system` | Welcome, activation, onboarding, trial, retention, and win-back emails |
 | "Plan a month of content" | `/kai-content-calendar` | Keyword- and persona-mapped content calendar |
 | "Audit my marketing" | `/kai-audit` | Prioritized marketing health report |
-| "Get us into ChatGPT answers" | `/kai-surround-sound` | AI-search visibility and LLM citation strategy |
+| "Improve AI-search visibility" | `/kai-surround-sound` | Agent-readiness, source-quality, and AI-search visibility strategy |
 | "Turn this blog into social posts" | `/kai-repurpose` | 15–25 assets for LinkedIn, X, TikTok, Instagram, email, and YouTube |
 
 ## How it works
@@ -153,9 +169,11 @@ Implementation
 
 The canonical runtime models live in `kai/runtime/`.
 
-## All 33 commands (Claude Code skills)
+## 33 public router commands, 37 canonical skills
 
 These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. They do not invoke the `kai/` Python runtime directly.
+
+The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 37 `harness/skills/kai-*` directories.
 
 ### Produce marketing assets
 
@@ -206,19 +224,19 @@ These commands work through Claude Code's skill system. They load knowledge file
 | Command | What you get |
 |---|---|
 | `/kai-competitors` | Competitive teardown and sales battlecards |
-| `/kai-surround-sound` | AEO/GEO strategy to get mentioned in ChatGPT, Perplexity, Gemini, Claude, and AI Overviews |
+| `/kai-surround-sound` | AEO/GEO strategy for agent-readiness, source-quality, and measured AI-search visibility |
 | `/kai-analytics` | Analytics and attribution setup |
 | `/kai` | Command router and help menu |
 
 ## What is included
 
-Kai ships with a real marketing knowledge base, not just prompts:
+Kai ships with a real marketing knowledge base, more than prompts:
 
-- **41 marketing playbooks** — growth loops, CRO, pricing, competitive intel, content repurposing, lifecycle marketing, launches, retargeting, ABM, partnerships, and more
+- **48 marketing playbook docs** — growth loops, CRO, pricing, competitive intel, content repurposing, lifecycle marketing, launches, retargeting, ABM, partnerships, and more
 - **27 frameworks** — SEO rules, AEO/GEO strategy, AI-search optimization, perception engineering, copywriting formulas, quality-rater guidance, query fan-out, and LLM citation tracking
-- **24 checklists** — technical SEO, ad launches, content quality, email, PR, website launches, social audits, creative production, and paid acquisition
+- **32 checklists** — technical SEO, ad launches, content quality, email, PR, website launches, social audits, creative production, and paid acquisition
 - **17 channel guides** — SEO content, LinkedIn, Meta ads, TikTok, YouTube, X/Twitter, Instagram, newsletters, podcasts, community, affiliate/referral, and press
-- **12 ad platform policies** — Google, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Amazon, X, and more
+- **18 harness references** — ad platform policies, API notes, compliance references, provenance rules, creator disclosure, and analytics query templates
 - **8 audience personas** — pains, hooks, objections, emotional drivers, and voice guidance
 - **Quality gates** — Four U's, banned-word checks, proof density, specificity, platform compliance, SEO linting, and AI-slop detection
 
@@ -261,7 +279,7 @@ tools/docker/                Modal and RunPod media-generation worker templates
 
 ## Where to start
 
-- **Just launched:** `/kai-growth-plan` → `/kai-email-system` → `/kai-landing-page`
+- **New launch:** `/kai-growth-plan` -> `/kai-email-system` -> `/kai-landing-page`
 - **Need organic growth:** `/kai-content-calendar` → `/kai-write` → `/kai-gate`
 - **Running ads:** `/kai-ad-campaign` → `/kai-cro` → `/kai-retarget`
 - **Need AI-search mentions:** `/kai-surround-sound` → `/kai-competitors` → `/kai-seo-audit`

@@ -46,13 +46,13 @@ For one-page summary of all frameworks: `_quick-reference.md`
 |------|----------|
 | `aeo-ai-search-strategies-2026.md` | AEO overview, patents, key ranking factors |
 | `aeo-ai-search-playbook-2026.md` | Complete AEO tactical playbook |
-| `llm-citation-tracking.md` | **WriteSonic AI Rank Tracker**, Reddit/Quora mentions, ChatGPT citations |
+| `llm-citation-tracking.md` | **WriteSonic AI Rank Tracker**, Reddit/Quora mentions, ChatGPT/Claude/Perplexity/Bing-Copilot/Grok citations |
 | `patent-information-gain-US12013887B2.md` | Understanding Google's novelty scoring |
-| `geo-academic-research-synthesis.md` | Citation science (+115% citations, +40% quotes) |
+| `geo-academic-research-synthesis.md` | GEO experimental citation, quotation, and statistics signals |
 | `perplexity-ranking-reverse-engineered.md` | Perplexity L3 Reranker, Trust Pool |
 | `entity-seo-knowledge-graph-deep-dive.md` | Entity Home, Wikidata, Schema.org |
 | `quality-rater-guidelines-deep-analysis.md` | QRG, E-E-A-T, Experience signals |
-| `ai-crawlers-technical-reference.md` | llms.txt, AI crawler user agents |
+| `ai-crawlers-technical-reference.md` | Multi-engine crawler policy, optional llms.txt, search/user/training bot split |
 | `query-fan-out-guide.md` | Google AI Mode sub-query optimization |
 | `hidden-aeo-edges.md` | Advanced AEO tactics |
 
@@ -111,6 +111,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 | File | Use When |
 |------|----------|
+| `frameworks/design/frontend-design.md` | General frontend UI methodology, app surfaces, responsive interaction states, Remotion scene polish |
 | `design/b2b-saas-design.md` | Designing B2B software interfaces |
 | `design/b2c-fintech-design.md` | Designing consumer fintech, payment apps, neobanks |
 
@@ -195,7 +196,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `checklists/cro-audit-checklist.md` | **CRO audit** - Technical, above-fold, trust, forms, content, navigation scoring (1-5 per section, /30 total) |
 | `checklists/google-ads-launch-checklist.md` | **Google Ads** - Account setup, Search/PMax/Display/YouTube config, keywords, ad copy, extensions, landing page, post-launch |
 | `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
-| `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - robots.txt / llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
+| `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - multi-engine robots.txt / optional llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
 
 ---
 
@@ -237,7 +238,7 @@ Original source files preserved in `archive/` for reference.
 | **Technical SEO security** | `checklists/SEO Expert-technical-seo-checklist.md` | - |
 | **Local SEO/GBP** | `playbooks/local-seo-gbp-optimization.md` | - |
 | **Topical map creation** | `playbooks/SEO Expert-semantic-seo-methodology.md` | - |
-| **LLM/ChatGPT visibility** | `playbooks/surround-sound-llm-manipulation.md` | `frameworks/aeo-ai-search/llm-citation-tracking.md` |
+| **LLM/AI-search visibility** | `playbooks/surround-sound-llm-manipulation.md` | `frameworks/aeo-ai-search/llm-citation-tracking.md` |
 | **Content brief creation** | `checklists/content-brief-checklist.md` | `playbooks/content-publication-velocity.md` |
 | **Patent research** | `checklists/patent-research-checklist.md` | - |
 | **Header/footer design** | `frameworks/dynamic-header-footer-design.md` | - |

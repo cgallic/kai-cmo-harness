@@ -1,6 +1,6 @@
 # Kai System Guide
 
-This folder is the reader-facing map of the Kai CMO Harness. It explains how the runtime, skills, content engine, quality gates, approvals, gateway, connectors, and background work fit together.
+This folder is the reader-facing map of the Kai CMO Harness. It explains how the runtime, skills, content engine, quality gates, approvals, gateway, connectors, background work, instruction contract, recommendation ethics, and evaluation doctrine fit together.
 
 Use this guide when you want to understand the product without reading every Python module first.
 
@@ -43,6 +43,7 @@ flowchart TB
 | Reader | Best first page | Why |
 |---|---|---|
 | New repo reader | [Runtime Map](runtime-map.md) | Names the main nouns and where they live. |
+| Operator comparing skills | [Public Skill Manifest](../skill-manifest/README.md) | Documents every canonical `kai-*` skill with triggers, inputs, methodology, gates, dependencies, provenance, examples, and failure modes. |
 | Engineer adding a workflow | [Schema Catalog](schema-catalog.md) | Shows the contracts workflows must preserve. |
 | Engineer debugging a run | [Execution Lifecycle](execution-lifecycle.md) | Follows a run from request to artifact to approval. |
 | Operator reviewing safety | [Governance and Quality](governance-and-quality.md) | Explains quality gates, provenance, policy, and holds. |
@@ -51,8 +52,9 @@ flowchart TB
 ## System Pages
 
 - [Runtime Map](runtime-map.md): product layers, runtime nouns, module activation, and code map.
+- [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for all 37 canonical `harness/skills/kai-*` skill directories.
 - [Execution Lifecycle](execution-lifecycle.md): local generation, audit/proposal flow, run states, and action states.
-- [Governance and Quality](governance-and-quality.md): quality gate pipeline, audit provenance, approval policy, and memory writeback.
+- [Governance and Quality](governance-and-quality.md): authoritative inventory, instruction contract, recommendation ethics, KaiCalls fit logic, evaluation doctrine, quality gate pipeline, audit provenance, approval policy, and memory writeback.
 - [Remote and Connectors](remote-and-connectors.md): FastAPI gateway, job queue, connector maturity, scheduled tasks, and integration shape.
 - [Schema Catalog](schema-catalog.md): JSON Schema contracts and example payloads.
 
