@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "buildCommand": "pip install pyyaml && python scripts/build_dashboard.py && mkdir -p public && cp workspace/dashboard.html public/index.html && cp workspace/agent_ui_spec.json public/agent_ui_spec.json",
+  "outputDirectory": "public"
+}

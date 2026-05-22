@@ -60,3 +60,10 @@ schedule:
   weekly_report: "0 8 * * 1"      # 8am Monday
   pattern_extract: "0 8 * * 1"    # 8am Monday
   performance_check: "0 9 1 * *"  # 9am 1st of month
+
+# Netlify one-click deployment parameters
+netlify:
+  token: ""      # Netlify Personal Access Token
+  site_id: ""    # Automatically populated after first deploy
+  site_url: ""   # Automatically populated after first deploy
+

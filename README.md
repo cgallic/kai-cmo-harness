@@ -103,6 +103,25 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
 
 Or type `/kai` to see the 36 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 40 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
 
+## One-Click Live Dashboard Deployment
+
+Kai compiles a complete, interactive, premium dashboard to help you and your subagents visualize active goals, tasks, and integrations. You can deploy it live to the web in one click:
+
+### Path A: Direct Browser Deploy (Zero-Config)
+1. Open your compiled dashboard locally at `workspace/dashboard.html` in your browser.
+2. Click the **One-Click Deploy** button in the top-right header.
+3. Enter your **Netlify Personal Access Token** (the modal includes a link to generate a free token in 30 seconds).
+4. Click **Deploy Dashboard**. The dashboard will automatically compile its layout and active agent states into an in-memory ZIP and upload it directly to Netlify. 
+5. The URL and Site ID are cached locally in your browser's `localStorage` so future deploys take exactly one click.
+
+### Path B: Double-Click Desktop Launchers
+Run the deployment process directly from your workspace folder:
+- **Windows:** Double-click the `deploy.bat` launcher. It compiles the latest dashboard state and pushes it to Netlify via a zero-dependency Python script.
+- **macOS/Linux:** Open a terminal in the repository root and run `./deploy.sh`.
+
+### Path C: Git-Backed Auto-Deploy
+Push this repository to GitHub and link your repository to Vercel or Netlify. The repo includes pre-configured `vercel.json` and `netlify.toml` files to auto-compile and host the dashboard.
+
 ## Why this exists
 
 Most AI marketing tools are either:

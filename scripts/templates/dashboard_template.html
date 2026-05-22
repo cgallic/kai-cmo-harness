@@ -15,6 +15,9 @@
   
   <!-- Marked.js (Markdown renderer) -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- JSZip (For browser-based one-click deploys) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
   <style>
     /* Design Tokens */
@@ -1870,6 +1873,10 @@
             <i data-lucide="help-circle" style="width:14px; height:14px"></i>
             Take Tour
           </button>
+          <button class="viewer-btn" id="deploy-open-btn" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); color:#34d399">
+            <i data-lucide="cloud-lightning" style="width:14px; height:14px"></i>
+            One-Click Deploy
+          </button>
           <button class="viewer-btn" id="settings-open-btn">
             <i data-lucide="settings" style="width:14px; height:14px"></i>
             Settings
@@ -2264,6 +2271,146 @@
     </div>
   </div>
 
+  <!-- One-Click Deployment Modal -->
+  <div class="settings-overlay" id="deploy-modal-overlay">
+    <div class="settings-card" style="width: 650px">
+      <div class="modal-header">
+        <h3 style="display:flex; align-items:center; gap:8px; margin:0">
+          <i data-lucide="cloud-lightning" style="color:#34d399; width:20px; height:20px"></i>
+          One-Click Live Deployment
+        </h3>
+        <button class="modal-close" onclick="closeDeployModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="settings-form" style="padding-bottom:12px; max-height:75vh; overflow-y:auto">
+        <p style="font-size:0.9rem; color:var(--text-dim); margin-bottom:16px; line-height:1.4">
+          Take your marketing dashboard live so you can access it from your mobile device, monitor active subagents remotely, and share audit reports with clients. Select your preferred deployment path:
+        </p>
+        
+        <div style="display:flex; flex-direction:column; gap:16px">
+          
+          <!-- Path A: One-Click Browser Deploy -->
+          <div style="background:rgba(168,85,247,0.03); border:1px solid rgba(168,85,247,0.25); padding:18px; border-radius:12px; position:relative; overflow:hidden">
+            <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%); pointer-events:none"></div>
+            
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
+              <h4 style="display:flex; align-items:center; gap:8px; color:#fff; font-size:1rem; margin:0">
+                <i data-lucide="zap" style="width:18px; height:18px; color:#a855f7"></i>
+                Path A: Instant Browser Deploy
+              </h4>
+              <span style="background:rgba(168,85,247,0.2); color:#d8b4fe; font-size:0.65rem; font-family:var(--font-mono); padding:3px 8px; border-radius:4px; font-weight:600">RECOMMENDED</span>
+            </div>
+            
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px; line-height:1.4">
+              Deploy this compiled dashboard directly from your browser to a live URL via Netlify. No Git, CLI terminal setup, or build pipelines required.
+              <span id="file-origin-warning" style="display:none; color:var(--color-warning); font-size:0.75rem; margin-top:8px">
+                <i data-lucide="alert-triangle" style="width:12px; height:12px; display:inline-block; vertical-align:middle; margin-right:2px"></i>
+                Note: Browsers block API requests from local file:// files due to CORS. Use Path B (deploy.bat) or open this dashboard via a local server.
+              </span>
+            </p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:14px">
+              <div class="form-group" style="margin:0">
+                <label class="form-label" style="font-size:0.75rem; color:var(--text-muted); display:flex; justify-content:space-between; margin-bottom:6px">
+                  <span>Netlify Personal Access Token</span>
+                  <a href="https://app.netlify.com/user/settings/applications#personal-access-tokens" target="_blank" style="color:var(--color-secondary); text-decoration:none; display:flex; align-items:center; gap:2px">
+                    Get free token <i data-lucide="external-link" style="width:10px; height:10px"></i>
+                  </a>
+                </label>
+                <div style="position:relative; display:flex; width:100%">
+                  <input class="form-input" type="password" id="netlify-token-input" placeholder="Paste your API token here (ntp_...)" style="width:100%; padding-right:40px; background:rgba(0,0,0,0.25); border-color:var(--border-color); color:#fff">
+                  <button type="button" onclick="toggleTokenVisibility()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-dim); cursor:pointer">
+                    <i data-lucide="eye" id="token-visibility-icon" style="width:16px; height:16px"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Site URL Indicator (if exists) -->
+              <div id="netlify-site-url-container" style="display:none; font-size:0.8rem; background:rgba(0,229,255,0.05); border:1px solid rgba(0,229,255,0.15); padding:8px 12px; border-radius:6px">
+                <span style="color:var(--text-dim)">Linked Site URL:</span> 
+                <a id="netlify-site-link" href="#" target="_blank" style="color:var(--color-secondary); font-weight:600; text-decoration:none; margin-left:4px"></a>
+              </div>
+            </div>
+            
+            <div style="display:flex; gap:10px; align-items:center">
+              <button onclick="deployToNetlify()" class="tour-btn primary" style="padding:8px 16px; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:6px; cursor:pointer">
+                <i data-lucide="cloud-lightning" style="width:14px; height:14px"></i>
+                Deploy Dashboard
+              </button>
+              <div id="deploy-status-indicator" style="font-size:0.75rem; color:var(--text-dim); display:flex; align-items:center; gap:6px"></div>
+            </div>
+            
+            <!-- Deployment Success State Info -->
+            <div id="deploy-success-box" style="display:none; margin-top:14px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); padding:14px; border-radius:8px">
+              <h5 style="color:var(--color-success); font-size:0.85rem; margin-bottom:6px; display:flex; align-items:center; gap:6px">
+                <i data-lucide="check-circle" style="width:14px; height:14px"></i>
+                Dashboard is Live!
+              </h5>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px">
+                Your dashboard has been deployed. Save the link below to access it from anywhere:
+              </p>
+              <div style="font-family:var(--font-mono); font-size:0.75rem; background:rgba(0,0,0,0.3); padding:6px 10px; border-radius:4px; margin-bottom:10px; word-break:break-all">
+                <a id="deploy-live-link" href="#" target="_blank" style="color:var(--color-secondary); text-decoration:none"></a>
+              </div>
+              <div style="display:flex; gap:12px; font-size:0.75rem">
+                <a id="deploy-admin-link" href="#" target="_blank" style="color:var(--text-dim); text-decoration:none; display:flex; align-items:center; gap:3px">
+                  <i data-lucide="settings-2" style="width:12px; height:12px"></i> Manage on Netlify
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Path B: Command Line Deploy -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); padding:16px; border-radius:8px">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px">
+              <h4 style="display:flex; align-items:center; gap:6px; color:#fff; font-size:0.95rem; margin:0">
+                <i data-lucide="terminal" style="width:16px; height:16px; color:var(--color-secondary)"></i>
+                Path B: Double-Click Desktop Launchers
+              </h4>
+              <span style="background:rgba(0,229,255,0.1); color:var(--color-secondary); font-size:0.65rem; font-family:var(--font-mono); padding:2px 6px; border-radius:4px">LOCAL SCRIPT</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:10px; line-height:1.4">
+              Run the deployment locally from your workspace folder using the pre-packaged quick script files in the project root:
+            </p>
+            <div style="font-size:0.75rem; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); font-family:var(--font-mono); color:var(--text-dim); display:flex; flex-direction:column; gap:4px">
+              <div><strong>Windows:</strong> Double-click <code style="color:#fff">deploy.bat</code> to compile and push.</div>
+              <div><strong>Mac/Linux:</strong> Run <code style="color:#fff">./deploy.sh</code> in your terminal.</div>
+            </div>
+          </div>
+
+          <!-- Path C: Git-backed Auto-deploy -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); padding:16px; border-radius:8px">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px">
+              <h4 style="display:flex; align-items:center; gap:6px; color:#fff; font-size:0.95rem; margin:0">
+                <i data-lucide="git-branch" style="width:16px; height:16px; color:#10b981"></i>
+                Path C: Git-Backed Auto-Deploy (GitHub Pages / Vercel / Netlify)
+              </h4>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:10px; line-height:1.4">
+              To setup continuous deployment, push this repository to GitHub and connect it to your hosting provider:
+            </p>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px">
+              <a href="https://github.com/cgallic/kai-cmo-harness" target="_blank" style="background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--border-color); text-align:center; padding:8px; border-radius:6px; font-weight:600; font-size:0.75rem; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px; transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                <i data-lucide="github" style="width:14px; height:14px"></i> GitHub Repo
+              </a>
+              <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcgallic%2Fkai-cmo-harness" target="_blank" style="background:#fff; color:#000; text-align:center; padding:8px; border-radius:6px; font-weight:600; font-size:0.75rem; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px; transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                <svg viewBox="0 0 116 100" fill="#000" style="width:12px; height:10px"><path d="M57.5 0L115 100H0L57.5 0z"/></svg> Vercel
+              </a>
+              <a href="https://app.netlify.com/start/deploy?repository=https://github.com/cgallic/kai-cmo-harness" target="_blank" style="background:#00AD9F; color:#fff; text-align:center; padding:8px; border-radius:6px; font-weight:600; font-size:0.75rem; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:4px; transition:opacity 0.2s" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                <svg viewBox="0 0 500 500" fill="#fff" style="width:12px; height:12px"><path d="M428 203c-23-28-56-43-91-43-34 0-66 14-89 40L143 323c-4 5-11 7-17 5L33 294c-6-2-10-8-10-14V113c0-6 3-11 9-13L234 11c6-2 13-2 19 0l202 89c6 2 9 7 9 13v90c0 6-4 11-10 13l-46-13z"/><path d="M72 400c23 28 56 43 91 43 34 0 66-14 89-40l105-123c4-5 11-7 17-5l93 29c6 2 10 8 10 14v167c0 6-3 11-9 13L266 489c-6 2-13 2-19 0L45 400c-6-2-9-7-9-13v-90c0-6 4-11 10-13l46 13z"/></svg> Netlify
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="settings-footer" style="padding-top:12px">
+        <button class="tour-btn primary" onclick="closeDeployModal()" style="margin-left:auto">Done</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Configuration Settings Modal -->
   <div class="settings-overlay" id="settings-modal-overlay">
     <div class="settings-card">
@@ -2409,6 +2556,11 @@
         title: "Command Console & History",
         body: "Review technical logs under <strong>Execution Runs</strong>. If you want to run manual audits, calculate compliance scores, or chat directly with the workspace runtime, use the <strong>Interactive Console</strong>.",
         tab: "interactive-console"
+      },
+      {
+        title: "One-Click Live Deployment",
+        body: "Want to view this dashboard on your mobile device, monitor your active subagents remotely, or share growth results? Click the <strong>One-Click Deploy</strong> button in the top bar to deploy this dashboard to GitHub Pages, Vercel, or Netlify instantly!",
+        tab: "mission-control"
       }
     ];
 
@@ -2507,6 +2659,7 @@
       // Tour and Settings togglers
       document.getElementById("tour-start-btn").addEventListener("click", startTour);
       document.getElementById("settings-open-btn").addEventListener("click", openSettingsModal);
+      document.getElementById("deploy-open-btn").addEventListener("click", openDeployModal);
 
       // Close modal on outside click
       window.addEventListener("click", (e) => {
@@ -2516,6 +2669,7 @@
         }
         if (e.target.classList.contains("settings-overlay")) {
           closeSettingsModal();
+          closeDeployModal();
         }
       });
     }
@@ -3369,6 +3523,203 @@
 
     function closeSettingsModal() {
       document.getElementById("settings-modal-overlay").classList.remove("active");
+    }
+
+    function openDeployModal() {
+      document.getElementById("deploy-modal-overlay").classList.add("active");
+      initNetlifyDeployUI();
+      lucide.createIcons();
+    }
+
+    function closeDeployModal() {
+      document.getElementById("deploy-modal-overlay").classList.remove("active");
+    }
+
+    function toggleTokenVisibility() {
+      const input = document.getElementById("netlify-token-input");
+      const icon = document.getElementById("token-visibility-icon");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      lucide.createIcons();
+    }
+
+    function initNetlifyDeployUI() {
+      const token = localStorage.getItem("kai_netlify_token") || "";
+      const siteId = localStorage.getItem("kai_netlify_site_id") || "";
+      const siteUrl = localStorage.getItem("kai_netlify_site_url") || "";
+      
+      const tokenInput = document.getElementById("netlify-token-input");
+      if (tokenInput) tokenInput.value = token;
+      
+      const container = document.getElementById("netlify-site-url-container");
+      const link = document.getElementById("netlify-site-link");
+      }
+      
+      const warning = document.getElementById("file-origin-warning");
+      if (warning) {
+        warning.style.display = (window.location.protocol === 'file:') ? "block" : "none";
+      }
+    }
+
+    function showDeployStatus(msg, type) {
+      const el = document.getElementById("deploy-status-indicator");
+      if (!el) return;
+      el.textContent = msg;
+      if (type === "error") {
+        el.style.color = "var(--color-danger)";
+      } else if (type === "success") {
+        el.style.color = "var(--color-success)";
+      } else {
+        el.style.color = "var(--color-secondary)";
+      }
+    }
+
+    async function deployToNetlify() {
+      const tokenInput = document.getElementById("netlify-token-input");
+      const token = tokenInput ? tokenInput.value.trim() : "";
+      if (!token) {
+        showDeployStatus("Token is required.", "error");
+        return;
+      }
+      
+      localStorage.setItem("kai_netlify_token", token);
+      showDeployStatus("Zipping files...", "info");
+      
+      try {
+        // Clone document element and clean it up
+        const docClone = document.documentElement.cloneNode(true);
+        const overlays = docClone.querySelectorAll(".settings-overlay");
+        overlays.forEach(o => o.classList.remove("active"));
+        
+        // Remove token from input in build
+        const cloneTokenInput = docClone.querySelector("#netlify-token-input");
+        if (cloneTokenInput) cloneTokenInput.value = "";
+        
+        const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
+        const statePayload = document.getElementById("kai-data")?.textContent || "{}";
+        
+        const zip = new JSZip();
+        zip.file("index.html", htmlContent);
+        zip.file("agent_ui_spec.json", statePayload);
+        
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        
+        let siteId = localStorage.getItem("kai_netlify_site_id") || "";
+        let siteUrl = localStorage.getItem("kai_netlify_site_url") || "";
+        
+        showDeployStatus("Connecting to Netlify...", "info");
+        
+        if (!siteId) {
+          // Suggest name based on owner
+          const ownerName = (state && state.owner && state.owner.name) || "Operator";
+          const cleanOwner = ownerName.toLowerCase().replace(/[^a-z0-9-]/g, "");
+          const siteNameSuggestion = `kai-dashboard-${cleanOwner || "site"}`;
+          
+          showDeployStatus("Creating new site container...", "info");
+          
+          let siteResponse;
+          try {
+            const createRes = await fetch("https://api.netlify.com/api/v1/sites", {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ name: siteNameSuggestion })
+            });
+            
+            if (createRes.status === 422) {
+              // Name taken, fallback to auto-assigned
+              showDeployStatus("Claim taken, creating auto-named container...", "info");
+              const createResAuto = await fetch("https://api.netlify.com/api/v1/sites", {
+                method: "POST",
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+              });
+              if (!createResAuto.ok) {
+                const errData = await createResAuto.json().catch(() => ({ message: "Unknown error" }));
+                throw new Error(errData.message || "Failed to create site container");
+              }
+              siteResponse = await createResAuto.json();
+            } else if (!createRes.ok) {
+              const errData = await createRes.json().catch(() => ({ message: "Unknown error" }));
+              throw new Error(errData.message || "Failed to create site container");
+            } else {
+              siteResponse = await createRes.json();
+            }
+          } catch (err) {
+            throw new Error("Could not initialize site container: " + err.message);
+          }
+          
+          siteId = siteResponse.id;
+          siteUrl = siteResponse.ssl_url || siteResponse.url;
+          
+          localStorage.setItem("kai_netlify_site_id", siteId);
+          localStorage.setItem("kai_netlify_site_url", siteUrl);
+          
+          const container = document.getElementById("netlify-site-url-container");
+          const link = document.getElementById("netlify-site-link");
+          if (container && link) {
+            container.style.display = "block";
+            link.href = siteUrl;
+            link.textContent = siteUrl;
+          }
+        }
+        
+        showDeployStatus("Uploading live bundle...", "info");
+        
+        const uploadRes = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/deploys`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/zip"
+          },
+          body: zipBlob
+        });
+        
+        if (!uploadRes.ok) {
+          const errData = await uploadRes.json().catch(() => ({ message: "Unknown error" }));
+          throw new Error(errData.message || "Failed to upload live bundle to Netlify");
+        }
+        
+        const uploadData = await uploadRes.json();
+        const finalUrl = uploadData.ssl_url || uploadData.url || siteUrl;
+        const adminUrl = `https://app.netlify.com/sites/${uploadData.name}`;
+        
+        showDeployStatus("Deploy complete!", "success");
+        
+        // Show success box
+        const successBox = document.getElementById("deploy-success-box");
+        if (successBox) successBox.style.display = "block";
+        
+        const liveLink = document.getElementById("deploy-live-link");
+        if (liveLink) {
+          liveLink.href = finalUrl;
+          liveLink.textContent = finalUrl;
+        }
+        
+        const adminLink = document.getElementById("deploy-admin-link");
+        if (adminLink) {
+          adminLink.href = adminUrl;
+        }
+        
+        appendConsoleLog(`Deployed dashboard live to Netlify: ${finalUrl}`, "success");
+      } catch (error) {
+        console.error(error);
+        let errorMsg = error.message;
+        if (window.location.protocol === 'file:') {
+          errorMsg += " (Note: Browsers block API requests from local file:// files due to CORS. Use deploy.bat / deploy.sh instead.)";
+        }
+        showDeployStatus(`Error: ${errorMsg}`, "error");
+      }
     }
 
     // Dynamic yaml preview output
