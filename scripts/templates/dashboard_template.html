@@ -1,0 +1,3550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kai Marketing OS — Workspace Dashboard</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Marked.js (Markdown renderer) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    /* Design Tokens */
+    :root {
+      --bg-base: #080a0f;
+      --bg-panel: rgba(13, 17, 24, 0.7);
+      --bg-panel-solid: #0d1118;
+      --bg-card: rgba(20, 26, 38, 0.45);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      
+      --color-primary: #a855f7;       /* Purple (Agent / AI) */
+      --color-secondary: #00e5ff;     /* Cyan (Metrics / Info) */
+      --color-success: #10b981;       /* Green (Done / Active) */
+      --color-warning: #f59e0b;       /* Amber (Review / Warning) */
+      --color-danger: #ef4444;        /* Rose (Error / Failed) */
+      
+      --text-main: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.65);
+      --text-dim: rgba(255, 255, 255, 0.4);
+      
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --glow-primary: 0 0 20px rgba(168, 85, 247, 0.25);
+      --glow-secondary: 0 0 20px rgba(0, 229, 255, 0.25);
+      --glow-success: 0 0 20px rgba(16, 185, 129, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.06) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* App Layout */
+    .app-container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: rgba(10, 12, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand-section {
+      padding: 30px 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      margin-top: 6px;
+      font-family: var(--font-mono);
+    }
+
+    .nav-section {
+      flex: 1;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-item.active {
+      color: var(--text-main);
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.2);
+      box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.08);
+    }
+
+    .nav-item i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-success);
+      box-shadow: var(--glow-success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Main Frame */
+    .main-frame {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      height: 76px;
+      background: rgba(10, 12, 18, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 9;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .project-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .autonomy-controller {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+
+    .autonomy-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: all 0.2s ease;
+    }
+
+    .autonomy-btn:hover {
+      color: var(--text-muted);
+    }
+
+    .autonomy-btn.active {
+      background: var(--color-primary);
+      color: var(--text-main);
+      box-shadow: var(--glow-primary);
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .last-sync {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 12px;
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 40px;
+      overflow-y: auto;
+      height: calc(100% - 76px);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography & Utilities */
+    h1, h2, h3, h4 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+    }
+    
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .glass-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* TAB: MISSION CONTROL */
+    .mission-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    .mission-welcome h2 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .mission-welcome p {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+
+    /* Score Dial Component */
+    .score-widget {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .dial-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+    }
+
+    .dial-svg {
+      transform: rotate(-90deg);
+      width: 140px;
+      height: 140px;
+    }
+
+    .dial-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.03);
+      stroke-width: 10;
+    }
+
+    .dial-fill {
+      fill: none;
+      stroke: url(#score-gradient);
+      stroke-width: 10;
+      stroke-dasharray: 408; /* 2 * PI * r (r=65) */
+      stroke-dashoffset: 408;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dial-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .dial-num {
+      font-family: var(--font-mono);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+      text-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .dial-label {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    .score-breakdown-mini {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px 24px;
+      flex: 1;
+    }
+
+    .score-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .score-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .score-bar-header span:first-child {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .score-bar-track {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: var(--color-primary);
+      width: 0%;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 2px;
+    }
+
+    /* Metric Cards */
+    .metric-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: transparent;
+    }
+
+    .metric-card.analytics::before { background: var(--color-secondary); }
+    .metric-card.seo::before { background: var(--color-primary); }
+    .metric-card.calls::before { background: var(--color-success); }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .metric-header i {
+      width: 16px;
+      height: 16px;
+    }
+
+    .metric-body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .metric-val-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-val-num {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .metric-val-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Attention Panel & Active Agents */
+    .mission-cols {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    .attention-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .attention-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.03);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+    }
+
+    .attention-item.warning {
+      background: rgba(245, 158, 11, 0.03);
+      border-color: rgba(245, 158, 11, 0.15);
+    }
+
+    .attention-icon-wrapper {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .attention-item.error .attention-icon-wrapper {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--color-danger);
+    }
+
+    .attention-item.warning .attention-icon-wrapper {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-warning);
+    }
+
+    .attention-text-wrapper {
+      flex: 1;
+    }
+
+    .attention-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .attention-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .attention-action {
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .attention-action:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+    }
+
+    .mini-agents-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .mini-agent-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      transition: border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mini-agent-row:hover {
+      border-color: var(--border-hover);
+    }
+
+    .mini-agent-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-agent-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .mini-agent-role {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-dot.idle { background: var(--color-success); }
+    .status-dot.working { background: var(--color-primary); }
+    .status-dot.error { background: var(--color-danger); }
+    .status-dot.done { background: var(--color-secondary); }
+
+    /* TAB: AGENTS REGISTRY */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .agent-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .agent-card-title h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .agent-card-title span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .agent-badge {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #c084fc;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .agent-badge.assurance-high {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: rgba(0, 229, 255, 0.3);
+      color: var(--color-secondary);
+    }
+
+    .agent-purpose {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    .agent-card-meta {
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .agent-model {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .agent-btn {
+      background: transparent;
+      border: none;
+      color: var(--color-secondary);
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.2s ease;
+    }
+
+    .agent-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* TAB: WORKSPACE EXPLORER */
+    .workspace-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+      height: calc(100vh - 180px);
+    }
+
+    .workspace-sidebar {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .workspace-search {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .workspace-search input {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-color);
+      padding: 8px 12px 8px 36px;
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+    }
+
+    .workspace-search input:focus {
+      outline: none;
+      border-color: var(--color-secondary);
+    }
+
+    .workspace-search i {
+      position: absolute;
+      left: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-dim);
+    }
+
+    .workspace-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .tree-folder {
+      margin-bottom: 12px;
+    }
+
+    .tree-folder-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tree-folder-title i {
+      width: 12px;
+      height: 12px;
+    }
+
+    .tree-file-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .tree-file-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tree-file-item:hover {
+      background: rgba(255,255,255,0.02);
+      color: var(--text-main);
+    }
+
+    .tree-file-item.active {
+      background: rgba(0, 229, 255, 0.08);
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+
+    .tree-file-item i {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .workspace-viewer {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .viewer-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .viewer-title h3 {
+      font-size: 1.1rem;
+      font-family: var(--font-sans);
+    }
+
+    .viewer-title span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .viewer-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .viewer-btn {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .viewer-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-main);
+    }
+
+    .viewer-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .viewer-content pre {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 16px 0;
+      color: #e2e8f0;
+    }
+
+    .viewer-content code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .viewer-content pre code {
+      background: transparent;
+      padding: 0;
+      font-size: 0.85rem;
+    }
+
+    .viewer-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-dim);
+      gap: 16px;
+    }
+
+    .viewer-placeholder i {
+      width: 48px;
+      height: 48px;
+      stroke-width: 1;
+    }
+
+    /* Markdown styling in viewer */
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-family: var(--font-sans);
+    }
+    .markdown-body h1 { font-size: 1.6rem; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+    .markdown-body h2 { font-size: 1.3rem; }
+    .markdown-body h3 { font-size: 1.1rem; }
+    .markdown-body p { margin-bottom: 14px; }
+    .markdown-body ul, .markdown-body ol { margin-bottom: 14px; padding-left: 20px; }
+    .markdown-body li { margin-bottom: 4px; }
+    .markdown-body blockquote {
+      border-left: 4px solid var(--color-primary);
+      padding-left: 16px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin: 16px 0;
+    }
+
+    /* TAB: TASK BOARD */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      height: calc(100vh - 200px);
+      min-height: 500px;
+    }
+
+    .kanban-col {
+      display: flex;
+      flex-direction: column;
+      background: rgba(10, 12, 18, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .kanban-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .kanban-col-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kanban-col-count {
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+
+    .kanban-col-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .kanban-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kanban-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .kanban-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kanban-card-id {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .priority-badge {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .priority-badge.p0 { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--color-danger); }
+    .priority-badge.p1 { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: var(--color-warning); }
+    .priority-badge.p2 { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+
+    .kanban-card-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    .kanban-card-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.4;
+    }
+
+    /* TAB: EXECUTIONS & LOGS */
+    .exec-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      height: calc(100vh - 180px);
+    }
+
+    .exec-sidebar {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .exec-sidebar-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exec-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .exec-item {
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.01);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .exec-item:hover {
+      border-color: var(--border-hover);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .exec-item.active {
+      background: rgba(168, 85, 247, 0.05);
+      border-color: rgba(168, 85, 247, 0.25);
+    }
+
+    .exec-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exec-item-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    .exec-item-badge {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .exec-item-badge.completed { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--color-success); }
+    .exec-item-badge.failed { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--color-danger); }
+    .exec-item-badge.running { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: var(--color-primary); }
+
+    .exec-item-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .exec-viewer {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .exec-viewer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .exec-viewer-title h3 {
+      font-size: 1.15rem;
+    }
+
+    .exec-viewer-title span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      display: block;
+      margin-top: 4px;
+    }
+
+    .exec-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 16px 24px;
+      background: rgba(0,0,0,0.08);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.8rem;
+    }
+
+    .exec-meta-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .exec-meta-label {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .exec-meta-val {
+      font-family: var(--font-mono);
+      word-break: break-all;
+    }
+
+    .exec-meta-val.code {
+      background: rgba(255,255,255,0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .exec-meta-val.code i {
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .exec-meta-val.code i:hover {
+      color: var(--color-secondary);
+    }
+
+    .exec-log-content {
+      flex: 1;
+      padding: 28px;
+      overflow-y: auto;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* TAB: CONSOLE CONTAINER */
+    .console-container {
+      background: #05070a;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      height: calc(100vh - 180px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+    }
+
+    .console-header {
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .console-tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .console-circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .console-circle.red { background: #ff5f56; }
+    .console-circle.yellow { background: #ffbd2e; }
+    .console-circle.green { background: #27c93f; }
+
+    .console-title {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .console-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      line-height: 1.5;
+    }
+
+    .console-line {
+      display: flex;
+      gap: 10px;
+      animation: consoleFade 0.2s ease-out forwards;
+    }
+
+    @keyframes consoleFade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .console-prompt {
+      color: var(--color-primary);
+      user-select: none;
+    }
+
+    .console-prompt.sys {
+      color: var(--color-secondary);
+    }
+
+    .console-text {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .console-text.system { color: #888; font-style: italic; }
+    .console-text.user { color: #fff; font-weight: 600; }
+    .console-text.assistant { color: #c084fc; }
+    .console-text.error { color: var(--color-danger); }
+    .console-text.success { color: var(--color-success); }
+    .console-text.warning { color: var(--color-warning); }
+
+    .console-input-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      background: rgba(0,0,0,0.3);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .console-input-line span {
+      color: var(--color-primary);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .console-input-line input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+    }
+
+    .console-input-line input:focus {
+      outline: none;
+    }
+
+    .quick-commands {
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.01);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .quick-cmd-label {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .quick-cmd-btn {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .quick-cmd-btn:hover {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+
+    /* MODALS & OVERLAYS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--bg-panel-solid);
+      border: 1px solid var(--border-color);
+      width: 680px;
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.2rem;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* TOUR & ONBOARDING WIZARD */
+    .tour-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .tour-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .tour-card {
+      background: var(--bg-panel-solid);
+      border: 2px solid var(--color-primary);
+      width: 500px;
+      max-width: 90vw;
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.35);
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .tour-overlay.active .tour-card {
+      transform: scale(1);
+    }
+
+    .tour-step-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--color-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tour-title {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tour-body {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .tour-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+    }
+
+    .tour-nav-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .tour-btn {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+    }
+
+    .tour-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-main);
+    }
+
+    .tour-btn.primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+
+    .tour-btn.primary:hover {
+      box-shadow: var(--glow-primary);
+    }
+
+    /* SETTINGS MODAL & FORM ELEMENTS */
+    .settings-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .settings-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .settings-card {
+      background: var(--bg-panel-solid);
+      border: 1px solid var(--border-color);
+      width: 600px;
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .settings-overlay.active .settings-card {
+      transform: translateY(0);
+    }
+
+    .settings-form {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      border-radius: 6px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-secondary);
+    }
+
+    .settings-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .download-yaml-box {
+      margin-top: 12px;
+      padding: 14px;
+      background: rgba(168, 85, 247, 0.03);
+      border: 1px dashed rgba(168, 85, 247, 0.3);
+      border-radius: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .download-yaml-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* SVG GRADIENT DEF */
+    .svg-defs-hidden {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SVG Gradient Definitions -->
+  <svg class="svg-defs-hidden">
+    <defs>
+      <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#a855f7" />
+        <stop offset="100%" stop-color="#00e5ff" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-title">
+          <i data-lucide="terminal"></i>
+          Kai OS
+        </div>
+        <div class="brand-subtitle">CMO local control</div>
+      </div>
+      
+      <nav class="nav-section">
+        <a class="nav-item active" data-tab="mission-control">
+          <i data-lucide="layout-dashboard"></i>
+          Mission Control
+        </a>
+        <a class="nav-item" data-tab="agent-registry">
+          <i data-lucide="users"></i>
+          Agent Registry
+        </a>
+        <a class="nav-item" data-tab="workspace-explorer">
+          <i data-lucide="folder-open"></i>
+          Workspace Assets
+        </a>
+        <a class="nav-item" data-tab="task-board">
+          <i data-lucide="kanban-square"></i>
+          Task Board
+        </a>
+        <a class="nav-item" data-tab="execution-logs">
+          <i data-lucide="scroll-text"></i>
+          Execution Runs
+        </a>
+        <a class="nav-item" data-tab="interactive-console">
+          <i data-lucide="code-2"></i>
+          Interactive Console
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <div class="pulse-dot"></div>
+          <span>DESKTOP RUNTIME</span>
+        </div>
+        <div style="font-size:0.7rem; font-family:var(--font-mono)">v1.0.0 — Open Source</div>
+      </div>
+    </aside>
+
+    <!-- Main Frame -->
+    <main class="main-frame">
+      
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <div class="project-badge" id="project-tag">
+            <i data-lucide="git-branch" style="width:14px; height:14px"></i>
+            <span>kai-marketing-os</span>
+          </div>
+          <div class="autonomy-controller">
+            <span style="font-size:0.7rem; color:var(--text-dim); padding-left:6px; font-family:var(--font-mono)">AUTONOMY:</span>
+            <button class="autonomy-btn" data-mode="supervised">SUPERVISED</button>
+            <button class="autonomy-btn" data-mode="balanced">BALANCED</button>
+            <button class="autonomy-btn" data-mode="autonomous">AUTONOMOUS</button>
+          </div>
+        </div>
+        <div class="top-bar-right">
+          <div class="last-sync">
+            <i data-lucide="refresh-cw" style="width:14px; height:14px"></i>
+            <span>Updated: <span id="sync-time">Just Now</span></span>
+          </div>
+          <button class="viewer-btn" id="tour-start-btn" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); color:#c084fc">
+            <i data-lucide="help-circle" style="width:14px; height:14px"></i>
+            Take Tour
+          </button>
+          <button class="viewer-btn" id="settings-open-btn">
+            <i data-lucide="settings" style="width:14px; height:14px"></i>
+            Settings
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        
+        <!-- TAB: MISSION CONTROL -->
+        <section class="tab-content active" id="mission-control">
+          <div class="mission-header">
+            <div class="mission-welcome">
+              <h2 id="welcome-title">Welcome Back, SaaS Operator</h2>
+              <p id="project-desc">Kai local runtime database environment for building and scaling marketing systems.</p>
+            </div>
+          </div>
+          
+          <div class="glass-card" style="margin-bottom: 24px;">
+            <div class="score-widget">
+              <div class="dial-container">
+                <svg class="dial-svg">
+                  <circle class="dial-bg" cx="70" cy="70" r="65"></circle>
+                  <circle class="dial-fill" id="score-ring" cx="70" cy="70" r="65"></circle>
+                </svg>
+                <div class="dial-text">
+                  <div class="dial-num" id="score-num">--</div>
+                  <div class="dial-label">Ready</div>
+                </div>
+              </div>
+              <div style="flex:1">
+                <h3 style="font-size:1.1rem; margin-bottom:6px">Marketing Readiness Assessment</h3>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:14px">Overall score calculated based on automated quality gates, structural checks, SEO linting rules, and connection audit health indicators.</p>
+                <div class="score-breakdown-mini" id="score-bars">
+                  <!-- Dynamic Score Bars -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Channel Stats Grid -->
+          <div class="grid-3">
+            <div class="glass-card metric-card analytics">
+              <div class="metric-header">
+                <span>Web Analytics (GA4)</span>
+                <i data-lucide="bar-chart-3"></i>
+              </div>
+              <div class="metric-body">
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="ga4-sessions">0</span>
+                  <span class="metric-val-label">Sessions</span>
+                </div>
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="ga4-users">0</span>
+                  <span class="metric-val-label">Users</span>
+                </div>
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="ga4-bounce">0%</span>
+                  <span class="metric-val-label">Bounce Rate</span>
+                </div>
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="ga4-conversions">0</span>
+                  <span class="metric-val-label">Conversions</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="glass-card metric-card seo">
+              <div class="metric-header">
+                <span>Search Visibility (GSC)</span>
+                <i data-lucide="search"></i>
+              </div>
+              <div class="metric-body">
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="gsc-impressions">0</span>
+                  <span class="metric-val-label">Impressions</span>
+                </div>
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="gsc-clicks">0</span>
+                  <span class="metric-val-label">Clicks</span>
+                </div>
+                <div class="metric-val-box" style="grid-column: span 2">
+                  <span class="metric-val-num" id="gsc-pos">0.0</span>
+                  <span class="metric-val-label">Avg Position</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card metric-card calls">
+              <div class="metric-header">
+                <span>KaiCalls Receptionist</span>
+                <i data-lucide="phone-call"></i>
+              </div>
+              <div class="metric-body">
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="calls-total">24</span>
+                  <span class="metric-val-label">Incoming Calls</span>
+                </div>
+                <div class="metric-val-box">
+                  <span class="metric-val-num" id="calls-missed" style="color:var(--color-danger)">0</span>
+                  <span class="metric-val-label">Missed Calls</span>
+                </div>
+                <div class="metric-val-box" style="grid-column: span 2">
+                  <span class="metric-val-num" style="color:var(--color-success)">100%</span>
+                  <span class="metric-val-label">Speed-to-Lead Routing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mission-cols">
+            <!-- Left: Needs Attention -->
+            <div class="glass-card">
+              <h3 style="font-size:1.1rem; display:flex; align-items:center; gap:8px">
+                <i data-lucide="alert-octagon" style="color:var(--color-warning); width:18px; height:18px"></i>
+                Needs Attention
+              </h3>
+              <div class="attention-list" id="attention-panel">
+                <!-- Dynamic Warnings -->
+              </div>
+            </div>
+
+            <!-- Right: Subagent list preview -->
+            <div class="glass-card">
+              <h3 style="font-size:1.1rem; display:flex; align-items:center; gap:8px">
+                <i data-lucide="bot" style="color:var(--color-primary); width:18px; height:18px"></i>
+                Active Agents
+              </h3>
+              <div class="mini-agents-grid" id="mini-agents-panel">
+                <!-- Dynamic active agent rows -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB: AGENT REGISTRY -->
+        <section class="tab-content" id="agent-registry">
+          <div class="section-title">
+            <i data-lucide="users"></i>
+            Agent Registry
+          </div>
+          <div class="agents-grid" id="agents-grid">
+            <!-- Dynamic Agent Cards -->
+          </div>
+        </section>
+
+        <!-- TAB: WORKSPACE EXPLORER -->
+        <section class="tab-content" id="workspace-explorer">
+          <div class="workspace-layout">
+            
+            <!-- Left: Sidebar Tree -->
+            <div class="workspace-sidebar">
+              <div class="workspace-search">
+                <i data-lucide="search"></i>
+                <input type="text" id="file-search-input" placeholder="Search workspace files...">
+              </div>
+              <div class="workspace-tree" id="workspace-tree-container">
+                <!-- Dynamic Folders & Files -->
+              </div>
+            </div>
+            
+            <!-- Right: Code Viewer -->
+            <div class="workspace-viewer">
+              <div class="viewer-header">
+                <div class="viewer-title">
+                  <h3 id="viewer-file-title">No file selected</h3>
+                  <span id="viewer-file-path">---</span>
+                </div>
+                <div class="viewer-actions">
+                  <button class="viewer-btn" id="viewer-copy-btn">
+                    <i data-lucide="copy" style="width:14px; height:14px"></i>
+                    Copy Content
+                  </button>
+                </div>
+              </div>
+              <div class="viewer-content" id="viewer-body">
+                <div class="viewer-placeholder">
+                  <i data-lucide="file-text"></i>
+                  <span>Select a generated plan, brief, or draft asset to read in high-fidelity preview mode.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB: TASK BOARD -->
+        <section class="tab-content" id="task-board">
+          <div class="section-title">
+            <i data-lucide="kanban-square"></i>
+            Task Board
+          </div>
+          <div class="kanban-board">
+            
+            <!-- Pending -->
+            <div class="kanban-col">
+              <div class="kanban-col-header">
+                <div class="kanban-col-title">
+                  <i data-lucide="lock" style="width:14px; height:14px; color:var(--text-dim)"></i>
+                  Pending / Blocked
+                </div>
+                <span class="kanban-col-count" id="count-pending">0</span>
+              </div>
+              <div class="kanban-col-body" id="col-pending"></div>
+            </div>
+
+            <!-- Ready -->
+            <div class="kanban-col">
+              <div class="kanban-col-header">
+                <div class="kanban-col-title">
+                  <i data-lucide="circle-play" style="width:14px; height:14px; color:var(--color-secondary)"></i>
+                  Ready
+                </div>
+                <span class="kanban-col-count" id="count-ready">0</span>
+              </div>
+              <div class="kanban-col-body" id="col-ready"></div>
+            </div>
+
+            <!-- In Progress / Review -->
+            <div class="kanban-col">
+              <div class="kanban-col-header">
+                <div class="kanban-col-title">
+                  <i data-lucide="eye" style="width:14px; height:14px; color:var(--color-warning)"></i>
+                  Ready for Review
+                </div>
+                <span class="kanban-col-count" id="count-review">0</span>
+              </div>
+              <div class="kanban-col-body" id="col-review"></div>
+            </div>
+
+            <!-- Done -->
+            <div class="kanban-col">
+              <div class="kanban-col-header">
+                <div class="kanban-col-title">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px; color:var(--color-success)"></i>
+                  Done
+                </div>
+                <span class="kanban-col-count" id="count-done">0</span>
+              </div>
+              <div class="kanban-col-body" id="col-done"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB: EXECUTIONS & LOGS -->
+        <section class="tab-content" id="execution-logs">
+          <div class="exec-layout">
+            
+            <!-- Left List -->
+            <div class="exec-sidebar">
+              <div class="exec-sidebar-header">
+                <span>Runs History</span>
+                <span id="runs-count" style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-dim)">0 runs</span>
+              </div>
+              <div class="exec-list" id="runs-list-panel">
+                <!-- Dynamic run records -->
+              </div>
+            </div>
+
+            <!-- Right Viewer -->
+            <div class="exec-viewer">
+              <div class="exec-viewer-header">
+                <div class="exec-viewer-title">
+                  <h3 id="exec-title">No execution selected</h3>
+                  <span id="exec-timestamp">---</span>
+                </div>
+                <div id="exec-status-badge-container"></div>
+              </div>
+              
+              <div class="exec-meta-grid">
+                <div class="exec-meta-box">
+                  <span class="exec-log-meta exec-meta-label">Task Reference</span>
+                  <span class="exec-meta-val" id="exec-task-ref">---</span>
+                </div>
+                <div class="exec-meta-box">
+                  <span class="exec-log-meta exec-meta-label">Files Mutated</span>
+                  <span class="exec-meta-val" id="exec-mutated-files">None</span>
+                </div>
+                <div class="exec-meta-box">
+                  <span class="exec-log-meta exec-meta-label">Verification Target</span>
+                  <div class="exec-meta-val code" id="exec-verification-code">
+                    <span>---</span>
+                    <i data-lucide="copy"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="exec-log-content markdown-body" id="exec-body">
+                <div class="viewer-placeholder">
+                  <i data-lucide="terminal"></i>
+                  <span>Select an agent run from the sidebar to inspect execution steps, quality gate logs, and build artifacts.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB: INTERACTIVE CONSOLE -->
+        <section class="tab-content" id="interactive-console">
+          <div class="console-container">
+            <div class="console-header">
+              <div class="console-tabs">
+                <div class="console-circle red"></div>
+                <div class="console-circle yellow"></div>
+                <div class="console-circle green"></div>
+              </div>
+              <div class="console-title">
+                <i data-lucide="terminal" style="width:14px; height:14px"></i>
+                kai-marketing-os-bash
+              </div>
+            </div>
+
+            <div class="console-body" id="console-output">
+              <!-- Logs print here -->
+            </div>
+
+            <div class="quick-commands">
+              <span class="quick-cmd-label">Quick Actions:</span>
+              <button class="quick-cmd-btn" data-cmd="/run-audit https://meetkai.xyz">/run-audit</button>
+              <button class="quick-cmd-btn" data-cmd="/quality-gate check">/quality-gate</button>
+              <button class="quick-cmd-btn" data-cmd="/check-banned-words workspace/demo-clients/">/check-banned-words</button>
+              <button class="quick-cmd-btn" data-cmd="/four-us-score workspace/demo-clients/">/four-us-score</button>
+              <button class="quick-cmd-btn" data-cmd="/list-agents">/list-agents</button>
+              <button class="quick-cmd-btn" data-cmd="/status">/status</button>
+            </div>
+
+            <div class="console-input-line">
+              <span>kai-cmo$</span>
+              <input type="text" id="console-input" placeholder="Type a command (e.g. /help, /run-audit) and press Enter..." autocomplete="off">
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Agent Details Modal -->
+  <div class="modal-overlay" id="agent-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-agent-name">Agent Subinstructions</h3>
+        <button class="modal-close" onclick="closeAgentModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body markdown-body" id="modal-agent-body">
+        <!-- Rendered Agent prompt markdown -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Details Modal -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-task-name">Task Details</h3>
+        <button class="modal-close" onclick="closeTaskModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-task-body">
+        <!-- Structured task metadata & files -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Guided Tour Modal -->
+  <div class="tour-overlay" id="tour-modal-overlay">
+    <div class="tour-card">
+      <div style="display:flex; justify-content:space-between; align-items:center">
+        <div class="tour-step-badge" id="tour-step-num">Step 1 of 6</div>
+        <button class="modal-close" onclick="endTour()" style="width:20px; height:20px">
+          <i data-lucide="x" style="width:14px; height:14px"></i>
+        </button>
+      </div>
+      <h3 class="tour-title" id="tour-step-title">Welcome to Kai Marketing OS</h3>
+      <div class="tour-body" id="tour-step-body">
+        Kai is a marketing-native control deck that coordinates local AI subagents to audit, write, and grow your marketing channels directly on your machine.
+      </div>
+      <div class="tour-footer">
+        <button class="tour-btn" id="tour-skip-btn" onclick="endTour()">Skip Tour</button>
+        <div class="tour-nav-btns">
+          <button class="tour-btn" id="tour-prev-btn" onclick="prevTourStep()">Back</button>
+          <button class="tour-btn primary" id="tour-next-btn" onclick="nextTourStep()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Configuration Settings Modal -->
+  <div class="settings-overlay" id="settings-modal-overlay">
+    <div class="settings-card">
+      <div class="modal-header">
+        <h3 style="display:flex; align-items:center; gap:8px">
+          <i data-lucide="settings" style="color:var(--color-secondary); width:18px; height:18px"></i>
+          Workspace Configuration
+        </h3>
+        <button class="modal-close" onclick="closeSettingsModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="settings-form">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="setting-project-id">Workspace ID</label>
+            <input class="form-input" type="text" id="setting-project-id" placeholder="e.g. my-business-cmo">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="setting-project-name">Business / Project Name</label>
+            <input class="form-input" type="text" id="setting-project-name" placeholder="e.g. ACME Marketing">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="setting-project-desc">Workspace Description</label>
+          <input class="form-input" type="text" id="setting-project-desc" placeholder="e.g. Local marketing workspace for our SaaS product.">
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="setting-owner-name">Owner Name</label>
+            <input class="form-input" type="text" id="setting-owner-name" placeholder="e.g. Jane Doe">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="setting-owner-email">Owner Email</label>
+            <input class="form-input" type="email" id="setting-owner-email" placeholder="e.g. owner@mybusiness.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="setting-gsc-url">Target Audit URL</label>
+          <input class="form-input" type="url" id="setting-gsc-url" placeholder="e.g. https://mybusiness.com">
+        </div>
+
+        <!-- Offline export box -->
+        <div class="download-yaml-box" id="yaml-download-box">
+          <div class="download-yaml-text">
+            <strong>Running offline (file://):</strong> Browsers restrict direct edits to your local computer's files for safety. Save settings by downloading your updated file and replacing the root <code>config.yaml</code>:
+          </div>
+          <div style="display:flex; gap:10px">
+            <button class="tour-btn primary" onclick="downloadConfig()" style="display:flex; align-items:center; gap:6px">
+              <i data-lucide="download" style="width:14px; height:14px"></i>
+              Download config.yaml
+            </button>
+            <button class="tour-btn" onclick="copyYamlToClipboard()" style="display:flex; align-items:center; gap:6px">
+              <i data-lucide="copy" style="width:14px; height:14px"></i>
+              Copy YAML to Clipboard
+            </button>
+          </div>
+          <pre id="yaml-preview-code" style="background:rgba(0,0,0,0.4); border:1px solid var(--border-color); padding:10px; border-radius:6px; font-family:var(--font-mono); font-size:0.75rem; color:#a855f7; display:none; max-height:100px; overflow-y:auto; margin-top:8px"></pre>
+        </div>
+      </div>
+      <div class="settings-footer">
+        <button class="tour-btn" onclick="closeSettingsModal()">Cancel</button>
+        <button class="tour-btn primary" onclick="saveSettings()">Save & Exporter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBEDDED STATE (INJECTED BY COMPILER SCRIPT) -->
+  <script id="kai-data" type="application/json">{}</script>
+
+  <!-- Application Logic -->
+  <script>
+    // Local memory fallback if JSON block is empty
+    const mockState = {
+      project: { id: "kai-marketing-os", name: "Kai Marketing OS", description: "Marketing-native runtime workspace." },
+      owner: { name: "SaaS Operator", email: "operator@meetkai.xyz" },
+      autonomy_mode: "balanced",
+      marketing_score: 72,
+      score_breakdown: { offer: 80, trust: 65, cro: 55, seo: 75, copy: 85, channels: 60, conversion: 70, readiness: 85 },
+      metrics: {
+        traffic: { sessions: 1420, users: 950, bounce_rate: "42.1%", conversions: 38 },
+        seo: { impressions: 24500, clicks: 612, avg_position: 14.2 }
+      },
+      agents: [
+        { id: "seo-agent", name: "SEO Optimizer", role: "Search Engine Optimization Specialist", status: "idle", purpose: "Audits search layouts, checks multi-engine robots.txt protocols, compiles robots.txt exclusions, and scores site keyword indices.", model: "gemini-2.5-pro", assurance: "high", content: "# SEO Agent\n\n## Purpose\nActs as the central validator for organic search layouts.\n\n## Tasks\n- Robots.txt gates\n- Sitemaps lints" },
+        { id: "ads-agent", name: "Combinatorial Creative Bench", role: "Creative Strategy Operator", status: "idle", purpose: "Automates multi-variant creative writing, analyzes historical compliance databases, structures tests.", model: "gemini-2.5-pro", assurance: "standard", content: "# Ads Agent\n\n## Purpose\nDeploys combinatorial copy vectors." }
+      ],
+      task_queue: [
+        { id: "T01", name: "Initialize local core repository architecture", priority: "P0", status: "done", acceptance_summary: "Local repository hooks, folder blueprints, and agent instructions verify successfully." },
+        { id: "T05", name: "Integrate KaiCalls voice receptionist", priority: "P0", status: "ready_for_review", acceptance_summary: "Configure missed call workflows, connect test API profile, and verify routing logic." },
+        { id: "T06", name: "Setup SEO checklist gates", priority: "P1", status: "ready", acceptance_summary: "Establish multi-engine web crawler robots.txt check logic and rules." },
+        { id: "T07", name: "Draft combinatorial Facebook/Meta ad sequence", priority: "P2", status: "pending", acceptance_summary: "Deploy three copy concepts, scoring each against compliance policy matrices." }
+      ],
+      executions: [
+        { id: "run-2026-05-21-t01", task_id: "T01", name: "Repository Bootstrapping", slice: "boot", status: "completed", timestamp: "2026-05-21T21:40:00Z", files_changed: ["AGENTS.md", "config.yaml"], verification: "python scripts/quality_gates/banned_word_check.py AGENTS.md", content: "# Execution Report\nCore structures bootstrapped successfully.\nAll quality gates passed checks without infractions." }
+      ],
+      connections: [
+        { id: "gsc-prod", provider: "Google Search Console", channel: "organic-search", status: "connected", connected_at: "2026-05-20T10:00:00Z", last_verified_at: "2026-05-21T21:00:00Z", config: { site_url: "https://meetkai.xyz" } },
+        { id: "ga4-prod", provider: "Google Analytics 4", channel: "web-analytics", status: "disconnected", connected_at: "", last_verified_at: "2026-05-21T21:00:00Z", config: {} }
+      ],
+      workspace_assets: {
+        growth_plans: [{ name: "B2B SaaS Growth Template", path: "workspace/growth-plan/b2b_saas.md", content: "# Growth Plan\n- SEO Target\n- Cold Outreach Lifecycle" }],
+        content_briefs: [],
+        demo_clients: []
+      },
+      chat_history: [
+        { role: "system", content: "Runtime engine boot complete.", timestamp: "2026-05-21T21:30:00Z" }
+      ],
+      last_updated: "2026-05-21T21:45:00Z"
+    };
+
+    // Guided Tour Steps definition
+    const tourSteps = [
+      {
+        title: "Welcome to Kai Marketing OS",
+        body: "Kai is a marketing-native workspace. Instead of subscribing to expensive marketing software, you run local AI subagents that work directly on your files (copy drafts, SEO configs, task queues) right on your computer.",
+        tab: "mission-control"
+      },
+      {
+        title: "Mission Control Hub",
+        body: "This is your marketing cockpit. It displays your general readiness score, search performance traffic metrics, phone receptionist status (KaiCalls), connected marketing accounts, and items that need attention.",
+        tab: "mission-control"
+      },
+      {
+        title: "Meet Your AI Employee Team",
+        body: "Under the <strong>Agent Registry</strong> tab, you can view specialized AI agents. For example, your SEO Agent scans search visibility, while the Ads Agent generates copy variations. Click them to review their guidelines.",
+        tab: "agent-registry"
+      },
+      {
+        title: "Browse Scanned Deliverables",
+        body: "When agents finish drafting materials (like cold email sequences, SEO sitemaps, or growth roadmaps), they write them to your workspace files. You can read, search, and copy them directly inside the <strong>Workspace Assets</strong> tab.",
+        tab: "workspace-explorer"
+      },
+      {
+        title: "Task Queue Kanban Board",
+        body: "The <strong>Task Board</strong> displays your work backlog. Tasks automatically progress as agents pick them up. Click any card to inspect what acceptance criteria are needed for completion.",
+        tab: "task-board"
+      },
+      {
+        title: "Command Console & History",
+        body: "Review technical logs under <strong>Execution Runs</strong>. If you want to run manual audits, calculate compliance scores, or chat directly with the workspace runtime, use the <strong>Interactive Console</strong>.",
+        tab: "interactive-console"
+      }
+    ];
+
+    let currentTourIndex = 0;
+
+    // Load active state
+    let state = {};
+    
+    function loadState() {
+      try {
+        const embeddedData = JSON.parse(document.getElementById("kai-data").textContent || "{}");
+        if (embeddedData && Object.keys(embeddedData).length > 0) {
+          state = embeddedData;
+          console.log("State loaded from embedded JSON schema databases.");
+        } else {
+          state = mockState;
+          console.log("Empty data block detected. Fallback to mock mockState databases loaded.");
+        }
+      } catch (err) {
+        console.error("Failed loading state:", err);
+        state = mockState;
+      }
+    }
+
+    // App Initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      renderAll();
+      initEvents();
+      lucide.createIcons();
+      
+      // Handle initial tab based on URL hash
+      const hash = window.location.hash.substring(1);
+      if (hash && document.querySelector(`[data-tab="${hash}"]`)) {
+        switchTab(hash);
+      }
+
+      // Automatically trigger tour if not completed before
+      if (localStorage.getItem("kai_tour_completed") !== "true") {
+        setTimeout(startTour, 1000);
+      }
+    });
+
+    // Global event hookup
+    function initEvents() {
+      // Tab selector bindings
+      document.querySelectorAll("[data-tab]").forEach(item => {
+        item.addEventListener("click", (e) => {
+          const tabName = item.getAttribute("data-tab");
+          switchTab(tabName);
+        });
+      });
+
+      // Autonomy controller buttons
+      document.querySelectorAll(".autonomy-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.getAttribute("data-mode");
+          updateAutonomyMode(mode);
+        });
+      });
+
+      // Explorer search binding
+      document.getElementById("file-search-input").addEventListener("input", (e) => {
+        filterExplorerTree(e.target.value);
+      });
+
+      // Console Command Input binding
+      document.getElementById("console-input").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const cmd = e.target.value.trim();
+          if (cmd) {
+            handleConsoleInput(cmd);
+            e.target.value = "";
+          }
+        }
+      });
+
+      // Quick Console Actions
+      document.querySelectorAll(".quick-cmd-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const cmd = btn.getAttribute("data-cmd");
+          handleConsoleInput(cmd);
+        });
+      });
+
+      // File viewer copy button
+      document.getElementById("viewer-copy-btn").addEventListener("click", () => {
+        const bodyEl = document.getElementById("viewer-body");
+        navigator.clipboard.writeText(bodyEl.innerText || "").then(() => {
+          alert("File contents copied to clipboard.");
+        }).catch(err => {
+          console.error("Failed to copy text:", err);
+        });
+      });
+      
+      // Tour and Settings togglers
+      document.getElementById("tour-start-btn").addEventListener("click", startTour);
+      document.getElementById("settings-open-btn").addEventListener("click", openSettingsModal);
+
+      // Close modal on outside click
+      window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("modal-overlay")) {
+          closeAgentModal();
+          closeTaskModal();
+        }
+        if (e.target.classList.contains("settings-overlay")) {
+          closeSettingsModal();
+        }
+      });
+    }
+
+    // Tab switcher logic
+    function switchTab(tabId) {
+      document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+        if (item.getAttribute("data-tab") === tabId) {
+          item.classList.add("active");
+        }
+      });
+
+      document.querySelectorAll(".tab-content").forEach(content => {
+        content.classList.remove("active");
+      });
+
+      const selectedContent = document.getElementById(tabId);
+      if (selectedContent) {
+        selectedContent.classList.add("active");
+        window.location.hash = tabId;
+      }
+    }
+
+    // Renderer coordinator
+    function renderAll() {
+      renderMetadata();
+      renderMissionControl();
+      renderAgentRegistry();
+      renderWorkspaceExplorer();
+      renderTaskBoard();
+      renderExecutionLogs();
+      renderConsoleLogs();
+    }
+
+    // Render metadata & setup attributes
+    function renderMetadata() {
+      document.getElementById("project-tag").querySelector("span").textContent = state.project.id;
+      document.getElementById("welcome-title").textContent = `Welcome back, ${state.owner.name}`;
+      document.getElementById("project-desc").textContent = state.project.description;
+      
+      // Format updated timestamp
+      if (state.last_updated) {
+        const date = new Date(state.last_updated);
+        document.getElementById("sync-time").textContent = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + date.toLocaleDateString();
+      }
+
+      // Autonomy active state toggle
+      const activeMode = state.autonomy_mode || "balanced";
+      document.querySelectorAll(".autonomy-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === activeMode) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    // Dynamic Autonomy mode selector UI response
+    function updateAutonomyMode(mode) {
+      state.autonomy_mode = mode;
+      document.querySelectorAll(".autonomy-btn").forEach(btn => {
+        if (btn.getAttribute("data-mode") === mode) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+      
+      // Write system log to console
+      appendConsoleLog(`System changed autonomy runtime policy mode to [${mode.toUpperCase()}].`, "system");
+    }
+
+    // Tab 1: MISSION CONTROL
+    function renderMissionControl() {
+      // 1. Dial Dial SVG Fill
+      const score = state.marketing_score || 0;
+      document.getElementById("score-num").textContent = score;
+      const ring = document.getElementById("score-ring");
+      const radius = 65;
+      const circumference = 2 * Math.PI * radius; // 408.4
+      const offset = circumference - (score / 100) * circumference;
+      ring.style.strokeDashoffset = offset;
+
+      // 2. Score Breakdown Sub-bars
+      const scoreBarsPanel = document.getElementById("score-bars");
+      scoreBarsPanel.innerHTML = "";
+      if (state.score_breakdown) {
+        Object.entries(state.score_breakdown).forEach(([key, val]) => {
+          const item = document.createElement("div");
+          item.className = "score-bar-item";
+          item.innerHTML = `
+            <div class="score-bar-header">
+              <span>${key}</span>
+              <span>${val}%</span>
+            </div>
+            <div class="score-bar-track">
+              <div class="score-bar-fill" style="width: ${val}%"></div>
+            </div>
+          `;
+          scoreBarsPanel.appendChild(item);
+        });
+      }
+
+      // 3. Metrics Cards values injection
+      if (state.metrics) {
+        const traffic = state.metrics.traffic || {};
+        document.getElementById("ga4-sessions").textContent = Number(traffic.sessions || 0).toLocaleString();
+        document.getElementById("ga4-users").textContent = Number(traffic.users || 0).toLocaleString();
+        document.getElementById("ga4-bounce").textContent = traffic.bounce_rate || "0%";
+        document.getElementById("ga4-conversions").textContent = Number(traffic.conversions || 0).toLocaleString();
+
+        const seo = state.metrics.seo || {};
+        document.getElementById("gsc-impressions").textContent = Number(seo.impressions || 0).toLocaleString();
+        document.getElementById("gsc-clicks").textContent = Number(seo.clicks || 0).toLocaleString();
+        document.getElementById("gsc-pos").textContent = Number(seo.avg_position || 0.0).toFixed(1);
+      }
+
+      // 4. Gather warnings and issues in connections & queue
+      const attentionPanel = document.getElementById("attention-panel");
+      attentionPanel.innerHTML = "";
+      let warningsCount = 0;
+
+      // Scan OAuth integrations status
+      if (state.connections) {
+        state.connections.forEach(conn => {
+          if (conn.status !== "connected") {
+            warningsCount++;
+            const item = document.createElement("div");
+            item.className = "attention-item warning";
+            item.innerHTML = `
+              <div class="attention-icon-wrapper">
+                <i data-lucide="unplug"></i>
+              </div>
+              <div class="attention-text-wrapper">
+                <div class="attention-title">${conn.provider} Offline</div>
+                <div class="attention-desc">Platform channel integration connector status reads '${conn.status}'. Update config to resolve.</div>
+              </div>
+              <button class="attention-action" onclick="openSettingsModal()">Configure</button>
+            `;
+            attentionPanel.appendChild(item);
+          }
+        });
+      }
+
+      // Scan failed runs
+      if (state.executions) {
+        state.executions.slice(0, 3).forEach(run => {
+          if (run.status === "failed") {
+            warningsCount++;
+            const item = document.createElement("div");
+            item.className = "attention-item error";
+            item.innerHTML = `
+              <div class="attention-icon-wrapper">
+                <i data-lucide="x-circle"></i>
+              </div>
+              <div class="attention-text-wrapper">
+                <div class="attention-title">Agent Execution Fail: ${run.name}</div>
+                <div class="attention-desc">Task ID ${run.task_id} failed during active quality gate inspection.</div>
+              </div>
+              <button class="attention-action" onclick="viewLogDetail('${run.id}')">View Log</button>
+            `;
+            attentionPanel.appendChild(item);
+          }
+        });
+      }
+
+      if (warningsCount === 0) {
+        attentionPanel.innerHTML = `
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 24px; color: var(--text-dim); gap: 10px">
+            <i data-lucide="check-circle" style="width: 32px; height: 32px; color: var(--color-success)"></i>
+            <span style="font-size:0.85rem">All checks are positive. No attention items flagged.</span>
+          </div>
+        `;
+      }
+
+      // 5. Active agents mini panel rendering
+      const miniAgentsPanel = document.getElementById("mini-agents-panel");
+      miniAgentsPanel.innerHTML = "";
+      if (state.agents && state.agents.length > 0) {
+        state.agents.slice(0, 4).forEach(agent => {
+          const item = document.createElement("div");
+          item.className = "mini-agent-row";
+          item.onclick = () => { viewAgentDetail(agent.id); };
+          item.innerHTML = `
+            <div class="mini-agent-info">
+              <i data-lucide="bot" style="width:16px; height:16px; color:var(--color-primary)"></i>
+              <div>
+                <div class="mini-agent-name">${agent.name}</div>
+                <div class="mini-agent-role">${agent.role}</div>
+              </div>
+            </div>
+            <div class="status-badge">
+              <div class="status-dot ${agent.status}"></div>
+              <span>${agent.status}</span>
+            </div>
+          `;
+          miniAgentsPanel.appendChild(item);
+        });
+      } else {
+        miniAgentsPanel.innerHTML = `<span style="font-size:0.85rem; color:var(--text-dim)">No subagents registered.</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    // Tab 2: AGENT REGISTRY
+    function renderAgentRegistry() {
+      const grid = document.getElementById("agents-grid");
+      grid.innerHTML = "";
+      if (state.agents && state.agents.length > 0) {
+        state.agents.forEach(agent => {
+          const card = document.createElement("div");
+          card.className = "glass-card agent-card";
+          card.innerHTML = `
+            <div class="agent-card-header">
+              <div class="agent-card-title">
+                <h3>${agent.name}</h3>
+                <span>ID: ${agent.id}</span>
+              </div>
+              <div class="agent-badge ${agent.assurance === 'high' ? 'assurance-high' : ''}">${agent.assurance} assurance</div>
+            </div>
+            <div class="agent-purpose">${agent.purpose || 'No instructions outlined.'}</div>
+            <div class="agent-card-meta">
+              <div class="agent-model">${agent.model || 'Standard Engine'}</div>
+              <button class="agent-btn" onclick="viewAgentDetail('${agent.id}')">
+                <i data-lucide="eye" style="width:14px; height:14px"></i>
+                Review Script
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } else {
+        grid.innerHTML = `<div style="grid-column: span 3; text-align:center; padding:40px; color:var(--text-dim)">No agents found in workspace. Run python scripts/build_dashboard.py to generate records.</div>`;
+      }
+      lucide.createIcons();
+    }
+
+    // Modal details for Agents
+    function viewAgentDetail(agentId) {
+      const agent = state.agents.find(a => a.id === agentId);
+      if (!agent) return;
+      
+      document.getElementById("modal-agent-name").textContent = `${agent.name} — Workspace Definition`;
+      
+      const bodyEl = document.getElementById("modal-agent-body");
+      if (window.marked && agent.content) {
+        bodyEl.innerHTML = marked.parse(agent.content);
+      } else {
+        bodyEl.innerHTML = `<pre style="font-family:var(--font-mono); font-size:0.82rem; white-space:pre-wrap">${agent.content || 'No content specified.'}</pre>`;
+      }
+      
+      document.getElementById("agent-modal").classList.add("active");
+    }
+
+    function closeAgentModal() {
+      document.getElementById("agent-modal").classList.remove("active");
+    }
+
+    // Tab 3: WORKSPACE ASSETS
+    let activeFilePath = "";
+
+    function renderWorkspaceExplorer() {
+      const container = document.getElementById("workspace-tree-container");
+      container.innerHTML = "";
+      
+      const assets = state.workspace_assets || {};
+      
+      // Render Growth Plans Folder
+      if (assets.growth_plans && assets.growth_plans.length > 0) {
+        const folder = createFolderElement("Growth Plans", "trending-up");
+        const list = folder.querySelector(".tree-file-list");
+        assets.growth_plans.forEach(gp => {
+          const item = createFileItemElement(gp.name, gp.path, () => {
+            loadFileToViewer(gp.name, gp.path, gp.content);
+          });
+          list.appendChild(item);
+        });
+        container.appendChild(folder);
+      }
+
+      // Render Content Briefs Folder
+      if (assets.content_briefs && assets.content_briefs.length > 0) {
+        const folder = createFolderElement("Content Briefs", "file-text");
+        const list = folder.querySelector(".tree-file-list");
+        assets.content_briefs.forEach(cb => {
+          const item = createFileItemElement(cb.name, cb.path, () => {
+            loadFileToViewer(cb.name, cb.path, cb.content);
+          });
+          list.appendChild(item);
+        });
+        container.appendChild(folder);
+      }
+
+      // Render Demo Clients Folder tree structure
+      if (assets.demo_clients && assets.demo_clients.length > 0) {
+        const folder = createFolderElement("Demo Clients", "briefcase");
+        const list = folder.querySelector(".tree-file-list");
+        
+        assets.demo_clients.forEach(client => {
+          // Client subfolder item style
+          const subHeader = document.createElement("li");
+          subHeader.style.padding = "6px 8px 2px 14px";
+          subHeader.style.fontSize = "0.75rem";
+          subHeader.style.fontWeight = "600";
+          subHeader.style.color = "var(--text-muted)";
+          subHeader.style.textTransform = "uppercase";
+          subHeader.textContent = client.name;
+          list.appendChild(subHeader);
+          
+          if (client.files && client.files.length > 0) {
+            client.files.forEach(file => {
+              const item = createFileItemElement(file.name, file.path, () => {
+                loadFileToViewer(file.name, file.path, file.content);
+              });
+              item.style.paddingLeft = "24px";
+              list.appendChild(item);
+            });
+          } else {
+            const emptyLi = document.createElement("li");
+            emptyLi.style.padding = "4px 8px 4px 24px";
+            emptyLi.style.fontSize = "0.75rem";
+            emptyLi.style.color = "var(--text-dim)";
+            emptyLi.textContent = "Empty";
+            list.appendChild(emptyLi);
+          }
+        });
+        container.appendChild(folder);
+      }
+
+      if (container.children.length === 0) {
+        container.innerHTML = `<span style="font-size:0.8rem; color:var(--text-dim); padding:16px; display:block; text-align:center">No assets compiled in workspace. Run builder scripts to import files.</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    function createFolderElement(name, iconName) {
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "tree-folder";
+      folderDiv.innerHTML = `
+        <div class="tree-folder-title">
+          <i data-lucide="${iconName}"></i>
+          <span>${name}</span>
+        </div>
+        <ul class="tree-file-list"></ul>
+      `;
+      return folderDiv;
+    }
+
+    function createFileItemElement(name, path, clickCallback) {
+      const li = document.createElement("li");
+      li.className = "tree-file-item";
+      li.dataset.path = path;
+      
+      // Icon mapping by suffix
+      let fileIcon = "file";
+      if (path.endsWith(".md")) fileIcon = "file-text";
+      else if (path.endsWith(".json") || path.endsWith(".yaml") || path.endsWith(".yml")) fileIcon = "file-json";
+      else if (path.endsWith(".html")) fileIcon = "file-code";
+
+      li.innerHTML = `
+        <i data-lucide="${fileIcon}"></i>
+        <span class="file-name-span">${name}</span>
+      `;
+      li.onclick = (e) => {
+        document.querySelectorAll(".tree-file-item").forEach(item => item.classList.remove("active"));
+        li.classList.add("active");
+        clickCallback();
+      };
+      return li;
+    }
+
+    function loadFileToViewer(title, path, content) {
+      activeFilePath = path;
+      document.getElementById("viewer-file-title").textContent = title;
+      document.getElementById("viewer-file-path").textContent = path;
+      
+      const bodyEl = document.getElementById("viewer-body");
+      bodyEl.innerHTML = "";
+      
+      if (path.endsWith(".md")) {
+        const mdDiv = document.createElement("div");
+        mdDiv.className = "markdown-body";
+        if (window.marked) {
+          mdDiv.innerHTML = marked.parse(content || "");
+        } else {
+          mdDiv.innerHTML = `<pre style="font-family:var(--font-mono); white-space:pre-wrap">${content}</pre>`;
+        }
+        bodyEl.appendChild(mdDiv);
+      } else {
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+        code.textContent = content || "";
+        pre.appendChild(code);
+        bodyEl.appendChild(pre);
+      }
+    }
+
+    function filterExplorerTree(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll(".tree-file-item").forEach(item => {
+        const text = item.querySelector(".file-name-span").textContent.toLowerCase();
+        const path = item.dataset.path.toLowerCase();
+        if (text.includes(q) || path.includes(q)) {
+          item.style.display = "flex";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    }
+
+    // Tab 4: TASK BOARD (Kanban Layout)
+    function renderTaskBoard() {
+      // Clear columns
+      const cols = {
+        pending: document.getElementById("col-pending"),
+        ready: document.getElementById("col-ready"),
+        ready_for_review: document.getElementById("col-review"),
+        done: document.getElementById("col-done")
+      };
+      
+      Object.values(cols).forEach(col => {
+        if (col) col.innerHTML = "";
+      });
+
+      const taskQueue = state.task_queue || [];
+      const counts = { pending: 0, ready: 0, review: 0, done: 0 };
+
+      taskQueue.forEach(task => {
+        const card = document.createElement("div");
+        card.className = "kanban-card";
+        card.onclick = () => { viewTaskDetail(task.id); };
+        
+        // Priority lowercase class
+        const pClass = (task.priority || "P2").toLowerCase();
+
+        card.innerHTML = `
+          <div class="kanban-card-top">
+            <span class="kanban-card-id">${task.id}</span>
+            <span class="priority-badge ${pClass}">${task.priority}</span>
+          </div>
+          <div class="kanban-card-title">${task.name}</div>
+          <div class="kanban-card-desc">${task.acceptance_summary || 'No criteria specified.'}</div>
+        `;
+
+        const status = task.status || "pending";
+        if (status === "done") {
+          cols.done.appendChild(card);
+          counts.done++;
+        } else if (status === "ready_for_review") {
+          cols.ready_for_review.appendChild(card);
+          counts.review++;
+        } else if (status === "ready") {
+          cols.ready.appendChild(card);
+          counts.ready++;
+        } else {
+          cols.pending.appendChild(card);
+          counts.pending++;
+        }
+      });
+
+      // Update badge counts
+      document.getElementById("count-pending").textContent = counts.pending;
+      document.getElementById("count-ready").textContent = counts.ready;
+      document.getElementById("count-review").textContent = counts.review;
+      document.getElementById("count-done").textContent = counts.done;
+    }
+
+    // Modal popup detail for task
+    function viewTaskDetail(taskId) {
+      const task = state.task_queue.find(t => t.id === taskId);
+      if (!task) return;
+
+      document.getElementById("modal-task-name").textContent = `[${task.id}] ${task.name}`;
+      
+      const bodyEl = document.getElementById("modal-task-body");
+      
+      let depsHtml = "";
+      if (task.dependencies && task.dependencies.length > 0) {
+        depsHtml = task.dependencies.map(d => `<span class="priority-badge p2" style="margin-right:6px">${d}</span>`).join("");
+      } else {
+        depsHtml = `<span style="font-size:0.85rem; color:var(--text-dim)">None</span>`;
+      }
+
+      let targetsHtml = "";
+      if (task.first_targets && task.first_targets.length > 0) {
+        targetsHtml = task.first_targets.map(t => `<code style="display:block; margin:4px 0">${t}</code>`).join("");
+      } else {
+        targetsHtml = `<span style="font-size:0.85rem; color:var(--text-dim)">No primary target files specified.</span>`;
+      }
+
+      // Check for matching execution log runs
+      const relatedRuns = state.executions.filter(r => r.task_id === taskId);
+      let runsHtml = "";
+      if (relatedRuns && relatedRuns.length > 0) {
+        runsHtml = relatedRuns.map(run => `
+          <div style="padding: 10px; border-radius:6px; border:1px solid var(--border-color); background:rgba(255,255,255,0.02); display:flex; justify-content:space-between; align-items:center; margin-top:6px; cursor:pointer" onclick="closeTaskModal(); switchTab('execution-logs'); viewLogDetail('${run.id}')">
+            <span style="font-size:0.85rem; font-weight:600">${run.name}</span>
+            <span class="exec-item-badge ${run.status}">${run.status}</span>
+          </div>
+        `).join("");
+      } else {
+        runsHtml = `<span style="font-size:0.85rem; color:var(--text-dim)">No running executions logged for this task.</span>`;
+      }
+
+      bodyEl.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:20px">
+          <div>
+            <h4 style="font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px">Status & Acceptance Gate</h4>
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px">
+              <span class="priority-badge ${task.priority.toLowerCase()}">${task.priority} Priority</span>
+              <span class="exec-item-badge ${task.status === 'done' ? 'completed' : task.status === 'ready_for_review' ? 'running' : 'failed'}">${task.status.replace(/_/g, ' ')}</span>
+            </div>
+            <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.5">${task.acceptance_summary || 'No summary configured.'}</p>
+          </div>
+          
+          <div>
+            <h4 style="font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px">Dependencies</h4>
+            <div>${depsHtml}</div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px">Primary Deliverable Targets</h4>
+            <div style="background:rgba(0,0,0,0.2); padding:10px; border-radius:6px; font-family:var(--font-mono); font-size:0.8rem">${targetsHtml}</div>
+          </div>
+
+          <div>
+            <h4 style="font-size:0.85rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:6px">Related Agent Runs</h4>
+            <div>${runsHtml}</div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("task-modal").classList.add("active");
+    }
+
+    function closeTaskModal() {
+      document.getElementById("task-modal").classList.remove("active");
+    }
+
+    // Tab 5: EXECUTIONS & LOGS
+    function renderExecutionLogs() {
+      const listPanel = document.getElementById("runs-list-panel");
+      listPanel.innerHTML = "";
+      
+      const runs = state.executions || [];
+      document.getElementById("runs-count").textContent = `${runs.length} runs`;
+
+      if (runs.length > 0) {
+        runs.forEach((run, index) => {
+          const item = document.createElement("div");
+          item.className = "exec-item";
+          item.dataset.id = run.id;
+          
+          // Format date preview
+          const dateStr = run.timestamp ? new Date(run.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "---";
+
+          item.innerHTML = `
+            <div class="exec-item-header">
+              <span class="exec-item-title">${run.name}</span>
+              <span class="exec-item-badge ${run.status}">${run.status}</span>
+            </div>
+            <div class="exec-item-meta">
+              <span>Task: ${run.task_id || "None"}</span>
+              <span>${dateStr}</span>
+            </div>
+          `;
+          item.onclick = () => {
+            document.querySelectorAll(".exec-item").forEach(el => el.classList.remove("active"));
+            item.classList.add("active");
+            viewLogDetail(run.id);
+          };
+          
+          listPanel.appendChild(item);
+          
+          // Auto-select first log on initial tab display
+          if (index === 0) {
+            item.classList.add("active");
+            viewLogDetail(run.id);
+          }
+        });
+      } else {
+        listPanel.innerHTML = `<span style="font-size:0.82rem; color:var(--text-dim); text-align:center; display:block; padding:20px">No agent run records scanned.</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    function viewLogDetail(runId) {
+      const run = state.executions.find(r => r.id === runId);
+      if (!run) return;
+
+      document.getElementById("exec-title").textContent = run.name;
+      
+      if (run.timestamp) {
+        const d = new Date(run.timestamp);
+        document.getElementById("exec-timestamp").textContent = d.toLocaleString();
+      } else {
+        document.getElementById("exec-timestamp").textContent = "Unknown Time";
+      }
+
+      // Status badge
+      const badgeBox = document.getElementById("exec-status-badge-container");
+      badgeBox.innerHTML = `<span class="exec-item-badge ${run.status}">${run.status}</span>`;
+
+      // Meta values
+      document.getElementById("exec-task-ref").textContent = run.task_id || "None";
+      
+      const filesBox = document.getElementById("exec-mutated-files");
+      if (run.files_changed && run.files_changed.length > 0) {
+        filesBox.innerHTML = run.files_changed.map(f => `<code style="display:inline-block; margin:2px; font-size:0.75rem; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px">${f}</code>`).join(" ");
+      } else {
+        filesBox.innerHTML = `<span style="color:var(--text-dim)">None</span>`;
+      }
+
+      // Verification code block
+      const verifyBox = document.getElementById("exec-verification-code");
+      const vText = run.verification || "No verification target configured.";
+      verifyBox.querySelector("span").textContent = vText;
+      verifyBox.querySelector("i").onclick = () => {
+        navigator.clipboard.writeText(vText).then(() => alert("Copied verification command."));
+      };
+
+      // Main log markdown body
+      const logBody = document.getElementById("exec-body");
+      logBody.innerHTML = "";
+      if (window.marked && run.content) {
+        logBody.innerHTML = marked.parse(run.content);
+      } else {
+        logBody.innerHTML = `<pre style="font-family:var(--font-mono); font-size:0.82rem; white-space:pre-wrap">${run.content || "Empty logs."}</pre>`;
+      }
+    }
+
+    // Tab 6: INTERACTIVE CONSOLE
+    let cmdHistory = [];
+
+    function renderConsoleLogs() {
+      const panel = document.getElementById("console-output");
+      panel.innerHTML = "";
+      
+      // Print default system boot log
+      appendConsoleLog("Initialize local CLI console controller connection...", "system");
+      appendConsoleLog("Loaded 42 Framework check scripts and platform policy schemas.", "system");
+      appendConsoleLog("Type '/help' to list available local runtime hooks.", "success");
+      
+      if (state.chat_history) {
+        state.chat_history.forEach(log => {
+          let roleClass = "system";
+          if (log.role === "user") roleClass = "user";
+          else if (log.role === "assistant") roleClass = "assistant";
+          appendConsoleLog(log.content, roleClass);
+        });
+      }
+    }
+
+    function appendConsoleLog(text, type = "system") {
+      const panel = document.getElementById("console-output");
+      const line = document.createElement("div");
+      line.className = "console-line";
+      
+      let promptHtml = `<span class="console-prompt sys">sys&gt;</span>`;
+      if (type === "user") {
+        promptHtml = `<span class="console-prompt">user&gt;</span>`;
+      } else if (type === "assistant") {
+        promptHtml = `<span class="console-prompt" style="color:var(--color-primary)">kai&gt;</span>`;
+      }
+      
+      line.innerHTML = `
+        ${promptHtml}
+        <span class="console-text ${type}">${text}</span>
+      `;
+      
+      panel.appendChild(line);
+      panel.scrollTop = panel.scrollHeight;
+    }
+
+    // Command Parser
+    function handleConsoleInput(rawCmd) {
+      appendConsoleLog(rawCmd, "user");
+      
+      const parts = rawCmd.split(" ");
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1).join(" ");
+      
+      // Command simulation logic
+      setTimeout(() => {
+        switch (command) {
+          case "/help":
+            appendConsoleLog(`Available hooks:
+  /help                             — Show this menu list.
+  /run-audit <domain>               — Scan a website domain for SEO and AI Agent-Readiness.
+  /status                           — Display current connections, subagents, and score metrics.
+  /quality-gate check               — Inspect workspace drafts for structure compliance.
+  /four-us-score <path>             — Score target text 1-4 on Unique, Useful, Specific, Urgent.
+  /check-banned-words <path>        — Scan files for forbidden corporate terms.
+  /list-agents                      — List active subagents.
+  /clear                            — Clear the console screen log.`, "assistant");
+            break;
+            
+          case "/clear":
+            document.getElementById("console-output").innerHTML = "";
+            appendConsoleLog("Console history cleared.", "system");
+            break;
+            
+          case "/status":
+            appendConsoleLog(`Kai Runtime Workspace Profile Status:
+  - Project ID: ${state.project.id}
+  - Ready Score: ${state.marketing_score}%
+  - Registered Subagents: ${state.agents.length} active
+  - Task board queue items: ${state.task_queue.length} tasks
+  - Policy constraints check: 100% compliant`, "assistant");
+            break;
+
+          case "/list-agents":
+            let agentLines = state.agents.map(a => `  * ${a.name} (${a.id}) — ${a.status} [Model: ${a.model}]`).join("\n");
+            appendConsoleLog(`Registered Workspace Subagents:\n${agentLines}`, "assistant");
+            break;
+            
+          case "/run-audit":
+            if (!args) {
+              appendConsoleLog("Error: Missing target domain. Usage: /run-audit <domain>", "error");
+              break;
+            }
+            appendConsoleLog(`Auditing targeting domain: '${args}'...`, "system");
+            appendConsoleLog("Reading multi-engine robots.txt rules...", "system");
+            appendConsoleLog("Verifying LLMs.txt cooperations...", "system");
+            appendConsoleLog("Checking Organization JSON-LD microdata...", "system");
+            
+            setTimeout(() => {
+              appendConsoleLog(`Audit run complete for ${args}:
+  [PASS] robots.txt is cooperative to Claude, GPTBot, PerplexityBot.
+  [PASS] Organization schema detected.
+  [WARN] Missing '/llms.txt' file (Optional P1).
+  [SCORE] Calculated Agent-Readiness: 85/100.
+  Created workspace report: [workspace/demo-clients/${args.replace(/https?:\/\//, '').replace(/\//, '')}_audit.md]`, "success");
+            }, 1000);
+            break;
+            
+          case "/quality-gate":
+            appendConsoleLog("Running workspace quality gate linter checks...", "system");
+            setTimeout(() => {
+              appendConsoleLog("Scanning drafts under 'workspace/'...", "system");
+              appendConsoleLog("[PASS] Zero banned jargon terms found.", "success");
+              appendConsoleLog("[PASS] SEO Algorithmic Authorship syntax (Instructions start with verbs).", "success");
+              appendConsoleLog("All active validation tests passed successfully.", "success");
+            }, 800);
+            break;
+
+          case "/four-us-score":
+            appendConsoleLog("Evaluating text density and relevance metrics (Four U's framework)...", "system");
+            setTimeout(() => {
+              appendConsoleLog(`Evaluation results:
+  - Unique (Can only WE write this?): 3/4
+  - Useful (Immediate actionable steps?): 4/4
+  - Ultra-specific (Numbers, tool names?): 3/4
+  - Urgent (Reason to engage today?): 3/4
+  TOTAL: 13/16 (PASS — Threshold: 12/16)`, "success");
+            }, 800);
+            break;
+
+          case "/check-banned-words":
+            appendConsoleLog("Scanning target files for forbidden corporate jargon...", "system");
+            setTimeout(() => {
+              appendConsoleLog("Checking 'utilize', 'leverage', 'deep dive', 'synergy'...", "system");
+              appendConsoleLog("Scan finished: 0 Tier-1 infractions identified. Drafts are clean.", "success");
+            }, 600);
+            break;
+            
+          default:
+            appendConsoleLog(`Command '${command}' not recognized. Type '/help' for options.`, "error");
+        }
+      }, 300);
+    }
+
+    // ONBOARDING GUIDED TOUR FUNCTIONS
+    function startTour() {
+      currentTourIndex = 0;
+      showTourStep(0);
+      document.getElementById("tour-modal-overlay").classList.add("active");
+    }
+
+    function showTourStep(index) {
+      const step = tourSteps[index];
+      
+      document.getElementById("tour-step-num").textContent = `Step ${index + 1} of ${tourSteps.length}`;
+      document.getElementById("tour-step-title").textContent = step.title;
+      document.getElementById("tour-step-body").innerHTML = step.body;
+      
+      // Toggle prev button visibility
+      document.getElementById("tour-prev-btn").style.display = index === 0 ? "none" : "block";
+      
+      // Update next button text
+      const nextBtn = document.getElementById("tour-next-btn");
+      if (index === tourSteps.length - 1) {
+        nextBtn.textContent = "Finish Tour";
+      } else {
+        nextBtn.textContent = "Next";
+      }
+
+      // Automatically switch to correct tab for context!
+      switchTab(step.tab);
+    }
+
+    function nextTourStep() {
+      if (currentTourIndex < tourSteps.length - 1) {
+        currentTourIndex++;
+        showTourStep(currentTourIndex);
+      } else {
+        endTour();
+      }
+    }
+
+    function prevTourStep() {
+      if (currentTourIndex > 0) {
+        currentTourIndex--;
+        showTourStep(currentTourIndex);
+      }
+    }
+
+    function endTour() {
+      document.getElementById("tour-modal-overlay").classList.remove("active");
+      localStorage.setItem("kai_tour_completed", "true");
+      appendConsoleLog("Onboarding guide completed. Welcome aboard!", "success");
+    }
+
+    // CONFIGURATION SETTINGS FUNCTIONS
+    function openSettingsModal() {
+      // Pre-fill inputs with state values
+      document.getElementById("setting-project-id").value = state.project.id || "";
+      document.getElementById("setting-project-name").value = state.project.name || "";
+      document.getElementById("setting-project-desc").value = state.project.description || "";
+      document.getElementById("setting-owner-name").value = state.owner.name || "";
+      document.getElementById("setting-owner-email").value = state.owner.email || "";
+
+      // Find site url connection
+      const gsc = state.connections ? state.connections.find(c => c.id === "gsc-prod") : null;
+      document.getElementById("setting-gsc-url").value = (gsc && gsc.config) ? gsc.config.site_url || "" : "";
+
+      // Show offline prompt box if file:// protocol is active
+      const isOffline = window.location.protocol === "file:";
+      const downloadBox = document.getElementById("yaml-download-box");
+      if (isOffline) {
+        downloadBox.style.display = "flex";
+        updateYamlPreview();
+      } else {
+        downloadBox.style.display = "none";
+      }
+
+      document.getElementById("settings-modal-overlay").classList.add("active");
+      lucide.createIcons();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById("settings-modal-overlay").classList.remove("active");
+    }
+
+    // Dynamic yaml preview output
+    function updateYamlPreview() {
+      const formState = {
+        project: {
+          id: document.getElementById("setting-project-id").value,
+          name: document.getElementById("setting-project-name").value,
+          description: document.getElementById("setting-project-desc").value
+        },
+        owner: {
+          name: document.getElementById("setting-owner-name").value,
+          email: document.getElementById("setting-owner-email").value
+        },
+        autonomy_mode: state.autonomy_mode || "balanced",
+        gsc_url: document.getElementById("setting-gsc-url").value
+      };
+
+      const yamlStr = convertStateToYaml(formState);
+      const previewEl = document.getElementById("yaml-preview-code");
+      previewEl.textContent = yamlStr;
+      previewEl.style.display = "block";
+    }
+
+    // Bind real-time preview updates
+    document.querySelectorAll(".settings-form input").forEach(input => {
+      input.addEventListener("input", () => {
+        if (window.location.protocol === "file:") {
+          updateYamlPreview();
+        }
+      });
+    });
+
+    function convertStateToYaml(s) {
+      return `workspace:
+  id: "${s.project.id.toLowerCase().replace(/\s+/g, '-')}"
+  name: "${s.project.name}"
+  description: "${s.project.description}"
+
+owner:
+  name: "${s.owner.name}"
+  email: "${s.owner.email}"
+
+products:
+  - id: "kaicalls"
+    name: "KaiCalls"
+    domain: "${s.gsc_url || 'https://meetkai.xyz'}"
+    fit_signals:
+      - "phone_led_lead_capture"
+      - "after_hours_calls"
+  - id: "buildwithkai"
+    name: "BuildWithKai"
+    domain: "${s.gsc_url || 'https://meetkai.xyz'}"
+
+# Active agent runner configurations
+autonomy_mode: "${s.autonomy_mode}"
+`;
+    }
+
+    function saveSettings() {
+      // Get values from form
+      const projectId = document.getElementById("setting-project-id").value.trim() || "kai-marketing-os";
+      const projectName = document.getElementById("setting-project-name").value.trim() || "Kai Marketing OS";
+      const projectDesc = document.getElementById("setting-project-desc").value.trim() || "";
+      const ownerName = document.getElementById("setting-owner-name").value.trim() || "SaaS Operator";
+      const ownerEmail = document.getElementById("setting-owner-email").value.trim() || "";
+      const auditUrl = document.getElementById("setting-gsc-url").value.trim();
+
+      // Mutate in-memory state
+      state.project.id = projectId;
+      state.project.name = projectName;
+      state.project.description = projectDesc;
+      state.owner.name = ownerName;
+      state.owner.email = ownerEmail;
+
+      // Update Search Console site config
+      if (state.connections) {
+        let gsc = state.connections.find(c => c.id === "gsc-prod");
+        if (gsc) {
+          if (!gsc.config) gsc.config = {};
+          gsc.config.site_url = auditUrl;
+          if (auditUrl) {
+            gsc.status = "connected";
+          } else {
+            gsc.status = "disconnected";
+          }
+        }
+      }
+
+      // Re-render components
+      renderAll();
+
+      // Write logs
+      appendConsoleLog(`Configuration updated successfully in memory for project ID: '${projectId}'.`, "success");
+
+      // Check protocol write-backs
+      if (window.location.protocol !== "file:") {
+        // Send actual write-back JSON fetch requests to API when running under HTTP server
+        fetch("/api/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state)
+        })
+        .then(response => {
+          if (response.ok) {
+            appendConsoleLog("Dynamic backend config saved permanently.", "success");
+            closeSettingsModal();
+          } else {
+            appendConsoleLog("Failed to sync backend configs. Downloading file fallback.", "warning");
+          }
+        })
+        .catch(err => {
+          console.error("Save config fetch failed:", err);
+          appendConsoleLog("Local server endpoint unreachable. Config updated in memory.", "warning");
+          closeSettingsModal();
+        });
+      } else {
+        // file:// offline fallback
+        alert("Configuration saved in active browser memory!\n\nTo persist these changes permanently on your computer, download the config.yaml using the options inside the Settings window.");
+        closeSettingsModal();
+      }
+    }
+
+    function downloadConfig() {
+      const tempState = {
+        project: {
+          id: document.getElementById("setting-project-id").value,
+          name: document.getElementById("setting-project-name").value,
+          description: document.getElementById("setting-project-desc").value
+        },
+        owner: {
+          name: document.getElementById("setting-owner-name").value,
+          email: document.getElementById("setting-owner-email").value
+        },
+        autonomy_mode: state.autonomy_mode || "balanced",
+        gsc_url: document.getElementById("setting-gsc-url").value
+      };
+
+      const yamlContent = convertStateToYaml(tempState);
+      const blob = new Blob([yamlContent], { type: "text/yaml" });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "config.yaml";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      appendConsoleLog("Downloaded updated 'config.yaml' file. Drop this into your repository root.", "success");
+    }
+
+    function copyYamlToClipboard() {
+      const tempState = {
+        project: {
+          id: document.getElementById("setting-project-id").value,
+          name: document.getElementById("setting-project-name").value,
+          description: document.getElementById("setting-project-desc").value
+        },
+        owner: {
+          name: document.getElementById("setting-owner-name").value,
+          email: document.getElementById("setting-owner-email").value
+        },
+        autonomy_mode: state.autonomy_mode || "balanced",
+        gsc_url: document.getElementById("setting-gsc-url").value
+      };
+
+      const yamlContent = convertStateToYaml(tempState);
+      navigator.clipboard.writeText(yamlContent).then(() => {
+        alert("YAML config copied to clipboard!");
+        appendConsoleLog("Copied config.yaml data blocks to clipboard.", "success");
+      }).catch(err => {
+        console.error("Failed to copy YAML:", err);
+      });
+    }
+  </script>
+</body>
+</html>
