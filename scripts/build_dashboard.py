@@ -368,7 +368,7 @@ def main():
     template_content = TEMPLATE_PATH.read_text(encoding="utf-8")
     
     # Inject JSON string in the template
-    json_str = json.dumps(state, indent=2, default=str)
+    json_str = json.dumps(state, indent=2, default=str).replace("</", "<\\/")
     # We will replace <script id="kai-data" type="application/json"></script> 
     # with the actual JSON payload
     replacement = f'<script id="kai-data" type="application/json">\n{json_str}\n</script>'

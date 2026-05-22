@@ -150,6 +150,7 @@ The module system is opinionated by default:
 - `kai/runtime/audit.py` — audit finding models + scoring
 - `kai/runtime/application_flow.py` — profile → audit → proposal → bundle
 - `kai/runtime/business_profile.py` — business profile + normalization
+- `kai/runtime/goals.py` — Goal Registry, KPI target mapping, and SQLite/JSON goal states
 - `kai/runtime/modules/*.yaml` — 5 archetype manifests
 
 ### Marketing OS layer [BUILT]
@@ -175,11 +176,15 @@ The module system is opinionated by default:
 - `kai/connectors/lifecycle/` — Mailchimp, SendGrid, Loops (logic real, HTTP stub)
 - `kai/connectors/social/` — Facebook, Instagram, TikTok, LinkedIn, YouTube (mostly stubs)
 
-### Real API clients [BUILT — in scripts/, not routed through connectors]
+### Real API clients & Campaign Loops [BUILT]
 - `scripts/analytics/google_analytics.py` — real GA4 API via BetaAnalyticsDataClient
 - `scripts/ads/meta_ads_create.py` — real Meta Graph API via requests
 - `scripts/ads/facebook_ads.py` — real Facebook API via requests
 - `scripts/analytics/supabase_analytics.py` — real Supabase client
+- `scripts/ads/ad_loop.py` — AutoReason & Ad loop variant generation/evaluation
+
+### Attribution and Rewards [BUILT]
+- `kai/analytics/rewards.py` — Closed-loop performance rewards feedback loop
 
 ### Remote surface [PARTIAL]
 - `gateway/main.py` — FastAPI app with 11+ routers
@@ -191,10 +196,12 @@ The module system is opinionated by default:
 - `kai/execution/connector_factory.py` — provider/channel instantiation
 - `kai/execution/executor.py` — approved-action execution bridge
 - `kai/execution/result.py` — normalized execution result
+- `kai/execution/orchestrator.py` — Task Orchestrator translating task nodes into execution jobs
 - `kai/execution/anomaly_proposals.py` — analytics anomaly proposal creation
 
-### Background automation [PARTIAL]
+### Background automation & Decomposer [PARTIAL]
 - `agent/scheduler.py` — scheduled task registration
+- `agent/decomposer.py` — Task Graph Decomposer (goals-to-DAG planner)
 - `agent/tasks/execute_approved.py` — approved action execution task
 - `agent/tasks/connector_health.py` — integration health check task
 - `agent/tasks/daily_analytics.py` — connector-first analytics task with fallback
