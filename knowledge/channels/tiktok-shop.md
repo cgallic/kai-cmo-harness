@@ -9,6 +9,8 @@
 - Say AND show the keyword in the first 3 seconds
 - Place a "Soft CTA" (mention the shop/price) within 15 seconds
 - Use specific hashtags (#coffeelover), NOT generic ones (#fyp, #viral)
+- For creator or affiliate content, rights authorization and disclosure evidence are required before paid amplification.
+- Treat GMV Max dashboard results as TikTok-attributed channel GMV until incrementality is tested.
 
 ---
 
@@ -45,6 +47,24 @@ Can the primary benefit be understood in under 3 seconds with sound off?
 - **Solves Real Problem:** Pre-existing frustration, not manufactured need
 - **Brand Story:** Differentiation beyond price
 - **Margin:** High-ticket or high-commission to maximize revenue per view
+- **Operational Fit:** Inventory, fulfillment speed, return rate, commission, sample cost, and creator volume can support demand.
+
+### SKU Economics Gate
+
+Do not push a TikTok Shop SKU until these fields are known:
+
+| Field | Why It Matters |
+|-------|----------------|
+| `sku_margin` | Sets the ceiling for commission and paid media |
+| `commission_rate` | Determines creator supply and margin risk |
+| `sample_cost` | Converts seeding into real CAC |
+| `shipping_cost` | Can erase low-ticket margin |
+| `refund_rate` | Needed before calling GMV profitable |
+| `inventory_on_hand` | Prevents paid demand from outrunning stock |
+| `creator_authorization` | Required for Spark/Shop ad usage |
+| `disclosure_evidence` | Required for sponsored or affiliate content |
+
+If any field is missing, hold scale and record a data gap.
 
 ---
 
@@ -115,6 +135,8 @@ talking about this solution, so I finally caved and bought it."
 
 **Why it works:** Creates curiosity gap. Viewer clicks to check price even if not fully committed.
 
+Compliance rule: scarcity, price, and stock claims must be current and true. Do not script "low stock," "flash sale," or "selling out" unless the SKU evidence supports it.
+
 ### Step 6: Hard Call to Action (0:50-0:60)
 
 **Objective:** Direct instruction to interface
@@ -151,7 +173,7 @@ If video fails, swap Hook Block and repost.
 
 ### "Good Quality" Technical Requirements
 
-Videos tagged "Good Quality" get 50-70% view boost:
+Treat technical quality as a delivery prerequisite, not a guaranteed view boost:
 
 - [ ] **Lighting:** Subject and product well-lit, no shadows/grain
 - [ ] **Audio:** Clear and crisp (use lavalier mic, not phone mic)
@@ -195,6 +217,26 @@ Quality over quantity:
 
 ---
 
+## GMV Max And Shop Ads Caveats
+
+Use Product GMV Max when:
+
+- The SKU has healthy margin after commission, shipping, samples, refunds, and ad spend.
+- Product listings, inventory, fulfillment, and shop health are stable.
+- Authorized affiliate videos and brand videos are available.
+- The team accepts that GMV Max can use available creative assets and automate campaign settings.
+
+Hold or limit GMV Max when:
+
+- Organic and affiliate sales are already growing and cannibalization is unmeasured.
+- Creator authorization, Spark code, or mass authorization status is unclear.
+- The SKU has thin margin or high refund risk.
+- Brand safety, claim review, or AI content disclosure is unresolved.
+
+Reporting rule: Product GMV Max attributes orders for promoted products, including organic and affiliate orders, in its dashboard. Do not call this incremental GMV or incremental profit without a holdout, geo test, or matched baseline.
+
+---
+
 ## Audit Checklist
 
 | Component | Audit Question | Pass/Fail |
@@ -206,6 +248,9 @@ Quality over quantity:
 | **Lighting** | Product clearly visible and sharp? | Fail if grainy or dark |
 | **SEO** | Hashtags specific to niche? | Fail if #fyp or #viral used |
 | **Compliance** | Medical/weight loss claims? | Fail = immediate violation risk |
+| **Rights** | Creator asset authorized for paid use? | Fail if missing authorization or expired rights |
+| **Disclosure** | Commercial/affiliate disclosure visible? | Fail if missing or buried |
+| **SKU Economics** | Margin, commission, sample, shipping, refunds known? | Fail if scale decision lacks economics |
 
 ---
 

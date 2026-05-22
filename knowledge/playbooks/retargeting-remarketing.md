@@ -57,6 +57,8 @@ SEGMENT 1: ALL SITE VISITORS (last 30 days)
 
 **Critical rule:** Always exclude converted users from conversion-focused retargeting. Showing "Sign up now!" to existing customers is wasted spend and annoying.
 
+2026 signal rule: retargeting audiences must respect consent state, suppression lists, customer status, and channel overlap. A small high-ROAS audience may be harvesting conversions that would have happened anyway.
+
 ---
 
 ## Platform-Specific Setup
@@ -200,11 +202,13 @@ Email 4: 7 days after abandonment (final)
 
 ### By Segment
 
-| Segment | % of Retargeting Budget | Expected ROAS |
-|---------|------------------------|---------------|
-| Cart/signup abandoners | 35% | 5-15x |
-| Product/pricing visitors | 40% | 3-8x |
-| All visitors (awareness) | 25% | 1-3x |
+| Segment | % of Retargeting Budget | Read As |
+|---------|------------------------|---------|
+| Cart/signup abandoners | 35% | Highest intent, highest incrementality risk |
+| Product/pricing visitors | 40% | Useful objection handling if exclusions are clean |
+| All visitors (awareness) | 25% | Often small lift unless sequenced with a clear next step |
+
+Do not use generic expected ROAS ranges as client claims. Use account data, holdouts, or directional labels.
 
 ---
 
@@ -226,4 +230,13 @@ Retargeting inflates platform-reported ROAS because these users were already war
 - **GA4-reported conversions** (last-click, more conservative)
 - **Incrementality** (the true test — did retargeting cause the conversion or would they have converted anyway?)
 
-Run a holdout test quarterly: exclude 10% of your retargeting audience and compare conversion rates. The difference = true retargeting lift.
+### Incrementality Decision
+
+Use this read path:
+
+1. If the platform supports clean holdouts, exclude a random control group and compare conversion rate or revenue per eligible user.
+2. If clean user holdouts are not possible, run a geo test with matched regions.
+3. If retargeting spend is small, use directional proxies: blended CAC, branded-search trend, returning-customer mix, and post-purchase survey.
+4. If the campaign only shows high view-through ROAS, cap budget until a causal read exists.
+
+Run a holdout test quarterly when audience size supports it. Label the result as retargeting lift, not total retargeting revenue.

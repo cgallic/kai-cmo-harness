@@ -42,7 +42,57 @@ Crawl speed is already limited to X threads and Y URLs/second.
 
 ---
 
-## 2. Post-Crawl Analysis Workflow
+## 2. Google AI Search / AEO Overlay
+
+Google AI Overviews and AI Mode use Google Search systems. Treat this overlay as a technical SEO check for generative Search visibility, not as a separate crawler or markup project.
+
+### 2.1 Eligibility Checks
+
+- Confirm key pages are crawlable by Googlebot and not blocked by `robots.txt`, WAF rules, or server protections
+- Confirm key pages are indexable and canonicalized to the intended URL
+- Confirm key pages are eligible for snippets: no accidental `nosnippet`, `data-nosnippet`, or overly restrictive `max-snippet`
+- Confirm rendered HTML exposes the main content, headings, links, media, and product/local details
+- Confirm JavaScript-rendered sites follow JavaScript SEO best practices and do not hide primary content until after user interaction
+
+### 2.2 Content + Data Checks
+
+- Validate structured data only where it matches visible content and a real Google Search feature
+- For ecommerce sites, verify Product schema, Merchant Center feed health, price, availability, return policy, shipping, and image eligibility
+- For local businesses, verify Google Business Profile data, local business schema, NAP consistency, service areas, hours, reviews, and location/service pages
+- For image/video-heavy pages, verify descriptive filenames, alt text, captions/transcripts, video metadata, and sitemap/feed coverage where applicable
+- Use query fan-out/PAA research to identify missing user facets, then consolidate into useful pages or clusters; do not create doorway pages for every query variant
+
+### 2.3 Measurement Checks
+
+- Export Google Search Console page/query data for the audit period where access exists
+- Track impressions, clicks, CTR shifts, indexed pages, and query/page pairs; Google does not provide a universal AI Overview-only report in Search Console
+- Record any manual AI Overview / AI Mode observations with query, location/device, date, and screenshot
+- Cite every client-facing visibility claim from Search Console, crawler exports, SERP screenshots, or a named third-party AI visibility tool
+- Label AI visibility by engine; do not combine Google AI Overview observations, Bing AI Performance, ChatGPT samples, Claude samples, Perplexity citations, and Grok/X observations into one undifferentiated "AI ranking"
+- For Bing Webmaster Tools AI Performance, report citation counts, cited pages, grounding queries, and date range as Microsoft AI surface data
+
+### 2.4 Agent-Readiness Overlay
+
+Run this overlay for AI search, browser agents, documentation sites, local businesses with booking forms, ecommerce, and any site that expects agents to compare, summarize, or transact.
+
+- Confirm primary content appears in initial HTML, not only after JS, login, modal, infinite scroll, or click-to-expand controls
+- Confirm semantic structure: one H1, ordered H2/H3s, meaningful link text, visible main content, and no critical facts only in images/PDFs
+- Confirm accessibility tree basics: labeled form controls, buttons with accessible names, descriptive image alt text, and visible focus/interaction states
+- Confirm stable commercial facts: product name, price/price range, availability, address, hours, phone, service area, return policy, booking path, and approval/human-review path where relevant
+- Confirm forms and booking flows expose labels, validation messages, confirmation states, and phone alternatives in text
+- Confirm WAF/anti-bot rules do not block Googlebot, bingbot, declared AI search crawlers, or browser-like user agents needed for agentic experiences
+
+**Agent-readiness data-gap language:**
+
+```markdown
+Data gap: The audit did not include authenticated checkout or booking flow access, so agent-readiness findings are limited to public pages.
+Data gap: Server logs were unavailable, so we could not confirm whether OpenAI, Anthropic, Perplexity, Googlebot, or bingbot accessed the site during the audit window.
+Data gap: The crawler export does not include rendered screenshots. We cannot confirm whether modal-only pricing or hidden tabs are visible to browser agents.
+```
+
+---
+
+## 3. Post-Crawl Analysis Workflow
 
 Review these tabs **in order**:
 
@@ -53,10 +103,12 @@ Review these tabs **in order**:
 5. **Inlinks** - Trace broken URL link sources
 6. **robots.txt / Directives** - Check blocking rules
 7. **Sitemaps vs Crawl** - Compare if sitemap provided
+8. **Rendered HTML / JavaScript comparison** - Confirm main content is available to crawlers
+9. **Structured data validation** - Confirm valid, content-matching schema for eligible rich results
 
 ---
 
-## 3. Issue-by-Issue SOP + Dev Instructions
+## 4. Issue-by-Issue SOP + Dev Instructions
 
 ### A. 404 NOT FOUND
 
@@ -281,7 +333,7 @@ Remove X-Robots-Tag: noindex from /file.pdf if it should be indexed.
 
 ---
 
-## 4. REQUIRED Dev Ticket Format (NO EXCEPTIONS)
+## 5. REQUIRED Dev Ticket Format (NO EXCEPTIONS)
 
 Every issue sent to devs **MUST** include:
 
@@ -312,7 +364,7 @@ Priority: High
 
 ---
 
-## 5. Mandatory Screaming Frog Exports
+## 6. Mandatory Screaming Frog Exports
 
 Always attach these reports:
 
@@ -324,6 +376,9 @@ Always attach these reports:
 | **Indexability report** | Noindex, blocked pages |
 | **Canonical errors** | Canonical mismatches |
 | **Sitemap vs Crawl comparison** | Missing/extra URLs (if sitemap used) |
+| **Rendered HTML / JavaScript crawl comparison** | Main content visibility for Googlebot and AI Search eligibility |
+| **Structured data validation export** | Rich result eligibility and schema/content mismatch evidence |
+| **Google Search Console export** | Page/query visibility, indexing, CTR, and crawl/index evidence where access exists |
 
 ---
 

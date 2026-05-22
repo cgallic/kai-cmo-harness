@@ -34,6 +34,12 @@ Load this with:
 
 External reference points:
 
+- Meta Engineering Andromeda: retrieval systems can process much larger creative candidate sets, which raises the value of true concept diversity.
+  Source: https://engineering.fb.com/2024/12/02/production-engineering/meta-andromeda-advantage-automation-next-gen-personalized-ads-retrieval-engine/
+- Meta Engineering GEM: Meta's foundation model improves downstream ads recommendation models, so account-level inputs and creative signals matter more than isolated manual targeting.
+  Source: https://engineering.fb.com/2025/11/10/ml-applications/metas-generative-ads-model-gem-the-central-brain-accelerating-ads-recommendation-ai-innovation/
+- Kantar attention research: attention is not one metric; passive attention and active emotional response should be evaluated separately when diagnosing creative quality.
+  Source: https://www.kantar.com/Inspiration/Advertising-Media/Decoding-Attention-Five-lessons-to-transform-your-creative
 - Pilothouse P.D.A. framework: Persona, Desire, and Angle produce combinatorial concept diversity for Meta Andromeda.
   Source: https://www.pilothouse.co/post/the-p-d-a-framework-deep-dive-how-to-generate-conceptual-diversity-that-andromeda-actually-rewards
 - ATTN 60/30/10 campaign budget rule: proven performers / scaling tests / new experiments.
@@ -132,6 +138,9 @@ Every concept row should answer:
 | `proof` | Yes | Review, demo, data point, mechanism, example, or "needs proof" |
 | `offer` | Yes | The commercial promise attached to the ad |
 | `landing_match` | Yes | Page or section that fulfills the ad promise |
+| `rights_status` | Required for creator/UGC | Owned, licensed, whitelisted, expired, or missing |
+| `disclosure_status` | Required for creator/UGC | Not required, present, missing, or needs legal review |
+| `ai_generated` | Yes | None, assisted, synthetic image/video, avatar, voice, or unknown |
 | `hypothesis` | Yes | What should happen if this concept is true |
 | `portfolio_bucket` | Yes | Winner / adjacent / experiment |
 | `budget` | Yes | Planned daily or test budget |
@@ -153,6 +162,7 @@ Score each concept 0-2.
 | Awareness-stage fit | Mismatched | Plausible | Right stage for placement |
 | Proof availability | None | Indirect | Specific proof ready |
 | Landing match | Weak | Acceptable | Same promise and CTA |
+| Rights/disclosure | Missing when required | Needs review | Valid for planned usage |
 | Production speed | Slow | Moderate | Can ship this week |
 | Policy risk | High | Needs review | Low |
 
@@ -307,6 +317,8 @@ Before a paid creative batch ships:
 - [ ] Kill rule is named for each active row.
 - [ ] Test resolution memo has a control, variable, data floor, and read window.
 - [ ] Landing page matches the concept promise.
+- [ ] Creator/UGC rights and disclosure are recorded before paid usage.
+- [ ] AI-generated or synthetic media status is recorded.
 - [ ] Platform policy reference has been checked.
 - [ ] UTMs identify concept, format, and hook.
 

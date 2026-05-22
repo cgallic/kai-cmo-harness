@@ -12,6 +12,23 @@
 
 ---
 
+## 2026 Paid-Media Operating Model
+
+Paid media now works as an evidence loop, not a channel checklist. Platform AI can expand matching, bidding, placement, and creative assembly, but Kai still owns the inputs and the business decision.
+
+| Layer | Operator Job | Evidence Required | Hard Stop |
+|-------|--------------|-------------------|-----------|
+| Unit economics | Define contribution margin, payback, cash limit, and scale threshold | Margin source, refund/cancel adjustment, payback target | No profit claim without margin |
+| Signal quality | Feed clean conversion events, customer exclusions, lead quality, and SKU data | Pixel/CAPI/enhanced conversions checks, offline conversion import status | No broad automation with broken events |
+| Creative system | Ship a portfolio of distinct concepts, proof types, formats, and offers | Creative-quality ledger row per asset | No "more variants" unless concept diversity is real |
+| Automation control | Decide if PMax, AI Max, Advantage+, Smart+, or GMV Max fits the account state | Conversion volume, product feed/catalog health, exclusions, brand controls | No universal automation recommendation |
+| Incrementality | Separate attribution from causal lift | Holdout, geo test, conversion lift, MMM, or named proxy | Do not present platform ROAS as incremental profit |
+| Compliance | Check claims, rights, disclosures, special categories, and AI content labels | Policy reference, substantiation file, rights/disclosure record | No creator/UGC activation without rights and disclosure |
+
+Source posture: official platform docs and IAB incrementality guidance are requirements or best practices. Vendor creative studies are hypothesis inputs unless validated by account data.
+
+---
+
 ## 1. Unit Economics Framework
 
 ### B2B SaaS Benchmarks
@@ -30,7 +47,7 @@
 2. **CM2 (Order Margin):** CM1 - Variable Logistics (shipping, packaging, transaction fees)
 3. **CM3 (Contribution Margin):** CM2 - Variable Marketing (CAC)
 
-**Target:** 15-25% CM3 on first order for sustainability. Subscriptions can tolerate lower/negative CM3 if 60-90 day LTV is strong.
+**Internal planning target:** 15-25% CM3 on first order is Kai's conservative DTC guardrail. Subscriptions can test lower or negative first-order CM3 only when retention, refund, and 60-90 day LTV data are present.
 
 ### Variable ROAS by Margin
 
@@ -44,7 +61,7 @@
 ### The New Targeting Paradigm
 
 **Old Model:** Hyper-segmentation (demographics, interests)
-**2025 Model:** Broad targeting + Audience Signals + Let creative do the targeting
+**2026 Model:** Broader matching + first-party signal quality + creative portfolio design. Creative supplies many of the audience cues that platform AI uses, but the operator still controls exclusions, offer quality, claim proof, and measurement.
 
 ### First-Party Data Strategy
 
@@ -119,6 +136,23 @@ Use this layer to choose which concepts deserve production, assign 60/30/10 port
 
 ### Google Ads
 
+**Account-state gate before AI Max or Performance Max:**
+
+Use more automation when these are true:
+
+- Conversion actions are clean, deduplicated, and imported with value.
+- Search terms, negatives, brand exclusions, and URL controls are reviewed weekly.
+- Product feed or landing-page inventory is accurate.
+- The account has enough conversion volume for the chosen bid strategy.
+- Brand and legal terms can be protected through exclusions, URL rules, and asset review.
+
+Hold or run a contained experiment when these are true:
+
+- Lead quality is unknown or offline conversions are missing.
+- Brand search is mixed into prospecting results.
+- Final URL expansion could send traffic to non-compliant or weak pages.
+- The account needs keyword, product, or landing-page baselines first.
+
 **Hagakure/STAG Method:**
 - Consolidate account structure for data density
 - Need 30-50 conversions/month/campaign for optimization
@@ -130,6 +164,7 @@ Use this layer to choose which concepts deserve production, assign 60/30/10 port
 - Use Brand Exclusion lists (prevent branded cannibalization)
 - Feed-Only PMax for eCommerce (forces Shopping placements)
 - Enable New Customer Acquisition (NCA) goals
+- Treat PMax ROAS as platform-attributed unless calibrated by lift testing, geo testing, or MMM.
 
 ### Meta (Facebook/Instagram)
 
@@ -137,20 +172,22 @@ Use this layer to choose which concepts deserve production, assign 60/30/10 port
 - Hybrid structure: ASC for scaling + Manual for testing
 - Set Customer Budget Cap (max 10% on existing customers)
 - Scale 10-20% every few days if CPA holds
+- Use Advantage+ only after catalog health, purchase event quality, customer exclusions, and creative diversity are checked.
 
 **Remix Strategy:** Combat fatigue by creating 5 variations of first 3 seconds while keeping video body the same.
 
 ### TikTok
 
-- **Spark Ads:** 134% higher completion rates, 142% higher engagement
+- **Spark Ads:** Use only with creator authorization, paid usage rights, and visible disclosure evidence.
 - **TikTok Shop:** Direct in-app purchase for impulse categories
 - **Search Ads Toggle:** Capture Gen Z search intent
+- **GMV Max:** Treat dashboard GMV as TikTok-attributed channel GMV. Check organic and affiliate cannibalization before calling it incremental.
 
 **Principle:** "Don't Make Ads, Make TikToks"
 
 ### LinkedIn
 
-- **Thought Leader Ads:** 1.7x higher CTR (sponsor employee posts)
+- **Thought Leader Ads:** Sponsor expert or employee posts when the post has a professional point of view, substantiated claims, and permission from the author.
 - **Content Funnel:**
   - TOFU: Ungated video + Thought Leader ads
   - MOFU: Document Ads (whitepapers in-feed)
@@ -183,6 +220,25 @@ Use this layer to choose which concepts deserve production, assign 60/30/10 port
 | **Multi-Touch Attribution (MTA)** | Day-to-day optimization | Signal loss, last-click bias |
 | **Marketing Mix Modeling (MMM)** | Quarterly budget allocation | Requires historical data |
 | **Incrementality Testing** | Proving causality (gold standard) | Resource intensive |
+
+### Incrementality Decision Tree
+
+1. Need a client-facing profit claim?
+   - Require contribution margin plus causal lift. Platform ROAS alone is not enough.
+2. Need a scale decision this month?
+   - Prefer conversion lift or holdout when the platform supports clean exclusions.
+   - Use geo testing when audiences cannot be cleanly held out or channels spill across platforms.
+3. Need quarterly budget allocation?
+   - Use MMM when there is enough history and spend variation.
+   - Calibrate MMM with experiments where possible.
+4. Too little data for causal measurement?
+   - Use a directional proxy: blended CAC, new-customer mix, branded-search share, post-purchase survey, or qualified pipeline.
+   - Label the recommendation as directional and name the missing data.
+
+Decision language:
+
+- "Meta reported 4.1x platform-attributed ROAS" is acceptable.
+- "Paid social generated 4.1x incremental profit" is blocked unless causal lift and margin data support it.
 
 ### Geo-Lift Testing Methodology
 
@@ -241,7 +297,7 @@ Incremental ROAS = Incremental Revenue / Ad Spend in Test Region
 ### ROAS Illusion
 - **Symptom:** 10x ROAS but flat revenue
 - **Cause:** Over-investing in branded search/retargeting
-- **Fix:** Measure Incremental ROAS, use Brand Exclusions
+- **Fix:** Measure incremental ROAS, use brand exclusions, and compare platform-attributed revenue to blended revenue and margin.
 
 ### Over-Segmentation
 - **Symptom:** Hundreds of ad groups with fragmented data

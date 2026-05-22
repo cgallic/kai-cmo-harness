@@ -349,6 +349,22 @@ curl -X POST "https://graph.facebook.com/v21.0/${ADSET_ID}" \
 
 ---
 
+## 8.1 Creator And Automation API Pre-Flight
+
+Before creating Meta ads from creator, UGC, or generated assets:
+
+- Create ads in `PAUSED` state.
+- Store `concept_id`, `asset_id`, and `utm_content` in the local upload sheet or payload log.
+- Confirm Partnership Ads or whitelisting permission for creator content.
+- Confirm usage-rights duration and expiration date.
+- Confirm disclosure evidence and native paid-partnership label plan.
+- Confirm AI/synthetic-media disclosure status where relevant.
+- Attach the policy check and human approval ID to the audit log.
+
+Do not activate Advantage+ or other automated delivery changes through API unless the decision memo names account state, enabled controls, known gaps, measurement method, and rollback plan.
+
+---
+
 ## 9. Common Gotchas
 
 ### Field Name Mismatches

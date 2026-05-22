@@ -1,31 +1,186 @@
 skill: email
-version: 2.0
+version: 3.0
 harness: kai-harness
+format: general-email
+risk_tier: medium
+word_count: 300-500
+min_four_us: 10
+seo_lint: false
+
+description: >
+  General marketing emails for known lists and owned audiences. Requires segment
+  fit, consent posture, suppression awareness, clear sender identity, and
+  evidence for material claims.
+
+required_sources:
+  - brief
+  - knowledge/channels/email-lifecycle.md
+  - knowledge/checklists/email-checklist.md
+  - list_segment_definition
+  - sender_identity
+  - suppression_list
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  list_segment_must_be_named: true
+  sender_identity_required: true
+  suppression_list_must_be_checked: true
+  promotional_claims_require_evidence: true
+  missing_sources_action: block_and_request_sources
 
 inputs:
   required:
     - brief: object
-    - list_segment: string  # kaicalls_leads | bwk_users | abp_vendors | newsletter
+    - list_segment: string
   optional:
-    - subject_variants: int  # default 3 subject line A/B options
+    - subject_variants: int
+    - sender_name: string
+    - preference_center_url: string
+    - claim_evidence_log: list[object]
 
 outputs:
   draft: markdown
   subject_lines: list[string]
   four_us_score: object
   preview_text: string
+  compliance_notes: list[string]
+
+output_schema:
+  type: object
+  required:
+    - draft
+    - subject_lines
+    - preview_text
+    - four_us_score
+    - compliance_notes
+  properties:
+    draft: markdown
+    subject_lines: list[string]
+    preview_text: string
+    four_us_score: object
+    compliance_notes: list[string]
+    claim_table: list[object]
 
 quality_gates:
-  - four_us_total >= 12
-  - banned_words_tier1 == 0
-  - subject_line_length <= 50  # chars
-  - word_count <= 500
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "subject_line_length <= 50"
+  - "word_count <= 500"
+  - "single_primary_cta == true"
 
-word_count: 300-500
+deterministic_checks:
+  - id: word_count_max
+    evaluator: script
+    pass_when: "word_count <= 500"
+  - id: subject_line_length
+    evaluator: script
+    pass_when: "every subject char_count <= 50"
+  - id: list_segment_present
+    evaluator: schema
+    pass_when: "list_segment is non_empty"
+  - id: suppression_checked
+    evaluator: static
+    pass_when: "suppression_checked == true"
+  - id: sender_identity_present
+    evaluator: schema
+    pass_when: "sender_identity is complete"
+  - id: no_deceptive_subjects
+    evaluator: regex
+    pass_when: "subjects do not imply a false thread, false urgency, or false relationship"
+  - id: claim_evidence_present
+    evaluator: static
+    pass_when: "material claims have evidence_id or are removed"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: segment_fit
+      question: "Does the message match the audience state and list relationship?"
+    - name: clarity
+      question: "Is there one clear promise and one primary CTA?"
+    - name: compliance_and_trust
+      question: "Are sender identity, suppression, and preference expectations respected?"
+    - name: evidence_discipline
+      question: "Are material claims sourced and believable?"
+
+human_review_required_when:
+  - regulated_industry == true
+  - cold_or_purchased_list == true
+  - claim_risk_level == high
+  - suppression_list_missing == true
+  - sender_identity_missing == true
+
+golden_situations:
+  - name: owned_list_newsletter
+    expectation: "Uses segment-aware framing, one CTA, compliant sender identity, and no unsupported claims."
+  - name: cold_outreach_relevance_failure
+    eval_id: kai.situations.cold_outreach_relevance_failure.scraped_list_generic_personalization
+    expectation: "Blocks send-ready copy when list source, relevance, opt-out, or suppression proof is missing."
+  - name: attribution_overclaim
+    eval_id: kai.situations.attribution_overclaim.ga4_assisted_revenue_equals_roi
+    expectation: "Does not turn assisted or attributed metrics into exact ROI claims."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_missing_sender_identity: 0
+  max_missing_suppression_checks: 0
+  max_unsourced_material_claims: 0
+
+claim_policy:
+  allowed:
+    - sourced product updates
+    - approved offers
+    - segment-specific but non-sensitive personalization
+  requires_evidence:
+    - ROI or revenue claims
+    - customer outcomes
+    - rankings or awards
+    - urgency or scarcity
+  forbidden:
+    - fabricated familiarity
+    - hidden sender identity
+    - deceptive subject lines
+    - sensitive personal-attribute claims
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - list_segment
+    - sender_identity_id
+    - suppression_list_id
+    - evidence_id
+    - preference_center_url
+  unresolved_claim_action: remove_or_hold_for_review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - lifecycle_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - suppression_not_checked
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - email_id
+  - list_segment
+  - sender_identity_id
+  - suppression_list_id
+  - evidence_ids
+  - four_us_score
+  - reviewer
+  - approval_status
+  - esp_campaign_id
+
 hooks:
   pre_write: load_brief + load_email_channel + load_email_checklist
   post_write: run_quality_gate
   on_fail: revise_with_failure_report
   on_pass: post_for_approval
   on_approve: send_via_loops + content_log
-  on_send: schedule_open_rate_check  # 7-day check instead of 30
+  on_send: schedule_open_rate_check

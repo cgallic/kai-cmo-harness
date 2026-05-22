@@ -28,7 +28,16 @@
 | Payment schedule | Monthly, NET 30 |
 | Minimum payout | $50-100 |
 | Recurring commission | Yes for SaaS (as long as customer stays = affiliate earns) |
-| Attribution | Last-click with 30-90 day cookie |
+| Attribution | Last-click can be the payout rule, but it is not proof of incrementality |
+
+Before setting rates, calculate SKU or plan economics:
+
+- Gross margin.
+- Refund and cancellation rate.
+- Commission and platform fees.
+- Sample, shipping, or onboarding cost.
+- New-customer value vs existing-customer leakage.
+- Coupon-site and trademark-bidding risk.
 
 ### Tier Structure (for scaling)
 
@@ -87,6 +96,8 @@ Want me to set up your affiliate account? Takes 2 minutes.
 
 - [ ] Unique tracking link per affiliate
 - [ ] Custom discount code (if applicable)
+- [ ] Required disclosure language for affiliate links and codes
+- [ ] Usage-rights terms for any creator/UGC asset
 - [ ] Banner ads in standard sizes (300x250, 728x90, 160x600)
 - [ ] Email swipe copy (3-5 emails they can adapt)
 - [ ] Social media posts (copy + images ready to use)
@@ -161,6 +172,14 @@ REINFORCE: Show referral progress ("You've earned $75!")
 | Cookie-based | Tracking pixel + cookie | Automatic, multi-session | Cookie blockers, cross-device issues |
 | Server-to-server | Postback URL on conversion | Most reliable | Requires technical setup |
 
+### Attribution And Incrementality Rules
+
+- Use last-click, code, or platform attribution for payout administration.
+- Use holdouts, geo splits, matched creator cells, or MMM for incrementality.
+- Use directional proxies only when causal tests are too small: new-customer share, blended CAC, branded-search trend, and customer survey source.
+- Block claims that affiliate spend produced incremental profit unless margin and causal lift are available.
+- Track organic cannibalization when affiliates or creators promote SKUs already selling through owned channels.
+
 ### Fraud Prevention
 
 | Fraud Type | Signal | Prevention |
@@ -181,15 +200,10 @@ REINFORCE: Show referral progress ("You've earned $75!")
 | Conversion rate | Clicks → purchases through affiliate links | Referral clicks → signups |
 | Revenue per affiliate | Total revenue / active affiliates | — |
 | Customer LTV (referred) | LTV of affiliate-acquired customers | LTV of referred customers |
+| Incremental contribution | Requires margin plus causal lift | Requires margin plus causal lift |
 | Viral coefficient | — | Referrals per customer (>1 = viral growth) |
 | Payback period | Time to recoup affiliate commission | Time to recoup referral reward |
 
-### Benchmarks
+### Benchmark Policy
 
-| Metric | Average | Top Performers |
-|--------|---------|---------------|
-| Referral program participation | 2-5% of customers | 10-15% |
-| Referral conversion rate | 3-8% | 15-25% |
-| Affiliate activation rate | 5-10% of signups | 20-30% |
-| Revenue from affiliates (of total) | 5-15% | 25-40% |
-| Referred customer LTV | 1.2-1.5x organic | 2x+ organic |
+Do not use generic participation, conversion, revenue-share, or LTV benchmarks as client-facing claims unless a current source is cited and the category fit is clear. Prefer account history and program cohort data.

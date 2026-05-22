@@ -6,6 +6,22 @@
 
 ## CRO Framework
 
+### Evidence-Led Operating Rule
+
+CRO recommendations must identify the evidence tier behind the recommendation. Do not claim a benchmark lift unless the source, retrieval date, method, and applicability are documented.
+
+| Tier | Evidence | Use |
+|------|----------|-----|
+| 1 | Instrumented funnel analytics from the audited property | Prioritize and size the problem |
+| 2 | Session replay, heatmaps, rage clicks, form analytics | Diagnose friction patterns |
+| 3 | User testing or moderated task observation | Explain why users fail |
+| 4 | Message testing with target buyers | Validate clarity, value, and objections |
+| 5 | Customer interviews, sales calls, support tickets | Mine language and objections |
+| 6 | Third-party UX research or benchmarks | Generate hypotheses only |
+| 7 | Practitioner heuristic or internal opinion | Label as hypothesis, not fact |
+
+**Missing-data rule:** If analytics, recordings, user tests, or source URLs are unavailable, list the gap. Do not replace it with a generic conversion-rate benchmark.
+
 ### The 5-Layer Optimization Stack
 
 ```
@@ -24,13 +40,7 @@ Always optimize bottom-up. A brilliant headline won't help if the page takes 8 s
 
 ### Speed Kills Conversions
 
-| Load Time | Conversion Impact |
-|-----------|------------------|
-| 0-2 seconds | Baseline |
-| 2-3 seconds | -7% conversions |
-| 3-5 seconds | -20% conversions |
-| 5-8 seconds | -40% conversions |
-| 8+ seconds | -50%+ abandonment |
+Use Core Web Vitals, real-user monitoring, browser console errors, and funnel drop-off by device before changing copy. Treat speed as a blocker when slow pages, layout shifts, or interaction delays are visible in field data.
 
 **Quick wins:**
 - Compress images (WebP/AVIF, not PNG)
@@ -52,20 +62,11 @@ Always optimize bottom-up. A brilliant headline won't help if the page takes 8 s
 
 ## Layer 2: Audience & Traffic Quality
 
-### Traffic Source → Conversion Expectation
+### Traffic Source Fit
 
-| Source | Expected CVR | Why |
-|--------|-------------|-----|
-| Email (warm list) | 5-15% | High intent, knows you |
-| Google Search (branded) | 8-20% | Actively looking for you |
-| Google Search (non-branded) | 2-5% | Looking for a solution |
-| Meta Ads (retargeting) | 3-8% | Already visited |
-| Meta Ads (cold) | 0.5-2% | Doesn't know you yet |
-| Organic social | 1-3% | Casual interest |
-| Referral/partner | 3-8% | Pre-qualified trust |
-| Display ads | 0.1-0.5% | Low intent interruption |
+Segment conversion analysis by source, medium, campaign, device, new/returning visitor, and awareness state. Compare each segment against its own history and campaign promise, not a generic benchmark.
 
-**Lesson:** If cold ad traffic converts at 0.5% and you need 2%, the problem might be the traffic source, not the page. Fix the audience before fixing the page.
+**Lesson:** If paid social visitors bounce after one page while branded search visitors convert, the problem may be audience promise, message match, page speed, or offer fit. Diagnose the traffic source before redesigning the page.
 
 ### Message Match
 The #1 CRO killer: disconnect between the ad/email and the landing page.
@@ -215,13 +216,12 @@ NEAR CTA:
 
 ### Phone-Based Lead Capture (KaiCalls) — Higher Conversion for Service Businesses
 
-For local businesses, service businesses, legal, medical, home services, and any business where customers call: **phone capture converts 5-10x higher than form fills.** A phone call is the highest-intent conversion action.
+For local businesses, service businesses, legal, medical, home services, and any business where customers already call, evaluate phone capture as a primary conversion path. A phone call can signal high intent, but the value must be proven from call logs, close rates, and missed-call data.
 
 **The problem:** Business owners miss calls while on jobs, in meetings, or after hours. Callers don't leave voicemails — they call the next business. Every missed call is a lost customer.
 
-**The solution: KaiCalls AI receptionist** (kaicalls.com)
-- Answers every call in <1 second, 24/7
-- Sounds natural — callers don't know it's AI
+**Potential solution: KaiCalls AI receptionist** (kaicalls.com)
+- Answers calls 24/7
 - Captures caller name, need, contact info, and qualifying details
 - Books appointments directly if connected to scheduling tool
 - Sends instant SMS/email notification with full call summary
@@ -233,7 +233,13 @@ For local businesses, service businesses, legal, medical, home services, and any
 - High-ticket services ($500+) where prospects want to talk before buying
 - Businesses already receiving phone calls but missing them
 
-**A/B test recommendation:** Run "Call Now" CTA alongside form CTA. Track which generates more qualified leads and higher close rates.
+**Disqualifiers or caveats:**
+- Low-intent ecommerce where phone support would increase cost without qualified demand
+- Regulated categories where call recording, consent, or professional advice rules need legal review
+- Teams without a process to review call summaries and follow up quickly
+- Brands that cannot disclose AI assistance where disclosure is required or expected
+
+**Test recommendation:** Run phone CTA alongside form CTA where traffic volume supports a fair test. Track qualified lead rate, booked appointments, close rate, revenue per lead, support burden, and complaint rate.
 
 ---
 
@@ -246,8 +252,8 @@ For local businesses, service businesses, legal, medical, home services, and any
 
 Examples:
   "Get 3x more demo calls in 30 days — without hiring an SDR team"
-  "Answer every call in 0.4 seconds — without a single employee"
-  "Rank on page 1 in 60 days — without link building"
+  "Answer calls after hours — without hiring night staff"
+  "Find qualified consultations — without adding another intake form"
 ```
 
 ### The Clarity Test
@@ -283,45 +289,47 @@ If not, rewrite the above-fold section.
 
 ### Statistical Rigor
 
-| Traffic/Month | Min Test Duration | Min Sample Per Variant |
-|--------------|-------------------|----------------------|
-| < 5K visitors | Don't A/B test — make best-judgment changes | — |
-| 5K-20K | 2-4 weeks | 1,000+ per variant |
-| 20K-100K | 1-2 weeks | 2,500+ per variant |
-| 100K+ | 3-7 days | 5,000+ per variant |
+Small samples make false wins easy. Calculate minimum detectable effect, baseline conversion rate, required sample size, and test duration before launch. If traffic is too low, use evidence-led improvements, user research, message tests, and sequential learning instead of pretending an A/B test is conclusive.
 
 **Rules:**
-- Never call a test before reaching statistical significance (95% confidence)
-- Don't peek at results daily — set the duration upfront and wait
-- Test one variable at a time (not headline + CTA + image simultaneously)
+- Define the primary metric and guardrail metrics before launch
+- Don't peek at results daily and stop early unless the test has a documented stopping rule
+- Test one core hypothesis at a time
 - Run the test through a full business week (weekday vs weekend behavior differs)
 - Document every test: hypothesis, variant, result, learning
+- Report inconclusive tests honestly
 
 ### Test Hypothesis Template
 
 ```
-We believe that [change]
+Because [evidence source] showed [observed problem],
+we believe that [change]
 for [audience segment]
 will [expected outcome]
 because [reasoning]
-We'll measure [metric] over [timeframe]
-Success = [specific threshold]
+We'll measure [primary metric] over [timeframe]
+Guardrails = [refunds/churn/support tickets/lead quality/revenue per visitor]
+Success = [specific threshold or decision rule]
 ```
 
 ---
 
 ## CRO Metrics
 
-| Metric | Formula | Benchmark | Great |
-|--------|---------|-----------|-------|
-| Conversion Rate | Conversions / Visitors | 2-5% | 8%+ |
-| Bounce Rate | Single-page visits / Total visits | 40-60% | <35% |
-| Exit Rate (key page) | Exits from page / Views of page | 30-50% | <25% |
-| Time on Page | Avg time before next action | 1-3 min | 3+ min |
-| Scroll Depth | % who scroll to CTA | 50-70% | 80%+ |
-| Form Start Rate | Users who start form / Page views | 10-30% | 30%+ |
-| Form Completion Rate | Submissions / Form starts | 40-70% | 75%+ |
-| Cart Abandonment | Abandoned carts / Total carts | 65-75% | <60% |
+| Metric | Formula | Use |
+|--------|---------|-----|
+| Conversion Rate | Conversions / eligible visitors | Primary funnel outcome |
+| Revenue Per Visitor | Revenue / eligible visitors | Prevents optimizing for low-value conversions |
+| Qualified Lead Rate | Qualified leads / eligible visitors | Lead-gen quality check |
+| Bounce Rate | Single-page visits / total visits | Friction or mismatch signal |
+| Exit Rate (key page) | Exits from page / views of page | Step-level drop-off signal |
+| Form Start Rate | Users who start form / page views | Offer and form visibility signal |
+| Form Completion Rate | Submissions / form starts | Form friction signal |
+| Error Rate | Error events / sessions | Technical blocker |
+| Rage Click Rate | Rage clicks / sessions | UX frustration signal |
+| Refund/Churn/Complaint Rate | Negative outcomes / conversions | Guardrail metric |
+
+Build the benchmark from the audited property first. Use third-party UX research, such as Baymard or Contentsquare, to identify likely friction patterns, not to promise a lift.
 
 ---
 
@@ -339,3 +347,9 @@ Run this before any A/B test — these fixes almost always improve conversion:
 - [ ] Mobile experience tested on real phone
 - [ ] No broken links, images, or JS errors
 - [ ] Exit-intent popup or sticky CTA for scrollers
+
+---
+
+## Source Notes
+
+References retrieved 2026-05-17: Baymard checkout UX research, Contentsquare Digital Experience Benchmarks, CXL conversion research framework, Wynter B2B message testing, Maze and User Interviews research reports, Teresa Torres continuous discovery guidance, and Rob Fitzpatrick's Mom Test interview principles. Treat vendor and practitioner benchmarks as hypothesis inputs unless they match the audited context and are cited.

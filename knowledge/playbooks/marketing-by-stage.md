@@ -15,15 +15,27 @@ PRE-LAUNCH ($0)  →  EARLY (0-$10K MRR)  →  GROWTH ($10K-$100K MRR)  →  SCA
 
 ---
 
+## Evidence Loop By Stage
+
+Every stage uses the same loop at a different level of rigor:
+
+1. Collect evidence from customers, analytics, sales notes, support, search demand, and campaign results.
+2. Form a stage-appropriate hypothesis.
+3. Run the smallest test that can change the decision.
+4. Measure against a named success metric and guardrail.
+5. Update positioning, persona evidence, channel choice, and budget.
+
+Do not promote a channel because a benchmark says it works. Promote it because the stage, customer behavior, and local evidence support the bet.
+
 ## Stage 1: Pre-Launch ($0 revenue)
 
-**Goal:** Validate demand before building. Get 100 people who want this badly enough to give you their email, money, or time.
+**Goal:** Validate demand before building. Look for people who want this badly enough to give you their email, money, time, or a concrete introduction.
 
 ### Do This (priority order)
 
 | Activity | Why | Effort |
 |----------|-----|--------|
-| **Customer interviews (20-30)** | Validate pain is real, understand language they use | 2 weeks |
+| **Customer interviews** | Validate pain is real, understand language they use | Run until patterns and contradictions are clear |
 | **Landing page + email capture** | Test if people will take action on the promise | 1 day |
 | **Waitlist with referral mechanic** | Each signup incentivized to recruit the next | 1 day |
 | **Build in public (X/Twitter, LinkedIn)** | Free distribution, attracts early adopters | Ongoing |
@@ -38,12 +50,13 @@ PRE-LAUNCH ($0)  →  EARLY (0-$10K MRR)  →  GROWTH ($10K-$100K MRR)  →  SCA
 - Marketing automation (no audience to automate for)
 
 ### Key Metrics
-- Email signups (target: 100-500 before launch)
-- Conversion rate on landing page (>10% = strong signal)
-- Interview insights (are people actively trying to solve this problem?)
+- Email signups and waitlist completion quality
+- Landing page conversion rate compared with traffic source and offer promise
+- Interview evidence: are people actively trying to solve this problem?
+- Pre-commitment evidence: deposit, paid pilot, calendar booking, referral, or repeated follow-up
 
 ### Budget: $0-500/month
-Spend on: domain, landing page hosting, maybe a small waitlist tool.
+Planning default only. Spend on domain, landing page hosting, research tooling, and a small waitlist tool if needed.
 
 ---
 
@@ -81,13 +94,14 @@ Spend on: domain, landing page hosting, maybe a small waitlist tool.
 | **Marketplace** | Supply-side acquisition first | No demand without supply |
 
 ### Key Metrics
-- MRR growth rate (target: 15-20% MoM)
+- MRR growth rate and retention trend
 - CAC from primary channel
 - Conversion rate from primary channel
 - Customer retention (month 1, month 3)
+- Customer-language evidence explaining why they chose you
 
 ### Budget: $500-3,000/month
-Spend on: tools (email, CRM, analytics), small ad budget, maybe a freelance writer.
+Planning default only. Spend on tools (email, CRM, analytics), a small test budget, and specialist help only when it speeds learning.
 
 ---
 
@@ -125,13 +139,14 @@ QUARTER 4: Evaluate what's working, cut what's not, double down
 
 ### Key Metrics
 - Blended CAC (across all channels)
-- LTV:CAC ratio (target: >3:1)
+- LTV:CAC ratio, with payback and retention assumptions documented
 - Channel-specific CAC and ROAS
 - Net revenue retention (target: >100%)
 - Pipeline coverage (for sales-assisted)
+- Holdout or lift evidence for large paid or lifecycle programs
 
 ### Budget: $5,000-30,000/month
-Spend on: ad budget (40%), tools (15%), people (35%), content (10%).
+Planning default only. Allocate by evidence, not fixed percentages. Separate proven spend, optimization spend, and experiment spend.
 
 ---
 
@@ -177,37 +192,42 @@ VP/Head of Marketing
 ### Key Metrics
 - Revenue attributed to marketing
 - Blended CAC trend (should decrease or stabilize)
-- Organic vs paid ratio (target: 40-60% organic)
+- Organic vs paid ratio and dependency risk
 - Brand search volume trend
 - Pipeline contribution by channel
 - Marketing-influenced revenue (beyond just first-touch)
 
 ### Budget: $30,000-200,000+/month
-Rule of thumb: 10-20% of revenue for SaaS, 15-30% for DTC.
+Planning default only. Tie budget to cash position, payback period, margin, sales capacity, incrementality evidence, and strategic brand goals.
 
 ---
 
 ## Stage Transition Checklist
 
 ### Pre-Launch → Early
-- [ ] 100+ email signups validated demand
-- [ ] 5+ customer interviews confirmed the pain
-- [ ] Landing page converts at >5%
+- [ ] Waitlist, deposits, demos, or referrals show real demand
+- [ ] Customer interviews confirmed the pain with concrete past behavior
+- [ ] Landing page conversion is strong for its traffic source and offer
 - [ ] Product exists (even MVP)
+- [ ] Evidence quality labeled: observed behavior, customer quote, analytics, or hypothesis
 
 ### Early → Growth
-- [ ] Reached $10K MRR with clear growth trend
+- [ ] Revenue shows a clear growth trend for the business model
 - [ ] One acquisition channel consistently produces customers
-- [ ] CAC is known and sustainable (LTV:CAC > 3:1)
-- [ ] Retention is healthy (>70% at month 3)
+- [ ] CAC, payback, and retention are known enough to make channel decisions
+- [ ] Retention is healthy for the category and margin profile
 - [ ] Customer can articulate why they chose you
+- [ ] First-channel learning is documented enough for another operator to repeat
 
 ### Growth → Scale
-- [ ] Reached $100K MRR
+- [ ] Revenue and sales capacity justify repeatable channel systems
 - [ ] 2+ acquisition channels producing reliably
 - [ ] Marketing systems documented and repeatable
 - [ ] First marketing hire onboarded and productive
 - [ ] Brand starting to generate inbound demand (branded search growing)
+- [ ] Attribution limits documented; no single platform report is treated as truth
+
+> Stage thresholds are planning heuristics. Replace them with the company's actual economics, sales cycle, margins, churn, and evidence quality before making a client-facing recommendation.
 
 ---
 

@@ -9,6 +9,19 @@
 **Role:** De facto "Chief Household Officer"
 **Frustration:** Death by a thousand administrative tasks
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Calendar/task logs, support tickets, app analytics, community posts, or interview notes |
+| Buying trigger | Missed deadline, billing error, renewal shock, household transition, caregiving change |
+| Budget authority | Self-purchase, household joint decision, employer benefit, or family budget owner |
+| Current workaround | Spreadsheet, reminders app, email search, partner delegation, paper pile |
+| Objection | Privacy, setup effort, yet another app, cost, trust |
+| Quote/source | Dated interview quote, review, ticket, survey response, or source URL |
+
 ---
 
 ## Core Psychology

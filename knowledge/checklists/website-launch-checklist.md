@@ -30,7 +30,7 @@
 
 ### Technical
 - [ ] SSL certificate installed (HTTPS everywhere)
-- [ ] Page speed: Core Web Vitals pass (LCP < 2.5s, FID < 100ms, CLS < 0.1)
+- [ ] Page speed: Core Web Vitals pass (LCP, INP, CLS checked against current Google thresholds)
 - [ ] Mobile responsive — tested on iPhone SE, iPhone 14, iPad, Android
 - [ ] Cross-browser tested (Chrome, Safari, Firefox, Edge)
 - [ ] Forms submit correctly and send to the right inbox

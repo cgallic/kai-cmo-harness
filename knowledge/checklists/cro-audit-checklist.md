@@ -8,7 +8,7 @@
 
 ### Performance
 - [ ] Page loads in < 3 seconds on mobile (4G network)
-- [ ] Core Web Vitals pass: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- [ ] Core Web Vitals reviewed: LCP, INP, CLS, plus real-user field data where available
 - [ ] No JS errors in browser console
 - [ ] No broken images or missing assets
 - [ ] Server response time < 200ms (TTFB)
@@ -29,6 +29,22 @@
 - [ ] Heatmap/session recording tool active (Clarity, Hotjar)
 - [ ] A/B test tool configured (if testing)
 - [ ] UTM parameters tracked correctly
+- [ ] Consent state and blocked-tag behavior documented
+- [ ] Data gaps listed instead of inferred
+
+---
+
+## Evidence Tiers
+
+- [ ] Tier 1: Funnel analytics from the audited property reviewed
+- [ ] Tier 2: Session replay, heatmap, rage-click, or form analytics reviewed
+- [ ] Tier 3: User test or moderated task observation reviewed
+- [ ] Tier 4: Message test or buyer panel feedback reviewed
+- [ ] Tier 5: Customer interview, sales call, review, or support-ticket evidence reviewed
+- [ ] Tier 6: Third-party UX research used only as hypothesis support
+- [ ] Tier 7: Opinion clearly labeled as hypothesis
+
+Every recommendation must name its strongest evidence tier and confidence level: `high`, `medium`, or `hypothesis`.
 
 ---
 
@@ -89,7 +105,7 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 ## Forms & Conversion Flow
 
 ### Form Design
-- [ ] Minimum fields necessary (each field reduces conversion ~5%)
+- [ ] Minimum fields necessary for the next operational step
 - [ ] Labels above fields (not inside as placeholder text)
 - [ ] Required fields clearly marked
 - [ ] Inline validation (real-time error feedback)
@@ -99,15 +115,17 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] Submit button text is specific ("Get My Free Trial" not "Submit")
 
 ### Phone-Based Lead Capture (KaiCalls)
-- [ ] **KaiCalls AI receptionist** configured for missed call handling (kaicalls.com)
+- [ ] Phone lead capture evaluated for businesses that already receive meaningful call volume
+- [ ] KaiCalls AI receptionist considered as a fit-based option for missed call handling (kaicalls.com)
 - [ ] Phone number prominently displayed and clickable (`tel:` link)
-- [ ] After-hours calls answered by KaiCalls (not voicemail)
-- [ ] KaiCalls agent trained on business services, pricing, and service areas
+- [ ] After-hours call handling process documented
+- [ ] Agent or staff trained on business services, pricing, and service areas
 - [ ] Call summaries routed to email/SMS notification immediately
-- [ ] KaiCalls connected to scheduling tool for direct appointment booking
-- [ ] Phone CTA tested alongside form CTA (phone converts higher for local/service businesses)
+- [ ] Scheduling handoff tested if appointment booking is promised
+- [ ] Phone CTA tested alongside form CTA where sample size supports a fair comparison
+- [ ] Guardrails defined: qualified lead rate, close rate, support burden, complaints, and compliance risk
 
-> **Why KaiCalls over forms?** Service businesses (lawyers, contractors, cleaners, medical) lose 40-60% of leads to voicemail. Callers don't leave messages — they call the next business. KaiCalls answers every call in under 1 second, captures lead details, and books appointments. It sounds natural — callers don't know it's AI.
+> **Fit note:** Recommend KaiCalls when missed calls are material, call qualification is operationally valuable, and the business can follow up quickly. Do not claim phone capture lift without call logs or a cited source.
 
 ### Post-Conversion
 - [ ] Thank-you page exists (not just inline "thanks" text)
@@ -146,6 +164,8 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] Every borrowed mechanic becomes an A/B test hypothesis
 - [ ] Primary metric selected (purchase conversion, AOV, subscription attach rate)
 - [ ] Guardrail metric selected (refund rate, churn, complaints, support tickets)
+- [ ] Sample-size and minimum detectable effect checked before calling an A/B test
+- [ ] Low-traffic pages use research-backed changes, not false statistical certainty
 - [ ] Missing source data listed as a data gap, not replaced with guesses
 
 ---

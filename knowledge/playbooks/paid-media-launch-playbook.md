@@ -8,9 +8,22 @@
 
 ## Overview
 
-Complete framework for launching a paid media program for a new brand. This is the exact sequence a one-person paid media operator used to launch a supplement brand (belly MD) from scratch.
+Complete framework for launching a paid media program for a new brand. The original source is one operator's launch sequence, so treat the tactical sequence as a starting pattern, not a benchmark or guarantee.
 
 **Key principle:** Infrastructure → Creative → Launch → Measure (in that order)
+
+---
+
+## 2026 Launch Doctrine
+
+Every launch must declare four things before spend starts:
+
+1. **Account state:** new account, low-volume account, stable conversion account, feed/catalog account, or creator-commerce account.
+2. **Automation posture:** manual baseline, contained automation experiment, or automation scale mode.
+3. **Measurement posture:** attribution only, directional proxy, lift test, geo test, or MMM calibration.
+4. **Creative ledger:** one row per asset with concept, proof, rights, disclosure, AI use, landing match, and kill rule.
+
+Platform ROAS is an attribution metric. Do not turn it into incremental profit without contribution margin and a causal method.
 
 ---
 
@@ -36,9 +49,23 @@ Complete framework for launching a paid media program for a new brand. This is t
    - Qualitative validation of attribution data
 
 **Why this matters:**
-- Standard Shopify tracking misses 20-30% of conversions
-- Better data = better optimization = lower CPA
+- Standard platform pixels can miss or duplicate conversions. Audit the gap with server logs, order exports, and event diagnostics before claiming an exact loss rate.
+- Cleaner data gives bidding systems better optimization inputs.
 - Post-purchase surveys catch what pixels miss
+
+### Baseline Data Pack
+
+Create this pack before launch:
+
+- Margin by SKU or offer.
+- Refund, cancellation, and chargeback assumptions.
+- Current organic, email, brand search, and direct revenue baseline.
+- Attribution windows and conversion-event definitions.
+- New vs returning customer split when available.
+- Customer exclusion list and suppression rules.
+- Policy and claim substantiation file.
+
+If a field is missing, mark it as a launch risk. Do not replace it with a benchmark.
 
 ---
 
@@ -72,9 +99,47 @@ Complete framework for launching a paid media program for a new brand. This is t
 
 **Brandon's prompt:** Link in bio (not provided in transcript, but framework is clear)
 
+### Creative-Quality Ledger
+
+Create a ledger before upload. Required fields:
+
+| Field | Purpose |
+|-------|---------|
+| `asset_id` | Stable creative identifier |
+| `concept_id` | Link to P.D.A. bench row |
+| `hook_type` | Problem, proof, mechanism, contrast, offer, story, or pattern interrupt |
+| `proof_type` | Demo, testimonial, review, data point, expert, mechanism, or no proof |
+| `product_cue` | How fast the product or SKU is visible |
+| `brand_cue` | Logo, distinctive asset, founder, packaging, sonic cue, or none |
+| `audience_state` | Cold, warm, hot, customer, lapsed, or creator audience |
+| `offer_stage` | Education, comparison, trial, discount, bundle, retention |
+| `rights_status` | Owned, licensed organic, paid usage, whitelisted, expired, or missing |
+| `disclosure_status` | Not required, required-present, required-missing, or needs legal review |
+| `ai_generated` | None, assisted, synthetic media, avatar, voice, or unknown |
+| `landing_match` | Exact, partial, weak, or missing |
+| `kill_rule` | Named threshold from the test plan |
+
+Creator or UGC assets cannot go live unless `rights_status` and `disclosure_status` pass.
+
 ---
 
 ## Phase 3: Meta Campaign Structure
+
+### Advantage+ / Manual Decision Gate
+
+Choose manual baseline when:
+
+- The account has no reliable purchase or lead-quality history.
+- The offer, product page, or funnel is still being validated.
+- Customer exclusions or special category status are uncertain.
+- The creative set is mostly the same concept with minor edits.
+
+Choose Advantage+ or consolidated automation when:
+
+- Purchase or qualified-lead events are stable.
+- Customer exclusions and catalog/feed health are verified.
+- Creative concepts are diverse enough for delivery to learn from.
+- You have a measurement plan beyond in-platform ROAS.
 
 ### Campaign Setup
 
@@ -127,14 +192,23 @@ Track this as a leading indicator of creative quality.
 
 ## Phase 4: Google Campaign Structure
 
-### What NOT to do
+### PMax / AI Max Decision Gate
 
-**Don't launch Performance Max immediately.**
+Do not launch Performance Max or AI Max as a universal default.
 
-**Why:**
-- PMax is a black box (no visibility into what's working)
-- Need baseline data first (what keywords convert? what products?)
-- Can't optimize what you can't see
+Use manual Search and Shopping first when:
+
+- There is no keyword, SKU, or landing-page baseline.
+- Offline conversion quality is not imported.
+- Brand terms need clean separation.
+- Final URL expansion could route traffic to unreviewed pages.
+
+Use PMax or AI Max as a contained experiment when:
+
+- Conversion actions and value rules are clean.
+- Brand exclusions, URL inclusions/exclusions, and asset controls are configured.
+- Product feed quality is strong.
+- Results will be read as platform-attributed until lift, geo, or MMM evidence exists.
 
 ### Campaign Structure
 
@@ -243,22 +317,26 @@ Campaign: Product A (IBS Relief)
 - [ ] Check post-purchase survey responses
 - [ ] Monitor engagement ratio (Meta)
 - [ ] Monitor Quality Score (Google)
+- [ ] Update creative-quality ledger with spend, delivery, and quality notes
+- [ ] Compare platform-attributed ROAS to blended CAC and margin
+- [ ] Decide if the next read needs holdout, geo test, or directional proxy
 - [ ] Optimize based on performance
 - [ ] Scale winners, pause losers
 
 ---
 
-## Expected Results
+## Expected Read Windows
 
-**Timeline:**
-- Week 1: Sales start coming in (slow at first)
-- Week 2-3: Exit learning phase, optimization kicks in
-- Week 4+: Performance stabilizes, scale winners
+These are review windows, not promises:
+
+- Week 1: verify spend, approvals, events, UTMs, landing pages, and early creative delivery.
+- Week 2-3: check whether the campaign can fund the selected optimization event.
+- Week 4+: decide whether to scale, reset the test, run an incrementality read, or fix offer/funnel issues.
 
 **Metrics to watch:**
 - **Meta:** Engagement ratio (leading indicator), CPA, ROAS
 - **Google:** Quality Score, CTR, CPA, ROAS
-- **Overall:** Post-purchase survey data (validate attribution)
+- **Overall:** margin-adjusted CAC, new-customer mix, post-purchase survey data, and measurement confidence
 
 ---
 
@@ -270,9 +348,9 @@ Campaign: Product A (IBS Relief)
    - Declare "ads don't work" prematurely
 
 2. **Launching Performance Max first on Google**
-   - No visibility into what's working
-   - Can't optimize (black box)
-   - Need baseline data first
+   - Bad when baselines, exclusions, feed quality, or conversion values are missing
+   - Reasonable as a contained experiment when controls and measurement are ready
+   - Must not be reported as incremental profit from platform ROAS alone
 
 3. **Uploading AI-generated ads without brand review**
    - Doesn't match brand voice
@@ -281,7 +359,7 @@ Campaign: Product A (IBS Relief)
 
 4. **No measurement infrastructure before spending**
    - Can't attribute sales accurately
-   - Can't optimize based on real data
+   - Can't separate attributed revenue from incremental revenue
    - Wasted spend on guessing
 
 5. **Using only PDPs instead of landing pages**

@@ -3,13 +3,13 @@ name: kai-topical-map
 description: Build an AEO-first topical map optimized for AI search citation — entity clusters, query fan-out coverage, information gain scoring, and multi-platform distribution. Produces entity map, content node architecture, schema blueprint, and 90-day publishing calendar. Use when "topical map", "content architecture", "site structure", "topic clusters", "pillar content plan", "AEO map", "AI search architecture", "entity map", "what content should we build", or any request to plan a site's topical structure for AI search visibility.
 ---
 
-Build a topical map optimized for AI search engines — not traditional PageRank. Every decision is driven by citation probability: which pages will ChatGPT, Perplexity, Google AI Overviews, and Gemini actually cite?
+Build a topical map optimized for AI search engines and traditional search together. Every decision is driven by retrievability, entity clarity, source quality, and measurable user demand, not by promises that a specific AI engine will cite a page.
 
-## Why This Matters — The Numbers
+## Why This Matters
 
-AI-referred traffic converts at **14.2% vs Google's 2.8%** (Exposure Ninja, March 2026). Sites with topic clusters receive **3.2x more AI citations** than single-page competitors (Yext, 6.8M citation analysis). Content distributed across multiple platforms earns up to **325% more AI citations** than own-site-only publishing (Ahrefs).
+AI search visibility is sampled, volatile, and engine-specific. Treat any traffic, citation, or conversion benchmark as context until it is verified for the client with a source, retrieval date, evidence tier, and confidence label.
 
-This skill builds the map that captures that traffic.
+This skill builds the map that can be measured: pages to create, entities to clarify, passages to make retrievable, sources to cite, and follow-up checks to run.
 
 ---
 
@@ -35,7 +35,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 3. **Existing content inventory** — blog post URLs, podcast episode titles, landing pages, guides already published
 4. **Competitor URLs** — 2-3 sites currently winning AI citations in this topic space
 5. **Target queries** — what questions should AI answer with YOUR brand? (e.g., "What's the best AI phone answering service?")
-6. **Current AI presence** — test 3-5 category queries in ChatGPT, Perplexity, and Google AI. Is the brand mentioned? Who IS mentioned?
+6. **Current AI presence** — sample 3-5 category queries in ChatGPT, Perplexity, Bing/Copilot, and Google AI surfaces where available. Record prompt, location, date, engine, account state, citations, mentions, and missing-data caveats.
 
 Output: `workspace/topical-map/_discovery.md`
 
@@ -70,7 +70,7 @@ Identify every entity the brand needs to establish, strengthen, or associate wit
 
 **Tier 3 — Reference:** Authoritative entities to cite for credibility amplification.
 - Research institutions, industry standards, regulatory bodies, recognized experts
-- Citing these entities triggers the +115% citation visibility boost (GEO paper)
+- Cite these entities to improve provenance and passage usefulness. Do not promise a fixed citation or visibility lift from citations.
 
 ### Entity Map Output
 
@@ -87,7 +87,7 @@ Generate a `@graph` structure for the site showing:
 - `mentions` and `about` properties connecting content pages to entities
 - `sameAs` links for every entity that has a Wikidata or Wikipedia entry
 
-**Evidence:** Brands with verified Wikidata items are 3.2x more likely to display a Knowledge Panel. The Wikidata Embedding Project (Oct 2025) made Wikidata directly accessible to AI applications via vector search.
+**Evidence requirement:** Treat Knowledge Graph, Wikidata, and vector-search claims as source-dependent. Add source URL, retrieval date, evidence tier, and confidence before using any quantitative claim in a client-facing map.
 
 **Gate:** Every Tier 1 entity must have a proposed Entity Home URL and a Wikidata action plan.
 
@@ -219,24 +219,24 @@ For each node, define:
 - Fan-out queries answered (from Phase 3)
 - Information Gain angle (from Phase 4)
 
-**Citation Signal Requirements** (based on GEO paper, Princeton/Georgia Tech):
-- Statistics: ≥3 per page (+37% citation probability)
-- Expert quotes: ≥1 per page (+40% citation probability)
-- External citations: ≥5 per page (+115% visibility for lower-ranked sites)
+**Citation Signal Requirements** (evidence-safe operating targets):
+- Statistics: at least 3 sourced data points per page when the topic benefits from data
+- Expert quotes: at least 1 permissioned quote or attributed expert source when claims need authority
+- External citations: at least 5 primary or high-quality secondary sources for research-heavy pages
 - Atomic fact density: 2-3 verifiable facts per paragraph
-- Paragraph length: 60-100 words (aligns with RAG chunking)
+- Paragraph length: 60-100 words when it improves scannability and passage retrieval
 - Sentence length: 15-20 words maximum
 - Answer position: direct answer in first 30-50 words after H2
 
-**Schema Prescription** (based on benchmarked citation impact):
+**Schema Prescription** (eligibility and clarity, not guaranteed citation lift):
 
-| Content Node Type | Primary Schema | Citation Impact |
+| Content Node Type | Primary Schema | Why Use It |
 |-------------------|---------------|-----------------|
-| FAQ / Q&A content | `FAQPage` | +42% citation rate for question queries |
-| How-to / Process guides | `HowTo` | +38% citation rate for process queries |
-| Data / Research / Stats pages | `Dataset` | +67% citation rate for statistical queries |
-| All informational content | `Article` (baseline) | +23% citation rate |
-| Entity Home pages | `Organization` or `Person` + `sameAs` | 3.2x Knowledge Panel likelihood |
+| FAQ / Q&A content | `FAQPage` where eligible | Clarifies question-answer structure |
+| How-to / Process guides | `HowTo` where eligible | Clarifies steps, tools, and prerequisites |
+| Data / Research / Stats pages | `Dataset` where eligible | Clarifies dataset ownership and fields |
+| All informational content | `Article` or `BlogPosting` | Clarifies authorship, dates, and subject |
+| Entity Home pages | `Organization` or `Person` + `sameAs` | Clarifies canonical entity identity |
 
 **Rule:** All schema must have EVERY relevant attribute populated. Generic/incomplete schema produces an **18% citation penalty** vs having no schema at all (Growth Marshal, Feb 2026).
 
@@ -424,62 +424,51 @@ Output a summary report at `workspace/topical-map/_quality-report.md`:
 ## Recommended Next Steps
 1. `/kai-content-calendar` — Move into production mode with the calendar
 2. `/kai-surround-sound` — Build off-site consensus web (complements the distribution plan)
-3. `/kai-seo-audit` — Ensure technical foundation supports AEO (AI crawlers, llms.txt, Schema)
+3. `/kai-seo-audit` — Ensure technical foundation supports search and agent readability (crawlability, renderability, optional llms.txt, schema, accessibility tree)
 4. `/kai-write` — Produce content using briefs (AEO extensions auto-loaded)
 5. Re-run AI Presence Scorecard (Phase 1) at 30/60/90 days to measure progress
 ```
 
 ---
 
-## Reference: AEO Benchmarks (2025-2026)
+## Reference: Benchmark Handling
 
-These benchmarks are embedded for reference during execution. All sourced from published research.
+Do not paste benchmark numbers into client-facing maps unless each claim has a source URL, retrieval date, evidence tier, confidence label, and fit note. Use the following as a research checklist, not as promised outcomes.
 
-### Case Studies
+### Case Study Evidence To Collect
 
-| Company | Strategy | Key Result | Source |
-|---------|----------|------------|--------|
-| Apollo.io | Reddit community + comparison content | 63% brand citation rate on AI prompts | HubSpot 2026 |
-| B2B SaaS (Discovered) | 66 AEO articles + Reddit seeding, 7 weeks | 600% citation uplift, 6x AI trials | HubSpot 2026 |
-| Broworks | 90-day Schema + entity optimization | 27% of AI traffic → SQLs, 2-4x leads | HubSpot 2026 |
-| Schema App | Entity Linking to Wikidata + KG | 19.72% increase in AI Overview visibility | Schema App |
-| 50 B2B SaaS sites | Pillar-cluster architecture | AI citation rate 12% → 41% in 90 days | Yext Q4 2025 |
+- Method: what changed, what stayed constant, and whether a control or holdout existed
+- Measurement: engine, prompt set, sample size, dates, geography, account state, and citation definition
+- Source quality: official study, academic paper, vendor report, practitioner benchmark, or internal measurement
+- Applicability: whether the client's category, site authority, content depth, and distribution match the case
+- Caveat: what data is missing and what should be treated as hypothesis
 
-### Citation Signal Multipliers
+### Citation Signal Guidance
 
-| Signal | Impact | Source |
+| Signal | Use As | Caveat |
 |--------|--------|--------|
-| External citations in content | +115% visibility (lower-ranked sites) | GEO paper (Princeton/Georgia Tech) |
-| Expert quotes | +40% visibility | GEO paper |
-| Statistics / data | +37% visibility | GEO paper |
-| Proprietary statistics | 3.2x citation frequency | Perplexity study |
-| Topic clusters (5+ pages) | 3.2x more citations vs single page | 6.8M citation analysis |
-| Content updated within 60 days | 1.9x more likely in AI answers | BrightEdge |
-| Multi-platform distribution | Up to 325% more citations | Ahrefs |
-| FAQ Schema (complete) | +42% citation rate | Mixed studies |
-| HowTo Schema (complete) | +38% citation rate | Mixed studies |
-| Dataset Schema (complete) | +67% citation rate | Mixed studies |
-| Incomplete/generic schema | -18% penalty vs no schema | Growth Marshal, Feb 2026 |
+| External citations | Provenance and source-quality support | Not a guaranteed AI visibility lift |
+| Expert quotes | Attributable authority and customer language | Requires permission and context |
+| Statistics / data | Specificity and answer usefulness | Must be sourced and current |
+| Proprietary research | Information gain and PR asset | Needs methodology disclosure |
+| Topic clusters | Coverage and internal linking | Measure by queries and conversions, not vanity citation counts alone |
+| Freshness | Accuracy maintenance | Update only when facts or examples change |
+| Multi-platform distribution | Legitimate audience discovery | Avoid astroturfing, hidden ownership, or fake consensus |
+| Schema | Entity and content clarity | Schema does not substitute for useful visible content |
 
 ### Platform Citation DNA
 
 | AI Engine | Primary Citation Source | Implication |
 |-----------|----------------------|-------------|
-| Gemini | Brand-owned websites (52%) | Invest in on-site content + Schema |
-| ChatGPT | Third-party directories (49%) | Win on G2, Capterra, Yelp, vertical directories |
+| Gemini / Google AI surfaces | Google Search crawl and index systems | Invest in helpful, crawlable, snippet-eligible pages |
+| ChatGPT | Mixed retrieval, browsing, and partner/source behavior | Earn coverage in trusted sources and make pages retrievable |
 | Perplexity | Industry-specific directories | Zocdoc (health), Avvo (legal), G2 (SaaS) |
-| Google AI Overviews | Entity authority + freshness | Knowledge Graph + recent updates |
-| All platforms | Reddit (#1), LinkedIn (#2) | Seed both platforms for every content node |
+| Google AI Overviews | Search ranking, retrieval, and query fan-out | Focus on Search fundamentals, source quality, and page-level answers |
+| Community/social platforms | Public discussion and professional context | Participate transparently; do not seed fake threads |
 
-### AI Traffic Conversion
+### AI Traffic Measurement
 
-| Metric | Value | Source |
-|--------|-------|--------|
-| AI traffic conversion rate | 14.2% | Exposure Ninja, March 2026 |
-| Google organic conversion rate | 2.8% | Exposure Ninja, March 2026 |
-| AI-referred visitors convert higher | 58% of marketers agree | HubSpot State of Marketing 2026 |
-| ChatGPT share of AI referral traffic | 87.4% | Conductor 2026 |
-| AI referral as % of all traffic | 1.08%, growing ~1%/month | Conductor 2026 |
+Track AI traffic with source/medium rules, referrer inspection, landing-page cohorts, assisted conversions, and qualitative lead-source notes. Do not compare AI and organic conversion rates without channel definitions, attribution windows, sample sizes, and confidence labels.
 
 ### Sources
 

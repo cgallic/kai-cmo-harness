@@ -30,9 +30,11 @@ This inventory is limited to repo-owned artifact areas: `workspace/`, `examples/
 | `kai-email-system` | [Northstar email system map](../../workspace/demo-clients/northstar-media-lab/emails/_email-system-map.md); [quality report](../../workspace/demo-clients/northstar-media-lab/emails/_quality-report.md); [demo deck](../../workspace/demo-clients/northstar-media-lab/presentation/output/northstar-email-system-demo.pptx) | These are a mapped email system, its quality report, and a generated presentation output for the same demo client. |
 | `kai-gate` | [launch quality report](../../workspace/launch/_quality-report.md); [Northstar email quality report](../../workspace/demo-clients/northstar-media-lab/emails/_quality-report.md) | These are explicit quality-gate report artifacts. |
 | `kai-growth-plan` | [90-day growth plan](../../workspace/growth-plan/_90-day-plan.md); [stage assessment](../../workspace/growth-plan/_stage-assessment.md); [skill routing](../../workspace/growth-plan/_skill-routing.md) | These are the strongest committed growth-plan outputs. |
+| `kai-html-presentation` | No committed example artifact found | A reusable HTML template exists, but no filled audit deck artifact has been committed. |
 | `kai-influencer` | No committed example artifact found | No influencer brief, creator list, or campaign plan artifact was found. |
 | `kai-landing-page` | [launch landing page copy](../../workspace/launch/landing-page/copy.md) | This is a complete landing page copy artifact with target, framework, sections, proof strip, and CTAs. |
 | `kai-launch` | [launch timeline](../../workspace/launch/_timeline.md); [messaging guide](../../workspace/launch/_messaging-guide.md); [announcement blog post](../../workspace/launch/blog/announcement.md); [announcement email](../../workspace/launch/emails/announcement.md); [launch-day social posts](../../workspace/launch/social/launch-day-posts.md) | These files form a real multi-channel launch package. |
+| `kai-monthly-audit` | No committed example artifact found | The skill has been defined, but no month-end audit output folder has been committed. |
 | `kai-newsletter` | No committed example artifact found | No newsletter edition or newsletter calendar artifact was found. |
 | `kai-partnership` | No committed example artifact found | The growth plan mentions partnership targets, but no dedicated partnership plan or co-marketing artifact was found. |
 | `kai-podcast` | No committed example artifact found | No podcast launch, guest pitch, episode brief, or production plan artifact was found. |
@@ -50,6 +52,7 @@ This inventory is limited to repo-owned artifact areas: `workspace/`, `examples/
 | `kai-video` | [KaiCalls demo video test script](../../workspace/video-test-script.md) | This is a concrete video script with scenes, narration, duration, format, brand, and assets needed. |
 | `kai-video-production` | [KaiCalls demo video test script](../../workspace/video-test-script.md) | This is a pre-production script artifact, but no rendered video output was found in the searched artifact folders. |
 | `kai-webinar` | No committed example artifact found | No webinar topic plan, run-of-show, registration sequence, or event follow-up artifact was found. |
+| `kai-weekly-audit` | No committed example artifact found | The skill has been defined, but no weekly audit output folder has been committed. |
 | `kai-write` | [announcement blog post](../../workspace/launch/blog/announcement.md); [launch deep-dive post](../../workspace/launch/blog/deep-dive.md); [LinkedIn article](../../workspace/launch/linkedin/article.md) | These are concrete writing outputs across blog and LinkedIn formats. |
 
 ## Strongest Examples For Public Pages

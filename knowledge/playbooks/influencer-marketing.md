@@ -20,11 +20,19 @@
 
 ## Campaign Types
 
+Every creator recommendation must include:
+
+- Usage rights: organic post only, paid whitelisting, ad reuse, edit rights, exclusivity, duration, and expiration.
+- Disclosure plan: in-content disclosure, caption/description disclosure, native paid-partnership label, affiliate disclosure, and evidence capture.
+- Claim controls: what the creator can say, what requires substantiation, and what is prohibited.
+- SKU economics: product margin, commission, sample cost, shipping, refund risk, and inventory limit.
+
 ### Product Seeding
 - Send free product to 20-50 creators
-- No obligation to post (but most will if the product is good)
+- No obligation to post unless a contract creates one
 - Cost: Product cost only
 - Best for: Physical products, new launches, building relationships
+- Disclosure still applies when a gifted product creates a material connection.
 
 ### Sponsored Content
 - Pay creator to produce and post content featuring your product
@@ -37,12 +45,14 @@
 - Creator doesn't need to post on their account
 - Typically $150-500 per video for nano/micro creators
 - Best for: Ad creative that feels authentic, testimonial-style ads
+- Contract must name edit rights, paid usage windows, platform usage, whitelisting permission, and AI/synthetic-media restrictions.
 
 ### Affiliate/Performance
 - Pay commission on sales generated through creator's unique link/code
 - Lower risk (pay only for results)
 - Typical commission: 10-30% of sale
 - Best for: DTC products, subscription services, clear purchase funnel
+- Require affiliate disclosure near the link/code and reconcile orders against SKU margin and refund data.
 
 ### Ambassador Programs
 - Long-term partnership (3-12 months)
@@ -124,6 +134,11 @@ APPROVAL:
 
 ### Contract Must-Haves
 - [ ] Content ownership/usage rights (can you use their content in ads?)
+- [ ] Usage-rights duration and expiration date
+- [ ] Paid whitelisting/Partnership Ads/Spark Ads permission by asset
+- [ ] Disclosure placement and platform-native label requirements
+- [ ] Affiliate link/code disclosure and commission terms
+- [ ] AI-generated, avatar, voice clone, or synthetic media restrictions
 - [ ] Exclusivity period (can they work with competitors?)
 - [ ] Content approval process and timeline
 - [ ] Payment terms and schedule
@@ -140,18 +155,23 @@ APPROVAL:
 - UTM-tagged links per creator
 - Dedicated landing pages per creator
 - Pixel tracking on conversion pages
+- SKU-level margin, commission, sample, shipping, and refund data
+- Rights/disclosure compliance status per asset
 
 ### Indirect Attribution
 - Brand search volume lift during campaign
 - Social media follower growth
 - Share of voice in your niche
 - Engagement rate on your own content
+- Organic cannibalization check when paid media boosts creator posts
 
-### Benchmarks (by platform)
+### Creator-Commerce Measurement Caveat
 
-| Metric | Instagram | TikTok | YouTube |
-|--------|-----------|--------|---------|
-| CPM (cost per 1K views) | $5-15 | $3-10 | $10-30 |
-| Engagement rate (good) | 3%+ | 5%+ | 3%+ |
-| Click-through rate | 0.5-1% | 0.5-1.5% | 1-3% |
-| Conversion rate (from click) | 2-5% | 1-3% | 3-8% |
+Do not report creator-attributed revenue as incremental profit by default. Creator links, codes, Shop dashboards, and platform ROAS are attribution systems. Incremental profit requires:
+
+- Contribution margin by SKU or offer.
+- Incrementality method: holdout, geo split, creator-cell test, MMM, or named directional proxy.
+- Organic baseline and cannibalization read.
+- Refund and cancellation adjustment.
+
+Benchmark tables are intentionally omitted unless a current source and account fit are available.

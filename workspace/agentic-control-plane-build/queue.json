@@ -63,7 +63,7 @@
       "id": "T04",
       "name": "Connector Health Gate",
       "priority": "P0",
-      "status": "ready_for_review",
+      "status": "done",
       "dependencies": [
         "T01"
       ],
@@ -80,7 +80,7 @@
       "id": "T05",
       "name": "Scheduled Handler Registration",
       "priority": "P0",
-      "status": "pending",
+      "status": "ready",
       "dependencies": [
         "T04"
       ],
@@ -97,7 +97,7 @@
       "id": "T06",
       "name": "Local Lead OS Package",
       "priority": "P1",
-      "status": "pending",
+      "status": "ready",
       "dependencies": [
         "T03",
         "T04"
@@ -198,7 +198,7 @@
       "id": "T12",
       "name": "Agentic Security Evals",
       "priority": "P2",
-      "status": "pending",
+      "status": "ready",
       "dependencies": [
         "T01",
         "T02",

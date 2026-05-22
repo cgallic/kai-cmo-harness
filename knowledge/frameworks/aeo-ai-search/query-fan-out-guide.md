@@ -15,13 +15,46 @@ OUTPUT: Fan-out architecture diagram, PAA optimization tactics, content structur
 
 ---
 
+## 2026 Google Search Calibration
+
+Google's May 2026 guidance confirms that query fan-out is real in generative Search, but optimizing for it is still SEO. AI Overviews and AI Mode use Google's core Search index, ranking systems, RAG, and concurrent related queries.
+
+Use query fan-out research to improve intent coverage on genuinely useful pages and clusters. Do **not** create separate pages for every PAA, long-tail, or fan-out variation primarily to manipulate Google AI responses; Google warns that this can violate scaled content abuse policies and is not a durable strategy.
+
+For Google AI Search, the technical floor remains:
+- Googlebot crawl access
+- Indexability
+- Snippet eligibility
+- Rendered main content
+- Helpful, reliable, people-first content
+- Images, video, product data, local data, and structured data where they serve the user
+
+Google does not require `llms.txt`, special AI markup, AI-only Markdown files, forced chunking, or exact-match long-tail coverage for AI Overviews or AI Mode.
+
+---
+
+## Evidence And Confidence Labels
+
+Use these labels whenever this guide informs an audit or content brief:
+
+| Label | Meaning | Example |
+|---|---|---|
+| Requirement | Official Google eligibility rule | Crawlable, indexable, snippet-eligible page |
+| Best practice | Official guidance or durable SEO practice | Semantic HTML, helpful content, page experience |
+| System disclosure | Google described the mechanism, but not exact scoring | Query fan-out, RAG, concurrent related queries |
+| Practitioner inference | Useful field method, not official proof | PAA mining as a proxy for possible sub-intents |
+| Experiment | Needs client-specific measurement | Whether adding a comparison table changes citations |
+| Missing data | Evidence absent | No Search Console export, no screenshots, no prompt log |
+
+**PAA caveat:** People Also Ask is a research input, not a direct export of AI Mode fan-out. Use PAA to discover user facets, then decide whether the answer belongs in the current page, a cluster page, a product feed, a local listing, or a data gap.
+
 # Google Query Fan-Out Architecture and Optimization Strategies: A Comprehensive Analysis of AI Mode Mechanics
 
 **Key Points**
 *   **Google I/O 2025 Announcement:** Liz Reid, Head of Search, introduced "Query Fan-Out" as a core component of the new **AI Mode**, powered by a custom version of Gemini 2.5. This technique allows the search engine to decompose complex queries into multiple sub-topics and execute them simultaneously [cite: 1, 2].
 *   **Mechanism of Action:** The system breaks a single user prompt into a "multitude" of sub-queries (observed examples suggest 8 or more parallel searches). It retrieves information from the open web, Knowledge Graph, and Shopping Graph, then synthesizes these distinct data streams into a coherent, cited report [cite: 3, 4].
-*   **People Also Ask (PAA) Utility:** PAA data serves as a "visible blueprint" of the fan-out process. SEOs can use PAA questions to reverse-engineer the sub-intents that AI Mode is likely to generate, allowing for proactive content optimization [cite: 5, 6].
-*   **Content Strategy:** Success in AI Mode requires shifting from keyword targeting to **entity-rich content clusters**. The "Hub-and-Spoke" model is validated as the superior architecture for capturing fan-out queries, provided the central pillar and spokes are semantically linked and structured with schema to facilitate AI parsing [cite: 3, 7].
+*   **People Also Ask (PAA) Utility:** PAA data is a visible research proxy for related user intents. SEOs can use PAA questions to discover possible sub-intents, then validate them with Search Console, customer language, and source data [cite: 5, 6].
+*   **Content Strategy:** AI Mode work should shift from keyword-string targeting toward useful entity-rich pages and clusters. The "Hub-and-Spoke" model is useful when spokes deserve standalone treatment; otherwise, answer sub-intents inside the best existing page to avoid doorway or scaled-content patterns [cite: 3, 7].
 
 ## 1. Introduction: The Paradigm Shift to Agentic Search
 
@@ -29,7 +62,7 @@ The announcements at Google I/O 2025 marked a definitive transition from traditi
 
 Unlike traditional search, which maps a query to an index of documents based on keyword frequency and PageRank, Query Fan-Out introduces an intermediate reasoning layer. This layer interprets the user's intent, deconstructs it into constituent logical parts, and executes a parallel retrieval process. For the academic and digital marketing communities, understanding this architecture is critical. It suggests that visibility in the AI-first era is no longer a function of matching a specific string of text, but of satisfying a distributed set of sub-intents that the AI generates dynamically.
 
-This report provides an exhaustive analysis of the Query Fan-Out architecture, drawing directly from Google I/O 2025 disclosures and subsequent technical analyses. It explores the decomposition mechanics, the strategic utility of "People Also Ask" (PAA) data, and the necessary evolution of content modeling from simple pillars to complex, entity-mapped clusters.
+This report provides an evidence-tiered analysis of Query Fan-Out architecture, drawing from Google disclosures and caveated technical analyses. It explores decomposition mechanics, the strategic utility of "People Also Ask" (PAA) data, and the content modeling choices needed to avoid thin pages.
 
 ## 2. Google I/O 2025: The Official Unveiling of Query Fan-Out
 
@@ -109,7 +142,7 @@ The exact number of sub-queries generated is dynamic and dependent on the comple
     3.  "Sneakers for walking on a trail" (Terrain specificity)
     4.  "Best slip-on sneakers" (Feature specificity) [cite: 11].
 
-This granularity means that to rank for the broad term, a website must possess content that addresses these specific, narrower sub-queries. The AI is effectively performing a "content gap analysis" on the user's behalf, looking for pages that cover the specific facets it has identified as relevant.
+This granularity means broad-topic visibility may depend on whether a site addresses the important narrower facets. Treat this as content gap analysis on the user's behalf: find the facets, decide whether they deserve a section or page, and add evidence only where it helps the task.
 
 ### 3.3 The Merging Process (Synthesis)
 Once the parallel searches are complete, the system enters the synthesis phase. This is where the "Fan-In" occurs.
@@ -121,10 +154,10 @@ Once the parallel searches are complete, the system enters the synthesis phase. 
 
 While the internal logic of Gemini 2.5 is proprietary, the "People Also Ask" (PAA) feature in Google Search provides a publicly visible approximation of the fan-out logic. PAA boxes represent Google's existing map of related intents and follow-up questions, making them an invaluable dataset for reverse-engineering the sub-queries AI Mode is likely to generate.
 
-### 4.1 PAA as the "Blueprint" for AI Reasoning
-Research suggests that PAA questions often align with the sub-queries generated during the fan-out process [cite: 5]. PAA reflects the "next steps" a user typically takes, which is exactly what the AI attempts to automate.
-*   **Predictive Modeling:** PAA data is essentially a historical record of query refinement. If users searching for "vegan diet" frequently click on "is vegan diet healthy for heart," the AI Mode is highly likely to generate "benefits of vegan diet for heart health" as a sub-query during fan-out [cite: 14].
-*   **Intent Mapping:** By analyzing PAA, SEOs can map the "intent graph" of a topic. This graph represents the nodes (questions) and edges (relationships) that the AI traverses to build a comprehensive answer [cite: 6].
+### 4.1 PAA as a Proxy for User Facets
+PAA questions can reveal visible follow-up intents, but they are not a literal blueprint of AI Mode's internal fan-out [cite: 5]. Treat PAA as one signal alongside Search Console queries, site search, sales/support questions, competitor pages, product feeds, local data, and interviews.
+*   **Predictive Modeling:** PAA data can suggest query refinements. Confidence is medium only when PAA themes repeat across multiple seed queries and match observed user behavior.
+*   **Intent Mapping:** By analyzing PAA, SEOs can map a topic's likely facets. This graph is a planning artifact, not proof that Google will issue those exact sub-queries [cite: 6].
 
 ### 4.2 Tactics for Using PAA Data
 To optimize for Query Fan-Out using PAA data, a more sophisticated approach than simple list generation is required.
@@ -132,6 +165,7 @@ To optimize for Query Fan-Out using PAA data, a more sophisticated approach than
 **Tactic 1: Recursive PAA Mining**
 Do not stop at the first layer of PAA questions. Click on a PAA question to expand it, which generates new, deeper questions. This simulates the "recursive search" capability of AI Mode [cite: 2].
 *   *Action:* Map PAA questions 3-4 levels deep to identify niche sub-topics that might be triggered by a complex query.
+*   *Evidence note:* Label each PAA cluster as "observed PAA," "Search Console query," "customer question," or "hypothesis." Do not merge all sources into one invented fan-out list.
 
 **Tactic 2: Categorization by Intent Facet**
 Group PAA questions into logical categories (facets) such as "Cost," "Process," "Safety," "Alternatives," and "Technical Specs."
@@ -139,7 +173,7 @@ Group PAA questions into logical categories (facets) such as "Cost," "Process," 
 
 **Tactic 3: The "Answer a Facet" Mentality**
 Instead of writing a single FAQ section, adopt an "Answer a Facet" mentality. Treat each major PAA theme as a distinct sub-topic requiring a comprehensive answer, not just a one-sentence reply [cite: 7, 15].
-*   *Implementation:* If PAA shows questions about "safety," create a dedicated section or even a separate page (linked to the hub) that exhaustively covers safety, citing studies and expert opinions.
+*   *Implementation:* If PAA shows questions about "safety," create a dedicated section on the best existing page. Create a separate page only when safety is a standalone user need with enough unique evidence to justify it.
 
 ## 5. Content Structure for Multi-Sub-Query Capture
 
@@ -150,7 +184,7 @@ Liz Reid emphasized that AI Mode looks for "high-quality, granular content" [cit
 
 1.  **Descriptive Subheadings (H2/H3):** Use headings that explicitly state the sub-topic or question being addressed. This helps the decomposition engine map a sub-query (e.g., "best sneakers for trails") directly to a specific section of your page [cite: 3].
 2.  **The "Inverted Pyramid" for Sections:** Within each subsection, place the direct answer immediately after the heading (2-3 sentences), followed by detailed elaboration. This "concise summary" format is preferred for AI Overviews and likely for AI Mode synthesis [cite: 16].
-3.  **Structured Data (Schema):** Implement robust schema markup, particularly `FAQPage`, `Article`, and `HowTo`. While not a direct ranking factor, schema helps the AI disambiguate the content and understand the relationship between questions and answers [cite: 15, 17].
+3.  **Structured Data (Schema):** Implement schema only where it matches visible content and an eligible Search feature, such as `Article`, `Product`, `LocalBusiness`, `FAQPage`, or `HowTo`. Google does not require special AI schema for generative Search [cite: 15, 17].
 4.  **Lists and Tables:** Use bullet points and comparison tables. These formats are highly "parsable" and are frequently used by AI to construct comparisons and lists in the final output [cite: 3].
 
 ### 5.2 Optimizing for "Zero-Click" Citations
@@ -160,7 +194,7 @@ A significant portion of AI Mode interactions may result in "zero-click" satisfa
 
 ## 6. Strategic Content Models: Hub-and-Spoke vs. Pillar
 
-To capture the wide net of sub-queries generated by fan-out, the organization of content across a website is as important as the content itself. The two dominant models—Pillar and Hub-and-Spoke—must be adapted for the AI era.
+To capture the wide net of sub-queries generated by fan-out, the organization of content across a website is as important as the content itself. The two dominant models—Pillar and Hub-and-Spoke—must be adapted for the AI era without turning PAA research into scaled doorway pages.
 
 ### 6.1 The Evolution of the Pillar Model
 Traditionally, a "Pillar Page" was a massive, long-form guide covering a broad keyword, with links to blog posts. In the context of Query Fan-Out, the Pillar Page must evolve into an **Entity Hub**.
@@ -168,26 +202,37 @@ Traditionally, a "Pillar Page" was a massive, long-form guide covering a broad k
 *   **Comprehensive Topical Authority:** The goal is not just to rank for the head term but to establish "Topical Authority." The AI evaluates whether a site is an authority on the *entire* cluster of related entities. If your site covers the main topic but lacks depth on the sub-queries (spokes), the AI may prefer a competitor who covers the full spectrum [cite: 4, 7].
 
 ### 6.2 Hub-and-Spoke Architecture for AI
-The Hub-and-Spoke model is superior for Query Fan-Out optimization because it aligns perfectly with the decomposition/synthesis mechanism.
+The Hub-and-Spoke model is useful for Query Fan-Out optimization when each page has independent user value. It is not a mandate to publish a page for every synthetic query.
 
 *   **The Hub (Synthesis Target):** The central page serves as the synthesis point. It provides the high-level overview that matches the user's initial broad query.
-*   **The Spokes (Sub-Query Targets):** Each spoke page is dedicated to a specific sub-query or facet (e.g., "Safety of X," "Cost of X," "History of X").
-    *   *Why this works:* When the AI "fans out" the query "Guide to X" into "Safety of X" and "Cost of X," it finds your specific spoke pages. Because these pages are semantically linked to the Hub, the AI recognizes the cluster's authority.
-    *   *Parallel Retrieval Alignment:* Since the AI executes searches in parallel, having distinct, high-quality pages for each sub-topic increases the surface area for retrieval. Your site can potentially provide the source material for *multiple* sub-queries simultaneously [cite: 4].
+*   **The Spokes (Sub-Query Targets):** A spoke page is appropriate when a specific facet deserves a complete answer (e.g., "Safety of X," "Cost of X," "History of X").
+    *   *Why this works:* When the AI "fans out" the query "Guide to X" into "Safety of X" and "Cost of X," it can find your specific sections or spoke pages. Because these assets are semantically linked to the Hub, the AI can recognize the cluster's authority.
+    *   *Parallel Retrieval Alignment:* Since the AI executes searches in parallel, distinct, high-quality sections or pages for major sub-topics increase retrieval surface area without creating thin variants [cite: 4].
 
 ### 6.3 Recommendation: The "Cluster-First" Approach
 For AI Mode, we recommend a **Cluster-First** approach:
 1.  **Identify the Core Entity:** (e.g., "Cloud Computing").
 2.  **Map the Fan-Out:** Use PAA and tools to identify the 10-20 likely sub-queries (e.g., Security, Cost, Providers, Implementation).
-3.  **Build the Spokes First:** Create deep, granular content for each sub-query.
-4.  **Construct the Hub:** Build the central page that summarizes and links to the spokes.
-5.  **Interlink Semantically:** Use descriptive anchor text that matches the sub-query intent when linking from Hub to Spoke and vice versa.
+3.  **Decide Page vs. Section:** Create a spoke only when the sub-query has standalone demand, unique evidence, and enough depth. Otherwise, fold it into the hub.
+4.  **Construct the Hub:** Build the central page that answers the core question and links to any justified spokes.
+5.  **Interlink Semantically:** Use descriptive anchor text that matches user intent when linking from Hub to Spoke and vice versa.
+
+### 6.4 Audit Example: Page vs. Section Decision
+
+```markdown
+Seed query: "AI receptionist for dental office"
+Observed facets: missed calls, HIPAA/vendor risk, after-hours routing, insurance questions, appointment booking, pricing.
+Section decision: "after-hours routing" stays on the main page because it needs 250 words and one workflow diagram.
+Spoke decision: "HIPAA risk" becomes a separate compliance page because it needs legal review, source citations, and vendor comparison.
+Do-not-create: "AI receptionist for dentists near me open Saturday" is a doorway-style variant unless there is a real location/service page.
+Missing data: No call logs or form conversion data were available. Do not claim missed-call revenue impact.
+```
 
 ## 7. Conclusion
 
-Google's Query Fan-Out technique represents a fundamental change in search engine architecture. By moving from keyword matching to intent decomposition and parallel retrieval, Google has shifted the optimization goalpost. Success in AI Mode is not about optimizing for a single string of text, but about constructing a web of content that anticipates and satisfies the "multitude" of sub-queries the AI will generate.
+Google's Query Fan-Out technique represents a meaningful change in search behavior. By moving from exact keyword matching toward intent decomposition and parallel retrieval, Google has made coverage, evidence, and usefulness more important than query-string repetition. Success in AI Mode is not about optimizing for every possible phrase; it is about building content that answers the important facets of a real user task.
 
-The "People Also Ask" feature serves as the Rosetta Stone for this new language, offering a glimpse into the AI's reasoning logic. By leveraging PAA data to build robust Hub-and-Spoke content clusters, digital marketers can align their architecture with Google's own, ensuring that when the AI fans out a query, it finds their content waiting at every node.
+The "People Also Ask" feature remains a useful research input. Use PAA data to build robust pages and clusters, then stop where the content stops helping the reader.
 
 ## References
 [cite: 1, 2] Google I/O 2025 Keynote & Liz Reid Announcements

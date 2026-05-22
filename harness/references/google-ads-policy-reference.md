@@ -975,6 +975,31 @@ Before submitting any Google Ad, verify:
 - [ ] Identity verification completed
 - [ ] Privacy policy and terms of service on landing page
 - [ ] Business contact information visible on landing page
+- [ ] AI Max, Performance Max, final URL expansion, generated assets, and auto-apply settings reviewed
+- [ ] Brand exclusions, negative keywords, URL inclusions/exclusions, and feed constraints configured where needed
+- [ ] PMax or AI Max results will be reported as platform-attributed unless causal measurement supports incrementality
+
+---
+
+## AI Max And Performance Max Control Caveats
+
+Use AI Max or Performance Max only after an account-state review.
+
+Good-fit conditions:
+
+- Conversion actions are clean, deduplicated, and imported with value.
+- Brand, competitor, regulated, and legal terms can be controlled.
+- Landing pages and product feeds are accurate and policy-compliant.
+- URL expansion, asset generation, and brand controls are explicitly reviewed.
+- Offline conversion quality or new-customer value is available for lead-gen or subscription accounts.
+
+Hold or test in a contained experiment when:
+
+- Lead quality is unknown.
+- The account lacks search-term, product, or landing-page baselines.
+- Final URL expansion could route users to unreviewed pages.
+- Auto-generated assets could create unsupported claims.
+- The client expects platform ROAS to equal incremental profit.
 
 ---
 

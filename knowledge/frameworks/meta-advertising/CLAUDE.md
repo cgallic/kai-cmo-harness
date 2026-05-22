@@ -41,7 +41,15 @@ When the algorithm gives more budget to ads with higher CPAs:
 - It's finding the optimal **blended** result
 - Low-CPA ads often have **limited scale**
 - Evaluate at **ad set level**, not individual ads
-- Trust the algorithm's meritocratic distribution
+- Treat distribution as a delivery signal, then verify with account economics and incrementality.
+
+### 2026 Operator Caveats
+
+- Treat Andromeda/GEM/Lattice as delivery-system context, not a reason to remove account-state judgment.
+- Creative diversity means distinct concepts, proof types, product cues, brand cues, audience states, and offers. Minor caption or crop changes do not count.
+- Advantage+ is a scale or learning tool when conversion events, exclusions, catalog quality, budget, and creative ledger fields are ready.
+- Meta ROAS is platform-attributed. Incremental profit requires margin plus conversion lift, geo testing, MMM, or another causal read.
+- Creator and UGC assets require Partnership Ads or whitelisting permission, usage-rights windows, disclosure evidence, and AI/synthetic-media status before paid use.
 
 ## Related Files
 

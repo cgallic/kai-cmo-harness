@@ -9,6 +9,19 @@
 **Role:** Established in field, now questioning relevance
 **Frustration:** "AI won't replace you, but a person using AI will"
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Course purchases, interview notes, community posts, internal enablement requests, search queries |
+| Buying trigger | Layoff news, AI mandate, role redesign, job search, performance pressure |
+| Budget authority | Self-purchase, learning stipend, manager approval, department enablement budget |
+| Current workaround | Tutorials, AI tools, peer advice, certifications, shadow workflows |
+| Objection | Time, overwhelm, age stigma, trust in outcomes, fear of looking behind |
+| Quote/source | Dated interview quote, sales call, survey response, review, or source URL |
+
 ---
 
 ## Core Psychology

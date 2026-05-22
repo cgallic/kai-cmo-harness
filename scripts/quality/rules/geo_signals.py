@@ -1,11 +1,9 @@
 """
 Content Quality Scorer — GEO/AEO signal counting rules.
 
-Based on academic research showing visibility boosts:
-- Citations: +115%
-- Quotations: +40%
-- Statistics: +37%
-- Technical terms: +32.7%
+Based on academic GEO research and current AI-search practice. These rules
+flag source-quality signals; they must not be presented as guaranteed ranking,
+citation, or traffic lifts.
 """
 
 import re
@@ -19,12 +17,12 @@ from scripts.quality.rules.base import BaseRule
 
 @register
 class CitationCount(BaseRule):
-    """GEO-01: Inline citations boost AI search visibility by +115%."""
+    """GEO-01: Inline citations support provenance and retrievability."""
     RULE_ID = "GEO-01"
     RULE_NAME = "Citation density"
     CATEGORY = Category.GEO_SIGNALS
     SEVERITY = Severity.WARNING
-    DESCRIPTION = "Content should include 5+ citations per article for +115% AI search visibility"
+    DESCRIPTION = "Content should include 5+ relevant citations per research-heavy article"
 
     _PATTERNS = [
         re.compile(r'according to\s', re.IGNORECASE),
@@ -57,7 +55,7 @@ class CitationCount(BaseRule):
             violations.append(Violation(
                 line=0,
                 text=f"Found {count} citations (target: {target}+)",
-                fix=f'Add {target - count} more inline citations. Each adds {GEO_BOOSTS["citations"]} visibility',
+                fix=f'Add {target - count} more inline citations. Treat citations as {GEO_BOOSTS["citations"]}',
             ))
 
         return self._make_result(
@@ -68,12 +66,12 @@ class CitationCount(BaseRule):
 
 @register
 class QuotationCount(BaseRule):
-    """GEO-02: Direct quotations boost AI search visibility by +40%."""
+    """GEO-02: Direct quotations add attributable experience and authority."""
     RULE_ID = "GEO-02"
     RULE_NAME = "Quotation density"
     CATEGORY = Category.GEO_SIGNALS
     SEVERITY = Severity.WARNING
-    DESCRIPTION = "Content should include 3+ direct quotations for +40% AI search visibility"
+    DESCRIPTION = "Content should include 3+ direct quotations when expert or customer evidence is needed"
 
     # Direct quotes >10 chars (not code or attribute values)
     _QUOTE = re.compile(r'["\u201c]([^"\u201d]{10,})["\u201d]')
@@ -93,7 +91,7 @@ class QuotationCount(BaseRule):
             violations.append(Violation(
                 line=0,
                 text=f"Found {count} quotations (target: {target}+)",
-                fix=f'Add {target - count} more expert quotes. Each adds {GEO_BOOSTS["quotations"]} visibility',
+                fix=f'Add {target - count} more expert quotes. Treat quotes as {GEO_BOOSTS["quotations"]}',
             ))
 
         return self._make_result(
@@ -104,12 +102,12 @@ class QuotationCount(BaseRule):
 
 @register
 class StatisticCount(BaseRule):
-    """GEO-03: Statistics boost AI search visibility by +37%."""
+    """GEO-03: Statistics add specificity when sourced and current."""
     RULE_ID = "GEO-03"
     RULE_NAME = "Statistic density"
     CATEGORY = Category.GEO_SIGNALS
     SEVERITY = Severity.WARNING
-    DESCRIPTION = "Content should include 5+ statistics for +37% AI search visibility"
+    DESCRIPTION = "Content should include 5+ sourced statistics when the topic benefits from data"
 
     _PATTERNS = [
         re.compile(r'\d+(?:\.\d+)?%'),               # Percentages: 42%, 3.5%
@@ -139,7 +137,7 @@ class StatisticCount(BaseRule):
             violations.append(Violation(
                 line=0,
                 text=f"Found {count} statistics (target: {target}+)",
-                fix=f'Add {target - count} more data points. Each adds {GEO_BOOSTS["statistics"]} visibility',
+                fix=f'Add {target - count} more data points. Treat statistics as {GEO_BOOSTS["statistics"]}',
             ))
 
         return self._make_result(
@@ -150,12 +148,12 @@ class StatisticCount(BaseRule):
 
 @register
 class TechnicalTermDensity(BaseRule):
-    """GEO-04: Technical/domain terms boost visibility by +32.7%."""
+    """GEO-04: Technical/domain terms improve entity clarity when natural."""
     RULE_ID = "GEO-04"
     RULE_NAME = "Technical term density"
     CATEGORY = Category.GEO_SIGNALS
     SEVERITY = Severity.OPPORTUNITY
-    DESCRIPTION = "Include domain-specific terminology for +32.7% AI search visibility"
+    DESCRIPTION = "Include domain-specific terminology when it improves precision"
 
     # Words >10 chars or compound technical terms
     _LONG_WORD = re.compile(r'\b[a-zA-Z]{11,}\b')
@@ -181,7 +179,7 @@ class TechnicalTermDensity(BaseRule):
             violations.append(Violation(
                 line=0,
                 text=f"Found {count} technical terms (target: {target}+)",
-                fix=f'Add more domain-specific terminology. Each adds {GEO_BOOSTS["technical_terms"]} visibility',
+                fix=f'Add more domain-specific terminology. Treat terms as {GEO_BOOSTS["technical_terms"]}',
             ))
 
         return self._make_result(

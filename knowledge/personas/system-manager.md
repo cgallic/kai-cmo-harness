@@ -9,6 +9,19 @@
 **Role:** Primary household administrator for children
 **Frustration:** The bureaucracy of childhood has replaced the village
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Parent interviews, app usage, school communications, support tickets, community posts |
+| Buying trigger | Childcare gap, school process, diagnosis wait, camp registration, schedule breakdown |
+| Budget authority | Household budget owner, co-decision maker, employer benefit, school/clinic payer |
+| Current workaround | Shared calendars, group chats, spreadsheets, paper forms, paid advocates |
+| Objection | Trust, child privacy, cost, setup effort, provider coordination |
+| Quote/source | Dated interview quote, artifact, review, survey response, or source URL |
+
 ---
 
 ## Core Psychology

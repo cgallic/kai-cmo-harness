@@ -21,6 +21,16 @@ evals/
     manipulative-community-tactic/
     ad-claim-risk/
     paid-media-attribution-confusion/
+    ai-search-measurement-volatility/
+    llms-txt-misconception/
+    pmax-account-state-decision/
+    creator-rights-disclosure-failure/
+    cold-outreach-relevance-failure/
+    cro-unsupported-benchmark/
+    brand-positioning-without-research/
+    persona-invented-from-vibes/
+    attribution-overclaim/
+    pr-quote-newsworthiness-failure/
 ```
 
 Planned but not created in this wave:
@@ -82,3 +92,11 @@ Future runnable evals should record:
 - deterministic gate results
 - LLM judge result with confidence
 - human calibration result, if required
+
+## Regression Thresholds
+
+Contract and prompt changes should not ship when a golden situation regresses on
+any listed hard-fail condition. Deterministic checks are expected to pass at
+100% for hard policy, schema, trace, and provenance fields. LLM judges may vary,
+but every situation must meet its own `pass_threshold` and record confidence for
+human calibration.

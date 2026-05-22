@@ -1,48 +1,57 @@
 # AEO & AI Search Playbook 2026
 
-> The definitive guide to ranking in AI Overviews, Perplexity, ChatGPT, and generative search engines. Synthesized from 8 deep research reports including Google patents, academic papers, and reverse-engineered algorithms.
+> Operating doctrine for visibility across Google AI Overviews and AI Mode, ChatGPT Search, Claude, Perplexity, Bing/Copilot, Grok, and browser agents. Treat recommendations as evidence-tiered hypotheses unless an official source says they are requirements.
 
 ---
 
 ## 1. Executive Summary
 
-### The 5 Most Important Findings That Change Everything
+### Evidence Ladder
 
-**1. Information Gain is the #1 Ranking Factor for AI (Patent US12013887B2)**
-Google's patented "Information Gain" algorithm measures how much *new* information your content provides relative to what already exists. Content that merely summarizes competitors is mathematically penalized. The system uses `word2vec` embeddings to calculate semantic novelty—being "orthogonal to consensus" is now more valuable than being comprehensive.
+Every recommendation in this playbook must carry an evidence tier. Use the tier in briefs, audits, client reports, and test plans.
 
-**2. GEO Research Proves Specific Content Features Increase Citation 115%+**
-Academic research from Princeton/Georgia Tech quantifies exactly what gets cited:
-- **Citations to external sources: +115% visibility** (for lower-ranked sites)
-- **Direct quotes from experts: +40% visibility**
-- **Statistics and data: +37% visibility**
-- Keyword stuffing has **zero or negative effect**
+| Tier | Label | Use for |
+|------|-------|---------|
+| 1 | Official requirement | Platform rules needed for eligibility, crawling, indexing, serving, or policy compliance |
+| 2 | Official best practice | Platform guidance that improves access, understanding, quality, or user experience |
+| 3 | Academic study | Peer-reviewed or preprint research that tested methods or measurement behavior |
+| 4 | Patent / system disclosure | Patent filings, public architecture talks, or engineering posts; useful for hypotheses, not proof of live ranking weight |
+| 5 | Vendor / platform measurement | Tool-provider or platform reports with methodology and sample limits |
+| 6 | Practitioner observation | Reputable field research, reverse engineering, or case work with clear caveats |
+| 7 | Internal measurement | Kai/client data collected with declared method, sample size, and dates |
+| 8 | Inference / hypothesis | Plausible idea to test; never present as a recommendation without measurement |
+| 9 | Missing data | Required evidence is absent; list in `_data-gaps.md` instead of guessing |
 
-**3. Perplexity's L3 Reranker Kills "Fluffy" Content Before LLMs See It**
-Perplexity uses a three-layer ranking system. The L3 Reranker filters content based on "extractability" and information density. High domain authority means nothing if your content is padded with filler—it gets dropped before synthesis.
+### The 6 Operating Principles
 
-**4. "Experience" is the E-E-A-T Signal AI Cannot Fake**
-Google's Quality Rater Guidelines (Section 4.6.6) mandate "Lowest Quality" ratings for AI content with "little to no effort." The "Experience" component of E-E-A-T—evidenced by original photos, first-person specifics, and unique case studies—is the human moat that AI cannot cross.
+**1. AI visibility is multi-engine, not Google-only.**
+Google, OpenAI/ChatGPT, Anthropic/Claude, Perplexity, Microsoft/Bing/Copilot, and xAI/Grok use different discovery paths. Google says generative AI features in Search are rooted in normal Search systems: crawlability, indexability, snippet eligibility, quality systems, RAG, and query fan-out. OpenAI, Anthropic, and Perplexity publish separate controls for search/discovery, user-triggered retrieval, and model-training crawlers. Build a provider matrix before changing robots policy. Evidence: Tier 1-2.
 
-**5. Query Fan-Out Means You Must Answer 8+ Sub-Questions**
-Google's AI Mode decomposes complex queries into ~8 simultaneous sub-queries. To rank for the main keyword, your content must satisfy these sub-intents. "People Also Ask" reveals the exact sub-queries to target.
+**2. Google AI work is still SEO.**
+For Google AI Overviews and AI Mode, do not sell `llms.txt`, special AI schema, AI-only Markdown files, forced chunking, or long-tail rewrites as ranking requirements. Google explicitly says those are not needed for generative AI Search. Use them only when they serve other agents or readers. Evidence: Tier 1-2.
 
-### What Competitors Don't Know
+**3. Content needs non-commodity value.**
+Information Gain patents and GEO research support the same practical direction: do not publish a paraphrase of the top results. Add original data, expert review, firsthand experience, source-backed examples, product/local details, or clearer synthesis. Do not call Information Gain a deterministic ranking factor unless Google says so. Evidence: Tier 3-4.
 
-| Hidden Insight | Source | Competitive Edge |
-|----------------|--------|------------------|
-| Information Gain uses word2vec embeddings to detect "same info, different words" | Patent US12013887B2 | Paraphrasing competitors = penalty, not optimization |
-| Perplexity hardcodes Reddit/LinkedIn/Wikipedia as Tier 1 trust sources | Reverse engineering | Parasite SEO on trusted platforms beats your own blog |
-| AI Overviews cite "Entity Home" pages with Knowledge Graph presence | Entity SEO research | Wikidata entry + Schema.org = citation priority |
-| "Little to no effort" AI content triggers "Lowest Quality" rating | QRG Section 4.6.6 | Human editing and original data are mandatory |
-| Query Fan-Out checks for gaps and re-queries recursively | Google I/O 2025 | Covering ALL sub-topics on one page captures multiple citations |
+**4. Passage retrievability beats page bloat.**
+AI search systems often retrieve, parse, and cite specific passages. Build self-contained section-answer pairs, descriptive headings, tables, definitions, examples, and visible HTML. Do not break a page into tiny artificial chunks purely for AI. Evidence: Tier 2-4.
 
-### Expected Impact
+**5. Entity clarity reduces ambiguity.**
+Use consistent names, entity homes, author pages, Organization/Product/Article schema where it matches visible content, and corroborating third-party profiles. Schema helps eligibility and disambiguation; it is not special AI markup. Evidence: Tier 2, Tier 6.
 
-Sites implementing this playbook can expect:
-- **30-50% increase** in AI Overview citations within 90 days
-- **115%+ visibility boost** for previously lower-ranked pages using citation optimization
-- **Recovery** from Helpful Content/AI content penalties by demonstrating "significant effort"
+**6. Measurement is probabilistic.**
+AI visibility changes by engine, prompt wording, location, time, personalization, and sampling. Report citations, mentions, absorption into the answer, clicks/referrals, and conversions with method notes and confidence. Never promise to "rank in ChatGPT" or guarantee AI citations. Evidence: Tier 3, Tier 7.
+
+### Removed Claims
+
+Do not use the following legacy claims in client-facing work:
+
+- "Information Gain is the #1 AI ranking factor"
+- "External citations create a 115%+ visibility boost"
+- "Perplexity hardcodes Reddit, LinkedIn, and Wikipedia as Tier 1 trust sources"
+- "Sites can expect 30-50% more AI Overview citations in 90 days"
+- "`llms.txt` is a Google AI Overview ranking factor"
+- "A page can be guaranteed to rank in ChatGPT, Claude, Perplexity, or Google AI Mode"
 
 ---
 
@@ -52,22 +61,26 @@ Sites implementing this playbook can expect:
 
 | Platform | Retrieval Method | Primary Ranking Factor | Citation Style |
 |----------|------------------|------------------------|----------------|
-| **Google AI Overviews** | Query Fan-Out (8+ parallel searches) | Information Gain + Entity Authority | Inline cards linking to sources |
-| **Google AI Mode** | Deep Query Fan-Out + recursive gap-filling | Topical Authority + Freshness | Comprehensive report with layered citations |
-| **Perplexity AI** | Bing API + PerplexityBot + Vespa.ai vectors | L3 Reranker (extractability + trust) | Numbered footnotes in answer |
-| **ChatGPT (Browsing)** | Bing API via ChatGPT-User agent | Domain Authority + Direct Answer Match | Inline links when sources used |
-| **Claude (Browsing)** | Claude-User agent | Unknown internal ranking | Cited within response text |
+| **Google AI Overviews** | Google Search index + Query Fan-Out | Helpful, reliable content + crawl/index eligibility | Inline cards linking to sources |
+| **Google AI Mode** | Google Search index + Deep Query Fan-Out + recursive gap-filling | Topical authority, freshness, page experience | Comprehensive report with layered citations |
+| **ChatGPT Search / Atlas** | OAI-SearchBot for search; ChatGPT-User for user-triggered fetches | Crawl access + clear citation-worthy pages | Summaries, snippets, links, UTM-tagged referrals |
+| **Claude Search / User Fetch** | Claude-SearchBot for search quality; Claude-User for user-directed fetches | Crawl access + accessible, well-structured pages | Answers with cited or fetched source context |
+| **Perplexity AI** | PerplexityBot plus partner/search index signals | Retrieval, ranking, and answer synthesis with visible source links | Numbered footnotes in answer |
+| **Bing / Microsoft Copilot** | Bing index via Bingbot + generative search | Bing crawl/index eligibility + useful page structure | AI answer with source links |
+| **Grok / X** | Public X posts + real-time web search when Grok chooses | X presence, public web availability, brand/entity consensus | Conversational answer with web/X context |
 
 ### Tactics That Work Across ALL Platforms
 
 | Universal Tactic | Why It Works Everywhere |
 |------------------|-------------------------|
-| **Statistics in content** | All LLMs prefer quantifiable facts (+37% GEO study) |
-| **Quotes from experts** | Pre-verified content reduces hallucination risk (+40%) |
-| **Cite external sources** | Signals "corroboration" to retrieval systems (+115%) |
-| **Answer-first formatting** | All RAG systems extract the first 50 words after headers |
-| **Schema markup (FAQ, Article)** | Helps all systems understand content structure |
-| **Short sentences (15-20 words)** | Easier for `IsSup` (support verification) tokens to validate |
+| **Source-backed facts** | Academic GEO work and platform guidance both favor clear evidence, but effect sizes vary by engine and domain |
+| **Expert quotations** | Useful when the expert, quote, and source are real, relevant, and cited inline |
+| **External citations** | Help readers and systems verify claims; do not promise a fixed citation lift |
+| **Answer-first formatting** | Makes passages easier to retrieve, quote, and understand when the query calls for a direct answer |
+| **Eligible schema markup** | Helps rich result eligibility and entity clarity where it matches visible content |
+| **Short, self-contained sentences** | Easier for people, snippets, and retrieval systems to parse |
+| **Provider-specific crawl policy** | Search, user-action, and training bots are different products |
+| **Accessible, server-rendered content** | Browser agents and user-triggered fetchers need visible DOM text, labels, and forms |
 
 ### Platform-Specific Differences
 
@@ -79,13 +92,26 @@ Sites implementing this playbook can expect:
 | **YMYL Sensitivity** | Very High (Ray Update) | Moderate | Moderate |
 | **Schema Value** | High for KG | High for FAQ extraction | Moderate |
 
+### Provider Access Matrix
+
+Use this matrix before any AEO, surround-sound, SEO audit, or agent-readiness work. The point is not to "allow every bot"; the point is to make a deliberate business decision per engine.
+
+| Engine | Discovery / Search Access | User-Triggered Access | Training / Model Access | Kai Default |
+|--------|---------------------------|------------------------|-------------------------|-------------|
+| Google Search AI features | `Googlebot`, indexed pages, snippet eligibility | Browser agents may inspect DOM/accessibility tree | `Google-Extended` controls Gemini/Vertex AI training use, not Search ranking | Allow `Googlebot`; decide on `Google-Extended`; do not treat `llms.txt` as a Google requirement |
+| ChatGPT | `OAI-SearchBot` controls ChatGPT Search discovery | `ChatGPT-User` may fetch pages for user actions; robots rules may not always apply | `GPTBot` controls potential OpenAI foundation-model training | Allow `OAI-SearchBot`; usually allow `ChatGPT-User`; decide on `GPTBot` |
+| Claude | `Claude-SearchBot` supports search result quality | `Claude-User` supports user-directed retrieval | `ClaudeBot` supports Anthropic model training | Allow `Claude-SearchBot` and `Claude-User`; decide on `ClaudeBot` |
+| Perplexity | `PerplexityBot` indexes pages for Perplexity answers and respects robots.txt | Perplexity says URL summarization of robots-blocked pages has been disabled to prevent misuse | Perplexity docs say PerplexityBot indexing is not foundation-model pre-training | Allow official Perplexity access where visibility is desired and verify IP ranges at WAF |
+| Bing / Copilot | `bingbot` feeds Bing Search and generative Bing experiences | Browser/user agents vary by product | No separate public Copilot training token for normal web visibility | Allow `bingbot`; verify Bing Webmaster Tools |
+| Grok / X | X Help says Grok may search public X posts and the real-time web | Grok product behavior is user-facing and not exposed as a stable crawler contract in X Help | X users can opt out of public/interactions data use for Grok training in X settings | Optimize public X/entity presence; monitor referrals/logs; do not hard-code a supposed Grok UA as a P0 requirement |
+
 ---
 
 ## 3. Content Optimization Checklist
 
-### A. Information Gain Optimization (Patent US12013887B2)
+### A. Information Gain and Non-Commodity Value (Evidence Tier 4)
 
-The Information Gain patent calculates novelty using semantic embeddings. Content must be "orthogonal to consensus" to score high.
+The Information Gain patent describes a way to estimate how much additional information a document provides relative to documents already seen. Treat it as a useful lens for content gap analysis, not as a known live "AI ranking factor." The durable action is simple: publish information a serious reader could not get from the top results alone.
 
 **PRIORITY Tactics:**
 
@@ -93,57 +119,52 @@ The Information Gain patent calculates novelty using semantic embeddings. Conten
 - [ ] **Identify the "Information Gap"** — What perspectives, data, or counter-arguments are missing?
 - [ ] **Add unique data points** — Original research, proprietary data, case studies nobody else has
 - [ ] **Include contrarian viewpoints** — "Most experts say X, but our experience shows Y because [specific evidence]"
-- [ ] **Avoid "Skyscraper" content** — Longer versions of existing content score LOW on Information Gain
-- [ ] **Use unique terminology** — Coin specific terms that competitors don't use (creates semantic distance)
+- [ ] **Avoid "Skyscraper" content** — Do not make a longer rewrite of the same facts
+- [ ] **Name the evidence source** — Label each new claim as client data, field observation, public dataset, expert review, or hypothesis
+- [ ] **Keep invented terminology useful** — Coin terms only when they clarify a real pattern; novelty theater does not help readers
 
-**Technical Implementation:**
+**Audit output example:**
+
+```markdown
+Information gap: The top five pages explain "AI receptionist" features, but none show after-hours call handling failure modes.
+Evidence we can add: 60-day call log export from CallRail, three anonymized missed-call transcripts, and a pricing comparison table.
+Confidence: medium. The data proves usefulness for this client, not a universal search ranking effect.
+Data gap: We do not have Google AI Overview inclusion history for this topic.
 ```
-Information Gain Score = f(V_new, V_history)
-Where:
-- V_new = Semantic vector of your content
-- V_history = Aggregate vector of documents user/AI has already seen
-- High score = Your content is in a different region of semantic space
-```
 
-**What "Novelty" Actually Means (Patent Details):**
-- The system embeds documents using `word2vec` or autoencoder models
-- "Same info, different words" = LOW score (synonyms are neighbors in vector space)
-- High KL-divergence from existing content = HIGH score
-- Session-based: What the user viewed in THIS search session matters most
+### B. Evidence-Rich Passage Design (Evidence Tier 3)
 
-### B. Citation Probability Maximization (GEO Research)
+The GEO paper introduced a black-box framework for improving visibility in generative engine responses and reported up to 40% visibility gains in the tested setting. Use the study as directional research, not as a universal promise. Effects vary by domain, engine, query type, and baseline content quality.
 
-The GEO paper (Princeton/Georgia Tech) tested specific content features across 10,000 queries.
+**PRIORITY tactics to test:**
 
-**PRIORITY Tactics That INCREASE Citation:**
-
-| Feature | Impact | Implementation |
-|---------|--------|----------------|
-| **Cite external sources** | **+115.1%** (rank 5 sites) | Link to .edu, .gov, research papers in your text |
-| **Add quotations** | **+40%** | "Dr. Jane Smith, Harvard: 'Direct quote here'" |
-| **Add statistics** | **+37%** | "In 2024, X increased by 47% according to [source]" |
-| **Technical terminology** | **+32.7%** | Use domain-specific jargon accurately |
-| **Fluency optimization** | **+15-30%** | Short sentences, clear syntax, no complex clauses |
+| Feature | Evidence Tier | Implementation |
+|---------|---------------|----------------|
+| **Cite external sources** | Tier 3 | Link to primary sources, official docs, academic papers, and public datasets where they support the sentence |
+| **Add quotations** | Tier 3 | Use short, real expert quotes with attribution and retrieval/source notes |
+| **Add statistics** | Tier 3 | Add sourced numbers only when they are current enough and relevant to the claim |
+| **Use technical terms accurately** | Tier 3 / Tier 6 | Define domain terms once, then use them consistently |
+| **Improve clarity** | Tier 2 / Tier 3 | Use short sentences, specific nouns, tables, and self-contained answer blocks |
 
 **Tactics That FAILED or Had NEGATIVE Effect:**
 
-| Failed Tactic | Result | Why It Fails |
-|---------------|--------|--------------|
-| Keyword stuffing | Negligible/negative | LLMs use semantic embeddings, not keyword density |
-| Authoritative tone alone | No effect in factual domains | Confidence without evidence = low `IsSup` score |
-| Adding more words | No improvement | Information density matters, not word count |
+| Failed Tactic | Why It Fails |
+|---------------|--------------|
+| Keyword stuffing | Semantic systems and readers both punish unnatural repetition |
+| Authoritative tone alone | Confidence without evidence is not trust |
+| Adding more words | More text can dilute the passage if it adds no new facts |
 
 **Optimal Content Structure (GEO Research):**
 
-- **Paragraph length:** 60-100 words (aligns with RAG chunking)
+- **Paragraph length:** 60-100 words where natural (often easier to retrieve and quote)
 - **Sentence length:** 15-20 words maximum
 - **Answer position:** Direct answer in first 30-50 words after H2
-- **Format:** Markdown preferred over complex HTML
-- **Atomic fact density:** Aim for 2-3 verifiable facts per paragraph
+- **Format:** Clean HTML or Markdown-style structure preferred over complex, JS-hidden content
+- **Atomic fact density:** Include verifiable facts where they serve the answer; do not stuff numbers into unsupported claims
 
 ### C. Structure for AI Parsing (Query Fan-Out)
 
-Google's Query Fan-Out decomposes queries into ~8 sub-queries. Your content must satisfy multiple sub-intents.
+Google's Query Fan-Out decomposes some complex queries into multiple sub-queries. Your content should satisfy the important sub-intents users genuinely need.
 
 **PRIORITY Tactics:**
 
@@ -167,7 +188,7 @@ Google's Query Fan-Out decomposes queries into ~8 sub-queries. Your content must
 - [ ] **Inverted Pyramid within each section**
   ```
   [H2: Question]
-  [Direct answer: 2-3 sentences, 40-60 words] <-- AI extracts THIS
+  [Direct answer: 2-3 sentences, 40-60 words] <-- easiest to extract and cite
   [Supporting detail paragraph 1]
   [Supporting detail paragraph 2]
   [Data/examples/quotes]
@@ -182,7 +203,9 @@ Google's Query Fan-Out decomposes queries into ~8 sub-queries. Your content must
   | Competing for high-volume head terms | Targeting long-tail only |
   | Building topical authority domain-wide | Creating single landing page |
 
-**Schema Markup That Feeds AI:**
+**Eligible Schema Markup:**
+
+Use schema only when it matches visible page content and a real Search feature. Google does not require special AI schema for generative Search.
 
 ```json
 {
@@ -238,6 +261,9 @@ Triggers:
 
 ### A. Google AI Overviews
 
+**Official Google Search baseline (verified 2026-05-16):**
+Google's generative AI features use the same public, crawlable Search systems that already process pages for Google Search. To appear, pages must be crawlable, indexable, and eligible for snippets. Google explicitly says site owners do not need `llms.txt`, special AI markup, AI-only Markdown files, forced content chunking, long-tail rewrites, inauthentic mentions, or special schema for generative AI Search. Keep normal technical SEO, helpful people-first content, media quality, local/ecommerce feeds, and page experience strong.
+
 **The "Ray Update" Reality:**
 Following the May 2024 AIO launch failures (glue on pizza, etc.), Google implemented significant tightening:
 - AIOs reduced dramatically for YMYL queries
@@ -250,7 +276,9 @@ Following the May 2024 AIO launch failures (glue on pizza, etc.), Google impleme
    - John Mueller (Jan 2025): "Think about AI Overviews the same way SEOs optimize for featured snippets"
    - Win the snippet → likely to be cited in AIO
 
-2. **Cover ALL Query Fan-Out sub-topics**
+2. **Cover important Query Fan-Out sub-topics**
+   - Use fan-out as a research model, not a doorway-page factory
+   - Google warns against creating separate content for every query variation primarily to manipulate generative AI responses
    ```
    User query: "Compare iPhone 15 vs Pixel 8"
 
@@ -264,7 +292,7 @@ Following the May 2024 AIO launch failures (glue on pizza, etc.), Google impleme
    - "iPhone 15 price"
    - "Pixel 8 price"
 
-   → Your page must answer ALL of these to be the primary citation
+   -> Your page should satisfy the important facets users actually need
    ```
 
 3. **YMYL Strategy:**
@@ -277,35 +305,33 @@ Following the May 2024 AIO launch failures (glue on pizza, etc.), Google impleme
 ### B. Perplexity AI
 
 **Architecture Understanding:**
-- Uses Bing API for broad retrieval + PerplexityBot for depth
-- Vespa.ai for vector search orchestration
-- L3 Reranker filters low-density content
+- PerplexityBot indexes pages for Perplexity answers and, per Perplexity's help docs, respects robots.txt
+- Perplexity says allowing PerplexityBot does not put content into foundation-model pre-training
+- Treat claims about specific rerankers, hardcoded trust pools, or source whitelists as practitioner hypotheses unless Perplexity publishes them
 
 **Optimization Tactics:**
 
-1. **Survive the L3 Reranker**
+1. **Make passages extractable**
    - Place direct answer immediately after H1/H2
    - High atomic fact density (2-3 facts per paragraph)
    - Zero fluff, zero marketing language
    - Avoid: "In today's fast-paced world..." (instant penalty)
 
-2. **Leverage the Trust Pool (Parasite SEO)**
+2. **Earn third-party corroboration**
 
-   | Tier 1 (Hardcoded High Trust) | Tier 2 (News/Media) | Tier 3 (General Web) |
-   |-------------------------------|---------------------|----------------------|
-   | Wikipedia | Bloomberg | Your website |
-   | Reddit | NYT | Most blogs |
-   | LinkedIn | Reuters | E-commerce |
-   | GitHub | BBC | |
-   | Stack Overflow | | |
-   | .gov, .edu | | |
+   | Source type | Acceptable use | Disallowed use |
+   |-------------|----------------|----------------|
+   | Wikipedia / Wikidata | Create or update only when notability and sourcing rules are met | Promotional entries, self-serving edits, paid undisclosed editing |
+   | Reddit / forums | Participate with disclosure and useful answers where community rules allow it | Seeding fake consensus, bought accounts, coordinated voting |
+   | LinkedIn / GitHub / Stack Overflow | Publish real expertise, docs, code, or analysis under the right identity | Thin reposts made only to bait citations |
+   | .gov / .edu / standards bodies | Cite primary evidence | Misrepresenting endorsement |
 
-   **Tactic:** For competitive queries, create high-quality content on Reddit or LinkedIn FIRST. Perplexity is more likely to cite your Reddit post than your new WordPress blog.
+   **Tactic:** Build durable, disclosed authority in the places your market already trusts. Do not create off-site content only to manipulate citations.
 
-3. **Freshness matters heavily**
-   - Perplexity applies aggressive time decay
-   - Update content weekly with current dates/stats
-   - New posts get "impression threshold" test—if no engagement, dropped
+3. **Freshness matters by topic**
+   - Update volatile content when facts change, not on an arbitrary weekly schedule
+   - Show `dateModified` and explain material changes
+   - Archive stale claims and list missing source data instead of backfilling guesses
 
 4. **Optimize for "Related Questions"**
    - Search your keyword on Perplexity
@@ -325,22 +351,23 @@ Following the May 2024 AIO launch failures (glue on pizza, etc.), Google impleme
 ### C. ChatGPT/Bing (GPT Search/Browsing)
 
 **Key Distinction:**
-- `GPTBot` = Training crawler (block this)
-- `ChatGPT-User` = Retrieval agent (allow this)
+- `OAI-SearchBot` = ChatGPT Search discovery and automatic crawl control
+- `GPTBot` = OpenAI foundation-model training crawler; allow or block based on the client's training-data policy
+- `ChatGPT-User` = user-triggered retrieval for ChatGPT and Custom GPTs; OpenAI says robots.txt may not apply because a user initiated the action and that this bot does not determine Search inclusion
 
 **Optimization Tactics:**
 
-1. **Domain authority still matters** (inherited from Bing)
-2. **Direct answer matching** — ChatGPT prefers content that can be extracted verbatim
-3. **Focus on comprehensive coverage** — Less "Query Fan-Out" sophistication than Google
+1. **Allow the right crawler:** Use `OAI-SearchBot` policy for ChatGPT Search inclusion decisions
+2. **Make answers self-contained:** Define terms, include dates, and connect claims to sources so a fetched passage can stand alone
+3. **Measure separately:** Track ChatGPT referrals, cited URLs, brand mentions, and answer absorption separately from Google and Bing
 
 **robots.txt Configuration:**
 ```
 User-agent: GPTBot
-Disallow: /     # Block training
+Disallow: /     # Example: block training if the client chooses that policy
 
 User-agent: ChatGPT-User
-Allow: /        # Allow retrieval
+Allow: /        # Allow user-triggered retrieval where visibility matters
 
 User-agent: OAI-SearchBot
 Allow: /        # Allow SearchGPT indexing
@@ -450,7 +477,7 @@ Create consistent profiles on high-trust databases:
 |----------|----------|---------|
 | LinkedIn (Company/Person) | HIGH | Trust Pool source, feeds KG |
 | Crunchbase | HIGH | Business entity validation |
-| Wikipedia (if notable) | HIGHEST | Near-guaranteed Knowledge Panel |
+| Wikipedia (if notable) | HIGHEST | Strong corroborating entity source when notability and sourcing rules are met |
 | EverybodyWiki | MEDIUM | Alternative for non-notable entities |
 | Google Business Profile | HIGH (Local) | Local entity recognition |
 | Industry directories | MEDIUM | Domain-specific authority |
@@ -474,10 +501,10 @@ Name, Address, Phone, and Description must be IDENTICAL across all profiles.
 
 ### A. robots.txt Configuration
 
-**Strategy: Allow RAG, Block Training**
+**Strategy: Allow search/retrieval, decide separately on training**
 
 ```
-# robots.txt - Allow retrieval, block training
+# robots.txt - Allow discovery/retrieval, decide separately on training
 
 User-agent: *
 Allow: /
@@ -490,8 +517,6 @@ Disallow: /
 
 # Anthropic Training
 User-agent: ClaudeBot
-Disallow: /
-User-agent: anthropic-ai
 Disallow: /
 
 # Google Training (Control Token)
@@ -514,45 +539,48 @@ Disallow: /
 User-agent: Applebot-Extended
 Disallow: /
 
-# Misc Training
-User-agent: GoogleOther
-Disallow: /
+# ============ ALLOW SEARCH / RETRIEVAL AGENTS ============
 
-# ============ ALLOW RAG/RETRIEVAL AGENTS ============
-
-# OpenAI Retrieval (ChatGPT Browsing)
-User-agent: ChatGPT-User
-Allow: /
-
-# OpenAI Search
-User-agent: OAI-SearchBot
-Allow: /
-
-# Anthropic Retrieval (Claude Browsing)
-User-agent: Claude-User
-Allow: /
-
-# Google Search (Required for SEO + AI Overviews)
+# Google Search (required for Google Search + AI Overviews / AI Mode)
 User-agent: Googlebot
 Allow: /
 
-# Perplexity
+# Bing Search (feeds Bing and Microsoft Copilot search experiences)
+User-agent: bingbot
+Allow: /
+
+# OpenAI Search (ChatGPT Search)
+User-agent: OAI-SearchBot
+Allow: /
+
+# OpenAI user-triggered fetches
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic Search / Retrieval
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+
+# Perplexity Search / Retrieval
 User-agent: PerplexityBot
 Allow: /
 User-agent: Perplexity-User
-Allow: /
-
-# Bing (Feeds ChatGPT, Perplexity)
-User-agent: Bingbot
 Allow: /
 
 # Sitemap
 Sitemap: https://yoursite.com/sitemap.xml
 ```
 
-### B. llms.txt Implementation
+**Notes:**
+- `Google-Extended` is not a replacement for `Googlebot`; blocking `Googlebot` removes Google Search visibility, including Google generative Search features.
+- `ChatGPT-User`, `Claude-User`, and `Perplexity-User` represent user-triggered fetches. Robots behavior can differ from automatic crawlers, so pair robots rules with WAF/IP allowlists and log monitoring.
+- Do not add a required Grok/X user-agent rule unless xAI publishes an official crawler contract. Treat Grok as an observability and public-entity problem until then.
 
-Create `/llms.txt` to guide AI agents to your best content.
+### B. llms.txt and Markdown Entry Points
+
+Create `/llms.txt` to guide cooperative AI agents to your best content. Do not sell or score it as a Google AI Overview ranking requirement: Google says `llms.txt` and other special AI text files are not needed for Google generative AI Search. It remains useful for agents and tools that choose to read it, including docs-oriented crawlers, internal assistants, MCP clients, and AI browsers.
 
 **File Format:**
 
@@ -575,9 +603,10 @@ Additional context about the site, target audience, or usage notes.
 - [Less Critical Content](https://yoursite.com/other/): Can be skipped if context limited
 ```
 
-**Also create:**
-- `/llms-full.txt` — Concatenated full text of all key pages
-- `.md` versions of HTML pages (e.g., `/article.html.md`)
+**Also consider:**
+- `/llms-full.txt` - concatenated full text of all key pages for cooperative agents
+- `.md` versions of HTML pages (e.g., `/article.html.md`) when your audience includes developers, API users, or agentic workflows
+- an internal ownership note that says which systems consume the file and how often it is regenerated
 
 ### C. Server-Side Optimization
 
@@ -588,9 +617,9 @@ Additional context about the site, target audience, or usage notes.
 | JavaScript rendering | SSR preferred | AI crawlers have JS limitations |
 | Mobile-first | Required | Google's primary index |
 
-### D. Agent-Readiness Audit (run this before shipping any AEO content)
+### D. Multi-Engine Agent-Readiness Audit (run this before shipping any AEO content)
 
-Config alone is not enough — the site has to pass an audit for agents to actually use it. The **agent-readiness checklist** turns the technical configuration above into a scored audit covering crawler access, llms.txt validity, markdown mirrors, JS-gating, capability signaling, schema, and token cost.
+Config alone is not enough. The site has to pass an audit for search engines, AI search products, and browser agents to actually use it. The **agent-readiness checklist** turns the technical configuration above into a scored audit covering provider-specific crawler access, robots decisions, optional `llms.txt`, markdown mirrors, JS-gating, capability signaling, schema, accessibility, WAF/IP allowlists, and token cost.
 
 **Rubric:** `knowledge/checklists/agent-readiness-checklist.md`
 
@@ -647,13 +676,44 @@ Score each piece 1-5 (target: 35+/50 total)
 
 ## 8. Measurement & Iteration
 
+### Measurement Rules
+
+AI visibility is sampled and volatile. Single-run tests are useful for discovery, not for executive reporting. The March 2026 uncertainty paper argues that citation metrics should be treated as sample estimates from an underlying response distribution. Report method, date range, engine, prompt set, location/device where relevant, sample count, and confidence.
+
+**Measure four outcomes separately:**
+
+| Outcome | What it answers | Sources |
+|---------|-----------------|---------|
+| Citation selection | "Was our URL shown as a source?" | Bing AI Performance, third-party AI visibility tools, manual screenshots |
+| Citation absorption | "Did our page shape the actual answer?" | Answer comparison, quoted phrases, facts reused from page |
+| Referral behavior | "Did users click or arrive from AI products?" | Analytics referrers, UTM data, server logs |
+| Business impact | "Did AI discovery create pipeline, leads, sales, or subscribers?" | CRM, call tracking, ecommerce, form attribution with caveats |
+
+**Minimum reporting protocol:**
+
+1. Build a prompt/query set with branded, category, comparison, problem, local, and long-tail tasks.
+2. Run each prompt at least 5-10 times per engine across multiple days for directional reporting.
+3. Record engine, account state, location, date, device/browser, prompt, answer, citations, and screenshots.
+4. Use confidence labels: high when repeated samples agree, medium when trends agree but citations vary, low when based on one-off observations.
+5. Separate Google AI Overview / AI Mode observations from Bing/Copilot, ChatGPT, Claude, Perplexity, and Grok.
+6. Put absent metrics in `_data-gaps.md`; do not infer AI visibility from rank tracking alone.
+
 ### Tracking AI Citation Appearance
 
-**Tools:**
-- [ ] **Ahrefs/Semrush:** Track positions for AI Overview presence
-- [ ] **InLinks:** Visualize entity graph, identify gaps
-- [ ] **Google Knowledge Graph API:** Query entity `resultScore`
-- [ ] **Manual Perplexity/ChatGPT testing:** Search your topics, note citations
+**Tools and data sources:**
+- [ ] **Google Search Console:** Query/page impressions, clicks, CTR, indexing, and snippet eligibility. Google does not provide a universal AI Overview-only Search Console report.
+- [ ] **Bing Webmaster Tools AI Performance:** Citation counts, cited pages, grounding queries, and trend data for supported AI surfaces.
+- [ ] **InLinks / entity tools:** Entity graph diagnostics and schema/entity gap checks.
+- [ ] **Google Knowledge Graph API:** Entity presence checks; do not treat `resultScore` as an AI ranking score.
+- [ ] **Manual Perplexity/ChatGPT/Claude/Grok testing:** Record repeated samples, not one-off wins.
+
+**Data-gap language for reports:**
+
+```markdown
+Data gap: We did not have Bing Webmaster Tools AI Performance access for this audit. We cannot claim citation frequency in Copilot or Bing AI answers.
+Data gap: Google Search Console does not expose a universal AI Overview-only report. We used Search Console page/query data plus dated screenshots as supporting evidence.
+Data gap: ChatGPT and Claude outputs were sampled manually across 12 prompts on 2026-05-17. Treat the result as directional because answer generation is non-deterministic.
+```
 
 **Google KG API Query (Python):**
 ```python
@@ -672,50 +732,50 @@ else:
     print("Entity not found in Knowledge Graph")
 ```
 
-### A/B Testing Framework
+### Experiment Framework
 
 | Test Variable | Measurement |
 |---------------|-------------|
-| Add statistics to existing page | Monitor AI Overview inclusion +/- |
-| Add expert quote | Monitor citation position |
-| Change H2 to match PAA verbatim | Monitor snippet capture |
-| Add Schema FAQ markup | Monitor featured snippet/AIO |
-| Create Wikidata entry | Monitor Knowledge Panel |
+| Add sourced statistics to existing page | Monitor citation selection, answer absorption, organic query/page metrics, and conversions |
+| Add expert review or quote | Monitor trust-sensitive queries and answer language reuse |
+| Rewrite H2s to match real facets | Monitor snippet capture, AI citations, engagement, and internal search behavior |
+| Add valid schema matching visible content | Monitor rich result eligibility, Search Console enhancements, and entity clarity |
+| Improve entity home and sameAs graph | Monitor Knowledge Graph presence, branded answer accuracy, and third-party profile consistency |
 
 ---
 
-## 9. Hidden Gems & Competitive Edges
+## 9. Failure Modes & Competitive Edges
 
-### 10 Obscure Insights That Give Unfair Advantages
+### 10 Patterns To Watch
 
 1. **"Little to no effort" is the death sentence** (QRG 4.6.6)
    - Even AI-assisted content survives if human effort is evident
    - The standard is "significant effort" — show your work
 
-2. **Information Gain uses LSTM-like session state** (Patent inventor research)
-   - What users viewed THIS session affects scoring
-   - Multi-turn searches increasingly common in AI Mode
+2. **Information Gain is a hypothesis lens, not a client promise**
+   - Use it to find missing evidence and original perspective
+   - Do not claim a measurable ranking boost without internal measurement
 
-3. **Perplexity's Trust Pool is literally hardcoded** (Reverse engineering)
-   - Reddit, LinkedIn, Wikipedia are Tier 1 regardless of traditional SEO metrics
-   - Your blog must be 10x better to compete with Reddit post
+3. **Third-party sources matter only when they are legitimate**
+   - Earned reviews, standards pages, docs, public datasets, and expert discussion can help corroboration
+   - Astroturfing, bought accounts, and fake consensus are disallowed tactics
 
 4. **Query Fan-Out triggers "gap-filling" re-queries** (Google I/O 2025)
-   - If your page covers 7/8 sub-intents, you might get all 8
-   - Covering 4/8 = another source gets synthesized alongside you
+   - Cover important facets where they help the reader
+   - Do not create doorway pages for every possible fan-out query
 
 5. **"Experience" is the only anti-AI moat in E-E-A-T**
    - Original photos with EXIF data
    - First-person specifics AI couldn't generate
    - Case studies with real client names (with permission)
 
-6. **The L3 Reranker has a "drop threshold"**
-   - Low information density = entire result set scrapped, new search issued
-   - Your "fluffy" intro paragraph may cause entire page rejection
+6. **Low information density weakens extractability**
+   - Long intros, generic claims, and vague comparisons make passages harder to reuse
+   - Put the answer before context where the query calls for it
 
-7. **Wikidata → Knowledge Graph is 2-4 week pipeline**
-   - Faster than waiting for Wikipedia notability
-   - Schema `sameAs` to Wikidata accelerates entity recognition
+7. **Wikidata is not a shortcut around notability**
+   - Use Wikidata only when the entity meets Wikidata rules and has reliable references
+   - Schema `sameAs` should point to real, maintained profiles
 
 8. **PAA questions 3-4 levels deep reveal long-tail fan-out**
    - Click PAA → new PAA appears
@@ -738,8 +798,8 @@ else:
 | Day | Task | Output |
 |-----|------|--------|
 | 1-2 | Audit top 5 pages for Information Gain gaps | Gap analysis document |
-| 3 | Implement robots.txt configuration | Updated robots.txt |
-| 4 | Create llms.txt | /llms.txt live |
+| 3 | Implement provider-specific robots.txt configuration | Updated robots.txt + decision log |
+| 4 | Publish optional llms.txt and verify WAF/IP allowlists | /llms.txt live + crawler access notes |
 | 5-6 | Audit Schema markup, add missing `sameAs` links | Schema updated |
 | 7 | Set up monitoring (KG API, AI Overview tracking) | Dashboard/alerts |
 
@@ -777,12 +837,12 @@ else:
 
 ### GEO Citation Triggers
 
-| Add This | Get This |
-|----------|----------|
-| External citations | +115% visibility |
-| Expert quotes | +40% visibility |
-| Statistics | +37% visibility |
-| Technical terms | +32.7% visibility |
+| Add This | Expected Effect |
+|----------|-----------------|
+| External citations | Better verifiability and reader trust; test citation impact by engine |
+| Expert quotes | Stronger experience/expertise signal when real and relevant |
+| Statistics | More extractable evidence when current, sourced, and material |
+| Technical terms | Better entity clarity when natural and useful |
 
 ### Information Gain Checklist
 
@@ -817,13 +877,25 @@ This playbook synthesizes findings from:
 
 1. `aeo-ai-search-strategies-2026.md` — Google I/O announcements, Mueller quotes
 2. `patent-information-gain-US12013887B2.md` — Patent mechanics, word2vec, novelty scoring
-3. `geo-academic-research-synthesis.md` — Princeton/Georgia Tech GEO paper (+115%/+40%/+37%)
+3. `geo-academic-research-synthesis.md` — GEO paper and directional visibility experiments
 4. `perplexity-ranking-reverse-engineered.md` — L3 Reranker, Trust Pool, Vespa.ai
 5. `entity-seo-knowledge-graph-deep-dive.md` — Entity Home, Wikidata, Schema examples
 6. `quality-rater-guidelines-deep-analysis.md` — QRG 4.6.x, Ray Update, Experience signal
-7. `ai-crawlers-technical-reference.md` — llms.txt spec, crawler user agents
+7. `ai-crawlers-technical-reference.md` — crawler user agents, provider policy, optional llms.txt
 8. `query-fan-out-guide.md` — Query decomposition, PAA optimization
+9. [Google Search Central: AI optimization guide](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) — official guidance on Google generative AI Search, `llms.txt`, chunking, and agentic experiences
+10. [OpenAI Crawlers documentation](https://developers.openai.com/api/docs/bots) — `OAI-SearchBot`, `GPTBot`, `ChatGPT-User`
+11. [Anthropic crawler documentation](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) — `ClaudeBot`, `Claude-User`, `Claude-SearchBot`
+12. [Perplexity robots.txt guidance](https://www.perplexity.ai/help-center/en/articles/10354969-how-does-perplexity-follow-robots-txt) and [Perplexity Crawlers documentation](https://docs.perplexity.ai/docs/resources/perplexity-crawlers) — `PerplexityBot`, robots behavior, official IP endpoints
+13. [X Help: About Grok](https://help.x.com/en/using-x/about-grok) — Grok real-time web search and X public-post usage
+14. [Bing Webmaster Tools AI Performance](https://blogs.bing.com/webmaster/February-2026/Introducing-AI-Performance-in-Bing-Webmaster-Tools-Public-Preview) — Microsoft AI citation reporting and grounding query data
+15. [Microsoft Advertising: optimizing content for AI search answers](https://about.ads.microsoft.com/en/blog/post/october-2025/optimizing-your-content-for-inclusion-in-ai-search-answers) — Bing/Copilot passage structure guidance
+16. [web.dev: Build agent-friendly websites](https://web.dev/articles/ai-agent-site-ux) — browser-agent UX, DOM, and accessibility-tree considerations
+17. [arXiv: Quantifying Uncertainty in AI Visibility](https://arxiv.org/abs/2603.08924) — repeated-sampling and confidence interval guidance
+18. [arXiv: From Citation Selection to Citation Absorption](https://arxiv.org/abs/2604.25707) — measurement framework for citation selection vs answer absorption
+
+External sources retrieved: 2026-05-17.
 
 ---
 
-*Last updated: January 2026*
+*Last updated: 2026-05-17*

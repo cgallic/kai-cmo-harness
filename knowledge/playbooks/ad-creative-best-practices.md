@@ -22,7 +22,24 @@ STRONGEST → WEAKEST (by conversion impact)
 5. CTA button (the action prompt)
 ```
 
-An irresistible offer with mediocre creative will outperform brilliant creative with a weak offer every time.
+Strong offers usually beat polished execution, but creative quality still shapes attention, memory, delivery, and trust. Treat offer, creative, proof, and landing-page match as a system.
+
+### 2026 Creative Portfolio Taxonomy
+
+Every paid creative batch should include diversity across these fields:
+
+| Field | Options |
+|-------|---------|
+| `hook_type` | Problem, proof, mechanism, contrast, offer, story, pattern interrupt |
+| `proof_type` | Demo, testimonial, review, data point, expert, mechanism, comparison |
+| `product_cue` | Product first-frame, product in use, packaging, interface, result, invisible service cue |
+| `brand_cue` | Logo, founder, spokesperson, distinctive asset, sonic cue, color system, none |
+| `audience_state` | Unaware, problem-aware, solution-aware, product-aware, most-aware, customer |
+| `offer_stage` | Education, diagnostic, trial, bundle, discount, deadline, retention |
+| `format` | Founder, creator UGC, customer story, static proof card, demo, carousel, search text |
+| `risk_flags` | Regulated claim, personal attribute, AI media, creator rights, affiliate disclosure |
+
+Use the taxonomy to build a portfolio. Do not count minor crop, caption, or color changes as new strategic concepts.
 
 ### Copy Formulas That Convert
 
@@ -52,8 +69,7 @@ An irresistible offer with mediocre creative will outperform brilliant creative 
 - 1:1 ratio for feed, 9:16 for Stories/Reels
 - Less than 20% text on image (soft rule, still impacts delivery)
 - High contrast — must pop on a white/dark feed background
-- Human faces outperform product shots by 30-50%
-- UGC-style (phone shot, natural lighting) outperforms polished studio
+- Test human presence, product-first frames, and founder/customer formats against account data. Do not use universal face or UGC lift claims without a source.
 
 **Video Ads:**
 - First 3 seconds = hook or bust (autoplay, sound off)
@@ -81,7 +97,7 @@ An irresistible offer with mediocre creative will outperform brilliant creative 
 - Descriptions: 90 chars each, 4 description slots
 - Include keyword in headline 1 (Quality Score impact)
 - Use numbers: "Save 37%" > "Save Money"
-- Power words in headlines: Free, New, Proven, Guaranteed, Instant
+- Avoid unsubstantiated superlatives or guarantee language. Use "free," "new," or "proven" only when the landing page substantiates the claim.
 - Pin best-performing headlines to position 1
 
 **Display Ads:**
@@ -95,19 +111,21 @@ An irresistible offer with mediocre creative will outperform brilliant creative 
 - Write for each funnel stage (awareness, consideration, conversion)
 - Use audience signals, not audience targeting (it's a hint, not a constraint)
 - Budget >= $50/day for meaningful data
+- Configure brand exclusions, URL controls, and asset review before relying on automated assembly.
+- Report PMax outcomes as platform-attributed unless a causal measurement method supports incrementality.
 
 ### TikTok Ads
 
 **Video Creative:**
 - First 2 seconds: hook or skip (even faster than Meta)
-- Native TikTok style outperforms polished ads by 3-5x
+- Native-feeling creative is a strong hypothesis on TikTok, but validate by account and SKU.
 - Use trending sounds/music (check commercial license)
 - Text overlays are mandatory — 85% watch sound-off in feed
 - Optimal length: 9-15 seconds for TopView, 21-34 for In-Feed
 - End screen with CTA + product
 
 **Creative Formats:**
-- Spark Ads (boost organic posts) — highest authenticity, lowest CPM
+- Spark Ads (boost organic posts) — use only with creator authorization, usage rights, and disclosure evidence.
 - In-Feed Ads — blend with organic content
 - TopView — first ad user sees on open
 - Branded Effects — interactive, high engagement
@@ -130,7 +148,7 @@ An irresistible offer with mediocre creative will outperform brilliant creative 
 - Data-driven claims perform best (cite specific stats)
 - "Industry insight" framing > product pitch
 - Name-drop recognizable companies/tools for credibility
-- Question-led posts get 50%+ higher engagement than statements
+- Use expert evidence, named buyer situations, and durable point of view. Avoid unsupported engagement uplift claims.
 
 ---
 
@@ -149,6 +167,20 @@ concept_count = personas x desires x angles
 A 3x3 hook / creative matrix tests execution variants. A P.D.A. bench tests strategic concepts. Build the P.D.A. bench first, then use the 3x3 matrix for the highest-scoring rows.
 
 After launch, use `knowledge/playbooks/creative-test-resolution-protocol.md` to decide whether each test resolved. Write resolved learnings to `knowledge/playbooks/creative-intelligence-ledger.md` before planning the next batch.
+
+### Creative-Quality Ledger Fields
+
+Record these fields before upload and update them after the read window:
+
+- `asset_id`, `concept_id`, `platform`, `campaign`, `adset_or_adgroup`
+- `hook_type`, `proof_type`, `product_cue`, `brand_cue`, `audience_state`, `offer_stage`
+- `human_presence`, `creator_type`, `format`, `length_seconds`, `aspect_ratio`
+- `claim_type`, `substantiation_source`, `policy_risk`, `landing_match`
+- `rights_status`, `rights_expires_at`, `disclosure_status`, `ai_generated`
+- `spend`, `impressions`, `clicks`, `conversions`, `platform_attributed_revenue`
+- `incrementality_method`, `decision`, `learning`, `next_iteration`
+
+For creator or UGC assets, `rights_status` and `disclosure_status` are required fields, not notes.
 
 ### The 3x3 Matrix
 
@@ -194,6 +226,9 @@ Before any ad goes live:
 - [ ] Platform character limits respected (no truncation)
 - [ ] No banned words from quality gate (leverage, synergy, etc.)
 - [ ] Platform TOS compliance checked (load the relevant policy reference)
+- [ ] Every claim has a substantiation source or is rewritten
+- [ ] Creator/UGC assets have usage rights, whitelisting scope, and disclosure evidence
+- [ ] AI-generated or synthetic media has required platform labels
 - [ ] Landing page matches ad promise (no bait-and-switch)
 - [ ] Tracking UTMs set up (utm_source, utm_medium, utm_campaign, utm_content)
 - [ ] Mobile preview checked (most impressions are mobile)

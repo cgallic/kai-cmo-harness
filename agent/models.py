@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from .config import agent_config
+from kai.runtime.models import TaskNode, TaskGraph
 
 
 TASK_SPAN_RECORDS_TABLE = "task_span_records"
@@ -151,9 +152,15 @@ class AgentDatabase:
         self.db_path = db_path or agent_config.db_path
         self._init_db()
 
+    def connect(self) -> sqlite3.Connection:
+        """Create a database connection with WAL mode and busy timeout enabled."""
+        conn = sqlite3.connect(self.db_path, timeout=5.0)
+        conn.execute("PRAGMA journal_mode=WAL;")
+        return conn
+
     def _init_db(self):
         """Create tables if they don't exist."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             # Scheduled tasks table
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS scheduled_tasks (
@@ -227,6 +234,36 @@ class AgentDatabase:
                 )
             """)
 
+            # Task graphs table
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS task_graphs (
+                    graph_id TEXT PRIMARY KEY,
+                    goal_id TEXT,
+                    brand_id TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    edges TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+            """)
+
+            # Task nodes table
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS task_nodes (
+                    graph_id TEXT NOT NULL,
+                    node_id TEXT NOT NULL,
+                    task_type TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    inputs TEXT,
+                    outputs TEXT,
+                    error TEXT,
+                    started_at TEXT,
+                    completed_at TEXT,
+                    PRIMARY KEY (graph_id, node_id),
+                    FOREIGN KEY (graph_id) REFERENCES task_graphs(graph_id) ON DELETE CASCADE
+                )
+            """)
+
             # Create indexes
             conn.execute("""
                 CREATE INDEX IF NOT EXISTS idx_tasks_enabled
@@ -268,6 +305,14 @@ class AgentDatabase:
                 CREATE INDEX IF NOT EXISTS idx_conversations_channel
                 ON conversations(channel)
             """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_graphs_status
+                ON task_graphs(status)
+            """)
+            conn.execute("""
+                CREATE INDEX IF NOT EXISTS idx_task_nodes_status
+                ON task_nodes(status)
+            """)
 
             conn.commit()
 
@@ -291,7 +336,7 @@ class AgentDatabase:
     # -------------------------------------------------------------------------
     def create_scheduled_task(self, task: ScheduledTask) -> str:
         """Create a new scheduled task."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("""
                 INSERT INTO scheduled_tasks
                 (id, name, cron_expression, task_type, client, config, enabled,
@@ -314,7 +359,7 @@ class AgentDatabase:
 
     def get_scheduled_task(self, task_id: str) -> Optional[ScheduledTask]:
         """Get a scheduled task by ID."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
             row = conn.execute(
                 "SELECT * FROM scheduled_tasks WHERE id = ?",
@@ -332,7 +377,7 @@ class AgentDatabase:
         client: Optional[str] = None
     ) -> List[ScheduledTask]:
         """List scheduled tasks."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
 
             query = "SELECT * FROM scheduled_tasks WHERE 1=1"
@@ -379,7 +424,7 @@ class AgentDatabase:
 
         params.append(task_id)
 
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute(
                 f"UPDATE scheduled_tasks SET {', '.join(updates)} WHERE id = ?",
                 params
@@ -388,7 +433,7 @@ class AgentDatabase:
 
     def delete_scheduled_task(self, task_id: str):
         """Delete a scheduled task."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("DELETE FROM scheduled_tasks WHERE id = ?", (task_id,))
             conn.commit()
 
@@ -415,7 +460,7 @@ class AgentDatabase:
     # -------------------------------------------------------------------------
     def create_execution(self, execution: TaskExecution) -> str:
         """Create a new task execution record."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("""
                 INSERT INTO task_executions
                 (id, task_id, status, started_at, completed_at, result, error, retry_count)
@@ -467,7 +512,7 @@ class AgentDatabase:
 
         params.append(execution_id)
 
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute(
                 f"UPDATE task_executions SET {', '.join(updates)} WHERE id = ?",
                 params
@@ -480,7 +525,7 @@ class AgentDatabase:
         limit: int = 50
     ) -> List[TaskExecution]:
         """Get recent task executions."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
 
             if task_id:
@@ -514,7 +559,7 @@ class AgentDatabase:
     # -------------------------------------------------------------------------
     def create_span(self, span: TaskSpan) -> str:
         """Create a new trace span record."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("""
                 INSERT INTO task_span_records
                 (id, trace_id, execution_id, task_id, client, span, status,
@@ -582,7 +627,7 @@ class AgentDatabase:
             return
 
         params.append(span_id)
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute(
                 f"UPDATE {TASK_SPAN_RECORDS_TABLE} SET {', '.join(updates)} WHERE id = ?",
                 params
@@ -601,7 +646,7 @@ class AgentDatabase:
         limit: int = 1000,
     ) -> List[TaskSpan]:
         """List trace spans with optional filters."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
             query = f"SELECT * FROM {TASK_SPAN_RECORDS_TABLE} WHERE 1=1"
             params: List[Any] = []
@@ -655,7 +700,7 @@ class AgentDatabase:
     # -------------------------------------------------------------------------
     def save_message(self, message: ConversationMessage) -> int:
         """Save a conversation message."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             cursor = conn.execute("""
                 INSERT INTO conversations
                 (channel, phone_number, message_type, content, context, created_at)
@@ -678,7 +723,7 @@ class AgentDatabase:
         limit: int = 20
     ) -> List[ConversationMessage]:
         """Get recent conversation history for a phone number."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("""
                 SELECT * FROM conversations
@@ -704,7 +749,7 @@ class AgentDatabase:
     # -------------------------------------------------------------------------
     def get_state(self, key: str, default: Any = None) -> Any:
         """Get a state value by key."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
             row = conn.execute(
                 "SELECT value FROM agent_state WHERE key = ?",
@@ -717,7 +762,7 @@ class AgentDatabase:
 
     def set_state(self, key: str, value: Any):
         """Set a state value."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("""
                 INSERT OR REPLACE INTO agent_state (key, value, updated_at)
                 VALUES (?, ?, ?)
@@ -726,13 +771,13 @@ class AgentDatabase:
 
     def delete_state(self, key: str):
         """Delete a state value."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute("DELETE FROM agent_state WHERE key = ?", (key,))
             conn.commit()
 
     def get_all_state(self) -> Dict[str, Any]:
         """Get all state values."""
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute("SELECT key, value FROM agent_state").fetchall()
 
@@ -746,7 +791,7 @@ class AgentDatabase:
         from datetime import timedelta
         cutoff = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
-        with sqlite3.connect(self.db_path) as conn:
+        with self.connect() as conn:
             conn.execute(
                 "DELETE FROM task_executions WHERE started_at < ?",
                 (cutoff,)
@@ -760,6 +805,144 @@ class AgentDatabase:
                 (cutoff,)
             )
             conn.commit()
+
+    # -------------------------------------------------------------------------
+    # Task Graphs and Nodes CRUD
+    # -------------------------------------------------------------------------
+    def create_task_graph(self, graph: TaskGraph) -> str:
+        """Create and persist a new task graph and its nodes."""
+        with self.connect() as conn:
+            conn.execute("""
+                INSERT INTO task_graphs (graph_id, goal_id, brand_id, status, edges, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (
+                graph.graph_id,
+                graph.goal_id,
+                graph.brand_id,
+                graph.status,
+                self._to_json(graph.edges),
+                graph.created_at,
+                graph.updated_at
+            ))
+            for node_id, node in graph.nodes.items():
+                conn.execute("""
+                    INSERT INTO task_nodes (graph_id, node_id, task_type, status, inputs, outputs, error, started_at, completed_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    graph.graph_id,
+                    node.node_id,
+                    node.task_type,
+                    node.status,
+                    self._to_json(node.inputs),
+                    self._to_json(node.outputs),
+                    node.error,
+                    node.started_at,
+                    node.completed_at
+                ))
+            conn.commit()
+        return graph.graph_id
+
+    def get_task_graph(self, graph_id: str) -> Optional[TaskGraph]:
+        """Retrieve a task graph and its nodes by ID."""
+        with self.connect() as conn:
+            conn.row_factory = sqlite3.Row
+            row = conn.execute("SELECT * FROM task_graphs WHERE graph_id = ?", (graph_id,)).fetchone()
+            if not row:
+                return None
+            
+            nodes = self.get_task_nodes(graph_id)
+            edges = self._from_json(row["edges"]) or []
+            
+            return TaskGraph(
+                graph_id=row["graph_id"],
+                goal_id=row["goal_id"],
+                brand_id=row["brand_id"],
+                status=row["status"],  # type: ignore
+                nodes=nodes,
+                edges=edges,
+                created_at=row["created_at"],
+                updated_at=row["updated_at"]
+            )
+
+    def update_task_graph_status(self, graph_id: str, status: str):
+        """Update the status of a task graph."""
+        with self.connect() as conn:
+            conn.execute("""
+                UPDATE task_graphs 
+                SET status = ?, updated_at = ? 
+                WHERE graph_id = ?
+            """, (status, datetime.utcnow().isoformat(), graph_id))
+            conn.commit()
+
+    def update_task_node(
+        self,
+        graph_id: str,
+        node_id: str,
+        status: str,
+        outputs: Optional[Dict[str, Any]] = None,
+        error: Optional[str] = None,
+        started_at: Optional[datetime] = None,
+        completed_at: Optional[datetime] = None
+    ):
+        """Update a task node's execution progress."""
+        updates = ["status = ?"]
+        params: List[Any] = [status]
+        
+        if outputs is not None:
+            updates.append("outputs = ?")
+            params.append(self._to_json(outputs))
+        if error is not None:
+            updates.append("error = ?")
+            params.append(error)
+        if started_at is not None:
+            updates.append("started_at = ?")
+            params.append(started_at.isoformat())
+        if completed_at is not None:
+            updates.append("completed_at = ?")
+            params.append(completed_at.isoformat())
+            
+        params.extend([graph_id, node_id])
+        with self.connect() as conn:
+            conn.execute(
+                f"UPDATE task_nodes SET {', '.join(updates)} WHERE graph_id = ? AND node_id = ?",
+                params
+            )
+            conn.commit()
+
+    def list_active_task_graphs(self) -> List[TaskGraph]:
+        """List active task graphs (status pending or running)."""
+        with self.connect() as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(
+                "SELECT graph_id FROM task_graphs WHERE status IN ('pending', 'running') ORDER BY created_at ASC"
+            ).fetchall()
+            
+        graphs = []
+        for r in rows:
+            g = self.get_task_graph(r["graph_id"])
+            if g:
+                graphs.append(g)
+        return graphs
+
+    def get_task_nodes(self, graph_id: str) -> Dict[str, TaskNode]:
+        """Get all nodes for a specific graph."""
+        with self.connect() as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute("SELECT * FROM task_nodes WHERE graph_id = ?", (graph_id,)).fetchall()
+            
+        nodes = {}
+        for row in rows:
+            nodes[row["node_id"]] = TaskNode(
+                node_id=row["node_id"],
+                task_type=row["task_type"],
+                status=row["status"],  # type: ignore
+                inputs=self._from_json(row["inputs"]) or {},
+                outputs=self._from_json(row["outputs"]) or {},
+                error=row["error"],
+                started_at=row["started_at"],
+                completed_at=row["completed_at"]
+            )
+        return nodes
 
 
 # Global database instance

@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet Kai | Marketing assistant for small teams</title>
+<meta name="description" content="Meet Kai helps business owners and lean teams build a marketing plan, audit gaps, create campaign work, review it before launch, connect their tools, and capture phone leads with KaiCalls.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="https://meetkai.xyz/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://meetkai.xyz/">
+<meta property="og:title" content="Meet Kai | Marketing assistant for small teams">
+<meta property="og:description" content="A practical marketing assistant that starts with a plan, not a blank chat box.">
+<meta property="og:image" content="https://meetkai.xyz/mascot-concepts/final/25-og-wide.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meet Kai">
+<meta name="twitter:description" content="Marketing help that starts with a plan, not a blank chat box.">
+<meta name="twitter:image" content="https://meetkai.xyz/mascot-concepts/final/25-og-wide.jpg">
+<link rel="icon" type="image/png" href="/mascot-concepts/final/transparent/26-icon-v2.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("kai-theme");
+      var preferred = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", saved || preferred);
+    } catch (error) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://meetkai.xyz/#organization",
+      "name": "Meet Kai",
+      "url": "https://meetkai.xyz/",
+      "logo": "https://meetkai.xyz/mascot-concepts/final/transparent/26-icon-v2.png",
+      "sameAs": [
+        "https://github.com/cgallic/kai-cmo-harness",
+        "https://kaicalls.com/"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://meetkai.xyz/#software",
+      "name": "Meet Kai",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web, local agent workspaces",
+      "url": "https://meetkai.xyz/",
+      "publisher": {
+        "@id": "https://meetkai.xyz/#organization"
+      },
+      "description": "Meet Kai helps business owners and lean teams build a marketing plan, audit gaps, create campaign work, review it before launch, connect their tools, and capture phone leads with KaiCalls.",
+      "featureList": [
+        "Marketing plan creation",
+        "Website, SEO, content, ads, analytics, and missed-call follow-up audits",
+        "Landing page, email, ad, SEO brief, social post, and campaign drafting",
+        "Human approval queue before launch",
+        "Analytics, CRM, ads, email, website, calendar, and phone lead integrations",
+        "KaiCalls phone lead capture for missed calls and after-hours inquiries"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://meetkai.xyz/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Kai?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kai is a marketing assistant for business owners and lean teams. It helps plan marketing, find gaps, draft campaign work, and review the next action before launch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Kai only a chat box?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Kai is built around marketing workflows. The /kai skills create briefs, run audits, draft campaigns, check quality, and keep a record of approved work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can Kai create?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kai can draft landing pages, emails, ads, SEO briefs, social posts, newsletters, competitor notes, case studies, launch plans, and campaign plans."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Kai check before work goes live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kai checks usefulness, specificity, claims, banned words, search structure, ad policy, approval status, analytics gaps, and phone lead capture."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does KaiCalls fit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "KaiCalls handles missed calls, after-hours answering, and phone-based lead qualification for businesses that still win customers by phone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can agents sign up for KaiCalls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Agents can use the KaiCalls signup docs at https://www.kaicalls.com/docs/api#signup and download the KaiCalls agent skill at https://www.kaicalls.com/skills/kaicalls-agent-api.skill."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  :root {
+    color-scheme: light;
+    --bg: #f6efe3;
+    --surface: #fffaf0;
+    --surface-strong: #ffffff;
+    --ink: #171915;
+    --muted: #5f655d;
+    --line: #d9cfbc;
+    --line-strong: #161815;
+    --blue: #4c84ff;
+    --green: #2eb872;
+    --orange: #f06f38;
+    --yellow: #ffd166;
+    --shadow: rgba(23, 25, 21, 0.16);
+    --shadow-strong: rgba(23, 25, 21, 0.24);
+    --radius: 8px;
+    --wrap: min(1160px, calc(100% - 32px));
+    --font: "IBM Plex Sans", "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #101316;
+    --surface: #171b1f;
+    --surface-strong: #20262b;
+    --ink: #f7efe1;
+    --muted: #b9b0a0;
+    --line: #343a3f;
+    --line-strong: #f7efe1;
+    --blue: #82a8ff;
+    --green: #58d596;
+    --orange: #ff9168;
+    --yellow: #ffe08a;
+    --shadow: rgba(0, 0, 0, 0.36);
+    --shadow-strong: rgba(0, 0, 0, 0.52);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background:
+      linear-gradient(90deg, rgba(120, 120, 120, 0.11) 1px, transparent 1px),
+      linear-gradient(rgba(120, 120, 120, 0.11) 1px, transparent 1px),
+      var(--bg);
+    background-size: 44px 44px, 44px 44px, auto;
+    color: var(--ink);
+    font-family: var(--font);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body.no-scroll {
+    overflow: hidden;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .wrap {
+    width: var(--wrap);
+    margin: 0 auto;
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(18px);
+  }
+
+  .nav-inner {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--yellow);
+    box-shadow: 3px 3px 0 var(--line-strong);
+    overflow: hidden;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .nav-links a {
+    text-decoration: none;
+  }
+
+  .nav-links a:hover,
+  .nav-links a:focus-visible {
+    color: var(--ink);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+
+  .theme-toggle button {
+    min-width: 58px;
+    min-height: 32px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: 700 0.78rem var(--font);
+    cursor: pointer;
+  }
+
+  .theme-toggle button[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .menu-button {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    font: 700 1rem var(--font);
+  }
+
+  .button {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 0 18px;
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: 4px 4px 0 var(--line-strong);
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .button:hover,
+  .button:focus-visible {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--line-strong);
+  }
+
+  .button.secondary {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .button.slim {
+    min-height: 40px;
+    padding: 0 14px;
+    box-shadow: 3px 3px 0 var(--line-strong);
+    font-size: 0.9rem;
+  }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    padding: 86px 0 72px;
+  }
+
+  .hero-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.72fr);
+    align-items: center;
+    gap: 54px;
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 30px;
+    height: 3px;
+    background: var(--orange);
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-top: 0;
+  }
+
+  h1 {
+    max-width: 720px;
+    margin-bottom: 22px;
+    font-size: clamp(2.65rem, 4.1vw, 4.75rem);
+    line-height: 1.04;
+    letter-spacing: 0;
+  }
+
+  .hero-sub {
+    max-width: 620px;
+    margin-bottom: 28px;
+    color: var(--muted);
+    font-size: clamp(1.05rem, 1.55vw, 1.24rem);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+
+  .plain-proof {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+    max-width: 560px;
+  }
+
+  .plain-proof span {
+    display: inline-flex;
+    gap: 9px;
+    min-height: 34px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .plain-proof span::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 2px 2px 0 var(--line-strong);
+  }
+
+  .hero-visual {
+    position: relative;
+    min-height: 520px;
+    display: grid;
+    align-items: end;
+  }
+
+  .hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: 46px 8px 0 40px;
+    border: 2px solid var(--line-strong);
+    border-radius: 999px 999px 10px 10px;
+    background: linear-gradient(180deg, var(--yellow), color-mix(in srgb, var(--yellow) 64%, var(--surface)));
+    box-shadow: 8px 8px 0 var(--shadow);
+  }
+
+  .hero-kai {
+    position: absolute;
+    z-index: 4;
+    right: 30px;
+    bottom: 54px;
+    width: min(58%, 310px);
+    max-height: 440px;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 16px var(--shadow));
+  }
+
+  .hero-board {
+    position: relative;
+    z-index: 2;
+    width: min(78%, 370px);
+    margin: 0 auto 0 0;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+    box-shadow: 7px 7px 0 var(--line-strong);
+    padding: 18px;
+  }
+
+  .mini-flow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mini-flow li {
+    min-height: 64px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    font: 700 0.75rem var(--mono);
+    text-align: center;
+  }
+
+  .hero-board p {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+
+  section {
+    padding: 90px 0;
+  }
+
+  .band {
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 46%, transparent);
+  }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.7fr);
+    align-items: end;
+    gap: 42px;
+    margin-bottom: 36px;
+  }
+
+  .section-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--orange);
+    font: 700 0.8rem var(--mono);
+    text-transform: uppercase;
+  }
+
+  .section-kicker::before {
+    content: "";
+    width: 26px;
+    height: 2px;
+    background: currentColor;
+  }
+
+  h2 {
+    max-width: 760px;
+    margin-bottom: 0;
+    font-size: clamp(2.05rem, 4.4vw, 4rem);
+    line-height: 1.04;
+    letter-spacing: 0;
+  }
+
+  .section-desc {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 1.08rem;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .intro-card,
+  .step,
+  .skill-card,
+  .app-panel,
+  .search-card,
+  .faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 5px 5px 0 var(--shadow);
+  }
+
+  .intro-card {
+    min-height: 210px;
+    padding: 24px;
+  }
+
+  .intro-card strong,
+  .step h3,
+  .skill-card h3,
+  .app-panel h3,
+  .search-card h3 {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.18rem;
+    line-height: 1.2;
+  }
+
+  .intro-card p,
+  .step p,
+  .skill-card p,
+  .app-panel p,
+  .search-card p,
+  .faq-item p {
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  .intro-card:nth-child(1) {
+    border-top: 6px solid var(--blue);
+  }
+
+  .intro-card:nth-child(2) {
+    border-top: 6px solid var(--green);
+  }
+
+  .intro-card:nth-child(3) {
+    border-top: 6px solid var(--orange);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .step {
+    padding: 22px;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .num {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .tag {
+    display: inline-flex;
+    min-height: 30px;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0 10px;
+    color: var(--muted);
+    font: 600 0.78rem var(--mono);
+    white-space: nowrap;
+  }
+
+  .step p {
+    margin-top: auto;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+    align-items: center;
+    gap: 44px;
+  }
+
+  .mascot-side {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    min-height: 420px;
+    border-bottom: 2px solid var(--line-strong);
+  }
+
+  .mascot-side img {
+    max-height: 410px;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 16px var(--shadow));
+  }
+
+  .app-grid,
+  .search-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .app-panel,
+  .search-card {
+    padding: 22px;
+    min-height: 180px;
+  }
+
+  .panel-label {
+    display: inline-flex;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font: 600 0.76rem var(--mono);
+    text-transform: uppercase;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .skill-card {
+    min-height: 245px;
+    padding: 22px;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .skill-list span {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 9px;
+    color: var(--muted);
+    font: 600 0.75rem var(--mono);
+  }
+
+  .phone-band {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .phone-band .section-desc,
+  .phone-band p {
+    color: color-mix(in srgb, var(--bg) 76%, transparent);
+  }
+
+  .phone-band .button {
+    background: var(--bg);
+    color: var(--ink);
+    border-color: var(--bg);
+    box-shadow: 4px 4px 0 color-mix(in srgb, var(--bg) 45%, transparent);
+  }
+
+  .phone-band .mascot-side {
+    border-color: color-mix(in srgb, var(--bg) 55%, transparent);
+  }
+
+  .phone-band .section-kicker {
+    color: var(--yellow);
+  }
+
+  .agent-kit {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--blue) 10%, transparent), transparent 42%),
+      color-mix(in srgb, var(--surface) 58%, transparent);
+  }
+
+  .agent-downloads {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .agent-card {
+    display: flex;
+    min-height: 280px;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 5px 5px 0 var(--shadow);
+    padding: 22px;
+  }
+
+  .agent-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.18rem;
+    line-height: 1.2;
+  }
+
+  .agent-card p {
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .agent-card .download-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .download-link {
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 0 12px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .faq-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .faq-item {
+    padding: 22px;
+  }
+
+  .faq-item h3 {
+    margin: 0 0 8px;
+    font-size: 1.08rem;
+  }
+
+  .audit-box {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.7fr);
+    gap: 24px;
+    align-items: center;
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-strong);
+    padding: 28px;
+    box-shadow: 8px 8px 0 var(--line-strong);
+  }
+
+  .audit-box h2 {
+    font-size: clamp(2rem, 3.8vw, 3.6rem);
+  }
+
+  .audit-form {
+    display: grid;
+    gap: 12px;
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  .field input {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 0 12px;
+    font: 500 1rem var(--font);
+  }
+
+  .form-note,
+  .form-success {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .form-success {
+    display: none;
+    border: 1px solid var(--green);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  }
+
+  footer {
+    padding: 42px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+
+  .footer-links a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (max-width: 980px) {
+    .nav-links {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 16px;
+      right: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-strong);
+      box-shadow: 8px 8px 0 var(--shadow-strong);
+      padding: 10px;
+    }
+
+    .nav-links.is-open {
+      display: flex;
+    }
+
+    .nav-links a {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .menu-button {
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .hero {
+      padding: 64px 0 68px;
+    }
+
+    .hero-layout {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .hero-visual {
+      width: min(540px, 100%);
+      min-height: 430px;
+      margin: 0 auto;
+    }
+
+    .hero-visual::before {
+      inset: 28px 0 0 78px;
+    }
+
+    .hero-kai {
+      right: 34px;
+      bottom: 50px;
+      width: min(46%, 250px);
+      max-height: 340px;
+    }
+
+    .hero-board {
+      width: min(76%, 360px);
+    }
+
+    .section-head,
+    .two-col,
+    .audit-box {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-grid,
+    .steps,
+    .skills-grid,
+    .agent-downloads,
+    .app-grid,
+    .search-grid,
+    .faq-list {
+      grid-template-columns: 1fr;
+    }
+
+    .mascot-side {
+      min-height: 320px;
+    }
+
+    .mascot-side img {
+      max-height: 310px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :root {
+      --wrap: min(100% - 28px, 420px);
+    }
+
+    .site-nav .button {
+      display: none;
+    }
+
+    .brand span:last-child {
+      display: none;
+    }
+
+    .theme-toggle button {
+      min-width: 50px;
+    }
+
+    h1 {
+      font-size: clamp(2.15rem, 10vw, 2.95rem);
+      line-height: 1.05;
+    }
+
+    section {
+      padding: 68px 0;
+    }
+
+    .hero {
+      padding: 48px 0 56px;
+    }
+
+    .plain-proof {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+
+    .plain-proof span {
+      align-items: flex-start;
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    .hero-visual {
+      min-height: 300px;
+    }
+
+    .hero-visual::before {
+      inset: 0 18px 0;
+      border-radius: 150px 150px 8px 8px;
+    }
+
+    .hero-kai {
+      right: 50%;
+      bottom: 0;
+      transform: translateX(50%);
+      width: min(62%, 220px);
+      max-height: 285px;
+    }
+
+    .hero-board {
+      display: none;
+    }
+
+    .hero-actions,
+    .audit-form {
+      width: 100%;
+    }
+
+    .hero-actions .button,
+    .audit-form .button {
+      width: 100%;
+    }
+
+    .footer-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .footer-links {
+      justify-content: flex-start;
+    }
+  }
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Primary navigation">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/" aria-label="Meet Kai home">
+      <span class="brand-mark"><img src="/mascot-concepts/final/transparent/26-icon-v2.png" alt=""></span>
+      <span>Meet Kai</span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#skills">/kai skills</a>
+      <a href="#agent-kit">Agent kit</a>
+      <a href="#app">Inside the app</a>
+      <a href="#problems">What Kai fixes</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <div class="theme-toggle" aria-label="Theme options">
+        <button type="button" data-theme-choice="light">Light</button>
+        <button type="button" data-theme-choice="dark">Dark</button>
+      </div>
+      <a class="button slim" href="https://app.meetkai.xyz/">Open app</a>
+      <button class="menu-button" type="button" aria-controls="nav-links" aria-expanded="false" id="menu-button">Menu</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-layout">
+      <div class="hero-copy">
+        <p class="eyebrow">Meet Kai</p>
+        <h1>Meet Kai plans your next marketing move.</h1>
+        <p class="hero-sub">Kai reads the business context, finds the gaps, drafts the work, and keeps you in approval before anything goes live.</p>
+        <div class="hero-actions">
+          <a class="button" href="#audit">Start with an audit</a>
+          <a class="button secondary" href="#how">See how Kai works</a>
+        </div>
+        <div class="plain-proof" aria-label="What Kai helps with">
+          <span>Business brief first</span>
+          <span>Website and campaign gaps</span>
+          <span>Drafts ready for review</span>
+          <span>Phone leads included</span>
+        </div>
+      </div>
+      <aside class="hero-visual" aria-label="Kai workflow preview">
+        <div class="hero-board">
+          <span class="panel-label">Brief to approval</span>
+          <ol class="mini-flow" aria-label="Kai workflow">
+            <li>Brief</li>
+            <li>Audit</li>
+            <li>Draft</li>
+            <li>Approve</li>
+          </ol>
+          <p>Kai starts from your business brief, then turns the next priority into work a human can approve.</p>
+        </div>
+        <img class="hero-kai" src="/mascot-concepts/final/transparent/02-the-briefing.png" alt="Kai presenting a marketing brief" width="720" height="900">
+      </aside>
+    </div>
+  </section>
+
+  <section class="band" id="plain">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">What it means</p>
+          <h2>A marketing workflow, not another empty prompt.</h2>
+        </div>
+        <p class="section-desc">Kai is for the person who knows they need better marketing but does not want a giant agency contract, a random task list, or a chat screen that starts by asking them what to do.</p>
+      </div>
+      <div class="intro-grid">
+        <div class="intro-card">
+          <strong>Kai learns the business.</strong>
+          <p>Products, customers, offers, tone, channels, competitors, and existing assets go into one working brief.</p>
+        </div>
+        <div class="intro-card">
+          <strong>Kai routes the work.</strong>
+          <p>Planning, audits, landing pages, emails, ads, SEO briefs, social posts, and approvals each use a dedicated /kai skill.</p>
+        </div>
+        <div class="intro-card">
+          <strong>Kai keeps humans in control.</strong>
+          <p>Drafts and recommendations go through approval gates for claims, quality, policy, timing, and risk.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">How it works</p>
+          <h2>From messy marketing problem to approved next step.</h2>
+        </div>
+        <p class="section-desc">The command names matter to operators. The plain-English jobs matter to everyone else.</p>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <div class="step-top"><span class="num">01</span><span class="tag">/kai-start</span></div>
+          <h3>Build the business brief</h3>
+          <p>Tell Kai what you sell, who you serve, and which channels matter. Kai turns that into a shared marketing file.</p>
+        </article>
+        <article class="step">
+          <div class="step-top"><span class="num">02</span><span class="tag">/kai-audit</span></div>
+          <h3>Find the biggest gaps</h3>
+          <p>Check the website, content, search, ads, analytics, conversion paths, and missed-call follow-up.</p>
+        </article>
+        <article class="step">
+          <div class="step-top"><span class="num">03</span><span class="tag">/kai-brief</span></div>
+          <h3>Choose the next job</h3>
+          <p>Turn the audit into a focused brief with audience, offer, channel, angle, proof, and success criteria.</p>
+        </article>
+        <article class="step">
+          <div class="step-top"><span class="num">04</span><span class="tag">/kai-write</span></div>
+          <h3>Create the work</h3>
+          <p>Draft landing pages, emails, ads, SEO briefs, social posts, competitor notes, and campaign plans.</p>
+        </article>
+        <article class="step">
+          <div class="step-top"><span class="num">05</span><span class="tag">/kai-gate</span></div>
+          <h3>Review before launch</h3>
+          <p>Score usefulness, catch vague claims, check policy, and send the work to a human approval queue.</p>
+        </article>
+        <article class="step">
+          <div class="step-top"><span class="num">06</span><span class="tag">Connect</span></div>
+          <h3>Learn from real results</h3>
+          <p>Pull in analytics, CRM, ads, email, website, calendar, and phone lead data so the next action is grounded.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="app">
+    <div class="wrap two-col">
+      <div>
+        <p class="section-kicker">Inside the app</p>
+        <h2>Clear surfaces for the work a team actually has to approve.</h2>
+        <p class="section-desc">The app is not the homepage. It is where connected accounts, business memory, campaign drafts, audit results, approval queues, and phone lead routing become daily work.</p>
+        <div class="app-grid" style="margin-top: 28px;">
+          <div class="app-panel">
+            <span class="panel-label">Workspace memory</span>
+            <h3>Business profile</h3>
+            <p>Offer, audience, channels, competitors, tone, proof, pricing, and past work in one place.</p>
+          </div>
+          <div class="app-panel">
+            <span class="panel-label">Signal</span>
+            <h3>Connected accounts</h3>
+            <p>Analytics, CRM, ads, email, website, calendar, and phone lead data feed the next recommendation.</p>
+          </div>
+          <div class="app-panel">
+            <span class="panel-label">Control</span>
+            <h3>Approval queue</h3>
+            <p>Humans approve claims, tone, timing, and risk before campaign work goes live.</p>
+          </div>
+          <div class="app-panel">
+            <span class="panel-label">Calls</span>
+            <h3>KaiCalls route</h3>
+            <p>Phone leads, missed calls, and after-hours inquiries stay inside the same marketing workflow.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mascot-side">
+        <img src="/mascot-concepts/final/transparent/20-at-desk-working.png" alt="Kai working at a desk with campaign notes" loading="lazy" width="700" height="900">
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">/kai skills</p>
+          <h2>The command library is organized by marketing job.</h2>
+        </div>
+        <p class="section-desc">The slash commands are not there to sound technical. They keep each job tied to the right brief, framework, checklist, and approval gate.</p>
+      </div>
+      <div class="skills-grid">
+        <article class="skill-card">
+          <h3>Plan</h3>
+          <p>Position the product, choose the offer, map the launch, and pick the next priority.</p>
+          <div class="skill-list"><span>/kai-start</span><span>/kai-brief</span><span>/kai-growth-plan</span><span>/kai-brand</span></div>
+        </article>
+        <article class="skill-card">
+          <h3>Audit</h3>
+          <p>Find weak pages, search gaps, conversion leaks, analytics holes, and missed-call issues.</p>
+          <div class="skill-list"><span>/kai-audit</span><span>/kai-seo-audit</span><span>/kai-cro</span><span>/kai-analytics</span></div>
+        </article>
+        <article class="skill-card">
+          <h3>Create</h3>
+          <p>Draft landing pages, emails, ads, social posts, content briefs, videos, and newsletters.</p>
+          <div class="skill-list"><span>/kai-write</span><span>/kai-landing-page</span><span>/kai-email-system</span><span>/kai-video</span></div>
+        </article>
+        <article class="skill-card">
+          <h3>Promote</h3>
+          <p>Build campaigns with platform rules loaded before copy and targeting decisions are made.</p>
+          <div class="skill-list"><span>/kai-ad-campaign</span><span>/kai-cold-outreach</span><span>/kai-retarget</span><span>/kai-abm</span></div>
+        </article>
+        <article class="skill-card">
+          <h3>Gate</h3>
+          <p>Check quality, specificity, search structure, banned words, claims, and approval status.</p>
+          <div class="skill-list"><span>/kai-gate</span><span>Four U's</span><span>SEO lint</span><span>policy check</span></div>
+        </article>
+        <article class="skill-card">
+          <h3>Learn</h3>
+          <p>Keep traces of approved work, connected signals, decisions, and the next action.</p>
+          <div class="skill-list"><span>memory</span><span>traces</span><span>approval queue</span><span>30-day check</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="agent-kit" id="agent-kit">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Agent kit</p>
+          <h2>Agents can discover Kai. Humans can install it.</h2>
+        </div>
+        <p class="section-desc">Kai publishes public paths for people, crawlers, and agent runtimes: sign up, download the skills, inspect the A2A card, and give phone-capable agents the KaiCalls signup docs.</p>
+      </div>
+      <div class="agent-downloads">
+        <article class="agent-card">
+          <h3>Download the /kai skills</h3>
+          <p>Use the agent kit to understand the command map, install path, quality gates, KaiCalls rule, and first-run workflow.</p>
+          <div class="download-actions">
+            <a class="download-link" href="/downloads/kai-agent-kit.zip" download>Download ZIP</a>
+            <a class="download-link" href="/downloads/kai-agent-kit.md">Read kit</a>
+            <a class="download-link" href="https://github.com/cgallic/kai-cmo-harness">GitHub</a>
+          </div>
+        </article>
+        <article class="agent-card">
+          <h3>A2A discovery</h3>
+          <p>Agent cards describe Kai's public marketing skills, install links, signup paths, and current discovery-only status for A2A-aware agents.</p>
+          <div class="download-actions">
+            <a class="download-link" href="/.well-known/agent-card.json">Agent card</a>
+            <a class="download-link" href="/.well-known/agent.json">Legacy card</a>
+            <a class="download-link" href="/llms.txt">llms.txt</a>
+          </div>
+        </article>
+        <article class="agent-card">
+          <h3>Sign up or give an agent a phone</h3>
+          <p>Agents that find Kai can send humans to the app, start an audit request, or use KaiCalls when a workflow needs calls, SMS, and lead capture.</p>
+          <div class="download-actions">
+            <a class="download-link" href="https://app.meetkai.xyz/">Open app</a>
+            <a class="download-link" href="#audit">Request audit</a>
+            <a class="download-link" href="https://www.kaicalls.com/docs/api#signup">KaiCalls signup</a>
+            <a class="download-link" href="https://www.kaicalls.com/skills/kaicalls-agent-api.skill">KaiCalls skill</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="phone-band" id="kaicalls">
+    <div class="wrap two-col">
+      <div>
+        <p class="section-kicker">Phone lead capture</p>
+        <h2>Marketing does not stop when someone calls.</h2>
+        <p class="section-desc">Many small businesses still win customers by phone. Kai treats missed calls, after-hours answering, and phone-based qualification as part of the marketing system.</p>
+        <p>KaiCalls can answer when the team cannot, collect the lead details, and route the follow-up back into the same brief-to-approval workflow.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://www.kaicalls.com/">See KaiCalls</a>
+          <a class="button secondary" href="#audit">Audit my follow-up</a>
+          <a class="button secondary" href="https://www.kaicalls.com/docs/api#signup">Agent signup</a>
+        </div>
+      </div>
+      <div class="mascot-side">
+        <img src="/mascot-concepts/final/transparent/12-phone-ringing-v2.png" alt="Kai answering a phone lead" loading="lazy" width="720" height="900">
+      </div>
+    </div>
+  </section>
+
+  <section id="problems">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">What Kai fixes</p>
+          <h2>Most marketing problems are coordination problems.</h2>
+        </div>
+        <p class="section-desc">Kai gives the work a shared brief, a clear next step, and a review path so the team is not guessing from scattered notes and disconnected tools.</p>
+      </div>
+      <div class="search-grid">
+        <article class="search-card">
+          <h3>No clear plan</h3>
+          <p>Kai turns product, audience, offer, channels, and goals into a working marketing brief before anything gets drafted.</p>
+        </article>
+        <article class="search-card">
+          <h3>Too many loose tasks</h3>
+          <p>Audits become ranked fixes, not a pile of random ideas. The next action has an owner, reason, and expected outcome.</p>
+        </article>
+        <article class="search-card">
+          <h3>Drafts need review</h3>
+          <p>Landing pages, emails, ads, SEO briefs, and social posts go through claims, quality, policy, and tone checks before launch.</p>
+        </article>
+        <article class="search-card">
+          <h3>Leads fall through cracks</h3>
+          <p>Kai treats forms, analytics, CRM follow-up, and phone calls as one customer path, with KaiCalls for missed calls and after-hours leads.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="audit">
+    <div class="wrap">
+      <div class="audit-box">
+        <div>
+          <p class="section-kicker">Start here</p>
+          <h2>Get a practical marketing audit.</h2>
+          <p class="section-desc">Share your domain and email. Kai checks the public marketing surface and sends back the most useful next fixes.</p>
+        </div>
+        <div>
+          <form class="audit-form" id="audit-form">
+            <div class="field">
+              <label for="audit-domain">Website</label>
+              <input id="audit-domain" name="domain" type="url" placeholder="https://yourbusiness.com" required>
+            </div>
+            <div class="field">
+              <label for="audit-email">Email</label>
+              <input id="audit-email" name="email" type="email" placeholder="you@company.com" required>
+            </div>
+            <div class="field">
+              <label for="audit-name">Name</label>
+              <input id="audit-name" name="name" type="text" placeholder="Your name">
+            </div>
+            <button class="button" type="submit" id="audit-submit-btn">Request audit</button>
+            <p class="form-note">No spam. The point is to find the next useful marketing action.</p>
+          </form>
+          <div class="form-success" id="audit-success">
+            <strong>Audit request received.</strong>
+            <p>We will send the report to your inbox after the run finishes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">FAQ</p>
+          <h2>Plain answers for people meeting Kai for the first time.</h2>
+        </div>
+        <p class="section-desc">No assumed operator knowledge. The product should make sense before someone opens the app.</p>
+      </div>
+      <div class="faq-list">
+        <article class="faq-item">
+          <h3>What is Kai?</h3>
+          <p>Kai is a marketing assistant for business owners and lean teams. It helps plan marketing, find gaps, draft campaign work, and review the next action before launch.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Is Kai only a chat box?</h3>
+          <p>No. Kai is built around marketing workflows. The /kai skills create briefs, run audits, draft campaigns, check quality, and keep a record of approved work.</p>
+        </article>
+        <article class="faq-item">
+          <h3>What can Kai create?</h3>
+          <p>Kai can draft landing pages, emails, ads, SEO briefs, social posts, newsletters, competitor notes, case studies, launch plans, and campaign plans.</p>
+        </article>
+        <article class="faq-item">
+          <h3>What does Kai check?</h3>
+          <p>Kai checks usefulness, specificity, claims, banned words, search structure, ad policy, approval status, analytics gaps, and phone lead capture.</p>
+        </article>
+        <article class="faq-item">
+          <h3>What tools can Kai connect?</h3>
+          <p>Kai is designed to connect analytics, CRM, ads, email, website, calendar, phone lead, and publishing tools so recommendations can use real business signals.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Where does KaiCalls fit?</h3>
+          <p>KaiCalls handles missed calls, after-hours answering, and phone-based lead qualification for businesses that still win customers by phone.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Can agents sign up for KaiCalls?</h3>
+          <p>Yes. Agents can use the <a href="https://www.kaicalls.com/docs/api#signup">KaiCalls signup docs</a> or download the <a href="https://www.kaicalls.com/skills/kaicalls-agent-api.skill">KaiCalls agent skill</a> when a workflow needs phone, SMS, and lead capture.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>
+      <strong>Meet Kai</strong><br>
+      <span>Marketing plans, audits, campaign work, approvals, integrations, and phone lead capture.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://app.meetkai.xyz/">App</a>
+      <a href="/skills">Skills</a>
+      <a href="#agent-kit">Agent kit</a>
+      <a href="/downloads/kai-agent-kit.zip">Download</a>
+      <a href="/blog">Blog</a>
+      <a href="/sitemap.xml">Sitemap</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="https://github.com/cgallic/kai-cmo-harness">GitHub</a>
+      <a href="https://www.kaicalls.com/">KaiCalls</a>
+      <a href="https://www.kaicalls.com/docs/api#signup">KaiCalls signup</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("kai-theme", theme);
+    } catch (error) {}
+    document.querySelectorAll("[data-theme-choice]").forEach(function (button) {
+      button.setAttribute("aria-pressed", button.getAttribute("data-theme-choice") === theme ? "true" : "false");
+    });
+  }
+
+  applyTheme(document.documentElement.getAttribute("data-theme") || "light");
+
+  document.querySelectorAll("[data-theme-choice]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      applyTheme(button.getAttribute("data-theme-choice"));
+    });
+  });
+
+  var menuButton = document.getElementById("menu-button");
+  var navLinks = document.getElementById("nav-links");
+  if (menuButton && navLinks) {
+    menuButton.addEventListener("click", function () {
+      var open = navLinks.classList.toggle("is-open");
+      menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.classList.toggle("no-scroll", open);
+    });
+
+    navLinks.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        navLinks.classList.remove("is-open");
+        menuButton.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("no-scroll");
+      });
+    });
+  }
+
+  var auditForm = document.getElementById("audit-form");
+  if (auditForm) {
+    auditForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      var button = document.getElementById("audit-submit-btn");
+      var success = document.getElementById("audit-success");
+      var original = button.textContent;
+      button.textContent = "Submitting";
+      button.disabled = true;
+
+      var payload = {
+        domain: document.getElementById("audit-domain").value,
+        email: document.getElementById("audit-email").value,
+        name: document.getElementById("audit-name").value
+      };
+
+      try {
+        var response = await fetch("/api/mikai/audit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        var result = await response.json();
+        if (result.success) {
+          auditForm.style.display = "none";
+          success.style.display = "block";
+          return;
+        }
+        throw new Error(result.error || "Audit request failed");
+      } catch (error) {
+        button.textContent = original;
+        button.disabled = false;
+        alert("The audit request did not go through. Please try again.");
+      }
+    });
+  }
+</script>
+</body>
+</html>

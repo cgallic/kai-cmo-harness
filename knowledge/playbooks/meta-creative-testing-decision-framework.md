@@ -43,6 +43,10 @@ Do not confuse upload volume with test volume.
 
 It is fine to create many ads paused for review. It is usually weak testing to activate many ads in one underfunded ad set. Meta will allocate spend to a few likely winners, and most creatives will get too little data to prove anything.
 
+Meta automation is not a universal upgrade. Advantage+ and broad/consolidated structures work best when the account has clean conversion events, valid exclusions, enough budget, and real creative diversity. Use manual or narrow signal tests when the account lacks those inputs.
+
+Platform-reported ROAS is a delivery and attribution signal. Treat it as incremental only after conversion lift, geo testing, MMM calibration, or another causal method supports the claim.
+
 ## Budget Reality Check
 
 Use this test before recommending a launch structure:
@@ -89,13 +93,16 @@ These are defaults, not laws. Override them only with account evidence.
    - Count ideas, not files.
    - Different captions over similar footage are iterations, not distinct tests.
    - Tag each candidate with Persona, Desire, and Angle when the batch is concept-heavy.
-   - Prioritize different hooks, visual openings, proof types, personas, and offers.
+    - Prioritize different hooks, visual openings, proof types, personas, and offers.
+    - Require rights and disclosure records for creator or UGC assets.
+    - Require AI/synthetic-media status for generated or materially altered assets.
 
 4. Pick the launch mode.
    - **Staged review:** create all ads paused with tracking and naming complete.
    - **Signal test:** activate 3-6 strongest ads when budget is tight.
    - **Learning test:** activate 6-20 ads when budget and events are sufficient.
-   - **Scale refresh:** add new creative to the existing winning structure only when the account is stable.
+    - **Scale refresh:** add new creative to the existing winning structure only when the account is stable.
+    - **Automation scale:** use Advantage+ only when events, exclusions, catalog/feed quality, and creative ledger fields are complete.
 
 5. Write a decision memo before spending.
    - Include the rejected alternative.
@@ -126,6 +133,8 @@ Before activating a Meta batch with 10 or more creatives, write:
 ## Why
 - Learning/budget:
 - Creative diversity:
+- Rights/disclosure:
+- AI/synthetic media:
 - Winner protection:
 - Measurement:
 

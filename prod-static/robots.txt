@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://meetkai.xyz/sitemap.xml
+Host: https://meetkai.xyz

@@ -9,6 +9,19 @@
 **Role:** Professional, patient, or both
 **Frustration:** Systemic minimization requiring constant proof of competence
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Interview notes, support records, complaint logs, reviews, community posts, workplace/healthcare research |
+| Buying trigger | Dismissed concern, promotion process, health event, documented bias, need for advocacy |
+| Budget authority | Self-purchase, employer-sponsored, healthcare decision maker, or professional-development budget |
+| Current workaround | Extra documentation, second opinions, peer networks, scripts, escalation paths |
+| Objection | Trust, privacy, fear of retaliation, emotional labor, proof burden |
+| Quote/source | Dated interview quote, research source, review, ticket, or source URL |
+
 ---
 
 ## Core Psychology

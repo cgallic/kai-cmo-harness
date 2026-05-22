@@ -8,9 +8,9 @@ Use these counts when public docs, skill docs, or agent prompts need a system in
 
 | Surface | Count | Counting rule |
 |---|---:|---|
-| Skill directories | 39 | Directories under `harness/skills/`. This includes 37 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`. |
-| Canonical `kai-*` skill docs | 37 | Public API-style pages in `docs/skill-manifest/`, one for each `harness/skills/kai-*` directory. |
-| Public `/kai` router commands | 33 | Commands listed by `harness/skills/kai/SKILL.md`. Router-visible commands are a subset of the canonical `kai-*` skill inventory. |
+| Skill directories | 42 | Directories under `harness/skills/`. This includes 40 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`. |
+| Canonical `kai-*` skill docs | 40 | Public API-style pages in `docs/skill-manifest/`, one for each `harness/skills/kai-*` directory. |
+| Public `/kai` router commands | 36 | Commands listed by `harness/skills/kai/SKILL.md`. Router-visible commands are a subset of the canonical `kai-*` skill inventory. |
 | Playbook docs | 48 | Markdown playbooks under `knowledge/playbooks/`, excluding local `CLAUDE.md` metadata. |
 | Checklists | 32 | Markdown checklists under `knowledge/checklists/`, excluding local `CLAUDE.md` metadata. |
 | Framework docs | 27 | Markdown framework files under `knowledge/frameworks/`. |
@@ -19,7 +19,7 @@ Use these counts when public docs, skill docs, or agent prompts need a system in
 | Harness references | 18 | Markdown or YAML/JSON references under `harness/references/`. |
 | Skill contracts | 15 | YAML contracts under `harness/skill-contracts/`. |
 
-Inventory date: 2026-05-16. Regenerate with scoped file counts before publishing a release.
+Inventory date: 2026-05-22. Regenerate with scoped file counts before publishing a release.
 
 ## Instruction Contract
 

@@ -9,6 +9,19 @@
 **Income:** Above median but feels squeezed
 **Frustration:** Fighting predatory pricing and friction-designed billing
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Billing records, complaint logs, reviews, community posts, cancellation-flow tests |
+| Buying trigger | Surprise fee, denied claim, failed cancellation, renewal shock, refund dispute |
+| Budget authority | Self-purchase or household budget owner |
+| Current workaround | Spreadsheets, bank alerts, chargebacks, calls, scripts, consumer forums |
+| Objection | Trust, privacy, "will this create more work?", cost, legal concern |
+| Quote/source | Dated interview quote, review, complaint, ticket, or source URL |
+
 ---
 
 ## Core Psychology

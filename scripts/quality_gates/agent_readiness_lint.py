@@ -6,11 +6,14 @@ Audits a live URL against the agent-readiness checklist. Catches the top P0
 regressions before agents see them.
 
 Checks:
-  1. /robots.txt exists + has explicit rules for the big-6 AI bot tokens
-  2. /llms.txt exists + valid format (H1 + blockquote + H2 sections)
-  3. Main page renders meaningful content without JavaScript
-  4. Capability signaling: plain-text product description above the fold
-  5. Organization JSON-LD schema present on homepage
+  1. /robots.txt exists + does not block core AI search/discovery bots
+  2. Training bot decisions are explicit where possible
+  3. /llms.txt exists + valid format (P1, not a Google Search requirement)
+  4. Main page renders meaningful content without JavaScript
+  5. Capability signaling: plain-text product description above the fold
+  6. Organization JSON-LD schema present on homepage
+  7. Semantic HTML and accessible interactive controls are present
+  8. Critical facts are not likely trapped only in images or PDFs
 
 Usage:
   python3 agent_readiness_lint.py https://example.com
@@ -36,13 +39,28 @@ from urllib.parse import urljoin, urlparse
 
 USER_AGENT = "kai-agent-readiness-lint/1.0 (+https://github.com/cgallic/kai-cmo-harness)"
 
-BIG_SIX_AI_TOKENS = [
-    "GPTBot",
-    "ChatGPT-User",
-    "ClaudeBot",
-    "Claude-User",
+DISCOVERY_SEARCH_TOKENS = [
+    "Googlebot",
+    "bingbot",
+    "OAI-SearchBot",
+    "Claude-SearchBot",
     "PerplexityBot",
+]
+
+USER_TRIGGERED_TOKENS = [
+    "ChatGPT-User",
+    "Claude-User",
+    "Perplexity-User",
+]
+
+TRAINING_DECISION_TOKENS = [
+    "GPTBot",
+    "ClaudeBot",
     "Google-Extended",
+    "CCBot",
+    "Bytespider",
+    "Meta-ExternalAgent",
+    "Applebot-Extended",
 ]
 
 CAPABILITY_SIGNALS = [
@@ -66,31 +84,114 @@ def fetch(url: str, timeout: int = 15) -> tuple[int, str, dict]:
         return -1, "", {}
 
 
-def check_robots_txt(base: str) -> dict:
-    status, body, _ = fetch(urljoin(base, "/robots.txt"))
+def parse_robot_groups(body: str) -> list[dict]:
+    groups: list[dict] = []
+    agents: list[str] = []
+    rules: list[tuple[str, str]] = []
+    saw_rules = False
+
+    def flush() -> None:
+        nonlocal agents, rules, saw_rules
+        if agents or rules:
+            groups.append({"agents": [a.lower() for a in agents], "rules": rules[:]})
+        agents = []
+        rules = []
+        saw_rules = False
+
+    for raw_line in body.splitlines():
+        line = raw_line.split("#", 1)[0].strip()
+        if not line:
+            flush()
+            continue
+
+        if ":" not in line:
+            continue
+
+        key, value = [part.strip() for part in line.split(":", 1)]
+        key = key.lower()
+
+        if key == "user-agent":
+            if saw_rules and agents:
+                flush()
+            agents.append(value)
+            continue
+
+        if key in {"allow", "disallow"} and agents:
+            saw_rules = True
+            rules.append((key, value))
+
+    flush()
+    return groups
+
+
+def token_has_explicit_group(groups: list[dict], token: str) -> bool:
+    wanted = token.lower()
+    return any(wanted in group["agents"] for group in groups)
+
+
+def token_is_fully_blocked(groups: list[dict], token: str) -> bool:
+    wanted = token.lower()
+    exact_groups = [group for group in groups if wanted in group["agents"]]
+    relevant_groups = exact_groups or [group for group in groups if "*" in group["agents"]]
+
+    for group in relevant_groups:
+        blocks_root = any(directive == "disallow" and value.strip() == "/" for directive, value in group["rules"])
+        allows_root = any(directive == "allow" and value.strip() == "/" for directive, value in group["rules"])
+        if blocks_root and not allows_root:
+            return True
+    return False
+
+
+def check_robots_txt_body(status: int, body: str) -> dict:
     result = {"id": "robots_txt", "priority": "P0", "pass": False, "details": []}
 
     if status != 200:
         result["details"].append(f"/robots.txt returned {status}")
         return result
 
-    missing = [t for t in BIG_SIX_AI_TOKENS if not re.search(rf"(?im)^\s*User-agent:\s*{re.escape(t)}\b", body)]
-    if missing:
-        result["details"].append(f"missing explicit User-agent rules for: {', '.join(missing)}")
+    groups = parse_robot_groups(body)
+    blocked_discovery = [t for t in DISCOVERY_SEARCH_TOKENS if token_is_fully_blocked(groups, t)]
+    blocked_user_fetchers = [t for t in USER_TRIGGERED_TOKENS if token_is_fully_blocked(groups, t)]
+
+    if blocked_discovery:
+        result["details"].append(f"search/discovery bots blocked at root: {', '.join(blocked_discovery)}")
     else:
         result["pass"] = True
-        result["details"].append("all big-6 AI bot tokens have explicit rules")
+        result["details"].append(f"search/discovery bots not root-blocked: {', '.join(DISCOVERY_SEARCH_TOKENS)}")
 
-    if re.search(r"(?im)^\s*User-agent:\s*\*\s*$.*?^\s*Disallow:\s*/\s*$", body, re.MULTILINE | re.DOTALL):
-        result["pass"] = False
-        result["details"].append("WARNING: `User-agent: *` blocks entire site — this hides you from everyone")
+    if blocked_user_fetchers:
+        result["details"].append(f"user-triggered fetchers root-blocked: {', '.join(blocked_user_fetchers)}")
 
+    return result
+
+
+def check_robots_txt(base: str) -> tuple[dict, int, str]:
+    status, body, _ = fetch(urljoin(base, "/robots.txt"))
+    return check_robots_txt_body(status, body), status, body
+
+
+def check_training_bot_decisions(status: int, body: str) -> dict:
+    result = {"id": "training_bot_decisions", "priority": "P1", "pass": False, "details": []}
+    if status != 200:
+        result["details"].append("skipped because /robots.txt could not be fetched")
+        return result
+
+    groups = parse_robot_groups(body)
+    missing = [t for t in TRAINING_DECISION_TOKENS if not token_has_explicit_group(groups, t)]
+    present = [t for t in TRAINING_DECISION_TOKENS if token_has_explicit_group(groups, t)]
+
+    if present:
+        result["details"].append(f"explicit training bot decisions: {', '.join(present)}")
+    if missing:
+        result["details"].append(f"missing explicit training bot decisions: {', '.join(missing)}")
+
+    result["pass"] = not missing
     return result
 
 
 def check_llms_txt(base: str) -> dict:
     status, body, _ = fetch(urljoin(base, "/llms.txt"))
-    result = {"id": "llms_txt", "priority": "P0", "pass": False, "details": []}
+    result = {"id": "llms_txt", "priority": "P1", "pass": False, "details": []}
 
     if status != 200:
         result["details"].append(f"/llms.txt returned {status}")
@@ -144,6 +245,111 @@ def check_no_js_gating(base: str) -> tuple[dict, str]:
         result["details"].append(f"{words} words of text render without JS")
 
     return result, text
+
+
+def strip_tags(fragment: str) -> str:
+    text = re.sub(r"<script[\s\S]*?</script>", " ", fragment, flags=re.IGNORECASE)
+    text = re.sub(r"<style[\s\S]*?</style>", " ", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def attr_value(attrs: str, name: str) -> str:
+    match = re.search(rf'{name}\s*=\s*["\']([^"\']+)["\']', attrs, re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
+def check_semantic_structure(body: str) -> dict:
+    result = {"id": "semantic_structure", "priority": "P1", "pass": False, "details": []}
+
+    h1_count = len(re.findall(r"<h1\b", body, flags=re.IGNORECASE))
+    h2_count = len(re.findall(r"<h2\b", body, flags=re.IGNORECASE))
+    has_main = bool(re.search(r"<main\b|role\s*=\s*['\"]main['\"]", body, flags=re.IGNORECASE))
+    has_nav = bool(re.search(r"<nav\b|role\s*=\s*['\"]navigation['\"]", body, flags=re.IGNORECASE))
+
+    if h1_count != 1:
+        result["details"].append(f"expected 1 H1, found {h1_count}")
+    else:
+        result["details"].append("found exactly one H1")
+
+    if h2_count < 1:
+        result["details"].append("no H2 sections found")
+    else:
+        result["details"].append(f"found {h2_count} H2 section(s)")
+
+    if not has_main:
+        result["details"].append("missing <main> or role=\"main\" landmark")
+    if not has_nav:
+        result["details"].append("missing <nav> or navigation landmark")
+
+    result["pass"] = h1_count == 1 and h2_count >= 1 and has_main
+    return result
+
+
+def check_interactive_accessibility(body: str) -> dict:
+    result = {"id": "interactive_accessibility", "priority": "P1", "pass": False, "details": []}
+
+    missing_buttons = 0
+    for attrs, inner in re.findall(r"<button\b([^>]*)>([\s\S]*?)</button>", body, flags=re.IGNORECASE):
+        name = strip_tags(inner) or attr_value(attrs, "aria-label") or attr_value(attrs, "title")
+        if not name:
+            missing_buttons += 1
+
+    missing_links = 0
+    for attrs, inner in re.findall(r"<a\b([^>]*)>([\s\S]*?)</a>", body, flags=re.IGNORECASE):
+        href = attr_value(attrs, "href")
+        if href.startswith("#") or href.lower().startswith("javascript:"):
+            continue
+        name = strip_tags(inner) or attr_value(attrs, "aria-label") or attr_value(attrs, "title") or attr_value(inner, "alt")
+        if not name:
+            missing_links += 1
+
+    labels_for = set(re.findall(r"<label\b[^>]*for\s*=\s*['\"]([^'\"]+)['\"]", body, flags=re.IGNORECASE))
+    missing_inputs = 0
+    for attrs in re.findall(r"<input\b([^>]*)>", body, flags=re.IGNORECASE):
+        input_type = (attr_value(attrs, "type") or "text").lower()
+        if input_type in {"hidden", "submit", "button", "reset", "image"}:
+            continue
+        input_id = attr_value(attrs, "id")
+        has_name = attr_value(attrs, "aria-label") or attr_value(attrs, "aria-labelledby") or attr_value(attrs, "placeholder")
+        if not has_name and (not input_id or input_id not in labels_for):
+            missing_inputs += 1
+
+    if missing_buttons:
+        result["details"].append(f"{missing_buttons} button(s) lack accessible names")
+    if missing_links:
+        result["details"].append(f"{missing_links} link(s) lack accessible names")
+    if missing_inputs:
+        result["details"].append(f"{missing_inputs} input(s) lack labels or aria labels")
+    if not (missing_buttons or missing_links or missing_inputs):
+        result["details"].append("interactive controls found have basic accessible names")
+
+    result["pass"] = missing_buttons == 0 and missing_inputs == 0 and missing_links <= 2
+    return result
+
+
+def check_critical_content_formats(body: str, visible_text: str) -> dict:
+    result = {"id": "critical_content_formats", "priority": "P1", "pass": False, "details": []}
+
+    word_count = len(visible_text.split())
+    images = re.findall(r"<img\b([^>]*)>", body, flags=re.IGNORECASE)
+    pdf_links = re.findall(r"href\s*=\s*['\"][^'\"]+\.pdf(?:[?#][^'\"]*)?['\"]", body, flags=re.IGNORECASE)
+    missing_alt = sum(1 for attrs in images if "alt=" not in attrs.lower())
+
+    media_only_risk = word_count < 150 and (len(images) >= 3 or pdf_links)
+    alt_risk = bool(images) and missing_alt / max(len(images), 1) > 0.5
+
+    if media_only_risk:
+        result["details"].append(
+            f"only {word_count} visible words with {len(images)} image(s) and {len(pdf_links)} PDF link(s); critical facts may be media-only"
+        )
+    if alt_risk:
+        result["details"].append(f"{missing_alt}/{len(images)} image(s) are missing alt attributes")
+    if not media_only_risk and not alt_risk:
+        result["details"].append("no obvious image/PDF-only critical-content risk detected")
+
+    result["pass"] = not media_only_risk and not alt_risk
+    return result
 
 
 def check_capability_signaling(text: str) -> dict:
@@ -257,12 +463,44 @@ def main() -> int:
     base = f"{parsed.scheme}://{parsed.netloc}"
 
     checks = []
-    checks.append(check_robots_txt(base))
+    robots_check, robots_status, robots_body = check_robots_txt(base)
+    checks.append(robots_check)
+    checks.append(check_training_bot_decisions(robots_status, robots_body))
     checks.append(check_llms_txt(base))
 
     no_js, visible_text = check_no_js_gating(base)
     checks.append(no_js)
     checks.append(check_capability_signaling(visible_text))
+
+    homepage_status, homepage_body, _ = fetch(base)
+    if homepage_status == 200:
+        checks.append(check_semantic_structure(homepage_body))
+        checks.append(check_interactive_accessibility(homepage_body))
+        checks.append(check_critical_content_formats(homepage_body, visible_text))
+    else:
+        checks.extend(
+            [
+                {
+                    "id": "semantic_structure",
+                    "priority": "P1",
+                    "pass": False,
+                    "details": [f"homepage returned {homepage_status}; semantic checks skipped"],
+                },
+                {
+                    "id": "interactive_accessibility",
+                    "priority": "P1",
+                    "pass": False,
+                    "details": [f"homepage returned {homepage_status}; accessibility checks skipped"],
+                },
+                {
+                    "id": "critical_content_formats",
+                    "priority": "P1",
+                    "pass": False,
+                    "details": [f"homepage returned {homepage_status}; media/content checks skipped"],
+                },
+            ]
+        )
+
     checks.append(check_organization_schema(base))
 
     verdict, summary = score(checks)

@@ -463,3 +463,18 @@ For the harness quality pipeline, LinkedIn ads should pass:
 - Professional tone audit — no consumer urgency language, no sensationalized claims
 - Claim substantiation check — every quantitative claim has documented source within 18 months
 - Competitor mention check — zero disparagement or comparative language
+
+## B2B Thought Leadership And Creator Amplification Caveats
+
+LinkedIn B2B campaigns should not be judged only by short-window lead capture. The LinkedIn B2B Institute and Ehrenberg-Bass work frames many buyers as out-market at any given moment, so paid LinkedIn often needs two jobs:
+
+- Create memory and trust among future buyers.
+- Capture demand from the smaller in-market group.
+
+Operational rules:
+
+- Use Thought Leader Ads only with author permission and a professional, substantiated point of view.
+- Treat employee, executive, creator, or customer posts as endorsements when compensation, employment, affiliate, or material connection is relevant.
+- Keep disclosure visible when content is sponsored or materially connected.
+- Separate short-window platform leads from pipeline quality, account movement, and future-demand measurement.
+- Do not claim incremental pipeline from LinkedIn attribution without lift, matched account analysis, geo testing, or MMM support.
