@@ -45,14 +45,14 @@ Rules derived from [Algorithmic Authorship](../frameworks/content-copywriting/al
 
 ### Tier 1: GEO/AEO Signals (4 rules, zero deps)
 
-Based on academic research showing measurable visibility boosts in AI search:
+Based on academic research and AI-search practice. These checks identify evidence and clarity signals; they do not promise fixed ranking, citation, or traffic lifts.
 
-| Signal | Target | Visibility Boost | Source |
-|--------|--------|-----------------|--------|
-| Citations | 5+ per article | **+115%** | GEO academic synthesis |
-| Quotations | 3+ per article | **+40%** | GEO academic synthesis |
-| Statistics | 5+ per article | **+37%** | GEO academic synthesis |
-| Technical terms | 10+ per article | **+32.7%** | GEO academic synthesis |
+| Signal | Target | Use As | Source |
+|--------|--------|--------|--------|
+| Citations | 5+ per article | Provenance and source-quality support | GEO academic synthesis |
+| Quotations | 3+ per article | Attributable experience and authority | GEO academic synthesis |
+| Statistics | 5+ per article | Specificity and answer usefulness | GEO academic synthesis |
+| Technical terms | 10+ per article | Entity clarity and precision | GEO academic synthesis |
 
 ### Tier 1: Content Structure (8 rules, optional `textstat`)
 

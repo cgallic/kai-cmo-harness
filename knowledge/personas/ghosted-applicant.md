@@ -9,6 +9,19 @@
 **Role:** Actively searching or passively looking
 **Frustration:** Navigating a rigged job market that harvests their labor
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Job-search diary, application data, interview notes, community posts, support tickets |
+| Buying trigger | Layoff, career switch, stalled search, interview assignment, rejected application loop |
+| Budget authority | Self-purchase, scholarship, employer transition benefit, family budget |
+| Current workaround | Resume tailoring, networking, application trackers, recruiter outreach, unpaid assignments |
+| Objection | Cost, skepticism, scam risk, privacy, past tool disappointment |
+| Quote/source | Dated interview quote, application artifact, review, survey response, or source URL |
+
 ---
 
 ## Core Psychology

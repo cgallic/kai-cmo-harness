@@ -27,13 +27,13 @@
 - [ ] Brand entity verified in Wikidata
 - [ ] Company profile accurate in Crunchbase
 - [ ] Structured data (Schema.org) implemented across website
-- [ ] FAQ Schema applied to all content pages
+- [ ] Page-level schema matches visible content and eligible Google Search features (Article, Product, LocalBusiness, FAQ, HowTo, Video, etc.)
 
 ### Generative Engine Optimization (GEO)
-- [ ] AI Overview visibility audited (tools: Peec AI, Profound)
-- [ ] "Share of Model" baseline established for category queries
-- [ ] Citation-worthy content strategy defined (fact-dense, logically coherent)
-- [ ] Long-tail question content created for RAG triggering
+- [ ] Google AI Overview / AI Mode baseline audited using crawlability, indexability, snippet eligibility, and helpful content checks
+- [ ] Multi-engine "Share of Model" baseline established for Google, ChatGPT, Claude, Perplexity, Bing/Copilot, and Grok where relevant
+- [ ] Citation-worthy content strategy defined with first-hand experience, named evidence, images/video, and source support
+- [ ] Query fan-out and PAA research mapped to useful pages/clusters; no doorway pages created for every long-tail variation
 
 ### Content Authentication
 - [ ] C2PA Content Credentials implementation planned
@@ -89,9 +89,9 @@
 ## Channel Readiness
 
 ### Search
-- [ ] SEO strategy pivoted to GEO (influence > traffic)
+- [ ] SEO strategy expanded with AEO/GEO while preserving foundational Google SEO
 - [ ] Zero-click impact assessed and strategy adjusted
-- [ ] Visual content schema markup implemented
+- [ ] Visual content, product data, and local data optimized where relevant
 
 ### Social
 - [ ] TikTok USDS strategy localized (not global campaign)

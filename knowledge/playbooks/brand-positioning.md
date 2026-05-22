@@ -2,7 +2,7 @@
 
 > **Use when:** Defining or refining brand positioning, crafting a value proposition, or differentiating from competitors.
 
-Sources: [B2B Positioning Strategy](https://theb2bplaybook.com/b2b-positioning-strategy), [SaaS Branding 2026](https://www.overpass.studio/blog/brand-design-saas-branding-strategies-survey), [Product Positioning Frameworks](https://genesysgrowth.com/blog/product-positioning-frameworks-complete-guide), [Kalungi Competitive Positioning](https://www.kalungi.com/blog/b2b-competitive-positioning-strategies-for-communicating-value-proposition)
+Primary references to check before client-facing work: April Dunford positioning methodology, Forrester B2B buyer messaging cycle, LinkedIn B2B Institute / Ehrenberg-Bass 95-5 rule, Gartner B2B buying journey guidance, 6sense B2B Buyer Experience research, Wynter message testing, and customer interview evidence. Retrieval baseline: 2026-05-17.
 
 ---
 
@@ -18,6 +18,32 @@ LAYER 1: POSITIONING STATEMENT      ← the strategic foundation
 Work bottom-up. Most companies start at Layer 4 (tagline) and wonder why their messaging is inconsistent. Start at Layer 1.
 
 ---
+
+## Evidence-Backed Positioning Workflow
+
+Positioning starts with alternatives and customer language, not a clever tagline.
+
+1. **Name the best-fit customer.** Define who gets urgent value, who can buy, who can block, and who should be excluded.
+2. **List real alternatives.** Include spreadsheets, agencies, manual process, internal hires, doing nothing, incumbent tools, and "ask AI" substitutes.
+3. **Inventory unique capabilities.** Keep only capabilities competitors cannot credibly claim or copy quickly.
+4. **Translate capabilities into value.** Tie each capability to a buyer outcome, risk reduction, cost avoidance, revenue path, or workflow relief.
+5. **Attach proof.** Use product data, named customer evidence, third-party validation, interviews, demos, screenshots, certifications, or support records.
+6. **Mine customer language.** Pull exact phrases from interviews, sales calls, reviews, support tickets, message tests, and community posts.
+7. **Choose the category frame.** Pick the market context that makes the value obvious to the best-fit customer.
+8. **Test comprehension.** Run a five-second test, message test, sales-call review, or landing-page experiment before scaling.
+
+### Positioning Evidence Ledger
+
+| Field | Requirement |
+|-------|-------------|
+| `customer_segment` | The segment this claim is for |
+| `alternative` | What they would use without this product |
+| `unique_capability` | Capability the product can prove |
+| `value` | Buyer outcome created by the capability |
+| `proof_source` | Interview, call, product data, customer artifact, or third-party source |
+| `confidence` | `evidence_backed`, `directional`, or `hypothesis` |
+
+Do not use `hypothesis` positioning as final website, sales, ad, or investor copy without a test plan.
 
 ## Layer 1: Positioning Statement
 
@@ -38,9 +64,9 @@ we [UNIQUE DIFFERENTIATOR].
 For small law firms
 who lose clients because calls go to voicemail after hours,
 KaiCalls is an AI receptionist
-that answers every call in 0.4 seconds, 24/7.
-Unlike answering services that cost $800/month and put callers on hold,
-we answer instantly, route intelligently, and cost $99/month.
+that answers after-hours calls and captures intake details.
+Unlike traditional answering-service workflows that can create delay and handoff gaps,
+we route intelligently and summarize each call for follow-up.
 ```
 
 ### The 5-Second Test
@@ -83,8 +109,8 @@ SO I CAN stop worrying about lost clients and enjoy my evening
 │ • Qualify potential clients│ • 24/7 availability       │
 │                          │                           │
 │ Pains (frustrations):    │ Pain relievers:           │
-│ • Missed calls → lost $  │ • 0.4s answer time        │
-│ • Can't afford night staff│ • $99/mo vs $3500 staff  │
+│ • Missed calls → lost $  │ • Call summaries          │
+│ • Can't afford night staff│ • Lower-cost coverage path│
 │ • Answering service sucks │ • No hold time            │
 │                          │                           │
 │ Gains (desires):         │ Gain creators:            │
@@ -104,8 +130,8 @@ Every touchpoint (website, ads, email, sales calls) should pull from this matrix
 
 | Audience | Primary Message | Proof Point | CTA |
 |----------|---------------|-------------|-----|
-| **Office manager** (end user) | "Never miss another client call" | "0.4s answer time, 24/7" | "Start free trial" |
-| **Managing partner** (decision maker) | "Stop losing $4K/month to missed calls" | "500+ law firms, 340% more calls answered" | "See ROI calculator" |
+| **Office manager** (end user) | "Never miss another client call" | "[observed answer-time or call-log evidence]" | "Start free trial" |
+| **Managing partner** (decision maker) | "Stop losing qualified calls to voicemail" | "[client-specific missed-call and close-rate evidence]" | "See ROI calculator" |
 | **IT / Operations** (influencer) | "Sets up in 2 minutes, integrates with your PMS" | "Works with Clio, MyCase, PracticePanther" | "View integration docs" |
 
 ### Messaging Hierarchy
@@ -117,7 +143,7 @@ LEVEL 1: CATEGORY MESSAGE (broadest)
   "The AI receptionist for law firms"
 
 LEVEL 2: VALUE MESSAGE (differentiation)
-  "Answer every call in 0.4 seconds — 24/7, $99/month"
+  "Answer after-hours calls and capture intake details"
 
 LEVEL 3: FEATURE MESSAGE (specific)
   "Smart call routing sends personal injury calls to Partner A, family law to Partner B"
@@ -126,7 +152,7 @@ LEVEL 4: PROOF MESSAGE (evidence)
   "Acme Law went from 40% missed calls to 0.3% in the first week"
 ```
 
-**Rule:** Ads use Levels 1-2. Landing pages use Levels 2-3. Sales conversations use Levels 3-4. Consistent messaging across all touchpoints increases deal closure rates by 38%.
+**Rule:** Ads use Levels 1-2. Landing pages use Levels 2-3. Sales conversations use Levels 3-4. Do not claim cross-channel consistency lifts unless the source and context are documented.
 
 ---
 
@@ -143,9 +169,9 @@ Plot yourself and competitors on two axes that matter to your customer:
           ┌─────────────────┼─────────────────┐
           │                 │                 │
           │  Answering      │  KaiCalls ★     │
-          │  Services       │  (AI, instant,  │
- LOW ─────┤  ($800/mo,      │   $99/mo)       ├───── HIGH
- TECH     │  human, slow)   │                 │  TECH
+          │  Services       │  (AI-assisted,  │
+ LOW ─────┤  (human handoff)│   fit-specific) ├───── HIGH
+ TECH     │                 │                 │  TECH
           │                 │                 │
           │  Voicemail      │  Big AI         │
           │  (free, missed  │  (expensive,    │
@@ -160,9 +186,9 @@ Plot yourself and competitors on two axes that matter to your customer:
 | Strategy | How | Example |
 |----------|-----|---------|
 | **Category creation** | Define a new category you own | "AI receptionist" vs "answering service" |
-| **10x on one dimension** | Be 10x better on one thing customers care about | "0.4 seconds" (10x faster than hold time) |
+| **Material advantage on one dimension** | Be meaningfully better on one thing customers care about | "Faster after-hours response than voicemail" |
 | **Underserved segment** | Own a segment competitors ignore | "Law firms under 20 attorneys" |
-| **Price disruption** | Same value, 10x cheaper | "$99/mo vs $800/mo answering service" |
+| **Price disruption** | Lower-cost path to the same job | "AI receptionist vs staffed after-hours coverage" |
 | **Integration moat** | Deep integration with ecosystem | "Built for Clio, MyCase, PracticePanther" |
 | **Authenticity** | Real customer stories, transparency | Named case studies, public metrics |
 
@@ -175,7 +201,21 @@ Plot yourself and competitors on two axes that matter to your customer:
 - Case studies with named customers beat anonymous testimonials
 - Press mentions and analyst reports provide credibility marketing can't buy
 - Community/peer recommendations outperform brand messaging
-- Being cited by AI search engines (ChatGPT, Perplexity) is the new "being on page 1"
+- AI search visibility can be useful discovery evidence, but it is sampled and volatile. Do not equate it to a guaranteed ranking or stable demand source.
+
+## Customer-Language Mining
+
+Use customer language when it is observed, dated, and traceable.
+
+| Source | What To Extract | Risk |
+|--------|-----------------|------|
+| Sales calls | Trigger events, objections, buying committee language | Seller-led calls can bias wording |
+| Customer interviews | Alternatives, stakes, current workaround, decision criteria | Leading questions create false positives |
+| Support tickets | Repeated friction and feature confusion | Existing customers may not represent prospects |
+| Reviews/community | Competitor complaints and category expectations | Public comments can be non-representative |
+| Message tests | Clarity, relevance, trust, missing proof | Panel quality and targeting matter |
+
+Interview prompts should ask about past behavior and concrete examples. Avoid asking whether someone "would buy" a future idea; compliments and hypotheticals are weak evidence.
 
 ---
 
@@ -192,7 +232,7 @@ BRAND VOICE ATTRIBUTES:
 
   2. [Attribute 2] but not [anti-pattern]
      Example: "Confident but not arrogant"
-     We say: "We answer in 0.4 seconds. Nobody else is close."
+     We say: "We capture the intake details voicemail loses."
      We don't say: "We believe we may offer a competitive solution..."
 
   3. [Attribute 3] but not [anti-pattern]
@@ -222,3 +262,4 @@ BRAND VOICE ATTRIBUTES:
 - [ ] Do customers describe you the way you describe yourself? (Survey/interview)
 - [ ] Is the positioning reflected in your pricing? (Premium positioning + low price = confused market)
 - [ ] Have you validated the positioning with real customers? (Not just internal consensus)
+- [ ] Does every proof claim link to a source, date, and confidence label?

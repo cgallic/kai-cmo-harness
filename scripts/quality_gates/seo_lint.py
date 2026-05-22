@@ -79,6 +79,15 @@ def keyword_in_text(text: str, keyword: str) -> bool:
     return keyword.lower() in text.lower()
 
 
+def has_unsupported_ai_claim(text: str, pattern: str) -> bool:
+    for match in re.finditer(pattern, text, flags=re.IGNORECASE | re.DOTALL):
+        context = text[max(0, match.start() - 40) : match.end() + 40].lower()
+        if re.search(r"\b(no|not|never|do not|don't|avoid|disallowed|removed claims?)\b", context):
+            continue
+        return True
+    return False
+
+
 def lint(text: str, keyword: str) -> dict:
     sections = extract_sections(text)
     total_words = count_words(text)
@@ -90,10 +99,10 @@ def lint(text: str, keyword: str) -> dict:
 
     # Title checks
     if not sections["title"] and not sections["h1"]:
-        errors.append("No H1/title found. Add a clear H1 containing the target keyword.")
+        errors.append("No H1/title found. Add a clear H1 naming the primary topic.")
     elif sections["title"] and kw_lower not in sections["title"].lower():
         errors.append(
-            f'Target keyword "{keyword}" not found in title/H1: "{sections["title"]}"'
+            f'Primary topic "{keyword}" not found in title/H1: "{sections["title"]}"'
         )
     if sections["title"]:
         tlen = len(sections["title"])
@@ -107,7 +116,7 @@ def lint(text: str, keyword: str) -> dict:
     first_para_words = count_words(first_para)
     if not keyword_in_text(first_para, keyword):
         warnings.append(
-            f'Keyword "{keyword}" not in first paragraph. Lead with it within 100 words.'
+            f'Primary topic "{keyword}" not in first paragraph. Mention the topic or close variant early if natural.'
         )
     if first_para_words > 120:
         warnings.append(
@@ -122,7 +131,7 @@ def lint(text: str, keyword: str) -> dict:
     h2_text = " ".join(sections["h2s"]).lower()
     if kw_lower not in h2_text:
         warnings.append(
-            f'Keyword "{keyword}" not found in any H2. Include it or a close variant in at least one subheading.'
+            f'Primary topic "{keyword}" not found in any H2. Use the topic, entity, or close facet language in a subheading if useful.'
         )
 
     # Meta description
@@ -137,7 +146,7 @@ def lint(text: str, keyword: str) -> dict:
         elif mlen > 165:
             warnings.append(f"Meta description is {mlen} chars (target 150-160). Trim to avoid truncation.")
         if kw_lower not in sections["meta_desc"].lower():
-            warnings.append(f'Keyword "{keyword}" not in meta description. Add it within first 50 chars.')
+            warnings.append(f'Primary topic "{keyword}" not in meta description. Add it only if it improves the summary.')
 
     # Internal links
     internal_links = len(re.findall(r"\[.+?\]\((?!http)", text))
@@ -153,7 +162,7 @@ def lint(text: str, keyword: str) -> dict:
     # Word count
     if total_words < 800:
         warnings.append(
-            f"Word count is {total_words}. Under 800 is thin content — target 1200+ for blog posts."
+            f"Word count is {total_words}. Under 800 may be thin for competitive blog posts; expand only if the intent needs it."
         )
     elif total_words > 2500:
         warnings.append(
@@ -174,17 +183,40 @@ def lint(text: str, keyword: str) -> dict:
             f"{len(long_paras)} paragraph(s) exceed 80 words. Break them up for mobile readability."
         )
 
-    # Keyword density (rough)
+    # Repetition / stuffing check (rough)
     kw_count = len(re.findall(re.escape(kw_lower), full_text_lower))
     density = kw_count / max(total_words, 1) * 100
     if density > 3.0:
         warnings.append(
-            f'Keyword density is {density:.1f}% ({kw_count} uses). Over 3% reads as stuffing — aim for 1-2%.'
+            f'Exact-topic repetition is {density:.1f}% ({kw_count} uses). Over 3% reads as stuffing; remove forced repetitions.'
         )
     elif kw_count < 2:
         warnings.append(
-            f'Keyword "{keyword}" appears only {kw_count} time(s). Use it naturally 3-5x.'
+            f'Exact topic "{keyword}" appears only {kw_count} time(s). Mention it or a close variant only where it helps clarity.'
         )
+
+    # AI Search overclaim checks
+    ai_overclaim_patterns = [
+        (
+            r"\b(guarantee|guaranteed|promise|promises)\b.{0,80}\b(ChatGPT|Claude|Perplexity|Grok|AI Overview|AI Mode|AI citation|AI citations)\b",
+            "Unsupported AI search promise found. Remove guarantees about AI citations or inclusion.",
+        ),
+        (
+            r"\b(rank|ranking)\b.{0,40}\bin\b.{0,20}\b(ChatGPT|Claude|Perplexity|Grok)\b",
+            "Unsupported LLM ranking claim found. Report sampled visibility, not deterministic rank in AI assistants.",
+        ),
+        (
+            r"\bllms\.txt\b.{0,80}\b(Google|AI Overview|AI Mode)\b.{0,80}\b(ranking factor|required|requirement|boost)\b",
+            "Unsupported llms.txt claim found. Google says llms.txt is not required for generative AI Search.",
+        ),
+        (
+            r"\b(30-50%|115%|115\.1%)\b.{0,80}\b(AI Overview|AI citation|visibility|citation)\b",
+            "Unsupported fixed AI visibility lift found. Do not reuse study percentages as client promises.",
+        ),
+    ]
+    for pattern, message in ai_overclaim_patterns:
+        if has_unsupported_ai_claim(text, pattern):
+            errors.append(message)
 
     passed = len(errors) == 0
 

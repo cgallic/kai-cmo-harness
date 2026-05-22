@@ -9,6 +9,19 @@
 **Role:** Individual contributor or team lead
 **Frustration:** Capable of deep work but drowning in compliance theater
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Tool-request tickets, workflow analytics, sales calls, customer interviews, community posts |
+| Buying trigger | Blocked project, tool denial, team mandate, audit requirement, productivity initiative |
+| Budget authority | Influencer, team lead, department budget holder, or procurement requester |
+| Current workaround | Shadow IT, spreadsheets, manual process, personal SaaS account, approval queue |
+| Objection | Security, compliance, procurement, admin access, change fatigue |
+| Quote/source | Dated interview quote, call transcript, support ticket, review, or source URL |
+
 ---
 
 ## Core Psychology

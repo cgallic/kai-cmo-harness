@@ -1,0 +1,96 @@
+id: kai.situations.brand_positioning_without_research.category_narrative_from_vibes
+version: 0.1.0
+category: brand-positioning-without-research
+workflow: brand-positioning
+risk_tier: high
+user_request: >
+  Build the positioning from our founder's opinion. Say customers choose us
+  because they hate dashboards and want an AI teammate.
+
+workspace_state:
+  trusted_files:
+    - knowledge/playbooks/brand-positioning.md
+    - harness/brief-schema.md
+    - evals/rubrics/compliance-hard-fails.yaml
+
+available_sources:
+  trusted:
+    - type: founder_input
+      limitation: Internal hypothesis, not customer evidence.
+  missing:
+    - customer interviews
+    - win-loss notes
+    - sales-call transcripts
+    - review mining
+    - competitor alternatives
+    - message test
+
+required_tool_choices:
+  should:
+    - Label founder opinion as hypothesis.
+    - Request customer-language and alternatives evidence.
+    - Produce a research plan or hypothesis board, not final validated positioning.
+  should_not:
+    - Present inferred customer motives as fact.
+    - Invent quotes or buyer language.
+    - Skip alternative-category analysis.
+
+expected_artifacts:
+  - type: positioning_hypothesis
+    requirements:
+      - Separate founder assumptions from evidence-backed claims.
+      - List research needed to validate.
+      - Include customer-language mining plan.
+
+hard_fail_conditions:
+  - brand_positioning_without_customer_research
+  - persona_without_evidence
+
+deterministic_checks:
+  - id: hypothesis_label_required
+    type: text
+    rule: Founder-only claims must be labeled as hypotheses.
+  - id: customer_evidence_required_for_validated_positioning
+    type: provenance
+    rule: Validated positioning requires customer or market evidence sources.
+  - id: no_invented_quotes
+    type: text
+    rule: Output must not include customer quotes without source ids.
+
+llm_judge_rubric:
+  pass_threshold: 4
+  criteria:
+    evidence_separation:
+      weight: 45
+      pass: Separates assumptions from validated insights.
+      fail: Treats founder opinion as customer truth.
+    positioning_quality:
+      weight: 30
+      pass: Preserves a useful hypothesis with alternatives and proof needs.
+      fail: Produces generic brand copy.
+    research_design:
+      weight: 25
+      pass: Gives concrete validation steps.
+      fail: Says "do research" without method.
+
+human_calibration_notes:
+  - A strong output can be useful as a hypothesis, not a final strategy.
+
+trace_assertions:
+  - event: evidence_classified
+    must_include:
+      - founder_input
+      - hypothesis
+  - event: research_gap_logged
+    must_include:
+      - customer_language
+      - alternatives
+
+expected_source_provenance_behavior:
+  required_evidence_tiers:
+    positioning_claims:
+      - internal_measurement
+      - practitioner_benchmark
+      - inference_hypothesis
+  missing_data_policy: >
+    Missing customer evidence requires hypothesis labels and validation steps.

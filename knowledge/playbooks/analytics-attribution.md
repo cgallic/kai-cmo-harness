@@ -6,6 +6,23 @@
 
 ## The Analytics Stack
 
+### No-Perfect-Attribution Doctrine
+
+Attribution models assign credit; they do not prove causality. Platform ROAS, GA4 attribution, CRM source fields, and self-reported attribution each answer different questions with different bias. Use them as directional views, then use holdouts, lift tests, geo tests, or MMM when the spend decision requires causal evidence.
+
+### Measurement Ladder
+
+| Level | Capability | Decision It Supports | Limitation |
+|-------|------------|----------------------|------------|
+| 0 | Clean event taxonomy and consent-aware tracking | Can we trust the data? | No channel judgment yet |
+| 1 | UTMs, source capture, dashboard definitions | What happened? | Touchpoint bias remains |
+| 2 | Funnels and cohorts | Where do users drop or retain? | Still mostly descriptive |
+| 3 | Holdouts and lift tests | Did the campaign cause incremental action? | Needs volume and careful setup |
+| 4 | Geo tests or matched-market tests | Did spend change business outcomes? | Operationally harder |
+| 5 | MMM, such as Google Meridian or another MMM stack | How should budget move across channels over time? | Needs enough history and modeling skill |
+
+Climb the ladder only when the business question justifies the cost and complexity.
+
 ### Essential Tools by Stage
 
 | Stage | Free Tier | Paid Upgrade |
@@ -17,7 +34,7 @@
 | Attribution | GA4 + UTMs | Triple Whale, Rockerbox, Northbeam |
 | BI / dashboards | Looker Studio (free) | Tableau, Metabase, Preset |
 | Session recording | Microsoft Clarity (free) | Hotjar, FullStory |
-| A/B testing | Google Optimize (sunset) | VWO, Optimizely, PostHog |
+| A/B testing | PostHog feature flags/experiments or platform-native tools | VWO, Optimizely, Statsig, Eppo |
 
 ### The 80/20 Setup
 For most companies, this covers 80% of analytics needs:
@@ -86,15 +103,17 @@ Which channel gets credit? The answer depends on the model.
 | **Linear** | Equal credit to all touchpoints | Fair overview | Treats all touches equally (unrealistic) |
 | **Time Decay** | More credit to recent touches | Considered purchases | Undervalues awareness |
 | **Position-Based (U-Shape)** | 40% first, 40% last, 20% split middle | Balanced view | Arbitrary weighting |
-| **Data-Driven** | ML-based, platform assigns credit | Large datasets (GA4 needs 600+ conversions/month) | Black box, platform-biased |
+| **Data-Driven** | ML-based, platform assigns credit | Accounts that meet platform eligibility and volume requirements | Black box, platform-biased |
 | **Incrementality** | A/B test: show ads vs don't | True causal impact | Expensive, complex |
+| **MMM** | Models sales/revenue against spend and external factors | Cross-channel budget allocation | Needs enough history and analyst review |
 
 ### Recommended Approach
 
 1. **Start with UTM + last-click** (simple, actionable)
-2. **Layer on GA4 data-driven** when you have enough data (600+ conversions/month)
+2. **Layer on platform attribution** only when the platform says the account is eligible and volume is sufficient
 3. **Run incrementality tests** on your biggest spend channels quarterly
-4. **Never trust a single model** — look at first-touch AND last-touch together
+4. **Use MMM or geo tests** when budget allocation depends on cross-channel causality
+5. **Never trust a single model** — compare first-touch, last-touch, platform attribution, blended CAC, and causal tests
 
 ### The Blended CAC Approach
 
@@ -103,7 +122,7 @@ Instead of attributing perfectly, track blended metrics:
 ```
 Blended CAC = Total marketing spend / Total new customers
 
-Channel contribution: If you turn off a channel and CAC goes up, that channel was contributing.
+Channel contribution: If you turn off a channel and blended CAC, revenue, or pipeline quality changes after a fair test window, that channel may have been contributing.
 ```
 
 This avoids the attribution rabbit hole for most companies.
@@ -230,3 +249,9 @@ BIGGEST MOVERS: [keywords that gained/lost position]
 | Short time horizons | "This campaign failed" (after 3 days) | Wait for statistical significance (minimum 2 weeks) |
 | Ignoring dark social | DMs, Slack shares, word-of-mouth don't have UTMs | Track "How did you hear about us?" on forms |
 | Tool sprawl | 12 analytics tools, none integrated | Consolidate into 3-4 core tools |
+
+---
+
+## Source Notes
+
+References retrieved 2026-05-17: Google Meridian documentation and launch notes, IAB incremental measurement guidance, IAB State of Data/privacy materials, Google consent and ads measurement documentation, and PostHog event/HogQL docs. Client-facing quantitative claims require the collector/source, retrieval date, evidence tier, and confidence label.

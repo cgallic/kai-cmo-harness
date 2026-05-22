@@ -60,13 +60,13 @@ Andromeda is Meta's first-stage ad retrieval system that filters tens of million
 
 **After Andromeda:** Meta controls targeting using your creative as the primary signal.
 
-> "Instead of focusing on who your ad is targeting, Meta now focuses on how your creative performs. This means that your creative is now the main signal for success, not your targeting settings."
+Operational translation: targeting controls still matter for geography, exclusions, compliance, and account state. The creative portfolio now supplies more of the matching signal, so weak creative, duplicate concepts, missing proof, or poor landing-page match can limit delivery even when the targeting setup looks clean.
 
 ### Optimization Implications
 
 1. **Creative is everything** - Algorithm reads creative to determine audience
 2. **Diversity required** - Same-looking ads get flagged as duplicates; CPMs rise
-3. **10-50 ads per ad set** - Top performers test this range for genuine variation
+3. **Creative count depends on budget and account state** - Use 3-6 active ads for small signal tests, 6-20 for funded learning, and higher counts only in mature accounts with real concept diversity
 4. **Vertical-first** - 90% of Meta inventory is now vertical (9:16)
 
 ---
@@ -346,11 +346,13 @@ Triggers when the ad set is unlikely to reach 50 events/week. Options:
 - Scaling proven creative
 - E-commerce with strong catalog
 - Sufficient conversion volume (50+/week)
+- Clean purchase event, CAPI deduplication, customer exclusions, and rights-cleared assets
 
 **Bad fit:**
 - Heavy testing phase
 - Niche B2B audiences
 - Low conversion volume products
+- Unclear special category status, weak catalog health, missing customer exclusions, or unreviewed creator/UGC rights
 
 ### Best Practices
 
@@ -441,6 +443,8 @@ Layer 3: Deduplication (event_id matching)
 Result: Most accurate attribution possible
 ```
 
+This stack improves attribution quality. It does not prove incremental profit. Use conversion lift, holdout, geo testing, MMM calibration, or another causal method before presenting Meta-reported ROAS as incremental revenue or profit.
+
 ---
 
 ## 11. Creative Strategy for Andromeda
@@ -456,6 +460,8 @@ concept_count = personas x desires x angles
 ```
 
 This P.D.A. bench prevents the common mistake of treating caption edits, crop changes, or minor hook swaps as separate concepts.
+
+Add the creative-quality ledger fields from `knowledge/playbooks/ad-creative-best-practices.md` before upload. Meta creative review should include concept ID, hook type, proof type, product cue, brand cue, audience state, offer stage, rights status, disclosure status, AI/synthetic-media status, and landing match.
 
 ```
 Creative Variation Spectrum:
@@ -514,11 +520,14 @@ Recommended 2026 Structure:
 
 ### Budget Allocation Rule of Thumb
 
-| Funnel Stage | Budget % |
-|--------------|----------|
-| Prospecting (Advantage+) | 70-80% |
-| Retargeting | 15-20% |
-| Retention | 5-10% |
+Treat budget allocation as account-state logic, not a fixed rule.
+
+| Account State | Default Allocation |
+|---------------|--------------------|
+| New or low-volume | Fund a narrow signal test and protect learning budget |
+| Stable e-commerce | Prioritize prospecting, with exclusions and measurement controls |
+| Heavy repeat purchase | Keep retention and customer exclusions explicit |
+| Small retargeting pool | Cap retargeting until holdout or blended metrics justify spend |
 
 ### Key Metrics to Track
 

@@ -50,7 +50,7 @@ QUANTITATIVE DATA TO EXTRACT:
 
 ### Key Points
 *   **Paradigm Shift:** Generative Engine Optimization (GEO) represents a fundamental transition from optimizing for list-based retrieval (SEO) to optimizing for synthesis and citation in Large Language Models (LLMs). Research indicates that traditional SEO metrics like keyword density have negligible or negative effects on citation probability in generative engines [cite: 1, 2].
-*   **Quantitative Drivers:** Empirical studies, specifically the foundational GEO paper by Aggarwal et al. (2024), demonstrate that including **citations** (+115% visibility for lower-ranked sites), **quotations** (+40%), and **statistics** (+37%) significantly increases the likelihood of an LLM citing a source [cite: 1, 3].
+*   **Quantitative Drivers:** Empirical studies, specifically the foundational GEO paper by Aggarwal et al. (2024), reported visibility lift in its benchmark when documents added citations, quotations, and statistics. Treat those findings as experimental evidence, not guaranteed client outcomes [cite: 1, 3].
 *   **Architectural Mechanisms:** Systems like **Self-RAG** and **WebGPT** utilize specific "reflection tokens" and imitation learning to decide when to retrieve and cite. Understanding these internal critique mechanisms is essential for optimization; models prioritize content that is factually dense and structurally parseable (e.g., Markdown over complex HTML) [cite: 4, 5, 6].
 *   **Evaluation Benchmarks:** The science of citation is measured by benchmarks like **ALCE** and **FActScore**, which quantify "citation recall" (whether the generated text is supported by the source) and "atomic fact" precision. High-ranking content often fails these checks if it lacks "extractable" atomic facts [cite: 7, 8].
 *   **Platform Variance:** While Google's SGE and Bing Chat rely heavily on traditional index ranking as a pre-filter, engines like Perplexity utilize "FreshLLM" architectures that prioritize recency and direct answer extraction, often bypassing domain authority in favor of content that fits the "answer shape" [cite: 9, 10].
@@ -84,13 +84,13 @@ The study isolated specific content features that statistically increased the pr
 
 | Feature / Strategy | Impact on Visibility (PAWC) | Mechanism of Action |
 | :--- | :--- | :--- |
-| **Cite Sources** | **+115.1%** (for Rank 5 sites) | LLMs are trained to verify claims; providing external citations makes the text "pre-verified" for the model [cite: 1, 3]. |
-| **Quotation Addition** | **+40%** | Direct quotes are treated as high-fidelity "atomic facts" that models prefer to extract verbatim rather than summarize [cite: 1]. |
-| **Statistics Addition** | **+37%** | Quantitative data provides high information density, reducing the model's perplexity when generating factual answers [cite: 1, 14]. |
-| **Fluency Optimization** | **+15-30%** | Simplifying syntax reduces token complexity, making ingestion and synthesis computationally cheaper and more probable [cite: 2, 15]. |
-| **Technical Terms** | **+32.7%** | Domain-specific terminology signals authority to the semantic router, increasing relevance scores in vector space [cite: 16, 17]. |
+| **Cite Sources** | Experimental lift in GEO-bench | External citations improve provenance and make claims easier to verify [cite: 1, 3]. |
+| **Quotation Addition** | Experimental lift in GEO-bench | Direct quotes can provide high-fidelity attributable language when permission and context are clear [cite: 1]. |
+| **Statistics Addition** | Experimental lift in GEO-bench | Quantitative data can increase information density when it is sourced, current, and relevant [cite: 1, 14]. |
+| **Fluency Optimization** | Experimental lift in GEO-bench | Simplifying syntax can make passages easier to parse and cite [cite: 2, 15]. |
+| **Technical Terms** | Experimental lift in GEO-bench | Domain-specific terminology can improve entity clarity when it is natural and accurate [cite: 16, 17]. |
 
-**Statistical Significance:** The improvements were consistent across 10,000 queries. Notably, the **Cite Sources** strategy showed a massive effect size for lower-ranked domains (5th position in SERP), effectively allowing them to "leapfrog" top-ranked domains in AI answers. The top-ranked website's visibility actually *decreased* by 30.3% on average when competitors optimized for citations, proving GEO is a zero-sum game [cite: 1, 3].
+**Statistical Significance:** The improvements were reported across the benchmark queries, but they should not be translated into fixed client promises. Use the findings to design experiments and source-quality checks, then measure each client with dated prompts, engine labels, sample counts, and confidence notes [cite: 1, 3].
 
 ### 2.3 Negative Results and Failure Modes
 Crucially, the study identified tactics that **failed** to produce results, signaling wasted effort for practitioners.
@@ -152,12 +152,12 @@ RARR (Gao et al., 2022) is a post-processing method that takes generated text an
 
 ## 5. Quantitative Optimization Data
 
-Based on the extraction from the GEO paper and supporting technical reports, the following quantitative adjustments maximize citation probability.
+Based on the extraction from the GEO paper and supporting technical reports, the following adjustments are useful experiment candidates. They do not guarantee citation probability.
 
 ### 5.1 Content Feature Impact
-*   **Statistics:** **+37%** visibility. *Format:* "X% of Y..." or "In 2024, Z increased by..." [cite: 1].
-*   **Quotations:** **+40%** visibility. *Format:* "Expert Name, title, states: '...'" [cite: 1].
-*   **Citations:** **+115%** visibility (for lower-ranked sites). *Format:* Linking to .edu, .gov, or primary research papers increases the "trust score" of the hosting page [cite: 3, 30].
+*   **Statistics:** Use sourced, dated statistics when the answer needs data. *Format:* "X% of Y..." or "In 2024, Z increased by..." [cite: 1].
+*   **Quotations:** Use permissioned or attributable quotes when experience or expert judgment matters. *Format:* "Expert Name, title, states: '...'" [cite: 1].
+*   **Citations:** Link to primary sources, official docs, .edu/.gov sources, or high-quality secondary research for provenance [cite: 3, 30].
 
 ### 5.2 Optimal Word Count and Structure
 *   **Paragraph Length:** Optimal range is **60–100 words** per paragraph. This aligns with the "chunking" strategies used in RAG vector databases. Chunks that are too long get truncated; chunks that are too short lack semantic context [cite: 31].

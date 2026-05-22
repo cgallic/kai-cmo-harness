@@ -23,16 +23,31 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, "/opt/cmo-analytics")
-from dotenv import load_dotenv
-load_dotenv("/opt/cmo-analytics/.env")
+# Environment and path detection for local development vs. production server
+IS_LOCAL = not Path("/opt/cmo-analytics").exists() or sys.platform == "win32"
 
-VENV = "/opt/cmo-analytics/venv/bin/python3"
-HARNESS = "/opt/cmo-analytics/scripts/kai_harness.py"
-AD_FLAG = "/opt/cmo-analytics/scripts/ad_flag.py"
-META_CREATE = "/opt/cmo-analytics/scripts/meta_ads_create.py"
-SHORTS_STUDIO = "/opt/shorts-studio"
-PENDING_DIR = Path("/opt/cmo-analytics/data/pending_ads")
+if not IS_LOCAL:
+    sys.path.insert(0, "/opt/cmo-analytics")
+    from dotenv import load_dotenv
+    load_dotenv("/opt/cmo-analytics/.env")
+    VENV = "/opt/cmo-analytics/venv/bin/python3"
+    HARNESS = "/opt/cmo-analytics/scripts/kai_harness.py"
+    AD_FLAG = "/opt/cmo-analytics/scripts/ad_flag.py"
+    META_CREATE = "/opt/cmo-analytics/scripts/meta_ads_create.py"
+    SHORTS_STUDIO = "/opt/shorts-studio"
+    PENDING_DIR = Path("/opt/cmo-analytics/data/pending_ads")
+else:
+    repo_root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(repo_root))
+    from dotenv import load_dotenv
+    load_dotenv(repo_root / ".env")
+    VENV = sys.executable
+    HARNESS = str(repo_root / "scripts" / "harness_cli.py")
+    AD_FLAG = str(repo_root / "scripts" / "ads" / "ad_flag.py")  # may not exist locally
+    META_CREATE = str(repo_root / "scripts" / "ads" / "meta.py")
+    SHORTS_STUDIO = str(repo_root / "ad-render")
+    PENDING_DIR = repo_root / "data" / "pending_ads"
+
 PENDING_DIR.mkdir(parents=True, exist_ok=True)
 
 SITE_LINKS = {
@@ -64,6 +79,16 @@ def step_flag(days, dry_run):
     print(f"Step 1 — Flagging underperformers (last {days} days)")
     print('='*60)
 
+    if IS_LOCAL and not Path(AD_FLAG).exists():
+        print("  [LOCAL RUN] ad_flag.py not found locally. Using mocked underperforming campaigns.")
+        return [
+            {
+                "campaign_id": "120211234567890",
+                "name": "kaicalls_broad_smb",
+                "flag_reasons": ["CTR below threshold (0.43% < 1.0%)", "High CPA"],
+            }
+        ]
+
     r = run([VENV, AD_FLAG, f"--days={days}", "--json"])
     if r.returncode != 0:
         print("Could not fetch Meta data. Check META_ACCESS_TOKEN and META_AD_ACCOUNT_ID.")
@@ -86,8 +111,8 @@ def step_flag(days, dry_run):
     return flagged
 
 
-def step_generate_variants(flagged, site, dry_run):
-    """Step 2: Generate 3 copy variants per flagged ad via Harness."""
+def step_generate_variants(flagged, site, dry_run, autoreason=False):
+    """Step 2: Generate copy variants per flagged ad via Harness or AutoReason."""
     print(f"\n{'='*60}")
     print(f"Step 2 — Generating copy variants")
     print('='*60)
@@ -96,6 +121,45 @@ def step_generate_variants(flagged, site, dry_run):
     for ad in flagged:
         keyword = ad["name"]  # Use campaign name as seed keyword
         print(f"\nGenerating variants for: {ad['name']}")
+
+        if autoreason:
+            print(f"  Running AutoReason tournament loop...")
+            try:
+                from scripts.ads.autoreason import knowledge as ar_knowledge
+                from scripts.ads.autoreason.loop import run_loop as ar_run_loop
+
+                bundle = None
+                # If we're live (not dry-run) and have credentials, attempt live bundle load
+                if not dry_run and os.getenv("META_ACCESS_TOKEN"):
+                    try:
+                        bundle = ar_knowledge.live_bundle()
+                    except Exception as e:
+                        print(f"  Live AutoReason bundle load failed: {e}. Falling back to fixture.")
+
+                if not bundle:
+                    bundle = ar_knowledge.fixture_bundle()
+
+                winner, passes, reason = ar_run_loop(
+                    incumbent=bundle["incumbent"],
+                    perf=bundle["perf"],
+                    top_ads=bundle["top_ads"],
+                    bottom_ads=bundle["bottom_ads"],
+                    max_passes=5,
+                )
+                variants.append({
+                    "campaign_id": ad["campaign_id"],
+                    "campaign_name": ad["name"],
+                    "headline": winner.headline,
+                    "description": winner.primary_text,  # Map primary text to description field
+                    "site": site,
+                    "keyword": keyword,
+                })
+                print(f"  AutoReason tournament converged: {reason}")
+                print(f"  ✓ Headline: {winner.headline[:60]}")
+                print(f"  ✓ Description: {winner.primary_text[:80]}")
+                continue
+            except Exception as e:
+                print(f"  AutoReason failed: {e}. Falling back to standard generation.")
 
         if dry_run:
             # Fake variants for dry run
@@ -298,6 +362,7 @@ def main():
     parser.add_argument("--days", type=int, default=7)
     parser.add_argument("--channel", help="Discord channel ID for approval posts")
     parser.add_argument("--dry-run", action="store_true", help="No uploads, no Meta API writes")
+    parser.add_argument("--autoreason", action="store_true", help="Use AutoReason tournament self-refinement")
     args = parser.parse_args()
 
     channel = args.channel or CHANNEL_MAP.get(args.site)
@@ -309,7 +374,7 @@ def main():
         print("\nNothing to do. All ads healthy.")
         return
 
-    variants = step_generate_variants(flagged, args.site, args.dry_run)
+    variants = step_generate_variants(flagged, args.site, args.dry_run, autoreason=args.autoreason)
     if not variants:
         print("\nNo variants generated.")
         return

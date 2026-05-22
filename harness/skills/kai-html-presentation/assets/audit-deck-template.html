@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kai Audit Presentation</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --paper: #fffdf8;
+      --ink: #161616;
+      --muted: #66645d;
+      --line: #d8d2c4;
+      --accent: #0f766e;
+      --accent-strong: #115e59;
+      --red: #b42318;
+      --yellow: #a15c07;
+      --green: #087443;
+      --gray: #6b7280;
+      --shadow: 0 24px 80px rgba(22, 22, 22, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .deck {
+      width: min(1180px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 18px 0 48px;
+    }
+
+    .slide {
+      min-height: calc(100vh - 36px);
+      scroll-snap-align: start;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 22px;
+      margin: 18px 0;
+      padding: clamp(22px, 4vw, 52px);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin-bottom: 18px;
+      font-size: clamp(2.5rem, 5.6vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      max-width: 900px;
+      margin-bottom: 0;
+      font-size: clamp(1.8rem, 3.6vw, 3.7rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.35rem);
+    }
+
+    .meta-grid,
+    .metric-grid,
+    .two-col {
+      display: grid;
+      gap: 14px;
+    }
+
+    .meta-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 28px;
+    }
+
+    .metric-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .two-col {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .value {
+      font-size: clamp(1.25rem, 2.6vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status.green { background: var(--green); }
+    .status.yellow { background: var(--yellow); }
+    .status.red { background: var(--red); }
+    .status.gray { background: var(--gray); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-wrap: anywhere;
+      font-size: clamp(0.82rem, 1vw, 0.98rem);
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .slide {
+        min-height: auto;
+      }
+
+      .meta-grid,
+      .metric-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      html {
+        scroll-snap-type: none;
+        background: #ffffff;
+      }
+
+      .deck {
+        width: 100%;
+        padding: 0;
+      }
+
+      .slide {
+        min-height: 100vh;
+        margin: 0;
+        page-break-after: always;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide">
+      <header>
+        <p class="eyebrow">Audit presentation</p>
+        <h1>{{CLIENT_NAME}} {{AUDIT_TYPE}}</h1>
+        <p class="lede">{{AUDIT_PERIOD}}. Data mode: {{DATA_MODE}}. Replace placeholders with sourced audit findings before delivery.</p>
+      </header>
+      <div class="meta-grid">
+        <div class="panel">
+          <span class="label">Overall</span>
+          <span class="value">{{OVERALL_STATUS}}</span>
+        </div>
+        <div class="panel">
+          <span class="label">Top priority</span>
+          <span class="value">{{TOP_PRIORITY}}</span>
+        </div>
+        <div class="panel">
+          <span class="label">Data confidence</span>
+          <span class="value">{{DATA_CONFIDENCE}}</span>
+        </div>
+        <div class="panel">
+          <span class="label">Retrieved</span>
+          <span class="value">{{RETRIEVED_AT}}</span>
+        </div>
+      </div>
+      <footer>Sources: {{TITLE_SOURCES}}</footer>
+    </section>
+
+    <section class="slide">
+      <header>
+        <p class="eyebrow">{{AUDIT_PERIOD}}</p>
+        <h2>Executive Snapshot</h2>
+      </header>
+      <div class="metric-grid">
+        <div class="panel">
+          <span class="label">Green</span>
+          <span class="value">{{GREEN_COUNT}}</span>
+        </div>
+        <div class="panel">
+          <span class="label">Yellow</span>
+          <span class="value">{{YELLOW_COUNT}}</span>
+        </div>
+        <div class="panel">
+          <span class="label">Red</span>
+          <span class="value">{{RED_COUNT}}</span>
+        </div>
+      </div>
+      <footer>Sources: {{SNAPSHOT_SOURCES}}</footer>
+    </section>
+
+    <section class="slide">
+      <header>
+        <p class="eyebrow">Scorecard</p>
+        <h2>Marketing Health</h2>
+      </header>
+      <div class="slide-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Status</th>
+              <th>Evidence</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{AREA}}</td>
+              <td><span class="status gray">{{STATUS}}</span></td>
+              <td>{{EVIDENCE}}</td>
+              <td>{{DECISION}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer>Sources: {{SCORECARD_SOURCES}}</footer>
+    </section>
+
+    <section class="slide">
+      <header>
+        <p class="eyebrow">Action plan</p>
+        <h2>Next Moves</h2>
+      </header>
+      <div class="slide-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Action</th>
+              <th>Owner</th>
+              <th>Due</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P0</td>
+              <td>{{ACTION}}</td>
+              <td>{{OWNER}}</td>
+              <td>{{DUE}}</td>
+              <td>{{ACTION_SOURCE}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <footer>Sources: {{ACTION_SOURCES}}</footer>
+    </section>
+
+    <section class="slide">
+      <header>
+        <p class="eyebrow">Evidence</p>
+        <h2>Data Sources and Gaps</h2>
+      </header>
+      <div class="two-col">
+        <div class="panel">
+          <h3>Sources Used</h3>
+          <ul>
+            <li>{{DATA_SOURCE}}</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Data Gaps</h3>
+          <ul>
+            <li>{{DATA_GAP}}</li>
+          </ul>
+        </div>
+      </div>
+      <footer>Sources: _data-sources.md and _data-gaps.md</footer>
+    </section>
+  </main>
+</body>
+</html>
+

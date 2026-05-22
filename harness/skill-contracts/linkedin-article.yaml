@@ -1,25 +1,162 @@
 skill: linkedin-article
-version: 2.0
+version: 3.0
 harness: kai-harness
+format: linkedin-article
+risk_tier: medium
+word_count: 700-1000
+min_four_us: 12
+seo_lint: false
+
+description: >
+  LinkedIn-native articles with a strong hook, short paragraphs, sourced
+  claims, audience-specific insight, and no invented persona or customer proof.
+
+required_sources:
+  - brief
+  - knowledge/channels/linkedin-articles.md
+  - persona_or_audience_source
+  - claim_evidence_log
+  - voice_guide
+source_policy:
+  load_before_writing: true
+  voice_guide_required: true
+  persona_claims_require_source_or_hypothesis_label: true
+  customer_or_market_claims_require_evidence: true
+  missing_sources_action: block_or_label_as_hypothesis
 
 inputs:
   required:
     - brief: object
   optional:
-    - voice_override: string  # default: Connor's voice from memory/connor-voice.md
+    - voice_override: string
+    - persona_source_id: string
+    - claim_evidence_log: list[object]
 
 outputs:
   draft: markdown
   four_us_score: object
-  hook_type: string  # curiosity_gap | contrarian | data_driven | story | authority
+  hook_type: string
+  claim_table: list[object]
+
+output_schema:
+  type: object
+  required:
+    - draft
+    - four_us_score
+    - hook_type
+    - claim_table
+  properties:
+    draft: markdown
+    hook_type: string
+    four_us_score: object
+    claim_table: list[object]
 
 quality_gates:
-  - four_us_total >= 12
-  - four_us_min_single >= 2
-  - banned_words_tier1 == 0
-  - linkedin_format_check == pass  # no headers, short paragraphs, spacing
+  - "four_us_total >= 12"
+  - "four_us_min_single >= 2"
+  - "banned_words_tier1 == 0"
+  - "linkedin_format_check == pass"
+  - "claim_table_complete == true"
 
-word_count: 700-1000
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "700 <= word_count <= 1000"
+  - id: linkedin_format
+    evaluator: quality_gate
+    pass_when: "short paragraphs, no markdown H1/H2 headers, and readable spacing"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: claim_evidence_present
+    evaluator: static
+    pass_when: "material claims map to evidence_id or hypothesis label"
+  - id: no_invented_persona_quote
+    evaluator: regex
+    pass_when: "no unsourced persona or customer quote appears"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: hook_strength
+      question: "Does the opening create a real reason to keep reading?"
+    - name: audience_specificity
+      question: "Does the piece speak to a sourced audience or labeled hypothesis?"
+    - name: proof_and_precision
+      question: "Are claims specific, sourced, and not overconfident?"
+    - name: platform_fit
+      question: "Does the article read naturally on LinkedIn without blog-post formatting?"
+
+human_review_required_when:
+  - founder_voice_required == true
+  - client_facing_quantitative_claims_present == true
+  - persona_source_confidence != high
+  - regulated_industry == true
+
+golden_situations:
+  - name: sourced_point_of_view
+    expectation: "Uses evidence-backed insight and LinkedIn-native structure without generic thought-leadership filler."
+  - name: persona_invented_from_vibes
+    eval_id: kai.situations.persona_invented_from_vibes.founder_vibes_persona
+    expectation: "Does not invent buyer motives, quotes, or budget authority."
+  - name: brand_positioning_without_research
+    eval_id: kai.situations.brand_positioning_without_research.category_narrative_from_vibes
+    expectation: "Labels founder-only positioning as hypothesis."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_unsourced_material_claims: 0
+  max_invented_quotes: 0
+  max_voice_hard_rule_violations: 0
+
+claim_policy:
+  allowed:
+    - sourced lessons
+    - first-person experience when true and identified
+    - labeled hypotheses
+  requires_evidence:
+    - customer behavior
+    - market trends
+    - buyer objections
+    - performance claims
+  forbidden:
+    - invented quotes
+    - fabricated anecdotes
+    - unsupported trend certainty
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - persona_source_id
+    - voice_guide_version
+    - confidence_label
+  unresolved_claim_action: remove_or_label_hypothesis
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - content_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - unsubstantiated_material_claim
+    - voice_hard_rule_violation
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - article_id
+  - persona_source_id
+  - evidence_ids
+  - voice_guide_version
+  - four_us_score
+  - reviewer
+  - approval_status
+  - linkedin_post_url
+
 hooks:
   pre_write: load_brief + load_linkedin_skill + load_connor_voice
   post_write: run_quality_gate

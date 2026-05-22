@@ -87,6 +87,13 @@ def test_export_run_evidence_pack_includes_artifacts_mandates_and_results():
                     "data": {
                         "sources": [{"source": "fixture://audit-findings", "type": "fixture"}],
                         "claim_cards": [{"claim": "llms.txt missing", "severity": "high"}],
+                        "disclosure_proof": [
+                            {
+                                "platform": "youtube",
+                                "asset_id": "video_123",
+                                "paid_promotion_toggle": True,
+                            }
+                        ],
                     },
                 },
                 run_id=run_id,
@@ -98,6 +105,13 @@ def test_export_run_evidence_pack_includes_artifacts_mandates_and_results():
                     "data_gaps": ["Merchant Center feed not connected"],
                     "gate_report": {"score": 13, "status": "pass"},
                     "connector_health": {"google_merchant_center": "missing"},
+                    "disclosure_proof": [
+                        {
+                            "platform": "instagram",
+                            "asset_id": "reel_888",
+                            "label_text": "Paid partnership with GlowCraft",
+                        }
+                    ],
                 },
             )
 
@@ -111,6 +125,15 @@ def test_export_run_evidence_pack_includes_artifacts_mandates_and_results():
                     "risk_tier": "high",
                     "mandate_id": "mandate_abc123",
                     "evidence": [{"source": "fixture://action-proof", "url": "https://example.com/proof"}],
+                    "metadata": {
+                        "disclosure_proof": [
+                            {
+                                "platform": "tiktok",
+                                "asset_id": "tt_42",
+                                "disclosure_setting_enabled": True,
+                            }
+                        ]
+                    },
                 }
             )
             action_store.approve_action(action["action_id"])
@@ -129,6 +152,10 @@ def test_export_run_evidence_pack_includes_artifacts_mandates_and_results():
             assert any(link.get("path") for link in pack["artifact_links"])
             assert any(row.get("source") == "fixture://action-proof" for row in pack["sources"])
             assert pack["action_result"][0]["status"] == "success"
+            assert len(pack["disclosure_proof"]) == 3
+            assert any(row.get("platform") == "youtube" for row in pack["disclosure_proof"])
+            assert any(row.get("platform") == "instagram" for row in pack["disclosure_proof"])
+            assert any(row.get("platform") == "tiktok" for row in pack["disclosure_proof"])
 
 
 def test_export_action_evidence_pack_surfaces_data_gaps():
@@ -149,6 +176,15 @@ def test_export_action_evidence_pack_surfaces_data_gaps():
                     "action_type": "adjust_budget",
                     "intent": "Increase spend without evidence",
                     "risk_tier": "high",
+                    "metadata": {
+                        "disclosure_proof": [
+                            {
+                                "platform": "x",
+                                "asset_id": "post_99",
+                                "paid_partnership_toggle": False,
+                            }
+                        ]
+                    },
                 }
             )
 
@@ -162,3 +198,4 @@ def test_export_action_evidence_pack_surfaces_data_gaps():
             assert any("has no evidence sources" in gap for gap in pack["data_gaps"])
             assert any("missing mandate_id" in gap for gap in pack["data_gaps"])
             assert pack["sources"] == []
+            assert pack["disclosure_proof"][0]["platform"] == "x"

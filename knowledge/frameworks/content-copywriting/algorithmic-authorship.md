@@ -16,6 +16,8 @@
 
 These rules optimize content for passage ranking and AI-generated answers. They come from analysis of Google's passage scoring methodology and Featured Snippet selection patterns.
 
+**Google Search calibration (2026):** Treat these as clarity and extraction heuristics, not as special Google AI requirements. Google's official guidance says AI Overviews and AI Mode are grounded in core Search systems. Google does not require `llms.txt`, special AI markup, forced Markdown, or tiny content chunks. Keep the content useful, original, and people-first; use these rules only where they make the answer easier to read.
+
 ### Sentence Structure Rules
 
 **Rule 1: Put "if" statements in the second part of the sentence**

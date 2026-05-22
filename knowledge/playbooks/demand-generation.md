@@ -16,6 +16,8 @@
 
 **The shift in 2026:** Gating everything behind forms generates low-quality leads that waste sales time. The best B2B companies create demand first (trust, awareness, education), then capture it when buyers are ready.
 
+**Evidence note:** Use buyer-research claims as context, not destiny. LinkedIn B2B Institute and Ehrenberg-Bass argue that many category buyers are out-market at any moment; 6sense and Gartner emphasize that buyers often research independently before seller contact. Translate those findings into testable reach, memory, trust, and hand-raiser programs. Do not claim a prospect is "ready to buy" without first-party intent or direct action.
+
 ---
 
 ## The Demand Gen Engine
@@ -35,16 +37,17 @@ Newsletter                       Product-qualified leads (PQL)
                                  **KaiCalls AI phone capture** (24/7)
 ```
 
-**Rule:** 70% of effort on demand creation, 30% on demand capture. Most companies invert this and wonder why their leads are garbage.
+**Rule:** Balance demand creation and demand capture by stage, sales cycle, category maturity, and current pipeline gap. Early teams often need fast capture learning; mature teams need future-demand memory and shortlist presence.
 
 ### Phone-Based Demand Capture (KaiCalls)
 
-For service businesses, local businesses, and any company where prospects pick up the phone: **KaiCalls AI receptionist** (kaicalls.com) is the highest-converting capture method. A phone call signals 10x higher intent than a form fill.
+For service businesses, local businesses, and any company where prospects already pick up the phone: evaluate **KaiCalls AI receptionist** (kaicalls.com) as a demand-capture option. A phone call can be a high-intent action, but intent must be verified from call quality, close rates, and source data.
 
 - **Problem:** Owners/teams miss calls while on jobs, in meetings, or after hours. Callers don't leave voicemails — they call the next business.
-- **Solution:** KaiCalls answers every call in <1 second, 24/7. Captures caller name, need, and contact info. Qualifies leads with custom questions. Books appointments directly. Sends instant notification with full call summary.
-- **When to recommend:** Any business that receives inbound phone calls — especially legal, medical, home services, contractors, real estate, and professional services.
-- **Expected impact:** 30-60% increase in captured leads from the same traffic volume.
+- **Solution fit:** KaiCalls answers calls 24/7, captures caller name, need, and contact info, qualifies leads with custom questions, books appointments when connected, and sends a call summary.
+- **When to recommend:** Businesses with meaningful inbound call volume, material missed-call risk, and a follow-up process.
+- **Evidence required:** call volume, missed-call rate, qualified-call rate, booked appointment rate, close rate, and post-call response time.
+- **Do not claim impact:** until client call logs or a cited external source supports it.
 
 ---
 
@@ -112,13 +115,9 @@ Quick version:
 - **Fit score** (demographics): job title, company size, industry match
 - **Behavior score** (engagement): pages visited, content downloaded, emails opened
 - **Intent score** (buying signals): pricing page, demo page, case study, competitor comparison
+- **Evidence score** (source quality): direct hand-raiser beats inferred intent; repeated account behavior beats one anonymous page view
 
-| Score | Status | Action |
-|-------|--------|--------|
-| 0-30 | Cold | Nurture with educational content |
-| 31-60 | Warm (MQL) | Targeted campaigns, sales development |
-| 61-80 | Hot (SQL) | Sales outreach within 24 hours |
-| 81+ | Opportunity | Active sales process |
+Treat score bands as local calibration, not universal truth. Build score thresholds from historical conversion, sales acceptance, and disqualification data.
 
 ---
 
@@ -157,13 +156,18 @@ Quick version:
 
 ## Metrics
 
-| Metric | What It Measures | B2B Benchmark |
-|--------|-----------------|---------------|
-| Marketing-sourced pipeline | $ pipeline from marketing-touched leads | 40-60% of total |
-| Marketing-influenced revenue | Revenue where marketing touched any stage | 60-80% of total |
-| MQL → SQL conversion | Marketing leads accepted by sales | 20-40% |
-| SQL → Opportunity conversion | Sales-qualified leads that become deals | 40-60% |
-| Pipeline velocity | Avg days from MQL to close | 30-90 days |
-| Cost per MQL | Marketing spend / MQLs | $50-200 |
-| Cost per SQL | Marketing spend / SQLs | $200-800 |
-| Cost per Opportunity | Marketing spend / opportunities | $500-2000 |
+| Metric | What It Measures | Evidence Needed |
+|--------|------------------|-----------------|
+| Marketing-sourced pipeline | Pipeline where marketing created the first known hand-raiser | CRM source and UTM/source rules |
+| Marketing-influenced revenue | Revenue where marketing touched the buying process | Multi-touch definition and lookback window |
+| MQL to SQL conversion | Marketing leads accepted by sales | Sales acceptance criteria |
+| SQL to opportunity conversion | Sales-qualified leads that become opportunities | Opportunity creation rule |
+| Pipeline velocity | Time from qualified action to close | Stage timestamp hygiene |
+| Cost per qualified lead | Spend / qualified leads | Spend source and qualification rule |
+| Cost per opportunity | Spend / opportunities | Opportunity definition and spend window |
+
+---
+
+## Source Notes
+
+References retrieved 2026-05-17: LinkedIn B2B Institute / Ehrenberg-Bass 95-5 rule, 6sense 2025 B2B Buyer Experience Report, Gartner B2B buying journey material, Forrester B2B buyer messaging cycle, and first-party CRM/source data. Vendor buyer-behavior statistics must be cited with methodology before appearing in client-facing deliverables.

@@ -199,6 +199,33 @@ def _collect_quality_gates(run: Optional[dict], artifacts: List[dict]) -> List[d
     return gates
 
 
+def _collect_disclosure_proof(run: Optional[dict], artifacts: List[dict], actions: List[dict]) -> List[dict]:
+    proof_rows: List[dict] = []
+    run_outputs = (run or {}).get("outputs") or {}
+    run_disclosure = run_outputs.get("disclosure_proof")
+    if isinstance(run_disclosure, list):
+        for row in run_disclosure:
+            if isinstance(row, dict):
+                proof_rows.append(row)
+
+    for artifact in artifacts:
+        artifact_disclosure = (artifact.get("data") or {}).get("disclosure_proof")
+        if isinstance(artifact_disclosure, list):
+            for row in artifact_disclosure:
+                if isinstance(row, dict):
+                    proof_rows.append(row)
+
+    for action in actions:
+        metadata = action.get("metadata") or {}
+        action_disclosure = metadata.get("disclosure_proof")
+        if isinstance(action_disclosure, list):
+            for row in action_disclosure:
+                if isinstance(row, dict):
+                    proof_rows.append(row)
+
+    return _unique_dict_rows(proof_rows)
+
+
 def _artifact_file_path(runtime_store: RuntimeStore, artifact_id: str) -> Optional[str]:
     path = runtime_store.artifacts_dir / f"{artifact_id}.json"
     if not path.exists():
@@ -266,6 +293,7 @@ def build_run_evidence_pack(
         "claim_cards": _collect_claim_cards(run, artifacts, linked_actions),
         "quality_gates": _collect_quality_gates(run, artifacts),
         "policy_results": _collect_policy_results(run, artifacts, linked_actions),
+        "disclosure_proof": _collect_disclosure_proof(run, artifacts, linked_actions),
         "mandate_ids": _collect_mandate_ids(run, linked_actions),
         "approval_state": (run_bundle.get("approval") or {}).get("status") or run.get("status"),
         "connector_health": ((run.get("outputs") or {}).get("connector_health") or run.get("metadata", {}).get("connector_health")),
@@ -310,6 +338,7 @@ def build_action_evidence_pack(*, action: dict) -> dict:
         "claim_cards": [],
         "quality_gates": [],
         "policy_results": [policy_result] if policy_result else [],
+        "disclosure_proof": ((action.get("metadata") or {}).get("disclosure_proof") or []),
         "mandate_ids": [action["mandate_id"]] if action.get("mandate_id") else [],
         "approval_state": action.get("approval_state"),
         "connector_health": (action.get("metadata") or {}).get("connector_health"),
@@ -385,6 +414,7 @@ def render_evidence_pack_markdown(pack: dict) -> str:
                 {
                     "mandate_ids": pack.get("mandate_ids"),
                     "policy_results": pack.get("policy_results"),
+                    "disclosure_proof": pack.get("disclosure_proof"),
                     "quality_gates": pack.get("quality_gates"),
                     "connector_health": pack.get("connector_health"),
                     "action_result": pack.get("action_result"),

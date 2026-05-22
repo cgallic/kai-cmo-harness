@@ -908,7 +908,29 @@ Use this checklist before submitting any Meta ad:
 - [ ] Text within recommended limits (125 primary, 40 headline, 25 description)
 - [ ] Minimal text overlay on images
 - [ ] Partnership Ads format used for any influencer/creator content
+- [ ] Creator/UGC asset has rights window, whitelisting scope, and disclosure evidence
+- [ ] Advantage+ or automated creative features have account-state approval and control review
+- [ ] Meta-reported ROAS is labeled as platform-attributed unless lift or MMM evidence exists
 - [ ] Geographic targeting complies with product restrictions
+
+---
+
+## 13.1 Advantage+ And Creator Automation Caveats
+
+Advantage+ targeting and creative features can improve delivery when account inputs are strong, but they do not remove compliance responsibility.
+
+Block launch or hold for review when:
+
+- Special Ad Category status is uncertain.
+- Customer exclusions, catalog health, CAPI deduplication, or purchase event quality are not verified.
+- Creator or UGC assets lack Partnership Ads permission, paid usage rights, or material-connection disclosure.
+- AI-generated or materially edited assets lack the required disclosure tag.
+- Reporting language treats Meta-attributed ROAS as incremental profit.
+
+Approved recommendation language:
+
+- "Use Advantage+ as a contained scale test because account events, exclusions, catalog quality, and creative diversity are ready."
+- "Hold Advantage+ and run a manual signal test because conversion quality, exclusions, or rights evidence is missing."
 
 ---
 

@@ -52,12 +52,12 @@ GEO_TARGETS = {
     "technical_terms": 10,
 }
 
-# GEO visibility boosts (from academic research)
+# GEO signal labels. Do not treat these as guaranteed ranking/citation lifts.
 GEO_BOOSTS = {
-    "citations": "+115%",
-    "quotations": "+40%",
-    "statistics": "+37%",
-    "technical_terms": "+32.7%",
+    "citations": "a provenance signal, not a guaranteed lift",
+    "quotations": "an attributable-experience signal, not a guaranteed lift",
+    "statistics": "a specificity signal, not a guaranteed lift",
+    "technical_terms": "an entity-clarity signal, not a guaranteed lift",
 }
 
 # Content structure targets

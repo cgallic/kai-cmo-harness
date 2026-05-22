@@ -2,7 +2,7 @@
 
 Kai is organized around a small set of runtime nouns. The docs and code should keep pointing back to these nouns so new workflows do not invent parallel contracts.
 
-Authoritative inventory lives in [Governance and Quality](governance-and-quality.md): 39 skill directories, 37 canonical `kai-*` skill docs, 33 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts. The [Public Skill Manifest](../skill-manifest/README.md) is the API-style reference for those canonical skills.
+Authoritative inventory lives in [Governance and Quality](governance-and-quality.md): 42 skill directories, 40 canonical `kai-*` skill docs, 36 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts. The [Public Skill Manifest](../skill-manifest/README.md) is the API-style reference for those canonical skills.
 
 ## Layer Model
 
@@ -20,9 +20,12 @@ flowchart TB
         Workspace["KaiWorkspaceProfile"]
         Brand["KaiBrandProfile"]
         Workflow["WorkflowDefinition"]
+        Goal["KaiGoal"]
+        TaskGraph["TaskGraph + TaskNode"]
         Run["KaiRunRequest + KaiRunRecord"]
         Artifact["KaiArtifactRecord"]
         State["KaiRuntimeState"]
+        Reward["ActionReward"]
     end
 
     subgraph Implementation["Implementation"]
@@ -30,6 +33,10 @@ flowchart TB
         Audits["kai/audits"]
         Proposals["kai/proposals"]
         Store["kai/runtime/store.py"]
+        GoalsStore["kai/runtime/goals.py"]
+        Decomposer["agent/decomposer.py"]
+        Orchestrator["kai/execution/orchestrator.py"]
+        RewardsStore["kai/analytics/rewards.py"]
         Gateway["gateway"]
         Actions["kai/runtime/actions.py"]
     end
@@ -39,7 +46,13 @@ flowchart TB
     Knowledge --> Workflow
     Workspace --> Brand
     Brand --> Workflow
-    Workflow --> Run
+    Workflow --> Goal
+    Goal --> Decomposer
+    Decomposer --> TaskGraph
+    TaskGraph --> Orchestrator
+    Orchestrator --> Run
+    Orchestrator --> RewardsStore
+    RewardsStore --> Reward
     Run --> Artifact
     Artifact --> State
     Quality --> Run
@@ -57,11 +70,15 @@ flowchart TB
 |---|---|---|
 | Workspace profile | `kai/runtime/models.py` | Describes the workspace, available surfaces, enabled plugins, and brands. |
 | Brand profile | `kai/runtime/models.py` | Describes one business target: URL, archetype, channels, proof, personas, and metadata. |
+| Goal | `kai/runtime/models.py` | Describes a high-level business goal or target KPI (e.g. increase CTR). |
+| Task Graph / DAG | `kai/runtime/models.py` | A validated, cycle-free Directed Acyclic Graph of subtasks to resolve a goal discrepancy. |
+| Task Node | `kai/runtime/models.py` | An individual subtask node within a Task Graph, representing a specific type of agent work. |
 | Module manifest | `kai/runtime/modules/*.yaml` | Adds archetype defaults: trigger words, prompt hints, required memory, workflows, KPIs, subagents, and automation names. |
 | Workflow definition | `kai/runtime/workflows.py` | Maps product workflows to handlers, input contracts, output artifacts, quality policy, aliases, and risk. |
 | Run request | `kai/runtime/models.py` | The cross-surface invocation contract for local and remote execution. |
 | Run record | `kai/runtime/models.py` | The persisted lifecycle record for a run, including status, lineage, artifacts, inputs, outputs, and timestamps. |
 | Artifact record | `kai/runtime/models.py` | The persisted output contract for briefs, drafts, audits, plans, snapshots, and learned patterns. |
+| Action reward | `kai/analytics/rewards.py` | Represents computed performance scores (e.g. percentage metric change * confidence) logged for closed-loop learning. |
 | Runtime state | `kai/runtime/models.py` | A derived index of latest runs and artifacts by brand and workflow. |
 | Action proposal | `kai/runtime/actions.py` | The contract for real-world marketing mutations such as publishing, editing, or changing spend. |
 
@@ -71,12 +88,16 @@ flowchart TB
 erDiagram
     WORKSPACE ||--o{ BRAND : contains
     BRAND ||--o{ MODULE : activates
+    BRAND ||--o{ GOAL : targets
+    GOAL ||--|| TASK_GRAPH : decomposes_to
+    TASK_GRAPH ||--o{ TASK_NODE : contains
     BRAND ||--o{ RUN : owns
     MODULE ||--o{ RUN : guides
     WORKFLOW ||--o{ RUN : invokes
     RUN ||--o{ ARTIFACT : creates
     RUN ||--o{ ACTION : proposes
     ACTION ||--o{ ACTION_LOG : records
+    ACTION ||--o{ ACTION_REWARD : generates
     ARTIFACT ||--o{ MEMORY_ENTRY : teaches
     RUN ||--o{ RUNTIME_STATE : indexes
 
@@ -93,6 +114,31 @@ erDiagram
         string primary_archetype
         array module_ids
         array active_channels
+    }
+
+    GOAL {
+        string goal_id
+        string brand_id
+        string name
+        string kpi_name
+        float target_value
+        float current_value
+        string target_direction
+    }
+
+    TASK_GRAPH {
+        string graph_id
+        string goal_id
+        string brand_id
+        string status
+    }
+
+    TASK_NODE {
+        string node_id
+        string task_type
+        string status
+        json inputs
+        json outputs
     }
 
     RUN {
@@ -117,6 +163,14 @@ erDiagram
         string risk_tier
         string approval_state
         string execution_state
+    }
+
+    ACTION_REWARD {
+        string action_id
+        string action_type
+        string metric_name
+        float percent_change
+        float reward_score
     }
 ```
 
@@ -150,6 +204,10 @@ flowchart LR
 | Area | Files |
 |---|---|
 | Canonical models | `kai/runtime/models.py` |
+| Goal Registry & Storage | `kai/runtime/goals.py` |
+| Task Graph Decomposer | `agent/decomposer.py` |
+| Task Orchestrator | `kai/execution/orchestrator.py` |
+| Closed-loop Rewards | `kai/analytics/rewards.py` |
 | Workspace and module loading | `kai/runtime/loader.py`, `kai/runtime/modules/*.yaml` |
 | Workflow registry | `kai/runtime/workflows.py` |
 | Persistence | `kai/runtime/store.py`, `kai/runtime/actions.py` |
@@ -159,4 +217,3 @@ flowchart LR
 | Compliance and approval | `kai/compliance/`, `kai/runtime/policy.py`, `scripts/content/approval_policy.py` |
 | Remote API | `gateway/main.py`, `gateway/routers/runtime.py`, `gateway/routers/actions.py` |
 | Background work | `agent/scheduler.py`, `agent/tasks/` |
-

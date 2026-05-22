@@ -147,6 +147,126 @@ hard_fails:
       alternatives, disqualifiers, or conflict-of-interest-safe wording.
     required_response: Add fit logic, alternatives, and disclosure-safe framing.
 
+  - id: missing_data_replaced_with_benchmark
+    severity: high
+    applies_to:
+      - seo-audit
+      - cro-audit
+      - analytics-attribution
+      - paid-media-launch
+      - content-strategy
+    description: >
+      Missing client data is replaced with benchmark numbers, category averages,
+      or plausible estimates without a sample-data label and source caveat.
+    required_response: Move the missing item to data gaps and cite the source needed.
+
+  - id: invented_compliance_status
+    severity: critical
+    applies_to:
+      - compliance
+      - advertising-compliance
+      - cold-outreach
+      - paid-media-launch
+    description: >
+      The artifact invents or assumes current legal, regulatory, certification,
+      or platform-review status without current source evidence.
+    required_response: Block handoff until current status is verified or legal review is attached.
+
+  - id: pmax_account_state_ignored
+    severity: high
+    applies_to:
+      - google-ads
+      - paid-media-launch
+    description: >
+      Performance Max, AI Max, or broad automation is recommended as a universal
+      default without checking account state, conversion quality, budget, feed
+      readiness, exclusions, brand controls, and measurement maturity.
+    required_response: Require account-state decision logic before automation recommendations.
+
+  - id: creator_rights_or_disclosure_missing
+    severity: critical
+    applies_to:
+      - creator-commerce
+      - paid-media-launch
+      - meta-ads
+      - tiktok
+    description: >
+      Paid, affiliate, whitelisted, Spark, Partnership, or UGC content is prepared
+      for launch without documented usage rights, term window, platform
+      authorization, and disclosure evidence.
+    required_response: Block launch until rights and disclosure provenance are complete.
+
+  - id: cold_outreach_relevance_missing
+    severity: high
+    applies_to:
+      - cold-email
+      - lifecycle-email
+      - email
+    description: >
+      Cold outreach uses generic personalization, scraped-list assumptions, or
+      unsupported prospect claims without a named lawful source and relevance
+      evidence.
+    required_response: Hold the sequence and request list source, suppression proof, and relevance fields.
+
+  - id: unsupported_cro_benchmark
+    severity: high
+    applies_to:
+      - cro-audit
+      - landing-page
+    description: >
+      CRO copy or audit recommendations cite conversion, abandonment, or UX
+      benchmark numbers as client facts without source metadata, method, and
+      applicability caveats.
+    required_response: Recast as sourced context or remove the benchmark from the client claim.
+
+  - id: brand_positioning_without_customer_research
+    severity: high
+    applies_to:
+      - brand-positioning
+      - landing-page
+      - content-strategy
+    description: >
+      Positioning, category narrative, ICP pain, or customer language is presented
+      as validated without interviews, win-loss notes, sales-call evidence,
+      review mining, message testing, or an explicit hypothesis label.
+    required_response: Label the work as hypothesis or collect customer evidence before handoff.
+
+  - id: persona_without_evidence
+    severity: high
+    applies_to:
+      - persona-development
+      - content-strategy
+      - blog-post
+      - linkedin-article
+    description: >
+      A persona includes invented motives, budget authority, objections,
+      triggers, or quotes without source evidence or a hypothesis label.
+    required_response: Add evidence fields or downgrade persona claims to hypotheses.
+
+  - id: attribution_overclaim
+    severity: high
+    applies_to:
+      - analytics-attribution
+      - paid-media-launch
+      - campaign-retrospective
+      - google-ads
+      - meta-ads
+    description: >
+      Assisted conversions, last-click reports, platform dashboards, or modeled
+      metrics are described as perfect attribution, exact ROI, causal lift, or
+      incremental revenue without an accepted measurement method.
+    required_response: Relabel the metric class and add a measurement-ladder next step.
+
+  - id: pr_quote_or_newsworthiness_failure
+    severity: high
+    applies_to:
+      - press-release
+      - pr
+    description: >
+      A release invents quotes, lacks quote approval, lacks a dated news event,
+      or turns routine promotional copy into a press release.
+    required_response: Block release until quote approval and a real news hook are documented.
+
 deterministic_runner_expectations:
   fail_fast: true
   output_required_fields:

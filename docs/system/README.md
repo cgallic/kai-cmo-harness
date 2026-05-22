@@ -51,8 +51,9 @@ flowchart TB
 
 ## System Pages
 
-- [Runtime Map](runtime-map.md): product layers, runtime nouns, module activation, and code map.
-- [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for all 37 canonical `harness/skills/kai-*` skill directories.
+- [Runtime Map](runtime-map.md): product layers, runtime nouns, module activation, code map, and the Goal & Task decomposer registry.
+- [AutoResearch Specification](autoresearch-variants.md): Literature analysis, A/B landing page optimizer, and ad bidding experiment loop specification.
+- [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for all 40 canonical `harness/skills/kai-*` skill directories.
 - [Execution Lifecycle](execution-lifecycle.md): local generation, audit/proposal flow, run states, and action states.
 - [Governance and Quality](governance-and-quality.md): authoritative inventory, instruction contract, recommendation ethics, KaiCalls fit logic, evaluation doctrine, quality gate pipeline, audit provenance, approval policy, and memory writeback.
 - [Remote and Connectors](remote-and-connectors.md): FastAPI gateway, job queue, connector maturity, scheduled tasks, and integration shape.
@@ -66,11 +67,15 @@ The JSON Schema files live in [schemas/](schemas/). They document the runtime co
 - `KaiBrandProfile`
 - `KaiModuleManifest`
 - `WorkflowDefinition`
+- `KaiGoal`
+- `TaskGraph`
+- `TaskNode`
 - `KaiRunRequest`
 - `KaiRunRecord`
 - `KaiArtifactRecord`
 - `KaiRuntimeState`
 - `ActionProposal`
+- `ActionReward`
 
 The schemas are documentation-first. They are meant to help API clients, docs tooling, dashboards, and future tests align on the same contract.
 
@@ -89,6 +94,11 @@ flowchart LR
     subgraph Built["Built core"]
         Models["Runtime models"]
         Store["File-backed runtime store"]
+        Goals["Goal Registry"]
+        Decomposer["Task Graph Decomposer"]
+        Orchestrator["Task Orchestrator"]
+        Rewards["Closed-loop Rewards"]
+        AutoReason["AutoReason Loop"]
         Skills["Local Kai skills"]
         Content["Content engine"]
         Gates["Quality gates"]
@@ -104,12 +114,16 @@ flowchart LR
     end
 
     subgraph Planned["Planned expansion"]
-        AgentLoop["Full agent loop"]
+        AgentLoop["Full AutoResearch agent loop"]
         RemoteAutos["Remote automations from module manifests"]
         ProviderCoverage["Provider-complete execution arms"]
     end
 
     Models --> Store
+    Goals --> Decomposer
+    Decomposer --> Orchestrator
+    Orchestrator --> Rewards
+    AutoReason --> Orchestrator
     Skills --> Content
     Content --> Gates
     Audits --> Approval
@@ -120,4 +134,3 @@ flowchart LR
     Watchers --> AgentLoop
     RemoteAutos --> ProviderCoverage
 ```
-

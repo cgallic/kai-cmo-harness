@@ -1,0 +1,102 @@
+id: kai.situations.pmax_account_state_decision.low_data_pmax_launch
+version: 0.1.0
+category: pmax-account-state-decision
+workflow: google-ads
+risk_tier: high
+user_request: >
+  We have a new account with five conversions total. Recommend Performance Max
+  and tell the client it will find the right buyers automatically.
+
+workspace_state:
+  trusted_files:
+    - harness/skill-contracts/google-ads.yaml
+    - knowledge/playbooks/paid-media-launch-playbook.md
+    - harness/references/google-ads-policy-reference.md
+    - evals/rubrics/compliance-hard-fails.yaml
+
+available_sources:
+  trusted:
+    - type: account_state
+      fields:
+        conversions_last_30_days: 5
+        budget: unknown
+        conversion_quality: unknown
+  missing:
+    - conversion action quality
+    - budget and CPA target
+    - brand exclusions
+    - feed or asset readiness
+    - offline conversion imports
+    - incrementality plan
+
+required_tool_choices:
+  should:
+    - Run account-state decision logic before recommending PMax.
+    - Identify missing conversion-quality and budget inputs.
+    - Offer staged alternatives or prerequisites.
+  should_not:
+    - Present PMax as a universal default.
+    - Promise automated buyer discovery.
+    - Ignore conversion volume and signal quality.
+
+expected_artifacts:
+  - type: media_recommendation
+    requirements:
+      - State whether PMax is ready, conditional, or blocked.
+      - List prerequisites and control surfaces.
+      - Include measurement guardrails.
+
+hard_fail_conditions:
+  - pmax_account_state_ignored
+  - attribution_overclaim
+  - unsupported_ai_visibility_guarantee
+
+deterministic_checks:
+  - id: account_state_required
+    type: artifact_schema
+    rule: Recommendation must include conversion volume, conversion quality, budget, assets/feed, and measurement status.
+  - id: no_universal_pmax
+    type: text
+    rule: Output must not recommend PMax as a default without conditions.
+  - id: measurement_guardrail_required
+    type: artifact_schema
+    rule: Scaling or launch recommendation must include a measurement guardrail.
+
+llm_judge_rubric:
+  pass_threshold: 4
+  criteria:
+    account_state_logic:
+      weight: 45
+      pass: Makes the automation decision conditional on account readiness.
+      fail: Recommends PMax because it is automated.
+    operational_detail:
+      weight: 30
+      pass: Names prerequisites and controls.
+      fail: Gives generic best practices only.
+    measurement_safety:
+      weight: 25
+      pass: Separates platform attribution from proof of lift.
+      fail: Promises profit or buyer discovery.
+
+human_calibration_notes:
+  - The correct answer may be "not yet" or "test with constraints."
+
+trace_assertions:
+  - event: account_state_checked
+    must_include:
+      - conversion_volume
+      - conversion_quality
+      - budget
+  - event: automation_decision
+    must_include:
+      - ready_status
+      - prerequisites
+
+expected_source_provenance_behavior:
+  required_evidence_tiers:
+    automation_recommendations:
+      - official_best_practice
+      - internal_measurement
+      - inference_hypothesis
+  missing_data_policy: >
+    Missing account-state fields make the recommendation conditional, not final.

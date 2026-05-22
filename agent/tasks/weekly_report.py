@@ -192,8 +192,25 @@ class WeeklyReportTask(BaseTask):
     async def _collect_goals_data(self, client: Dict) -> str:
         """Collect goals progress data."""
         from ..state import state_manager
+        from kai.runtime import get_default_goal_registry
 
-        client_state = state_manager.get_client_state(client.get("id"))
+        brand_id = client.get("id")
+        
+        # Try reading from our dynamic GoalRegistry first
+        try:
+            registry = get_default_goal_registry()
+            registered_goals = registry.list_goals(brand_id=brand_id)
+        except Exception:
+            registered_goals = []
+
+        if registered_goals:
+            lines = []
+            for goal in registered_goals:
+                lines.append(f"- {goal.name} ({goal.kpi_name}): {goal.current_value} / {goal.target_value} ({goal.status})")
+            return "\n".join(lines)
+
+        # Fallback to static state dictionary
+        client_state = state_manager.get_client_state(brand_id)
         goals = client_state.get("goals", {})
 
         if not goals:

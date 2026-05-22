@@ -70,6 +70,14 @@ from kai.analytics.attribution import (
     compute_observed_changes,
 )
 
+from kai.analytics.rewards import (
+    ActionReward,
+    compute_reward_score,
+    get_average_rewards_by_action_type,
+    load_rewards_log,
+    log_action_rewards,
+)
+
 from kai.analytics.scorecards import (
     ChannelRollup,
     DashboardSummary,
@@ -109,6 +117,12 @@ __all__ = [
     "build_action_lineage",
     "calculate_confidence",
     "compute_observed_changes",
+    # Rewards (Phase 3)
+    "ActionReward",
+    "compute_reward_score",
+    "get_average_rewards_by_action_type",
+    "load_rewards_log",
+    "log_action_rewards",
     # Anomaly detection (task 059)
     "AnomalyAlert",
     "AnomalyDetector",
@@ -130,3 +144,4 @@ __all__ = [
     "build_spend_efficiency_scorecard",
     "build_visibility_scorecard",
 ]
+

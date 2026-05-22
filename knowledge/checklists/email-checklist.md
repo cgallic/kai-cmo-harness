@@ -7,6 +7,10 @@
 - [ ] SPF record configured in DNS
 - [ ] DKIM authentication enabled
 - [ ] DMARC policy set (start with p=none, plan progression)
+- [ ] From-domain alignment verified for bulk mail
+- [ ] PTR/reverse DNS and TLS requirements checked for sending infrastructure
+- [ ] One-click unsubscribe headers implemented for marketing/subscribed bulk mail
+- [ ] Visible unsubscribe link included in the email body
 - [ ] Dedicated IP requested (if volume >100k/month)
 - [ ] IP warming schedule documented and ready
 - [ ] Real-time email validation tool integrated (NeverBounce, ZeroBounce)
@@ -18,14 +22,19 @@
 - [ ] BIMI setup initiated (if DMARC at quarantine/reject)
 
 ## IP Warming (If Applicable)
-- [ ] Days 1-3: 50-200 emails to most engaged users only
-- [ ] Days 4-7: 500-1,000 to opened-last-7-days segment
-- [ ] Days 8-14: 2,000-5,000 to opened-last-30-days segment
-- [ ] Days 15-21: 10,000-25,000 to opened-last-60-days segment
-- [ ] Days 22-30: Full volume excluding 90-180 day inactive
-- [ ] Monitoring: >25% open rate, <0.1% complaint rate maintained
+- [ ] Start with recently engaged, consented recipients only
+- [ ] Increase volume only after ESP logs and mailbox-provider dashboards are stable
+- [ ] Monitor bounces, deferrals, spam complaints, authentication, domain reputation, and blocklist signals
+- [ ] Pause scaling if complaints approach provider thresholds or reputation drops
+- [ ] Exclude inactive users according to documented suppression policy
 
 ## Sequence Design
+
+- [ ] Every flow declares lifecycle state: subscribed prospect, customer lifecycle, transactional, cold outbound, retention, win-back, or suppressed
+- [ ] Every flow declares message class: marketing, subscribed, transactional, sales, support, or legal/service notice
+- [ ] Every flow has exit criteria tied to product or purchase events
+- [ ] Preference center and global suppression rules are tested before launch
+- [ ] Frequency caps apply by message class and lifecycle state
 
 ### B2B SaaS Onboarding
 - [ ] Welcome email with magic link (immediate)
@@ -75,6 +84,9 @@
 - [ ] Unsubscribe rate per campaign monitored
 - [ ] Holdout groups configured for incrementality testing
 - [ ] P&L model implemented (not just revenue tracking)
+- [ ] Open rate treated as directional only when Apple MPP or image proxying may inflate opens
+- [ ] Flow reports separate attributed revenue from holdout-measured lift
+- [ ] Data gaps listed when source data is unavailable
 
 ## Subject Lines
 - [ ] Under 50 characters (mobile optimization)
@@ -92,8 +104,17 @@
 
 ## Monthly Audit
 - [ ] Deliverability metrics reviewed (inbox placement, bounce rate)
-- [ ] Complaint rate below 0.1%
+- [ ] Complaint rate reviewed against mailbox-provider thresholds and internal risk limits
 - [ ] Engagement trends analyzed (opens, clicks trending)
 - [ ] Sunset suppressions applied
 - [ ] Incrementality results reviewed
 - [ ] Contribution margin calculated
+- [ ] DMARC aggregate reports reviewed for unauthorized senders
+- [ ] Preference-center choices and unsubscribe processing verified
+- [ ] Source references checked for policy changes: Google sender guidelines, Yahoo Sender Hub, FTC CAN-SPAM, Spamhaus
+
+---
+
+## Source Notes
+
+Primary source requirements should be rechecked before launch. Current references retrieved 2026-05-17: Google Email Sender Guidelines, Yahoo Sender Hub FAQs and best practices, FTC CAN-SPAM compliance guide, Spamhaus cold-email guidance, and ESP/provider docs for the sending platform in use.

@@ -278,6 +278,64 @@ def _gmv_data_gap(data: Mapping[str, Any]) -> Optional[AuditFinding]:
     )
 
 
+def _material_connection_disclosure_finding(data: Mapping[str, Any]) -> Optional[AuditFinding]:
+    creators = [item for item in _as_list(data.get("creators")) if isinstance(item, Mapping)]
+    if not creators:
+        return None
+
+    flagged: List[str] = []
+    for creator in creators:
+        creator_id = _text(creator.get("creator_id")) or _text(creator.get("name")) or "<unknown>"
+        has_connection = False
+
+        connections = _as_list(creator.get("material_connections"))
+        if connections:
+            has_connection = True
+        if bool(creator.get("gifted_product")):
+            has_connection = True
+        if bool(creator.get("affiliate_enabled")):
+            has_connection = True
+        relationship_type = _text(creator.get("relationship_type")).lower()
+        if relationship_type in {"employee", "founder", "director", "brand_ambassador"}:
+            has_connection = True
+
+        if not has_connection:
+            continue
+
+        disclosed = creator.get("material_connection_disclosed")
+        if disclosed is not True:
+            flagged.append(creator_id)
+
+    if not flagged:
+        return None
+
+    return create_finding(
+        category=CATEGORY,
+        subcategory="material_connection_disclosure",
+        severity=FindingSeverity.HIGH.value,
+        title="Material connection disclosures are missing in creator fixture",
+        description=(
+            f"{len(flagged)} creator records show gifting, affiliate, or insider relationships "
+            "without an explicit material-connection disclosure flag."
+        ),
+        recommendation=(
+            "Set material_connection_disclosed=true for every creator entry with gifting, "
+            "affiliate links, or insider/employment relationships, and include the disclosure text template."
+        ),
+        estimated_impact=ImpactLevel.HIGH.value,
+        effort=EffortLevel.QUICK_WIN.value,
+        source=FindingSource.USER_PROVIDED.value,
+        evidence=[
+            Evidence(
+                evidence_type="checklist_item",
+                value=f"flagged_creators={','.join(flagged)}",
+                source_label="creator_fixture.creators",
+            )
+        ],
+        tags=["disclosure", "affiliate", "insider_endorsement"],
+    )
+
+
 def audit_creator_commerce_ops(
     data: Optional[Mapping[str, Any]] = None,
 ) -> List[AuditFinding]:
@@ -292,6 +350,7 @@ def audit_creator_commerce_ops(
         _rights_disclosure_finding(payload),
         _affiliate_tracking_finding(payload),
         _gmv_data_gap(payload),
+        _material_connection_disclosure_finding(payload),
     ):
         if finding is not None:
             findings.append(finding)

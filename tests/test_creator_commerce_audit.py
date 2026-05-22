@@ -16,6 +16,8 @@ def _healthy_fixture() -> dict:
                 "platform": "instagram",
                 "follower_count": 24000,
                 "engagement_rate": 0.034,
+                "gifted_product": True,
+                "material_connection_disclosed": True,
             },
             {
                 "creator_id": "c-002",
@@ -23,6 +25,8 @@ def _healthy_fixture() -> dict:
                 "platform": "youtube",
                 "follower_count": 91000,
                 "engagement_rate": 0.027,
+                "affiliate_enabled": True,
+                "material_connection_disclosed": True,
             },
         ],
         "rate_cards": [
@@ -97,3 +101,28 @@ def test_low_engagement_is_flagged_when_metrics_exist() -> None:
     subcategories = {finding.subcategory for finding in findings}
 
     assert "audience_quality" in subcategories
+
+
+def test_material_connection_without_disclosure_is_flagged() -> None:
+    fixture = _healthy_fixture()
+    fixture["creators"][0]["material_connection_disclosed"] = False
+    fixture["creators"][0]["gifted_product"] = True
+
+    findings = audit_creator_commerce_ops(fixture)
+    subcategories = {finding.subcategory for finding in findings}
+
+    assert "material_connection_disclosure" in subcategories
+
+
+def test_insider_relationship_without_explicit_disclosure_is_flagged() -> None:
+    fixture = _healthy_fixture()
+    fixture["creators"][1]["relationship_type"] = "employee"
+    fixture["creators"][1]["material_connection_disclosed"] = False
+
+    findings = audit_creator_commerce_ops(fixture)
+    disclosure_findings = [
+        finding for finding in findings if finding.subcategory == "material_connection_disclosure"
+    ]
+
+    assert disclosure_findings
+    assert disclosure_findings[0].severity == "high"

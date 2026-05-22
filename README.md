@@ -49,7 +49,9 @@ It uses Claude Code's operator experience — skills, subagents, hooks, memory, 
 - **Approval workflows** with risk-based auto-approval and state machine enforcement
 - **Compliance checking** with 100+ rules and regex pattern matching
 - **Quality gates**: Four U's scoring, banned-word detection, SEO linting, proof density, and AI-slop checks
-- **Current inventory**: 39 skill directories, 37 canonical `kai-*` skill docs, 33 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts
+- **Current inventory**: 42 skill directories, 40 canonical `kai-*` skill docs, 36 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts
+- **Claude Code marketing skills** for content, ads, lifecycle, SEO, GEO/AEO, audits, launches, and growth planning
+
 - **Claude Code marketing skills** for content, ads, lifecycle, SEO, GEO/AEO, audits, launches, and growth planning
 
 It is built for founders, indie hackers, SaaS teams, agencies, and product engineers who want Claude Code to help with actual growth work instead of generic copy generation.
@@ -63,6 +65,9 @@ Kai is not a prompt pack, a standalone chatbot, or a content spinner. It is a lo
 | Layer | Status | Notes |
 |-------|--------|-------|
 | Runtime models + persistence | Built | Atomic writes, thread-safe, audit log |
+| Goal Registry & Decomposer | Built | File-backed goals registry (`goals.py`) + cycle-free Task Graph Decomposer (`decomposer.py`) |
+| Closed-loop Rewards | Built | Outcome attribution metrics & performance feedback scoring loop (`rewards.py`) |
+| AutoReason & Ad loop | Built | Automated ad variant iteration & AutoReason tournament integration (`ad_loop.py`) |
 | Audit engines (8 categories) | Built | Real scoring algorithms, 239 tests passing |
 | Proposal ranking + bundling | Built | 5-factor weighted, dependency-aware |
 | Approval + action lifecycle | Built | State machine enforced, tested |
@@ -72,7 +77,7 @@ Kai is not a prompt pack, a standalone chatbot, or a content spinner. It is a lo
 | Connector business logic | Partial | Request construction complete, HTTP transport not wired |
 | Creative module | Partial | Generates briefs/templates, not final content |
 | Watchers/monitoring | Partial | Threshold logic real, data feeds not connected |
-| Agent loop / subagent orchestration | Planned | Scaffolding only |
+| Agent loop / subagent orchestration | Partial | TaskOrchestrator and scheduled tasks mapped; autonomous execution loops planned |
 | Remote automation scheduling | Planned | Defined in module manifests, not triggered |
 
 For the full assessment, see `docs/superpowers/specs/2026-04-03-system-current-state-report.md`.
@@ -96,7 +101,7 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
 
 **First run:** open Claude Code in any product repo and type `/kai-start` for guided setup. It reads your codebase, creates `MARKETING.md`, and recommends your first command.
 
-Or type `/kai` to see the 33 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 37 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
+Or type `/kai` to see the 36 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 40 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
 
 ## Why this exists
 
@@ -169,11 +174,11 @@ Implementation
 
 The canonical runtime models live in `kai/runtime/`.
 
-## 33 public router commands, 37 canonical skills
+## 36 public router commands, 40 canonical skills
 
 These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. They do not invoke the `kai/` Python runtime directly.
 
-The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 37 `harness/skills/kai-*` directories.
+The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 40 `harness/skills/kai-*` directories.
 
 ### Produce marketing assets
 
@@ -206,8 +211,11 @@ The table below reflects the `/kai` router surface. The complete canonical skill
 |---|---|
 | `/kai-gate` | Quality score for any content using Four U's, banned words, specificity, proof, and platform checks |
 | `/kai-audit` | Full marketing audit across SEO, content, email, ads, social, CRO, and positioning |
+| `/kai-weekly-audit` | 7-day marketing scorecard with urgent flags, source-backed findings, and actions |
+| `/kai-monthly-audit` | 30-day executive marketing review with strategic learning and next-month plan |
 | `/kai-seo-audit` | Technical SEO and semantic SEO audit with prioritized fixes |
 | `/kai-cro` | Conversion-rate audit for landing pages and funnels |
+| `/kai-html-presentation` | Client-ready HTML deck for audit and report delivery |
 
 ### Plan strategy
 
@@ -267,7 +275,10 @@ Use `/kai-surround-sound` and the AEO/GEO knowledge base to target the questions
 ```text
 harness/skills/              Claude Code slash-command skills
 knowledge/                   Marketing playbooks, frameworks, checklists, personas, policies
-kai/runtime/                 Runtime models, state, profiles, approvals, and action lifecycle
+kai/runtime/                 Runtime models, state, profiles, goals registry, approvals, and lifecycle
+agent/                       Subagent task scheduler and Task Graph Decomposer (goals-to-DAG planner)
+kai/execution/               Task Orchestrator mapping nodes to task handlers
+kai/analytics/               Attribution engine and closed-loop ActionRewards feedback loop
 scripts/quality/             Content quality gate and scoring rules
 scripts/content/             Briefing, writing, reporting, and content workflow scripts
 scripts/analytics/           Search Console, GA4, Stripe, Meta, and competitive monitoring utilities
@@ -280,7 +291,6 @@ tools/docker/                Modal and RunPod media-generation worker templates
 ## Where to start
 
 - **New launch:** `/kai-growth-plan` -> `/kai-email-system` -> `/kai-landing-page`
-- **Need organic growth:** `/kai-content-calendar` → `/kai-write` → `/kai-gate`
 - **Running ads:** `/kai-ad-campaign` → `/kai-cro` → `/kai-retarget`
 - **Need AI-search mentions:** `/kai-surround-sound` → `/kai-competitors` → `/kai-seo-audit`
 - **Want the full machine:** `/kai-launch`

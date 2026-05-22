@@ -9,6 +9,19 @@
 **Role:** Managing 5-15 direct reports
 **Frustration:** Trapped between executive demands and team burnout
 
+## Evidence Status
+
+**Current status:** Hypothesis scaffold until project-specific evidence is attached.
+
+| Field | Evidence Needed |
+|-------|-----------------|
+| Observed behavior | Manager interviews, calendar audits, support tickets, HR process data, sales calls |
+| Buying trigger | Hiring freeze, team burnout, missed target, reorg, new reporting requirement |
+| Budget authority | Team budget holder, influencer, department head, or executive sponsor |
+| Current workaround | Spreadsheets, status meetings, manual reporting, Slack reminders, shadow docs |
+| Objection | Team adoption, procurement, integration, change fatigue, executive approval |
+| Quote/source | Dated interview quote, call transcript, ticket, survey, or source URL |
+
 ---
 
 ## Core Psychology

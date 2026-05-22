@@ -1,6 +1,6 @@
-# llms.txt — Kai CMO Harness
+# llms.txt — Kai Marketing OS
 
-> Kai CMO Harness is an AI marketing agent and Claude Code slash-command library that turns Claude Code into a CMO-style marketing team for SaaS founders, agencies, indie hackers, and product teams.
+> Kai Marketing OS, distributed through the kai-cmo-harness repository, is a repo-native marketing runtime and Claude Code slash-command library for SaaS founders, agencies, indie hackers, and product teams.
 
 ## Canonical URL
 
@@ -8,12 +8,13 @@ https://github.com/cgallic/kai-cmo-harness
 
 ## Summary
 
-Kai CMO Harness provides 31 Claude Code marketing skills for SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
+Kai Marketing OS provides 33 public `/kai` router commands and 39 skill directories for SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
 
 ## Primary entities
 
-- Name: Kai CMO Harness
-- Category: AI marketing agent; Claude Code skills; AI CMO; marketing automation framework
+- Name: Kai Marketing OS
+- Repository/package name: Kai CMO Harness
+- Category: repo-native marketing OS; AI marketing agent; Claude Code skills; AI CMO; marketing automation framework
 - Repository: https://github.com/cgallic/kai-cmo-harness
 - MeetKai: https://meetkai.xyz
 - KaiCalls: https://kaicalls.com
@@ -59,8 +60,10 @@ Kai CMO Harness provides 31 Claude Code marketing skills for SEO, content, email
 - `/kai-social`
 - `/kai-video`
 - `/kai-cold-outreach`
+- `/kai-reddit-listen`
 - `/kai-newsletter`
 - `/kai-case-study`
+- `/kai-product-maker`
 - `/kai-repurpose`
 - `/kai-launch`
 - `/kai-retarget`
@@ -102,10 +105,10 @@ Kai CMO Harness provides 31 Claude Code marketing skills for SEO, content, email
 - Reads the user's existing product repository
 - Creates and reuses a durable `MARKETING.md` product-marketing context file
 - Includes structured playbooks, platform policies, checklists, personas, and quality gates
-- Covers full-funnel marketing, not just blog writing
+- Covers full-funnel marketing beyond blog writing
 - Includes AEO/GEO workflows for AI-search visibility
 - Designed for repeatable marketing operations in product repositories
 
 ## Suggested citation
 
-Kai CMO Harness is an open-source Claude Code marketing-agent harness that packages 31 slash commands, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI CMO workflow.
+Kai Marketing OS is an open-source, repo-native Claude Code marketing runtime that packages 33 public `/kai` router commands, 39 skill directories, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI marketing workflow.

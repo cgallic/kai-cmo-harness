@@ -12,6 +12,59 @@
 
 ---
 
+## Google Search + AEO Baseline (2026)
+
+Google treats AI Overviews and AI Mode as Google Search features. AEO/GEO work for Google should strengthen normal SEO, not replace it.
+
+**Google requirements for generative AI visibility:**
+- Page is crawlable by Googlebot
+- Page is indexable and eligible to appear with a snippet
+- Main content is visible in rendered HTML
+- Content is helpful, reliable, people-first, and non-commodity
+- Facts are supported by experience, sources, images, video, product data, or local data where relevant
+
+**Not required for Google AI Overviews / AI Mode:**
+- `llms.txt` or special AI text files
+- Special AI-only schema or markup
+- Forced Markdown versions of pages
+- "Chunking" content into tiny passages
+- Separate pages for every fan-out, PAA, or long-tail query variation
+
+Use AEO formatting to make useful content clearer. Do not use it to create doorway pages, keyword-stuffed variants, or content written only for AI systems.
+
+---
+
+## Evidence Policy for SEO Content
+
+Every non-obvious claim needs a source tier before drafting:
+
+| Tier | Use in SEO content |
+|---|---|
+| Official requirement | Crawlability, indexability, snippets, robots, structured-data eligibility, platform policy |
+| Official best practice | Google helpful content, AI optimization guide, Search Essentials, Bing AI guidance |
+| Academic study | GEO, AI visibility measurement, information retrieval research |
+| Vendor/platform measurement | Bing AI Performance, Search Console, analytics exports, tool reports with methodology |
+| Practitioner observation | Named expert or agency research with clear caveats |
+| Internal measurement | Client data, case studies, experiments, support logs, call logs |
+| Hypothesis | Ideas to test, not facts to publish |
+| Missing data | List in the brief or `_data-gaps.md`; do not invent numbers |
+
+**Claim rules:**
+- Use sourced numbers only when the source, date, and scope are stated.
+- Do not promise deterministic ranking, AI citations, or ChatGPT/Claude/Perplexity inclusion.
+- Do not reuse study effect sizes as universal outcomes.
+- Label AI-assisted drafts as drafts until a human verifies facts, sources, and experience evidence.
+
+**Data-gap language:**
+
+```markdown
+Data gap: We do not have Search Console access for this page, so we cannot claim current query impressions or CTR.
+Data gap: No AI visibility tool or repeated manual prompt sample was available, so AI citation frequency is unknown.
+Data gap: The client has not supplied original screenshots, product data, call logs, or customer quotes. This draft must avoid performance claims.
+```
+
+---
+
 ## Core SEO Content Principles
 
 ### Sentence Structure for Passage Ranking
@@ -96,15 +149,28 @@ Follow these [number] steps to [achieve X]:
 
 ---
 
-## AI Overview Optimization
+## Google AI Overview / AI Mode Optimization
 
-Google AI Overviews use these components:
+Google AI Overviews and AI Mode use the Google Search index, core ranking systems, RAG, and query fan-out. Optimize the page so it is useful to humans and easy for Search to retrieve, understand, and cite.
 
-1. **Entity Definition** with main attribute
-2. **Anchors** connecting answer segments
-3. **Listicles with headwords** (term: explanation format)
-4. **Section names** for navigation
-5. **Headword explanations**
+### What to Strengthen
+
+1. **Index and snippet eligibility:** Avoid accidental `noindex`, blocked Googlebot access, `nosnippet`, or overly restrictive `max-snippet` rules on pages that should be visible.
+2. **Non-commodity content:** Add first-hand experience, unique analysis, original examples, named data, screenshots, images, videos, product details, or local details.
+3. **Clear answer structure:** Put the direct answer under the relevant heading before nuance, caveats, or sales copy.
+4. **Intent coverage:** Use query fan-out and PAA research to improve coverage on a useful page or cluster. Create a separate page only when the subtopic deserves a standalone answer.
+5. **Rich source context:** Include product feeds, Merchant Center data, Google Business Profile details, structured data, image SEO, and video SEO where the business model makes those assets relevant.
+
+### Multi-Engine Notes
+
+| Engine | Writing implication | Measurement caveat |
+|---|---|---|
+| Google AI Overviews / AI Mode | Start with SEO fundamentals, non-commodity content, snippet eligibility, media/product/local data | No universal AI Overview-only Search Console report |
+| Bing / Copilot | Use clear headings, tables, FAQ blocks, evidence, and IndexNow where appropriate | Bing AI Performance is a Microsoft-specific AI citation report |
+| ChatGPT Search | Allow `OAI-SearchBot` where visibility matters; make pages self-contained and source-backed | Separate ChatGPT referrals and citations from Bing and Google |
+| Claude | Make pages accessible to `Claude-SearchBot` and `Claude-User` where desired; use readable HTML | Claude answers vary by user prompt and retrieval context |
+| Perplexity | Keep facts current, sourced, and extractable; respect robots policy | Perplexity citations are not proof of conversion impact |
+| Grok / X | Maintain public entity consistency and useful X presence where the audience uses X | Do not require a Grok crawler token unless xAI publishes one |
 
 ### Optimal Structure
 
@@ -125,16 +191,16 @@ Key [factors/steps/types] include:
 
 ---
 
-## Keyword Integration
+## Topic and Query Integration
 
 ### Placement Priority
-1. **Title/H1** - Near beginning
-2. **First paragraph** - Within first 100 words
-3. **H2 subheading** - At least one
-4. **Body** - Natural 1-2% density
-5. **Meta description** - Include primary keyword
-6. **URL slug** - Hyphenated keywords
-7. **Image alt text** - Descriptive with keyword
+1. **Title/H1** - Name the topic or primary entity clearly if it matches the page intent
+2. **First answer block** - Mention the query, entity, or close variant naturally
+3. **H2 subheadings** - Use facet language that helps readers scan the answer
+4. **Body** - Repeat terms only when they clarify meaning; do not chase density
+5. **Meta description** - Summarize the user benefit and topic in natural language
+6. **URL slug** - Keep it stable, short, and descriptive
+7. **Image alt text** - Describe the image accurately; include topic language only when it fits
 
 ### Semantic Keyword Expansion
 
@@ -268,3 +334,5 @@ Key [factors/steps/benefits] include:
 - [ ] Snippet-worthy answer exists in first 100 words
 - [ ] All sources integrated contextually
 - [ ] Reading level appropriate (6th-8th grade)
+- [ ] Every quantitative/client-facing claim has a source tier and retrieval date
+- [ ] Missing rankings, AI citations, traffic, conversions, Core Web Vitals, backlinks, or schema findings are listed as data gaps

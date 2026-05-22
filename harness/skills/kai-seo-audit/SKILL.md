@@ -81,7 +81,7 @@ Load these before starting:
 - Pagination — rel=next/prev or infinite scroll handling?
 
 **Layer 2: Technical Performance**
-- Core Web Vitals (LCP, FID/INP, CLS)
+- Core Web Vitals (LCP, INP, CLS)
 - Mobile-friendliness
 - Page speed (server response time, render-blocking resources)
 - HTTPS — mixed content, certificate issues?

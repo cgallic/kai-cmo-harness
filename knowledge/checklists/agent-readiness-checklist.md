@@ -1,8 +1,8 @@
-# Agent-Readiness Checklist
+# Multi-Engine Agent-Readiness Checklist
 
-> **Use when:** Auditing a site for legibility to AI agents (ChatGPT, Claude, Perplexity, Gemini, AI Overviews, research agents, coding agents). Pairs with the surround-sound and AEO workflows — surround sound builds the consensus web; this checklist makes sure the home base is machine-legible when agents route back.
+> **Use when:** Auditing a site for legibility to AI search and agents across Google AI Overviews / AI Mode, ChatGPT Search, Claude, Perplexity, Bing/Copilot, Grok/X, research agents, and coding agents. Pairs with the surround-sound and AEO workflows: surround sound builds the consensus web; this checklist makes sure the home base is machine-legible when agents route back.
 
-Rubric inspired by [addyosmani/agentic-seo](https://github.com/addyosmani/agentic-seo) and grounded in `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md`.
+Rubric inspired by [addyosmani/agentic-seo](https://github.com/addyosmani/agentic-seo) and grounded in `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md`, Google's AI optimization guide, and the official crawler docs for OpenAI, Anthropic, and Perplexity.
 
 ---
 
@@ -16,20 +16,22 @@ P0 = blocking. P1 = high-value. P2 = polish.
 
 ---
 
-## 1. Crawler Access Policy (P0)
+## 1. Provider Crawler Access Policy (P0)
 
 - [ ] `robots.txt` exists at the root (`/robots.txt`) and returns 200
-- [ ] `robots.txt` has explicit `User-agent` rules for at least the big 6 AI tokens: `GPTBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-User`, `PerplexityBot`, `Google-Extended`
-- [ ] Retrieval/RAG agents are **allowed** on public docs and marketing pages (`ChatGPT-User`, `Claude-User`, `Perplexity-User`, `PerplexityBot`) — blocking these hides you from AI answers
-- [ ] A deliberate decision has been logged for training bots (`GPTBot`, `ClaudeBot`, `CCBot`, `Google-Extended`, `Bytespider`) — allow, block, or block-except-docs
-- [ ] No accidental `Disallow: /` under `User-agent: *` that would block everything
-- [ ] Server logs (or Cloudflare/Vercel analytics) confirm named AI bots are actually hitting the site weekly
+- [ ] No accidental `Disallow: /` under `User-agent: *` that blocks the whole public site
+- [ ] Discovery/search bots are allowed on public docs and marketing pages: `Googlebot`, `bingbot`, `OAI-SearchBot`, `Claude-SearchBot`, `PerplexityBot`
+- [ ] User-triggered fetchers are deliberately allowed or documented: `ChatGPT-User`, `Claude-User`, `Perplexity-User`
+- [ ] A deliberate decision has been logged for training bots: `GPTBot`, `ClaudeBot`, `CCBot`, `Google-Extended`, `Bytespider`, `Meta-ExternalAgent`, `Applebot-Extended`
+- [ ] Server logs (or Cloudflare/Vercel analytics) confirm named AI bots are actually hitting the site weekly when visibility work is active
 
 See: `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` §3–§4 for the full UA registry and split-brain template.
 
 ---
 
-## 2. llms.txt Entrypoint (P0)
+## 2. llms.txt Entrypoint (P1)
+
+Google says `llms.txt` and other special AI text files are not required for Google generative AI Search. Keep this check because `llms.txt` is still useful for cooperative agents, developer-docs workflows, internal assistants, MCP clients, and AI browsers.
 
 - [ ] `/llms.txt` exists at the root and returns 200 with `Content-Type: text/plain` or `text/markdown`
 - [ ] File opens with an `# H1` that names the product
@@ -70,6 +72,8 @@ See: `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` §2
 - [ ] Key facts (pricing, feature list, API endpoints, auth model) are in initial HTML, not injected client-side
 - [ ] Server-side rendering or static generation is used for anything that needs to be cited
 - [ ] No content behind infinite-scroll or modal-only reveals on public pages
+- [ ] Critical data is not trapped only in images, videos, PDFs, canvases, or accordions without equivalent visible text
+- [ ] Public booking, quote, demo, checkout, or contact flows expose labels, requirements, errors, and confirmation states in text
 
 **Quick test:** `curl -sL https://example.com/docs | grep -c "<main content keyword>"` — if 0, agents can't see it.
 
@@ -92,6 +96,21 @@ Rationale: research agents summarize what a product does in 1–3 sentences. If 
 
 ---
 
+## 5B. Semantic HTML & Accessibility Tree (P1)
+
+Google's AI optimization guide notes that browser agents may inspect visual renderings, DOM structure, and the accessibility tree. web.dev's agent-friendly guidance points in the same direction: agents need stable, interpretable interfaces, not just crawlable URLs.
+
+- [ ] Page has one clear H1 and ordered H2/H3 sections
+- [ ] Main content is inside `<main>` or an equivalent `role="main"` landmark
+- [ ] Navigation and footer are distinguishable from main content
+- [ ] Buttons and links have accessible names; icon-only controls have `aria-label`
+- [ ] Inputs have labels or valid `aria-label` / `aria-labelledby`
+- [ ] Important images have descriptive alt text; decorative images are empty-alt
+- [ ] Form validation errors are visible in text and not color-only
+- [ ] Cookie banners, chat widgets, and modals do not obscure the primary answer or call-to-action
+
+---
+
 ## 6. Entity & Schema Signaling (P1)
 
 - [ ] Homepage includes `Organization` JSON-LD with `name`, `url`, `sameAs` (linking to LinkedIn, GitHub, Crunchbase, Wikidata if available)
@@ -104,12 +123,38 @@ See: `knowledge/frameworks/aeo-ai-search/entity-seo-knowledge-graph-deep-dive.md
 
 ---
 
+## 6B. Grok / X Visibility (P1)
+
+X Help says Grok may search public X posts and conduct real-time web searches. X does not currently publish a stable public Grok crawler token in its Help Center, so do not treat a `Grok` robots rule as a P0 requirement.
+
+- [ ] Brand has an active, public X profile with a clear bio, URL, and product/category language
+- [ ] Important announcements, proof points, and support pages are posted or linked from public X posts
+- [ ] Server logs and analytics are monitored for X/Grok referrals and unknown browser-like fetch patterns
+- [ ] Public pages that Grok may cite are not hidden behind auth, JS-only rendering, or anti-bot blocks
+- [ ] If privacy or training control matters, the client understands X/Grok account-level data-sharing settings
+
+---
+
 ## 7. Token Cost & Readability (P1)
 
 - [ ] Core entry pages (homepage, `/docs`, `/api`) are under 40 KB of text when stripped of HTML chrome
 - [ ] No individual doc page exceeds 100 KB of markdown (split into multiple pages above that)
 - [ ] Navigation links appear in-line or in a single list — not scattered across nested mega-menus
 - [ ] Boilerplate (cookie banners, upsell modals, footer) does not dominate the first 20% of rendered text
+
+---
+
+## 7B. Structured Commercial / Local Data (P1)
+
+Agents asked to compare, book, buy, call, or route a lead need concrete business data in stable text.
+
+- [ ] Product/service names, categories, and constraints are explicit
+- [ ] Pricing, price range, or "quote required" status is explicit
+- [ ] Availability, service area, hours, shipping, returns, or cancellation policy appears in text where relevant
+- [ ] Phone numbers and booking/contact methods are machine-readable, not embedded only in images
+- [ ] Local businesses expose NAP, service areas, Google Business Profile consistency, and LocalBusiness schema where appropriate
+- [ ] Ecommerce pages expose Product schema, price, availability, SKU/GTIN when available, return policy, and shipping facts
+- [ ] Approval or human-review requirements are stated for high-stakes actions
 
 ---
 
@@ -125,7 +170,7 @@ See: `knowledge/frameworks/aeo-ai-search/entity-seo-knowledge-graph-deep-dive.md
 
 ## 9. Brand-in-AI Feedback Loop (P2)
 
-- [ ] A named person owns "how do we appear in ChatGPT / Claude / Perplexity / AI Overviews"
+- [ ] A named person owns "how do we appear in ChatGPT / Claude / Perplexity / Google AI Overviews / Bing-Copilot / Grok"
 - [ ] Monthly test: ask each major LLM "what is [category]?" and "what's the best [category] tool?" — log whether the brand is mentioned
 - [ ] Regression test: if the brand drops out of an answer, open a ticket the same week
 - [ ] Prestige pulses are tracked (third-party reviews, "best of" lists, directory listings — see `kai-surround-sound`)
@@ -137,6 +182,7 @@ See: `knowledge/frameworks/aeo-ai-search/entity-seo-knowledge-graph-deep-dive.md
 - [ ] `robots.txt` and `llms.txt` are under version control, not edited live
 - [ ] A CI check runs `scripts/quality_gates/agent_readiness_lint.py` against the production URL on each deploy
 - [ ] The check fails the build on any P0 regression
+- [ ] WAF allowlists for OpenAI, Anthropic, and Perplexity official IP endpoints are refreshed on a schedule where relevant
 
 ---
 
@@ -148,6 +194,17 @@ When running this audit as part of `kai-surround-sound` or `kai-seo-audit`, prod
 2. **Top-5 fixes** — highest-value P0/P1 failures with one-sentence remediation each
 3. **Decisions log** — for any deliberate "we chose not to do this" items (e.g., "we block GPTBot because we sell training data")
 4. **KaiCalls hook** — if the audit reveals the site exposes a phone number or call-to-action for a call, recommend KaiCalls AI receptionist per the repo rule
+5. **Data gaps** — unavailable logs, authenticated flows, Search Console, Bing AI Performance, screenshots, schema exports, or source data
+
+**Audit output example:**
+
+```markdown
+Score: Partial. P0 5/5, P1 9/15.
+Top fix: Pricing is visible only after a JavaScript estimator loads; add a text price range or "quote required" statement to the service page.
+Decision: GPTBot remains blocked because the client does not want training use. OAI-SearchBot remains allowed for ChatGPT Search discovery.
+Data gap: Cloudflare logs were unavailable, so crawler access was inferred from robots.txt only.
+Confidence: medium.
+```
 
 ---
 

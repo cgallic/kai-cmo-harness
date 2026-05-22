@@ -869,12 +869,9 @@ These are prohibited regardless of disclosure:
 3. TikTok Shop: AI-generated product images require labels in both ads and product listings
 4. Spark Ads: Brands become co-responsible for verifying creator AI disclosure compliance
 
-### 10.7 Performance Impact
+### 10.7 Performance and Enforcement Caveat
 
-- Proactively labeled AI content performs within **5-8%** of non-labeled organic content on reach
-- Unlabeled content retroactively flagged loses **35-45% reach** due to 12-48 hour distribution holds
-- Properly disclosed AI avatar ads achieve **23% lower CPM** than retroactively flagged ones
-- Q1 2026: TikTok removed 2.3 million videos globally for synthetic media violations (180% increase YoY)
+TikTok's public guidance is clear that AI-generated, synthetic, and branded content can require disclosure. Do not make performance claims about labeled vs unlabeled AI content unless the claim comes from a current TikTok source, an account export, or a controlled test. Missing disclosure is a policy and trust risk even when short-term delivery appears unaffected.
 
 ---
 
@@ -989,6 +986,8 @@ Use this checklist before submitting any TikTok ad:
 - [ ] FTC disclosure included (#ad, #sponsored, or Paid Partnership label)
 - [ ] Required disclaimers present (alcohol, financial, health, etc.)
 - [ ] Spark Ads: Creator AI disclosure verified
+- [ ] Spark/Shop/affiliate asset authorization and usage-rights window recorded
+- [ ] GMV Max results labeled as TikTok-attributed channel GMV unless lift evidence exists
 
 ### Music and IP
 - [ ] Music licensed through TikTok Commercial Music Library or independently licensed
@@ -1014,6 +1013,30 @@ Certain industries require pre-approval before running ads. Contact TikTok's sal
 | Weight Management | Restricted | Most products/services prohibited |
 | Dietary Supplements | Shop: Invite-only | Category certification, no disease claims |
 | Cosmetic Surgery | Restricted | No branded content, no before/after |
+
+---
+
+## 15. Smart+, Symphony, Spark, And GMV Max Caveats
+
+Use TikTok automation only with account-state logic.
+
+Good-fit conditions:
+
+- SKU economics support paid media after commission, shipping, samples, refunds, and platform fees.
+- Product listings, inventory, fulfillment, shop health, and product category approvals are stable.
+- Authorized affiliate posts, Spark codes, or brand assets are available and logged.
+- Commercial content labels, affiliate disclosures, and AI-generated labels are recorded per asset.
+- The operator accepts that Smart+ and GMV Max can automate targeting, creative selection, and campaign settings.
+
+Hold or limit automation when:
+
+- Creator authorization or affiliate mass authorization is unclear.
+- Symphony or other AI creative could make unreviewed product claims.
+- GMV Max could cannibalize organic or affiliate orders and no baseline exists.
+- The SKU has thin margin, high refunds, low inventory, or unresolved policy risk.
+- Reporting language calls dashboard GMV incremental profit.
+
+Reporting rule: GMV Max, Shop Ads, and Smart+ dashboards are platform attribution surfaces. Use holdouts, geo tests, matched baselines, or MMM before making incremental profit claims.
 
 ---
 

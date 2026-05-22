@@ -65,6 +65,7 @@ Each file contains:
 - "This feels rigged because..." analysis
 - Phrases they think vs. say
 - Why these problems are video/content-worthy
+- Evidence fields separating observed insight from hypothesis
 
 Files:
 - `competent-cog.md` - Corporate/office workers
@@ -79,6 +80,20 @@ Files:
 ---
 
 ## Using Personas in Content
+
+### Evidence Standard
+
+Personas are creative and strategic scaffolds until source evidence is attached. Before using a persona for client-facing strategy, fill the evidence fields in the persona file:
+
+- Observed behavior
+- Buying trigger
+- Budget authority or influence
+- Current workaround
+- Objection
+- Interview quote or source artifact
+- Evidence status: `evidence_backed`, `directional`, or `hypothesis`
+
+Use `hypothesis` personas for ideation and testing only. Do not present a persona pain, quote, budget authority, or trigger as fact without a dated source.
 
 ### Headlines
 Use persona-specific pain points:

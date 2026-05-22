@@ -47,6 +47,24 @@ curl -s -X POST "https://us.posthog.com/api/projects/${POSTHOG_PROJECT_ID}/query
 
 ## Common Marketing Queries
 
+### 0. Event Hygiene Audit
+
+Use this before attribution work. Unknown event names, missing session IDs, and missing UTMs create false certainty.
+
+```sql
+SELECT
+  event,
+  count() AS events,
+  count(DISTINCT distinct_id) AS users,
+  countIf(properties.$session_id IS NULL) AS missing_session_id,
+  countIf(properties.utm_source IS NOT NULL) AS with_utm_source
+FROM events
+WHERE timestamp > now() - interval 30 day
+GROUP BY event
+ORDER BY events DESC
+LIMIT 100
+```
+
 ### 1. Pageviews by URL (Last 30 Days)
 
 ```sql
@@ -214,6 +232,97 @@ ORDER BY pageviews DESC
 LIMIT 20
 ```
 
+### 11. Signup Cohort Retention By Acquisition Source
+
+```sql
+WITH signups AS (
+  SELECT
+    distinct_id,
+    min(timestamp) AS signup_time,
+    argMin(properties.utm_source, timestamp) AS signup_source
+  FROM events
+  WHERE event = 'signup_completed'
+    AND timestamp > now() - interval 90 day
+  GROUP BY distinct_id
+)
+SELECT
+  signup_source,
+  count() AS signups,
+  countIf(e.event = 'activation_completed'
+    AND e.timestamp <= signups.signup_time + interval 14 day) AS activated_14d,
+  round(activated_14d / signups * 100, 2) AS activation_rate_pct
+FROM signups
+LEFT JOIN events e ON e.distinct_id = signups.distinct_id
+GROUP BY signup_source
+ORDER BY signups DESC
+```
+
+### 12. Holdout Lift For Lifecycle Campaigns
+
+Requires a stable property such as `lifecycle_holdout_group = 'test' | 'control'`.
+
+```sql
+SELECT
+  properties.lifecycle_campaign AS campaign,
+  properties.lifecycle_holdout_group AS holdout_group,
+  count(DISTINCT distinct_id) AS users,
+  countIf(event = 'purchase_completed') AS purchases,
+  round(purchases / users * 100, 2) AS purchase_rate_pct
+FROM events
+WHERE timestamp > now() - interval 30 day
+  AND properties.lifecycle_campaign IS NOT NULL
+  AND properties.lifecycle_holdout_group IN ('test', 'control')
+GROUP BY campaign, holdout_group
+ORDER BY campaign, holdout_group
+```
+
+Report lift only after checking randomization, exclusions, sample size, and guardrails. Do not call attributed revenue incremental without a control group or another causal method.
+
+### 13. Assisted Conversion Touches
+
+```sql
+WITH converters AS (
+  SELECT
+    distinct_id,
+    min(timestamp) AS conversion_time
+  FROM events
+  WHERE event IN ('signup_completed', 'demo_requested', 'purchase_completed')
+    AND timestamp > now() - interval 30 day
+  GROUP BY distinct_id
+)
+SELECT
+  e.properties.utm_source AS source,
+  e.properties.utm_medium AS medium,
+  e.properties.utm_campaign AS campaign,
+  count(DISTINCT e.distinct_id) AS assisted_converters
+FROM events e
+INNER JOIN converters c ON e.distinct_id = c.distinct_id
+WHERE e.timestamp BETWEEN c.conversion_time - interval 30 day AND c.conversion_time
+  AND e.properties.utm_source IS NOT NULL
+  AND e.event = '$pageview'
+GROUP BY source, medium, campaign
+ORDER BY assisted_converters DESC
+LIMIT 50
+```
+
+Assisted touch counts are directional. They show presence in journeys, not causal lift.
+
+### 14. Preference And Suppression Audit
+
+```sql
+SELECT
+  event,
+  properties.unsubscribe_scope AS unsubscribe_scope,
+  properties.list_id AS list_id,
+  count() AS events,
+  count(DISTINCT distinct_id) AS users
+FROM events
+WHERE event IN ('email_subscribed', 'email_unsubscribed', 'email_complaint_received')
+  AND timestamp > now() - interval 90 day
+GROUP BY event, unsubscribe_scope, list_id
+ORDER BY events DESC
+```
+
 ---
 
 ## Response Parsing
@@ -247,3 +356,7 @@ POSTHOG_PROJECT_ID=<numeric project ID>
 ---
 
 *Queries tested against PostHog Cloud (us.posthog.com) as of April 2026. HogQL syntax may evolve — check PostHog docs for breaking changes.*
+
+## Source Notes
+
+References retrieved 2026-05-17: PostHog HogQL docs, PostHog event docs, Google Meridian docs, and IAB incremental measurement guidance. Queries are templates; verify event names, consent rules, and identity-stitching policy before using results in client-facing claims.

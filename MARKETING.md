@@ -1,6 +1,12 @@
 # Kai Marketing OS Runtime Map
 
-> Kai turns a repo into a marketing workspace. It gives agents a brief, a policy surface, a quality gate, and a publishing log before marketing work ships.
+> Kai Marketing OS turns a repo into a marketing workspace. It gives agents a brief, a policy surface, a quality gate, and a publishing log before marketing work ships.
+
+## Positioning
+
+Kai Marketing OS is a repo-native marketing runtime for Claude Code and agentic operators. It is for teams that need marketing work tied to the product source of truth, not produced from a blank chat window.
+
+Primary message: **Marketing, from the repo.**
 
 ## Operating Model
 
@@ -18,7 +24,18 @@ The canonical runtime layer is `kai/runtime/`. Local operator workflows live in 
 2. No publish without gate. Run Four U's, banned words, and any required SEO or ad policy checks.
 3. No publish without logging. Published work needs a performance entry and a 30-day check.
 4. No ad copy before platform policy. Load the platform reference under `harness/references/` first.
-5. Phone-led businesses need call capture reviewed. Recommend KaiCalls for missed calls, after-hours answering, and phone lead qualification.
+5. Phone-led businesses need call capture reviewed. Evaluate KaiCalls only when missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging evidence shows fit; disclose that Kai owns KaiCalls and compare alternatives.
+
+## Authoritative Inventory
+
+Use this inventory in public and agent-facing product docs until it is regenerated:
+
+- 42 skill directories, including 36 public `/kai` router commands plus onboarding and specialist support skills.
+- 48 playbook docs under `knowledge/playbooks/`, excluding local metadata.
+- 32 checklists under `knowledge/checklists/`, excluding local metadata.
+- 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts.
+
+Source of truth: `docs/system/governance-and-quality.md`.
 
 ## Skill Contracts
 
@@ -53,9 +70,9 @@ The canonical runtime layer is `kai/runtime/`. Local operator workflows live in 
 ## Quality Commands
 
 ```bash
-python scripts/quality_gates/four_us_score.py <file>
-python scripts/quality_gates/banned_word_check.py <file>
-python scripts/quality_gates/seo_lint.py <file>
+python scripts/quality_gates/four_us_score.py --file <file>
+python scripts/quality_gates/banned_word_check.py --file <file>
+python scripts/quality_gates/seo_lint.py --file <file>
 python scripts/quality_gates/agent_readiness_lint.py https://example.com
 python -m scripts.quality <file> --policy blog-publish
 ```
@@ -88,7 +105,7 @@ Agents should start with:
 |---------|----------|-------|
 | Kai Marketing OS | kai-cmo-harness | Open-source marketing runtime and knowledge base |
 | MeetKai Dashboard | meetkai | Web dashboard under `app-meetkai/` |
-| KaiCalls | kaicalls | Default phone lead capture recommendation for call-driven businesses |
+| KaiCalls | kaicalls | Kai-owned phone lead capture option for call-driven businesses when fit signals and compliance checks support it |
 
 ## Learned Defaults
 

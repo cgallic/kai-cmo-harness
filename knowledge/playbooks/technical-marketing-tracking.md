@@ -28,6 +28,20 @@ Work bottom-up. If Layer 1 is wrong, everything above it is garbage.
 
 ## Layer 1: Data Layer
 
+### Event Governance
+
+Every event must have an owner, trigger definition, consent behavior, and QA path. Do not add duplicate names for the same action across GA4, PostHog, ad platforms, and the CRM.
+
+| Governance Field | Requirement |
+|------------------|-------------|
+| `event_name` | snake_case, stable, one action per event |
+| `trigger` | exact user/system action that fires the event |
+| `properties` | required and optional fields with allowed values |
+| `consent_state` | whether the event fires under denied, partial, or granted consent |
+| `destinations` | GA4, PostHog, CRM, ad platforms, warehouse |
+| `owner` | team/person accountable for QA |
+| `qa_method` | DebugView, PostHog live events, Tag Assistant, network request, warehouse check |
+
 ### What Is It?
 
 A JavaScript object that holds structured data about the page and user. GTM reads from it. It decouples your tracking from your HTML.
@@ -187,6 +201,7 @@ gtag('set', 'user_data', {
 - **CCPA** (California): Must offer opt-out
 - **ePrivacy** (EU): Cookie consent required before any non-essential cookies
 - **Google Consent Mode v2**: Required for Google ads in EEA — sends cookieless pings when consent is denied
+- **State privacy and GPC signals:** Respect applicable opt-out and sensitive-data rules based on jurisdiction and data use
 
 ### Implementation
 
@@ -198,7 +213,7 @@ USER ARRIVES
   │   └── Declines → Fire GA4 in consent mode (cookieless pings)
   │                  Do NOT fire Meta/LinkedIn/TikTok pixels
   │
-  ├── US visitor (California) → Fire tags, show "Do Not Sell" link
+  ├── US visitor (California/covered states) → Respect applicable opt-out, sale/share, sensitive-data, and GPC signals
   │
   └── US visitor (other) → Fire tags normally
 ```
@@ -222,6 +237,8 @@ gtag('consent', 'update', {
   'analytics_storage': 'granted'
 });
 ```
+
+**Identity caution:** Do not send CRM IDs, emails, phone numbers, or other persistent identifiers to analytics or ad platforms under denied consent unless counsel and platform policy allow the exact use. Hashed personal data can still be personal data.
 
 ### Cookie Banner Tools
 
@@ -275,6 +292,9 @@ https://yoursite.com/page?utm_source=facebook&utm_medium=cpc&utm_campaign=trial-
 - [ ] UTM parameters preserved through to conversion
 - [ ] Cross-domain tracking configured (if multiple domains)
 - [ ] IP anonymization enabled (GDPR requirement)
+- [ ] No PII sent in URLs, event names, or event properties
+- [ ] Consent-denied state tested for every ad/analytics tag
+- [ ] Event names and properties match the analytics attribution plan
 
 ### Monthly
 - [ ] Verify conversion tracking is still firing (platforms change)
@@ -293,3 +313,9 @@ https://yoursite.com/page?utm_source=facebook&utm_medium=cpc&utm_campaign=trial-
 | UTMs not showing in GA4 | Parameters stripped by redirect | Preserve UTMs through redirects |
 | Cross-domain tracking broken | Missing configuration | Set up cross-domain measurement in GA4 |
 | Consent banner breaks layout | CSS conflict | Test on mobile, adjust z-index |
+
+---
+
+## Source Notes
+
+References retrieved 2026-05-17: Google Consent Mode and advertising measurement docs, Google Meridian docs, IAB State of Data/privacy materials, IAB incremental measurement guidance, PostHog event documentation, and applicable privacy/legal references. Treat implementation snippets as examples; verify against current platform docs before production launch.

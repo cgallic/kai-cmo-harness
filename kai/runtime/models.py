@@ -187,3 +187,50 @@ class KaiRuntimeState(SerializableModel):
     latest_artifact_ids_by_brand: Dict[str, str] = field(default_factory=dict)
     latest_artifact_ids_by_brand_workflow: Dict[str, str] = field(default_factory=dict)
     active_run_ids: List[str] = field(default_factory=list)
+
+
+@dataclass
+class KaiGoal(SerializableModel):
+    """Canonical model for tracking brand goals and targets."""
+
+    goal_id: str
+    brand_id: str
+    name: str
+    kpi_name: str
+    target_value: float
+    current_value: float
+    target_direction: Literal["increase", "decrease"]
+    status: Literal["active", "achieved", "failed"] = "active"
+    deadline: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class TaskNode(SerializableModel):
+    """Individual execution node within a TaskGraph."""
+
+    node_id: str
+    task_type: str
+    status: Literal["pending", "running", "completed", "failed", "skipped"] = "pending"
+    inputs: Dict[str, Any] = field(default_factory=dict)
+    outputs: Dict[str, Any] = field(default_factory=dict)
+    error: Optional[str] = None
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+
+
+@dataclass
+class TaskGraph(SerializableModel):
+    """Directed Acyclic Graph representing a workflow execution roadmap."""
+
+    graph_id: str
+    goal_id: Optional[str]
+    brand_id: str
+    status: Literal["pending", "running", "completed", "failed"] = "pending"
+    nodes: Dict[str, TaskNode] = field(default_factory=dict)
+    edges: List[List[str]] = field(default_factory=list)  # List of [from_node, to_node]
+    created_at: str = ""
+    updated_at: str = ""
+

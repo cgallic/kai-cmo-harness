@@ -1,13 +1,41 @@
 skill: blog-post
-version: 2.0
+version: 3.0
 harness: kai-harness
+format: long-form-seo-content
+risk_tier: medium
+word_count: 1200-1800
+min_four_us: 12
+seo_lint: true
+
+description: >
+  Source-backed blog posts that follow Algorithmic Authorship, satisfy search
+  intent, preserve claim provenance, and avoid unsupported SEO or AI Search
+  promises.
+
+required_sources:
+  - brief
+  - harness/brief-schema.md
+  - knowledge/frameworks/content-copywriting/algorithmic-authorship.md
+  - knowledge/checklists/content-checklist.md
+  - claim_evidence_log
+  - persona_or_audience_source
+source_policy:
+  load_before_writing: true
+  search_or_client_claims_require_evidence: true
+  persona_claims_require_source_or_hypothesis_label: true
+  ai_search_claims_must_be_caveated: true
+  missing_sources_action: block_or_label_as_hypothesis
 
 inputs:
   required:
-    - brief: object  # see harness/brief-schema.md
+    - brief: object
   optional:
     - tone_override: string
     - length_override: int
+    - primary_keyword: string
+    - secondary_keywords: list[string]
+    - persona_source_id: string
+    - claim_evidence_log: list[object]
 
 outputs:
   draft: markdown
@@ -15,18 +43,152 @@ outputs:
   seo_score: object
   suggested_title: string
   meta_description: string
+  claim_table: list[object]
+
+output_schema:
+  type: object
+  required:
+    - draft
+    - suggested_title
+    - meta_description
+    - four_us_score
+    - seo_score
+    - claim_table
+  properties:
+    draft: markdown
+    suggested_title: string
+    meta_description: string
+    four_us_score: object
+    seo_score: object
+    claim_table:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        evidence_tier: string
+        confidence_label: string
 
 quality_gates:
-  - four_us_total >= 12
-  - four_us_min_single >= 2
-  - banned_words_tier1 == 0
-  - seo_lint_hard_errors == 0
+  - "four_us_total >= 12"
+  - "four_us_min_single >= 2"
+  - "banned_words_tier1 == 0"
+  - "seo_lint_hard_errors == 0"
+  - "claim_table_complete == true"
 
-word_count: 1200-1800
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "1200 <= word_count <= 1800"
+  - id: four_us_threshold
+    evaluator: quality_gate
+    pass_when: "four_us_total >= 12 and four_us_min_single >= 2"
+  - id: seo_lint_passes
+    evaluator: quality_gate
+    pass_when: "seo_lint_hard_errors == 0"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+  - id: claim_evidence_present
+    evaluator: static
+    pass_when: "every non-obvious factual claim maps to evidence_id or hypothesis label"
+  - id: no_ai_visibility_guarantee
+    evaluator: regex
+    pass_when: "no AI Search ranking, citation, or traffic guarantee appears"
+  - id: persona_source_present
+    evaluator: static
+    pass_when: "persona claims include source id or hypothesis label"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: usefulness
+      question: "Can the reader take action without needing hidden context?"
+    - name: search_fit
+      question: "Does the post satisfy intent with clear entities, examples, and answer-first structure?"
+    - name: evidence_discipline
+      question: "Are material claims sourced, caveated, or labeled as hypotheses?"
+    - name: voice_and_specificity
+      question: "Does the draft avoid filler while staying specific to the brief and persona?"
+
+human_review_required_when:
+  - regulated_industry == true
+  - client_facing_quantitative_claims_present == true
+  - ai_search_or_seo_visibility_claims_present == true
+  - persona_source_confidence != high
+  - claim_risk_level == high
+
+golden_situations:
+  - name: source_backed_seo_article
+    expectation: "Passes SEO lint, includes claim table, and uses answer-first sections without unsupported metrics."
+  - name: ai_search_measurement_volatility
+    eval_id: kai.situations.ai_search_measurement_volatility.volatile_sampled_ai_visibility
+    expectation: "Labels AI visibility data as sampled and volatile instead of claiming trend certainty."
+  - name: persona_invented_from_vibes
+    eval_id: kai.situations.persona_invented_from_vibes.founder_vibes_persona
+    expectation: "Uses persona hypotheses only when research evidence is missing."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_unsourced_material_claims: 0
+  max_ai_visibility_guarantees: 0
+  max_persona_evidence_gaps: 0
+
+claim_policy:
+  allowed:
+    - sourced how-to guidance
+    - sourced examples
+    - clearly labeled hypotheses
+  requires_evidence:
+    - statistics
+    - rankings or traffic
+    - buyer behavior claims
+    - AI Search or SEO visibility claims
+    - customer outcomes
+  forbidden:
+    - invented metrics
+    - fabricated quotes
+    - guaranteed rankings or citations
+    - unsourced persona motives
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - source_url_or_path
+    - evidence_tier
+    - retrieval_date
+    - confidence_label
+  unresolved_claim_action: remove_or_label_hypothesis
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - content_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - unsubstantiated_material_claim
+    - seo_lint_failed
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - draft_id
+  - primary_keyword
+  - persona_source_id
+  - evidence_ids
+  - seo_lint_result
+  - four_us_score
+  - reviewer
+  - approval_status
+  - publish_url
+
 hooks:
   pre_write: load_brief + load_algorithmic_authorship + load_content_checklist
   post_write: run_quality_gate
-  on_fail: revise_with_failure_report  # max 2 retries
+  on_fail: revise_with_failure_report
   on_pass: post_for_approval
   on_approve: publish + content_log
   on_publish: schedule_30day_check

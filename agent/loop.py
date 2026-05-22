@@ -107,10 +107,154 @@ class AgentLoop:
         self.running = False
         self.shutdown_event.set()
 
+    async def _process_active_graphs(self):
+        """Evaluate active task graphs and start ready nodes."""
+        active_graphs = agent_db.list_active_task_graphs()
+        if not active_graphs:
+            return
+
+        running_tasks = state_manager.get_running_tasks()
+        running_count = len(running_tasks)
+        available_slots = agent_config.max_concurrent_tasks - running_count
+
+        if available_slots <= 0:
+            return
+
+        for graph in active_graphs:
+            nodes = graph.nodes
+
+            for node_id, node in nodes.items():
+                if available_slots <= 0:
+                    break
+
+                if node.status != "pending":
+                    continue
+
+                # Check dependencies
+                parents = [edge[0] for edge in graph.edges if edge[1] == node_id]
+                all_parents_completed = True
+                for parent_id in parents:
+                    parent_node = nodes.get(parent_id)
+                    if not parent_node or parent_node.status != "completed":
+                        all_parents_completed = False
+                        break
+
+                if all_parents_completed:
+                    task_key = f"graph:{graph.graph_id}:{node_id}"
+                    if task_key in running_tasks:
+                        continue
+
+                    print(f"[{datetime.now()}] Starting graph node: {graph.graph_id}:{node_id} ({node.task_type})")
+
+                    # Update node status in db
+                    agent_db.update_task_node(
+                        graph.graph_id,
+                        node_id,
+                        status="running",
+                        started_at=datetime.utcnow()
+                    )
+
+                    # Update graph status to running if it was pending
+                    if graph.status == "pending":
+                        agent_db.update_task_graph_status(graph.graph_id, "running")
+                        graph.status = "running"
+
+                    state_manager.add_running_task(task_key)
+                    state_manager.record_activity()
+                    available_slots -= 1
+
+                    asyncio.create_task(self._execute_graph_node(graph, node_id))
+
+    async def _execute_graph_node(self, graph, node_id: str):
+        """Execute a single graph node using TaskOrchestrator."""
+        from kai.execution import TaskOrchestrator
+        task_key = f"graph:{graph.graph_id}:{node_id}"
+
+        try:
+            node = graph.nodes[node_id]
+            orchestrator = TaskOrchestrator()
+            result = await orchestrator.execute_node(graph.graph_id, node, graph.brand_id)
+
+            success = result.get("success", True) if isinstance(result, dict) else True
+            if success:
+                agent_db.update_task_node(
+                    graph.graph_id,
+                    node_id,
+                    status="completed",
+                    outputs=result if isinstance(result, dict) else {},
+                    completed_at=datetime.utcnow()
+                )
+                print(f"[{datetime.now()}] Graph node completed: {graph.graph_id}:{node_id}")
+            else:
+                error_msg = result.get("error") or result.get("summary") or "Node reported failure"
+                await self._handle_graph_node_failure(graph, node_id, error_msg)
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[{datetime.now()}] Graph node failed with exception: {graph.graph_id}:{node_id} - {error_msg}")
+            traceback.print_exc()
+            await self._handle_graph_node_failure(graph, node_id, error_msg)
+        finally:
+            state_manager.remove_running_task(task_key)
+            self._update_graph_status_if_done(graph.graph_id)
+
+    async def _handle_graph_node_failure(self, graph, node_id: str, error_msg: str):
+        """Handle execution failure for a node and skip its descendants recursively."""
+        agent_db.update_task_node(
+            graph.graph_id,
+            node_id,
+            status="failed",
+            error=error_msg,
+            completed_at=datetime.utcnow()
+        )
+        print(f"[{datetime.now()}] Graph node failed: {graph.graph_id}:{node_id} - {error_msg}")
+
+        # Fetch fresh graph structure to skip descendants
+        fresh_graph = agent_db.get_task_graph(graph.graph_id)
+        if fresh_graph:
+            self._skip_descendants(fresh_graph, node_id)
+
+    def _skip_descendants(self, graph, node_id: str):
+        """Recursively mark all downstream child nodes as skipped in the database."""
+        children = [edge[1] for edge in graph.edges if edge[0] == node_id]
+        for child_id in children:
+            child_node = graph.nodes.get(child_id)
+            if child_node and child_node.status in ("pending", "running"):
+                agent_db.update_task_node(
+                    graph.graph_id,
+                    child_id,
+                    status="skipped",
+                    completed_at=datetime.utcnow()
+                )
+                print(f"[{datetime.now()}] Skipping downstream node: {graph.graph_id}:{child_id} because parent {node_id} failed/skipped")
+                self._skip_descendants(graph, child_id)
+
+    def _update_graph_status_if_done(self, graph_id: str):
+        """Update overall graph status if all nodes are terminal."""
+        fresh_graph = agent_db.get_task_graph(graph_id)
+        if not fresh_graph:
+            return
+
+        all_terminal = True
+        has_failure = False
+        for node in fresh_graph.nodes.values():
+            if node.status in ("pending", "running"):
+                all_terminal = False
+                break
+            if node.status == "failed":
+                has_failure = True
+
+        if all_terminal:
+            new_status = "failed" if has_failure else "completed"
+            agent_db.update_task_graph_status(graph_id, new_status)
+            print(f"[{datetime.now()}] Task graph {graph_id} finished with status: {new_status}")
+
     async def _tick(self):
         """Single iteration of the agent loop."""
         if state_manager.is_paused():
             return
+
+        # Process active graphs first
+        await self._process_active_graphs()
 
         # Check for due tasks
         async with tracer.span(

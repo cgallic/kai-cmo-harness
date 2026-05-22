@@ -1,11 +1,164 @@
+skill: review-response
+version: 3.0
+harness: kai-harness
 format: review-response
+risk_tier: medium
 word_count: 180-360
 min_four_us: 10
 seo_lint: false
+
+description: >
+  Public responses to positive, neutral, and critical reviews. Protects private
+  information, avoids admissions of liability, and routes unresolved issues to
+  a direct follow-up channel.
+
+required_sources:
+  - brief
+  - review_text
+  - business_profile
+  - privacy_or_compliance_notes
+  - escalation_contact
+source_policy:
+  load_before_writing: true
+  review_text_required: true
+  no_private_customer_details: true
+  regulated_reviews_require_review: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - review_text: string
+    - star_rating: int
+    - business_name: string
+  optional:
+    - escalation_contact: string
+    - service_context: string
+    - compliance_notes: list[string]
+
 required_sections:
   - positive_review_response
   - critical_review_response
   - neutral_review_response
+
+outputs:
+  responses: object
+  risk_notes: list[string]
+
+output_schema:
+  type: object
+  required:
+    - positive_review_response
+    - critical_review_response
+    - neutral_review_response
+    - risk_notes
+  properties:
+    positive_review_response: string
+    critical_review_response: string
+    neutral_review_response: string
+    risk_notes: list[string]
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "required_sections_present == true"
+  - "no_private_data_disclosure == true"
+  - "direct_follow_up_included_for_critical == true"
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "180 <= word_count <= 360"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "all required_sections are non_empty"
+  - id: no_private_information
+    evaluator: regex
+    pass_when: "response does not disclose private customer, case, health, legal, or financial details"
+  - id: no_liability_admission
+    evaluator: regex
+    pass_when: "critical response does not admit fault, negligence, or specific private facts"
+  - id: follow_up_channel_present
+    evaluator: schema
+    pass_when: "critical and neutral responses include direct follow-up path"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: empathy
+      question: "Does the response acknowledge the reviewer without sounding canned?"
+    - name: privacy_safety
+      question: "Does it avoid private facts and liability-sensitive detail?"
+    - name: resolution_path
+      question: "Does it invite direct follow-up for unresolved issues?"
+    - name: brand_voice
+      question: "Does it sound calm, human, and professional?"
+
+human_review_required_when:
+  - review_mentions_legal_health_financial_issue == true
+  - threat_or_safety_issue_present == true
+  - private_information_in_review == true
+  - star_rating <= 2
+
+golden_situations:
+  - name: positive_review
+    expectation: "Thanks reviewer specifically without repeating private details."
+  - name: critical_review
+    expectation: "Shows empathy, avoids admissions, and moves resolution to direct channel."
+  - name: private_detail_trap
+    expectation: "Does not repeat sensitive facts from the review."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_private_detail_leaks: 0
+  max_missing_follow_up_paths: 0
+  max_liability_admissions: 0
+
+claim_policy:
+  allowed:
+    - general gratitude
+    - general service recovery language
+    - direct follow-up invitation
+  requires_evidence:
+    - specific service facts
+    - refund or policy promises
+  forbidden:
+    - private customer details
+    - arguing with reviewer
+    - admissions of legal liability
+    - incentives to change reviews
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - review_id
+    - business_profile_id
+    - escalation_contact_id
+    - compliance_note_id
+  unresolved_claim_action: remove_or_hold_for_review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - reputation_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - private_data_disclosure
+    - liability_admission
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - review_id
+  - star_rating
+  - business_profile_id
+  - escalation_contact_id
+  - reviewer
+  - approval_status
+
 constraints:
   - Never disclose private customer details.
   - Invite direct follow-up for unresolved issues.

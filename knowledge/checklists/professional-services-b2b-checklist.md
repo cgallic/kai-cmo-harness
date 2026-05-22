@@ -158,7 +158,7 @@
 - [ ] Internal linking connects blog posts to relevant service pages
 - [ ] Title tags and meta descriptions are unique and keyword-targeted on every page
 - [ ] Site has an XML sitemap submitted to Google Search Console
-- [ ] Core Web Vitals pass (LCP, FID/INP, CLS within Google thresholds)
+- [ ] Core Web Vitals pass (LCP, INP, CLS within Google thresholds)
 
 ---
 

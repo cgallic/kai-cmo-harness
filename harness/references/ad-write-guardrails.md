@@ -29,6 +29,10 @@ Every paid-media mutation must include:
 - Evidence for the recommendation, such as a collector snapshot, reporting export, anomaly record, or policy check.
 - Policy compliance result for the target platform.
 - Audit log entry linking the proposal, approval, API response, and verification result.
+- Measurement label: attribution only, directional proxy, lift test, geo test, or MMM.
+- Creative-quality ledger row for every new asset.
+- Rights and disclosure evidence for creator, UGC, affiliate, Partnership Ads, Spark Ads, or whitelisted assets.
+- Automation control review for PMax, AI Max, Advantage+, Smart+, GMV Max, final URL expansion, generated assets, or audience expansion.
 
 ## Spend Guardrails
 
@@ -67,6 +71,27 @@ paid_media_guardrails:
   require_rollback_for_activation: true
 ```
 
+## Platform AI Automation Guardrails
+
+AI automation features can change matching, creative assembly, URL selection, audience expansion, placement mix, or attribution surfaces. Block or hold automation changes when:
+
+- Conversion events are broken, duplicated, or optimized to low-quality leads.
+- Brand exclusions, URL exclusions, negative keywords, customer exclusions, or feed constraints are missing.
+- Generated assets or final URL expansion could create unreviewed claims.
+- Creator assets lack paid usage rights or disclosure evidence.
+- The recommendation describes platform ROAS as incremental profit.
+- The account state does not justify the automation mode.
+
+Required automation memo fields:
+
+- `account_state`
+- `automation_feature`
+- `enabled_controls`
+- `known_control_gaps`
+- `measurement_method`
+- `rollback_plan`
+- `human_approval_id`
+
 ## Blockers
 
 Block the mutation when any of these are true:
@@ -76,6 +101,9 @@ Block the mutation when any of these are true:
 - A budget or bid change lacks before/after values.
 - The diff or dry-run preview is missing.
 - Evidence is missing.
+- The measurement label is missing.
+- The action reports attributed ROAS as incremental profit.
+- Creator/UGC rights or disclosures are missing for assets used in ads.
 - A create/upload action sets status to `ACTIVE`.
 - `activate_on_create` is true.
 - Activation, launch, pause, bid, or budget changes lack rollback instructions.
