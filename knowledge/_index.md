@@ -54,6 +54,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `quality-rater-guidelines-deep-analysis.md` | QRG, E-E-A-T, Experience signals |
 | `ai-crawlers-technical-reference.md` | Multi-engine crawler policy, optional llms.txt, search/user/training bot split |
 | `linkedin-ai-systems-deep-dive.md` | **LinkedIn AI/feed systems research** — Feed-SR vs 360Brew, retrieval-ranking cascade, anti-slop detection, saves/dwell implications |
+| `google-ai-mode-agentic-features.md` | **Google AI Mode agentic plans/Canvas/booking + "Let Google call"** — partner-network distribution, conversational intent, local-services SERP shift |
 | `query-fan-out-guide.md` | Google AI Mode sub-query optimization |
 | `hidden-aeo-edges.md` | Advanced AEO tactics |
 
