@@ -491,6 +491,27 @@ Save this for your next [situation]. Link to [resource] in comments.
 
 ---
 
+## 2026 LinkedIn AI Systems Notes
+
+Source: `knowledge/research/linkedin-ai-systems/` and distilled framework `knowledge/frameworks/aeo-ai-search/linkedin-ai-systems-deep-dive.md`.
+
+**Core correction:** do not write as if LinkedIn's feed is simply ranked by the 150B 360Brew model. The research packet says 360Brew was evaluated and rejected for feed ranking. The production model is better treated as a retrieval-ranking cascade: LLaMA-3 3B retrieval, light rankers, Feed-SR rich ranking, then LiGR/LiFT/policy re-ranking.
+
+### Content implications
+
+- Optimize for **semantic relevance, dwell, and saves**, not just first-hour likes.
+- Make every article entity-rich: named systems, mechanisms, dates, papers, patents, people, or workflows.
+- Add one save-worthy artifact: checklist, teardown, diagram, table, or exact process.
+- Show human judgment early. Explain what changed your mind or what common belief is wrong.
+- Avoid uniform AI-generated structure; vary paragraph length and sentence rhythm.
+- Treat broad "thought leadership" as risky unless it contains specific evidence and operator implications.
+
+### Extra pre-publish check
+
+Run `knowledge/checklists/linkedin-ai-content-detection-and-feed-checklist.md` before final approval.
+
+---
+
 ## Sources
 
 - [LinkedIn Articles in 2025: The Definitive Guide](https://tomislavhorvat.com/linkedin-articles-the-definitive-guide/)

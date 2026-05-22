@@ -18,10 +18,11 @@ quality_gates:
   - four_us_min_single >= 2
   - banned_words_tier1 == 0
   - linkedin_format_check == pass  # no headers, short paragraphs, spacing
+  - linkedin_ai_detection_check == pass  # semantic relevance, dwell/save artifact, anti-slop signals
 
 word_count: 700-1000
 hooks:
-  pre_write: load_brief + load_linkedin_skill + load_connor_voice
+  pre_write: load_brief + load_linkedin_skill + load_connor_voice + load_linkedin_ai_systems_research
   post_write: run_quality_gate
   on_fail: revise_with_failure_report
   on_pass: post_for_approval

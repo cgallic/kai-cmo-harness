@@ -53,6 +53,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `entity-seo-knowledge-graph-deep-dive.md` | Entity Home, Wikidata, Schema.org |
 | `quality-rater-guidelines-deep-analysis.md` | QRG, E-E-A-T, Experience signals |
 | `ai-crawlers-technical-reference.md` | Multi-engine crawler policy, optional llms.txt, search/user/training bot split |
+| `linkedin-ai-systems-deep-dive.md` | **LinkedIn AI/feed systems research** — Feed-SR vs 360Brew, retrieval-ranking cascade, anti-slop detection, saves/dwell implications |
 | `query-fan-out-guide.md` | Google AI Mode sub-query optimization |
 | `hidden-aeo-edges.md` | Advanced AEO tactics |
 
@@ -196,6 +197,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `checklists/cro-audit-checklist.md` | **CRO audit** - Technical, above-fold, trust, forms, content, navigation scoring (1-5 per section, /30 total) |
 | `checklists/google-ads-launch-checklist.md` | **Google Ads** - Account setup, Search/PMax/Display/YouTube config, keywords, ad copy, extensions, landing page, post-launch |
 | `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
+| `checklists/linkedin-ai-content-detection-and-feed-checklist.md` | **LinkedIn pre-publish QA** — semantic feed fit, AI-slop avoidance, confidence hygiene |
 | `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - multi-engine robots.txt / optional llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
 
 ---
