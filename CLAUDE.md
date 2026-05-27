@@ -8,7 +8,7 @@ Kai is now framed as a **marketing-native Claude Code-style runtime**. This repo
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-This file is the entry point. Claude Code reads it automatically and gains access to the Kai inventory: 42 skill directories, 40 canonical `kai-*` skill docs, 36 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+This file is the entry point. Claude Code reads it automatically and gains access to the Kai inventory: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract
 
@@ -316,7 +316,7 @@ kai-cmo-harness/
 │
 ├── harness/                               # Content pipeline engine
 │   ├── brief-schema.md                    # Content brief template
-│   ├── skill-contracts/                   # Per-format contracts (15 YAML contracts)
+│   ├── skill-contracts/                   # Per-format contracts (18 YAML contracts)
 │   ├── references/                        # Platform-specific rules & policies
 │   │   ├── cold-email-rules.md            # CAN-SPAM, deliverability
 │   │   ├── google-ads-rules.md            # Google Ads copy constraints

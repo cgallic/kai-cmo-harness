@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 36 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 40 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 36 Marketing Skills
+# Kai Marketing OS - 40 Marketing Skills
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
@@ -41,6 +41,9 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
 | `/kai-video` | Video scripts + clipping plans for short/long-form |
 | `/kai-cold-outreach` | Cold email outreach sequences |
+| `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
+| `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
+| `/kai-sales-meeting-prep` | Meeting briefs, discovery plans, follow-up drafts, and sales handoff notes |
 | `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
 | `/kai-newsletter` | Newsletter editions — content, subject lines, scheduling |
 | `/kai-case-study` | Customer case studies from interview/data |
@@ -65,6 +68,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-seo-audit` | Technical SEO audit with prioritized fixes |
 | `/kai-cro` | Conversion rate audit — 5-layer optimization stack |
 | `/kai-html-presentation` | HTML presentation builder for audit and report delivery |
+| `/kai-data-dashboard` | Dashboard-ready specs or static dashboards from sourced Kai data |
 
 ## PLAN (choose direction)
 
@@ -87,7 +91,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 ## By Business Stage
 
 ### Pre-Launch ($0)
-`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-reddit-listen` → `/kai-brand`
+`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-sdr-operator` → `/kai-reddit-listen` → `/kai-brand`
 
 ### Launch ($0-$10K MRR)
 `/kai-launch` → `/kai-email-system` → `/kai-ad-campaign` → `/kai-social`
@@ -96,7 +100,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 `/kai-content-calendar` → `/kai-seo-audit` → `/kai-surround-sound` → `/kai-video` → `/kai-newsletter` → `/kai-influencer`
 
 ### Scale ($100K+ MRR)
-`/kai-audit` → `/kai-abm` → `/kai-competitors` → `/kai-retention` → `/kai-budget` → `/kai-partnership`
+`/kai-audit` → `/kai-abm` → `/kai-sdr-operator` → `/kai-competitors` → `/kai-retention` → `/kai-budget` → `/kai-partnership`
 
 ## When In Doubt
 

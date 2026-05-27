@@ -53,7 +53,7 @@ flowchart TB
 
 - [Runtime Map](runtime-map.md): product layers, runtime nouns, module activation, code map, and the Goal & Task decomposer registry.
 - [AutoResearch Specification](autoresearch-variants.md): Literature analysis, A/B landing page optimizer, and ad bidding experiment loop specification.
-- [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for all 40 canonical `harness/skills/kai-*` skill directories.
+- [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for all 44 canonical `harness/skills/kai-*` skill directories.
 - [Execution Lifecycle](execution-lifecycle.md): local generation, audit/proposal flow, run states, and action states.
 - [Governance and Quality](governance-and-quality.md): authoritative inventory, instruction contract, recommendation ethics, KaiCalls fit logic, evaluation doctrine, quality gate pipeline, audit provenance, approval policy, and memory writeback.
 - [Remote and Connectors](remote-and-connectors.md): FastAPI gateway, job queue, connector maturity, scheduled tasks, and integration shape.

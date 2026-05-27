@@ -49,7 +49,7 @@ It uses Claude Code's operator experience — skills, subagents, hooks, memory, 
 - **Approval workflows** with risk-based auto-approval and state machine enforcement
 - **Compliance checking** with 100+ rules and regex pattern matching
 - **Quality gates**: Four U's scoring, banned-word detection, SEO linting, proof density, and AI-slop checks
-- **Current inventory**: 42 skill directories, 40 canonical `kai-*` skill docs, 36 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts
+- **Current inventory**: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 18 skill contracts
 - **Claude Code marketing skills** for content, ads, lifecycle, SEO, GEO/AEO, audits, launches, and growth planning
 
 It is built for founders, indie hackers, SaaS teams, agencies, and product engineers who want Claude Code to help with actual growth work instead of generic copy generation.
@@ -64,7 +64,7 @@ Kai treats autonomous campaign management as a guarded phase, not the starting p
 
 | Layer | Status | Notes |
 |-------|--------|-------|
-| Claude Code skill surface | Working | 36 public `/kai` router commands and 40 canonical skill directories load repo context, frameworks, contracts, and policy references for interactive marketing work |
+| Claude Code skill surface | Working | 40 public `/kai` router commands and 44 canonical skill directories load repo context, frameworks, contracts, and policy references for interactive marketing work |
 | Runtime models + persistence | Built | Atomic writes, thread-safe, audit log |
 | Business profiling + audit engines | Built | Archetype detection, overlay inference, 8 audit categories, severity-weighted scoring, and multi-location support |
 | Proposal ranking + bundling | Built | 5-factor weighted, dependency-aware |
@@ -100,7 +100,7 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
 
 **First run:** open Claude Code in any product repo and type `/kai-start` for guided setup. It reads your codebase, creates `MARKETING.md`, and recommends your first command.
 
-Or type `/kai` to see the 36 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 40 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
+Or type `/kai` to see the 40 public router commands. The broader [public skill manifest](docs/skill-manifest/README.md) documents all 44 canonical `harness/skills/kai-*` skill directories, including newer and specialist skills that are not all listed in the router table.
 
 ## One-Click Live Dashboard Deployment
 
@@ -205,11 +205,11 @@ Implementation
 
 The canonical runtime models live in `kai/runtime/`.
 
-## 36 public router commands, 40 canonical skills
+## 40 public router commands, 44 canonical skills
 
 These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. They do not invoke the `kai/` Python runtime directly.
 
-The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 40 `harness/skills/kai-*` directories.
+The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 44 `harness/skills/kai-*` directories.
 
 ### Produce marketing assets
 
@@ -223,6 +223,9 @@ The table below reflects the `/kai` router surface. The complete canonical skill
 | `/kai-social` | Batch social posts across LinkedIn, X, TikTok, Instagram, and YouTube |
 | `/kai-video` | Video scripts and clipping plans for short-form and long-form video |
 | `/kai-cold-outreach` | Cold email sequences and outbound messaging |
+| `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
+| `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
+| `/kai-sales-meeting-prep` | Meeting briefs, discovery plans, follow-up drafts, and sales handoff notes |
 | `/kai-reddit-listen` | Monitor subreddits and draft profile-driven replies to Discord |
 | `/kai-newsletter` | Newsletter editions, subject lines, and structure |
 | `/kai-case-study` | Customer case study from interview notes or product data |
@@ -247,6 +250,7 @@ The table below reflects the `/kai` router surface. The complete canonical skill
 | `/kai-seo-audit` | Technical SEO and semantic SEO audit with prioritized fixes |
 | `/kai-cro` | Conversion-rate audit for landing pages and funnels |
 | `/kai-html-presentation` | Client-ready HTML deck for audit and report delivery |
+| `/kai-data-dashboard` | Dashboard specs or static dashboards from sourced Kai data |
 
 ### Plan strategy
 

@@ -1,0 +1,83 @@
+skill: sales-meeting-prep
+version: 1.0
+harness: kai-harness
+risk_tier: medium
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Prepares sales meetings from SDR package context, replies, account dossiers,
+  CRM notes, call notes, or transcripts. Produces meeting brief, discovery plan,
+  objection plan, follow-up draft, CRM handoff, and memory candidates.
+
+required_sources:
+  - product_context
+  - sdr_package
+  - account_dossier
+  - contact_context
+  - reply_triage_or_meeting_request
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  hypotheses_must_be_labeled: true
+  new_claims_require_evidence: true
+  transcript_claims_require_speaker_context: true
+  crm_or_calendar_mutation_requires_approval: true
+  missing_sources_action: mark_missing_and_continue_if_safe
+
+inputs:
+  required:
+    - meeting_type: string
+    - account: object
+    - contact: object
+    - offer: string
+    - source_evidence: list[object]
+  optional:
+    - reply_triage: object
+    - crm_notes: object
+    - call_notes: string
+    - transcript: string
+    - meeting_time: string
+
+outputs:
+  account_snapshot: object
+  known_inferred_missing: object
+  pain_hypotheses: list[object]
+  discovery_questions: list[string]
+  objection_plan: list[object]
+  agenda: list[string]
+  follow_up_draft: string
+  crm_handoff: object
+  memory_candidate: object
+
+quality_gates:
+  - known_inferred_missing_present == true
+  - hypotheses_labeled == true
+  - discovery_questions_count >= 3
+  - unsupported_claims == 0
+  - single_next_step == true
+  - crm_mutation_not_performed == true
+
+human_review_required_when:
+  - regulated_industry == true
+  - follow_up_contains_new_claims == true
+  - prospect_requested_contract_or_pricing_commitment == true
+  - transcript_contains_sensitive_data == true
+  - crm_or_calendar_mutation_requested == true
+
+approval_gate:
+  required_before_live_use: true
+  blocks:
+    - unsupported_claim
+    - unlabeled_hypothesis
+    - crm_mutation_without_approval
+    - calendar_mutation_without_approval
+
+trace_fields:
+  - meeting_id
+  - account_id
+  - contact_id
+  - reply_id
+  - evidence_ids
+  - crm_handoff_id
+  - memory_candidate_id

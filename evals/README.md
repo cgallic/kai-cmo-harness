@@ -1,6 +1,6 @@
 # Kai Evaluation Spine
 
-This directory contains the first-class evaluation spine for Kai workflows. It is intentionally YAML-and-docs only for Wave 1: no Python harness, no runner, and no changes outside `evals/`.
+This directory contains the first-class evaluation spine for Kai workflows. Most evals are YAML-and-docs only. SDR operating-loop situations also have a static schema runner at `scripts/quality_gates/sdr_loop_eval.py`.
 
 The goal is to make future prompt, skill-contract, and doctrine changes testable. Each situation captures the user request, trusted and untrusted context, required tool behavior, expected artifacts, deterministic hard checks, LLM judge criteria, provenance expectations, and human calibration notes.
 
@@ -31,6 +31,7 @@ evals/
     persona-invented-from-vibes/
     attribution-overclaim/
     pr-quote-newsworthiness-failure/
+    sdr-operating-loop/
 ```
 
 Planned but not created in this wave:
@@ -92,6 +93,12 @@ Future runnable evals should record:
 - deterministic gate results
 - LLM judge result with confidence
 - human calibration result, if required
+
+SDR static runner:
+
+```bash
+python scripts/quality_gates/sdr_loop_eval.py evals/situations/sdr-operating-loop
+```
 
 ## Regression Thresholds
 

@@ -1,6 +1,6 @@
 # Kai Public Skill Manifest
 
-This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 40 `kai-*` skill directories under `harness/skills/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
+This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 44 `kai-*` skill directories under `harness/skills/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
 Each page uses the same schema: one-line claim, triggers, inputs, outputs, methodology, dependencies, called-by links, quality gates, provenance, example artifacts, failure modes, and competitive claim. The manifest is meant to be falsifiable: a reader can trace a skill to source files, manifest rule IDs, gate thresholds, dependency links, and known example gaps.
 
@@ -73,6 +73,9 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 - [Kai Email System](./kai-email-system.md) - `kai-email-system`
 - [Kai Retarget](./kai-retarget.md) - `kai-retarget`
 - [Kai Retention](./kai-retention.md) - `kai-retention`
+- [Kai Sales Meeting Prep](./kai-sales-meeting-prep.md) - `kai-sales-meeting-prep`
+- [Kai SDR Operator](./kai-sdr-operator.md) - `kai-sdr-operator`
+- [Kai SDR Reply Triage](./kai-sdr-reply-triage.md) - `kai-sdr-reply-triage`
 
 ### Measurement
 
@@ -80,6 +83,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 - [Kai Audit](./kai-audit.md) - `kai-audit`
 - [Kai CRO](./kai-cro.md) - `kai-cro`
 - [Kai Daily Ad Review](./kai-daily-ad-review.md) - `kai-daily-ad-review`
+- [Kai Data Dashboard](./kai-data-dashboard.md) - `kai-data-dashboard`
 - [Kai Gate](./kai-gate.md) - `kai-gate`
 - [Kai Monthly Audit](./kai-monthly-audit.md) - `kai-monthly-audit`
 - [Kai Reddit Listen](./kai-reddit-listen.md) - `kai-reddit-listen`
@@ -96,9 +100,9 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 
 | Surface | Count | Notes |
 |---|---:|---|
-| Canonical `harness/skills/kai-*` pages | 40 | One manifest page per canonical `kai-*` skill directory. |
+| Canonical `harness/skills/kai-*` pages | 44 | One manifest page per canonical `kai-*` skill directory. |
 | Router/helper directories excluded | 2 | `harness/skills/kai` and `harness/skills/kaicalls-design`. |
-| Public router commands listed by `/kai` | 36 | Router-visible commands remain separate from the full canonical skill inventory. |
+| Public router commands listed by `/kai` | 40 | Router-visible commands remain separate from the full canonical skill inventory. |
 | Manifest rule IDs | 82 | Defined in `rule-registry.md`; derived from local methodology docs. |
 | Skills with real repo-local example artifacts | 22 | Listed in `example-artifacts.md`. |
-| Skills with explicit example gaps | 18 | Pages state `No committed example artifact found.` |
+| Skills with explicit example gaps | 22 | Pages state `No committed example artifact found.` |

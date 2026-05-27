@@ -30,10 +30,10 @@ The canonical runtime layer is `kai/runtime/`. Local operator workflows live in 
 
 Use this inventory in public and agent-facing product docs until it is regenerated:
 
-- 42 skill directories, including 36 public `/kai` router commands plus onboarding and specialist support skills.
+- 46 skill directories, including 40 public `/kai` router commands plus onboarding and specialist support skills.
 - 48 playbook docs under `knowledge/playbooks/`, excluding local metadata.
 - 32 checklists under `knowledge/checklists/`, excluding local metadata.
-- 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 15 skill contracts.
+- 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 18 skill contracts.
 
 Source of truth: `docs/system/governance-and-quality.md`.
 
@@ -45,6 +45,9 @@ Source of truth: `docs/system/governance-and-quality.md`.
 | `linkedin-article.yaml` | LinkedIn article | 12/16 | Skipped |
 | `email-lifecycle.yaml` | Lifecycle email | 10/16 | Skipped |
 | `cold-email.yaml` | Cold outreach email | 10/16 | Skipped |
+| `sdr-package.yaml` | SDR operator package | 12/16 | Skipped |
+| `sdr-reply-triage.yaml` | SDR reply triage | 10/16 | Skipped |
+| `sales-meeting-prep.yaml` | Sales meeting prep | 10/16 | Skipped |
 | `email.yaml` | General email | 10/16 | Skipped |
 | `meta-ads.yaml` | Meta ads | 10/16 | Skipped |
 | `google-ads.yaml` | Google Ads | 10/16 | Skipped |

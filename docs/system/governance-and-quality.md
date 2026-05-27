@@ -8,18 +8,18 @@ Use these counts when public docs, skill docs, or agent prompts need a system in
 
 | Surface | Count | Counting rule |
 |---|---:|---|
-| Skill directories | 42 | Directories under `harness/skills/`. This includes 40 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`. |
-| Canonical `kai-*` skill docs | 40 | Public API-style pages in `docs/skill-manifest/`, one for each `harness/skills/kai-*` directory. |
-| Public `/kai` router commands | 36 | Commands listed by `harness/skills/kai/SKILL.md`. Router-visible commands are a subset of the canonical `kai-*` skill inventory. |
+| Skill directories | 46 | Directories under `harness/skills/`. This includes 44 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`. |
+| Canonical `kai-*` skill docs | 44 | Public API-style pages in `docs/skill-manifest/`, one for each `harness/skills/kai-*` directory. |
+| Public `/kai` router commands | 40 | Commands listed by `harness/skills/kai/SKILL.md`. Router-visible commands are a subset of the canonical `kai-*` skill inventory. |
 | Playbook docs | 48 | Markdown playbooks under `knowledge/playbooks/`, excluding local `CLAUDE.md` metadata. |
 | Checklists | 32 | Markdown checklists under `knowledge/checklists/`, excluding local `CLAUDE.md` metadata. |
 | Framework docs | 27 | Markdown framework files under `knowledge/frameworks/`. |
 | Channel guides | 17 | Markdown channel guides under `knowledge/channels/`. |
 | Audience persona profiles | 8 | Named persona files under `knowledge/personas/`, excluding the index and local metadata. |
 | Harness references | 18 | Markdown or YAML/JSON references under `harness/references/`. |
-| Skill contracts | 15 | YAML contracts under `harness/skill-contracts/`. |
+| Skill contracts | 18 | YAML contracts under `harness/skill-contracts/`. |
 
-Inventory date: 2026-05-22. Regenerate with scoped file counts before publishing a release.
+Inventory date: 2026-05-27. Regenerate with scoped file counts before publishing a release.
 
 ## Instruction Contract
 
