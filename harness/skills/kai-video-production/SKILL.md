@@ -96,6 +96,29 @@ projects/{name}/
 
 ### Production Pipeline
 
+### Preflight Variant Lab
+
+Before asset creation or rendering, generate lightweight variants and score them as a dry run:
+
+- **3 hook variants** with platform, expected first-frame visual, and viewer promise
+- **2 structure variants** for scene order or pacing
+- **2 CTA variants** matched to the campaign goal
+- **1 risk note per variant** for unsupported claims, brand mismatch, or approval needs
+
+Write results to `workspace/video/projects/{name}/PREFLIGHT-VARIANTS.md`.
+
+Use this scoring table:
+
+| Factor | Score | Question |
+|--------|-------|----------|
+| Hook strength | 1-5 | Does the opening create immediate attention? |
+| Message clarity | 1-5 | Is the core idea obvious after one watch? |
+| Proof density | 1-5 | Are claims supported by demo, quote, data, or source? |
+| Production fit | 1-5 | Can this be made with available assets and timeline? |
+| Brand safety | 1-5 | Does it avoid fake authority, risky claims, or unclear rights? |
+
+Pick one winner for production and keep rejected variants in the same file as the kill list. User approval is required before moving from variant lab to full render.
+
 #### Step 1: Scene Planning
 
 **Decompose script into scenes:**

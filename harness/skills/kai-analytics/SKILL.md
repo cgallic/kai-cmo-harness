@@ -61,6 +61,16 @@ Recommend the right model based on their business:
 | Position-based (U-shaped) | Most B2B SaaS | Requires multi-touch data |
 | Data-driven (GA4) | High-volume businesses | Needs 600+ conversions/month |
 
+### Attribution Caveats
+
+State caveats beside every attribution recommendation:
+
+- Platform dashboards optimize for their own pixel, identity graph, attribution window, and modeled conversions.
+- GA4, CRM, payment, and ad-platform revenue will disagree when UTMs, consent mode, offline conversions, refunds, or sales-cycle delays differ.
+- Last-click is useful for capture channels, not proof that awareness or nurture did nothing.
+- Multi-touch models describe observed journeys; they do not prove incrementality without holdouts, geo tests, lift studies, or matched-market tests.
+- Use directional attribution for budget conversations until event QA, UTM hygiene, consent coverage, and CRM joins are verified.
+
 ## Phase 3 — Produce
 
 Build these deliverables:

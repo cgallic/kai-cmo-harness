@@ -1,0 +1,50 @@
+skill: x-longform
+version: 1.0
+harness: kai-harness
+format: x-longform-post
+risk_tier: medium
+seo_lint: false
+
+description: >
+  Founder or operator-style long-form X posts with sourced proof, clear voice
+  binding, and no fabricated metrics or fake personal stories.
+
+required_sources:
+  - brand_voice_profile
+  - proof_or_experience_log
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  personal_anecdotes_require_user_source: true
+  quantitative_claims_require_evidence: true
+  missing_sources_action: remove_or_label_hypothesis
+
+inputs:
+  required:
+    - topic: string
+    - intended_audience: string
+    - voice_profile: object
+  optional:
+    - proof_points: list[object]
+    - diagram_needed: bool
+    - thread_mode: bool
+
+outputs:
+  post: markdown
+  hook_options: list[string]
+  claim_table: list[object]
+  voice_notes: list[string]
+
+quality_gates:
+  - banned_words_tier1 == 0
+  - voice_profile_used == true
+  - no_fabricated_personal_story == true
+  - claims_have_evidence_or_hypothesis_label == true
+  - mobile_readability_checked == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - unsupported_claim
+    - fabricated_anecdote
+    - live_publish_without_approval

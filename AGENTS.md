@@ -8,7 +8,7 @@ Kai is now framed as a **marketing-native Codex-style runtime**. This repo still
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-This file is the entry point. Codex reads it automatically and gains access to the Kai inventory: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+This file is the entry point. Codex reads it automatically and gains access to the Kai inventory: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract
 

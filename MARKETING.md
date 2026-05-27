@@ -31,9 +31,9 @@ The canonical runtime layer is `kai/runtime/`. Local operator workflows live in 
 Use this inventory in public and agent-facing product docs until it is regenerated:
 
 - 46 skill directories, including 40 public `/kai` router commands plus onboarding and specialist support skills.
-- 48 playbook docs under `knowledge/playbooks/`, excluding local metadata.
-- 32 checklists under `knowledge/checklists/`, excluding local metadata.
-- 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 18 skill contracts.
+- 52 playbook docs under `knowledge/playbooks/`, excluding local metadata.
+- 35 checklists under `knowledge/checklists/`, excluding local metadata.
+- 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 27 skill contracts.
 
 Source of truth: `docs/system/governance-and-quality.md`.
 
@@ -53,6 +53,11 @@ Source of truth: `docs/system/governance-and-quality.md`.
 | `google-ads.yaml` | Google Ads | 10/16 | Skipped |
 | `landing-page.yaml` | Landing page | 12/16 | Required |
 | `call-script.yaml` | Call script | 10/16 | Skipped |
+| `experiment.yaml` | Experiment ledger | Context-specific | Skipped |
+| `video-clip.yaml` | Video clip package | Context-specific | Skipped |
+| `podcast-repurpose.yaml` | Podcast repurposing | Context-specific | Skipped |
+| `lead-dossier.yaml` | Lead dossier | Context-specific | Skipped |
+| `suppression-check.yaml` | Suppression check | Context-specific | Skipped |
 
 ## Framework Map
 
@@ -76,6 +81,8 @@ Source of truth: `docs/system/governance-and-quality.md`.
 python scripts/quality_gates/four_us_score.py --file <file>
 python scripts/quality_gates/banned_word_check.py --file <file>
 python scripts/quality_gates/seo_lint.py --file <file>
+python scripts/quality_gates/mutation_risk_lint.py <file>
+python scripts/security/sanitize.py <file>
 python scripts/quality_gates/agent_readiness_lint.py https://example.com
 python -m scripts.quality <file> --policy blog-publish
 ```

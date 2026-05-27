@@ -44,6 +44,19 @@ If call notes or a transcript are provided after the meeting, treat them as sour
 7. Write CRM handoff notes and proposed tasks.
 8. After a call, write a follow-up email and memory candidates from actual outcomes.
 
+## Post-Call Extraction And Scoring
+
+When call notes or a transcript are available, extract only sourced facts and label every item as `prospect_said`, `seller_said`, `inferred`, or `missing`.
+
+Capture:
+
+- Pain stated, current workflow, trigger, desired outcome, decision process, stakeholders, timeline, budget signal, competitor or alternative, objection, commitment, and next step.
+- Meeting quality score from 0-100: fit 25, pain clarity 20, urgency 20, authority or path to authority 15, next-step specificity 10, evidence completeness 10.
+- Follow-up actions with owner, due date, approval needed, and source line or note reference.
+- Memory candidates that can update source quality, trigger quality, objection patterns, and meeting quality after human approval.
+
+Do not score missing budget, authority, or timeline as negative proof. Mark the component as `missing_data` unless the prospect clearly disqualified it.
+
 ## Output
 
 Write to:

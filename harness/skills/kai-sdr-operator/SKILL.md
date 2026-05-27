@@ -107,6 +107,16 @@ Design the operator workflow as linked agents or queues:
 
 Keep each worker's input and output explicit enough that a future sub-agent, MCP connector, or dashboard can call it.
 
+### Signal Routing, Suppression, And Approval Queue
+
+Route every account or contact through a deterministic queue before outreach:
+
+- Ingest signals as separate rows: fit signal, timing signal, pain evidence, reply signal, referral, opt-out, bounce, competitor mention, or meeting intent.
+- Apply suppression before scoring promotion. Suppression includes prior opt-out, existing customer conflict, active opportunity owner, disallowed source, sensitive-data risk, bad domain, region restriction, or missing lawful basis.
+- Promote only `suppression_status=clear` rows to `approved_for_copy`; send `needs_review`, `conflict`, and `blocked` rows to the approval queue.
+- Store the approval queue with row ID, requested live action, reason, evidence, approver, decision, timestamp, and next state.
+- Never let a signal alone trigger a live send, CRM mutation, connector spend, call, SMS, or calendar action without explicit approval.
+
 ## Phase 5: Produce The SDR Package
 
 Write output to:
@@ -126,6 +136,7 @@ _research-workflows.md
 connector-plan.md
 connector-action-contracts.md
 approval-plan.md
+approval-queue-template.csv
 loop-state-model.md
 loop-events-and-transitions.md
 compliance-matrix.md

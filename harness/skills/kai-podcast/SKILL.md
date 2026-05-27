@@ -31,6 +31,23 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 6. **Commitment level** — Weekly, biweekly, monthly? (Host) / How many appearances per month? (Guest)
 7. **Equipment/setup** — Current mic, recording, and editing capabilities
 
+### Transcript and RSS Ingest
+
+If the user provides an RSS feed, episode URL, transcript, raw audio, or show notes, ingest before planning derivatives.
+
+Create `workspace/podcast/_ingest-log.md` with:
+- **Source**: RSS URL, episode URL, transcript path, audio path, or show-notes path
+- **Permission status**: owned, guest-approved, public citation, internal review, or unknown
+- **Episode metadata**: title, guest, publish date, runtime, canonical URL
+- **Transcript status**: provided, generated, partial, missing, or low confidence
+- **Repurpose candidates**: quotes, stories, objections, frameworks, clip timestamps
+
+Guardrails:
+- Preserve source locations for every quote, claim, and clip candidate.
+- Use public RSS metadata for planning only; do not imply endorsement by a host or guest.
+- Ask for approval before publishing show notes, clips, outreach, or guest quotes.
+- Do not create fake expert authority from a transcript. Attribute ideas to the right speaker or keep them as internal notes.
+
 ---
 
 ## Phase 2: Plan

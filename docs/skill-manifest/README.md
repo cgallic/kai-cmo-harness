@@ -2,6 +2,8 @@
 
 This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 44 `kai-*` skill directories under `harness/skills/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
+New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those five commands show the core loop: read the repo, create the work, check the work, and keep the record.
+
 Each page uses the same schema: one-line claim, triggers, inputs, outputs, methodology, dependencies, called-by links, quality gates, provenance, example artifacts, failure modes, and competitive claim. The manifest is meant to be falsifiable: a reader can trace a skill to source files, manifest rule IDs, gate thresholds, dependency links, and known example gaps.
 
 ## Skill Graph

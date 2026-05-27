@@ -138,6 +138,22 @@ Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\video-clipping-automatio
 | 2 | 5:00-5:30 | [hook] | Reels | 30s | [adapt for IG] |
 | 3 | 8:15-9:00 | [hook] | Shorts | 45s | [adapt for YT] |
 
+### Clip Scoring
+
+Score each candidate before scripting:
+
+| Factor | Score | Question |
+|--------|-------|----------|
+| Hook | 1-5 | Does the first 3 seconds create a clear reason to keep watching? |
+| Standalone clarity | 1-5 | Can the viewer understand the moment without the full source? |
+| Proof | 1-5 | Does it include a concrete example, result, quote, or demo moment? |
+| Tension | 1-5 | Does it contain contrast, surprise, objection, stakes, or a reveal? |
+| Source safety | 1-5 | Is the claim attributable and cleared for use? |
+
+Use clips scoring **18/25+** for production candidates. Put lower-scoring clips in `workspace/video/clipping-plan/_kill-list.md` with the reason.
+
+Every clip row must include a source timestamp or file locator. If the source is a guest, customer, or third-party show, mark approval status before export. Generate clip plans as a dry run first; publishing or upload requires approval.
+
 ## Phase 4: Output
 
 ```

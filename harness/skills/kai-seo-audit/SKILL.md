@@ -134,6 +134,16 @@ Score each finding:
 | **P2** | Medium impact | 1 week | Schema markup, internal linking optimization |
 | **P3** | Low impact / nice-to-have | Ongoing | Alt text gaps, URL cleanup |
 
+## Recurring SEO Ops Monitor
+
+For retained or repeated SEO work, add `seo-ops-monitor.md` beside the audit report. Keep it source-backed and operational:
+
+- Cadence: weekly for crawl/indexation/CWV/schema regressions; monthly for content decay, query movement, and internal-link opportunities.
+- Inputs: collector output, GSC/GA4 exports when connected, PageSpeed artifacts, crawl exports, sitemap and robots snapshots, rank or local data vendor exports when licensed.
+- Alert rules: new noindex, robots block, sitemap drop, 4xx/5xx spike, redirect chain, canonical conflict, CWV regression, schema error, title/H1 removal, orphaned priority page, organic landing-page drop.
+- Queue format: issue, source, retrieved_at, affected URL, severity, owner, proposed fix, approval needed, status, next check date.
+- Never report movement, traffic, rankings, or visibility without provenance. Missing connected data becomes a monitor gap.
+
 ## Phase 4: Output
 
 ```markdown
