@@ -1,227 +1,118 @@
 # Quick Start
 
-Two ways to use the Kai CMO Harness. Pick the one that matches your situation.
+Kai Marketing OS gives Claude Code a marketing operating surface inside any product repo. Start with local, dry-run work. Add credentials only when you want approved connector actions.
 
----
+## Path A: Use The Skills In Claude Code
 
-## Path A: Claude Code (5 minutes)
-
-Drop the marketing knowledge base and quality gates into any project. Claude Code reads `CLAUDE.md` on startup and instantly gains access to 30+ frameworks, 17 checklists, 8 personas, and an automated quality gate pipeline.
-
-### Step 1 — Copy four directories into your project
-
-```
-your-project/
-├── CLAUDE.md                    # Copy from kai-cmo-harness root
-├── knowledge/                   # Entire directory
-├── harness/                     # Skill contracts, brief schema, references
-└── scripts/quality_gates/       # Automated scoring and linting
-```
-
-You can copy manually or use the repo directly:
+### 1. Install
 
 ```bash
-git clone https://github.com/your-org/kai-cmo-harness.git
-cp -r kai-cmo-harness/CLAUDE.md your-project/
+curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
+```
+
+Manual install:
+
+```bash
+git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install
+cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/
+rm -rf /tmp/kai-install
+```
+
+### 2. Open A Product Repo
+
+```bash
+cd your-product
+claude
+```
+
+Run:
+
+```text
+/kai-start
+```
+
+Kai reads repo files, creates or refreshes `MARKETING.md`, and recommends the first workflow.
+
+### 3. Try One Useful Command
+
+```text
+/kai-growth-plan
+```
+
+Good first commands:
+
+| Need | Command | Output |
+|---|---|---|
+| Choose the next marketing move | `/kai-growth-plan` | Stage, channels, constraints, and next actions |
+| Write a page | `/kai-landing-page` | Page copy, proof table, CRO hypotheses, approval notes |
+| Plan content | `/kai-content-calendar` | Topics, keywords, personas, priorities, kill list |
+| Check a funnel | `/kai-cro` | Findings, evidence, gaps, tests |
+| Repurpose an asset | `/kai-repurpose` | Quotes, posts, clips, email angles, source map |
+| Run quality checks | `/kai-gate` | Four U's, banned words, policy, provenance, risk notes |
+
+## Path B: Copy Kai Into A Client Repo
+
+Use this path when you want the repo itself to carry the marketing system.
+
+```text
+your-project/
+├── AGENTS.md
+├── knowledge/
+├── harness/
+└── scripts/
+```
+
+Copy:
+
+```bash
+cp -r kai-cmo-harness/AGENTS.md your-project/
 cp -r kai-cmo-harness/knowledge your-project/
 cp -r kai-cmo-harness/harness your-project/
 mkdir -p your-project/scripts
 cp -r kai-cmo-harness/scripts/quality_gates your-project/scripts/
+cp -r kai-cmo-harness/scripts/security your-project/scripts/
 ```
 
-### Step 2 — Start Claude Code
+Claude Code will read `AGENTS.md` and use Kai's framework map, contracts, references, and gates.
+
+## What You Get
+
+| Surface | Count | Examples |
+|---|---:|---|
+| Skill directories | 46 | `/kai`, `/kai-growth-plan`, `/kai-landing-page`, `/kai-gate` |
+| Canonical `kai-*` docs | 44 | API-style skill docs with triggers, inputs, outputs, gates |
+| Public router commands | 40 | The commands shown by `/kai` |
+| Playbooks | 52 | CRO, experiments, pricing, SEO ops, content repurposing |
+| Checklists | 35 | Content, ads, launch, privacy, mutation risk |
+| Frameworks | 27 | Algorithmic Authorship, AEO/GEO, perception engineering |
+| Channel guides | 17 | SEO, LinkedIn, email, Meta, TikTok, YouTube, X, podcast |
+| Skill contracts | 27 | Blog, ads, cold email, experiments, clips, lead dossiers |
+
+## Local Gates
+
+Run these before sharing publishable work:
 
 ```bash
-cd your-project
-claude
+python scripts/quality_gates/banned_word_check.py --file draft.md
+python scripts/quality_gates/four_us_score.py --file draft.md
+python scripts/quality_gates/seo_lint.py --file draft.md
+python scripts/quality_gates/mutation_risk_lint.py draft.md
+python scripts/security/sanitize.py draft.md
 ```
 
-Claude Code reads `CLAUDE.md` automatically. It now knows:
-- Which framework to load for each content type
-- How to score content on the Four U's (12+/16 to pass)
-- Which words are banned (Tier 1 = instant rejection)
-- How to apply Algorithmic Authorship rules for SEO content
-
-### Step 3 — Ask it to do things
-
-**Write a blog post:**
-
-```
-Write a blog post targeting "law firm answering service" for kaicalls.com.
-Target persona: Shock Absorber. Use the competitor weakness that most
-AI receptionist companies charge $300-650/mo while KaiCalls is $69/mo.
-```
-
-Claude Code will:
-1. Load `knowledge/frameworks/content-copywriting/algorithmic-authorship.md`
-2. Load `knowledge/checklists/content-checklist.md`
-3. Check `harness/skill-contracts/blog-post.yaml` for word count and gate thresholds
-4. Write the post applying all framework rules
-5. Flag any banned words or quality issues
-
-**Run a quality gate on existing content:**
-
-```
-Run the quality gates on this draft. Check Four U's score,
-banned words, and SEO lint for keyword "AI receptionist for law firms".
-```
-
-**Check SEO opportunities:**
-
-```
-Look at knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md
-and tell me how to optimize this page for AI Overviews.
-```
-
-**Create a cold email sequence:**
-
-```
-Write a 3-touch cold email sequence for law firm partners.
-Follow harness/skill-contracts/cold-email.yaml and
-harness/references/cold-email-rules.md for TCPA compliance.
-```
-
-### What you get
-
-| Capability | How |
-|------------|-----|
-| SEO content | `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` — 31 rules from AI Overviews analysis |
-| Sales copy | `knowledge/frameworks/content-copywriting/perception-engineering.md` — 3-layer persuasion framework |
-| Quality scoring | `scripts/quality_gates/four_us_score.py` — automated 1-4 scoring on Unique, Useful, Ultra-specific, Urgent |
-| Banned word check | `scripts/quality_gates/banned_word_check.py` — Tier 1 instant rejection, Tier 2 flagging |
-| SEO linting | `scripts/quality_gates/seo_lint.py` — keyword placement, density, sentence length, heading structure |
-| AEO research | `knowledge/frameworks/aeo-ai-search/` — 12 files covering patents, citation science, Perplexity internals |
-| Persona targeting | `knowledge/personas/` — 8 archetypes with pain points, language patterns, hooks |
-| 7 skill contracts | `harness/skill-contracts/` — blog, LinkedIn, email, cold email, Meta ads, Google ads |
-
----
-
-## Path B: OpenClaw Autonomous CMO (30 minutes)
-
-Full autonomous operation: scheduled heartbeats, domain-specific agents, Discord integration, human-in-the-loop approval, and a self-improving pipeline that learns from content performance.
-
-### Prerequisites
-
-- A VPS (Ubuntu 22.04+, 4GB+ RAM recommended)
-- Python 3.11+
-- An OpenClaw installation
-- Discord bot token
-- API keys: Gemini (content generation), Google service account (GA4 + GSC), Supabase (product databases)
-
-### Step 1 — Fork and clone
+Use audit provenance for reports, decks, SEO audits, CRO audits, and other client-facing findings:
 
 ```bash
-git clone https://github.com/your-org/kai-cmo-harness.git
-cd kai-cmo-harness
+python scripts/quality_gates/audit_provenance_lint.py workspace/audit-folder --audit-dir
 ```
 
-### Step 2 — Configure
+## Approval Rule
 
-```bash
-# Copy example files
-cp config.yaml.example config.yaml
-cp .env.example .env
+Kai can draft, score, plan, audit, and prepare dry-run artifacts locally. It should not send, upload, enroll, publish, change spend, update CRM records, or mutate a live channel without explicit approval and a saved dry-run artifact.
 
-# Edit config.yaml — add your products, Discord channels, and settings
-# Edit .env — add all API keys and credentials
-```
+## Next Pages
 
-See `docs/CONFIGURATION.md` for every field explained.
-
-### Step 3 — Render workspace templates
-
-```bash
-pip install pyyaml jinja2
-python render_templates.py
-```
-
-This reads `config.yaml` and generates personalized workspace files (agent definitions, MARKETING.md, HEARTBEAT.md) with your products and channels injected.
-
-### Step 4 — Set up analytics on the VPS
-
-```bash
-# On your VPS
-mkdir -p /opt/cmo-analytics
-cd /opt/cmo-analytics
-python3 -m venv venv
-source venv/bin/activate
-pip install google-analytics-data google-auth google-search-console supabase stripe python-dotenv google-genai
-```
-
-Copy credentials and scripts:
-
-```bash
-scp .env root@your-vps:/opt/cmo-analytics/.env
-scp -r scripts/ root@your-vps:/opt/cmo-analytics/scripts/
-scp google-analytics-credentials.json root@your-vps:/opt/cmo-analytics/credentials/
-```
-
-See `docs/ANALYTICS_SETUP.md` for detailed setup per integration.
-
-### Step 5 — Deploy workspace to OpenClaw
-
-```bash
-# Copy workspace files to OpenClaw's workspace directory
-scp -r workspace/* root@your-vps:~/.openclaw/workspace/
-scp -r knowledge/ root@your-vps:~/.openclaw/workspace/knowledge/
-scp -r harness/ root@your-vps:~/.openclaw/workspace/harness/
-```
-
-### Step 6 — Start OpenClaw
-
-```bash
-# On the VPS
-systemctl start openclaw
-```
-
-OpenClaw reads the workspace files on startup:
-- `AGENTS.md` — agent hierarchy and Discord channel routing
-- `HEARTBEAT.md` — heartbeat protocol (parallel fan-out to domain agents)
-- `MARKETING.md` — content pipeline config (thresholds, frameworks, sites)
-- `TOOLS.md` — available CLI tools and data sources
-- `agents/*.md` — individual domain agent definitions
-
-### Example interactions (Discord)
-
-**Run the full content pipeline:**
-```
-!harness run blog kaicalls "law firm answering service"
-```
-Pipeline: research (GSC + GA4) -> brief -> write -> quality gate -> Discord approval post
-
-**Generate a brief only:**
-```
-!harness brief kaicalls "AI receptionist for law firms"
-```
-
-**Re-gate an existing draft:**
-```
-!harness gate "law firm answering service"
-```
-
-**Check system status:**
-```
-!harness status
-```
-
-**View content performance:**
-```
-!harness report kaicalls
-```
-
-**Surface winning patterns:**
-```
-!harness patterns all
-```
-
-### What you get (beyond Path A)
-
-| Capability | How |
-|------------|-----|
-| Scheduled heartbeats | Domain agents check analytics, leads, revenue, and SEO on cron |
-| Discord command interface | `!harness run`, `!harness brief`, `!harness gate`, `!harness report` |
-| Human-in-the-loop approval | Drafts posted to Discord with score cards; react to approve/reject |
-| Self-improvement loop | 30-day performance checks -> pattern extraction -> MARKETING.md auto-update |
-| Multi-product support | Each product gets its own domain agent, Discord channel, and analytics |
-| Parallel agent architecture | Heartbeat spawns all domain agents simultaneously, yields for results |
-| Content logging | Every published piece tracked with 30-day performance review |
+- [README](../README.md): product overview and command map.
+- [System guide](system/README.md): architecture and runtime docs.
+- [Public skill manifest](skill-manifest/README.md): API-style reference for the canonical skills.
+- [Governance and quality](system/governance-and-quality.md): instruction contract, source rules, policy gates, and approval doctrine.

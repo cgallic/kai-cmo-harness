@@ -55,6 +55,27 @@ Adapt to the product. Not every page needs every section.
 
 Present the wireframe before writing copy.
 
+### Preflight Variant Lab
+
+Before writing the full page, create a dry-run variant lab:
+
+- **5 hero angles**: headline, subhead, CTA, traffic source, awareness level
+- **3 offer frames**: direct outcome, risk removal, or urgency
+- **3 proof plans**: testimonials, metrics, demos, screenshots, or founder story
+- **Kill list**: rejected angles with the reason
+
+Score each variant:
+
+| Factor | Score | Question |
+|--------|-------|----------|
+| Audience fit | 1-5 | Does it match the persona and traffic source? |
+| Clarity | 1-5 | Is the offer understandable above the fold? |
+| Proof readiness | 1-5 | Can the page support the claim with real evidence? |
+| Differentiation | 1-5 | Does it avoid generic category copy? |
+| Conversion fit | 1-5 | Does the CTA match user intent? |
+
+Only carry variants scoring **20/25+** into copy production. Save the lab to `workspace/landing-pages/_variant-lab.md`. Ask for approval before turning a variant into final copy.
+
 ## Phase 3: Copy Production
 
 Write each section following perception engineering layers:

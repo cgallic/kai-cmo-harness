@@ -1,0 +1,45 @@
+skill: survey-lead-magnet
+version: 1.0
+harness: kai-harness
+format: survey-to-lead-magnet
+risk_tier: medium
+seo_lint: false
+
+description: >
+  Converts survey responses into pain clusters, offer angles, lead magnet ideas,
+  and testable follow-up assets while preserving respondent privacy.
+
+required_sources:
+  - survey_export
+  - consent_or_research_basis
+source_policy:
+  load_before_writing: true
+  response_quotes_require_anonymization: true
+  respondent_pii_must_be_removed: true
+  missing_sources_action: block_client_facing_output
+
+inputs:
+  required:
+    - survey_export: string
+    - audience: string
+  optional:
+    - segmentation_fields: list[string]
+    - offer_context: string
+
+outputs:
+  pain_clusters: list[object]
+  lead_magnet_briefs: list[object]
+  quote_bank_anonymized: list[object]
+  data_gaps: list[string]
+
+quality_gates:
+  - pii_removed == true
+  - cluster_support_count_present == true
+  - direct_quotes_anonymized == true
+  - no_overstated_representativeness == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - pii_present
+    - unsupported_cluster_claim

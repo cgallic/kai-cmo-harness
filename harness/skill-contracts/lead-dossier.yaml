@@ -1,0 +1,53 @@
+skill: lead-dossier
+version: 1.0
+harness: kai-harness
+format: lead-dossier
+risk_tier: high
+seo_lint: false
+
+description: >
+  Creates a sourced account or contact dossier for sales research. It may
+  recommend next actions, but it must not enroll, upload, or send without a
+  separate approval and suppression check.
+
+required_sources:
+  - lead_source
+  - consent_or_lawful_basis
+  - suppression_status
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  source_must_be_named: true
+  suppression_check_required: true
+  sensitive_data_minimization_required: true
+  missing_sources_action: block_outreach_recommendation
+
+inputs:
+  required:
+    - account_or_contact: object
+    - lead_source: string
+    - intended_use: string
+  optional:
+    - crm_context: object
+    - public_signals: list[object]
+    - suppression_list_id: string
+
+outputs:
+  dossier: object
+  signal_ledger: list[object]
+  outreach_readiness: string
+  data_gaps: list[string]
+
+quality_gates:
+  - source_named == true
+  - suppression_checked == true
+  - consent_basis_present == true
+  - no_sensitive_personal_attribute_targeting == true
+  - no_live_enrollment == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - suppression_missing
+    - consent_basis_missing
+    - live_mutation_without_approval

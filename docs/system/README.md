@@ -42,6 +42,7 @@ flowchart TB
 
 | Reader | Best first page | Why |
 |---|---|---|
+| New user | [Quick Start](../QUICK_START.md) | Installs the skills, runs `/kai-start`, and shows the first useful commands. |
 | New repo reader | [Runtime Map](runtime-map.md) | Names the main nouns and where they live. |
 | Operator comparing skills | [Public Skill Manifest](../skill-manifest/README.md) | Documents every canonical `kai-*` skill with triggers, inputs, methodology, gates, dependencies, provenance, examples, and failure modes. |
 | Engineer adding a workflow | [Schema Catalog](schema-catalog.md) | Shows the contracts workflows must preserve. |

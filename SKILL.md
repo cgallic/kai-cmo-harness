@@ -1,11 +1,11 @@
 ---
 name: kai-marketing
-description: Marketing team as slash commands. Current Kai inventory: 46 skill directories, 44 canonical kai-* skill docs, 40 public /kai router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, and 8 audience persona profiles. Full marketing ops from brief to gate.
+description: Marketing team as slash commands. Current Kai inventory: 46 skill directories, 44 canonical kai-* skill docs, 40 public /kai router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, and 8 audience persona profiles. Full marketing ops from brief to gate.
 ---
 
 # kai-marketing
 
-A marketing team as slash commands. Use the current Kai inventory in `docs/system/governance-and-quality.md`: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 48 playbook docs, 32 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 18 skill contracts.
+A marketing team as slash commands. Use the current Kai inventory in `docs/system/governance-and-quality.md`: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 27 skill contracts.
 
 ## Instruction Contract
 
@@ -82,12 +82,12 @@ These commands describe the older content-sprint surface. The current public Kai
 ## Authoritative Inventory
 
 - **46 skill directories** — including 44 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`
-- **48 playbook docs** — ads, CRO, pricing, retention, growth loops, ABM, demand gen, launches, budgeting, and more
+- **52 playbook docs** — ads, CRO, pricing, retention, growth loops, ABM, demand gen, launches, budgeting, and more
 - **27 framework docs** — algorithmic authorship, AEO, perception engineering, copywriting formulas, loop mechanics
-- **32 checklists** — content, SEO, ads, CRO, website launch, social audit, creative production, and paid acquisition
+- **35 checklists** — content, SEO, ads, CRO, website launch, social audit, creative production, privacy, mutation risk, and paid acquisition
 - **17 channel guides** — blog, LinkedIn, email, TikTok, Meta, YouTube, Instagram, X, affiliate, community, newsletter, podcast, and related channels
 - **18 harness references** — platform policies, compliance, provenance, creator disclosure, and analytics query templates
-- **8 audience persona profiles** — with pain points, hooks, and voice profiles
+- **8 audience persona profiles** — with pains, hooks, and voice profiles
 
 ## Quick Start
 

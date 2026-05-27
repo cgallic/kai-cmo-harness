@@ -55,6 +55,33 @@ This structure builds topical authority for SEO. Load `E:\Dev2\kai-cmo-harness-w
 
 Rotate across personas to avoid speaking to only one audience. Map each piece to one of the 8 personas from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`.
 
+### Idea Eval and Kill List
+
+Before presenting the calendar, score candidate ideas and keep a visible kill list.
+
+Create `workspace/content-calendar/_idea-eval.md`:
+
+| Idea | Persona | Source | Score | Decision | Reason |
+|------|---------|--------|-------|----------|--------|
+| ... | ... | file/URL/interview note | 0-25 | keep/hold/kill | ... |
+
+Score each idea:
+- **Business fit** (1-5): supports a real goal in `MARKETING.md`
+- **Audience pain** (1-5): speaks to a named persona problem
+- **Proof available** (1-5): has source locations, data, quote, demo, or example
+- **Channel fit** (1-5): fits the intended format and cadence
+- **Novelty** (1-5): adds information gain beyond generic advice
+
+Use:
+- **20-25**: keep
+- **15-19**: hold until proof or angle improves
+- **0-14**: kill
+
+Rules:
+- Every idea needs a source location or a clear note that it came from internal strategy.
+- Do not fill the calendar with unsupported claims just to hit cadence.
+- Treat the calendar as a dry run until the user approves topics, dates, and formats.
+
 ### Approval Gate
 
 Present the content map to the user. Confirm:

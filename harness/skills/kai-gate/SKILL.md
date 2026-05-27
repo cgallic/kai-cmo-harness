@@ -68,6 +68,28 @@ Apply only if the content targets search engines. Check against Algorithmic Auth
 
 For full rule set, read `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\algorithmic-authorship.md`.
 
+### 5. Optional Panel Scoring (advisory)
+
+Use panel scoring only when the user asks for a second opinion or the artifact is high-stakes. It does not replace Kai gates and cannot override a hard fail from banned words, source gaps, policy risk, or missing approval.
+
+Recommended panel roles:
+- **Audience reviewer**: checks persona fit and plain-language clarity
+- **Channel reviewer**: checks platform fit, format, and norms
+- **Proof reviewer**: checks source locations, attribution, and unsupported claims
+- **Conversion reviewer**: checks CTA clarity and objection handling
+
+Output panel scores as advisory notes:
+
+| Reviewer | Score | Concern | Suggested fix |
+|----------|-------|---------|---------------|
+| Audience | 1-5 | ... | ... |
+
+Governance rules:
+- Label panel output as simulated review, never expert validation.
+- Do not create fake credentials, endorsements, or named reviewers.
+- Treat missing source locations as a gate issue, not a panel preference.
+- Run panel scoring on drafts first; publishing still requires approval.
+
 ## Output Format
 
 ```

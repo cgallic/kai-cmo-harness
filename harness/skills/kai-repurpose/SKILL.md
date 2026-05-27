@@ -44,6 +44,23 @@ Generate `workspace/repurposed/_extraction-map.md`:
 | "Contrarian claim" | Take | X thread, TikTok | Thread / video script |
 | ... | ... | ... | ... |
 
+### Quote Mining Pass
+
+When the source is a transcript, podcast, webinar, interview, or long article, run a quote mining pass before derivative production.
+
+Create `workspace/repurposed/_quote-bank.md` with:
+- **Source location**: file path, URL, episode name, transcript timestamp, or paragraph locator
+- **Quote or paraphrase**: mark direct quotes clearly; keep direct quotes short
+- **Use case**: hook, proof, objection, story, CTA, email subject, clip candidate
+- **Risk note**: unsupported claim, private detail, medical/legal/financial claim, or needs approval
+- **Attribution requirement**: guest name, customer approval, anonymous/internal, or source citation
+
+Rules:
+- Preserve exact source locations so every derivative can be traced back.
+- Do not invent quotes, credentials, or expert authority.
+- Treat quote mining as source extraction, not rewriting. Rewrite only in derivative files.
+- Draft as a dry run first; publishing or scheduling requires explicit approval.
+
 ## Phase 3: Derivative Production
 
 From one pillar, produce:

@@ -95,6 +95,16 @@ If source evidence, checkout access, pricing, or ad visibility is missing, list 
 
 Use the browse/gstack skill to actually view and screenshot the page if available.
 
+### Deterministic Checks And Provenance
+
+Run repeatable CRO checks before subjective recommendations:
+
+- Verify page availability, status code, mobile viewport, primary CTA presence, form or checkout path, required fields, broken buttons, console errors, consent banner behavior, and analytics event firing when tools are available.
+- Record source metadata for every observed issue: URL, viewport, device, timestamp, screenshot or artifact path, tool, and confidence.
+- Separate observed facts from hypotheses. Example: "CTA hidden below first mobile viewport" is observed; "visitors do not trust the offer" is a hypothesis unless backed by research or user data.
+- Use `missing_data` for unavailable conversion rate, traffic mix, heatmaps, recordings, checkout access, A/B test history, or analytics events.
+- Do not include unsourced conversion rates, revenue impact, uplift percentages, or benchmark claims in the score or fix table.
+
 ## Phase 3: Scoring
 
 Score each layer 1-10:
