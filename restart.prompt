@@ -1,0 +1,133 @@
+# Restart Prompt — AutoReason for kai-cmo Ads
+
+Open this file in a fresh Claude Code session at `/home/connor/repos/kai-cmo-harness/`. This prompt assumes you have **zero** prior session context.
+
+---
+
+## The Goal
+
+Upgrade the ad-copy generation step in `kai-cmo-harness` from single-pass LLM rewrites to the **AutoReason** loop, where every iteration runs a tournament between the incumbent ad, an adversarial revision, and a synthesis — judged blind by fresh agents via Borda count, with "do nothing" as a first-class option.
+
+Same pattern Connor wants applied to email/copy across his brands. Ads are the first beachhead because the ground-truth signal (CTR, CPL, ROAS) is fast and the existing pipeline already pulls Meta performance data.
+
+## Read These First (in order)
+
+1. **Concept page (canonical):** `/home/connor/brain/wiki/concepts/autoreason.md` — has the paper summary, role table, convergence rules (k=2), temperature settings, where the method works (mid-tier models like Haiku 3.5) and where it doesn't (Sonnet 4.6 too good, Llama 8B too weak).
+2. **Paper:** [_Autoreason: Self-Refinement That Knows When to Stop_](https://github.com/NousResearch/autoreason/blob/main/paper/autoreason.pdf) — SHL0MS & NousResearch Hermes Agent. Local copy at `/tmp/autoreason.pdf`. Most important section: §2 (the loop) and §A (exact prompts).
+3. **Reference impl:** [github.com/NousResearch/autoreason](https://github.com/NousResearch/autoreason) — `experiments/v2/run_overnight.py` is the writing-task runner. Use this as the structural template, NOT a dependency to import.
+4. **Buildworthy-flagger** (Connor's adjacent system): `/home/connor/brain/wiki/systems/buildworthy-flagger.md`. Single-judge implementation that established the local-Ollama-as-judge pattern. AutoReason is the multi-agent upgrade.
+
+## Existing Ad Infrastructure (DO NOT rebuild)
+
+| Path | What it does |
+|------|--------------|
+| `scripts/ads/ad_loop.py` | Full pipeline: Meta perf pull → flag underperformers → generate variants → render → upload PAUSED → Discord approval. **Step 3 (generate variants) is the AutoReason swap target.** |
+| `scripts/ads/meta_ads.py`, `meta_ads_create.py`, `meta.py` | Meta Marketing API callers (read perf, create ads). |
+| `agent/tasks/ad_management.py` | Higher-level task wrapper. |
+| `ad-copy/`, `ad-research/`, `ad-render/`, `creative-brief/` | Subsystems for copy, research, Remotion video render, brief generation. |
+| `lib/components/creative/` | Shared creative primitives. |
+| `data/ads-devcast/` (on hermes) | Historical ad performance archive. |
+| `/opt/cmo-analytics/` (on hermes) | Production runtime — `kai_harness.py` is what `ad_loop.py` calls today for variant generation. |
+
+## What "AutoReason for Ads" Looks Like
+
+Per pass, for one underperforming ad, run **5 fresh agents** with no shared context:
+
+| Role | Sees | Produces |
+|------|------|----------|
+| **Incumbent (A)** | n/a — IS the input | Current ad: headline, primary text, description, CTA, image/video reference |
+| **Critic** | Incumbent + last 30/90d performance + top 3 winning ads from same audience | Critique only — NO rewrites |
+| **Author B** | Incumbent + critique | Adversarial revision (B) |
+| **Synthesizer** | A and B with **randomized labels** | Merged version (AB) |
+| **Judge panel (3)** | A, AB, B in **randomized order** with **randomized labels** | Borda-count vote (3/2/1). Conservative tiebreak: incumbent wins ties. |
+
+Convergence: **k=2 consecutive A wins** (paper proved k=1 premature, k=3 wasteful, k=4 actively worse).
+
+Author temperature **0.8**, judge temperature **0.3**. Don't ablate without reason — paper validated these.
+
+## The Knowledge Layer (the part that actually matters)
+
+The fresh agents are useless without business-grounded context. Wire these in:
+
+- **Meta Ads Insights** (already in `scripts/ads/meta.py`) — last 90d for the ad set, broken down by audience, placement, time-of-day
+- **Top-performing ads** for the brand (CTR, CPL ranking) — pull from same Meta API
+- **Worst-performing ads** — same source — useful as negative examples
+- **Customer reviews + interview transcripts** — for KaiCalls these live in Gmail (per [[crm_lives_in_gmail]] memory) and `/opt/cmo-analytics/data/`
+- **Audience-segment notes** — KaiCalls = SMB owners w/ phone-heavy ops; not the same voice as BWK creators
+- **Brand voice locks** — KaiCalls positioning is locked per memory: "the new business phone number with AI built in" — NOT receptionist, NOT answering service. The Critic should flag any draft that drifts off this.
+
+## Model Choice
+
+Use **Haiku 3.5** (or Haiku 4.5) for authors and judges. Per the paper, this is the AutoReason sweet spot — Sonnet is so strong it doesn't benefit, Llama 8B is too weak to generate useful diverse alternatives. Connor pays Anthropic; route through the standard `claude` SDK.
+
+Keep author/judge prompts in YAML or markdown so they're auditable, not buried in Python f-strings.
+
+## Smallest Weekend Deliverable
+
+**Pilot scope:** ONE underperforming KaiCalls ad set, ~5 ad variations, single AutoReason loop run, output written to a Discord thread for human approval before any Meta upload.
+
+Concrete:
+1. Pick the lowest-CTR active KaiCalls ad set (`scripts/ads/meta.py` can rank them).
+2. Run the AutoReason loop on it. Cap at 5 passes max.
+3. Post the winner + the full pass-by-pass trace (incumbent, B, AB, judge votes, why each was rejected) to `#kai-calls` Discord channel for approval.
+4. Connor approves manually → only then push to Meta as PAUSED.
+
+**DO NOT** auto-upload. **DO NOT** send any customer email. Per memory `feedback_no_customer_outreach`: only Connor emails clients, this rule applies to all paying KaiCalls customers including BBB, Starr's, Pete.
+
+## Files To Create (suggested layout)
+
+```
+kai-cmo-harness/scripts/ads/autoreason/
+├── loop.py            # The 5-role tournament runner — keep <300 lines
+├── prompts/
+│   ├── critic.md
+│   ├── author.md
+│   ├── synthesizer.md
+│   └── judge.md
+├── knowledge.py       # Loaders for Meta perf, top/bottom ads, customer voice
+├── trace.py           # Per-pass trace recording for Discord approval thread
+└── README.md
+```
+
+The orchestrator that calls AutoReason should live OUTSIDE this dir (`scripts/ads/ad_loop.py` is the right caller). Keep `autoreason/` pure: it takes an artifact + knowledge bundle and returns a winner.
+
+## Verify Before You Commit
+
+- `pnpm` is not used here; this is Python. Use the existing venv pattern from `scripts/ads/ad_loop.py`.
+- Run on the ad set you picked, with `--dry-run` first.
+- Print the full trace (5 candidates × pass count) so Connor can verify the loop actually behaves like AutoReason and not single-pass-with-extra-steps.
+- Diff the ad against KaiCalls positioning lock before showing to Connor — any draft that says "receptionist" or "answering service" is auto-rejected.
+
+## Out of Scope for the Pilot
+
+- Email loops (KaiCalls / BWK welcome sequences) — same pattern, do later.
+- BWK product pages — no live broadcast, judges can't ground in reply rate.
+- Auto-upload to Meta. Always paused, always Connor-approved first.
+- Generalizing across brands. Pilot is KaiCalls-only.
+
+## Done Definition
+
+- One PR opened against `kai-cmo-harness` with the new `scripts/ads/autoreason/` dir
+- Loop demonstrated on one real KaiCalls ad set, full trace posted to `#kai-calls`
+- Connor reviews the trace and gives go/no-go on whether to wire the loop into `ad_loop.py` step 3 as the new default
+
+If at any point the loop produces a draft that breaks brand positioning, stop and ask. Don't rationalize a violation as "the judges chose it" — the brand lock is non-negotiable.
+
+---
+
+## Context Connor Already Validated
+
+- AutoReason concept ingested + wiki page at `/home/connor/brain/wiki/concepts/autoreason.md` (2026-04-26)
+- Buildworthy-flagger built + cron live (single-judge precedent for local LLM as evaluator)
+- KaiCalls cold-email outbound first lines flagged as the second-cleanest pilot port (after ads). Save for after this lands.
+- Hermes Agent (NousResearch) ≠ Connor's local Hermes CLI. Coincidental name collision. Don't import nousresearch/hermes-agent.
+
+When you finish reading this, run:
+
+```bash
+ls /home/connor/repos/kai-cmo-harness/scripts/ads/
+cat /home/connor/brain/wiki/concepts/autoreason.md | head -100
+head -80 /home/connor/repos/kai-cmo-harness/scripts/ads/ad_loop.py
+```
+
+Then propose a plan and confirm with Connor before writing code.
