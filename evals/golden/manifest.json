@@ -1,0 +1,37 @@
+{
+  "description": "Golden corpus for the deterministic quality gates. Every case is a content sample with a known correct verdict. Any change to a gate script, banned-word list, or overclaim pattern must keep this corpus passing — and should add a case proving the change. Runner: python scripts/quality_gates/golden_check.py",
+  "cases": [
+    {
+      "id": "banned-words-clean-blog",
+      "gate": "banned_word_check",
+      "file": "banned-words/pass-clean-blog.md",
+      "expect": "pass",
+      "why": "Specific, numeric, jargon-free local-business content must not be flagged."
+    },
+    {
+      "id": "banned-words-tier1-jargon",
+      "gate": "banned_word_check",
+      "file": "banned-words/fail-tier1-jargon.md",
+      "expect": "fail",
+      "expect_failures_contain": ["leverage", "deep dive", "synergy", "in conclusion"],
+      "why": "Dense Tier 1 jargon and AI slop must hard-block."
+    },
+    {
+      "id": "seo-keyword-structured",
+      "gate": "seo_lint",
+      "file": "seo/pass-keyword-structured.md",
+      "keyword": "ai receptionist",
+      "expect": "pass",
+      "why": "Keyword in H1, answer-first structure, no AI-search overclaims: zero hard errors."
+    },
+    {
+      "id": "seo-ai-overclaim",
+      "gate": "seo_lint",
+      "file": "seo/fail-ai-overclaim.md",
+      "keyword": "ai receptionist",
+      "expect": "fail",
+      "expect_failures_contain": ["AI search promise", "llms.txt claim"],
+      "why": "Guaranteed ChatGPT citations and llms.txt-as-ranking-factor claims must hard-error."
+    }
+  ]
+}
