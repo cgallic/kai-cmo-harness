@@ -29,4 +29,4 @@ jobs:
       - name: Golden corpus + promoted edge cases + judge client (pytest)
         run: |
           pip install pytest pyyaml
-          python -m pytest tests/test_golden_corpus.py tests/test_promoted_edge_cases.py tests/test_llm_judge.py -v
+          python -m pytest tests/test_golden_corpus.py tests/test_promoted_edge_cases.py tests/test_llm_judge.py tests/test_llm_client.py -v

@@ -28,8 +28,10 @@ from pathlib import Path
 
 import feedparser
 import requests
-from openai import OpenAI
 from dotenv import load_dotenv
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.llm_client import complete as llm_complete
 
 _here = Path(__file__).parent
 for _candidate in (_here / ".env", _here.parent / ".env", _here.parent.parent / ".env"):
@@ -136,20 +138,23 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
 # --------------------------------------------------------------------------- #
 # scoring
 # --------------------------------------------------------------------------- #
-def llm_score(client: OpenAI, profile: dict, post: dict) -> dict:
+def llm_score(profile: dict, post: dict) -> dict:
     prompt = profile["_prompt_template"].format(
         subreddit=post["subreddit"],
         title=post["title"],
         content=post["content"][:profile["content_max_chars"]],
     )
     try:
-        resp = client.chat.completions.create(
-            model=profile["model"],
-            max_tokens=300,
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
+        # Provider-agnostic — see scripts/llm_client.py. The profile's model
+        # is kept as the OpenAI-path override for existing profiles.
+        data = json.loads(
+            llm_complete(
+                prompt,
+                max_tokens=300,
+                json_only=True,
+                model_overrides={"openai": profile["model"]},
+            )
         )
-        data = json.loads((resp.choices[0].message.content or "").strip())
         return {
             "score": int(data.get("score", 0)),
             "reason": (data.get("reason") or "").strip(),
@@ -272,7 +277,6 @@ def main() -> int:
         print(f"error: {profile['discord_webhook_env']} not set (use --dry-run)", file=sys.stderr)
         return 2
 
-    client = OpenAI()
     day = date.today().isoformat()
 
     print(f"[{datetime.now()}] profile={profile['name']} subs={len(profile['subreddits'])} "
@@ -283,7 +287,7 @@ def main() -> int:
 
     fresh = []
     for post in candidates:
-        res = llm_score(client, profile, post)
+        res = llm_score(profile, post)
         mark = "✓" if res["score"] >= threshold else "·"
         print(f"  {mark} {res['score']:>3}  r/{post['subreddit']} — {post['title'][:55]}")
         if res["score"] >= threshold:

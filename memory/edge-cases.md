@@ -70,6 +70,10 @@ Bites: pattern quality. Enforcement: /kai-retro workflow. Added: 2026-06-09
 **Winner/loser grading → a piece judged in a seasonal trough or after a competitor launch gets a misleading grade.** Note context in the log entry; allow manual re-grade.
 Bites: pattern extraction. Enforcement: none. Added: 2026-06-09
 
+### EC-19 LLM provider-agnosticism has two intentional exemptions
+**Routing LLM calls through `scripts/llm_client.py` → two subsystems stay vendor-pinned on purpose.** `scripts/knowledge_cloner/` uses Gemini-native audio/video transcription (YouTube URLs, audio files) that other providers don't expose equivalently. `agent/llm/router.py` already does its own multi-model routing via OpenRouter with env-configurable tiers. Everything else must use the shared client — `tests/test_llm_client.py` lints pipeline files for direct vendor imports.
+Bites: anyone adding LLM calls. Enforcement: tests/test_llm_client.py (vendor-import lint). Added: 2026-06-10
+
 ## Governance gotchas
 
 ### EC-16 KaiCalls fit rule is prose-only

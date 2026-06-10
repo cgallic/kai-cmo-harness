@@ -69,22 +69,25 @@ class GenerateResult:
     metadata: dict = field(default_factory=dict)
 
 
-def _make_gemini_fn():
-    """Create a Gemini callable. No module-level Gemini import."""
+def _make_llm_fn():
+    """Create a provider-agnostic LLM callable (scripts/llm_client.py).
+
+    Provider resolves from the environment (Gemini/Anthropic/OpenAI; pin
+    with KAI_LLM_PROVIDER / KAI_LLM_MODEL). The configured gemini_model is
+    carried as a legacy per-provider override. No module-level SDK import.
+    """
     cfg = get_config()
+    from scripts.llm_client import make_llm_fn
 
-    def call(prompt: str) -> str:
-        from google import genai as google_genai
-        client = google_genai.Client(
-            api_key=cfg.gemini_api_key,
-            http_options={"timeout": cfg.api_timeout * 1000},
-        )
-        response = client.models.generate_content(
-            model=cfg.gemini_model, contents=prompt
-        )
-        return response.text.strip()
+    return make_llm_fn(
+        max_tokens=8192,
+        timeout=cfg.api_timeout,
+        model_overrides={"gemini": cfg.gemini_model},
+    )
 
-    return call
+
+# Legacy name kept for callers that predate the provider-agnostic client
+_make_gemini_fn = _make_llm_fn
 
 
 def _load_framework_texts(fmt: str, repo_root: Path, workspace: Path) -> str:
@@ -338,7 +341,7 @@ async def generate(
         )
     try:
         # 2. Create Gemini callable
-        gemini_fn = _make_gemini_fn()
+        gemini_fn = _make_llm_fn()
 
         # 3. Load all context
         repo_root = cfg.repo_root

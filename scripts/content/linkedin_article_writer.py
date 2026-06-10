@@ -15,7 +15,9 @@ import sys
 import requests
 from datetime import datetime
 from pathlib import Path
-import openai
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.llm_client import complete as llm_complete
 
 # ── Config ───────────────────────────────────────────────────────────────────
 ENV_FILE       = "/opt/cmo-analytics/.env"
@@ -263,8 +265,6 @@ def next_headline(progress: dict) -> tuple[str, str, str, str]:
 
 
 def write_article(headline: str, cluster_name: str, cluster_context: str = "") -> str:
-    client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
     context_block = f"\n\nIndustry context to ground the article in real pain points:\n{cluster_context}" if cluster_context else ""
 
     prompt = f"""Write a LinkedIn article with this headline: "{headline}"
@@ -282,16 +282,14 @@ Requirements:
 
 Output the full article in markdown. Include the title as an H1 at the top."""
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": CONNOR_VOICE},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.7,
+    # Provider-agnostic — see scripts/llm_client.py. gpt-4o kept as the
+    # legacy OpenAI-path model so existing deployments are unchanged.
+    return llm_complete(
+        prompt,
+        system=CONNOR_VOICE,
         max_tokens=2000,
+        model_overrides={"openai": "gpt-4o"},
     )
-    return response.choices[0].message.content.strip()
 
 
 def post_discord(channel_id: str, message: str):

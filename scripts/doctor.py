@@ -62,6 +62,7 @@ REQUIRED_PATHS = [
     "scripts/quality_gates/audit_provenance_lint.py",
     "scripts/quality_gates/golden_check.py",
     "scripts/quality_gates/llm_judge.py",
+    "scripts/llm_client.py",
     "scripts/self_improvement/lesson_capture.py",
     "scripts/content/engine.py",
     "scripts/audit/collect.py",
@@ -83,27 +84,29 @@ COMPILE_PATHS = [
     "scripts/quality_gates/golden_check.py",
     "scripts/quality_gates/llm_judge.py",
     "scripts/quality_gates/four_us_score.py",
+    "scripts/llm_client.py",
     "scripts/self_improvement/lesson_capture.py",
     "scripts/doctor.py",
 ]
 
-# (module, what it unlocks)
+# (module, what it unlocks). All LLM tasks (judge, writer, extraction,
+# scoring) run on ANY one provider via scripts/llm_client.py.
 OPTIONAL_DEPS = [
-    ("google.genai", "Gemini provider: Four U's judge + content writing"),
-    ("anthropic", "Anthropic provider: Four U's judge + OpenClaw agent"),
-    ("openai", "OpenAI provider: Four U's judge"),
+    ("google.genai", "Gemini provider for all LLM tasks + audio/video transcription (knowledge_cloner)"),
+    ("anthropic", "Anthropic provider for all LLM tasks + OpenClaw agent"),
+    ("openai", "OpenAI provider for all LLM tasks"),
     ("dotenv", ".env loading for all scripts"),
     ("yaml", "skill contracts, quality policies, defaults updater"),
     ("fastapi", "gateway remote runner (gateway/main.py)"),
     ("pytest", "test suite (tests/)"),
 ]
 
-# (env var, what it unlocks). The Four U's judge needs ANY ONE of the three
-# LLM keys (pin with KAI_LLM_PROVIDER / KAI_LLM_MODEL).
+# (env var, what it unlocks). LLM tasks need ANY ONE of the three LLM keys
+# (pin with KAI_LLM_PROVIDER / KAI_LLM_MODEL).
 OPTIONAL_ENV = [
-    ("GEMINI_API_KEY", "draft writing + Four U's judge (Gemini)"),
-    ("ANTHROPIC_API_KEY", "Four U's judge (Claude) + OpenClaw agent mode"),
-    ("OPENAI_API_KEY", "Four U's judge (OpenAI)"),
+    ("GEMINI_API_KEY", "all LLM tasks via Gemini + knowledge-cloner transcription"),
+    ("ANTHROPIC_API_KEY", "all LLM tasks via Claude + OpenClaw agent mode"),
+    ("OPENAI_API_KEY", "all LLM tasks via OpenAI"),
     ("GOOGLE_CREDENTIALS_PATH", "GSC/GA4 briefs + 30-day performance checks"),
     ("DISCORD_BOT_TOKEN", "Discord approvals + notifications"),
 ]
@@ -186,18 +189,18 @@ def check_learning_layer(report: Report) -> None:
 
 
 def check_judge_provider(report: Report) -> None:
-    """Report which LLM provider the Four U's judge will use, if any."""
-    judge_path = REPO_ROOT / "scripts" / "quality_gates" / "llm_judge.py"
-    spec = importlib.util.spec_from_file_location("_doctor_llm_judge", judge_path)
+    """Report which LLM provider all LLM tasks will use, if any."""
+    client_path = REPO_ROOT / "scripts" / "llm_client.py"
+    spec = importlib.util.spec_from_file_location("_doctor_llm_client", client_path)
     mod = importlib.util.module_from_spec(spec)
     try:
         spec.loader.exec_module(mod)
         provider, model = mod.resolve_provider()
-        report.ok(f"LLM judge provider: {provider} ({model})")
+        report.ok(f"LLM provider (judge/writer/extraction): {provider} ({model})")
     except FileNotFoundError:
-        report.fail("scripts/quality_gates/llm_judge.py missing")
+        report.fail("scripts/llm_client.py missing")
     except Exception as exc:
-        report.warn(f"Four U's judge disabled — {exc}")
+        report.warn(f"LLM tasks disabled — {exc}")
 
 
 def check_optional(report: Report) -> None:

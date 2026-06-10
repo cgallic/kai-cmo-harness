@@ -39,7 +39,9 @@ from pathlib import Path
 
 import feedparser
 import requests
-from openai import OpenAI
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.llm_client import complete as llm_complete
 
 # ---------------------------------------------------------------------------
 # env loading — try sibling, parent, and repo root in that order
@@ -159,20 +161,21 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
     return candidates
 
 
-def llm_eval(client: OpenAI, profile: dict, post: dict) -> dict:
+def llm_eval(profile: dict, post: dict) -> dict:
     prompt = profile["_prompt_template"].format(
         subreddit=post["subreddit"],
         title=post["title"],
         content=post["content"][:profile["content_max_chars"]],
     )
     try:
-        response = client.chat.completions.create(
-            model=profile["model"],
+        # Provider-agnostic — see scripts/llm_client.py. The profile's model
+        # is kept as the OpenAI-path override for existing profiles.
+        text = llm_complete(
+            prompt,
             max_tokens=500,
-            messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"},
+            json_only=True,
+            model_overrides={"openai": profile["model"]},
         )
-        text = (response.choices[0].message.content or "").strip()
         return json.loads(text)
     except Exception as exc:
         print(f"    ! eval error: {exc}")
@@ -230,7 +233,6 @@ def main() -> int:
         return 2
 
     seen_path = seen_path_for(state_dir, profile["name"])
-    client = OpenAI()
 
     print(f"[{datetime.now()}] profile={profile['name']} subs={len(profile['subreddits'])} kws={len(profile['trigger_keywords'])}")
 
@@ -244,7 +246,7 @@ def main() -> int:
     passed = []
     for post in candidates:
         print(f"  r/{post['subreddit']} — {post['title'][:60]}...")
-        result = llm_eval(client, profile, post)
+        result = llm_eval(profile, post)
 
         if result.get("pass"):
             print(f"    ✓ pass: {result.get('reason')}")

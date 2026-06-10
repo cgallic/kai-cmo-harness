@@ -42,7 +42,7 @@ from scripts.content._writer import (
 
 _CFG = get_config()
 
-from google import genai as google_genai
+from scripts.llm_client import complete as llm_complete
 
 # ── Paths (derived from centralized config) ───────────────────────────────
 _REPO_ROOT   = _CFG.repo_root
@@ -276,37 +276,44 @@ SITE_FACTS = _load_site_facts()
 FORMAT_INSTRUCTIONS = _WRITER_FORMAT_INSTRUCTIONS
 
 
-# ── Gemini client with timeout + circuit breaker ─────────────────────────
+# ── LLM client with timeout + circuit breaker ─────────────────────────────
+# Provider-agnostic (Gemini/Anthropic/OpenAI) — see scripts/llm_client.py
 _CONSECUTIVE_FAILURES = 0
 
-def gemini(prompt: str, model: str | None = None) -> str:
-    """Call Gemini with timeout and circuit breaker.
+def llm_call(prompt: str, model: str | None = None) -> str:
+    """Call the configured LLM provider with timeout and circuit breaker.
 
-    Raises RuntimeError after api_max_retries consecutive failures.
+    Raises RuntimeError after api_max_retries consecutive failures. An
+    explicit `model` is honored as-is; otherwise the provider's default
+    applies (with the configured gemini_model as the Gemini-path override).
     """
     global _CONSECUTIVE_FAILURES
-    model = model or _CFG.gemini_model
-    timeout = _CFG.api_timeout
 
     if _CONSECUTIVE_FAILURES >= _CFG.api_max_retries:
         raise RuntimeError(
             f"Circuit breaker open: {_CONSECUTIVE_FAILURES} consecutive API failures. "
-            "Check GEMINI_API_KEY and network connectivity."
+            "Check your LLM provider key and network connectivity."
         )
 
     try:
-        client = google_genai.Client(
-            api_key=_CFG.gemini_api_key,
-            http_options={"timeout": timeout * 1000},  # genai uses milliseconds
+        text = llm_complete(
+            prompt,
+            model=model,
+            max_tokens=8192,
+            timeout=_CFG.api_timeout,
+            model_overrides={"gemini": _CFG.gemini_model},
         )
-        response = client.models.generate_content(model=model, contents=prompt)
         _CONSECUTIVE_FAILURES = 0  # Reset on success
-        return response.text.strip()
+        return text
     except Exception as e:
         _CONSECUTIVE_FAILURES += 1
-        log.error("Gemini API call failed (attempt %d/%d): %s",
+        log.error("LLM API call failed (attempt %d/%d): %s",
                   _CONSECUTIVE_FAILURES, _CFG.api_max_retries, e)
         raise
+
+
+# Legacy name
+gemini = llm_call
 
 
 # ── Script runner ──────────────────────────────────────────────────────────

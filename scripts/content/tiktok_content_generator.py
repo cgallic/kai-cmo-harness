@@ -14,7 +14,9 @@ import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-import openai
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from scripts.llm_client import complete as llm_complete
 
 # ── Config ──────────────────────────────────────────────────────────────────
 RESEARCH_DIR   = "/opt/cmo-analytics/research/learnings"
@@ -267,7 +269,6 @@ def _auto_fix(posts: list, allowed_sources: list[str], default_source: str) -> l
 
 
 def generate_posts(research_content: str, allowed_sources: list[str]) -> list:
-    client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     today = datetime.now().strftime("%B %d, %Y")
     default_source = (allowed_sources[0] if allowed_sources else "internal research")
     allowed_sources_str = "\n".join(f"- {s}" for s in allowed_sources[:25])
@@ -341,14 +342,13 @@ RETURN FIELDS PER OBJECT:
 - source: must be exactly one filename from the allowed sources list
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
+    # Provider-agnostic — see scripts/llm_client.py. gpt-4o kept as the
+    # legacy OpenAI-path model so existing deployments are unchanged.
+    response_text = llm_complete(
+        base_prompt,
         max_tokens=4096,
-        temperature=0.4,
-        messages=[{"role": "user", "content": base_prompt}]
+        model_overrides={"openai": "gpt-4o"},
     )
-
-    response_text = response.choices[0].message.content.strip()
     if response_text.startswith("```"):
         lines = response_text.split("\n")
         response_text = "\n".join(line for line in lines if not line.strip().startswith("```"))

@@ -27,9 +27,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from google import genai as google_genai
-
 from scripts.harness_config import get_config
+from scripts.llm_client import complete as llm_complete
 
 _CFG = get_config()
 
@@ -51,18 +50,17 @@ logging.basicConfig(
 _mapping_cache: dict[str, dict] = {}
 
 
-def _call_gemini(prompt: str) -> str:
-    """Call Gemini API."""
-    if not _CFG.gemini_api_key:
-        raise RuntimeError("No Gemini API key configured")
-    client = google_genai.Client(
-        api_key=_CFG.gemini_api_key,
-        http_options={"timeout": _CFG.api_timeout * 1000},
+def _call_llm(prompt: str) -> str:
+    """Call the configured LLM provider — see scripts/llm_client.py."""
+    return llm_complete(
+        prompt,
+        timeout=_CFG.api_timeout,
+        model_overrides={"gemini": _CFG.gemini_model},
     )
-    response = client.models.generate_content(
-        model=_CFG.gemini_model, contents=prompt,
-    )
-    return response.text.strip()
+
+
+# Legacy name
+_call_gemini = _call_llm
 
 
 # ── Fast heuristic detection (no LLM needed) ─────────────────────────

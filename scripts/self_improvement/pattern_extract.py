@@ -22,10 +22,9 @@ import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
 
-from google import genai as google_genai
-
 # Use centralized config
 from scripts.harness_config import get_config
+from scripts.llm_client import complete as llm_complete
 
 _CFG = get_config()
 
@@ -45,31 +44,34 @@ logging.basicConfig(
 )
 
 
-# ── Gemini client with timeout ───────────────────────────────────────────
+# ── LLM client with timeout + circuit breaker ────────────────────────────
+# Provider-agnostic (Gemini/Anthropic/OpenAI) — see scripts/llm_client.py
 _CONSECUTIVE_FAILURES = 0
 
-def _gemini(prompt: str) -> str:
-    """Call Gemini with timeout and circuit breaker."""
+def _llm(prompt: str) -> str:
+    """Call the configured LLM provider with timeout and circuit breaker."""
     global _CONSECUTIVE_FAILURES
     if _CONSECUTIVE_FAILURES >= _CFG.api_max_retries:
         raise RuntimeError(
             f"Circuit breaker open: {_CONSECUTIVE_FAILURES} consecutive API failures."
         )
     try:
-        client = google_genai.Client(
-            api_key=_CFG.gemini_api_key,
-            http_options={"timeout": _CFG.api_timeout * 1000},
-        )
-        response = client.models.generate_content(
-            model=_CFG.gemini_model, contents=prompt,
+        text = llm_complete(
+            prompt,
+            timeout=_CFG.api_timeout,
+            model_overrides={"gemini": _CFG.gemini_model},
         )
         _CONSECUTIVE_FAILURES = 0
-        return response.text.strip()
+        return text
     except Exception as e:
         _CONSECUTIVE_FAILURES += 1
-        log.error("Gemini call failed (attempt %d/%d): %s",
+        log.error("LLM call failed (attempt %d/%d): %s",
                   _CONSECUTIVE_FAILURES, _CFG.api_max_retries, e)
         raise
+
+
+# Legacy name
+_gemini = _llm
 
 
 def load_log() -> list:

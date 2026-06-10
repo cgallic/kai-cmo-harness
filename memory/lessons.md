@@ -18,7 +18,7 @@ Rules:
 
 ## User-specified lessons
 
-- [2026-06-10] (active) **When adding any LLM-judged gate or check** → never hard-code a single LLM vendor; route completions through `scripts/quality_gates/llm_judge.py` so the gate runs with whatever provider key the operator has (Gemini/Anthropic/OpenAI, `KAI_LLM_PROVIDER` to pin). Source: human correction on four_us_score.py. Enforced: scripts/quality_gates/llm_judge.py + tests/test_llm_judge.py
+- [2026-06-10] (promoted) **When writing ANY code that calls an LLM** (gates, writers, extractors, scorers) → never import a vendor SDK directly; route through `scripts/llm_client.py` so the task runs with whatever provider key the operator has (Gemini/Anthropic/OpenAI, `KAI_LLM_PROVIDER`/`KAI_LLM_MODEL` to pin). Only exemption: Gemini-native multimodal transcription (EC-19). Source: human correction on four_us_score.py, generalized to all call sites. Enforced: scripts/llm_client.py + tests/test_llm_client.py (vendor-import lint on pipeline files)
 
 - [2026-06-09] (active) **When writing for any channel** → binary clichés ("It's not X, it's Y") slip past subjective scoring; run the voice-pattern regexes in `harness/skills/kai-gate/SKILL.md` step 3. Source: kai-gate doctrine. Enforced: kai-gate skill (manual)
 - [2026-06-09] (active) **When citing AI-search studies** → never reuse study percentages (30-50%, 115%) as client promises; report sampled visibility with volatility caveats. Source: seo_lint overclaim history. Enforced: scripts/quality_gates/seo_lint.py
