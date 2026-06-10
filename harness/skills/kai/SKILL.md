@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 40 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 41 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 40 Marketing Skills
+# Kai Marketing OS - 41 Marketing Skills
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
@@ -88,6 +88,14 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-surround-sound` | AI-search visibility, source-quality, and agent-readiness strategy |
 | `/kai-analytics` | Analytics + attribution setup |
 
+## LEARN (make the harness smarter)
+
+| Skill | What It Does |
+|-------|-------------|
+| `/kai-retro` | Learning retrospective — mine gate failures, diagnose losers, promote lessons into enforced checks |
+
+Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMORY.md`. Doctrine: `docs/system/learning-loop.md`.
+
 ## By Business Stage
 
 ### Pre-Launch ($0)
@@ -110,3 +118,4 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Multiply what I have"** → `/kai-repurpose`
 - **"Improve AI-search visibility"** → `/kai-surround-sound`
+- **"Why does this keep failing?"** → `/kai-retro`

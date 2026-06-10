@@ -21,9 +21,10 @@ import argparse
 import json
 import os
 import sys
+from pathlib import Path
 
-from google import genai as google_genai
-import os
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gate_logger import log_gate_result
 
 MIN_TOTAL = 12
 MIN_SINGLE = 2
@@ -77,8 +78,29 @@ Return ONLY valid JSON, no explanation outside the JSON:
 
 
 def score_content(content: str) -> dict:
-    from dotenv import load_dotenv
-    load_dotenv("/opt/cmo-analytics/.env")
+    try:
+        from google import genai as google_genai
+    except ImportError:
+        print(
+            "ERROR: the 'google-genai' package is required for Four U's scoring "
+            "(pip install google-genai). The offline gates (banned_word_check.py, "
+            "seo_lint.py) run without it.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    try:
+        from dotenv import load_dotenv
+        load_dotenv("/opt/cmo-analytics/.env")
+        load_dotenv()
+    except ImportError:
+        pass
+    if not os.environ.get("GEMINI_API_KEY"):
+        print(
+            "ERROR: GEMINI_API_KEY is not set. Set it in the environment or .env. "
+            "Run 'python scripts/doctor.py' to see everything else this affects.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
     client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
     response = client.models.generate_content(
@@ -182,6 +204,19 @@ def main():
     total = scores["unique"] + scores["useful"] + scores["ultra_specific"] + scores["urgent"]
     passed = total >= MIN_TOTAL and all(
         scores[k] >= MIN_SINGLE for k in ["unique", "useful", "ultra_specific", "urgent"]
+    )
+    failures = []
+    if total < MIN_TOTAL:
+        failures.append(f"total_below_minimum:{total}/16")
+    for k in ["unique", "useful", "ultra_specific", "urgent"]:
+        if scores[k] < MIN_SINGLE:
+            failures.append(f"dimension_below_minimum:{k}:{scores[k]}/4")
+    log_gate_result(
+        gate="four_us_score",
+        passed=passed,
+        source=args.file,
+        failures=failures,
+        stats={"total": total, **{k: scores[k] for k in ["unique", "useful", "ultra_specific", "urgent"]}},
     )
     sys.exit(0 if passed else 1)
 

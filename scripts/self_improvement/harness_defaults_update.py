@@ -22,7 +22,6 @@ import json
 import logging
 import os
 import re
-import shutil
 import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -35,6 +34,7 @@ except ImportError:
 
 # Use centralized config
 from scripts.harness_config import get_config
+from scripts.self_improvement.safe_write import guarded_write_text, safe_write_yaml
 from scripts.self_improvement.stats_utils import (
     is_seasonal,
     welch_ttest,
@@ -289,11 +289,12 @@ def update_marketing_md(patterns: dict, dry_run: bool = False) -> list[str]:
     new_content = content + "\n".join(lines)
 
     if not dry_run:
-        # Create backup before overwriting
-        backup = MARKETING_MD + ".bak"
-        shutil.copy2(MARKETING_MD, backup)
-        log.info("Backed up MARKETING.md to %s", backup)
-        Path(MARKETING_MD).write_text(new_content)
+        # Validated, atomic rewrite (.bak created inside) — see edge-cases.md EC-11
+        ok, msg = guarded_write_text(MARKETING_MD, new_content)
+        if not ok:
+            log.error("MARKETING.md update aborted: %s", msg)
+            return [f"- MARKETING.md update ABORTED: {msg}"]
+        log.info("MARKETING.md updated (backup at %s.bak)", MARKETING_MD)
 
     return updates
 
@@ -447,9 +448,12 @@ def update_policy_thresholds(patterns: dict, dry_run: bool = False) -> dict:
         policy["hold_between"] = [new_reject, new_approve]
 
         if not dry_run:
-            shutil.copy2(policy_file, str(policy_file) + ".bak")
-            with open(policy_file, "w") as f:
-                yaml.dump(policy, f, default_flow_style=False, sort_keys=False)
+            # Round-trip-validated atomic write (.bak created inside) — EC-11
+            ok, msg = safe_write_yaml(policy_file, policy)
+            if not ok:
+                log.error("Policy update aborted: %s", msg)
+                updates.append(f"- `{policy_file.name}`: ABORTED — {msg}")
+                continue
 
         update_msg = (
             f"- `{policy_file.name}`: approve {old_approve}→{new_approve}, "

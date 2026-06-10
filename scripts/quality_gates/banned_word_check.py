@@ -17,6 +17,10 @@ import argparse
 import json
 import re
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gate_logger import log_gate_result
 
 TIER1 = [
     "leverage",
@@ -226,6 +230,13 @@ def main():
     result = check_content(content)
     report = format_report(result, content, as_json=args.json)
     print(report)
+    log_gate_result(
+        gate="banned_word_check",
+        passed=result["passed"],
+        source=args.file,
+        failures=[f"tier1:{h['word']}" for h in result["tier1"]],
+        warnings=[f"tier2:{h['word']}" for h in result["tier2"]],
+    )
     sys.exit(0 if result["passed"] else 1)
 
 

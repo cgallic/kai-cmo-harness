@@ -45,25 +45,17 @@ log = logging.getLogger("outcome-engine")
 FRAMEWORK_MAP = {key: list(paths) for key, paths in GENERATION_FRAMEWORK_MAP.items()}
 VALID_FORMATS = set(list_generation_formats())
 
-PLACEHOLDER_TERMS = re.compile(
-    r"\b(company|business|brand|service|city|location|page|title|keyword|name|"
-    r"cta|url|date|number|proof|review|offer|headline|subheadline|insert|"
-    r"placeholder|example)\b",
-    re.IGNORECASE,
-)
+from scripts.content.placeholders import find_placeholders
 
 
 def _find_bracket_placeholders(content: str) -> list[str]:
-    """Find bracketed template placeholders that should never ship."""
+    """Find template placeholders that should never ship.
 
-    placeholders = []
-    for match in re.finditer(r"\[([^\]\n]{2,80})\]", content or ""):
-        if match.end() < len(content) and content[match.end()] == "(":
-            continue
-        value = match.group(1).strip()
-        if PLACEHOLDER_TERMS.search(value):
-            placeholders.append(match.group(0))
-    return placeholders[:10]
+    Despite the legacy name, this catches bracketed ([company]) AND
+    natural-language ("insert your company name") placeholders — see
+    memory/edge-cases.md EC-06.
+    """
+    return find_placeholders(content)
 
 
 @dataclass
@@ -531,7 +523,7 @@ async def generate(
             gate_report.setdefault("violations", []).append(
                 {
                     "rule_id": "NO_BRACKET_PLACEHOLDERS",
-                    "rule_name": "Bracketed placeholder output is blocked",
+                    "rule_name": "Template placeholder output is blocked (bracketed or natural-language)",
                     "suggestion": "Replace placeholders with final execution-ready copy.",
                     "examples": placeholders,
                 }

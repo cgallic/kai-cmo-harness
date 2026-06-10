@@ -66,7 +66,7 @@ Apply only if the content targets search engines. Check against Algorithmic Auth
 - Bold the answer, not query terms
 - No links in first sentence of paragraphs
 
-For full rule set, read `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\algorithmic-authorship.md`.
+For full rule set, read `knowledge/frameworks/content-copywriting/algorithmic-authorship.md`.
 
 ### 5. Optional Panel Scoring (advisory)
 
@@ -117,3 +117,7 @@ Governance rules:
 ```
 
 If FAIL: list specific fixes needed. Offer to auto-fix and re-score.
+
+## Learning hook
+
+Gate script runs log to `data/learning/gate_runs.jsonl` automatically. If the **same diagnosis fails twice on one piece**, append a lesson to `memory/lessons.md` before escalating (write trigger #3 in `memory/MEMORY.md`). Recurring failures across pieces get mined by `/kai-retro` and promoted into new gate checks with golden corpus cases.

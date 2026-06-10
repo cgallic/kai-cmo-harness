@@ -8,7 +8,9 @@ Kai is now framed as a **marketing-native Claude Code-style runtime**. This repo
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-This file is the entry point. Claude Code reads it automatically and gains access to the Kai inventory: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+This file is the entry point. Claude Code reads it automatically and gains access to the Kai inventory: 47 skill directories, 45 canonical `kai-*` skill docs, 41 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+
+**At session start, also read `memory/MEMORY.md`** — the index of everything Kai has learned (lessons, edge cases, anti-patterns). It tells you which topic files to read for the task at hand.
 
 ## Instruction Contract
 
@@ -43,10 +45,19 @@ your-project/
 ├── CLAUDE.md                    # This file
 ├── knowledge/                   # Frameworks, channels, checklists, personas
 ├── harness/                     # Skill contracts, brief schema, references
+├── memory/                      # Lessons, edge cases, anti-patterns (git-backed learning)
 └── scripts/quality_gates/       # Automated scoring and linting
 ```
 
 That's it. Claude Code will read this file on startup and know how to find everything.
+
+Verify the install before relying on it:
+
+```bash
+python scripts/doctor.py
+```
+
+The doctor confirms every file this document references exists, the gate scripts run, and the golden corpus passes — and tells you exactly which optional credential unlocks which feature.
 
 ### Path B: OpenClaw Autonomous CMO (30 min)
 
@@ -150,7 +161,11 @@ Run: `python scripts/quality_gates/audit_provenance_lint.py <audit-folder> --aud
 Write content --> four_us_score.py --> banned_word_check.py --> seo_lint.py (if SEO) --> PASS/FAIL
 ```
 
-Max 2 auto-retry cycles. After 2 failures, surface to a human with the specific failures listed.
+Max 2 auto-retry cycles. Each retry must name the specific failing dimension or rule — never "improve the draft." After 2 failures, surface to a human with the specific failures listed, and log the repeated diagnosis as a lesson in `memory/lessons.md`.
+
+Every gate run is logged to `data/learning/gate_runs.jsonl` automatically (disable with `KAI_GATE_LOG=0`). The learning loop mines this log for recurring failures — see Memory & Self-Learning below.
+
+**Gate-change rule:** any edit to a gate script, banned-word tier, or overclaim pattern must keep the golden corpus passing — and a new check must add a case proving it. Run `python scripts/quality_gates/golden_check.py`.
 
 ### Agent-Readiness Gate (surround sound + AEO workflows)
 
@@ -180,6 +195,61 @@ Checks multi-engine `/robots.txt` policy, optional `/llms.txt`, JS-gating, capab
 ```
 Write ad --> Load platform policy --> Quality gate --> Policy compliance check --> PASS/FAIL
 ```
+
+---
+
+## Memory & Self-Learning
+
+The harness learns in both directions: winners feed `knowledge/playbooks/what-works.md` (automated 30-day loop), and failures feed `memory/` (this section). Full doctrine: `docs/system/learning-loop.md`.
+
+### The memory layer
+
+| File | Contents |
+|------|----------|
+| `memory/MEMORY.md` | Index — read at session start, stays under 200 lines |
+| `memory/lessons.md` | Dated trigger→advice lessons, one line each |
+| `memory/edge-cases.md` | Platform/API/harness gotchas with enforcement status |
+| `memory/what-doesnt-work.md` | Measured losers and anti-patterns with diagnoses |
+
+### Write triggers — append a lesson when:
+
+1. You make the same mistake a second time.
+2. A human corrects you and the correction generalizes.
+3. A quality gate fails twice for the same reason on one piece.
+4. A platform/API/tool behaves differently than the docs or harness references say.
+5. A claim you almost shipped turned out to be wrong or unsourceable.
+
+Generalize at write time ("Meta carousel ads need X", not "the Acme campaign needed X"). One line, dated, with a source. Use `python scripts/self_improvement/lesson_capture.py add --trigger "..." --advice "..."` or edit `memory/lessons.md` directly.
+
+### Graduation ladder
+
+A lesson that keeps mattering must become more enforced and more compressed:
+
+```
+lessons.md entry --> CLAUDE.md rule / checklist line --> lint rule or contract check + golden case
+```
+
+Prefer the executable form: if a lesson can be a regex, threshold, or checklist line, promote it. Promotions into gate scripts REQUIRE a golden corpus case (`evals/golden/manifest.json`) and a passing `golden_check.py` run. New hard blocks need human approval.
+
+### The retro cycle
+
+Run `/kai-retro` monthly or after any sprint with 5+ gated pieces:
+
+```bash
+python scripts/self_improvement/lesson_capture.py mine     # recurring gate failures --> candidate lessons
+python scripts/self_improvement/lesson_capture.py losers   # undiagnosed 30-day losers
+```
+
+Then triage every lesson — promote / keep / merge / retire (never delete; git keeps history).
+
+### Self-validation
+
+```bash
+python scripts/doctor.py                       # preflight: referenced files, gates, deps, credentials
+python scripts/quality_gates/golden_check.py   # gate verdicts on known content unchanged
+```
+
+CI runs both on every push (`.github/workflows/quality-gates.yml`).
 
 ---
 
@@ -285,11 +355,11 @@ Research --> Brief --> Write --> Quality Gate --> Approval --> Publish --> Log -
    - `scripts/quality_gates/four_us_score.py` (score threshold per contract)
    - `scripts/quality_gates/banned_word_check.py` (zero Tier 1 violations)
    - `scripts/quality_gates/seo_lint.py` (SEO content only)
-5. **Retry** — Max 2 auto-retry cycles on gate failure. Fix specific issues flagged.
-6. **Escalate** — After 2 failures, surface to human with failure details. Do not loop forever.
+5. **Retry** — Max 2 auto-retry cycles on gate failure. Fix only the specific issues flagged, never full rewrites.
+6. **Escalate** — After 2 failures, surface to human with failure details. Do not loop forever. Log the repeated diagnosis to `memory/lessons.md`.
 7. **Publish** — Deliver to the appropriate channel.
 8. **Log** — Record what was published, when, and for which persona.
-9. **30-day Check** — Revisit performance. Feed learnings back into the pipeline.
+9. **30-day Check** — Revisit performance. Winners feed `knowledge/playbooks/what-works.md`; losers get diagnosed into `memory/what-doesnt-work.md` via `/kai-retro`.
 
 ---
 
@@ -334,12 +404,23 @@ kai-cmo-harness/
 │   │   └── posthog-marketing-queries.md   # PostHog HogQL templates for marketing analytics
 │   └── ARCHITECTURE.md                    # Harness design docs
 │
+├── memory/                                # Git-backed learning layer
+│   ├── MEMORY.md                          # Index — read at session start
+│   ├── lessons.md                         # Trigger→advice lessons (dated, one line each)
+│   ├── edge-cases.md                      # Platform/API/harness gotchas + enforcement status
+│   └── what-doesnt-work.md                # Measured losers and anti-patterns
+│
 ├── scripts/
+│   ├── doctor.py                          # Preflight self-check — run on every fresh clone
+│   ├── self_improvement/
+│   │   └── lesson_capture.py              # add / mine / losers — failure-side learning CLI
 │   └── quality_gates/                     # Automated content validation
 │       ├── four_us_score.py               # Four U's scorer (12/16 threshold)
 │       ├── banned_word_check.py           # Banned word detection
 │       ├── seo_lint.py                    # SEO rule linter
-│       └── agent_readiness_lint.py        # Agent-readiness linter (robots.txt, llms.txt, JS-gating, schema)
+│       ├── agent_readiness_lint.py        # Agent-readiness linter (robots.txt, llms.txt, JS-gating, schema)
+│       ├── gate_logger.py                 # JSONL run logging --> data/learning/gate_runs.jsonl
+│       └── golden_check.py                # Golden corpus regression runner (evals/golden/)
 │
 ├── agent/                                 # OpenClaw autonomous agent config
 ├── gateway/                               # Webhook gateway (FastAPI)

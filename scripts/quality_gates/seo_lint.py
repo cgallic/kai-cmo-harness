@@ -15,6 +15,10 @@ import argparse
 import json
 import re
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from gate_logger import log_gate_result
 
 
 def extract_sections(text: str) -> dict:
@@ -294,6 +298,14 @@ def main():
     result = lint(content, args.keyword)
     report = format_report(result, as_json=args.json)
     print(report)
+    log_gate_result(
+        gate="seo_lint",
+        passed=result["passed"],
+        source=args.file,
+        failures=result["errors"],
+        warnings=result["warnings"],
+        stats=result["stats"],
+    )
     sys.exit(0 if result["passed"] else 1)
 
 
