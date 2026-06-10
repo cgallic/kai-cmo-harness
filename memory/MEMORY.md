@@ -48,5 +48,5 @@ Run `/kai-retro` monthly (or after any heavy content sprint) to triage candidate
 
 ## Current standing lessons (index)
 
-- Platform/API gotchas are catalogued in `memory/edge-cases.md` — 16 seeded entries, several with `enforcement: none` that should graduate to code checks.
+- Platform/API gotchas are catalogued in `memory/edge-cases.md` — 18 entries. EC-06 (NL placeholders), EC-11 (defaults rewrite validation), and EC-12 (pending-check reconciliation) were promoted to code on 2026-06-10 (`tests/test_promoted_edge_cases.py`); the rest with `enforcement: none` are graduation candidates.
 - No published losers analyzed yet — `what-doesnt-work.md` is seeded with structural anti-patterns only.

@@ -1,6 +1,6 @@
 # Edge Cases & Gotchas Registry
 
-Known sharp edges in the harness, platform APIs, and the learning loop. Each entry says where it bites, what to do, and whether anything enforces it. Entries with `enforcement: none` are graduation candidates — promote them to code checks via `/kai-retro` and add a golden case when you do.
+Known sharp edges in the harness, platform APIs, and the learning loop. Each entry says where it bites, what to do, and whether anything enforces it. Entries with `enforcement: none` are graduation candidates — promote them to code checks via `/kai-retro` and add a golden case when you do. Promoted entries stay here marked *(promoted)* with the enforcement path; their tests live in `tests/test_promoted_edge_cases.py`.
 
 Format per entry: **trigger → advice**, then `Bites:` (who hits it), `Enforcement:` (what catches it today), `Added:` (date).
 
@@ -28,9 +28,9 @@ Bites: every ad workflow. Enforcement: doctrine in CLAUDE.md; no freshness check
 **Gating ads/emails → the 10/16 threshold triggers on markers like "VARIANT A", "Subject:", "HOOK (0-3s)".** An ad phrased as an essay gets judged long-form at 12/16. Pass the format explicitly; don't rely on detection.
 Bites: anyone gating short-form content. Enforcement: heuristic in engine only. Added: 2026-06-09
 
-### EC-06 Placeholder detection misses natural language
-**Pre-ship placeholder scan → `_find_bracket_placeholders()` in `scripts/content/engine.py` only catches `[company]`-style tokens.** "Insert your company name here" ships. Scan for natural-language placeholders too.
-Bites: every publish. Enforcement: partial (bracket regex only). Added: 2026-06-09
+### EC-06 Placeholder detection misses natural language *(promoted 2026-06-10)*
+**Pre-ship placeholder scan → bracket-only detection let "insert your company name here" ship.** Now enforced: `scripts/content/placeholders.py` catches bracketed, curly-brace, angle-bracket, and natural-language placeholders; the engine blocks on all of them.
+Bites: every publish. Enforcement: scripts/content/placeholders.py + tests/test_promoted_edge_cases.py. Added: 2026-06-09
 
 ### EC-07 Four U's scorer needs GEMINI_API_KEY
 **Running `four_us_score.py` → it calls Gemini and loads `/opt/cmo-analytics/.env` (a server path).** Without `GEMINI_API_KEY` in the environment it crashes rather than degrading. Banned-word check and SEO lint are fully offline — run them regardless.
@@ -50,13 +50,13 @@ Bites: autonomous runs. Enforcement: prose policy; engine enforces retry cap. Ad
 
 ## Self-improvement loop gotchas
 
-### EC-11 MARKETING.md auto-rewrite has no validity check
-**`harness_defaults_update.py` rewrites MARKETING.md and policy YAML → it backs up `.bak` but never validates the result parses.** A bad rewrite breaks every later run. Validate YAML before replacing; roll back on parse failure.
-Bites: scheduled learning loop. Enforcement: none. Added: 2026-06-09
+### EC-11 MARKETING.md auto-rewrite has no validity check *(promoted 2026-06-10)*
+**`harness_defaults_update.py` rewrote MARKETING.md and policy YAML with only a `.bak` and no validation.** Now enforced: `scripts/self_improvement/safe_write.py` — policy YAML is round-trip-validated before an atomic replace; MARKETING.md rewrites refuse truncation or a lost heading. Aborted writes leave the original untouched and surface in the update digest.
+Bites: scheduled learning loop. Enforcement: scripts/self_improvement/safe_write.py + tests/test_promoted_edge_cases.py. Added: 2026-06-09
 
-### EC-12 pending_checks are the only schedule record
-**30-day checks → if `pending_checks/<id>.json` is lost, that piece is never re-measured.** `content_log.json` has enough to regenerate them; do so on startup if counts mismatch.
-Bites: long-running deployments. Enforcement: none. Added: 2026-06-09
+### EC-12 pending_checks are the only schedule record *(promoted 2026-06-10)*
+**30-day checks → a lost `pending_checks/<id>.json` meant that piece was never re-measured.** Now enforced: `reconcile_pending_checks()` in `performance_check.py` rebuilds missing check files from `content_log.json` on every run (also `--reconcile-only`).
+Bites: long-running deployments. Enforcement: scripts/self_improvement/performance_check.py + tests/test_promoted_edge_cases.py. Added: 2026-06-09
 
 ### EC-13 Circuit breaker resets on restart
 **`pattern_extract.py` stops after 3 consecutive Gemini failures → the counter is in-memory only.** A crash-looping agent hammers the API forever. Persist breaker state if you see repeated restarts.

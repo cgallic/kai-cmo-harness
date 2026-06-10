@@ -24,6 +24,6 @@ Rules:
 ## Learned lessons
 
 - [2026-06-09] (active) **When a gate fails twice on one piece for the same dimension** → stop rewriting whole drafts; fix only the named failing dimension, then escalate to a human with the diagnosis if the third run fails. Source: pipeline retry policy. Enforced: none (prose only — promotion candidate)
-- [2026-06-09] (active) **When a draft contains template placeholders** → the bracket regex in `scripts/content/engine.py` only catches `[company]`-style tokens; also scan for natural-language placeholders ("insert your", "add your company", "YOUR NAME HERE") before shipping. Source: engine.py gap audit. Enforced: none (promotion candidate)
+- [2026-06-09] (promoted) **When a draft contains template placeholders** → natural-language placeholders ("insert your", "your business name here", "TBD") must block publish, not just `[company]`-style brackets. Source: engine.py gap audit. Enforced: scripts/content/placeholders.py (promoted 2026-06-10, EC-06)
 - [2026-06-09] (active) **When GSC/GA4 credentials are missing** → brief generation and performance checks fail quietly with an error dict; run `python scripts/doctor.py` first and treat missing connectors as data gaps, never as zeros. Source: performance_check.py audit. Enforced: scripts/doctor.py (preflight warning)
 - [2026-06-09] (active) **When building Meta ad creatives** → use instagram_user_id, never instagram_actor_id (wrong field is accepted, ad silently fails). Source: memory/edge-cases.md EC-01. Enforced: none

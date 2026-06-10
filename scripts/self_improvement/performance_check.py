@@ -59,6 +59,61 @@ def save_log(entries: list):
         json.dump(entries, f, indent=2)
 
 
+def reconcile_pending_checks(dry_run: bool = False) -> int:
+    """Regenerate missing pending-check files from the content log.
+
+    pending_checks/<id>.json was the only record that a piece is awaiting its
+    30-day check — if the file was lost, the piece was never re-measured
+    (memory/edge-cases.md EC-12). The content log has everything needed to
+    rebuild the schedule, so do that for any unmeasured entry with no file.
+
+    Returns the number of check files recreated.
+    """
+    from datetime import timedelta
+
+    entries = load_log()
+    checks_dir = Path(PENDING_CHECKS_DIR)
+    recreated = 0
+    for entry in entries:
+        if not isinstance(entry, dict) or not entry.get("id"):
+            continue
+        if entry.get("performance_30d"):
+            continue  # already measured
+        if not (entry.get("url") and entry.get("keyword") and entry.get("site")):
+            continue  # not checkable (e.g. social entries graded separately)
+        check_file = checks_dir / f"{entry['id']}.json"
+        if check_file.exists():
+            continue
+        published = entry.get("published_at")
+        try:
+            due_dt = datetime.fromisoformat(published) + timedelta(days=30)
+        except (TypeError, ValueError):
+            due_dt = datetime.now(timezone.utc)
+        if due_dt.tzinfo is None:
+            due_dt = due_dt.replace(tzinfo=timezone.utc)
+        check_data = {
+            "id": entry["id"],
+            "url": entry["url"],
+            "keyword": entry["keyword"],
+            "site": entry["site"],
+            "published_at": published,
+            "check_due": due_dt.isoformat(),
+            "status": "pending",
+            "source_run": entry.get("source_run"),
+            "proposal_id": entry.get("proposal_id"),
+            "module_set": entry.get("module_set", []),
+            "artifact_refs": entry.get("artifact_refs", {}),
+            "reconciled": True,
+        }
+        if not dry_run:
+            checks_dir.mkdir(parents=True, exist_ok=True)
+            with open(check_file, "w") as f:
+                json.dump(check_data, f, indent=2)
+        recreated += 1
+        log.info("Reconciled missing pending check for %s (%s)", entry["id"], entry["url"])
+    return recreated
+
+
 def get_pending_checks() -> list:
     if not os.path.exists(PENDING_CHECKS_DIR):
         return []
@@ -529,7 +584,17 @@ def main():
     parser.add_argument("--social", action="store_true", help="Grade all social entries (TikTok/Instagram)")
     parser.add_argument("--days", type=int, default=30)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--reconcile-only",
+        action="store_true",
+        help="Rebuild missing pending-check files from the content log and exit",
+    )
     args = parser.parse_args()
+
+    if args.reconcile_only:
+        n = reconcile_pending_checks(dry_run=args.dry_run)
+        print(f"{n} missing pending check(s) {'would be ' if args.dry_run else ''}recreated.")
+        return
 
     if args.social:
         results = check_social_entries(dry_run=args.dry_run)
@@ -553,6 +618,11 @@ def main():
         msg = format_discord_message(entry, gsc, ga4, evaluation)
         print(msg)
         return
+
+    # Self-heal the schedule before reading it (edge-cases.md EC-12)
+    reconciled = reconcile_pending_checks(dry_run=args.dry_run)
+    if reconciled:
+        print(f"Reconciled {reconciled} missing pending check(s) from the content log.")
 
     checks = get_pending_checks()
     if not checks:
