@@ -32,7 +32,9 @@ AGENT_OWNER_PHONE=+1...           # where approvals/alerts go
 AGENT_WHATSAPP_ENABLED=false
 
 # Content pipeline (optional but recommended)
-GEMINI_API_KEY=...                # Four U's gate + draft writing
+GEMINI_API_KEY=...                # draft writing + Four U's judge (the judge also
+                                  # accepts ANTHROPIC_API_KEY or OPENAI_API_KEY;
+                                  # pin with KAI_LLM_PROVIDER / KAI_LLM_MODEL)
 GOOGLE_CREDENTIALS_PATH=...       # GSC/GA4 for briefs + 30-day checks
 
 # Behavior tuning (defaults shown)

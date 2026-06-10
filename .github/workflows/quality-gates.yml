@@ -26,7 +26,7 @@ jobs:
       - name: Golden corpus
         run: python scripts/quality_gates/golden_check.py
 
-      - name: Golden corpus + promoted edge cases (pytest)
+      - name: Golden corpus + promoted edge cases + judge client (pytest)
         run: |
           pip install pytest pyyaml
-          python -m pytest tests/test_golden_corpus.py tests/test_promoted_edge_cases.py -v
+          python -m pytest tests/test_golden_corpus.py tests/test_promoted_edge_cases.py tests/test_llm_judge.py -v

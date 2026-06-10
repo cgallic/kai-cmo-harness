@@ -32,9 +32,9 @@ Bites: anyone gating short-form content. Enforcement: heuristic in engine only. 
 **Pre-ship placeholder scan → bracket-only detection let "insert your company name here" ship.** Now enforced: `scripts/content/placeholders.py` catches bracketed, curly-brace, angle-bracket, and natural-language placeholders; the engine blocks on all of them.
 Bites: every publish. Enforcement: scripts/content/placeholders.py + tests/test_promoted_edge_cases.py. Added: 2026-06-09
 
-### EC-07 Four U's scorer needs GEMINI_API_KEY
-**Running `four_us_score.py` → it calls Gemini and loads `/opt/cmo-analytics/.env` (a server path).** Without `GEMINI_API_KEY` in the environment it crashes rather than degrading. Banned-word check and SEO lint are fully offline — run them regardless.
-Bites: fresh clones. Enforcement: scripts/doctor.py reports it. Added: 2026-06-09
+### EC-07 Four U's scorer needs an LLM provider key *(promoted 2026-06-10)*
+**Running `four_us_score.py` → it needs one of GEMINI_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY.** Provider auto-detects from whichever key is set (pin with `KAI_LLM_PROVIDER` / `KAI_LLM_MODEL`); without any key it exits with guidance instead of crashing. Banned-word check and SEO lint are fully offline — run them regardless.
+Bites: fresh clones. Enforcement: scripts/quality_gates/llm_judge.py + scripts/doctor.py (reports resolved provider). Added: 2026-06-09
 
 ### EC-08 seo_lint llms.txt pattern is broad
 **Writing about llms.txt near AI Overview topics → the overclaim regex can flag legitimate "llms.txt is NOT a ranking factor" sentences if negation sits >40 chars away.** Keep the negation close to the claim, or rephrase.

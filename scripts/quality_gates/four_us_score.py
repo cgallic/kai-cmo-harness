@@ -19,11 +19,11 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import llm_judge
 from gate_logger import log_gate_result
 
 MIN_TOTAL = 12
@@ -78,37 +78,17 @@ Return ONLY valid JSON, no explanation outside the JSON:
 
 
 def score_content(content: str) -> dict:
-    try:
-        from google import genai as google_genai
-    except ImportError:
-        print(
-            "ERROR: the 'google-genai' package is required for Four U's scoring "
-            "(pip install google-genai). The offline gates (banned_word_check.py, "
-            "seo_lint.py) run without it.",
-            file=sys.stderr,
-        )
-        sys.exit(2)
-    try:
-        from dotenv import load_dotenv
-        load_dotenv("/opt/cmo-analytics/.env")
-        load_dotenv()
-    except ImportError:
-        pass
-    if not os.environ.get("GEMINI_API_KEY"):
-        print(
-            "ERROR: GEMINI_API_KEY is not set. Set it in the environment or .env. "
-            "Run 'python scripts/doctor.py' to see everything else this affects.",
-            file=sys.stderr,
-        )
-        sys.exit(2)
-    client = google_genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    """Score via any configured LLM provider (Gemini/Anthropic/OpenAI).
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=SCORING_PROMPT.format(content=content[:8000]),
-    )
+    Provider and model resolve from the environment — see llm_judge.py.
+    """
+    try:
+        raw = llm_judge.complete(SCORING_PROMPT.format(content=content[:8000]))
+    except llm_judge.JudgeConfigError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        print("Run 'python scripts/doctor.py' to see what each credential unlocks.", file=sys.stderr)
+        sys.exit(2)
 
-    raw = response.text.strip()
     # Strip markdown if present
     if raw.startswith("```"):
         raw = raw.split("```")[1]

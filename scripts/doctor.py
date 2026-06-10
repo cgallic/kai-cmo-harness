@@ -61,6 +61,7 @@ REQUIRED_PATHS = [
     "scripts/quality_gates/agent_readiness_lint.py",
     "scripts/quality_gates/audit_provenance_lint.py",
     "scripts/quality_gates/golden_check.py",
+    "scripts/quality_gates/llm_judge.py",
     "scripts/self_improvement/lesson_capture.py",
     "scripts/content/engine.py",
     "scripts/audit/collect.py",
@@ -80,24 +81,30 @@ COMPILE_PATHS = [
     "scripts/quality_gates/seo_lint.py",
     "scripts/quality_gates/gate_logger.py",
     "scripts/quality_gates/golden_check.py",
+    "scripts/quality_gates/llm_judge.py",
+    "scripts/quality_gates/four_us_score.py",
     "scripts/self_improvement/lesson_capture.py",
     "scripts/doctor.py",
 ]
 
 # (module, what it unlocks)
 OPTIONAL_DEPS = [
-    ("google.genai", "Four U's scoring + content writing (Gemini)"),
+    ("google.genai", "Gemini provider: Four U's judge + content writing"),
+    ("anthropic", "Anthropic provider: Four U's judge + OpenClaw agent"),
+    ("openai", "OpenAI provider: Four U's judge"),
     ("dotenv", ".env loading for all scripts"),
     ("yaml", "skill contracts, quality policies, defaults updater"),
     ("fastapi", "gateway remote runner (gateway/main.py)"),
     ("pytest", "test suite (tests/)"),
 ]
 
-# (env var, what it unlocks)
+# (env var, what it unlocks). The Four U's judge needs ANY ONE of the three
+# LLM keys (pin with KAI_LLM_PROVIDER / KAI_LLM_MODEL).
 OPTIONAL_ENV = [
-    ("GEMINI_API_KEY", "Four U's gate + draft writing"),
+    ("GEMINI_API_KEY", "draft writing + Four U's judge (Gemini)"),
+    ("ANTHROPIC_API_KEY", "Four U's judge (Claude) + OpenClaw agent mode"),
+    ("OPENAI_API_KEY", "Four U's judge (OpenAI)"),
     ("GOOGLE_CREDENTIALS_PATH", "GSC/GA4 briefs + 30-day performance checks"),
-    ("ANTHROPIC_API_KEY", "OpenClaw autonomous agent mode"),
     ("DISCORD_BOT_TOKEN", "Discord approvals + notifications"),
 ]
 
@@ -178,6 +185,21 @@ def check_learning_layer(report: Report) -> None:
         report.warn(f"data/learning/ not writable ({exc}) — gate logging disabled, mining won't work")
 
 
+def check_judge_provider(report: Report) -> None:
+    """Report which LLM provider the Four U's judge will use, if any."""
+    judge_path = REPO_ROOT / "scripts" / "quality_gates" / "llm_judge.py"
+    spec = importlib.util.spec_from_file_location("_doctor_llm_judge", judge_path)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+        provider, model = mod.resolve_provider()
+        report.ok(f"LLM judge provider: {provider} ({model})")
+    except FileNotFoundError:
+        report.fail("scripts/quality_gates/llm_judge.py missing")
+    except Exception as exc:
+        report.warn(f"Four U's judge disabled — {exc}")
+
+
 def check_optional(report: Report) -> None:
     for module, unlocks in OPTIONAL_DEPS:
         if importlib.util.find_spec(module.split(".")[0]) is None:
@@ -207,6 +229,7 @@ def main() -> int:
     check_golden_corpus(report)
     if not args.ci:
         check_learning_layer(report)
+        check_judge_provider(report)
         check_optional(report)
 
     print("\nKai Harness Doctor")
