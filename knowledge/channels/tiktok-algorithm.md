@@ -1,6 +1,8 @@
 # TikTok Algorithm Deep Dive
 
 > **Use when:** Optimizing content strategy for TikTok FYP distribution, understanding engagement weighting, or debugging poor video performance.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md` + `playbooks/b2c-distribution-playbook.md` — where organic TikTok fits the creative-volume flywheel. Feed it with `channels/ai-ugc.md`.
 
 ## Quick Reference
 

@@ -1,0 +1,228 @@
+skill: linkedin-post
+version: 3.0
+harness: kai-harness
+format: linkedin-post
+risk_tier: medium
+word_count: 40-300
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Founder-led, personal-profile LinkedIn feed posts (text post, document/carousel,
+  or native-video caption). One idea per post, a hook that lands in the first two
+  lines before "see more", outbound links moved to the first comment to avoid reach
+  throttling, no engagement-bait, and a meaningful-comment-friendly CTA. Not for
+  long-form articles — use linkedin-article.yaml for those.
+
+required_sources:
+  - brief
+  - knowledge/channels/linkedin-organic.md
+  - knowledge/checklists/linkedin-ai-content-detection-and-feed-checklist.md
+  - knowledge/frameworks/aeo-ai-search/linkedin-ai-systems-deep-dive.md
+  - voice_guide
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  voice_guide_required: true
+  persona_claims_require_source_or_hypothesis_label: true
+  customer_or_market_claims_require_evidence: true
+  outbound_links_belong_in_first_comment: true
+  claims_must_trace_to_evidence: true
+  missing_sources_action: block_or_label_as_hypothesis
+
+inputs:
+  required:
+    - brief: object
+    - post_format: string
+    - core_idea: string
+  optional:
+    - voice_override: string
+    - persona_source_id: string
+    - outbound_link: string
+    - claim_evidence_log: list[object]
+    - cta_question: string
+
+outputs:
+  hook: string
+  body: string
+  cta_question: string
+  first_comment: string
+  post_format: string
+  four_us_score: object
+  claim_table: list[object]
+
+output_schema:
+  type: object
+  required:
+    - hook
+    - body
+    - cta_question
+    - first_comment
+    - post_format
+    - four_us_score
+    - claim_table
+  properties:
+    hook: string
+    body: string
+    cta_question: string
+    first_comment: string
+    post_format: string
+    four_us_score: object
+    claim_table:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        confidence_label: string
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "four_us_min_single >= 2"
+  - "banned_words_tier1 == 0"
+  - "ai_slop_phrases == 0"
+  - "hook_within_first_two_lines == true"
+  - "single_idea_per_post == true"
+  - "no_outbound_link_in_body == true"
+  - "no_engagement_bait == true"
+  - "cta_is_real_question == true"
+  - "claim_table_complete == true"
+
+deterministic_checks:
+  - id: hook_char_budget
+    evaluator: script
+    pass_when: "hook char_count <= 200 and hook carries the core idea before the see-more fold"
+  - id: word_count_range
+    evaluator: script
+    pass_when: "40 <= word_count <= 300"
+  - id: single_idea
+    evaluator: static
+    pass_when: "post maps to exactly one core_idea"
+  - id: no_outbound_link_in_body
+    evaluator: regex
+    pass_when: "body contains no http(s) URL; any outbound_link appears only in first_comment"
+  - id: outbound_link_in_first_comment
+    evaluator: static
+    pass_when: "outbound_link is empty or first_comment contains outbound_link"
+  - id: no_engagement_bait
+    evaluator: regex
+    pass_when: "no phrases like 'comment YES below', 'tag a friend', 'like if', 'comment * to get', or follow-for-DM bait"
+  - id: cta_is_real_question
+    evaluator: static
+    pass_when: "cta_question is a genuine open question, not a vanity-engagement prompt"
+  - id: ai_slop_phrases
+    evaluator: quality_gate
+    pass_when: "ai_slop_phrases == 0"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: claim_evidence_present
+    evaluator: static
+    pass_when: "material claims map to evidence_id or hypothesis label"
+  - id: no_invented_persona_quote
+    evaluator: regex
+    pass_when: "no unsourced persona or customer quote appears"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: hook_strength
+      question: "Do the first two lines earn the click on see-more without clickbait?"
+    - name: dwell_and_save_potential
+      question: "Does the post teach something concrete enough to save or re-read, driving dwell time?"
+    - name: authenticity
+      question: "Does it read as a real human founder voice rather than AI-slop or generic thought-leadership filler?"
+    - name: single_clear_idea
+      question: "Does the post commit to one idea instead of stacking several?"
+
+human_review_required_when:
+  - founder_voice_required == true
+  - client_facing_quantitative_claims_present == true
+  - persona_source_confidence != high
+  - regulated_industry == true
+  - sensitive_personal_data_used == true
+  - claim_risk_level == high
+
+golden_situations:
+  - name: sourced_founder_lesson
+    expectation: "One idea, hook in first two lines, link in first comment, real question CTA, claims traced to evidence."
+  - name: engagement_bait_attempt
+    expectation: "Fails deterministic check when copy asks for 'comment YES below' or tag-a-friend bait."
+  - name: link_in_body_throttle
+    expectation: "Fails deterministic check when an outbound URL sits in the post body instead of the first comment."
+  - name: persona_invented_from_vibes
+    expectation: "Does not invent buyer motives, quotes, or budget authority; labels founder-only positioning as hypothesis."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_engagement_bait_violations: 0
+  max_links_in_body: 0
+  max_unsourced_material_claims: 0
+  max_invented_quotes: 0
+
+claim_policy:
+  allowed:
+    - sourced lessons
+    - first-person experience when true and identified
+    - labeled hypotheses
+  requires_evidence:
+    - performance metrics
+    - customer outcomes
+    - market trends
+    - buyer objections
+  forbidden:
+    - fabricated stories presented as real
+    - invented quotes
+    - bought engagement claims
+    - unsupported trend certainty
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - persona_source_id
+    - voice_guide_version
+    - confidence_label
+  unresolved_claim_action: remove_or_label_hypothesis
+
+disallowed_tactics:
+  - buying engagement, followers, or likes
+  - engagement pods or automation that violates LinkedIn ToS
+  - fabricated stories presented as real first-person experience
+  - engagement-bait CTAs that solicit vanity reactions
+  - putting outbound links in the body to game then deceive the algorithm
+  - invented persona or customer quotes
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - content_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - engagement_bait_present
+    - outbound_link_in_body
+    - unsubstantiated_material_claim
+    - voice_hard_rule_violation
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - post_id
+  - post_format
+  - persona_source_id
+  - evidence_ids
+  - voice_guide_version
+  - four_us_score
+  - reviewer
+  - approval_status
+  - linkedin_post_url
+
+hooks:
+  pre_write: load_brief + load_linkedin_organic + load_linkedin_feed_checklist + load_linkedin_ai_systems_research
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: post_to_linkedin + content_log
+  on_publish: schedule_30day_check

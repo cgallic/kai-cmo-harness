@@ -1,6 +1,8 @@
 # YouTube Channel Guide
 
 > **Use when:** Building a YouTube presence, creating video content for SEO, or running YouTube ads.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md` — where YouTube fits in channel selection and the B2B/B2C build order.
 
 ---
 

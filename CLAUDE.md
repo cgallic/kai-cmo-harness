@@ -341,6 +341,9 @@ Common contracts include:
 | `meta-ads.yaml` | Meta/Facebook/Instagram ads | 10/16 | Skipped |
 | `google-ads.yaml` | Google Ads copy | 10/16 | Skipped |
 | `email.yaml` | General email | 10/16 | Skipped |
+| `linkedin-post.yaml` | Founder-led LinkedIn **feed** post (text/carousel/video caption) — hook-in-first-200-chars, one idea, link in first comment | 10/16 | Skipped |
+| `ai-ugc-script.yaml` | AI synthetic-UGC video ad script + spec — hard FTC/AI-label/likeness-consent gates, no fabricated testimonials | 10/16 | Skipped |
+| `sponsorship-brief.yaml` | Buyer-side sponsorship placement brief + deal/attribution spec — paid-partnership disclosure + tracking token required | 10/16 | Skipped |
 
 Load the relevant contract before writing. It specifies word counts, required sections, tone, and validation rules.
 

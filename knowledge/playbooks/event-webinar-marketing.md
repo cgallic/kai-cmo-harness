@@ -1,6 +1,8 @@
 # Event & Webinar Marketing Playbook
 
 > **Use when:** Running webinars, virtual events, conferences, workshops, or any event-driven lead generation. 95% of B2B marketers say webinars are key to their strategy.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md`. For IN-PERSON field marketing and B2C experiential, see `channels/events-experiential.md` (this playbook covers virtual).
 
 Sources: [ClickMeeting B2B Webinars](https://blog.clickmeeting.com/using-webinars-for-b2b-marketing), [Gudsho Webinar Lead Gen](https://www.gudsho.com/blog/webinar-lead-generation/), [Kacerr Webinar Marketing Guide](https://www.kacerr.com/webinar-marketing-guide-2026/)
 
