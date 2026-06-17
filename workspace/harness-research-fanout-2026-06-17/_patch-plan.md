@@ -60,4 +60,3 @@ Optional after the next gate patch:
 python scripts\quality_gates\golden_check.py
 python scripts\doctor.py
 ```
-
