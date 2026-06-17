@@ -1,13 +1,18 @@
 """
 Knowledge Cloner — Phase 2a: Transcription.
 
-Strategy cascade (cheapest first):
-1. youtube-transcript-api (free, instant)
-2. yt-dlp subtitle download (free, slower)
-3. yt-dlp audio download → Gemini Flash transcription (paid fallback)
+Strategy cascade:
+1. User-provided or publisher-provided transcript files.
+2. Authorized caption sources.
+3. Gemini transcription only when the operator confirms rights.
+
+Unofficial YouTube transcript/subtitle extractors and audio download fallbacks
+are disabled by default. They can be enabled only for owned or otherwise
+authorized workflows with KAI_TRANSCRIPT_UNOFFICIAL_OK=1.
 """
 
 import asyncio
+import os
 import shutil
 import re
 import time
@@ -21,6 +26,11 @@ from .utils import (
     call_gemini_with_audio, confirm_action,
 )
 from .prompts import TRANSCRIPTION_PROMPT
+
+
+UNOFFICIAL_TRANSCRIPT_OK = os.getenv("KAI_TRANSCRIPT_UNOFFICIAL_OK", "").lower() in {
+    "1", "true", "yes"
+}
 
 
 async def transcribe_sources(
@@ -55,9 +65,9 @@ async def transcribe_sources(
 
     if dry_run:
         log(f"[DRY RUN] Would transcribe {len(candidates)} sources:")
-        log(f"  YouTube (free captions): {youtube_count}")
-        log(f"  Other (may need Gemini): {non_youtube}")
-        fallback_est = max(1, youtube_count // 5)  # ~20% need fallback
+        log(f"  YouTube (authorized captions only by default): {youtube_count}")
+        log(f"  Other (may need rights-confirmed Gemini): {non_youtube}")
+        fallback_est = 0 if not UNOFFICIAL_TRANSCRIPT_OK else max(1, youtube_count // 5)
         log(f"  Estimated Gemini fallbacks: {fallback_est}")
         log(f"  Estimated cost: ~${fallback_est * 0.01:.2f}")
         return config
@@ -134,23 +144,34 @@ async def _transcribe_youtube(
     tracker: CostTracker,
     limiter: RateLimiter,
 ) -> Optional[str]:
-    """Transcribe YouTube video: captions → subtitles → audio+Gemini."""
+    """Transcribe YouTube video only through authorized transcript paths."""
     video_id = source.id.replace("yt_", "")
 
-    # Strategy 1: youtube-transcript-api (free, instant)
-    transcript = await _try_youtube_transcript_api(video_id)
-    if transcript:
-        log(f"    Got transcript via youtube-transcript-api (free)")
-        return transcript
+    if UNOFFICIAL_TRANSCRIPT_OK:
+        log("    Unofficial transcript fallbacks enabled; confirm owned/authorized rights.")
 
-    # Strategy 2: yt-dlp subtitle download
-    transcript = await _try_ytdlp_subtitles(video_id, expert_dir)
-    if transcript:
-        log(f"    Got transcript via yt-dlp subtitles (free)")
-        return transcript
+        # Strategy 1: youtube-transcript-api
+        transcript = await _try_youtube_transcript_api(video_id)
+        if transcript:
+            log(f"    Got transcript via youtube-transcript-api")
+            return transcript
 
-    # Strategy 3: Gemini video URL (Google can access YouTube natively — no IP blocks)
-    log(f"    No free captions. Using Gemini video transcription...")
+        # Strategy 2: yt-dlp subtitle download
+        transcript = await _try_ytdlp_subtitles(video_id, expert_dir)
+        if transcript:
+            log(f"    Got transcript via yt-dlp subtitles")
+            return transcript
+    else:
+        log(
+            "    Skipping unofficial YouTube transcript/subtitle extractors. "
+            "Use a publisher-provided transcript, YouTube Data API for owned "
+            "or authorized captions, or set KAI_TRANSCRIPT_UNOFFICIAL_OK=1 "
+            "only after rights review."
+        )
+        return None
+
+    # Strategy 3: Gemini video URL for rights-confirmed workflows.
+    log(f"    No authorized captions found. Trying Gemini video transcription...")
     tracker.check_or_abort()
 
     transcript = await _try_gemini_youtube_url(video_id, tracker, limiter)
@@ -158,7 +179,7 @@ async def _transcribe_youtube(
         log(f"    Got transcript via Gemini YouTube URL")
         return transcript
 
-    # Strategy 4: Download audio → Gemini transcription (last resort)
+    # Strategy 4: Download audio -> Gemini transcription (last resort).
     transcript = await _try_gemini_audio(source.url, expert_dir, tracker, limiter)
     if transcript:
         log(f"    Got transcript via Gemini audio transcription")

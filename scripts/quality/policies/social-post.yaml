@@ -1,0 +1,20 @@
+# Organic social post gate
+id: social-post
+auto_approve_above: 75
+hold_between: [50, 75]
+reject_below: 50
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "engagement pod"
+  - "fake engagement"
+  - "buy followers"
+  - "guaranteed viral"
+  - "shadowban hack"
+require_policy_ref: harness/references/social-automation-rules.md
+require_secondary_refs:
+  - harness/references/social-platform-source-registry.json
+notes: |
+  Load the destination platform organic rule file before scheduling, posting, replying, DMing, or collecting social data.
+  Brand, affiliate, paid partnership, AI, and synthetic-media disclosures must match the destination platform.
+  Live-channel mutation requires account-owner authorization and human approval unless explicitly pre-approved.

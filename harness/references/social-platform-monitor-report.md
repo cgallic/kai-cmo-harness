@@ -1,0 +1,348 @@
+# Social Platform Monitor Report
+
+Last run: 2026-06-17 04:17 UTC
+
+Checked: 82 sources
+Changed: 0
+New: 80
+Errors: 2
+Unchanged: 0
+
+## New
+
+- [x] X Rules: https://help.x.com/en/rules-and-policies/x-rules
+  - Category: policy
+  - Review file: `knowledge/channels/twitter-x.md`
+- [x] X Automation Rules: https://help.x.com/en/rules-and-policies/x-automation
+  - Category: automation
+  - Review file: `harness/references/x-organic-posting-rules.md`
+- [x] X Developer Policy: https://docs.x.com/developer-terms/policy
+  - Category: developer
+  - Review file: `harness/references/x-organic-posting-rules.md`
+- [x] X API Changelog: https://docs.x.com/changelog
+  - Category: changelog
+  - Review file: `harness/references/x-organic-posting-rules.md`
+- [meta] Meta Community Standards: https://transparency.meta.com/policies/community-standards/
+  - Category: policy
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [meta] Meta Advertising Standards: https://transparency.meta.com/policies/ad-standards/
+  - Category: ads_policy
+  - Review file: `harness/references/meta-ads-rules.md`
+- [meta] Meta Developer Policies: https://developers.facebook.com/devpolicy/
+  - Category: developer
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [instagram] Instagram Algorithms and Ranking: https://creators.instagram.com/grow/algorithms-and-ranking
+  - Category: recommendation
+  - Review file: `knowledge/channels/instagram.md`
+- [instagram] Instagram Recommendations and Originality: https://creators.instagram.com/blog/recommendations-and-originality
+  - Category: recommendation
+  - Review file: `knowledge/channels/instagram.md`
+- [threads] Threads API Documentation: https://developers.facebook.com/docs/threads/
+  - Category: developer
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [tiktok] TikTok Community Guidelines: https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines
+  - Category: policy
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] How TikTok Recommends Content: https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content
+  - Category: recommendation
+  - Review file: `knowledge/channels/tiktok-algorithm.md`
+- [tiktok] Why Is My Account Not Being Recommended?: https://support.tiktok.com/en/safety-hc/account-and-user-safety/why-is-my-account-not-being-recommended
+  - Category: recommendation
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] TikTok Content Posting API: https://developers.tiktok.com/doc/content-posting-api-get-started
+  - Category: developer
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] TikTok Content Sharing Guidelines: https://developers.tiktok.com/doc/content-sharing-guidelines
+  - Category: developer
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] TikTok Ad Policy Change Log 2026: https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026
+  - Category: ads_policy
+  - Review file: `harness/references/tiktok-ads-policy-reference.md`
+- [youtube] YouTube Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
+  - Category: policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] Recommendations on YouTube: https://www.youtube.com/howyoutubeworks/recommendations/
+  - Category: recommendation
+  - Review file: `knowledge/channels/youtube.md`
+- [youtube] YouTube Fake Engagement Policy: https://support.google.com/youtube/answer/3399767?hl=en
+  - Category: policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube GenAI Disclosure: https://support.google.com/youtube/answer/14328491?hl=en
+  - Category: policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube API Services Terms of Service: https://developers.google.com/youtube/terms/api-services-terms-of-service
+  - Category: developer
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube API Services Developer Policies: https://developers.google.com/youtube/terms/developer-policies
+  - Category: developer
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube Advertiser-Friendly Guideline Updates: https://support.google.com/youtube/answer/9725604?hl=en
+  - Category: ads_policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [linkedin] LinkedIn User Agreement: https://www.linkedin.com/legal/user-agreement
+  - Category: terms
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] LinkedIn API Terms of Use: https://www.linkedin.com/legal/l/api-terms-of-use
+  - Category: developer
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] LinkedIn Marketing API Terms: https://www.linkedin.com/legal/l/marketing-api-terms
+  - Category: developer
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] LinkedIn Developer AI Policy: https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-05
+  - Category: developer
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [pinterest] Pinterest Community Guidelines: https://policy.pinterest.com/en/community-guidelines
+  - Category: policy
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [pinterest] Pinterest Terms of Service: https://policy.pinterest.com/en/terms-of-service
+  - Category: terms
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [pinterest] Pinterest Business Terms: https://business.pinterest.com/business-terms-of-service/
+  - Category: terms
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [pinterest] Pinterest Developer Guidelines: https://policy.pinterest.com/en-gb/developer-guidelines
+  - Category: developer
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [pinterest] Pinterest Developer and API Terms: https://developers.pinterest.com/terms/
+  - Category: developer
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [snapchat] Snap Terms of Service: https://www.snap.com/terms
+  - Category: terms
+  - Review file: `harness/references/snapchat-organic-posting-rules.md`
+- [snapchat] Snapchat Community Guidelines: https://values.snap.com/policy/policy-community-guidelines
+  - Category: policy
+  - Review file: `harness/references/snapchat-organic-posting-rules.md`
+- [snapchat] Snap Content Guidelines for Recommendation Eligibility: https://values.snap.com/policy/content-guidelines-recommendation-eligibility
+  - Category: recommendation
+  - Review file: `harness/references/snapchat-organic-posting-rules.md`
+- [snapchat] Snap Commercial Content Policy: https://values.snap.com/policy/content-guidelines-recommendation-eligibility/recommendation-eligibility/commercial-content
+  - Category: commercial_policy
+  - Review file: `harness/references/snapchat-organic-posting-rules.md`
+- [snapchat] Snap Creator Monetization Policy: https://values.snap.com/policy/creator-monetization-policy
+  - Category: monetization
+  - Review file: `harness/references/snapchat-organic-posting-rules.md`
+- [reddit] Reddit User Agreement: https://redditinc.com/policies/user-agreement
+  - Category: terms
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Content Policy: https://redditinc.com/policies/content-policy
+  - Category: policy
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Developer Terms: https://redditinc.com/policies/developer-terms
+  - Category: developer
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Responsible Builder Policy Announcement: https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
+  - Category: developer
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [linkedin] LinkedIn Professional Community Policies: https://www.linkedin.com/help/linkedin/answer/a403270/linkedin-professional-community-policies
+  - Category: policy
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] How LinkedIn Feed Ranks Content: https://www.linkedin.com/help/linkedin/answer/a9554004
+  - Category: recommendation
+  - Review file: `knowledge/channels/linkedin-organic.md`
+- [linkedin] LinkedIn Publishing Platform Guidelines: https://www.linkedin.com/help/linkedin/answer/a519782
+  - Category: policy
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] LinkedIn Prohibited Software and Extensions: https://www.linkedin.com/help/linkedin/answer/a1341387
+  - Category: automation
+  - Review file: `harness/references/social-automation-rules.md`
+- [linkedin] LinkedIn Posts API: https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-05
+  - Category: developer
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [linkedin] LinkedIn Marketing API Recent Changes: https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05
+  - Category: changelog
+  - Review file: `harness/references/linkedin-organic-posting-rules.md`
+- [meta] Meta Ranking Explainer Hub: https://transparency.meta.com/features/explaining-ranking/
+  - Category: recommendation
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [instagram] Instagram Feed AI System: https://transparency.meta.com/features/explaining-ranking/ig-feed/
+  - Category: recommendation
+  - Review file: `knowledge/channels/instagram.md`
+- [instagram] Instagram Reels Chaining: https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/
+  - Category: recommendation
+  - Review file: `knowledge/channels/instagram.md`
+- [threads] Threads API Changelog: https://developers.facebook.com/docs/threads/changelog/
+  - Category: changelog
+  - Review file: `knowledge/channels/threads-organic.md`
+- [threads] Threads Terms: https://help.instagram.com/769983657850450
+  - Category: terms
+  - Review file: `knowledge/channels/threads-organic.md`
+- [instagram] Instagram Content Publishing API: https://developers.facebook.com/docs/instagram-platform/content-publishing/
+  - Category: developer
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [instagram] Instagram Media Publish Reference: https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media_publish/
+  - Category: developer
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [instagram] Instagram Platform Changelog: https://developers.facebook.com/docs/instagram-platform/changelog/
+  - Category: changelog
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [meta] Graph API Changelog: https://developers.facebook.com/docs/graph-api/changelog/
+  - Category: changelog
+  - Review file: `harness/references/meta-organic-posting-rules.md`
+- [tiktok] TikTok Promoting a Brand, Product, or Service: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service
+  - Category: commercial_policy
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] TikTok AI-Generated Content: https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content
+  - Category: ai_policy
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] Commercial Use of Music on TikTok: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/commercial-use-of-music-on-tiktok
+  - Category: commercial_policy
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [tiktok] TikTok Developer Changelog: https://developers.tiktok.com/doc/changelog
+  - Category: changelog
+  - Review file: `harness/references/tiktok-organic-posting-rules.md`
+- [youtube] YouTube Recommendation System: https://support.google.com/youtube/answer/16533387?hl=en
+  - Category: recommendation
+  - Review file: `knowledge/channels/youtube.md`
+- [youtube] YouTube Search and Discovery Tips: https://support.google.com/youtube/answer/11914225?hl=en
+  - Category: recommendation
+  - Review file: `knowledge/channels/youtube.md`
+- [youtube] YouTube Paid Promotion Declarations: https://support.google.com/youtube/answer/154235?hl=en
+  - Category: commercial_policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube Spam Policy: https://support.google.com/youtube/answer/2801973?hl=en
+  - Category: policy
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [youtube] YouTube Data API Revision History: https://developers.google.com/youtube/v3/revision_history
+  - Category: changelog
+  - Review file: `harness/references/youtube-organic-posting-rules.md`
+- [pinterest] Pinterest Commercial and Branded Content Guidelines: https://policy.pinterest.com/en/commercial-and-branded-content-guidelines
+  - Category: commercial_policy
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [pinterest] Pinterest API v5: https://developers.pinterest.com/docs/api/v5/
+  - Category: developer
+  - Review file: `harness/references/pinterest-organic-posting-rules.md`
+- [snapchat] How Snap Ranks Content on Spotlight: https://help.snapchat.com/hc/en-us/articles/8961653169940-How-We-Rank-Content-on-Spotlight
+  - Category: recommendation
+  - Review file: `knowledge/channels/snapchat-organic.md`
+- [snapchat] How Snap Ranks Content on Discover: https://help.snapchat.com/hc/en-us/articles/8961631424020-How-We-Rank-Content-on-Discover
+  - Category: recommendation
+  - Review file: `knowledge/channels/snapchat-organic.md`
+- [snapchat] Snap for Developers: https://developers.snap.com/
+  - Category: developer
+  - Review file: `harness/references/social-automation-rules.md`
+- [reddit] Reddit Rules: https://redditinc.com/policies/reddit-rules
+  - Category: policy
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Spam Policy: https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
+  - Category: policy
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Responsible Builder Policy: https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
+  - Category: developer
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+- [reddit] Reddit Developers Docs: https://developers.reddit.com/docs
+  - Category: developer
+  - Review file: `harness/references/social-automation-rules.md`
+- [bluesky] Bluesky Community Guidelines: https://bsky.social/about/support/community-guidelines
+  - Category: policy
+  - Review file: `knowledge/channels/bluesky-organic.md`
+- [bluesky] Bluesky Rate Limits: https://docs.bsky.app/docs/advanced-guides/rate-limits
+  - Category: automation
+  - Review file: `knowledge/channels/bluesky-organic.md`
+- [bluesky] Bluesky API Blog: https://docs.bsky.app/blog
+  - Category: changelog
+  - Review file: `knowledge/channels/bluesky-organic.md`
+- [mastodon] Mastodon Posting Guide: https://docs.joinmastodon.org/user/posting/
+  - Category: policy
+  - Review file: `knowledge/channels/mastodon-fediverse.md`
+- [mastodon] Mastodon API Guidelines: https://docs.joinmastodon.org/api/guidelines/
+  - Category: developer
+  - Review file: `knowledge/channels/mastodon-fediverse.md`
+- [mastodon] Mastodon GitHub Releases: https://github.com/mastodon/mastodon/releases
+  - Category: changelog
+  - Review file: `knowledge/channels/mastodon-fediverse.md`
+
+## Errors
+
+- [x] X Search Recommendations: https://help.x.com/en/resources/recommender-systems/search-recommendations
+  - Category: recommendation
+  - Review file: `knowledge/channels/twitter-x.md`
+  - Error: HTTP Error 403: Forbidden
+- [reddit] Reddit Public Content Policy: https://redditinc.com/policies/public-content-policy
+  - Category: data_policy
+  - Review file: `harness/references/reddit-organic-posting-rules.md`
+  - Error: HTTP Error 404: Not Found
+
+## Reviewed Sources
+
+- `new` [bluesky] Bluesky Rate Limits - https://docs.bsky.app/docs/advanced-guides/rate-limits
+- `new` [bluesky] Bluesky API Blog - https://docs.bsky.app/blog
+- `new` [bluesky] Bluesky Community Guidelines - https://bsky.social/about/support/community-guidelines
+- `new` [instagram] Instagram Platform Changelog - https://developers.facebook.com/docs/instagram-platform/changelog/
+- `new` [instagram] Instagram Content Publishing API - https://developers.facebook.com/docs/instagram-platform/content-publishing/
+- `new` [instagram] Instagram Media Publish Reference - https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media_publish/
+- `new` [instagram] Instagram Feed AI System - https://transparency.meta.com/features/explaining-ranking/ig-feed/
+- `new` [instagram] Instagram Recommendations and Originality - https://creators.instagram.com/blog/recommendations-and-originality
+- `new` [instagram] Instagram Algorithms and Ranking - https://creators.instagram.com/grow/algorithms-and-ranking
+- `new` [instagram] Instagram Reels Chaining - https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/
+- `new` [linkedin] LinkedIn Prohibited Software and Extensions - https://www.linkedin.com/help/linkedin/answer/a1341387
+- `new` [linkedin] LinkedIn Marketing API Recent Changes - https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05
+- `new` [linkedin] LinkedIn API Terms of Use - https://www.linkedin.com/legal/l/api-terms-of-use
+- `new` [linkedin] LinkedIn Developer AI Policy - https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-05
+- `new` [linkedin] LinkedIn Marketing API Terms - https://www.linkedin.com/legal/l/marketing-api-terms
+- `new` [linkedin] LinkedIn Posts API - https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-05
+- `new` [linkedin] LinkedIn Professional Community Policies - https://www.linkedin.com/help/linkedin/answer/a403270/linkedin-professional-community-policies
+- `new` [linkedin] LinkedIn Publishing Platform Guidelines - https://www.linkedin.com/help/linkedin/answer/a519782
+- `new` [linkedin] How LinkedIn Feed Ranks Content - https://www.linkedin.com/help/linkedin/answer/a9554004
+- `new` [linkedin] LinkedIn User Agreement - https://www.linkedin.com/legal/user-agreement
+- `new` [mastodon] Mastodon GitHub Releases - https://github.com/mastodon/mastodon/releases
+- `new` [mastodon] Mastodon API Guidelines - https://docs.joinmastodon.org/api/guidelines/
+- `new` [mastodon] Mastodon Posting Guide - https://docs.joinmastodon.org/user/posting/
+- `new` [meta] Meta Advertising Standards - https://transparency.meta.com/policies/ad-standards/
+- `new` [meta] Graph API Changelog - https://developers.facebook.com/docs/graph-api/changelog/
+- `new` [meta] Meta Developer Policies - https://developers.facebook.com/devpolicy/
+- `new` [meta] Meta Community Standards - https://transparency.meta.com/policies/community-standards/
+- `new` [meta] Meta Ranking Explainer Hub - https://transparency.meta.com/features/explaining-ranking/
+- `new` [pinterest] Pinterest Commercial and Branded Content Guidelines - https://policy.pinterest.com/en/commercial-and-branded-content-guidelines
+- `new` [pinterest] Pinterest API v5 - https://developers.pinterest.com/docs/api/v5/
+- `new` [pinterest] Pinterest Developer Guidelines - https://policy.pinterest.com/en-gb/developer-guidelines
+- `new` [pinterest] Pinterest Developer and API Terms - https://developers.pinterest.com/terms/
+- `new` [pinterest] Pinterest Community Guidelines - https://policy.pinterest.com/en/community-guidelines
+- `new` [pinterest] Pinterest Business Terms - https://business.pinterest.com/business-terms-of-service/
+- `new` [pinterest] Pinterest Terms of Service - https://policy.pinterest.com/en/terms-of-service
+- `error` [reddit] Reddit Public Content Policy - https://redditinc.com/policies/public-content-policy
+- `new` [reddit] Reddit Developer Terms - https://redditinc.com/policies/developer-terms
+- `new` [reddit] Reddit Developers Docs - https://developers.reddit.com/docs
+- `new` [reddit] Reddit Responsible Builder Policy - https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
+- `new` [reddit] Reddit Responsible Builder Policy Announcement - https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
+- `new` [reddit] Reddit Content Policy - https://redditinc.com/policies/content-policy
+- `new` [reddit] Reddit Rules - https://redditinc.com/policies/reddit-rules
+- `new` [reddit] Reddit Spam Policy - https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
+- `new` [reddit] Reddit User Agreement - https://redditinc.com/policies/user-agreement
+- `new` [snapchat] Snap Commercial Content Policy - https://values.snap.com/policy/content-guidelines-recommendation-eligibility/recommendation-eligibility/commercial-content
+- `new` [snapchat] Snap for Developers - https://developers.snap.com/
+- `new` [snapchat] Snap Creator Monetization Policy - https://values.snap.com/policy/creator-monetization-policy
+- `new` [snapchat] Snapchat Community Guidelines - https://values.snap.com/policy/policy-community-guidelines
+- `new` [snapchat] How Snap Ranks Content on Discover - https://help.snapchat.com/hc/en-us/articles/8961631424020-How-We-Rank-Content-on-Discover
+- `new` [snapchat] Snap Content Guidelines for Recommendation Eligibility - https://values.snap.com/policy/content-guidelines-recommendation-eligibility
+- `new` [snapchat] How Snap Ranks Content on Spotlight - https://help.snapchat.com/hc/en-us/articles/8961653169940-How-We-Rank-Content-on-Spotlight
+- `new` [snapchat] Snap Terms of Service - https://www.snap.com/terms
+- `new` [threads] Threads API Changelog - https://developers.facebook.com/docs/threads/changelog/
+- `new` [threads] Threads API Documentation - https://developers.facebook.com/docs/threads/
+- `new` [threads] Threads Terms - https://help.instagram.com/769983657850450
+- `new` [tiktok] TikTok Ad Policy Change Log 2026 - https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026
+- `new` [tiktok] TikTok AI-Generated Content - https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content
+- `new` [tiktok] TikTok Developer Changelog - https://developers.tiktok.com/doc/changelog
+- `new` [tiktok] TikTok Promoting a Brand, Product, or Service - https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service
+- `new` [tiktok] Commercial Use of Music on TikTok - https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/commercial-use-of-music-on-tiktok
+- `new` [tiktok] TikTok Content Posting API - https://developers.tiktok.com/doc/content-posting-api-get-started
+- `new` [tiktok] TikTok Content Sharing Guidelines - https://developers.tiktok.com/doc/content-sharing-guidelines
+- `new` [tiktok] TikTok Community Guidelines - https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines
+- `new` [tiktok] Why Is My Account Not Being Recommended? - https://support.tiktok.com/en/safety-hc/account-and-user-safety/why-is-my-account-not-being-recommended
+- `new` [tiktok] How TikTok Recommends Content - https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content
+- `new` [x] X Automation Rules - https://help.x.com/en/rules-and-policies/x-automation
+- `new` [x] X API Changelog - https://docs.x.com/changelog
+- `new` [x] X Developer Policy - https://docs.x.com/developer-terms/policy
+- `new` [x] X Rules - https://help.x.com/en/rules-and-policies/x-rules
+- `error` [x] X Search Recommendations - https://help.x.com/en/resources/recommender-systems/search-recommendations
+- `new` [youtube] YouTube Advertiser-Friendly Guideline Updates - https://support.google.com/youtube/answer/9725604?hl=en
+- `new` [youtube] YouTube Data API Revision History - https://developers.google.com/youtube/v3/revision_history
+- `new` [youtube] YouTube Paid Promotion Declarations - https://support.google.com/youtube/answer/154235?hl=en
+- `new` [youtube] YouTube API Services Terms of Service - https://developers.google.com/youtube/terms/api-services-terms-of-service
+- `new` [youtube] YouTube API Services Developer Policies - https://developers.google.com/youtube/terms/developer-policies
+- `new` [youtube] YouTube Community Guidelines - https://support.google.com/youtube/answer/9288567?hl=en
+- `new` [youtube] YouTube Fake Engagement Policy - https://support.google.com/youtube/answer/3399767?hl=en
+- `new` [youtube] YouTube GenAI Disclosure - https://support.google.com/youtube/answer/14328491?hl=en
+- `new` [youtube] YouTube Spam Policy - https://support.google.com/youtube/answer/2801973?hl=en
+- `new` [youtube] YouTube Recommendation System - https://support.google.com/youtube/answer/16533387?hl=en
+- `new` [youtube] Recommendations on YouTube - https://www.youtube.com/howyoutubeworks/recommendations/
+- `new` [youtube] YouTube Search and Discovery Tips - https://support.google.com/youtube/answer/11914225?hl=en

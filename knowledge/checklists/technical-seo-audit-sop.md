@@ -92,7 +92,57 @@ Data gap: The crawler export does not include rendered screenshots. We cannot co
 
 ---
 
-## 3. Post-Crawl Analysis Workflow
+## 3. Indexation Monitoring SOP
+
+Load `harness/references/google-indexation-monitoring.md` for launch QA, page-indexing issues, sitemap cleanup, and any audit where priority URLs are not appearing in Google Search.
+
+### 3.1 Priority URL Decision
+
+Assign one action to every questionable URL:
+
+| Action | Use When |
+|--------|----------|
+| `index` | The page is canonical, useful, crawlable, and should appear in Search |
+| `noindex` | The page should remain accessible but not appear in Search |
+| `canonicalize` | The page duplicates another URL and should consolidate signals |
+| `redirect` | The page has moved or should be merged into a replacement |
+| `remove` | The page is obsolete, test-only, unsafe, or intentionally gone |
+| `improve` | The page is useful in theory but too thin, duplicative, or unclear |
+
+### 3.2 Monitoring Cadence
+
+- First 7 days after launch: check priority URLs daily in Search Console Page Indexing and URL Inspection.
+- Weeks 2-4: check two or three times per week unless the page is business-critical or status is changing.
+- After 30 days: escalate unindexed URLs only after crawl access, canonicals, sitemaps, content quality, and internal links are checked.
+
+### 3.3 Evidence Required
+
+- Search Console Page Indexing status where access exists
+- URL Inspection status, including Google-selected canonical
+- Sitemap inclusion status
+- Crawl status code, indexability, canonical tag, and internal inlinks
+- Manual `site:example.com/exact-url` check, labeled as a rough check rather than source of truth
+- Server log Googlebot evidence where access exists
+
+### 3.4 Safe Fix Patterns
+
+- Add crawlable internal links from relevant, already-indexed pages.
+- Keep sitemap entries limited to clean canonical URLs.
+- Fix blocked resources, WAF rules, login walls, `robots.txt`, accidental `noindex`, bad canonicals, and soft 404s.
+- Improve thin pages with original information, examples, media, product/local data, or expert review.
+- Consolidate duplicates instead of creating URL variants.
+
+### 3.5 Rejected Tactics
+
+Do not recommend repeated indexing requests for unchanged URLs, duplicate URL generation, cloaking, hidden text, fake social signals, link spam, keyword stuffing, fake freshness, doorway pages, or `robots.txt` blocking when a `noindex` directive must be seen by Googlebot.
+
+### 3.6 Patent-History Caveat
+
+Patents can explain possible crawl/index/ranking system designs, including sitemap hints, historical change, link discovery, freshness, and spam detection. Treat patent material as diagnostic context, not proof of current Google ranking behavior.
+
+---
+
+## 4. Post-Crawl Analysis Workflow
 
 Review these tabs **in order**:
 
@@ -108,7 +158,7 @@ Review these tabs **in order**:
 
 ---
 
-## 4. Issue-by-Issue SOP + Dev Instructions
+## 5. Issue-by-Issue SOP + Dev Instructions
 
 ### A. 404 NOT FOUND
 
@@ -333,7 +383,7 @@ Remove X-Robots-Tag: noindex from /file.pdf if it should be indexed.
 
 ---
 
-## 5. REQUIRED Dev Ticket Format (NO EXCEPTIONS)
+## 6. REQUIRED Dev Ticket Format (NO EXCEPTIONS)
 
 Every issue sent to devs **MUST** include:
 
@@ -364,7 +414,7 @@ Priority: High
 
 ---
 
-## 6. Mandatory Screaming Frog Exports
+## 7. Mandatory Screaming Frog Exports
 
 Always attach these reports:
 
@@ -379,6 +429,7 @@ Always attach these reports:
 | **Rendered HTML / JavaScript crawl comparison** | Main content visibility for Googlebot and AI Search eligibility |
 | **Structured data validation export** | Rich result eligibility and schema/content mismatch evidence |
 | **Google Search Console export** | Page/query visibility, indexing, CTR, and crawl/index evidence where access exists |
+| **Indexation monitoring log** | Priority URL action, URL Inspection result, sitemap status, manual check, blocker, owner, and next check date |
 
 ---
 

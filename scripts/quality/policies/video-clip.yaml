@@ -1,0 +1,18 @@
+# Transcript-derived video clip gate
+id: video-clip
+auto_approve_above: 75
+hold_between: [50, 75]
+reject_below: 50
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "full transcript"
+  - "downloaded without permission"
+  - "member-only"
+  - "paywalled"
+require_policy_ref: harness/references/transcript-video-research-rules.md
+require_secondary_refs:
+  - harness/references/social-automation-rules.md
+notes: |
+  Every clip candidate needs a timestamp, source URL or file locator, rights status, privacy scan, and approval state.
+  Do not publish third-party, guest, customer, or client clips without approval.

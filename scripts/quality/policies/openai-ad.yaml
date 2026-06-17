@@ -1,0 +1,20 @@
+# OpenAI Ads / ChatGPT ad copy and measurement gate
+id: openai-ad
+auto_approve_above: 70
+hold_between: [45, 70]
+reject_below: 45
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "guaranteed"
+  - "#1"
+  - "act now"
+  - "limited time offer"
+  - "click here"
+require_policy_ref: harness/references/openai-ads-measurement-reference.md
+require_secondary_refs:
+  - harness/references/advertising-compliance.md
+notes: |
+  Use official OpenAI Ads docs for API, pixel, CAPI, event, and reporting claims.
+  Treat creative policy as human-review until OpenAI publishes a fuller public ad policy reference.
+  Hash identifiers, keep CAPI tokens server-only, and document consent mode.

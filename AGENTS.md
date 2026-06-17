@@ -8,7 +8,7 @@ Kai is now framed as a **marketing-native Codex-style runtime**. This repo still
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-This file is the entry point. Codex reads it automatically and gains access to the Kai inventory: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+This file is the entry point. Codex reads it automatically and gains access to the Kai inventory: 48 skill directories, 45 canonical `kai-*` skill docs, 42 public `/kai` router commands, 54 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract
 
@@ -64,9 +64,12 @@ When you need to create content, find the right framework here. Load the primary
 | LinkedIn article | `knowledge/channels/linkedin-articles.md` | — |
 | Email (lifecycle) | `knowledge/channels/email-lifecycle.md` | `knowledge/checklists/email-checklist.md` |
 | Email (cold outreach) | `knowledge/channels/email-lifecycle.md` + `harness/references/cold-email-rules.md` | — |
+| Research fan-out / edge synthesis | `harness/references/research-fanout-best-practices.md` + `harness/references/research-fanout-vertical-registry.json` + `harness/references/marketing-platform-source-registry.json` | `harness/references/audit-data-provenance.md` when claims are quantitative/client-facing |
+| First growth hire / distribution OS | `knowledge/playbooks/growth-hacker-first-hire-os.md` + `knowledge/playbooks/growth-loops-applied.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/growth-hacker-first-hire-checklist.md` |
 | SEO content | `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` + `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` | `knowledge/checklists/seo-checklist.md` |
 | Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `knowledge/playbooks/meta-creative-testing-decision-framework.md` + `harness/references/meta-ads-rules.md` + `harness/references/meta-ads-api-reference.md` | `knowledge/checklists/meta-advertising-checklist.md` |
 | Paid creative bench / concept testing | `knowledge/playbooks/combinatorial-creative-bench.md` + `knowledge/playbooks/ad-creative-best-practices.md` | `knowledge/checklists/ad-launch-checklist.md` |
+| OpenAI Ads measurement / CAPI | `harness/references/openai-ads-measurement-reference.md` + `harness/references/advertising-compliance.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Google ads | `knowledge/channels/paid-acquisition.md` + `harness/references/google-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | LinkedIn ads | `knowledge/channels/linkedin-articles.md` + `harness/references/linkedin-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Microsoft/Bing ads | `knowledge/channels/paid-acquisition.md` + `harness/references/microsoft-ads-rules.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
@@ -76,11 +79,16 @@ When you need to create content, find the right framework here. Load the primary
 | Snapchat ads | `harness/references/snapchat-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Amazon ads | `harness/references/amazon-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | X/Twitter ads | `harness/references/x-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
+| X/Twitter organic | `knowledge/channels/twitter-x.md` + `harness/references/x-organic-posting-rules.md` | `harness/skill-contracts/social-post.yaml` |
+| Meta/Instagram/Facebook/Threads organic | `knowledge/channels/instagram.md` + `knowledge/channels/facebook-organic.md` + `knowledge/channels/threads-organic.md` + `harness/references/meta-organic-posting-rules.md` | `harness/skill-contracts/social-post.yaml` |
+| TikTok/YouTube/Pinterest/Snapchat/Reddit organic | Platform channel guide + platform `harness/references/*-organic-posting-rules.md` + `harness/references/social-automation-rules.md` | `harness/skill-contracts/social-post.yaml` |
+| Bluesky/Mastodon/Fediverse organic | `knowledge/channels/bluesky-organic.md` + `knowledge/channels/mastodon-fediverse.md` + `harness/references/social-automation-rules.md` | `harness/skill-contracts/social-post.yaml` |
 | Press release | `knowledge/channels/press-releases.md` | `knowledge/checklists/pr-checklist.md` |
 | Sales/landing page | `knowledge/frameworks/content-copywriting/perception-engineering.md` | `knowledge/checklists/perception-engineering-checklist.md` |
 | Technical SEO audit | `knowledge/checklists/technical-seo-audit-sop.md` | `knowledge/checklists/seo-checklist.md` |
+| Google indexation troubleshooting | `harness/references/google-indexation-monitoring.md` + `knowledge/checklists/technical-seo-audit-sop.md` | `knowledge/checklists/seo-checklist.md` |
 | Agent-readiness audit (multi-engine crawler policy, optional llms.txt, capability signaling) | `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` + `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` | `knowledge/checklists/agent-readiness-checklist.md` |
-| Podcast setup | `knowledge/channels/podcast.md` | — |
+| Podcast setup | `knowledge/channels/podcast.md` + `harness/references/transcript-video-research-rules.md` | — |
 | Site architecture | `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `knowledge/checklists/seo-checklist.md` |
 | Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/cro-audit-checklist.md` |
 
@@ -176,6 +184,7 @@ Checks multi-engine `/robots.txt` policy, optional `/llms.txt`, JS-gating, capab
 | Snapchat | `harness/references/snapchat-ads-policy-reference.md` | Young audience protections, EU political ad ban |
 | Amazon | `harness/references/amazon-ads-policy-reference.md` | 18-month claim evidence rule, no competitor disparagement |
 | X/Twitter | `harness/references/x-ads-policy-reference.md` | Verification tier affects ad access, political ad certification by country |
+| OpenAI Ads measurement | `harness/references/openai-ads-measurement-reference.md` + `harness/references/advertising-compliance.md` | Pixel/CAPI consent, hashed identifiers only, event ID deduplication, server-only CAPI token |
 | **All platforms** | `harness/references/advertising-compliance.md` | FTC disclosures, GDPR consent, CAN-SPAM, COPPA, click-to-cancel rule |
 
 ```
@@ -330,8 +339,21 @@ kai-cmo-harness/
 │   │   ├── snapchat-ads-policy-reference.md # Snapchat Ads policies (512 lines)
 │   │   ├── amazon-ads-policy-reference.md # Amazon Ads policies (579 lines)
 │   │   ├── x-ads-policy-reference.md      # X/Twitter Ads policies (621 lines)
+│   │   ├── x-organic-posting-rules.md     # X/Twitter organic posting + automation rules
+│   │   ├── meta-organic-posting-rules.md  # Facebook/Instagram/Threads organic rules
+│   │   ├── tiktok-organic-posting-rules.md # TikTok organic, API, disclosure, music rules
+│   │   ├── youtube-organic-posting-rules.md # YouTube organic, API, AI, paid-promo rules
+│   │   ├── linkedin-organic-posting-rules.md # LinkedIn organic + API/AI rules
+│   │   ├── pinterest-organic-posting-rules.md # Pinterest organic/discovery rules
+│   │   ├── snapchat-organic-posting-rules.md # Snapchat organic/recommendation rules
+│   │   ├── reddit-organic-posting-rules.md # Reddit organic/community/API rules
+│   │   ├── social-automation-rules.md      # Cross-platform automation/API guardrails
+│   │   ├── social-platform-source-registry.json # Monthly monitored social source list
 │   │   ├── advertising-compliance.md      # FTC/GDPR/CAN-SPAM/COPPA/CCPA (1500 lines)
 │   │   ├── meta-ads-api-reference.md      # Meta API execution templates (campaign/adset/ad creation, field gotchas)
+│   │   ├── openai-ads-measurement-reference.md # OpenAI Ads pixel + Conversions API implementation and QA
+│   │   ├── research-fanout-best-practices.md # Cross-source research fan-out, provenance, transcripts, edge synthesis
+│   │   ├── research-fanout-vertical-registry.json # Vertical source packs, edge questions, SOP extracts, and gates
 │   │   └── posthog-marketing-queries.md   # PostHog HogQL templates for marketing analytics
 │   └── ARCHITECTURE.md                    # Harness design docs
 │

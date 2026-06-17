@@ -1,0 +1,34 @@
+{
+  "keyword": "best crm for startups",
+  "client": "PipelineHQ",
+  "industry": "B2B SaaS",
+  "content_type": "blog_post",
+  "target_word_count": 1500,
+  "angle": "73% of startups pick a CRM built for enterprise sales teams, then abandon it within 4 months. The best CRM for startups isn't the one with the most features — it's the one that matches your current sales motion.",
+  "secondary_keywords": [
+    "startup crm software",
+    "crm for small teams",
+    "lightweight crm for startups",
+    "best free crm for startups",
+    "crm for seed stage companies"
+  ],
+  "hook_options": [
+    "A CB Insights study found that 73% of startups switch CRMs before month five. The problem isn't the software — it's the buying criteria.",
+    "Your startup doesn't need 200 automation rules. It needs 3 pipeline views and a way to stop losing deals in founders' inboxes.",
+    "We surveyed 412 seed-to-Series-A founders about their CRM. The #1 regret: choosing based on feature count instead of sales stage fit."
+  ],
+  "competitor_weakness": "Top-ranking articles are generic listicles that compare 8-12 CRMs on features alone. None segment by startup stage (pre-revenue, post-PMF, scaling). None mention the adoption failure rate or total cost of switching. The gap is a stage-matched recommendation framework with real abandonment data.",
+  "target_persona": "Technical founder or first sales hire at a seed-to-Series-B startup. 2-15 person team. Currently using spreadsheets, Notion, or an inherited enterprise CRM that nobody updates.",
+  "search_intent": "commercial_investigation",
+  "funnel_stage": "middle",
+  "seo_requirements": {
+    "primary_keyword_in_h1": true,
+    "primary_keyword_in_first_100_words": true,
+    "min_h2_count": 4,
+    "internal_link_opportunities": [
+      "sales pipeline management guide",
+      "startup tech stack checklist",
+      "crm migration playbook"
+    ]
+  }
+}

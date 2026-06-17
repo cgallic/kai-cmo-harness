@@ -1,8 +1,8 @@
 # Kai Public Skill Manifest
 
-This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 44 `kai-*` skill directories under `harness/skills/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
+This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 45 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
-New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those five commands show the core loop: read the repo, create the work, check the work, and keep the record.
+New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those commands show the core loop: read the repo, pick distribution, create the work, check the work, and keep the record.
 
 Each page uses the same schema: one-line claim, triggers, inputs, outputs, methodology, dependencies, called-by links, quality gates, provenance, example artifacts, failure modes, and competitive claim. The manifest is meant to be falsifiable: a reader can trace a skill to source files, manifest rule IDs, gate thresholds, dependency links, and known example gaps.
 
@@ -46,6 +46,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 - [Kai Brief](./kai-brief.md) - `kai-brief`
 - [Kai Budget](./kai-budget.md) - `kai-budget`
 - [Kai Competitors](./kai-competitors.md) - `kai-competitors`
+- [Kai Growth Hacker](./kai-growth-hacker.md) - `kai-growth-hacker`
 - [Kai Growth Plan](./kai-growth-plan.md) - `kai-growth-plan`
 - [Kai Partnership](./kai-partnership.md) - `kai-partnership`
 - [Kai Topical Map](./kai-topical-map.md) - `kai-topical-map`
@@ -102,9 +103,9 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 
 | Surface | Count | Notes |
 |---|---:|---|
-| Canonical `harness/skills/kai-*` pages | 44 | One manifest page per canonical `kai-*` skill directory. |
+| Canonical `harness/skills/kai-*` pages | 45 | One manifest page per canonical public `kai-*` skill page. |
 | Router/helper directories excluded | 2 | `harness/skills/kai` and `harness/skills/kaicalls-design`. |
-| Public router commands listed by `/kai` | 40 | Router-visible commands remain separate from the full canonical skill inventory. |
+| Public router commands listed by `/kai` | 42 | Router-visible commands remain separate from the full canonical skill inventory. |
 | Manifest rule IDs | 82 | Defined in `rule-registry.md`; derived from local methodology docs. |
 | Skills with real repo-local example artifacts | 22 | Listed in `example-artifacts.md`. |
 | Skills with explicit example gaps | 22 | Pages state `No committed example artifact found.` |

@@ -29,6 +29,7 @@ Each workflow SKU is a YAML file with these required fields:
 - `agentic-commerce-readiness`
 - `creator-commerce-ops`
 - `content-gate`
+- `growth-hacker-first-hire-os`
 
 ## Runtime API
 

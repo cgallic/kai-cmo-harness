@@ -1,0 +1,67 @@
+skill: social-post
+version: 2.0
+harness: kai-harness
+
+description: >
+  Social media posts for LinkedIn, X (Twitter), Instagram, Facebook, Threads,
+  TikTok, YouTube, Pinterest, Snapchat, Reddit, Bluesky, and Mastodon/Fediverse.
+  Covers text posts, threads, carousels, videos, Shorts, Pins, community posts,
+  and articles. Adapts format, length, hooks, disclosures, automation limits,
+  and recommendation eligibility to each platform.
+
+inputs:
+  required:
+    - brief: object  # see harness/brief-schema.md
+    - platform: string  # linkedin | twitter | x | instagram | facebook | threads | tiktok | youtube | pinterest | snapchat | reddit | bluesky | mastodon
+    - post_type: string  # update | article | thread | carousel | reel | short | video | pin | story | community_post | comment | reply
+  optional:
+    - voice_override: string  # default: brand voice from brief
+    - media_direction: string  # description of desired visual
+    - hashtag_override: list  # override auto-generated hashtags
+    - thread_length: int  # number of tweets in a thread (twitter only, default 5-7)
+    - account_capability: string  # standard | premium | premium_plus | premium_business | verified_org | unknown
+    - may_promote: boolean  # if true, also run paid-platform reference before approval
+    - scheduled_or_automated: boolean  # if true, load social-automation-rules.md and platform API terms
+    - commercial_context: string  # none | own_brand | affiliate | sponsored | incentivized | regulated
+
+outputs:
+  post_text: string  # full post copy (or thread array for twitter threads)
+  hashtags: list  # platform-specific; X default is 0 unless event/campaign/search use is justified
+  media_suggestions: list  # descriptions of recommended images/video/carousel slides
+  cta: string  # call-to-action recommendation
+  hook_type: string  # pattern_interrupt | contrarian | story | data_lead | list_tease | before_after
+  platform_notes: string  # platform-specific formatting notes (char count, link placement, etc.)
+
+quality_gates:
+  - four_us_total >= 10  # lower bar for short-form content
+  - banned_words_tier1 == 0
+  - platform_char_limit_met == true  # linkedin: 3000, X default: 280 unless long-form capability is declared, instagram: 2200
+  - hook_in_first_line == true  # hook must land before truncation cutoff
+  - no_engagement_bait == true  # no "like if you agree", "comment YES"
+  - no_artificial_engagement == true  # no pods, bought metrics, vote manipulation, or coordinated fake activity
+  - no_platform_evasion == true  # no duplicate disguising, browser bots, scraping, account farming, or rate-limit workarounds
+  - platform_hashtag_policy_met == true  # X: default 0, max 2 only when justified; LinkedIn/Instagram follow channel guide
+  - platform_organic_rules_checked == true  # load the relevant harness/references/*-organic-posting-rules.md file
+  - social_automation_rules_checked_if_needed == true  # required when scheduled_or_automated is true
+  - commercial_disclosure_checked == true  # required for own-brand, affiliate, sponsored, incentivized, or regulated content
+  - ai_or_synthetic_media_label_checked == true  # required for realistic AI-generated/altered media or likeness content
+  - recommendation_eligibility_checked == true  # required for Reels, Shorts, TikTok, Snapchat Spotlight, Pinterest, Threads, Facebook, and other recommended surfaces
+  - community_specific_rules_checked == true  # required for Reddit subreddits, Facebook Groups, Discord-like communities, and fediverse instances
+  - x_automation_rules_checked == true  # required for X scheduling, replies, DMs, or promoted candidates
+  - x_claim_sources_present == true  # required for X claims with numbers, outcomes, savings, rankings, earnings, health benefits, or timelines
+  - x_account_capability_checked == true  # required for X long posts, Articles, Spaces, creator monetization, or promoted candidates
+
+word_count: 50-900  # varies by platform and post_type
+# linkedin update: 150-700 words | linkedin article: 700-1000
+# X update: 20-50 words by default | X thread: 150-500 words total | X long-form/Article only when account capability is declared
+# instagram/facebook/threads: 20-400 words depending on format
+# tiktok/youtube/snapchat: script-first; short-form hooks must land in first 1-3 seconds
+# reddit: subreddit rules override default length and CTA assumptions
+
+hooks:
+  pre_write: load_brief + load_platform_channel_guide + load_headline_formulas + load_platform_rules_if_needed
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report  # max 2 retries
+  on_pass: post_for_approval
+  on_approve: schedule_post + content_log
+  on_publish: schedule_7day_check

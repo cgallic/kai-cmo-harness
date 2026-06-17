@@ -79,14 +79,14 @@ Claude Code will read `AGENTS.md` and use Kai's framework map, contracts, refere
 
 | Surface | Count | Examples |
 |---|---:|---|
-| Skill directories | 46 | `/kai`, `/kai-growth-plan`, `/kai-landing-page`, `/kai-gate` |
-| Canonical `kai-*` docs | 44 | API-style skill docs with triggers, inputs, outputs, gates |
-| Public router commands | 40 | The commands shown by `/kai` |
-| Playbooks | 52 | CRO, experiments, pricing, SEO ops, content repurposing |
-| Checklists | 35 | Content, ads, launch, privacy, mutation risk |
+| Skill directories | 48 | `/kai`, `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-gate` |
+| Canonical `kai-*` docs | 45 | API-style skill docs with triggers, inputs, outputs, gates |
+| Public router commands | 42 | The commands shown by `/kai` |
+| Playbooks | 54 | CRO, experiments, growth hacker OS, pricing, SEO ops, content repurposing |
+| Checklists | 36 | Content, ads, growth hacker OS, launch, privacy, mutation risk |
 | Frameworks | 27 | Algorithmic Authorship, AEO/GEO, perception engineering |
-| Channel guides | 17 | SEO, LinkedIn, email, Meta, TikTok, YouTube, X, podcast |
-| Skill contracts | 27 | Blog, ads, cold email, experiments, clips, lead dossiers |
+| Channel guides | 26 | SEO, LinkedIn, email, Meta, TikTok, YouTube, X, podcast |
+| Skill contracts | 30 | Blog, ads, cold email, growth hacker OS, experiments, clips, lead dossiers |
 
 ## Local Gates
 

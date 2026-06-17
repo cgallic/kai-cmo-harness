@@ -259,7 +259,7 @@ Then: Find next category winner, repeat process
 - **Diversification:** 10 different topics = 10 independent shots, no compounding
 - **Iteration:** 10 variations of a winner = algorithm learns what works, compounds success
 
-**Key insight:** "Once you know it works, you do the same shit over and over again."
+**Key insight:** Once a format works, iterate the idea honestly instead of inventing a new format every time.
 
 ### Screenshot Feedback Loop
 
@@ -272,20 +272,16 @@ Use AI to accelerate iteration:
 
 This creates a compounding learning loop - each batch is informed by previous performance.
 
-### Duplicate Posting for Double Distribution
+### Duplicate-Evasion Block
 
-To maximize reach from the same content, post to multiple accounts with slight modifications:
+Do not post the same clip across multiple accounts with speed, brightness, crop, or length tweaks to disguise duplication. Treat that as platform-integrity risk, not an optimization tactic.
 
-**Export #1 (Primary):**
-- Normal export → Post to main account
-
-**Export #2 (Variation):**
-1. **Speed:** 1.1x (barely noticeable to viewers)
-2. **Brightness:** Slight adjustment (up or down)
-3. **Length:** Trimmed by a hair (speed does this)
-4. Post to secondary account
-
-**Why this works:** Algorithm treats speed/brightness-adjusted content as "new" while viewers see identical content. One piece of content gets 2x distribution through separate account networks.
+Safe iteration means changing the creative idea for a real viewer reason:
+- New hook or first frame
+- New example or proof point
+- New audience/problem framing
+- New edit that changes pacing or comprehension
+- New caption/disclosure because the commercial context changed
 
 ### CTA Placement Strategy
 
@@ -307,6 +303,9 @@ Two CTAs per video, different purposes:
 - [ ] Value proposition clear by 2 seconds
 - [ ] Technical quality meets standards (lighting, audio)
 - [ ] No watermarks from other platforms
+- [ ] No duplicate-content evasion or cross-account manipulation
+- [ ] Branded content, AI content, and commercial music rights checked
+- [ ] `harness/references/tiktok-organic-posting-rules.md` loaded
 - [ ] 5 or fewer specific hashtags
 - [ ] Posting 15-30 min before audience peak
 

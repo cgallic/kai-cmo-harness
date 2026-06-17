@@ -1,11 +1,11 @@
 ---
 name: kai-marketing
-description: Marketing team as slash commands. Current Kai inventory: 46 skill directories, 44 canonical kai-* skill docs, 40 public /kai router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, and 8 audience persona profiles. Full marketing ops from brief to gate.
+description: Marketing team as slash commands. Current Kai inventory: 48 skill directories, 45 canonical kai-* skill docs, 42 public /kai router commands, 54 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, and 8 audience persona profiles. Full marketing ops from brief to gate.
 ---
 
 # kai-marketing
 
-A marketing team as slash commands. Use the current Kai inventory in `docs/system/governance-and-quality.md`: 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 27 skill contracts.
+A marketing team as slash commands. Use the current Kai inventory in `docs/system/governance-and-quality.md`: 48 skill directories, 45 canonical `kai-*` skill docs, 42 public `/kai` router commands, 54 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, 18 harness references, and 30 skill contracts.
 
 ## Instruction Contract
 
@@ -23,7 +23,7 @@ Each skill reads what the previous one wrote. The system learns from its output.
 
 ## Legacy Content Sprint Commands
 
-These commands describe the older content-sprint surface. The current public Kai router exposes 40 `/kai-*` commands in `harness/skills/kai/SKILL.md`.
+These commands describe the older content-sprint surface. The current public Kai router exposes 42 `/kai-*` commands in `harness/skills/kai/SKILL.md`.
 
 ### Content Sprint
 
@@ -81,11 +81,11 @@ These commands describe the older content-sprint surface. The current public Kai
 
 ## Authoritative Inventory
 
-- **46 skill directories** — including 44 canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`
-- **52 playbook docs** — ads, CRO, pricing, retention, growth loops, ABM, demand gen, launches, budgeting, and more
+- **48 skill directories** — including canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`
+- **54 playbook docs** — ads, CRO, pricing, retention, growth loops, ABM, demand gen, growth hacker OS, launches, budgeting, and more
 - **27 framework docs** — algorithmic authorship, AEO, perception engineering, copywriting formulas, loop mechanics
-- **35 checklists** — content, SEO, ads, CRO, website launch, social audit, creative production, privacy, mutation risk, and paid acquisition
-- **17 channel guides** — blog, LinkedIn, email, TikTok, Meta, YouTube, Instagram, X, affiliate, community, newsletter, podcast, and related channels
+- **36 checklists** — content, SEO, ads, CRO, growth hacker OS, website launch, social audit, creative production, privacy, mutation risk, and paid acquisition
+- **26 channel guides** — blog, LinkedIn, email, TikTok, Meta, YouTube, Instagram, X, affiliate, community, newsletter, podcast, and related channels
 - **18 harness references** — platform policies, compliance, provenance, creator disclosure, and analytics query templates
 - **8 audience persona profiles** — with pains, hooks, and voice profiles
 

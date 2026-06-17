@@ -18,6 +18,7 @@ required_memory_fields:
   - consult_cta
 default_workflows:
   - kai-audit
+  - kai-growth-hacker
   - kai-brand
   - kai-email-system
   - kai-content-calendar

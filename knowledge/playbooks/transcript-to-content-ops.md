@@ -14,6 +14,8 @@ Kai extracts useful claims, stories, objections, and phrasing while preserving p
 
 ## Source Requirements
 
+Load `harness/references/transcript-video-research-rules.md` before ingesting third-party video, audio, captions, or transcript material.
+
 Each transcript job must declare:
 
 - Recording source and owner.

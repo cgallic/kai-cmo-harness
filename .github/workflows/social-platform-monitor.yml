@@ -1,0 +1,38 @@
+name: Social platform source monitor
+
+on:
+  schedule:
+    # 09:25 UTC on the first day of every month.
+    - cron: "25 9 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check official social platform sources
+        run: python -m scripts.social.platform_change_monitor --timeout 10
+
+      - name: Commit source monitor updates
+        run: |
+          if git diff --quiet -- harness/references/social-platform-source-snapshot.json harness/references/social-platform-monitor-report.md; then
+            echo "No social platform source changes detected."
+            exit 0
+          fi
+          git config user.name "kai-policy-monitor"
+          git config user.email "kai-policy-monitor@users.noreply.github.com"
+          git add harness/references/social-platform-source-snapshot.json harness/references/social-platform-monitor-report.md
+          git commit -m "chore: refresh social platform source monitor"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

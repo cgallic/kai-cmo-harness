@@ -17,6 +17,7 @@ required_memory_fields:
   - merchandising_calendar
   - retention_flows
 default_workflows:
+  - kai-growth-hacker
   - kai-ad-campaign
   - kai-email-system
   - kai-retention

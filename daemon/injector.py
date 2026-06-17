@@ -27,7 +27,8 @@ SKILL_MAP: dict[str, list[str]] = {
     "analytics": ["kai-analytics"],
     "competitors": ["kai-competitors", "kai-surround-sound"],
     "landing_page": ["kai-landing-page", "kai-cro", "kai-gate"],
-    "brand": ["kai-brand", "kai-growth-plan"],
+    "brand": ["kai-brand", "kai-growth-plan", "kai-growth-hacker"],
+    "growth": ["kai-growth-plan", "kai-growth-hacker", "kai-analytics", "kai-gate"],
     "outreach": ["kai-cold-outreach", "kai-influencer", "kai-partnership"],
     "launch": ["kai-launch", "kai-landing-page", "kai-email-system", "kai-ad-campaign"],
 }
@@ -68,6 +69,16 @@ KNOWLEDGE_MAP: dict[str, list[str]] = {
     ],
     "competitors": [
         "playbooks/business-model-marketing.md",
+    ],
+    "growth": [
+        "playbooks/growth-hacker-first-hire-os.md",
+        "playbooks/growth-loops-applied.md",
+        "playbooks/demand-generation.md",
+        "playbooks/social-media-strategy.md",
+        "playbooks/influencer-marketing.md",
+        "playbooks/event-webinar-marketing.md",
+        "playbooks/paid-media-launch-playbook.md",
+        "checklists/growth-hacker-first-hire-checklist.md",
     ],
     "landing_page": [
         "frameworks/content-copywriting/perception-engineering.md",

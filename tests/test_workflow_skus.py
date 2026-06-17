@@ -25,6 +25,7 @@ def test_load_workflow_skus_includes_required_examples():
         "agentic-commerce-readiness",
         "creator-commerce-ops",
         "content-gate",
+        "growth-hacker-first-hire-os",
     }
     assert expected.issubset(set(skus.keys()))
 

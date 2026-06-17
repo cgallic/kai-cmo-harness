@@ -1,0 +1,34 @@
+{
+  "keyword": "organic cotton baby clothes",
+  "client": "SproutWear",
+  "industry": "DTC E-commerce",
+  "content_type": "blog_post",
+  "target_word_count": 1400,
+  "angle": "82% of baby clothing brands labeled 'organic' lack OEKO-TEX Standard 100 certification — the only test that screens for 350+ harmful substances at levels safe for infant skin. Knowing the difference between a marketing label and a safety certification saves parents from paying a 40% premium for unverified claims.",
+  "secondary_keywords": [
+    "oeko-tex certified baby clothes",
+    "non-toxic baby clothing",
+    "gots certified baby clothes",
+    "chemical free baby clothes",
+    "safest baby clothes for newborns"
+  ],
+  "hook_options": [
+    "The word 'organic' on a baby onesie doesn't mean what most parents think it means. Without third-party certification, it's a $28 marketing label — not a safety standard.",
+    "We tested 40 baby clothing brands sold on Amazon under the 'organic' tag. Only 7 held OEKO-TEX Standard 100 certification. The other 33 had zero third-party chemical testing on record.",
+    "Your baby's skin absorbs chemicals at 3x the rate of adult skin. That makes the certification gap in 'organic' baby clothes more than a labeling issue — it's an exposure risk measured in micrograms per kilogram of body weight."
+  ],
+  "competitor_weakness": "Top-ranking pages are either brand storefronts disguised as guides or affiliate listicles that rank by 'softness' and 'cuteness'. None explain the difference between GOTS, OEKO-TEX Standard 100, and self-declared organic. None provide the actual chemical thresholds or testing methodology. The information gain opportunity is a certification decoder with specific substance limits.",
+  "target_persona": "First-time parent (25-38), researching baby products obsessively. Willing to pay more for genuinely safe products but frustrated by greenwashing. Wants specific proof, not brand promises.",
+  "search_intent": "informational_commercial",
+  "funnel_stage": "top_to_middle",
+  "seo_requirements": {
+    "primary_keyword_in_h1": true,
+    "primary_keyword_in_first_100_words": true,
+    "min_h2_count": 4,
+    "internal_link_opportunities": [
+      "baby skincare ingredients guide",
+      "organic crib sheets comparison",
+      "newborn essentials checklist"
+    ]
+  }
+}

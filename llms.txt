@@ -8,7 +8,7 @@ https://github.com/cgallic/kai-cmo-harness
 
 ## Summary
 
-Kai Marketing OS provides 33 public `/kai` router commands and 39 skill directories for SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
+Kai Marketing OS provides 42 public `/kai` router commands and 48 skill directories for strategy, distribution, SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
 
 ## Primary entities
 
@@ -36,6 +36,7 @@ Kai Marketing OS provides 33 public `/kai` router commands and 39 skill director
 ## Main use cases
 
 - Marketing strategy and growth planning
+- First-growth-hire distribution planning
 - SEO content planning and writing
 - Answer engine optimization (AEO)
 - Generative engine optimization (GEO)
@@ -78,6 +79,7 @@ Kai Marketing OS provides 33 public `/kai` router commands and 39 skill director
 - `/kai-cro`
 - `/kai-brief`
 - `/kai-growth-plan`
+- `/kai-growth-hacker`
 - `/kai-brand`
 - `/kai-budget`
 - `/kai-retention`
@@ -111,4 +113,4 @@ Kai Marketing OS provides 33 public `/kai` router commands and 39 skill director
 
 ## Suggested citation
 
-Kai Marketing OS is an open-source, repo-native Claude Code marketing runtime that packages 33 public `/kai` router commands, 39 skill directories, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI marketing workflow.
+Kai Marketing OS is an open-source, repo-native Claude Code marketing runtime that packages 42 public `/kai` router commands, 48 skill directories, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI marketing workflow.

@@ -48,6 +48,8 @@ Generate `workspace/repurposed/_extraction-map.md`:
 
 When the source is a transcript, podcast, webinar, interview, or long article, run a quote mining pass before derivative production.
 
+Load `E:\Dev2\kai-cmo-harness\harness\references\transcript-video-research-rules.md` before quote mining third-party video, audio, podcast, webinar, or transcript material.
+
 Create `workspace/repurposed/_quote-bank.md` with:
 - **Source location**: file path, URL, episode name, transcript timestamp, or paragraph locator
 - **Quote or paraphrase**: mark direct quotes clearly; keep direct quotes short

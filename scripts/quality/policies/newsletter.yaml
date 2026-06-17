@@ -1,0 +1,19 @@
+# Newsletter publishing gate
+id: newsletter
+auto_approve_above: 80
+hold_between: [55, 80]
+reject_below: 55
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "in conclusion"
+  - "without further ado"
+  - "harness the power"
+  - "guaranteed"
+require_policy_ref: knowledge/channels/newsletter-strategy.md
+require_secondary_refs:
+  - knowledge/channels/email-lifecycle.md
+  - harness/references/cold-email-rules.md
+notes: |
+  Commercial newsletters must include consent basis, sender identity, mailing address, unsubscribe path, and source support for claims.
+  Quantitative/client-facing claims route through audit-data-provenance.md.

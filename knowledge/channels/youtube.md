@@ -2,6 +2,13 @@
 
 > **Use when:** Building a YouTube presence, creating video content for SEO, or running YouTube ads.
 
+Primary references:
+- YouTube Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
+- Recommendations on YouTube: https://www.youtube.com/howyoutubeworks/recommendations/
+- YouTube recommendation system help: https://support.google.com/youtube/answer/16533387?hl=en
+- YouTube organic rules: `harness/references/youtube-organic-posting-rules.md`
+- Social automation rules: `harness/references/social-automation-rules.md`
+
 ---
 
 ## Why YouTube in 2026
@@ -112,7 +119,7 @@ BAD:
 2. **Watch time** — total minutes watched (not just views)
 3. **Retention** — % of video watched (high retention = promoted more)
 4. **Engagement** — likes, comments, shares, saves
-5. **Keywords** — title, description, tags, spoken words (YouTube transcribes audio)
+5. **Keywords** — title, description, spoken words, captions; tags have a minor role, mainly for misspellings
 6. **Freshness** — new videos get a promotion boost for 48-72 hours
 
 ### SEO Checklist
@@ -120,7 +127,7 @@ BAD:
 - [ ] Primary keyword in title (front-loaded)
 - [ ] Keyword in first 2 lines of description
 - [ ] Description 200+ words with natural keyword usage
-- [ ] 5-10 relevant tags
+- [ ] Tags used only for misspellings, alternate names, or disambiguation
 - [ ] Chapters with timestamps in description
 - [ ] Cards linking to related videos
 - [ ] End screen with 2 video suggestions + subscribe
@@ -148,6 +155,18 @@ BAD:
 - Text overlays for sound-off viewing
 - Hashtag #Shorts in title or description
 - Post 3-5 Shorts per week alongside 1-2 long-form videos
+
+---
+
+## Policy and Upload Checks
+
+Before publishing or scheduling YouTube content:
+
+- Load `harness/references/youtube-organic-posting-rules.md`.
+- Check Community Guidelines, spam/fake engagement, external links, and advertiser-friendly guidance.
+- Set paid promotion, made-for-kids, age restriction, AI/altered content, license, captions, and remix fields intentionally.
+- Do not use artificial views, engagement incentives, repetitive AI batches, or scraped reposting.
+- Mark analytics trend breaks when Shorts view counting or API metric definitions change.
 
 ---
 

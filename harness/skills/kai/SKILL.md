@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 41 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 42 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 41 Marketing Skills
+# Kai Marketing OS - 42 Marketing Skills
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
 
@@ -76,6 +76,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 |-------|-------------|
 | `/kai-brief` | Create a content brief before writing |
 | `/kai-growth-plan` | Stage-appropriate marketing plan ($0 → $100K+ MRR) |
+| `/kai-growth-hacker` | First-growth-hire distribution OS across B2B and B2C channels |
 | `/kai-brand` | Brand positioning + messaging framework |
 | `/kai-budget` | Marketing budget planning + forecasting |
 | `/kai-retention` | Customer retention system design |
@@ -99,16 +100,16 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 ## By Business Stage
 
 ### Pre-Launch ($0)
-`/kai-growth-plan` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-sdr-operator` → `/kai-reddit-listen` → `/kai-brand`
+`/kai-growth-plan` → `/kai-growth-hacker` → `/kai-landing-page` → `/kai-cold-outreach` → `/kai-sdr-operator` → `/kai-reddit-listen` → `/kai-brand`
 
 ### Launch ($0-$10K MRR)
 `/kai-launch` → `/kai-email-system` → `/kai-ad-campaign` → `/kai-social`
 
 ### Growth ($10K-$100K MRR)
-`/kai-content-calendar` → `/kai-seo-audit` → `/kai-surround-sound` → `/kai-video` → `/kai-newsletter` → `/kai-influencer`
+`/kai-growth-hacker` → `/kai-content-calendar` → `/kai-seo-audit` → `/kai-surround-sound` → `/kai-video` → `/kai-newsletter` → `/kai-influencer`
 
 ### Scale ($100K+ MRR)
-`/kai-audit` → `/kai-abm` → `/kai-sdr-operator` → `/kai-competitors` → `/kai-retention` → `/kai-budget` → `/kai-partnership`
+`/kai-audit` → `/kai-growth-hacker` → `/kai-abm` → `/kai-sdr-operator` → `/kai-competitors` → `/kai-retention` → `/kai-budget` → `/kai-partnership`
 
 ## When In Doubt
 
@@ -116,6 +117,7 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"I need a system"** → orchestrator skill (email-system, ad-campaign, content-calendar, launch)
 - **"What's wrong?"** → `/kai-audit` or `/kai-cro`
 - **"What should I do?"** → `/kai-growth-plan`
+- **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`
 - **"Improve AI-search visibility"** → `/kai-surround-sound`
 - **"Why does this keep failing?"** → `/kai-retro`

@@ -131,6 +131,7 @@ Load these before writing:
 If the user has long-form content, generate a clipping plan:
 
 Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\video-clipping-automation-workflow.md`
+Load for any transcript, caption, podcast, webinar, or third-party source: `E:\Dev2\kai-cmo-harness\harness\references\transcript-video-research-rules.md`
 
 | Clip # | Timestamp | Hook | Platform | Length | Script Adaptation |
 |--------|-----------|------|----------|--------|-------------------|

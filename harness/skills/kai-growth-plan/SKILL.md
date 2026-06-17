@@ -33,6 +33,7 @@ Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\marketing-by-stage.md`
 Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\growth-loops-applied.md`
 Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\demand-generation.md`
 Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\saas-metrics-guide.md`
+Also load: `knowledge/playbooks/growth-hacker-first-hire-os.md` when the request asks for distribution, a first growth hire, growth hacking, channel coverage, or a channel operating system.
 
 ### Stage Map
 
@@ -108,6 +109,7 @@ Week 3: /kai-content-calendar → plan first month of content
 Week 4: /kai-ad-campaign → launch first paid campaign
 Month 2: /kai-cold-outreach → start outbound
 Month 3: /kai-surround-sound → build AI presence
+Distribution OS: /kai-growth-hacker → score and test every B2B/B2C growth channel
 ```
 
 ## Phase 5: Output

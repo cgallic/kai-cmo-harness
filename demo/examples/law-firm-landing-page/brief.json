@@ -1,0 +1,45 @@
+{
+  "keyword": "personal injury lawyer phoenix",
+  "client": "Sandstone Legal Group",
+  "industry": "Legal Services",
+  "content_type": "landing_page",
+  "target_word_count": 1500,
+  "angle": "Phoenix personal injury cases settle for 31% less on average when claimants file without attorney representation, based on Insurance Research Council data. The real question isn't whether to hire a personal injury lawyer — it's knowing which case factors determine whether your claim is worth $40,000 or $400,000.",
+  "secondary_keywords": [
+    "phoenix personal injury attorney",
+    "car accident lawyer phoenix",
+    "personal injury settlement phoenix az",
+    "best personal injury lawyer phoenix",
+    "phoenix injury claim attorney"
+  ],
+  "hook_options": [
+    "The average personal injury settlement in Maricopa County is $52,900. The average settlement when an attorney negotiates: $78,400. That 48% gap is what representation buys.",
+    "Arizona's statute of limitations gives you 2 years from the date of injury to file. Miss it by a single day and your $200,000 claim becomes worth exactly $0.",
+    "Insurance adjusters in Phoenix close 340 personal injury claims per year. Your attorney handles 40-60. That asymmetry is the negotiation problem a personal injury lawyer solves."
+  ],
+  "competitor_weakness": "Top-ranking pages are generic attorney profiles with 'we fight for you' messaging and stock courthouse photos. None publish settlement ranges by case type, none explain how Arizona's comparative fault law (A.R.S. 12-2505) affects payout calculations, and none address the specific timing pressures of the 2-year statute. The information gain opportunity is a Phoenix-specific settlement data page with case-type breakdowns.",
+  "target_persona": "Recently injured Phoenix resident (car accident, slip-and-fall, workplace injury). Searching from a phone, likely within 72 hours of the incident. Overwhelmed by insurance calls, unsure if their case qualifies. Wants specific dollar figures, not attorney bios.",
+  "search_intent": "commercial_transactional",
+  "funnel_stage": "bottom",
+  "seo_requirements": {
+    "primary_keyword_in_h1": true,
+    "primary_keyword_in_first_100_words": true,
+    "min_h2_count": 4,
+    "local_seo_signals": [
+      "Phoenix",
+      "Maricopa County",
+      "Arizona",
+      "A.R.S.",
+      "Scottsdale",
+      "Tempe",
+      "Mesa",
+      "Chandler",
+      "Gilbert"
+    ],
+    "schema_markup": [
+      "LocalBusiness",
+      "LegalService",
+      "FAQPage"
+    ]
+  }
+}

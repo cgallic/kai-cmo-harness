@@ -74,6 +74,26 @@ Full playbook: `playbooks/combinatorial-creative-bench.md`
 
 ---
 
+## Growth Hacker First-Hire OS
+
+Use when a founder needs one growth operator to cover B2B and B2C distribution without turning every channel into a permanent commitment.
+
+**Sequence:** map every plausible channel, score stage fit, pick primary/secondary/exploratory bets, write test cards, run gates, then graduate one repeatable channel.
+
+**Required surfaces:**
+
+| Surface | Purpose |
+|---------|---------|
+| Channel map | Covers B2B and B2C distribution options |
+| Prioritization scorecard | Ranks audience density, message fit, speed, cost, compounding value, risk, and operator edge |
+| Fan-out plan | Assigns growth, evidence, B2B, B2C, content, creator, outbound, paid, analytics, and compliance operators |
+| Test cards | Define hypothesis, asset, source tracking, kill rule, and graduation rule |
+| Quality report | Blocks live sends, posts, spend, CRM changes, enrichment, and creator contracts without approval |
+
+Full playbook: `playbooks/growth-hacker-first-hire-os.md`
+
+---
+
 ## Headline Formulas
 
 **Number Headlines:**
@@ -136,7 +156,7 @@ Media Contact: [Name, Email, Phone]
 
 **3-Second Rule:**
 - 0-0.7s: Visual interrupt (must work on MUTE)
-- 0.7-2.0s: Clear value proposition
+- 0.7-2.0s: Clear offer promise
 - 2.0-3.0s: Curiosity gap / commitment
 
 **Critical Thresholds:**
@@ -169,7 +189,7 @@ Media Contact: [Name, Email, Phone]
 
 ## B2B Design Essentials
 
-**MLP over MVP:** Build lovable, not just viable
+**MLP over MVP:** Build lovable, not merely viable
 
 **Motion Timing:**
 - Micro-interactions: 120-160ms
@@ -266,12 +286,12 @@ Media Contact: [Name, Email, Phone]
 - Google: Hagakure/STAG structure, Performance Max
 - Meta: Advantage+ Shopping, broad targeting + signals
 - TikTok: Spark Ads, native-first creative
-- LinkedIn: Thought Leader Ads, content funnel
+- LinkedIn: authority ads, content funnel
 
 **Measurement Triangulation:**
 - MTA (Multi-Touch Attribution): Day-to-day optimization
 - MMM (Marketing Mix Modeling): Strategic allocation
-- Incrementality Testing: True causal impact
+- Incrementality Testing: True causal lift
 
 **Anti-Patterns:**
 - ROAS Illusion → Optimizing vanity over incrementality
@@ -290,7 +310,7 @@ Media Contact: [Name, Email, Phone]
 | Gatekeepers | Human Search | Agentic Retrieval (90% B2B) |
 | Metrics | Viewability | Attention Seconds (aCPM) |
 | Search | 10 Blue Links | Zero-Click AI Overviews |
-| Claims | Vague Green | Verified Impact (EU Sept 2026) |
+| Claims | Vague Green | Verified Results (EU Sept 2026) |
 | TikTok | Global Viral | US-Only Domestic Retail |
 
 **Priority Actions:**

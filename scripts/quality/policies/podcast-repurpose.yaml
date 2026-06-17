@@ -1,0 +1,19 @@
+# Podcast repurposing gate
+id: podcast-repurpose
+auto_approve_above: 75
+hold_between: [50, 75]
+reject_below: 50
+require_rules_pass:
+  - CS-07
+block_if_terms:
+  - "full transcript"
+  - "verbatim episode"
+  - "downloaded without permission"
+  - "guaranteed"
+require_policy_ref: harness/references/transcript-video-research-rules.md
+require_secondary_refs:
+  - harness/references/creator-disclosure.md
+notes: |
+  Direct quotes need timestamps or transcript lines.
+  Guest claims need source support or hypothesis labels.
+  Publishing, clipping, scheduling, or emailing derivative assets requires approval.

@@ -101,7 +101,7 @@ class MarketingConfig:
     """
     def __init__(self, path: Path):
         self.path     = path
-        self.raw      = path.read_text() if path.exists() else ""
+        self.raw      = path.read_text(encoding="utf-8") if path.exists() else ""
         self.thresholds:     dict[str, dict] = {}
         self.channels:       dict[str, str]  = {}
         self.framework_map:  dict[str, list] = {}
@@ -760,8 +760,32 @@ def cmd_run(args):
         print(f"   Re-gate: kai-harness gate --file /tmp/harness_draft.md --keyword \"{args.keyword}\"")
         sys.exit(1)
 
-    if not args.skip_approval:
-        post_for_approval(gate_results["draft"], brief, gate_results)
+    # Save final draft
+    final_draft = gate_results["draft"]
+    with open("/tmp/harness_draft.md", "w") as f:
+        f.write(final_draft)
+
+    # Publish if requested
+    if hasattr(args, "publish") and args.publish:
+        step(5, 6, f"Publish — {args.publish}")
+        try:
+            from scripts.publish import publish as do_publish
+            result = do_publish(
+                args.publish,
+                title=brief.get("target_keyword", ""),
+                body=final_draft,
+                status="draft",
+                tags=[brief.get("target_keyword", "")],
+                meta_description=brief.get("angle", ""),
+            )
+            if result.get("success"):
+                print(f"  Published: {result.get('url', result.get('message', ''))}")
+            else:
+                print(f"  Publish failed: {result.get('message', 'Unknown error')}")
+        except ImportError:
+            print("  Publishing module not available. Install dependencies.")
+    elif not args.skip_approval:
+        post_for_approval(final_draft, brief, gate_results)
     else:
         print("\n  ⚠️  Approval skipped (--skip-approval). Publish manually.")
         print("  Draft: /tmp/harness_draft.md")
@@ -878,6 +902,63 @@ def cmd_status(args):
     print(f"  Sites:    {', '.join(SITES)}")
 
 
+def cmd_campaign(args):
+    header(f"Kai Harness — Campaign / {args.goal}")
+    try:
+        from scripts.campaigns.campaign_planner import generate_campaign
+        generate_campaign(
+            goal=args.goal, product_id=args.product, keyword=args.keyword,
+            campaign_type=args.type, save_dir=args.save,
+        )
+    except ImportError:
+        cmd = [VENV_PY, str(SCRIPTS / "campaigns" / "campaign_planner.py"),
+               "--goal", args.goal, "--product", args.product, "--keyword", args.keyword,
+               "--type", args.type]
+        if args.save:
+            cmd += ["--save", args.save]
+        subprocess.run(cmd)
+
+
+def cmd_intel(args):
+    header("Kai Harness — Competitive Intelligence")
+    if args.check:
+        extra = ["--competitor", args.competitor] if args.competitor else []
+        _, out = run_script("intel/competitor_monitor.py", ["--check"] + extra)
+        print(out)
+    elif args.diff:
+        _, out = run_script("intel/competitor_monitor.py", ["--diff"])
+        print(out)
+    elif args.gaps:
+        extra = ["--competitor", args.competitor] if args.competitor else []
+        _, out = run_script("intel/content_gap.py", ["--site", args.site] + extra)
+        print(out)
+    elif args.brief:
+        _, out = run_script("intel/market_brief.py", [])
+        print(out)
+    else:
+        print("Use --check, --diff, --gaps, or --brief")
+
+
+def cmd_weekly_report(args):
+    header("Kai Harness — Weekly Report")
+    cmd = ["--site", args.site]
+    if args.save:
+        cmd += ["--save", args.save]
+    _, out = run_script("reporting/weekly_report.py", cmd)
+    print(out)
+
+
+def cmd_dashboard(_args):
+    header("Kai Harness — Dashboard")
+    dashboard_path = SCRIPTS / "reporting" / "dashboard.html"
+    if dashboard_path.exists():
+        import webbrowser
+        webbrowser.open(str(dashboard_path))
+        print(f"  Opened {dashboard_path} in browser")
+    else:
+        print("  Dashboard not found.")
+
+
 # ── CLI ────────────────────────────────────────────────────────────────────
 def main():
     p = argparse.ArgumentParser(prog="kai-harness", description="Kai Harness — Marketing Pipeline")
@@ -898,6 +979,8 @@ def main():
     r.add_argument("--brief-only",     action="store_true")
     r.add_argument("--skip-approval",  action="store_true")
     r.add_argument("--force",          action="store_true", help="Continue despite gate failure")
+    r.add_argument("--publish",        choices=["wordpress", "ghost", "webflow", "markdown"],
+                   help="Publish draft to CMS after approval")
     add_threshold(r)
 
     # gate
@@ -938,16 +1021,45 @@ def main():
     gen.add_argument("--dry-run",     action="store_true", help="Generate brief only")
     gen.add_argument("--skip-gates",  action="store_true", help="Skip quality gates")
 
+    # campaign
+    cp = sub.add_parser("campaign", help="Generate multi-channel campaign assets")
+    cp.add_argument("--goal",    required=True, help="Campaign goal")
+    cp.add_argument("--product", required=True, help="Product ID")
+    cp.add_argument("--keyword", required=True, help="Primary keyword")
+    cp.add_argument("--type",    default="launch", choices=["launch", "promotion", "webinar", "seasonal", "awareness"])
+    cp.add_argument("--save",    help="Directory to save campaign assets")
+
+    # intel
+    it = sub.add_parser("intel", help="Competitive intelligence")
+    it.add_argument("--check",      action="store_true", help="Run competitor check")
+    it.add_argument("--diff",       action="store_true", help="Show sitemap changes")
+    it.add_argument("--gaps",       action="store_true", help="Content gap analysis")
+    it.add_argument("--brief",      action="store_true", help="Generate market brief")
+    it.add_argument("--competitor", help="Filter by competitor")
+    it.add_argument("--site",       default="all", help="Your site key")
+
+    # weekly-report
+    wr = sub.add_parser("weekly-report", help="Generate weekly marketing report")
+    wr.add_argument("--site", default="all")
+    wr.add_argument("--save", help="Save report to file")
+
+    # dashboard
+    sub.add_parser("dashboard", help="Open marketing dashboard in browser")
+
     args = p.parse_args()
     {
-        "run":       cmd_run,
-        "gate":      cmd_gate,
-        "brief":     cmd_brief,
-        "report":    cmd_report,
-        "patterns":  cmd_patterns,
-        "status":    cmd_status,
-        "generate":  cmd_generate,
-        "approvals": lambda _: print("\n".join(str(f) for f in Path("/tmp").glob("harness_draft*.md")) or "No drafts pending."),
+        "run":            cmd_run,
+        "gate":           cmd_gate,
+        "brief":          cmd_brief,
+        "report":         cmd_report,
+        "patterns":       cmd_patterns,
+        "status":         cmd_status,
+        "approvals":      lambda _: print("\n".join(str(f) for f in Path("/tmp").glob("harness_draft*.md")) or "No drafts pending."),
+        "generate":       cmd_generate,
+        "campaign":       cmd_campaign,
+        "intel":          cmd_intel,
+        "weekly-report":  cmd_weekly_report,
+        "dashboard":      cmd_dashboard,
     }[args.command](args)
 
 

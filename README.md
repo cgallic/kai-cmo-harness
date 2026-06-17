@@ -6,14 +6,31 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 ## Why People Star This Repo
 
-- **40 public `/kai` commands** for strategy, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
-- **44 canonical skill docs** with triggers, inputs, outputs, gates, provenance, and failure modes.
-- **A real knowledge base**: 52 playbooks, 35 checklists, 27 frameworks, 17 channel guides, 8 personas, 18 references, and 27 skill contracts.
+- **42 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
+- **45 canonical skill docs** with triggers, inputs, outputs, gates, provenance, and failure modes.
+- **A real knowledge base**: 54 playbooks, 36 checklists, 27 frameworks, 26 channel guides, 8 personas, 18 references, and 30 skill contracts.
 - **Guardrails built in**: Four U's scoring, banned-word checks, SEO lint, policy references, provenance lint, privacy scanning, and mutation-risk lint.
 - **Local-first by default**: use it inside Claude Code from your repo before wiring live channels.
 - **Approval-led automation**: dry-run first, review the artifact, then approve external actions.
 
-## Try It In 5 Minutes
+## 30-Second Demo
+
+See it work before you read anything else:
+
+```bash
+git clone https://github.com/cgallic/kai-cmo-harness.git
+cd kai-cmo-harness
+pip install google-genai requests beautifulsoup4
+export GEMINI_API_KEY=your-free-key    # Get one at https://aistudio.google.com/apikey
+
+python demo/demo.py --url "https://yoursite.com" --keyword "best crm for startups"
+```
+
+One command. One API key. Outputs a scored blog post in ~60 seconds: research -> brief -> write -> quality gate -> scorecard.
+
+See pre-generated examples in `demo/examples/`.
+
+## Quick Start
 
 Install the skills:
 
@@ -37,6 +54,7 @@ Want the short setup guide? Read [Quick Start](docs/QUICK_START.md).
 | Goal | Command | What Kai returns |
 |---|---|---|
 | Find the next growth move | `/kai-growth-plan` | Stage, channel bets, constraints, and what to ignore |
+| Build the first growth hire OS | `/kai-growth-hacker` | B2B/B2C channel map, fan-out plan, test cards, gates, and metrics |
 | Rewrite a page | `/kai-landing-page` | Page copy, proof table, CRO hypotheses, and approval notes |
 | Plan search content | `/kai-content-calendar` | Topic map, keywords, personas, and source-backed priorities |
 | Audit the funnel | `/kai-cro` | Findings, evidence, data gaps, and test ideas |
@@ -80,13 +98,87 @@ git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
   && echo "Installed. Type /kai-start in Claude Code."
 ```
 
-First run: open Claude Code in any product repo and type `/kai-start`. Or type `/kai` to see the 40 public router commands. The [public skill manifest](docs/skill-manifest/README.md) documents all 44 canonical `harness/skills/kai-*` skill directories.
+## Repository Structure
+
+```
+kai-cmo-harness/
+├── CLAUDE.md                    # Standalone Claude Code entry point
+├── config.yaml.example          # Central config template
+├── setup.sh                     # Interactive setup wizard
+├── render_templates.py          # Jinja2 renderer for workspace files
+│
+├── knowledge/                   # 100+ marketing frameworks (ships as-is)
+│   ├── frameworks/              # Core frameworks (AEO, copywriting, Meta ads)
+│   ├── channels/                # Channel guides (blog, email, TikTok, etc.)
+│   ├── checklists/              # Validation checklists
+│   ├── personas/                # 8 audience personas
+│   ├── playbooks/               # Strategic playbooks
+│   └── design/                  # UI/UX design patterns
+│
+├── harness/                     # Pipeline config + quality gates
+│   ├── brief-schema.md          # Content brief format
+│   ├── skill-contracts/         # Format-specific YAML contracts
+│   └── references/              # Cold email rules, Google Ads rules
+│
+├── workspace/                   # OpenClaw workspace templates
+│   ├── MARKETING.md             # Operating config (parsed by harness)
+│   ├── SOUL.md                  # Voice profile + banned words
+│   ├── HEARTBEAT.md             # Agent heartbeat protocol
+│   ├── AGENTS.md                # Agent hierarchy + data tools
+│   ├── TOOLS.md                 # Tool configuration
+│   └── agents/                  # Domain agent templates (.j2)
+│
+├── demo/                        # Instant demo (one command, one API key)
+│   ├── demo.py                  # Single-file demo script
+│   └── examples/                # Pre-generated output examples
+│
+├── scripts/                     # Python pipeline + analytics
+│   ├── harness_cli.py           # Main CLI (brief → write → gate → approve → publish)
+│   ├── quality_gates/           # four_us_score, banned_word_check, seo_lint
+│   ├── self_improvement/        # Pattern extraction + harness updates
+│   ├── content/                 # Content generation helpers
+│   ├── leads/                   # Lead pipeline + conversion
+│   ├── ads/                     # Ad management (Meta, Google Ads API)
+│   ├── analytics/               # GA4, GSC, Stripe, Supabase, Meta Ads
+│   ├── publish/                 # CMS publishing (WordPress, Ghost, Webflow, static)
+│   ├── social/                  # Social posting (LinkedIn, Twitter/X, Buffer)
+│   ├── intel/                   # Competitor monitoring, SERP tracking, content gaps
+│   ├── campaigns/               # Campaign planner + tracker
+│   ├── reporting/               # Weekly reports, CEO deck, HTML dashboard
+│   └── knowledge_cloner/        # Expert knowledge extraction pipeline (14 modules)
+│
+├── agent/                       # Autonomous loop (optional)
+│   ├── loop.py, scheduler.py    # Task scheduling + execution
+│   ├── channels/                # Discord, WhatsApp integrations
+│   └── tasks/                   # Generic + example product handlers
+│
+├── gateway/                     # FastAPI webhook gateway (optional)
+│
+├── deploy/                      # VPS deployment templates
+│   ├── cloud-config.yaml.j2    # Cloud-init template
+│   ├── cmo-agent.service        # systemd service
+│   └── deploy.sh                # Git pull → restart → health check
+│
+├── examples/                    # Config examples by business type
+│   ├── config.yaml.saas
+│   ├── config.yaml.ecommerce
+│   └── config.yaml.agency
+│
+└── docs/                        # Documentation
+    ├── QUICK_START.md
+    ├── CONFIGURATION.md
+    ├── ADDING_PRODUCTS.md
+    ├── ANALYTICS_SETUP.md
+    └── ARCHITECTURE.md
+```
+
+First run: open Claude Code in any product repo and type `/kai-start`. Or type `/kai` to see the 42 public router commands. The [public skill manifest](docs/skill-manifest/README.md) documents 45 canonical `kai-*` skill pages.
 
 ## Current Status (v1.0.0, updated May 2026)
 
 | Layer | Status | Notes |
 |-------|--------|-------|
-| Claude Code skill surface | Working | 40 public `/kai` router commands and 44 canonical skill directories load repo context, frameworks, contracts, and policy references |
+| Claude Code skill surface | Working | 42 public `/kai` router commands and 45 canonical skill pages load repo context, frameworks, contracts, and policy references |
 | Runtime models + persistence | Built | Atomic writes, thread-safe records, audit log |
 | Business profiling + audit engines | Built | Archetype detection, overlay inference, 8 audit categories, severity-weighted scoring, and multi-location support |
 | Proposal ranking + bundling | Built | 5-factor weighted, dependency-aware |
@@ -129,6 +221,84 @@ Kai includes an interactive dashboard for active goals, tasks, and integrations.
 
 ### Path C: Git-Backed Hosting
 Push this repository to GitHub and link it to Vercel or Netlify. The repo includes `vercel.json` and `netlify.toml`.
+
+## Publishing
+
+Content pipeline now publishes directly to your CMS:
+
+```bash
+# Publish to WordPress
+kai-harness run --task blog --site mysite --keyword "ai crm" --publish wordpress
+
+# Publish to Ghost CMS
+kai-harness run --task blog --site mysite --keyword "ai crm" --publish ghost
+
+# Generate static site markdown (Hugo/Jekyll/Astro)
+kai-harness run --task blog --site mysite --keyword "ai crm" --publish markdown
+```
+
+Social media posting:
+
+```bash
+python scripts/social/linkedin.py --content "Your LinkedIn post"
+python scripts/social/twitter.py --content "Your tweet"
+python scripts/social/buffer.py --content "Scheduled post" --platforms linkedin twitter
+```
+
+## Competitive Intelligence
+
+Monitor competitors automatically:
+
+```bash
+kai-harness intel --check               # RSS + sitemap scan
+kai-harness intel --diff                # New pages since last check
+kai-harness intel --gaps --site mysite  # Keywords they rank for, you don't
+kai-harness intel --brief               # AI-synthesized weekly market brief
+```
+
+## Campaign Management
+
+Generate all assets for a multi-channel campaign:
+
+```bash
+kai-harness campaign --goal "product launch" --product myproduct --keyword "ai crm" --save campaigns/q1/
+```
+
+Generates: landing page, 5-email sequence, social variants (LinkedIn/Twitter/Instagram), ad variants (Meta + Google), content calendar.
+
+## Reporting
+
+```bash
+kai-harness weekly-report                          # Full weekly report
+kai-harness weekly-report --save reports/week.md   # Save to file
+kai-harness dashboard                              # Open HTML dashboard in browser
+python scripts/reporting/ceo_deck.py               # Generate 5-slide CEO deck
+```
+
+## Google Ads Integration
+
+```bash
+python scripts/ads/google_ads.py campaigns         # Campaign performance
+python scripts/ads/google_ads.py keywords           # Keyword data
+python scripts/ads/google_ads.py search-terms       # Find negatives + opportunities
+python scripts/ads/google_ads_optimize.py --analyze # AI-powered optimization
+```
+
+## Knowledge Cloner
+
+Extract expert knowledge from YouTube, podcasts, articles, and GitHub repos into structured frameworks:
+
+```bash
+python -m scripts.knowledge_cloner init "Alex Hormozi" --domain "Business"
+python -m scripts.knowledge_cloner discover alex-hormozi --youtube https://www.youtube.com/@AlexHormozi/videos --limit 20
+python -m scripts.knowledge_cloner pipeline alex-hormozi --max-cost 10.00
+```
+
+6-phase pipeline: Discover → Transcribe → Extract → Distill → Synthesize → Operationalize. Outputs 5 distilled docs + 4 operational tools + quality report. ~$3.50 for 40 sources via OpenRouter.
+
+See `scripts/knowledge_cloner/README.md` for full docs.
+
+## Self-Improvement
 
 ## Why this exists
 
@@ -213,11 +383,11 @@ Implementation
 
 The canonical runtime models live in `kai/runtime/`.
 
-## 40 public router commands, 44 canonical skills
+## 42 public router commands, 45 canonical skills
 
 These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. They do not invoke the `kai/` Python runtime directly.
 
-The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes all 44 `harness/skills/kai-*` directories.
+The table below reflects the `/kai` router surface. The complete canonical skill inventory lives in the [public skill manifest](docs/skill-manifest/README.md), which includes 45 canonical `kai-*` pages.
 
 ### Produce marketing assets
 
@@ -266,6 +436,7 @@ The table below reflects the `/kai` router surface. The complete canonical skill
 |---|---|
 | `/kai-brief` | Content brief before writing |
 | `/kai-growth-plan` | Marketing plan by stage: pre-launch, launch, growth, or scale |
+| `/kai-growth-hacker` | First-growth-hire distribution OS across B2B and B2C channels |
 | `/kai-brand` | Brand positioning and messaging framework |
 | `/kai-budget` | Marketing budget and channel allocation |
 | `/kai-retention` | Customer retention system and lifecycle plan |
@@ -283,12 +454,12 @@ The table below reflects the `/kai` router surface. The complete canonical skill
 
 Kai ships with a real marketing knowledge base, more than prompts:
 
-- **52 marketing playbook docs** — growth loops, CRO, pricing, competitive intel, content repurposing, lifecycle marketing, launches, retargeting, ABM, partnerships, and more
+- **54 marketing playbook docs** — growth loops, growth hacker OS, CRO, pricing, competitive intel, content repurposing, lifecycle marketing, launches, retargeting, ABM, partnerships, and more
 - **27 frameworks** — SEO rules, AEO/GEO strategy, AI-search optimization, perception engineering, copywriting formulas, quality-rater guidance, query fan-out, and LLM citation tracking
-- **35 checklists** — technical SEO, ad launches, content quality, email, PR, website launches, social audits, creative production, privacy scanning, mutation-risk review, and paid acquisition
-- **17 channel guides** — SEO content, LinkedIn, Meta ads, TikTok, YouTube, X/Twitter, Instagram, newsletters, podcasts, community, affiliate/referral, and press
+- **36 checklists** — technical SEO, ad launches, growth hacker OS, content quality, email, PR, website launches, social audits, creative production, privacy scanning, mutation-risk review, and paid acquisition
+- **26 channel guides** — SEO content, LinkedIn, Meta ads, TikTok, YouTube, X/Twitter, Instagram, newsletters, podcasts, community, affiliate/referral, and press
 - **18 harness references** — ad platform policies, API notes, compliance references, provenance rules, creator disclosure, and analytics query templates
-- **27 skill contracts** — output specs for content, ads, outreach, meetings, experiments, clips, podcasts, lead dossiers, and other marketing assets
+- **30 skill contracts** — output specs for content, ads, outreach, growth-hacker packages, meetings, experiments, clips, podcasts, lead dossiers, and other marketing assets
 - **8 audience personas** — pains, hooks, objections, emotional drivers, and voice guidance
 - **Quality gates** — Four U's, banned-word checks, proof density, specificity, platform compliance, SEO linting, and AI-slop detection
 
@@ -304,7 +475,7 @@ Install Kai inside a client repo and create repeatable strategy, content, campai
 
 ### For indie hackers
 
-Use `/kai-growth-plan`, `/kai-landing-page`, `/kai-cold-outreach`, and `/kai-content-calendar` to create a practical marketing system without hiring a team.
+Use `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-cold-outreach`, and `/kai-content-calendar` to create a practical marketing system without hiring a team.
 
 ### For local-service businesses
 

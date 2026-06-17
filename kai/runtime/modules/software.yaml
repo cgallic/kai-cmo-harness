@@ -17,6 +17,7 @@ required_memory_fields:
   - proof_assets
 default_workflows:
   - kai-growth-plan
+  - kai-growth-hacker
   - kai-email-system
   - kai-content-calendar
   - kai-analytics

@@ -16,8 +16,11 @@ required_sources:
   - brand_voice_profile
 source_policy:
   load_before_writing: true
+  required_reference: harness/references/transcript-video-research-rules.md
   transcript_claims_require_timestamp: true
   usage_rights_required: true
+  no_private_paywalled_or_login_gated_sources: true
+  no_unofficial_transcript_extractors_without_rights_review: true
   missing_sources_action: block_publishable_output
 
 inputs:
@@ -40,6 +43,8 @@ outputs:
 quality_gates:
   - rights_status_known == true
   - each_candidate_has_timestamp == true
+  - transcript_source_allowed == true
+  - no_full_transcript_or_long_excerpt == true
   - clip_score >= threshold
   - duplicate_history_checked == true
   - publish_requires_approval == true

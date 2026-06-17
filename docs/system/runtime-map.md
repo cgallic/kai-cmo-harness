@@ -2,7 +2,7 @@
 
 Kai is organized around a small set of runtime nouns. The docs and code should keep pointing back to these nouns so new workflows do not invent parallel contracts.
 
-Authoritative inventory lives in [Governance and Quality](governance-and-quality.md): 46 skill directories, 44 canonical `kai-*` skill docs, 40 public `/kai` router commands, 52 playbook docs, 35 checklists, 27 framework docs, 17 channel guides, 8 audience persona profiles, 18 harness references, and 27 skill contracts. The [Public Skill Manifest](../skill-manifest/README.md) is the API-style reference for those canonical skills.
+Authoritative inventory lives in [Governance and Quality](governance-and-quality.md). The [Public Skill Manifest](../skill-manifest/README.md) is the API-style reference for canonical Kai skills.
 
 ## Layer Model
 

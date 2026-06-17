@@ -1,0 +1,40 @@
+skill: campaign
+version: 2.0
+harness: kai-harness
+
+description: >
+  Multi-channel marketing campaign with coordinated assets across landing page,
+  email sequence, social posts, and ads. Ensures cross-channel message consistency.
+
+inputs:
+  required:
+    - brief: object
+    - campaign_type: string  # launch | promotion | webinar | seasonal | awareness
+    - channels: list  # landing_page, email, social, ads, press
+  optional:
+    - budget: number
+    - timeline_weeks: int
+    - product_id: string
+
+outputs:
+  landing_page_copy: markdown
+  email_sequence: list  # 5 emails
+  social_variants: list  # 3 per platform
+  ad_variants: list  # 3 per ad platform
+  content_calendar: markdown
+  press_release: markdown  # launch campaigns only
+
+quality_gates:
+  - four_us_total >= 12  # per individual asset
+  - cross_channel_consistency == true
+  - all_assets_complete == true
+  - banned_words_tier1 == 0
+
+word_count: varies by asset
+hooks:
+  pre_write: load_brief + load_campaign_orchestration + load_perception_engineering + load_email_lifecycle
+  post_write: run_quality_gate_per_asset
+  on_fail: revise_failing_assets
+  on_pass: post_campaign_for_approval
+  on_approve: save_campaign_bundle + content_log
+  on_publish: create_campaign_tracker

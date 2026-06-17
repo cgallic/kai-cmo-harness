@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kai CMO Harness — Marketing Dashboard</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --border: #334155;
+    --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+    --green: #22c55e; --yellow: #eab308; --red: #ef4444; --purple: #a78bfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+  .header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .meta { color: var(--muted); font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; padding: 24px 32px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 12px; }
+  .metric { font-size: 32px; font-weight: 700; margin-bottom: 4px; }
+  .metric.green { color: var(--green); }
+  .metric.yellow { color: var(--yellow); }
+  .metric.red { color: var(--red); }
+  .metric.accent { color: var(--accent); }
+  .metric.purple { color: var(--purple); }
+  .subtext { font-size: 13px; color: var(--muted); }
+  .trend { font-size: 13px; margin-top: 8px; }
+  .trend.up { color: var(--green); }
+  .trend.down { color: var(--red); }
+  .wide { grid-column: span 2; }
+  .full { grid-column: 1 / -1; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .status { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .status.green { background: var(--green); }
+  .status.yellow { background: var(--yellow); }
+  .status.red { background: var(--red); }
+  .bar-container { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .bar { height: 100%; border-radius: 3px; }
+  .btn { background: var(--accent); color: var(--bg); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; }
+  .btn:hover { opacity: 0.9; }
+  .section-title { padding: 24px 32px 8px; font-size: 16px; font-weight: 600; color: var(--muted); }
+  #file-input { display: none; }
+  .empty { text-align: center; padding: 40px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Kai CMO Harness</h1>
+    <div class="meta" id="last-updated">Marketing Dashboard — No data loaded</div>
+  </div>
+  <div>
+    <button class="btn" onclick="loadSampleData()">Load Sample Data</button>
+    <label class="btn" style="margin-left:8px">Load JSON <input type="file" id="file-input" accept=".json" onchange="loadFile(event)"></label>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid" id="kpi-grid">
+  <div class="card"><h3>Sessions</h3><div class="metric accent" id="sessions">—</div><div class="trend" id="sessions-trend"></div></div>
+  <div class="card"><h3>Leads</h3><div class="metric green" id="leads">—</div><div class="trend" id="leads-trend"></div></div>
+  <div class="card"><h3>Content Published</h3><div class="metric purple" id="content-count">—</div><div class="subtext" id="content-sub"></div></div>
+  <div class="card"><h3>Avg Quality Score</h3><div class="metric" id="quality-score">—</div><div class="subtext">Four U's /16</div></div>
+  <div class="card"><h3>SEO Clicks</h3><div class="metric accent" id="seo-clicks">—</div><div class="trend" id="seo-trend"></div></div>
+  <div class="card"><h3>Competitor Activity</h3><div class="metric yellow" id="comp-activity">—</div><div class="subtext">New posts + pages this week</div></div>
+</div>
+
+<!-- Channel Health -->
+<div class="section-title">Channel Health</div>
+<div class="grid">
+  <div class="card wide">
+    <h3>Channel Performance</h3>
+    <table>
+      <thead><tr><th>Channel</th><th>Status</th><th>Key Metric</th><th>Trend</th></tr></thead>
+      <tbody id="channel-table"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Content Pipeline</h3>
+    <div id="pipeline-bars"></div>
+  </div>
+</div>
+
+<!-- Top Keywords -->
+<div class="section-title">SEO Performance</div>
+<div class="grid">
+  <div class="card full">
+    <h3>Top Keywords</h3>
+    <table>
+      <thead><tr><th>Keyword</th><th>Position</th><th>Clicks</th><th>Impressions</th><th>CTR</th></tr></thead>
+      <tbody id="keywords-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Recent Content -->
+<div class="section-title">Recent Content</div>
+<div class="grid">
+  <div class="card full">
+    <h3>Content Log</h3>
+    <table>
+      <thead><tr><th>Title</th><th>Format</th><th>Four U's</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody id="content-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function renderDashboard(data) {
+  document.getElementById('last-updated').textContent =
+    `Marketing Dashboard — Updated ${data.generated || new Date().toISOString().split('T')[0]}`;
+
+  // KPIs
+  const t = data.traffic || {};
+  const s = data.seo || {};
+  const c = data.content || {};
+  const comp = data.competitive || {};
+
+  document.getElementById('sessions').textContent = (t.sessions || 0).toLocaleString();
+  document.getElementById('sessions-trend').textContent = t.sessions_trend || '';
+  document.getElementById('sessions-trend').className = 'trend ' + ((t.sessions_change || 0) >= 0 ? 'up' : 'down');
+
+  document.getElementById('leads').textContent = (t.leads || 0).toLocaleString();
+  document.getElementById('leads-trend').textContent = t.leads_trend || '';
+
+  document.getElementById('content-count').textContent = c.total || 0;
+  document.getElementById('content-sub').textContent = `${c.this_week || 0} this week, ${c.winners || 0} winners`;
+
+  const qs = c.avg_four_us || 0;
+  const qsEl = document.getElementById('quality-score');
+  qsEl.textContent = qs.toFixed(1);
+  qsEl.className = 'metric ' + (qs >= 12 ? 'green' : qs >= 10 ? 'yellow' : 'red');
+
+  document.getElementById('seo-clicks').textContent = (s.total_clicks || 0).toLocaleString();
+  document.getElementById('seo-trend').textContent = s.clicks_trend || '';
+
+  document.getElementById('comp-activity').textContent =
+    ((comp.new_posts || 0) + (comp.new_pages || 0)).toString();
+
+  // Channel health table
+  const channels = data.channels || [];
+  document.getElementById('channel-table').innerHTML = channels.map(ch => `
+    <tr>
+      <td><span class="status ${ch.status}"></span>${ch.name}</td>
+      <td>${ch.status_label || ch.status}</td>
+      <td>${ch.key_metric || '—'}</td>
+      <td class="${(ch.trend_value || 0) >= 0 ? 'trend up' : 'trend down'}">${ch.trend || '—'}</td>
+    </tr>
+  `).join('');
+
+  // Pipeline bars
+  const pipeline = data.pipeline || {};
+  document.getElementById('pipeline-bars').innerHTML = Object.entries(pipeline).map(([stage, count]) => `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:13px">${stage}</span>
+        <span style="font-size:13px;color:var(--muted)">${count}</span>
+      </div>
+      <div class="bar-container">
+        <div class="bar" style="width:${Math.min(count * 10, 100)}%;background:var(--accent)"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Keywords table
+  const keywords = data.keywords || [];
+  document.getElementById('keywords-table').innerHTML = keywords.slice(0, 15).map(kw => `
+    <tr>
+      <td>${kw.query || kw.keyword || ''}</td>
+      <td>${(kw.position || 0).toFixed(1)}</td>
+      <td>${(kw.clicks || 0).toLocaleString()}</td>
+      <td>${(kw.impressions || 0).toLocaleString()}</td>
+      <td>${((kw.ctr || 0) * 100).toFixed(1)}%</td>
+    </tr>
+  `).join('');
+
+  // Content table
+  const contentLog = data.content_log || [];
+  document.getElementById('content-table').innerHTML = contentLog.slice(0, 10).map(item => {
+    const grade = item.performance_30d?.grade || 'pending';
+    const statusColor = {winner: 'green', average: 'yellow', underperformer: 'red', pending: 'yellow'}[grade] || 'yellow';
+    return `
+    <tr>
+      <td>${item.title || item.keyword || '—'}</td>
+      <td>${item.format || '—'}</td>
+      <td>${item.four_us_score || '—'}/16</td>
+      <td><span class="status ${statusColor}"></span>${grade}</td>
+      <td>${(item.created || '').split('T')[0] || '—'}</td>
+    </tr>
+    `;
+  }).join('');
+}
+
+function loadSampleData() {
+  renderDashboard({
+    generated: new Date().toISOString().split('T')[0],
+    traffic: { sessions: 12450, sessions_trend: '+8.3% vs last week', sessions_change: 8.3, leads: 47, leads_trend: '+12% vs last week' },
+    seo: { total_clicks: 3280, clicks_trend: '+15% vs last week' },
+    content: { total: 24, this_week: 3, winners: 8, avg_four_us: 12.4 },
+    competitive: { new_posts: 5, new_pages: 12 },
+    channels: [
+      { name: 'SEO', status: 'green', status_label: 'Healthy', key_metric: '3,280 clicks', trend: '+15%', trend_value: 15 },
+      { name: 'Paid Search', status: 'yellow', status_label: 'Monitor', key_metric: '$2.40 CPC', trend: '+5%', trend_value: -5 },
+      { name: 'Social', status: 'green', status_label: 'Healthy', key_metric: '2.8% engagement', trend: '+22%', trend_value: 22 },
+      { name: 'Email', status: 'green', status_label: 'Healthy', key_metric: '24% open rate', trend: '+3%', trend_value: 3 },
+      { name: 'Content', status: 'green', status_label: 'Healthy', key_metric: '12.4 avg score', trend: '+0.8', trend_value: 0.8 },
+      { name: 'Meta Ads', status: 'yellow', status_label: 'Monitor', key_metric: '2.1x ROAS', trend: '-8%', trend_value: -8 },
+    ],
+    pipeline: { 'Published': 8, 'In Review': 3, 'In Progress': 5, 'Planned': 12 },
+    keywords: [
+      { query: 'ai answering service', position: 3.2, clicks: 420, impressions: 8500, ctr: 0.049 },
+      { query: 'law firm receptionist', position: 5.1, clicks: 280, impressions: 6200, ctr: 0.045 },
+      { query: 'virtual receptionist cost', position: 8.4, clicks: 150, impressions: 4800, ctr: 0.031 },
+      { query: 'legal intake automation', position: 4.7, clicks: 190, impressions: 3200, ctr: 0.059 },
+      { query: 'after hours answering service', position: 6.3, clicks: 120, impressions: 3900, ctr: 0.031 },
+    ],
+    content_log: [
+      { title: 'Why Law Firms Lose 35% of Calls After Hours', format: 'blog', four_us_score: 14, created: '2026-03-10', performance_30d: { grade: 'winner' } },
+      { title: 'AI Receptionist vs Live Answering Service', format: 'blog', four_us_score: 13, created: '2026-03-08', performance_30d: { grade: 'winner' } },
+      { title: 'Legal Intake Automation Guide', format: 'seo', four_us_score: 12, created: '2026-03-06', performance_30d: { grade: 'average' } },
+      { title: 'Meta Ad Variants — AI Receptionist', format: 'meta-ads', four_us_score: 11, created: '2026-03-04', performance_30d: { grade: 'pending' } },
+    ],
+  });
+}
+
+function loadFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      renderDashboard(data);
+    } catch (err) {
+      alert('Invalid JSON file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Auto-load sample data on page load
+loadSampleData();
+</script>
+</body>
+</html>

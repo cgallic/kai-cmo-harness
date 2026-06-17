@@ -5,9 +5,21 @@
 ## Google Search Baseline
 - [ ] Page is crawlable by Googlebot
 - [ ] Page is indexable and canonicalized correctly
+- [ ] Page has an explicit action: `index`, `noindex`, `canonicalize`, `redirect`, `remove`, or `improve`
+- [ ] Priority page appears in a clean canonical XML sitemap and has crawlable internal links from relevant indexed pages
 - [ ] Page is eligible to appear with a snippet (`nosnippet`, `data-nosnippet`, and `max-snippet` are not blocking key content)
 - [ ] Main content is visible in rendered HTML, including on JavaScript-heavy pages
 - [ ] Page satisfies Search Essentials and avoids scaled/doorway content patterns
+- [ ] No indexation tactic depends on repeated unchanged URL submission, duplicate URL variants, cloaking, hidden text, fake social signals, link spam, keyword stuffing, fake freshness, or doorway pages
+
+## Indexation Monitoring
+- [ ] `harness/references/google-indexation-monitoring.md` was loaded for launch QA, indexing issues, sitemap cleanup, or priority URL troubleshooting
+- [ ] First-week launch checks use Search Console Page Indexing, URL Inspection, sitemap status, crawl status, canonical status, and internal links
+- [ ] Manual `site:example.com/exact-url` checks are labeled as rough visibility checks, not authoritative indexation proof
+- [ ] URL Inspection records the Google-selected canonical and any crawl, indexing, or page-quality blockers
+- [ ] Pages that should not be indexed are intentionally noindexed, canonicalized, redirected, removed, or blocked from discovery based on the use case
+- [ ] Timeline language is cautious; no fixed indexing promise is made
+- [ ] Patent-history claims are labeled as diagnostic hypotheses, not proof of current Google ranking behavior
 
 ## Google AI Search Calibration
 - [ ] AEO/GEO work strengthens normal SEO; it is not treated as a separate Google ranking system

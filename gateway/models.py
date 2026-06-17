@@ -292,6 +292,75 @@ class TaskExtractRequest(WebhookRequest):
 
 
 # ============================================================================
+# OpenAI Ads Models
+# ============================================================================
+
+class OpenAIAdsRequest(WebhookRequest):
+    """Request for OpenAI Ads read endpoints (campaigns/insights/etc)."""
+    campaign_id: Optional[str] = None
+    ad_group_id: Optional[str] = None
+    ad_id: Optional[str] = None
+    days: int = Field(7, ge=1, le=365)
+    limit: int = Field(100, ge=1, le=10000)
+    fields: Optional[str] = Field(None, description="Comma-separated insights metric fields")
+    granularity: str = Field("daily", description="daily | none")
+    aggregation_level: Optional[str] = Field(None, description="ad_account | campaign | ad_group | ad")
+    time_ranges: Optional[str] = Field(None, description="JSON-encoded time_ranges param")
+
+
+class OpenAIAdsCampaignCreate(WebhookRequest):
+    """Create a campaign — budget in USD, converted to micros downstream."""
+    name: str = Field(..., min_length=3, max_length=1000)
+    budget_usd: float = Field(..., gt=0)
+    status: str = Field("paused", description="paused | active")
+
+
+class OpenAIAdsAdGroupCreate(WebhookRequest):
+    """Create an ad group — bid in USD, converted to micros downstream."""
+    campaign_id: str
+    name: str = Field(..., min_length=3, max_length=1000)
+    bid_usd: float = Field(..., gt=0)
+    status: str = Field("paused", description="paused | active")
+    context_hints: Optional[str] = Field(None, description="comma-separated keywords/audiences")
+
+
+class OpenAIAdsAdCreate(WebhookRequest):
+    """Create a chat_card ad. Headline 3-50 chars, description ≤100 chars."""
+    ad_group_id: str
+    name: str = Field(..., min_length=3, max_length=1000)
+    headline: str = Field(..., min_length=3, max_length=50)
+    description: str = Field(..., max_length=100)
+    link: str
+    file_id: str
+    status: str = Field("paused", description="paused | active")
+
+
+class OpenAIAdsUploadRequest(WebhookRequest):
+    """Upload an image — by local file path OR remote URL (one required)."""
+    file_path: Optional[str] = None
+    image_url: Optional[str] = None
+
+
+class OpenAIAdsStateRequest(WebhookRequest):
+    """Activate/pause/archive a campaign, adgroup, or ad."""
+    type: str = Field(..., description="campaign | adgroup | ad")
+    id: str
+    action: str = Field(..., description="activate | pause | archive")
+
+
+class OpenAIAdsConversionRequest(WebhookRequest):
+    """Single server-side conversion event (Conversions API)."""
+    event_id: str = Field(..., description="Stable id; matches pixel id for dedup")
+    event_type: str = Field(..., description="e.g. registration_completed, order_created, lead")
+    amount: int = Field(0, ge=0, description="Minor units (cents)")
+    currency: str = Field("USD", min_length=3, max_length=3)
+    source_url: Optional[str] = None
+    action_source: str = Field("web")
+    timestamp_ms: Optional[int] = None
+    validate_only: bool = False
+
+
+# ============================================================================
 # Client Models
 # ============================================================================
 

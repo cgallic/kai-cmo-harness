@@ -54,16 +54,63 @@ server:
   analytics_path: "/opt/cmo-analytics"
   venv_python: "/opt/cmo-analytics/venv/bin/python3"
 
+# Publishing — CMS integration for content pipeline output
+publishing:
+  default_platform: "wordpress"    # wordpress | ghost | webflow | markdown
+  wordpress:
+    url_env: "WP_URL"
+    username_env: "WP_USERNAME"
+    password_env: "WP_APP_PASSWORD"  # Application Password, not login password
+  ghost:
+    url_env: "GHOST_URL"
+    admin_key_env: "GHOST_ADMIN_KEY"
+  webflow:
+    api_token_env: "WEBFLOW_API_TOKEN"
+    site_id_env: "WEBFLOW_SITE_ID"
+    collection_id_env: "WEBFLOW_COLLECTION_ID"
+  markdown:
+    output_dir: "./content/blog"
+    generator: "hugo"              # hugo | jekyll | astro | 11ty
+
+# Social media — posting and scheduling
+social:
+  linkedin:
+    access_token_env: "LINKEDIN_ACCESS_TOKEN"
+    person_id_env: "LINKEDIN_PERSON_ID"  # urn:li:person:xxxxx
+  twitter:
+    api_key_env: "TWITTER_API_KEY"
+    api_secret_env: "TWITTER_API_SECRET"
+    access_token_env: "TWITTER_ACCESS_TOKEN"
+    access_secret_env: "TWITTER_ACCESS_SECRET"
+  buffer:
+    access_token_env: "BUFFER_ACCESS_TOKEN"
+
+# Competitors — monitored for intel reports
+competitors:
+  - url: "https://competitor1.com"
+    name: "Competitor 1"
+    rss_feed: "https://competitor1.com/blog/feed"
+  - url: "https://competitor2.com"
+    name: "Competitor 2"
+    rss_feed: ""  # Auto-detected from common paths
+
+# Keywords to track in SERP tracker (in addition to GSC data)
+tracked_keywords:
+  - "your main keyword"
+  - "your second keyword"
+
 # Scheduled tasks (OpenClaw path only)
 schedule:
   daily_report: "0 8 * * *"       # 8am daily
   weekly_report: "0 8 * * 1"      # 8am Monday
   pattern_extract: "0 8 * * 1"    # 8am Monday
   performance_check: "0 9 1 * *"  # 9am 1st of month
+  competitor_check: "0 6 * * *"   # 6am daily - RSS + sitemap check
+  serp_track: "0 7 * * *"         # 7am daily - keyword rankings
+  market_brief: "0 9 * * 1"       # 9am Monday - weekly market brief
 
 # Netlify one-click deployment parameters
 netlify:
   token: ""      # Netlify Personal Access Token
   site_id: ""    # Automatically populated after first deploy
   site_url: ""   # Automatically populated after first deploy
-

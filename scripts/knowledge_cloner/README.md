@@ -29,9 +29,9 @@ ls clients/Connor_Gallic/knowledge/alex-hormozi/output/
 │  DISCOVERY   │───▶│ TRANSCRIPTION │───▶│ EXTRACTION │───▶│ DISTILLATION │
 │  (Phase 1)   │    │  (Phase 2a)   │    │ (Phase 2b) │    │  (Phase 3)   │
 │              │    │               │    │            │    │              │
-│ YouTube      │    │ Free captions │    │ LLM prompt │    │ 5 category   │
-│ Podcasts     │    │ yt-dlp subs   │    │ per source │    │ passes       │
-│ Articles     │    │ Gemini audio  │    │            │    │              │
+│ YouTube      │    │ Authorized    │    │ LLM prompt │    │ 5 category   │
+│ Podcasts     │    │ transcripts   │    │ per source │    │ passes       │
+│ Articles     │    │ Rights review │    │            │    │              │
 │ GitHub repos │    │ git clone     │    │            │    │              │
 │ Local files  │    │ Web scrape    │    │            │    │              │
 └─────────────┘    └───────────────┘    └────────────┘    └──────┬───────┘
@@ -83,11 +83,11 @@ Discovers all videos via `yt-dlp`. Auto-prioritizes by duration:
 - **MEDIUM**: 5-20 minutes
 - **LOW**: <5 minutes (shorts, clips)
 
-Transcription cascade (cheapest first):
-1. `youtube-transcript-api` — free, instant
-2. `yt-dlp` subtitle download — free, slower
-3. Gemini video URL — ~$0.01-0.03 (Google servers access YouTube natively)
-4. Audio download + Gemini — ~$0.01-0.03 (last resort)
+Transcript policy:
+1. Prefer publisher-provided transcripts, YouTube visible transcripts, user-provided files, or authorized YouTube Data API caption workflows.
+2. Do not rip private, member-only, paywalled, deleted, login-gated, or restricted videos.
+3. Do not store full copyrighted third-party transcripts unless the owner provided them or the client has rights.
+4. Unofficial transcript and audio-download fallbacks are disabled by default. Set `KAI_TRANSCRIPT_UNOFFICIAL_OK=1` only for owned, licensed, user-provided, or otherwise authorized workflows.
 
 ### Podcasts
 
@@ -277,9 +277,9 @@ Place in `.env` at project root or `scripts/.env`.
 
 | Tool | Required For | Install |
 |------|-------------|---------|
-| `yt-dlp` | YouTube discovery & transcription | `pip install yt-dlp` |
+| `yt-dlp` | YouTube discovery; authorized subtitle/audio workflows only when explicitly enabled | `pip install yt-dlp` |
 | `git` | Repository cloning | System package |
-| `youtube-transcript-api` | Free YouTube captions | `pip install youtube-transcript-api` |
+| `youtube-transcript-api` | Optional authorized caption workflow only when explicitly enabled | `pip install youtube-transcript-api` |
 | `feedparser` | Podcast RSS parsing | `pip install feedparser` |
 | `beautifulsoup4` | Article scraping | `pip install beautifulsoup4` |
 | `httpx` | Async HTTP | `pip install httpx` |
@@ -292,6 +292,7 @@ Place in `.env` at project root or `scripts/.env`.
 - **Rate limiting**: 2-second minimum between API calls
 - **Dry-run mode**: Preview all actions without making API calls (`--dry-run`)
 - **Confirmation prompts**: User must approve each expensive phase
+- **Transcript safety**: Unofficial transcript/subtitle/audio fallbacks are off unless `KAI_TRANSCRIPT_UNOFFICIAL_OK=1`
 - **Resumable**: Re-run any phase — already-completed sources are skipped
 - **Phase idempotency**: Phases track completion in `progress.json`
 

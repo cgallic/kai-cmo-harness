@@ -1,0 +1,51 @@
+id: growth-hacker-first-hire-os
+name: Growth Hacker First-Hire OS
+description: Score B2B and B2C distribution channels, fan out specialist operators, and produce a 90-day growth test package.
+stage: phase-2-first-wedge
+inputs:
+  - name: product_context
+    type: object
+    required: true
+    description: MARKETING.md-derived product, audience, offer, stage, and channel context.
+  - name: business_type
+    type: string
+    required: true
+    description: B2B, B2C, marketplace, local service, ecommerce, creator, or mixed.
+  - name: approval_rules
+    type: object
+    required: false
+    description: Human approvals required before live sends, posts, spend, enrichment, or CRM changes.
+outputs:
+  - channel_map
+  - prioritization_scorecard
+  - ninety_day_sprint
+  - agent_fanout_plan
+  - b2b_b2c_test_cards
+  - quality_report
+artifacts:
+  - workspace/growth-hacker/_channel-map.md
+  - workspace/growth-hacker/_prioritization-scorecard.md
+  - workspace/growth-hacker/_90-day-sprint.md
+  - workspace/growth-hacker/_quality-report.md
+risk_tier: high
+required_scopes:
+  - workflow:growth-hacker-first-hire
+  - channel:organic-social
+  - channel:outbound
+  - channel:paid-media
+  - compliance:approval
+quality_gates:
+  - scripts/quality_gates/four_us_score.py
+  - scripts/quality_gates/banned_word_check.py
+  - scripts/quality_gates/audit_provenance_lint.py
+approval_rule: human-approve-any-live-channel-action
+estimated_runtime: 35-60m
+oss_price_band: free-oss
+saas_later:
+  - hosted_channel_scorecards
+  - connector_backed_growth_dashboard
+  - specialist_agent_dispatch
+docs:
+  - knowledge/playbooks/growth-hacker-first-hire-os.md
+  - knowledge/checklists/growth-hacker-first-hire-checklist.md
+  - harness/skill-contracts/growth-hacker-first-hire.yaml

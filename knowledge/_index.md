@@ -37,6 +37,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `dynamic-header-footer-design.md` | **VMAT anchor text**, semantic HTML structure, PageRank flow optimization |
 | `trending-nodes-news-pages.md` | **Hash URLs**, RSS syndication, news rotation, N8N automation |
 | `image-optimization-indexation.md` | **AVIF vs JPEG indexation**, featured image composition, Open Graph |
+| `../harness/references/google-indexation-monitoring.md` | **Google indexation monitoring** - Search Console checks, noindex/canonical decisions, sitemap/internal-link signals, patent-history caveats |
 | `dynamic-rendering-cloaking.md` | Showing different content to Googlebot (legally), CSS overlays |
 | `ctr-behavioral-signals.md` | Proxy testing, unicorn clicks, Gmail aging, crawl delay measurement |
 
@@ -85,7 +86,14 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `channels/paid-acquisition.md` | Paid media strategy, CAC optimization, platform playbooks |
 | `channels/youtube.md` | **YouTube** — channel strategy, SEO, script structure, retention tactics, Shorts, YouTube Ads, analytics |
 | `channels/instagram.md` | **Instagram** — Reels, carousels, stories, SEO, DM sales, growth tactics, ad placements, metrics |
-| `channels/x-twitter.md` | **X/Twitter** — threads, hot takes, growth via replies, Spaces, ad formats, content calendar |
+| `channels/twitter-x.md` | **X/Twitter** - organic posting strategy, recommendation signals, reply growth, threads, media, links, automation guardrails |
+| `channels/facebook-organic.md` | **Facebook organic** - Page, Group, Reels, public posts, Meta recommendation and Community Notes guardrails |
+| `channels/threads-organic.md` | **Threads organic** - public conversation, Threads API, fediverse settings, Meta policy checks |
+| `channels/reddit-organic.md` | **Reddit organic** - subreddit fit, transparent brand participation, listening, comments, AMAs |
+| `channels/pinterest-organic.md` | **Pinterest organic** - visual search, Pins, boards, affiliate/commercial disclosures, destination quality |
+| `channels/snapchat-organic.md` | **Snapchat organic** - Stories, Spotlight, recommendation eligibility, commercial content |
+| `channels/bluesky-organic.md` | **Bluesky organic** - custom feeds, AT Protocol, labels, rate limits |
+| `channels/mastodon-fediverse.md` | **Mastodon/Fediverse** - instance rules, hashtags, content warnings, federated distribution |
 | `channels/affiliate-referral.md` | **Affiliate & referral** — program structure, tiers, recruitment, tracking, fraud prevention, referral loops |
 | `channels/community-building.md` | **Community** — Discord/Slack/FB Groups, growth stages, engagement rituals, community-led growth, moderation |
 | `channels/newsletter-strategy.md` | **Newsletter** — Platform selection (beehiiv vs Substack vs Ghost), growth tactics by phase, content formats, monetization (sponsors, paid, affiliate, boosts), retention |
@@ -160,6 +168,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/competitive-intelligence.md` | **Competitive intelligence** - 5 intelligence layers, signal monitoring, product/pricing/positioning analysis, sales battlecard template, CI calendar |
 | `playbooks/saas-metrics-guide.md` | **SaaS metrics** - MRR waterfall, NRR, churn benchmarks by segment, cohort analysis, CAC/LTV, Rule of 40, Magic Number, diagnostic framework |
 | `playbooks/demand-generation.md` | **Demand generation** - Create vs capture demand, multi-touch campaign framework, lead scoring, channel playbooks, MQL→SQL pipeline metrics |
+| `playbooks/growth-hacker-first-hire-os.md` | **Growth hacker first hire** - Exhaustive B2B/B2C distribution OS, channel scoring, specialist fan-out, test cards, approval gates, and Kai skill routing |
 | `playbooks/account-based-marketing.md` | **ABM** - 3 tiers (one-to-one/few/many), account dossier template, multi-channel orchestration, engagement scoring, sales alignment SLA |
 | `playbooks/partnership-comarketing.md` | **Partnerships** - Partner types, fit matrix, co-marketing campaigns, integration levels, outreach templates, ROI measurement |
 | `playbooks/customer-retention.md` | **Customer retention** - 8-layer retention stack, dunning/payment recovery, onboarding, health scoring, churn analysis, expansion levers, cancellation flow |
@@ -168,6 +177,17 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/marketing-budget-forecasting.md` | **Budgeting** - Benchmarks by stage, 70/20/10 allocation, revenue forecasting, pipeline math, ROI by channel, budget defense framework |
 | `playbooks/seo-internal-linking.md` | **Internal linking** - Hub-and-spoke model, anchor text rules, link placement priority, orphan page detection, link equity flow, monthly audit |
 | `playbooks/podcast-marketing.md` | **Podcast marketing** - Strategy, guest acquisition, production workflow, distribution, growth tactics by phase, monetization, repurposing (1 episode → 20-30 pieces) |
+
+---
+
+## Harness References
+
+| File | Use When |
+|------|----------|
+| `../harness/references/research-fanout-best-practices.md` + `../harness/references/research-fanout-vertical-registry.json` + `../harness/references/marketing-platform-source-registry.json` | **Research fan-out and condensation** - Cross-vertical source discovery, transcript/video mining, official-doc checks, competitor examples, provenance, edges, best practices, structures, and SOPs |
+| `../harness/references/research-fanout-vertical-registry.json` | **Vertical research registry** - Source packs, edge questions, SOP extracts, and gates across Kai marketing verticals |
+| `../harness/references/transcript-video-research-rules.md` | **Transcript/video research safety** - Allowed transcript sources, quote limits, rights notes, timestamp ledgers, and blocked private/paywalled extraction |
+| `../harness/references/openai-ads-measurement-reference.md` | **OpenAI Ads measurement** - JavaScript Pixel, server-side Conversions API, supported events, SHA-256 identifiers, minor-unit values, event ID deduplication, consent and QA gates |
 
 ---
 
@@ -231,13 +251,16 @@ Original source files preserved in `archive/` for reference.
 | **Payment flow design** | `design/b2c-fintech-design.md` | - |
 | **Persona research** | `personas/_persona-index.md` | individual persona file |
 | **Email campaigns** | `channels/email-lifecycle.md` | `frameworks/content-copywriting/perception-engineering.md` |
+| **Research fan-out / edge synthesis** | `../harness/references/research-fanout-best-practices.md` + `../harness/references/research-fanout-vertical-registry.json` + `../harness/references/marketing-platform-source-registry.json` | `../harness/references/audit-data-provenance.md` |
 | **Paid ads** | `channels/paid-acquisition.md` | `frameworks/content-copywriting/headline-formulas.md` |
 | **Paid media launch** | `playbooks/paid-media-launch-playbook.md` | `playbooks/ad-campaign-management.md` |
+| **OpenAI Ads measurement / CAPI** | `../harness/references/openai-ads-measurement-reference.md` | `../harness/references/advertising-compliance.md` + `checklists/paid-acquisition-checklist.md` |
 | **Local business sample ad outreach** | `playbooks/local-business-claymation-ads.md` | `playbooks/ad-creative-best-practices.md` |
 | **Ecommerce CRO / offer architecture** | `playbooks/funnel-hack-offer-architecture.md` | `playbooks/ecommerce-marketing.md` + `playbooks/conversion-rate-optimization.md` |
 | **Meta/Facebook ads** | `channels/meta-advertising.md` + `playbooks/meta-creative-testing-decision-framework.md` | `frameworks/meta-advertising/` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |
 | **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` | `checklists/seo-checklist.md` |
+| **Indexation troubleshooting** | `../harness/references/google-indexation-monitoring.md` | `checklists/technical-seo-audit-sop.md` + `checklists/seo-checklist.md` |
 | **Technical SEO security** | `checklists/SEO Expert-technical-seo-checklist.md` | - |
 | **Local SEO/GBP** | `playbooks/local-seo-gbp-optimization.md` | - |
 | **Topical map creation** | `playbooks/SEO Expert-semantic-seo-methodology.md` | - |
@@ -261,6 +284,7 @@ Original source files preserved in `archive/` for reference.
 | **PR / media outreach** | `playbooks/pr-comms-strategy.md` | `channels/press-releases.md` |
 | **Crisis communications** | `playbooks/pr-comms-strategy.md` (crisis section) | - |
 | **Growth loops / viral mechanics** | `playbooks/growth-loops-applied.md` | `frameworks/content-copywriting/loop-mechanics.md` |
+| **First growth hire / distribution OS** | `playbooks/growth-hacker-first-hire-os.md` | `playbooks/growth-loops-applied.md` + `playbooks/demand-generation.md` + `checklists/growth-hacker-first-hire-checklist.md` |
 | **Brand positioning** | `playbooks/brand-positioning.md` | `playbooks/business-model-marketing.md` |
 | **Pricing strategy** | `playbooks/pricing-strategy.md` | `playbooks/conversion-rate-optimization.md` |
 | **Customer journey mapping** | `playbooks/customer-journey-mapping.md` | `playbooks/analytics-attribution.md` |
@@ -297,8 +321,10 @@ Original source files preserved in `archive/` for reference.
 |------|-----------|
 | **Increase conversions** | `frameworks/content-copywriting/perception-engineering.md`, `frameworks/content-copywriting/headline-formulas.md` |
 | **Deep persuasion/influence** | `frameworks/content-copywriting/perception-engineering-advanced.md` |
+| **Find edge from research** | `../harness/references/research-fanout-best-practices.md`, `../harness/references/research-fanout-vertical-registry.json`, `../harness/references/marketing-platform-source-registry.json` |
 | **Improve SEO rankings** | `frameworks/content-copywriting/algorithmic-authorship.md`, `channels/seo-content.md` |
 | **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` |
+| **Fix indexation** | `../harness/references/google-indexation-monitoring.md`, `checklists/technical-seo-audit-sop.md` |
 | **AEO/AI Search** | `frameworks/aeo-ai-search/` |
 | **URL/page architecture** | `frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` |
 | **Build brand voice** | `channels/content-writing.md`, `frameworks/content-copywriting/four-us-framework.md` |
@@ -309,6 +335,7 @@ Original source files preserved in `archive/` for reference.
 | **TikTok virality** | `channels/tiktok-algorithm.md`, `channels/tiktok-shop.md` |
 | **Nurture & retain users** | `channels/email-lifecycle.md` |
 | **Scale acquisition** | `channels/paid-acquisition.md`, `playbooks/combinatorial-creative-bench.md` |
+| **Find distribution channels** | `playbooks/growth-hacker-first-hire-os.md`, `playbooks/growth-loops-applied.md`, `playbooks/demand-generation.md` |
 | **Meta ad optimization** | `channels/meta-advertising.md`, `frameworks/meta-advertising/` |
 | **2026 readiness** | `playbooks/2026-marketing-playbook.md` |
 | **Business model strategy** | `playbooks/business-model-marketing.md` |

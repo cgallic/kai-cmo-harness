@@ -20,6 +20,7 @@ from gateway.models import WebhookResponse
 from gateway.routers import analytics, tiktok, cold_email, tasks, clients, jobs
 from gateway.routers import whatsapp, agent, creative, stripe, generate, runtime, actions
 from gateway.routers import connections, daemon
+from gateway.routers import openai_ads
 
 
 @asynccontextmanager
@@ -88,6 +89,7 @@ async def root():
             "cold_email": "/webhooks/cold-email/*",
             "whatsapp": "/webhooks/whatsapp/*",
             "creative": "/webhooks/creative/*",
+            "openai_ads": "/webhooks/openai-ads/*",
             "stripe": "/stripe/*",
             "tasks": "/webhooks/tasks/*",
             "clients": "/clients",
@@ -208,6 +210,13 @@ app.include_router(
     daemon.router,
     prefix="/daemon",
     tags=["Daemon"],
+    dependencies=[Depends(verify_api_key)]
+)
+
+app.include_router(
+    openai_ads.router,
+    prefix="/webhooks/openai-ads",
+    tags=["OpenAI Ads"],
     dependencies=[Depends(verify_api_key)]
 )
 

@@ -2,6 +2,13 @@
 
 > **Use when:** Building an Instagram presence for brand awareness, community, lead gen, or DTC sales.
 
+Primary references:
+- Instagram ranking guidance: https://creators.instagram.com/grow/algorithms-and-ranking
+- Instagram Feed AI system: https://transparency.meta.com/features/explaining-ranking/ig-feed/
+- Instagram Reels chaining: https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/
+- Meta organic rules: `harness/references/meta-organic-posting-rules.md`
+- Meta automation rules: `harness/references/social-automation-rules.md`
+
 ---
 
 ## Instagram in 2026
@@ -157,6 +164,18 @@ Slide 8: CTA
 - [ ] Hashtags: 5-10 relevant, mix of broad + niche
 - [ ] Location tags: for local businesses
 - [ ] Reels captions: keyword-rich
+
+---
+
+## Policy and Recommendation Checks
+
+Before drafting or scheduling Instagram content:
+
+- Load `harness/references/meta-organic-posting-rules.md`.
+- Check Account Status and recommendation eligibility for content intended to reach non-followers.
+- Use platform disclosure tools for branded, affiliate, incentivized, or own-brand commercial content.
+- Check AI-generated/manipulated media labeling when realistic people, voices, civic material, or likenesses appear.
+- Use approved Meta/Instagram APIs or partner tools for scheduling. Do not browser-bot likes, follows, comments, DMs, or scraping.
 
 ---
 
