@@ -165,4 +165,3 @@ Edge questions:
 
 Rejected tactics:
 - Fake waitlists, fabricated social proof, undisclosed incentives, and scraping launch communities behind gates.
-

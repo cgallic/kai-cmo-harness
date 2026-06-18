@@ -54,4 +54,3 @@ Evidence tiers:
 | src-042 | https://support.google.com/analytics/answer/10596866 | GA4 | Attribution | `knowledge/playbooks/analytics-attribution.md` | 2026-06-17 | T1 | Attribution docs. |
 | src-043 | https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business | Email | Legal | `harness/references/cold-email-rules.md` | 2026-06-17 | T1 | CAN-SPAM guidance. |
 | gap-001 | No official source found | Grok/xAI | Crawler docs | `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` | 2026-06-17 | HYP | Live search found no official Grok crawler/robots.txt docs. |
-

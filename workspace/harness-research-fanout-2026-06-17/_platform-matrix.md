@@ -22,4 +22,3 @@
 | Claude/Anthropic Crawlers | src-034 | AI crawler technical ref | N/A | N/A | Anthropic support docs | `audit-data-provenance.md` | Strong |
 | Perplexity | src-035 | Perplexity ranking ref, AI crawler technical ref | N/A | N/A | Perplexity crawler docs | `audit-data-provenance.md` | Medium; independent allegations must stay labeled |
 | Grok/xAI | gap-001 | AI crawler technical ref | N/A | N/A | No official crawler docs found | `audit-data-provenance.md` | Gap; do not claim crawler behavior as fact |
-
