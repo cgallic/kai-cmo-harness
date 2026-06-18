@@ -1,6 +1,8 @@
 # X (Twitter) Channel Guide
 
 > **Use when:** Building a presence on X/Twitter for thought leadership, real-time engagement, brand building, or B2B lead generation.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md` + `playbooks/b2b-distribution-playbook.md` — where X fits founder-led B2B distribution alongside `channels/linkedin-founder-led.md`.
 
 ---
 

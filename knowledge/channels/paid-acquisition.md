@@ -1,6 +1,8 @@
 # Paid Acquisition Framework
 
 > **Use when:** Planning, executing, or optimizing paid media campaigns across search, social, display, and programmatic channels. Apply when scaling customer acquisition, allocating budgets, building creative strategies, or measuring incrementality.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md` — when paid is the right channel to layer on top of organic, and the B2B/B2C build order.
 
 ## Quick Reference
 

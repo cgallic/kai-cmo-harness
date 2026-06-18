@@ -98,6 +98,11 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `channels/community-building.md` | **Community** — Discord/Slack/FB Groups, growth stages, engagement rituals, community-led growth, moderation |
 | `channels/newsletter-strategy.md` | **Newsletter** — Platform selection (beehiiv vs Substack vs Ghost), growth tactics by phase, content formats, monetization (sponsors, paid, affiliate, boosts), retention |
 | `channels/podcast.md` | Setting up podcast equipment, studio setup, recording workflow |
+| `channels/linkedin-founder-led.md` | **LinkedIn organic (founder-led B2B distribution)** — 2026 feed algorithm (Feed-SR), founder vs company page, hooks/formats, comments-as-distribution, profile-as-landing-page, organic→pipeline. Distribution motion; pairs with `linkedin-organic.md` (general algorithm/strategy) and `linkedin-articles.md` (long-form) |
+| `channels/ai-outbound.md` | **AI outbound (B2B)** — 2026 stack (Clay/Apollo/signals/AI research/Smartlead), deliverability engineering, signal/trigger plays, relevance-over-volume personalization, multichannel sequences, cold-start→scale runbooks |
+| `channels/ai-ugc.md` | **AI UGC (B2C)** — AI avatar/UGC tools (Arcads, Creatify, HeyGen, Captions, Veo), 1-script→30-variant batch pipeline, hook frameworks, testing-engine integration, FTC/AI-disclosure compliance |
+| `channels/sponsorships.md` | **Sponsorships (audience buying)** — newsletter/podcast/YouTube/creator/community/event placements, sourcing + marketplaces, audience vetting, CPM benchmarks, attribution, portfolio scaling, FTC disclosure |
+| `channels/events-experiential.md` | **Events & experiential (IRL)** — B2B field marketing (dinners/roadshows/booths) + B2C experiential/activations, the content flywheel, pre/at/post-event runbooks, ROI math |
 
 ---
 
@@ -177,6 +182,9 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/marketing-budget-forecasting.md` | **Budgeting** - Benchmarks by stage, 70/20/10 allocation, revenue forecasting, pipeline math, ROI by channel, budget defense framework |
 | `playbooks/seo-internal-linking.md` | **Internal linking** - Hub-and-spoke model, anchor text rules, link placement priority, orphan page detection, link equity flow, monthly audit |
 | `playbooks/podcast-marketing.md` | **Podcast marketing** - Strategy, guest acquisition, production workflow, distribution, growth tactics by phase, monetization, repurposing (1 episode → 20-30 pieces) |
+| `playbooks/growth-distribution-engine.md` | **Growth distribution engine (0→$5M ARR channel hacking)** — the distribution hire's OS: Bullseye/channel-market fit, scored B2B+B2C channel matrices, the Rule-of-3 testing system, kill/double-down criteria, stage sequencing by ACV/motion, unit-economics gates, first-90-days plan. **Hub that routes to every channel guide.** |
+| `playbooks/b2b-distribution-playbook.md` | **B2B distribution playbook** — sequences the full B2B channel stack (LinkedIn organic, events, AI outbound, AEO, SEO/blogs, long-form, YouTube, webinars, X, B2B influencers) into a build order with ACV/motion selection, weekly cadence, and pipeline/CAC measurement |
+| `playbooks/b2c-distribution-playbook.md` | **B2C distribution playbook** — the creative-volume + paid↔organic↔influencer↔UGC flywheel (AI UGC, organic TikTok/Reels/Shorts, paid social, events, influencer, sponsorships) with margin/AOV selection, build order, and blended CAC/MER measurement |
 
 ---
 
@@ -220,6 +228,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
 | `checklists/linkedin-ai-content-detection-and-feed-checklist.md` | **LinkedIn pre-publish QA** — semantic feed fit, AI-slop avoidance, confidence hygiene |
 | `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - multi-engine robots.txt / optional llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
+| `checklists/channel-distribution-checklist.md` | **Channel distribution scorecard** - channel-market fit pre-screen, Bullseye selection matrix, test design, mid-flight health, kill/iterate/double-down thresholds, scale-readiness unit-economics gate, per-channel leading indicators, compliance gate |
 
 ---
 
@@ -314,6 +323,14 @@ Original source files preserved in `archive/` for reference.
 | **E-commerce marketing** | `playbooks/ecommerce-marketing.md` | `playbooks/ad-campaign-management.md` |
 | **Marketing budget / forecasting** | `playbooks/marketing-budget-forecasting.md` | `playbooks/analytics-attribution.md` |
 | **SEO internal linking** | `playbooks/seo-internal-linking.md` | `playbooks/seo-link-building.md` |
+| **Pick channels / 0→$5M distribution** | `playbooks/growth-distribution-engine.md` | `checklists/channel-distribution-checklist.md` |
+| **B2B distribution strategy** | `playbooks/b2b-distribution-playbook.md` | `playbooks/growth-distribution-engine.md` |
+| **B2C distribution strategy** | `playbooks/b2c-distribution-playbook.md` | `playbooks/growth-distribution-engine.md` |
+| **AI outbound / cold (B2B)** | `channels/ai-outbound.md` | `harness/references/cold-email-rules.md` |
+| **AI UGC / creative volume (B2C)** | `channels/ai-ugc.md` | `channels/meta-advertising.md` |
+| **LinkedIn organic (founder-led)** | `channels/linkedin-founder-led.md` | `channels/linkedin-articles.md` |
+| **Sponsorships (audience buying)** | `channels/sponsorships.md` | `playbooks/influencer-marketing.md` |
+| **Events & experiential (IRL)** | `channels/events-experiential.md` | `playbooks/event-webinar-marketing.md` |
 
 ### By Goal
 

@@ -1,0 +1,276 @@
+skill: ai-ugc-script
+version: 3.0
+harness: kai-harness
+format: ai-ugc-script
+risk_tier: high
+word_count: 60-250
+min_four_us: 10
+seo_lint: false
+
+description: >
+  AI-generated UGC-style short-form video ad script plus production spec: hook
+  variants, body, CTA, on-screen text, and avatar/voice spec. Highest-compliance
+  contract — synthetic spokespeople carry FTC, platform AI-disclosure, and
+  likeness/consent risk. A synthetic avatar may never claim to be a real customer
+  or imply first-person product experience it did not have.
+
+required_sources:
+  - brief
+  - knowledge/channels/ai-ugc.md
+  - harness/references/creator-disclosure.md
+  - knowledge/channels/tiktok-algorithm.md
+  - claim_evidence_log
+  - likeness_consent_record
+source_policy:
+  load_before_writing: true
+  ai_disclosure_required_where_platform_mandates: true
+  no_fabricated_testimonials: true
+  likeness_or_cloned_voice_requires_consent_record: true
+  regulated_claims_route_to_human_review: true
+  claims_must_trace_to_evidence: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - objective: string
+    - platform: string
+    - audience_segment: string
+  optional:
+    - product: string
+    - hook_variant_count: int
+    - uses_real_likeness: boolean
+    - uses_cloned_voice: boolean
+    - likeness_consent_record_id: string
+    - regulated_claim: boolean
+    - claim_evidence_log: list[object]
+    - landing_page_url: string
+
+outputs:
+  hook_variants: list[string]
+  script_body: string
+  cta: string
+  on_screen_text: list[string]
+  avatar_spec: object
+  voice_spec: object
+  disclosure_text: string
+  ai_disclosure_required: boolean
+  platform_ai_label: string
+  claims: list[object]
+
+output_schema:
+  type: object
+  required:
+    - hook_variants
+    - script_body
+    - cta
+    - on_screen_text
+    - avatar_spec
+    - voice_spec
+    - disclosure_text
+    - ai_disclosure_required
+    - platform_ai_label
+    - claims
+    - compliance_notes
+  properties:
+    hook_variants:
+      type: list
+      min_items: 3
+      max_items: 10
+      item_schema: string
+    script_body: string
+    cta: string
+    on_screen_text: list[string]
+    avatar_spec:
+      type: object
+      properties:
+        avatar_type: string
+        is_synthetic: boolean
+        uses_real_likeness: boolean
+        likeness_consent_record_id: string
+        appearance_direction: string
+    voice_spec:
+      type: object
+      properties:
+        voice_type: string
+        is_cloned: boolean
+        likeness_consent_record_id: string
+        tone_direction: string
+    disclosure_text: string
+    ai_disclosure_required: boolean
+    platform_ai_label: string
+    claims:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        is_first_person_experience: boolean
+        risk_level: string
+    compliance_notes: list[string]
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "no_fabricated_testimonial == true"
+  - "ai_disclosure_resolved == true"
+  - "likeness_consent_resolved == true"
+  - "claim_evidence_complete == true"
+
+deterministic_checks:
+  - id: hook_variant_count
+    evaluator: schema
+    pass_when: "3 <= len(hook_variants) <= 10"
+  - id: word_count_range
+    evaluator: script
+    pass_when: "60 <= word_count <= 250"
+  - id: no_fabricated_testimonial
+    evaluator: static
+    pass_when: "no first-person customer-experience claim appears unless claims item has is_first_person_experience == false or an evidence_id backing a real, consented testimonial"
+  - id: synthetic_first_person_flagged
+    evaluator: regex
+    pass_when: "testimonial-style first-person claims ('I used', 'this changed my', 'after I tried') are flagged and carry evidence_id or are removed"
+  - id: ai_disclosure_present_when_required
+    evaluator: static
+    pass_when: "ai_disclosure_required == false or (disclosure_text is non_empty and platform_ai_label is non_empty)"
+  - id: platform_ai_label_set
+    evaluator: static
+    pass_when: "platform does not mandate synthetic-media labeling or platform_ai_label is non_empty"
+  - id: likeness_consent_present
+    evaluator: static
+    pass_when: "uses_real_likeness == false and uses_cloned_voice == false or likeness_consent_record_id is non_empty"
+  - id: regulated_claim_routed
+    evaluator: static
+    pass_when: "regulated_claim == false or human_review_flagged == true"
+  - id: claim_evidence_ids_present
+    evaluator: static
+    pass_when: "every claims item has evidence_id"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: thumbstop_strength
+      question: "Do the hook variants stop the scroll in the first second without clickbait?"
+    - name: native_feel
+      question: "Does the script feel like native UGC rather than uncanny, robotic, or obviously synthetic ad copy?"
+    - name: claim_integrity
+      question: "Does the synthetic avatar avoid implying real first-person product experience it never had, with all claims sourced?"
+    - name: disclosure_correctness
+      question: "Are AI-generated, sponsored, and regulated disclosures present, correctly labeled, and platform-appropriate?"
+
+human_review_required_when:
+  - regulated_claim == true
+  - health_weight_or_financial_claim == true
+  - uses_real_likeness == true
+  - uses_cloned_voice == true
+  - testimonial_style_framing == true
+  - sensitive_audience == true
+  - claim_risk_level == high
+  - likeness_consent_record is missing
+
+golden_situations:
+  - name: synthetic_avatar_product_demo
+    expectation: "Avatar presents product without claiming to be a real customer; AI label set; claims traced to evidence."
+  - name: fabricated_testimonial_attempt
+    expectation: "Blocks copy when a synthetic avatar gives a first-person customer testimonial without consented evidence."
+  - name: cloned_voice_no_consent
+    expectation: "Blocks and routes to human review when a real likeness or cloned voice is used without a likeness_consent_record id."
+  - name: regulated_weight_claim
+    expectation: "Routes to human review and withholds publish for health, weight, or financial claims."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_fabricated_testimonials: 0
+  max_missing_ai_disclosures: 0
+  max_missing_likeness_consent: 0
+  max_unsubstantiated_claims: 0
+
+claim_policy:
+  allowed:
+    - verifiable product capabilities demonstrated, not personally testified
+    - clearly labeled real customer testimonials with consent and evidence
+    - demonstrable workflow outcomes with evidence IDs
+  requires_evidence:
+    - performance numbers
+    - comparison claims
+    - savings, revenue, time, health, weight, legal, or financial claims
+    - any first-person product-experience statement
+  forbidden:
+    - synthetic avatar posing as a real customer
+    - fabricated testimonials or invented first-person experience
+    - undisclosed AI-generated or synthetic-media content
+    - undisclosed paid partnership
+    - guaranteed results
+    - regulated claims without human review
+
+provenance_policy:
+  claim_trace_required: true
+  likeness_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - likeness_consent_record_id
+    - disclosure_id
+    - platform_ai_label
+    - source_name
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - synthetic avatar claiming to be a real customer or implying real first-person experience it did not have
+  - fabricated testimonials presented as genuine
+  - using a real person's likeness or cloned voice without a consent record
+  - omitting AI-generated or synthetic-media disclosure where the platform mandates it
+  - undisclosed paid partnership
+  - health, weight, financial, or income guarantees without human review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - paid_media_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - fabricated_testimonial
+    - missing_ai_disclosure
+    - missing_likeness_consent
+    - regulated_claim_not_reviewed
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - platform
+  - objective
+  - avatar_id
+  - likeness_consent_record_id
+  - evidence_ids
+  - ai_disclosure_required
+  - platform_ai_label
+  - disclosure_id
+  - reviewer
+  - approval_status
+  - published_url
+  - utm_campaign
+
+constraints:
+  - A synthetic avatar must never claim to be a real customer.
+  - Carry AI-generated/synthetic-media disclosure where the platform mandates it.
+  - Real likeness or cloned voice requires a likeness_consent_record id.
+  - Route health, weight, and financial claims to human review.
+  - No bracketed placeholders.
+
+hooks:
+  pre_write: load_brief + load_ai_ugc_channel + load_creator_disclosure + load_tiktok_algorithm
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_7day_check

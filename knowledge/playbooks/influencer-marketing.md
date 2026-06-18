@@ -1,6 +1,8 @@
 # Influencer Marketing Playbook
 
 > **Use when:** Planning or executing influencer partnerships, UGC creator campaigns, or ambassador programs.
+>
+> **Distribution hub:** `playbooks/growth-distribution-engine.md`. Related: `channels/sponsorships.md` (paid audience buying) and `channels/ai-ugc.md` (AI creator content).
 
 ---
 
