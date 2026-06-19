@@ -9,8 +9,8 @@ requests>=2.31.0
 
 # LLM providers (install the one you use)
 google-genai>=1.0.0        # For Gemini (default)
+openai>=1.0.0              # OpenRouter-compatible client for agent loop + OpenAI SDK callers
 # anthropic>=0.40.0        # For Claude
-# openai>=1.0.0            # For OpenAI
 
 # Analytics
 google-analytics-data>=0.18.0
@@ -37,7 +37,7 @@ json-repair>=0.30.0
 # pydantic>=2.0.0
 
 # Agent loop (optional — install if running autonomous mode)
-# anthropic>=0.40.0
+# OpenRouter client is required by agent/llm/router.py via the OpenAI SDK above.
 # discord.py>=2.3.0
 # twilio>=8.0.0
 # apscheduler>=3.10.0

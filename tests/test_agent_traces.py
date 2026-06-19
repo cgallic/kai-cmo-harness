@@ -5,7 +5,9 @@ import json
 from datetime import datetime, timezone
 from types import SimpleNamespace
 
+import pytest
 from agent.models import AgentDatabase
+import agent.llm.router as router_mod
 from agent.traces.diagnose import diagnose_spans
 from agent.traces.recorder import (
     export_span_json,
@@ -118,6 +120,45 @@ def test_llm_router_records_usage(monkeypatch, tmp_path):
     assert spans[0].span == "llm.complete"
     assert spans[0].metadata["prompt_name"] == "weekly_report"
     assert spans[0].metadata["token_usage"]["total_tokens"] == 18
+
+
+def test_llm_router_missing_openai_dependency_raises_helpful_error(monkeypatch):
+    from agent.llm.router import LLMRouter
+
+    monkeypatch.setattr(router_mod, "_OpenAIClient", None)
+    monkeypatch.setattr(router_mod, "_google_genai", object())
+    monkeypatch.setenv("AGENT_LLM_PROVIDER", "openrouter")
+    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
+
+    router = LLMRouter()
+
+    with pytest.raises(ImportError, match="openai package is required for OpenRouter/OpenAI agent routing"):
+        _ = router.client
+
+
+def test_llm_router_detects_openai_provider(monkeypatch):
+    from agent.llm.router import LLMRouter
+
+    monkeypatch.delenv("AGENT_LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-openai-test")
+
+    router = LLMRouter()
+
+    assert router._detect_provider() == "openai"
+
+
+def test_llm_router_detects_gemini_provider(monkeypatch):
+    from agent.llm.router import LLMRouter
+
+    monkeypatch.delenv("AGENT_LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("GEMINI_API_KEY", "gemini-test")
+
+    router = LLMRouter()
+
+    assert router._detect_provider() == "gemini"
 
 
 def test_redact_value_handles_tokens_and_contacts():

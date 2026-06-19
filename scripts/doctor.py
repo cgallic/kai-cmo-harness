@@ -87,6 +87,7 @@ COMPILE_PATHS = [
 # (module, what it unlocks)
 OPTIONAL_DEPS = [
     ("google.genai", "Four U's scoring + content writing (Gemini)"),
+    ("openai", "agent loop LLM router + OpenRouter-compatible SDK callers"),
     ("dotenv", ".env loading for all scripts"),
     ("yaml", "skill contracts, quality policies, defaults updater"),
     ("fastapi", "gateway remote runner (gateway/main.py)"),
@@ -97,8 +98,13 @@ OPTIONAL_DEPS = [
 OPTIONAL_ENV = [
     ("GEMINI_API_KEY", "Four U's gate + draft writing"),
     ("GOOGLE_CREDENTIALS_PATH", "GSC/GA4 briefs + 30-day performance checks"),
-    ("ANTHROPIC_API_KEY", "OpenClaw autonomous agent mode"),
     ("DISCORD_BOT_TOKEN", "Discord approvals + notifications"),
+]
+AGENT_PROVIDER_ENV = [
+    "OPENROUTER_API_KEY",
+    "OPENAI_API_KEY",
+    "GEMINI_API_KEY",
+    "ANTHROPIC_API_KEY",
 ]
 
 
@@ -184,6 +190,18 @@ def check_optional(report: Report) -> None:
             report.warn(f"python package {module!r} not installed — disables: {unlocks}")
         else:
             report.ok(f"{module} available ({unlocks})")
+    configured_agent_keys = [var for var in AGENT_PROVIDER_ENV if os.environ.get(var)]
+    if configured_agent_keys:
+        report.ok(
+            "agent LLM provider key set ("
+            + ", ".join(configured_agent_keys)
+            + ")"
+        )
+    else:
+        report.warn(
+            "no agent LLM provider key set — disables: OpenClaw autonomous agent mode "
+            f"(set one of {', '.join(AGENT_PROVIDER_ENV)})"
+        )
     for var, unlocks in OPTIONAL_ENV:
         if os.environ.get(var):
             report.ok(f"{var} set ({unlocks})")
@@ -210,22 +228,22 @@ def main() -> int:
         check_optional(report)
 
     print("\nKai Harness Doctor")
-    print("─" * 40)
+    print("-" * 40)
     for msg in report.passes:
-        print(f"  ✓ {msg}")
+        print(f"  OK {msg}")
     if report.warnings:
         print(f"\n  Warnings (degraded features, not blockers):")
         for msg in report.warnings:
-            print(f"  ⚠ {msg}")
+            print(f"  WARN {msg}")
     if report.failures:
         print(f"\n  FAILURES (the harness will not behave as documented):")
         for msg in report.failures:
-            print(f"  ✗ {msg}")
-        print("\n❌ Doctor found hard failures. Fix these before relying on the harness.")
+            print(f"  FAIL {msg}")
+        print("\nDoctor found hard failures. Fix these before relying on the harness.")
         return 1
 
-    print(f"\n✅ Harness intact. {len(report.warnings)} optional feature(s) unconfigured." if report.warnings
-          else "\n✅ Harness fully configured.")
+    print(f"\nHarness intact. {len(report.warnings)} optional feature(s) unconfigured." if report.warnings
+          else "\nHarness fully configured.")
     if not args.ci:
         print("   Next: open Claude Code here and run /kai-start, or /kai-gate on any draft.")
     return 0

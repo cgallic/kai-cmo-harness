@@ -1,17 +1,36 @@
 """
-LLM model router - uses OpenRouter for cheaper models.
+LLM model router for autonomous agent tasks.
 
-Cost optimization strategy:
-- Cheap: Gemini Flash (~$0.10/M input) for routine tasks
-- Smart: Claude Sonnet for complex reasoning
+Provider selection order:
+- OpenRouter when ``OPENROUTER_API_KEY`` is set
+- OpenAI when ``OPENAI_API_KEY`` is set
+- Gemini when ``GEMINI_API_KEY`` is set
+- Anthropic when ``ANTHROPIC_API_KEY`` is set
+
+The public API stays small: ``complete()`` and ``chat()`` return plain text
+and the router normalizes usage metadata across providers where possible.
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 import os
 from contextlib import nullcontext
+import requests
 
-from openai import OpenAI
+try:
+    from openai import OpenAI as _OpenAIClient
+except ImportError:  # pragma: no cover - validated by dependency wiring/tests
+    _OpenAIClient = None
+
+try:
+    from google import genai as _google_genai
+except ImportError:  # pragma: no cover - optional provider
+    _google_genai = None
+
+if TYPE_CHECKING:
+    from openai import OpenAI
+else:  # pragma: no cover - typing fallback only
+    OpenAI = Any  # type: ignore[misc,assignment]
 
 from ..config import agent_config
 from ..traces import SpanKind, tracer
@@ -63,28 +82,72 @@ TASK_MODEL_MAP = {
     "abp_seo_monitor": ModelTier.CHEAP,
 }
 
+OPENAI_COMPATIBLE_PROVIDERS = {"openrouter", "openai"}
+PROVIDER_KEY_ENV = {
+    "openrouter": "OPENROUTER_API_KEY",
+    "openai": "OPENAI_API_KEY",
+    "gemini": "GEMINI_API_KEY",
+    "anthropic": "ANTHROPIC_API_KEY",
+}
+PROVIDER_PRIORITY = ("openrouter", "openai", "gemini", "anthropic")
+DEFAULT_MODELS = {
+    "openrouter": {
+        ModelTier.CHEAP: "google/gemini-2.0-flash-001",
+        ModelTier.SMART: "anthropic/claude-3.5-sonnet",
+    },
+    "openai": {
+        ModelTier.CHEAP: "gpt-4.1-mini",
+        ModelTier.SMART: "gpt-4.1",
+    },
+    "gemini": {
+        ModelTier.CHEAP: "gemini-2.0-flash-001",
+        ModelTier.SMART: "gemini-1.5-pro",
+    },
+    "anthropic": {
+        ModelTier.CHEAP: "claude-3-5-haiku-latest",
+        ModelTier.SMART: "claude-3-5-sonnet-latest",
+    },
+}
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+
 
 class LLMRouter:
     """
-    Routes LLM requests via OpenRouter for cost optimization.
-
-    Uses cheap Gemini models by default (~$0.10/M tokens).
+    Routes LLM requests across supported providers.
     """
 
     def __init__(self):
         self._client: Optional[OpenAI] = None
+        self._provider: Optional[str] = None
+        self._client_provider: Optional[str] = None
 
     @property
     def client(self) -> OpenAI:
-        """Lazy initialization of OpenRouter client."""
-        if self._client is None:
-            api_key = os.getenv("OPENROUTER_API_KEY")
-            if not api_key:
-                raise ValueError("OPENROUTER_API_KEY not set")
-            self._client = OpenAI(
-                base_url="https://openrouter.ai/api/v1",
-                api_key=api_key
+        """Lazy initialization for OpenAI-compatible providers."""
+        provider = self._detect_provider()
+        if provider not in OPENAI_COMPATIBLE_PROVIDERS:
+            raise ValueError(
+                f"Provider '{provider}' is not OpenAI-compatible. "
+                "Use complete()/chat() instead of client directly."
             )
+        if self._client is None or self._client_provider != provider:
+            if _OpenAIClient is None:
+                raise ImportError(
+                    "openai package is required for OpenRouter/OpenAI agent routing. "
+                    "Install scripts/requirements.txt."
+                )
+            api_key = os.getenv(PROVIDER_KEY_ENV[provider], "").strip()
+            if not api_key:
+                raise ValueError(f"{PROVIDER_KEY_ENV[provider]} not set")
+
+            client_kwargs: Dict[str, Any] = {"api_key": api_key}
+            if provider == "openrouter":
+                client_kwargs["base_url"] = "https://openrouter.ai/api/v1"
+            elif os.getenv("OPENAI_BASE_URL"):
+                client_kwargs["base_url"] = os.getenv("OPENAI_BASE_URL")
+
+            self._client = _OpenAIClient(**client_kwargs)
+            self._client_provider = provider
         return self._client
 
     def get_model_for_task(self, task_type: str) -> str:
@@ -94,10 +157,190 @@ class LLMRouter:
 
     def _tier_to_model(self, tier: ModelTier) -> str:
         """Convert model tier to actual model ID."""
-        if tier == ModelTier.SMART:
-            return os.getenv("AGENT_SMART_MODEL", "anthropic/claude-3.5-sonnet")
-        else:
-            return os.getenv("AGENT_CHEAP_MODEL", "google/gemini-2.0-flash-001")
+        env_var = "AGENT_SMART_MODEL" if tier == ModelTier.SMART else "AGENT_CHEAP_MODEL"
+        configured = os.getenv(env_var, "").strip()
+        if configured:
+            return configured
+        provider = self._detect_provider()
+        return DEFAULT_MODELS[provider][tier]
+
+    def _default_model(self) -> str:
+        """Return the default model when no task-specific tier is requested."""
+        configured = os.getenv("AGENT_DEFAULT_MODEL", "").strip()
+        if configured:
+            return configured
+        return self._tier_to_model(ModelTier.CHEAP)
+
+    def _detect_provider(self) -> str:
+        """Return the active provider based on env vars or explicit override."""
+        if self._provider:
+            return self._provider
+        if self._client is not None and self._client_provider:
+            self._provider = self._client_provider
+            return self._provider
+        if self._client is not None:
+            self._provider = "openrouter"
+            self._client_provider = "openrouter"
+            return self._provider
+
+        explicit = os.getenv("AGENT_LLM_PROVIDER", "").strip().lower()
+        if explicit:
+            if explicit not in PROVIDER_KEY_ENV:
+                raise ValueError(
+                    f"Unsupported AGENT_LLM_PROVIDER '{explicit}'. "
+                    f"Expected one of: {', '.join(PROVIDER_KEY_ENV)}"
+                )
+            key_name = PROVIDER_KEY_ENV[explicit]
+            if not os.getenv(key_name, "").strip():
+                raise ValueError(f"{key_name} not set for AGENT_LLM_PROVIDER={explicit}")
+            self._provider = explicit
+            return explicit
+
+        for provider in PROVIDER_PRIORITY:
+            if os.getenv(PROVIDER_KEY_ENV[provider], "").strip():
+                self._provider = provider
+                return provider
+
+        raise ValueError(
+            "No LLM provider API key set. Set one of OPENROUTER_API_KEY, "
+            "OPENAI_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY."
+        )
+
+    @staticmethod
+    def _message_text(messages: List[Dict[str, str]]) -> str:
+        """Flatten messages into plain text for providers without chat parity."""
+        lines: List[str] = []
+        for message in messages:
+            role = message.get("role", "user").upper()
+            lines.append(f"{role}:\n{message.get('content', '')}")
+        return "\n\n".join(lines)
+
+    def _complete_openai_compatible(
+        self,
+        *,
+        model: str,
+        max_tokens: int,
+        temperature: float,
+        messages: List[Dict[str, str]],
+    ) -> tuple[str, Any, Any]:
+        response = self.client.chat.completions.create(
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            messages=messages,
+        )
+        content = response.choices[0].message.content
+        usage = getattr(response, "usage", None)
+        finish_reason = getattr(response.choices[0], "finish_reason", None)
+        return content, usage, finish_reason
+
+    def _complete_gemini(
+        self,
+        *,
+        model: str,
+        max_tokens: int,
+        temperature: float,
+        messages: List[Dict[str, str]],
+    ) -> tuple[str, Dict[str, int], Optional[str]]:
+        if _google_genai is None:
+            raise ImportError(
+                "google-genai package is required for Gemini agent routing. "
+                "Install scripts/requirements.txt."
+            )
+
+        client = _google_genai.Client(api_key=os.getenv("GEMINI_API_KEY", "").strip())
+        response = client.models.generate_content(
+            model=model,
+            contents=self._message_text(messages),
+        )
+        usage_meta = getattr(response, "usage_metadata", None)
+        usage = {
+            "prompt_tokens": getattr(usage_meta, "prompt_token_count", 0) if usage_meta else 0,
+            "completion_tokens": getattr(usage_meta, "candidates_token_count", 0) if usage_meta else 0,
+            "total_tokens": getattr(usage_meta, "total_token_count", None) if usage_meta else None,
+        }
+        finish_reason = getattr(response, "finish_reason", None)
+        return response.text.strip(), usage, finish_reason
+
+    def _complete_anthropic(
+        self,
+        *,
+        model: str,
+        max_tokens: int,
+        temperature: float,
+        messages: List[Dict[str, str]],
+    ) -> tuple[str, Dict[str, int], Optional[str]]:
+        system_parts = [m["content"] for m in messages if m.get("role") == "system"]
+        user_messages = [
+            {"role": m.get("role", "user"), "content": m.get("content", "")}
+            for m in messages
+            if m.get("role") != "system"
+        ]
+        if not user_messages:
+            user_messages = [{"role": "user", "content": ""}]
+
+        response = requests.post(
+            ANTHROPIC_URL,
+            headers={
+                "x-api-key": os.getenv("ANTHROPIC_API_KEY", "").strip(),
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": model,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "system": "\n\n".join(system_parts) if system_parts else None,
+                "messages": user_messages,
+            },
+            timeout=120,
+        )
+        response.raise_for_status()
+        body = response.json()
+        content = "".join(
+            block.get("text", "")
+            for block in body.get("content", [])
+            if block.get("type") == "text"
+        ).strip()
+        usage_data = body.get("usage", {})
+        usage = {
+            "prompt_tokens": usage_data.get("input_tokens", 0),
+            "completion_tokens": usage_data.get("output_tokens", 0),
+            "total_tokens": usage_data.get("input_tokens", 0) + usage_data.get("output_tokens", 0),
+        }
+        return content, usage, body.get("stop_reason")
+
+    def _call_provider(
+        self,
+        *,
+        model: str,
+        max_tokens: int,
+        temperature: float,
+        messages: List[Dict[str, str]],
+    ) -> tuple[str, Any, Any]:
+        provider = self._detect_provider()
+        if provider in OPENAI_COMPATIBLE_PROVIDERS:
+            return self._complete_openai_compatible(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=messages,
+            )
+        if provider == "gemini":
+            return self._complete_gemini(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=messages,
+            )
+        if provider == "anthropic":
+            return self._complete_anthropic(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                messages=messages,
+            )
+        raise ValueError(f"Unsupported provider '{provider}'")
 
     async def complete(
         self,
@@ -133,7 +376,7 @@ class LLMRouter:
         elif task_type:
             model = self.get_model_for_task(task_type)
         else:
-            model = os.getenv("AGENT_DEFAULT_MODEL", "google/gemini-2.0-flash-001")
+            model = self._default_model()
 
         # Build messages
         messages = []
@@ -171,29 +414,31 @@ class LLMRouter:
                     "temperature": temperature,
                 },
             ) as span:
-                response = self.client.chat.completions.create(
+                content, usage, finish_reason = self._call_provider(
                     model=model,
                     max_tokens=max_tokens,
                     temperature=temperature,
                     messages=messages,
                 )
-
-                content = response.choices[0].message.content
-                usage = getattr(response, "usage", None)
                 input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
-                output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
-                total_tokens = (
-                    getattr(usage, "total_tokens", input_tokens + output_tokens)
-                    if usage
-                    else None
-                )
+                if isinstance(usage, dict):
+                    input_tokens = usage.get("prompt_tokens", 0)
+                    output_tokens = usage.get("completion_tokens", 0)
+                    total_tokens = usage.get("total_tokens", input_tokens + output_tokens)
+                else:
+                    output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+                    total_tokens = (
+                        getattr(usage, "total_tokens", input_tokens + output_tokens)
+                        if usage
+                        else None
+                    )
 
                 span.add_attributes(
                     input_tokens=input_tokens,
                     output_tokens=output_tokens,
                     total_tokens=total_tokens,
                     estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
-                    finish_reason=getattr(response.choices[0], "finish_reason", None),
+                    finish_reason=finish_reason,
                 )
                 span.set_output(content)
                 if recorded_span is not None:
@@ -241,7 +486,7 @@ class LLMRouter:
         elif task_type:
             model = self.get_model_for_task(task_type)
         else:
-            model = os.getenv("AGENT_DEFAULT_MODEL", "google/gemini-2.0-flash-001")
+            model = self._default_model()
 
         # Prepend system message if provided
         full_messages = []
@@ -262,24 +507,27 @@ class LLMRouter:
                 "temperature": temperature,
             },
         ) as span:
-            response = self.client.chat.completions.create(
+            content, usage, finish_reason = self._call_provider(
                 model=model,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 messages=full_messages,
             )
-
-            content = response.choices[0].message.content
-            usage = getattr(response, "usage", None)
-            input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
-            output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+            if isinstance(usage, dict):
+                input_tokens = usage.get("prompt_tokens", 0)
+                output_tokens = usage.get("completion_tokens", 0)
+                total_tokens = usage.get("total_tokens", input_tokens + output_tokens)
+            else:
+                input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
+                output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
+                total_tokens = getattr(usage, "total_tokens", input_tokens + output_tokens) if usage else None
 
             span.add_attributes(
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
-                total_tokens=getattr(usage, "total_tokens", input_tokens + output_tokens) if usage else None,
+                total_tokens=total_tokens,
                 estimated_cost_usd=self.estimate_cost(input_tokens, output_tokens, model=model),
-                finish_reason=getattr(response.choices[0], "finish_reason", None),
+                finish_reason=finish_reason,
             )
             span.set_output(content)
             return content
@@ -300,17 +548,20 @@ class LLMRouter:
         if model is None and task_type:
             model = self.get_model_for_task(task_type)
         elif model is None:
-            model = os.getenv("AGENT_DEFAULT_MODEL", "google/gemini-2.0-flash-001")
+            model = self._default_model()
 
         # OpenRouter prices per million tokens
         prices = {
             "gemini": (0.10, 0.40),      # Very cheap
+            "openai": (0.40, 1.60),      # gpt-4.1-mini ballpark
             "claude": (3.00, 15.00),     # Sonnet pricing
         }
 
         model_lower = model.lower()
         if "gemini" in model_lower:
             input_price, output_price = prices["gemini"]
+        elif "gpt" in model_lower or "o4" in model_lower:
+            input_price, output_price = prices["openai"]
         else:
             input_price, output_price = prices["claude"]
 

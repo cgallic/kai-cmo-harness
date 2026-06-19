@@ -169,10 +169,16 @@ Copy `.env.example` to `.env`. Never commit `.env` to version control.
 GEMINI_API_KEY=AIzaSyxxx
 
 # Autonomous agent (OpenClaw path)
-ANTHROPIC_API_KEY=sk-ant-xxx
-AGENT_DEFAULT_MODEL=claude-3-5-haiku-20241022
-AGENT_OPUS_MODEL=claude-opus-4-5-20251101
-AGENT_HAIKU_MODEL=claude-3-5-haiku-20241022
+# Set at least one provider key. The agent router picks one automatically
+# unless AGENT_LLM_PROVIDER is set explicitly.
+OPENROUTER_API_KEY=sk-or-v1-xxx
+# OPENAI_API_KEY=sk-xxx
+# GEMINI_API_KEY=AIzaSyxxx
+# ANTHROPIC_API_KEY=sk-ant-xxx
+AGENT_LLM_PROVIDER=openrouter
+AGENT_CHEAP_MODEL=google/gemini-2.0-flash-001
+AGENT_SMART_MODEL=anthropic/claude-3.5-sonnet
+AGENT_DEFAULT_MODEL=google/gemini-2.0-flash-001
 ```
 
 ### Supabase (per product)

@@ -8,7 +8,7 @@ Everything here maps to code in `agent/` — if this doc and the code disagree, 
 
 - A server (or always-on machine) with Python 3.11+
 - This repo cloned, with `python scripts/doctor.py` passing
-- An Anthropic API key (agent reasoning)
+- At least one LLM provider key for agent reasoning: `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, or `ANTHROPIC_API_KEY`
 - A Discord bot token + channel, or Twilio WhatsApp credentials (command + approval channel)
 - Optional: Gemini key (content gates/writing), Google credentials (GSC/GA4 performance loop)
 
@@ -18,7 +18,11 @@ The agent loads `.env` from the repo root and `scripts/.env` (see `agent/config.
 
 ```bash
 # Required — reasoning
-ANTHROPIC_API_KEY=sk-ant-...
+# Set at least one. OpenRouter is the broadest default because it can route to multiple model families.
+OPENROUTER_API_KEY=sk-or-v1-...
+# OPENAI_API_KEY=sk-...
+# GEMINI_API_KEY=AIza...
+# ANTHROPIC_API_KEY=sk-ant-...
 
 # Channels (enable at least one)
 DISCORD_BOT_TOKEN=...
@@ -46,9 +50,12 @@ AGENT_NOTIFY_ON_FAILURE=true
 AGENT_NOTIFY_ON_APPROVAL=true
 AGENT_DAILY_SUMMARY=true
 
-# Model routing (defaults in agent/config.py)
-AGENT_DEFAULT_MODEL=claude-3-5-haiku-20241022
-AGENT_OPUS_MODEL=claude-opus-4-5-20251101
+# Model routing (defaults vary by detected provider in `agent/llm/router.py`)
+# Optional explicit provider: openrouter | openai | gemini | anthropic
+AGENT_LLM_PROVIDER=openrouter
+AGENT_CHEAP_MODEL=google/gemini-2.0-flash-001
+AGENT_SMART_MODEL=anthropic/claude-3.5-sonnet
+AGENT_DEFAULT_MODEL=google/gemini-2.0-flash-001
 ```
 
 ## 2. Prepare the workspace files
@@ -123,6 +130,8 @@ The autonomous mode generates the data the learning loop feeds on:
 |---------|-------|-----|
 | Loop starts, no tasks fire | Tasks never initialized | `python -m agent.loop --init-tasks` |
 | No Discord messages | Token/channel unset or `AGENT_DISCORD_ENABLED=false` | check `.env`, re-run `python scripts/doctor.py` |
+| `ModuleNotFoundError: No module named 'openai'` | Agent loop dependency missing | install `pip install -r scripts/requirements.txt` |
+| `No LLM provider API key set` | Agent LLM router has no provider credentials | set one of `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, or `ANTHROPIC_API_KEY` |
 | Four U's gate crashes | `GEMINI_API_KEY` missing | set it, or rely on the offline gates (banned words, SEO lint) |
 | Performance checks return errors | Google credentials missing | set `GOOGLE_CREDENTIALS_PATH`; missing data is a data gap, never a zero |
 | Repeated Gemini failures after restart | Circuit breaker is in-memory (EC-13) | investigate the API failure before restarting again |
