@@ -158,6 +158,32 @@ Before recommending activation or creating live ads:
 - Recommend a staged active subset when budget cannot fairly test the full batch.
 - Produce `workspace/ads/_meta-creative-testing-decision.md` when writing workspace artifacts.
 
+### Creative Format Library Add-On
+
+For paid-social, short-form video, or any request for ad concepts, creative formats, or variant tests, load:
+
+- `kai/paid_media/creative_formats.py`
+
+Use `select_creative_formats(...)` to choose formats by:
+
+- platform
+- funnel stage
+- available assets
+- regulated-industry risk
+
+Each variant must now choose both:
+
+- a `hook_type`
+- a concrete `creative_format`
+
+Example pairings:
+
+- `problem_agitation` + `founder`
+- `social_proof` + `testimonial_mashup`
+- `pattern_interrupt` + `ugly_ad`
+
+If the selector returns `NEEDS_ASSET` or `REVIEW`, keep the format in the plan only when the missing asset or review step is stated explicitly.
+
 ## Phase 2: Campaign Architecture
 
 Generate `workspace/ads/_campaign-map.md` with:
@@ -233,6 +259,16 @@ Produce ads by platform and funnel stage. For each ad:
 ## Hook Type
 [pattern_interrupt | social_proof | pain_agitate | direct_offer | story]
 
+## Creative Format
+
+- Selected format: [format id + name]
+- Platform fit: PASS/FAIL
+- Funnel fit: PASS/FAIL
+- Asset feasibility: PASS/FAIL/NEEDS_ASSET
+- Compliance status: PASS/REVIEW
+- Missing assets: [list or none]
+- Compliance flags: [list or none]
+
 ## Quality Gate Results
 - Four U's: [X]/16 (min 10)
 - Banned words: PASS/FAIL
@@ -257,6 +293,8 @@ Across the 3 variants per stage, use different hook types:
 - Variant A: Pain/agitate
 - Variant B: Social proof or stat-led
 - Variant C: Pattern interrupt or story
+
+Across those variants, also rotate the concrete creative format. Do not count three ads with the same production format and different opening lines as full creative diversity.
 
 ### Batch Output
 
