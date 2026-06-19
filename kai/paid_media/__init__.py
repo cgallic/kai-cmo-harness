@@ -40,6 +40,19 @@ from kai.paid_media.variants import (
     is_significant,
 )
 
+from kai.paid_media.creative_formats import (
+    CREATIVE_FORMAT_LIBRARY,
+    CREATIVE_FORMAT_MAP,
+    FAIL,
+    NEEDS_ASSET,
+    PASS,
+    REVIEW,
+    CreativeFormatDefinition,
+    CreativeFormatSelection,
+    get_creative_format,
+    select_creative_formats,
+)
+
 from kai.paid_media.monitoring import (
     AlertCategory,
     AlertSeverity,
@@ -103,6 +116,17 @@ __all__ = [
     "is_significant",
     "calculate_lift",
     "days_since",
+    # Models/helpers - creative formats
+    "CreativeFormatDefinition",
+    "CreativeFormatSelection",
+    "CREATIVE_FORMAT_LIBRARY",
+    "CREATIVE_FORMAT_MAP",
+    "PASS",
+    "FAIL",
+    "NEEDS_ASSET",
+    "REVIEW",
+    "get_creative_format",
+    "select_creative_formats",
     # Enums — monitoring
     "AlertSeverity",
     "AlertCategory",
