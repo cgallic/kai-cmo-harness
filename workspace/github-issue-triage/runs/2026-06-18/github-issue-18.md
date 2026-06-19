@@ -75,12 +75,18 @@
 ## Blockers
 
 - None in local verification.
-- PR creation, required checks, and auto-merge status still pending at note time.
+- PR `#20` is not auto-mergeable yet because GitHub reports `mergeStateStatus: UNSTABLE`.
+- Current PR checks:
+  - `build-and-deploy`: failed
+  - `self-check`: passed
+  - `Vercel Preview Comments`: passed
+  - `Vercel`: pending
 
 ## PR / Merge Status
 
-- Branch prepared locally and ready to push.
-- PR not opened yet at note time.
+- Branch pushed: `codex/issue-18-ad-creative-format-library`
+- PR opened: `#20`
+- Auto-merge attempted, but merge is blocked by the failing `build-and-deploy` check and pending Vercel deployment state.
 
 ## Next Recommended Slice
 
