@@ -1,0 +1,57 @@
+id: brand-pulse
+name: Brand Pulse
+description: Collect cited public brand evidence across web, news, social, Reddit, and review surfaces, then produce objection, competitor, content, and AEO action packets.
+stage: phase-2-first-wedge
+inputs:
+  - name: brand
+    type: string
+    required: true
+    description: Brand, product, founder, or client name to monitor.
+  - name: domain
+    type: url
+    required: false
+    description: Canonical brand domain for own-domain and provenance checks.
+  - name: category
+    type: string
+    required: false
+    description: Category or buying query used to frame competitor and AEO queries.
+  - name: competitors
+    type: array
+    required: false
+    description: Competitor names to include in comparison and positioning queries.
+outputs:
+  - brand_pulse_summary
+  - platform_evidence_packets
+  - objection_bank
+  - content_angles
+  - surround_sound_actions
+  - delta_monitoring_plan
+artifacts:
+  - workspace/brand-pulse/<run>/brand-pulse-data.json
+  - workspace/brand-pulse/<run>/_brand-pulse.md
+  - workspace/brand-pulse/<run>/_content-angles.md
+  - workspace/brand-pulse/<run>/_objection-mining.md
+  - workspace/brand-pulse/<run>/_surround-sound-actions.md
+  - workspace/brand-pulse/<run>/platforms/
+  - workspace/brand-pulse/<run>/raw/
+risk_tier: medium
+required_scopes:
+  - workflow:brand-pulse
+  - brand:read
+  - search:public
+  - reputation:read
+quality_gates:
+  - scripts/quality_gates/audit_provenance_lint.py
+  - scripts/quality_gates/banned_word_check.py
+approval_rule: auto-approve-draft; human-approve-client-delivery-or-live-channel-action
+estimated_runtime: 10-25m
+oss_price_band: free-oss
+saas_later:
+  - hosted_weekly_brand_monitor
+  - connector_backed_social_listening
+  - brand_delta_alerts
+  - wiki_ingest_automation
+docs:
+  - harness/skills/kai-brand-pulse/SKILL.md
+  - harness/references/audit-data-provenance.md
+  - knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md

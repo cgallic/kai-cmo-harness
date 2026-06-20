@@ -21,6 +21,7 @@ def test_load_workflow_skus_includes_required_examples():
     skus = load_workflow_skus()
     expected = {
         "agent-ready-audit",
+        "brand-pulse",
         "local-lead-os",
         "agentic-commerce-readiness",
         "creator-commerce-ops",

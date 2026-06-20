@@ -21,6 +21,7 @@ required_memory_fields:
 default_workflows:
   - kai-audit
   - kai-cro
+  - kai-brand-pulse
   - kai-landing-page
   - kai-ad-campaign
 checklist_paths:

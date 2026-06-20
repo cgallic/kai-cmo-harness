@@ -18,6 +18,7 @@ required_memory_fields:
 default_workflows:
   - kai-audit
   - kai-analytics
+  - kai-brand-pulse
   - kai-seo-audit
 checklist_paths:
   - knowledge/checklists/multi-location-checklist.md

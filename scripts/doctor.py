@@ -52,9 +52,11 @@ REQUIRED_PATHS = [
     "harness/references/google-ads-policy-reference.md",
     "harness/references/advertising-compliance.md",
     "harness/skills/kai/SKILL.md",
+    "harness/skills/kai-brand-pulse/SKILL.md",
     "harness/skills/kai-gate/SKILL.md",
     "harness/skills/kai-write/SKILL.md",
     "harness/skills/kai-retro/SKILL.md",
+    "harness/workflow-skus/brand-pulse.yaml",
     "scripts/quality_gates/four_us_score.py",
     "scripts/quality_gates/banned_word_check.py",
     "scripts/quality_gates/seo_lint.py",
@@ -64,6 +66,7 @@ REQUIRED_PATHS = [
     "scripts/self_improvement/lesson_capture.py",
     "scripts/content/engine.py",
     "scripts/audit/collect.py",
+    "scripts/intel/brand_pulse.py",
     "memory/MEMORY.md",
     "memory/lessons.md",
     "memory/edge-cases.md",
@@ -81,6 +84,7 @@ COMPILE_PATHS = [
     "scripts/quality_gates/gate_logger.py",
     "scripts/quality_gates/golden_check.py",
     "scripts/self_improvement/lesson_capture.py",
+    "scripts/intel/brand_pulse.py",
     "scripts/doctor.py",
 ]
 

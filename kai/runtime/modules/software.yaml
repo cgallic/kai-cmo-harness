@@ -18,6 +18,7 @@ required_memory_fields:
 default_workflows:
   - kai-growth-plan
   - kai-growth-hacker
+  - kai-brand-pulse
   - kai-email-system
   - kai-content-calendar
   - kai-analytics

@@ -20,6 +20,7 @@ default_workflows:
   - kai-audit
   - kai-growth-hacker
   - kai-brand
+  - kai-brand-pulse
   - kai-email-system
   - kai-content-calendar
 checklist_paths:

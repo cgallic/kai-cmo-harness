@@ -18,6 +18,7 @@ required_memory_fields:
   - retention_flows
 default_workflows:
   - kai-growth-hacker
+  - kai-brand-pulse
   - kai-ad-campaign
   - kai-email-system
   - kai-retention
