@@ -57,8 +57,10 @@
 ## PR / Merge Status
 
 - Branch: `codex/issue-22-declare-agent-deps`
-- PR: pending at run-note creation time.
-- Merge: pending at run-note creation time.
+- PR: #23, https://github.com/cgallic/kai-cmo-harness/pull/23
+- Merge: left open; auto-merge skipped because PR checks were unstable.
+- Blocker: GitHub Pages `build-and-deploy` failed because branch `codex/issue-22-declare-agent-deps` is not allowed to deploy to the protected `github-pages` environment. Vercel was still pending when checked.
+- Comments: posted status comments on issue #22 and PR #23 with verification and blocker details.
 
 ## Next Recommended Slice
 
