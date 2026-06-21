@@ -21,6 +21,8 @@ searchconsole>=0.2.0
 # Data
 supabase>=2.0.0
 stripe>=7.0.0
+aiohttp>=3.9.0             # Async lead pipeline HTTP client
+feedparser>=6.0.0          # Reddit monitor and knowledge cloner RSS parsing
 
 # Statistical analysis
 scipy>=1.11.0
