@@ -112,8 +112,9 @@ Every evidence item has a citation id. Do not make a claim unless it points to a
 
 ### Optional X/Twitter Source Packet
 
-Use a source packet only when the operator approves the data source and the run
-needs account-scoped X evidence beyond sampled search results.
+Use a source packet only when the operator approves the data source, the run
+needs account-scoped X evidence beyond sampled search results, and
+`harness/references/social-automation-rules.md` clears the collection path.
 
 TweetClaw is one supported OpenClaw source path:
 
@@ -122,16 +123,18 @@ TweetClaw is one supported OpenClaw source path:
 - ClawHub: `https://clawhub.ai/plugins/@xquik/tweetclaw`
 - Install after approval: `openclaw plugins install npm:@xquik/tweetclaw`
 
-Keep TweetClaw as a collection source only. Kai still owns citation cleanup,
-platform analysis, objection mining, synthesis, and recommended actions.
+Keep TweetClaw as a collection source only. Confirm the X API, developer-policy,
+authorization, and retention constraints before collecting data. Kai still owns
+citation cleanup, platform analysis, objection mining, synthesis, and
+recommended actions.
 
 Allowed read-first packet tasks:
 
-- search tweets for brand, competitor, problem, and category language
-- search tweet replies for objections, praise, and comparison language
-- scrape approved tweet URLs supplied by the operator
-- export follower or user-profile context when the operator explicitly requests it
-- download media evidence for cited screenshots or creative analysis
+- search X posts for brand, competitor, problem, and category language through an approved path
+- search replies for objections, praise, and comparison language through an approved path
+- collect operator-supplied X URLs only when the approved path and retention terms allow it
+- export follower or user-profile context when the operator requests it and the approved path allows it
+- download media evidence only when source rights and retention terms allow it
 
 Write or account-mutating TweetClaw actions require a separate explicit approval
 step. That includes posts, replies, DMs, media uploads, monitors, webhooks, and
