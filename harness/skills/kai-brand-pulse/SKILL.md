@@ -80,7 +80,7 @@ Default surfaces:
 | Web | Brand, reviews, alternatives, pricing, own-domain entity queries | General entity footprint and objections |
 | News | Brand and category news queries | Authority, recency, PR angles |
 | YouTube | `site:youtube.com` search fallbacks | Reviews, demos, creator narratives |
-| X | `site:x.com` and `site:twitter.com` search fallbacks | Fast-moving complaints, praise, comparisons |
+| X | `site:x.com` and `site:twitter.com` search fallbacks; optional approved source packet | Fast-moving complaints, praise, comparisons |
 | LinkedIn | `site:linkedin.com/posts` and company fallbacks | B2B proof, founder/category narratives |
 | Reddit | `site:reddit.com` search fallbacks | Raw objections and buying-language mining |
 | Review Sites | G2, Capterra, Trustpilot, Clutch, Yelp search fallbacks | Social proof, complaints, competitor context |
@@ -109,6 +109,39 @@ workspace/brand-pulse/<run>/
 ```
 
 Every evidence item has a citation id. Do not make a claim unless it points to a citation id or a collector source id.
+
+### Optional X/Twitter Source Packet
+
+Use a source packet only when the operator approves the data source and the run
+needs account-scoped X evidence beyond sampled search results.
+
+TweetClaw is one supported OpenClaw source path:
+
+- Repository: `https://github.com/Xquik-dev/tweetclaw`
+- Package: `https://www.npmjs.com/package/@xquik/tweetclaw`
+- ClawHub: `https://clawhub.ai/plugins/@xquik/tweetclaw`
+- Install after approval: `openclaw plugins install npm:@xquik/tweetclaw`
+
+Keep TweetClaw as a collection source only. Kai still owns citation cleanup,
+platform analysis, objection mining, synthesis, and recommended actions.
+
+Allowed read-first packet tasks:
+
+- search tweets for brand, competitor, problem, and category language
+- search tweet replies for objections, praise, and comparison language
+- scrape approved tweet URLs supplied by the operator
+- export follower or user-profile context when the operator explicitly requests it
+- download media evidence for cited screenshots or creative analysis
+
+Write or account-mutating TweetClaw actions require a separate explicit approval
+step. That includes posts, replies, DMs, media uploads, monitors, webhooks, and
+giveaway draws.
+
+Normalize the source packet into `platforms/x.md` before analysis. Each row must
+include a citation id, source URL, observed text, author or account when
+available, timestamp when available, and packet mode. Do not report X volume,
+sentiment share, ranking, or market share unless the packet or collector source
+directly provides that metric.
 
 ---
 
