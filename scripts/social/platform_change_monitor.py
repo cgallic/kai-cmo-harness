@@ -25,6 +25,11 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from scripts.autonomy.impact import build_impact_card
+from scripts.autonomy.ledger import LedgerRecord, record_run
+
+WORKFLOW = "scripts.social.platform_change_monitor"
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "harness" / "references" / "social-platform-source-registry.json"
 SNAPSHOT = ROOT / "harness" / "references" / "social-platform-source-snapshot.json"
@@ -107,6 +112,7 @@ def check_sources(platforms: set[str] | None, limit: int | None, timeout: int) -
     registry = _load_json(REGISTRY, {"sources": []})
     snapshot = _load_json(SNAPSHOT, {"version": 1, "sources": {}})
     previous_sources = snapshot.get("sources", {})
+    previous_errors = snapshot.get("errors", {})
     selected = registry.get("sources", [])
     if platforms:
         selected = [s for s in selected if s.get("platform") in platforms]
@@ -115,16 +121,19 @@ def check_sources(platforms: set[str] | None, limit: int | None, timeout: int) -
 
     results: list[dict[str, Any]] = []
     new_sources = dict(previous_sources)
+    new_errors = dict(previous_errors)
 
     for source in selected:
         current = _fetch_source(source, timeout=timeout)
         previous = previous_sources.get(source["id"])
         state = _status(previous, current)
-        result = {**source, **current, "monitor_status": state}
+        was_error = source["id"] in previous_errors
+        result = {**source, **current, "monitor_status": state, "previous_error": was_error}
         if previous:
             result["previous_hash"] = previous.get("content_hash")
             result["previous_checked_at"] = previous.get("checked_at")
         if current.get("ok"):
+            new_errors.pop(source["id"], None)
             new_sources[source["id"]] = {
                 "platform": source.get("platform"),
                 "category": source.get("category"),
@@ -138,14 +147,28 @@ def check_sources(platforms: set[str] | None, limit: int | None, timeout: int) -
                 "status_code": current.get("status_code"),
                 "checked_at": current.get("fetched_at"),
             }
+        else:
+            new_errors[source["id"]] = {
+                "platform": source.get("platform"),
+                "url": source.get("url"),
+                "status_code": current.get("status_code"),
+                "error": current.get("error"),
+                "checked_at": current.get("fetched_at"),
+            }
         results.append(result)
 
     updated_snapshot = {
         "version": 1,
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "sources": new_sources,
+        "errors": new_errors,
     }
     return results, updated_snapshot
+
+
+def build_impact_cards(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Turn raw source results into practical impact cards (issue #27)."""
+    return [build_impact_card(result) for result in results]
 
 
 def write_report(results: list[dict[str, Any]], path: Path = REPORT) -> None:
@@ -154,6 +177,15 @@ def write_report(results: list[dict[str, Any]], path: Path = REPORT) -> None:
     new = [r for r in results if r["monitor_status"] == "new"]
     errors = [r for r in results if r["monitor_status"] == "error"]
     unchanged = [r for r in results if r["monitor_status"] == "unchanged"]
+
+    cards = build_impact_cards(results)
+    # Surface anything that needs a human or moved this run.
+    actionable = [
+        c
+        for c in cards
+        if c["monitor_status"] in {"changed", "new", "error"}
+        or c["source_status"] in {"fixed", "replaced", "unresolved"}
+    ]
 
     lines = [
         "# Social Platform Monitor Report",
@@ -168,22 +200,23 @@ def write_report(results: list[dict[str, Any]], path: Path = REPORT) -> None:
         "",
     ]
 
-    for label, items in (("Changed", changed), ("New", new), ("Errors", errors)):
-        if not items:
-            continue
-        lines.append(f"## {label}")
+    if actionable:
+        lines.append("## Impact Cards")
         lines.append("")
-        for item in items:
-            owner = item.get("owner_file", "")
-            lines.append(f"- [{item['platform']}] {item['title']}: {item['url']}")
-            lines.append(f"  - Category: {item.get('category')}")
-            if owner:
-                lines.append(f"  - Review file: `{owner}`")
-            if item.get("error"):
-                lines.append(f"  - Error: {item['error']}")
-            if item.get("previous_hash") and item.get("content_hash"):
-                lines.append(f"  - Hash: `{item['previous_hash'][:12]}` -> `{item['content_hash'][:12]}`")
-        lines.append("")
+        for card in actionable:
+            lines.append(f"### [{card['platform']}] {card['title']}")
+            lines.append("")
+            lines.append(f"- **What changed:** {card['what_changed']}")
+            lines.append(f"- **Why it matters:** {card['why_it_matters']} (area: {card['impact_area']})")
+            lines.append(f"- **Action taken:** {card['action_taken']}")
+            lines.append(f"- **Remaining risk:** {card['remaining_risk']}")
+            lines.append(f"- **Decision:** `{card['decision']}` ({card['decision_reason']})")
+            lines.append(f"- **Risk:** `{card['risk_level']}` · **Confidence:** {card['confidence']}")
+            lines.append(f"- **Source:** {card['source_url']}")
+            if card.get("owner_file"):
+                lines.append(f"- **Owner doc:** `{card['owner_file']}`")
+            lines.append(f"- **Next step:** {card['next_step']}")
+            lines.append("")
 
     lines.append("## Reviewed Sources")
     lines.append("")
@@ -203,12 +236,54 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="Print results as JSON")
     args = parser.parse_args(argv)
 
+    record = LedgerRecord(
+        workflow=WORKFLOW,
+        inputs={
+            "platforms": sorted(args.platform) if args.platform else "all",
+            "limit": args.limit,
+            "dry_run": args.dry_run,
+        },
+    )
+
     platforms = set(args.platform) if args.platform else None
     results, snapshot = check_sources(platforms=platforms, limit=args.limit, timeout=args.timeout)
+    cards = build_impact_cards(results)
+
+    record.sources_checked = [r.get("id") for r in results]
+    record.findings = [
+        c
+        for c in cards
+        if c["monitor_status"] in {"changed", "new", "error"}
+        or c["source_status"] in {"fixed", "replaced", "unresolved"}
+    ]
+    record.followups = sorted(
+        {c["next_step"] for c in record.findings if c["next_step"] not in {"No action needed", ""}}
+    )
+    record.blockers = [
+        f"{c['platform']} {c['title']}: source unresolved ({c['source_url']})"
+        for c in record.findings
+        if c["source_status"] == "unresolved"
+    ]
+    if record.blockers:
+        record.lessons.append("social source unreachable; registry needs canonical replacement")
+    record.validation = {
+        "method": "content-hash diff vs snapshot",
+        "sources_checked": len(results),
+        "errors": sum(1 for r in results if r["monitor_status"] == "error"),
+    }
 
     if not args.dry_run:
         SNAPSHOT.write_text(json.dumps(snapshot, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         write_report(results)
+        record.files_changed = [
+            str(SNAPSHOT.relative_to(ROOT)),
+            str(REPORT.relative_to(ROOT)),
+        ]
+        record.actions_taken.append("Updated snapshot and impact report")
+    else:
+        record.actions_taken.append("Dry run; no files written")
+
+    record_run(record)
 
     if args.json:
         print(json.dumps(results, indent=2, sort_keys=True))
