@@ -60,3 +60,6 @@ pnpm-lock.yaml
 workspace/ads/pulls/
 workspace/ads/mutations/
 .vercel
+
+# context-health re-grounding runtime state
+.claude/state/

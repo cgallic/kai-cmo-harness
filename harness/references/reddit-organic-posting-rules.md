@@ -1,12 +1,12 @@
 # Reddit Organic Posting Rules
 
-Last researched: 2026-06-17
+Last researched: 2026-06-22
 
 Primary sources:
 - User Agreement: https://redditinc.com/policies/user-agreement
 - Content Policy: https://redditinc.com/policies/content-policy
 - Developer Terms: https://redditinc.com/policies/developer-terms
-- Public Content Policy: https://redditinc.com/policies/public-content-policy
+- Public Content Policy: https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy
 - Spam policy: https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
 - Responsible Builder Policy announcement: https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
 - Responsible Builder Policy help article: https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
@@ -16,6 +16,7 @@ Primary sources:
 - Follow Reddit User Agreement and Content Policy for all posts, comments, usernames, and subreddit participation.
 - Read and follow each subreddit rule before posting. Subreddit rules can be stricter than platform rules.
 - Use Reddit API/data only under Developer Terms and Public Content Policy.
+- Use approved API or licensed access for commercial Reddit data use. Do not scrape Reddit public content for AI/model-training, enrichment, or monitoring outside approved terms.
 - Do not use undisclosed brand accounts, fake users, bought accounts, coordinated voting, vote manipulation, astroturfing, or scraped personal data.
 - Get approval for any new OAuth/API access path if Reddit requires it.
 - Check reputation, account age, karma, flair, moderation queue, and community-specific self-promotion tolerance before posting.
@@ -26,6 +27,7 @@ Primary sources:
 - Default to useful participation, direct answers, transparent affiliation, and source-backed claims.
 - Avoid drive-by self-promotion, link drops, generic comments, repetitive posting, and posting before the account has community context.
 - Treat each subreddit as its own channel with separate norms, mod preferences, flair rules, karma/account-age rules, and promotion tolerance.
+- Treat deleted, private, quarantined, or sensitive-targeting-adjacent content as off-limits for reuse even if it was previously visible elsewhere.
 
 ## Harness Guardrails
 

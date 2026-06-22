@@ -1,6 +1,6 @@
 # Meta, Instagram, Facebook, and Threads Organic Posting Rules
 
-Last researched: 2026-06-17
+Last researched: 2026-06-22
 
 Primary sources:
 - Meta Community Standards: https://transparency.meta.com/policies/community-standards/
@@ -12,6 +12,10 @@ Primary sources:
 - Instagram Content Publishing API: https://developers.facebook.com/docs/instagram-platform/content-publishing/
 - Instagram media publish reference: https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media_publish/
 - Meta ranking explainers: https://transparency.meta.com/features/explaining-ranking/
+- Meta other policies hub: https://transparency.meta.com/policies/other-policies/
+- Facebook Feed AI system: https://transparency.meta.com/features/explaining-ranking/fb-feed/
+- Threads Feed AI system: https://transparency.meta.com/features/explaining-ranking/ig-threads-feed/
+- Label AI content on Threads: https://help.instagram.com/407718162047721/
 - Meta Community Notes: https://transparency.meta.com/features/community-notes/
 - Meta Advertising Standards: https://transparency.meta.com/policies/ad-standards/
 
@@ -21,15 +25,17 @@ Primary sources:
 - Use the US English version of Meta policy pages as the freshness source when regional pages differ.
 - Treat AI-generated content, synthetic media, affiliate content, contests, testimonials, and regulated goods as policy-sensitive.
 - Check Meta Advertising Standards before boosting any organic post.
+- Check Meta's other-policies hub before branded content, affiliate, partner, Page-admin, or group/community publishing workflows.
 - Use only approved APIs and permission scopes for posting, moderation, messaging, insights, or Threads management.
 - Keep user consent, token scope, and account ownership records for any scheduled/published content.
 - Check live Instagram/Threads API docs before scheduling. Current Meta publishing-limit language can differ by guide and endpoint.
 - Review Community Notes exposure for factual, political, health, finance, public-interest, or brand-claim posts.
-- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing.
+- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing. Threads can auto-label detected AI signals, but creators still need to label when required.
 
 ## Organic Distribution Guidance
 
 - Instagram does not use one universal algorithm. Feed, Stories, Explore, and Reels each rank with different signals.
+- Facebook Feed, Instagram Feed/Reels, and Threads Feed each have separate AI explainers and should be tested as distinct recommendation surfaces.
 - Prioritize original posts, native Reels, carousels with saves, real comments, and topic clarity.
 - Avoid repost farms, low-originality compilations, engagement bait, misleading captions, and duplicate cross-posts that add no new context.
 - Put commercial or sponsored nature in the platform disclosure tools when applicable.
@@ -45,3 +51,4 @@ Primary sources:
 - For Instagram DM funnels, require explicit opt-in language and a manual-review path for regulated claims.
 - For Threads API use, verify the current Threads API capability and rate/permission constraints before scheduling.
 - For Facebook Groups, capture group rules before drafting and do not post Page-style promotion into community contexts.
+- For branded-content workflows, verify the current Meta disclosure tool path before scheduling because policy pages and product surfaces move more often than the core standards.

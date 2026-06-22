@@ -8,6 +8,7 @@ Primary references:
 - YouTube Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
 - Recommendations on YouTube: https://www.youtube.com/howyoutubeworks/recommendations/
 - YouTube recommendation system help: https://support.google.com/youtube/answer/16533387?hl=en
+- Search & discovery tips: https://support.google.com/youtube/answer/11914225?hl=en
 - YouTube organic rules: `harness/references/youtube-organic-posting-rules.md`
 - Social automation rules: `harness/references/social-automation-rules.md`
 
@@ -123,6 +124,8 @@ BAD:
 4. **Engagement** — likes, comments, shares, saves
 5. **Keywords** — title, description, spoken words, captions; tags have a minor role, mainly for misspellings
 6. **Freshness** — new videos get a promotion boost for 48-72 hours
+
+YouTube's official search/discovery guidance also calls out **topic interest**, **competition**, and **seasonality** as external reach factors. Compare against audience context before concluding a format or thumbnail failed.
 
 ### SEO Checklist
 

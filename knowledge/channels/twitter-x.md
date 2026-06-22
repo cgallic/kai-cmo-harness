@@ -2,7 +2,7 @@
 
 > **Use when**: Writing X posts, planning threads, building reply strategy, deciding cadence, reviewing automation, or preparing an organic post that may later be promoted.
 
-Last updated: 2026-06-17
+Last updated: 2026-06-22
 
 Primary references:
 - X For You recommendations: https://help.x.com/en/resources/recommender-systems/for-you-home-timeline-recommendations
@@ -47,6 +47,7 @@ High-confidence signal families from X's recommendation docs:
 - **Freshness and diversity**: old posts, repeated authors, duplicate posts, duplicate conversation branches, deleted content, blocked accounts, and muted accounts are filtered or reduced.
 - **Author diversity**: repeated author exposure can be attenuated, so many similar posts in a short window can compete with each other.
 - **Content understanding**: X's public algorithm materials describe classifiers and embedders for spam, post category, policy, media, language, quote expansion, and brand-safety signals.
+- **Search-specific ranking**: X's search recommendations doc separates Top, Latest, People, Media, and Lists. Top search weighs engagement, health, and relevance, while Latest is reverse-chronological with visibility filtering.
 
 Practical implications:
 
@@ -57,6 +58,7 @@ Practical implications:
 5. Treat blocks, mutes, reports, and spam flags as reach killers.
 6. Treat links as conversion steps after native value has earned attention.
 7. Do not spray many similar posts in a narrow window; diversity and dedup filters can make them fight each other.
+8. Write with entity clarity if search matters. X search is not only chronological; healthy engagement and relevance affect Top results.
 
 ---
 

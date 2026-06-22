@@ -2,7 +2,7 @@
   "sources": {
     "bluesky_api_blog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:17:12.658206+00:00",
+      "checked_at": "2026-06-22T13:26:23.151804+00:00",
       "content_hash": "482151d246db5372833df9b3fbcef353ebfe85947b39d11e0a80e0eb1fee82e6",
       "content_length": 67338,
       "etag": "W/\"2e11991943d6b97581672e1a2b483aa7\"",
@@ -15,7 +15,7 @@
     },
     "bluesky_community_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:17:11.963629+00:00",
+      "checked_at": "2026-06-22T13:26:21.925205+00:00",
       "content_hash": "3ea9ab7498d46e6891d2e0479f77d6b07409b57d227452496b547e4060aebab4",
       "content_length": 15729,
       "etag": null,
@@ -28,7 +28,7 @@
     },
     "bluesky_rate_limits": {
       "category": "automation",
-      "checked_at": "2026-06-17T04:17:12.324917+00:00",
+      "checked_at": "2026-06-22T13:26:22.741459+00:00",
       "content_hash": "73dcc7eb4b66c043df66723d10554f3fbf1441d2366f7c575952f91daf4259d2",
       "content_length": 5081,
       "etag": "W/\"8134a20645852d2adb79c5f13766ad89\"",
@@ -39,9 +39,22 @@
       "title": "Bluesky Rate Limits",
       "url": "https://docs.bsky.app/docs/advanced-guides/rate-limits"
     },
+    "facebook_feed_ai_system": {
+      "category": "recommendation",
+      "checked_at": "2026-06-22T13:25:52.088479+00:00",
+      "content_hash": "119dcc6af17d2b738195fd32705d21a97f8dad5836891cc329dd15042311fd89",
+      "content_length": 14852,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "platform": "meta",
+      "status_code": 200,
+      "title": "Facebook Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/fb-feed/"
+    },
     "graph_api_changelog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:16:50.896666+00:00",
+      "checked_at": "2026-06-22T13:26:04.324459+00:00",
       "content_hash": "e1bea6853225490e61aff2060b0d3fd0ac9a4e92c5a517d04af1b30af5669f23",
       "content_length": 2612,
       "etag": null,
@@ -54,9 +67,9 @@
     },
     "instagram_content_publishing_api": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:46.974505+00:00",
-      "content_hash": "ad062e09f387f2c538d594ae19b5bf9496ff30aafb18ba780eef94ce3dbf2ef2",
-      "content_length": 14294,
+      "checked_at": "2026-06-22T13:26:00.407476+00:00",
+      "content_hash": "a67555d177fea065d9deba5cf30fe4f33b1711037e103b4aa73e6829ae1c183c",
+      "content_length": 14986,
       "etag": null,
       "last_modified": null,
       "owner_file": "harness/references/meta-organic-posting-rules.md",
@@ -67,7 +80,7 @@
     },
     "instagram_feed_ai_system": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:36.071097+00:00",
+      "checked_at": "2026-06-22T13:25:52.978234+00:00",
       "content_hash": "b6bdd53b3f62a9a030b50e345bc3638c97afd582002ecb2d0e0814bf79121684",
       "content_length": 13274,
       "etag": null,
@@ -80,7 +93,7 @@
     },
     "instagram_media_publish_reference": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:48.341821+00:00",
+      "checked_at": "2026-06-22T13:26:01.540709+00:00",
       "content_hash": "8f11e843866d3dd11ab60b24f6ac89a93ed482a46a3eb443885a08015f418a09",
       "content_length": 3229,
       "etag": null,
@@ -93,7 +106,7 @@
     },
     "instagram_originality": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:00.461280+00:00",
+      "checked_at": "2026-06-22T13:25:16.240206+00:00",
       "content_hash": "85294c5926823a34f5accfd4906bb39644bb081118831db6e951b84d7aaa795f",
       "content_length": 10559,
       "etag": null,
@@ -106,9 +119,9 @@
     },
     "instagram_platform_changelog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:16:49.565891+00:00",
-      "content_hash": "8dffbf6fc3f3e93b9091c72f76bb3e977b4af4555ea9f98fe4dd3ae0c7dee270",
-      "content_length": 38795,
+      "checked_at": "2026-06-22T13:26:03.099114+00:00",
+      "content_hash": "778061ca06da692f2ac14b15e85ae3b2f76053757b761fe23c809da1cad60668",
+      "content_length": 39042,
       "etag": null,
       "last_modified": null,
       "owner_file": "harness/references/meta-organic-posting-rules.md",
@@ -119,7 +132,7 @@
     },
     "instagram_ranking": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:15:59.818111+00:00",
+      "checked_at": "2026-06-22T13:25:15.292142+00:00",
       "content_hash": "15439d59d225078e370c389b8887e5dfd45dda9b58cf04d10e24ad150126d4aa",
       "content_length": 3394,
       "etag": null,
@@ -132,7 +145,7 @@
     },
     "instagram_reels_chaining": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:37.289089+00:00",
+      "checked_at": "2026-06-22T13:25:54.469385+00:00",
       "content_hash": "735119cb72bbe0a28523670d26d584946e9f49e150bedce2d82109ba95884165",
       "content_length": 12687,
       "etag": null,
@@ -145,7 +158,7 @@
     },
     "linkedin_api_terms": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:18.068411+00:00",
+      "checked_at": "2026-06-22T13:25:34.679880+00:00",
       "content_hash": "740ea28d4bdec4bc4633d42f8029cf1525fff8abd43455ed6eaeb68a899a70ad",
       "content_length": 56077,
       "etag": null,
@@ -158,7 +171,7 @@
     },
     "linkedin_developer_ai_policy": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:18.965565+00:00",
+      "checked_at": "2026-06-22T13:25:35.518563+00:00",
       "content_hash": "25181f8ac8778d58fab30558622ec7031f5cd18148a90cb07d375edc72dd3256",
       "content_length": 9388,
       "etag": "\"hLDkZzyWlvjLst/6QDgshb5oVpc=\"",
@@ -171,7 +184,7 @@
     },
     "linkedin_feed_ranking": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:30.877848+00:00",
+      "checked_at": "2026-06-22T13:25:46.771191+00:00",
       "content_hash": "79a7cfaef58fc0e6cf54f350af9d555848778bf4d6e8fbdb7d1762eef6200e1f",
       "content_length": 2809,
       "etag": null,
@@ -184,7 +197,7 @@
     },
     "linkedin_marketing_api_recent_changes": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:16:32.528611+00:00",
+      "checked_at": "2026-06-22T13:25:48.366923+00:00",
       "content_hash": "7176d38beaeec69fb806b77f6363c1efc831edf27025236060566bcca7982d6e",
       "content_length": 100933,
       "etag": "\"tKAI7rhz95znUNb5RgVgFPQk0Y8=\"",
@@ -197,7 +210,7 @@
     },
     "linkedin_marketing_api_terms": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:18.510446+00:00",
+      "checked_at": "2026-06-22T13:25:35.164239+00:00",
       "content_hash": "8e9dafc9d2a54afc1af24ac8c4f3cac1a22852cdc1a6ae4cb81ebd76698d5bd5",
       "content_length": 40425,
       "etag": null,
@@ -210,7 +223,7 @@
     },
     "linkedin_posts_api": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:32.087454+00:00",
+      "checked_at": "2026-06-22T13:25:48.001806+00:00",
       "content_hash": "68b03318a7c32dc00add2aa99546642410898f13a2e4142fda7fe26656f7dae9",
       "content_length": 35475,
       "etag": "\"Y6iS9n8LTSQfmzRACS5+qCbKXOc=\"",
@@ -223,7 +236,7 @@
     },
     "linkedin_professional_community_policies": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:30.485300+00:00",
+      "checked_at": "2026-06-22T13:25:46.454760+00:00",
       "content_hash": "fddda86fb91614efbecf687e85217c9c0c981110acd8d438428442b535a01137",
       "content_length": 1968,
       "etag": null,
@@ -236,7 +249,7 @@
     },
     "linkedin_prohibited_software": {
       "category": "automation",
-      "checked_at": "2026-06-17T04:16:31.575519+00:00",
+      "checked_at": "2026-06-22T13:25:47.634723+00:00",
       "content_hash": "5989964333b27aaa5aba82f3d80517619e014934433ebc5287afe906c882d60f",
       "content_length": 4145,
       "etag": null,
@@ -249,7 +262,7 @@
     },
     "linkedin_publishing_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:31.285116+00:00",
+      "checked_at": "2026-06-22T13:25:47.110625+00:00",
       "content_hash": "483af454182e151076c0a952758912f9b410065b9b2b7b4abbb02daa8209bf98",
       "content_length": 3765,
       "etag": null,
@@ -262,7 +275,7 @@
     },
     "linkedin_user_agreement": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:17.579068+00:00",
+      "checked_at": "2026-06-22T13:25:34.184348+00:00",
       "content_hash": "ff330d70f1e9d299f4ce305a5cef855971ea6dd9162d909831627d5dbd64e7ad",
       "content_length": 34040,
       "etag": null,
@@ -275,7 +288,7 @@
     },
     "mastodon_api_guidelines": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:17:13.366968+00:00",
+      "checked_at": "2026-06-22T13:26:23.928301+00:00",
       "content_hash": "4c3b38d1b49c4452ade6a44118b7d368cb24aa09c5ee75282abdc61bbef335fa",
       "content_length": 13537,
       "etag": "\"6a2ad001-a386\"",
@@ -288,7 +301,7 @@
     },
     "mastodon_posting": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:17:13.118133+00:00",
+      "checked_at": "2026-06-22T13:26:23.368265+00:00",
       "content_hash": "859ec4424edd35b8c9bdd60d40b8c64f5922f00e927d71a899f335c3e6bcbecd",
       "content_length": 11298,
       "etag": "\"6a2ad001-9bce\"",
@@ -299,12 +312,25 @@
       "title": "Mastodon Posting Guide",
       "url": "https://docs.joinmastodon.org/user/posting/"
     },
+    "mastodon_quote_posts": {
+      "category": "policy",
+      "checked_at": "2026-06-22T13:26:23.701464+00:00",
+      "content_hash": "1d21d2eb3f699c2e9d2cd35ab694d43bff27633a0adcaa8b7a511bad6d67f9db",
+      "content_length": 11243,
+      "etag": "\"6a2ad001-a905\"",
+      "last_modified": "Thu, 11 Jun 2026 15:10:57 GMT",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "platform": "mastodon",
+      "status_code": 200,
+      "title": "Mastodon Quote Posts Guide",
+      "url": "https://docs.joinmastodon.org/user/quote-posts/"
+    },
     "mastodon_releases": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:17:15.234083+00:00",
-      "content_hash": "67beb59ca86f24b81bf53191044ff1b84f212caff88405a8051e436de64dbca9",
-      "content_length": 53494,
-      "etag": "W/\"6ff034dab12f1986a35ac23f1d553e42\"",
+      "checked_at": "2026-06-22T13:26:26.418290+00:00",
+      "content_hash": "6f435baf78653222c15335555dd01eed94f2ec5d2c6ce96d2904ced5c699a548",
+      "content_length": 61589,
+      "etag": "W/\"9d3298e569bf5745dc775b16c5efedbd\"",
       "last_modified": null,
       "owner_file": "knowledge/channels/mastodon-fediverse.md",
       "platform": "mastodon",
@@ -314,7 +340,7 @@
     },
     "meta_ad_standards": {
       "category": "ads_policy",
-      "checked_at": "2026-06-17T04:15:57.414071+00:00",
+      "checked_at": "2026-06-22T13:25:13.033593+00:00",
       "content_hash": "7951915be55371e17009a5c12cc1f9928a8bab2086c8857e67fbc33ad9a7375f",
       "content_length": 40871,
       "etag": null,
@@ -327,7 +353,7 @@
     },
     "meta_community_standards": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:15:56.460209+00:00",
+      "checked_at": "2026-06-22T13:25:11.426060+00:00",
       "content_hash": "c91b923012e4a50dafbac858f1a6d1f3132c957d9145e470bed9aa78c2c886ac",
       "content_length": 4648,
       "etag": null,
@@ -340,7 +366,7 @@
     },
     "meta_developer_policies": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:15:58.946657+00:00",
+      "checked_at": "2026-06-22T13:25:14.109676+00:00",
       "content_hash": "01ad04db3a1de813c23e8de28262e66da60e3b35883810eb4fdc45d54de538ec",
       "content_length": 27823,
       "etag": null,
@@ -351,9 +377,22 @@
       "title": "Meta Developer Policies",
       "url": "https://developers.facebook.com/devpolicy/"
     },
+    "meta_other_policies": {
+      "category": "commercial_policy",
+      "checked_at": "2026-06-22T13:25:50.936803+00:00",
+      "content_hash": "4b4c11dc45b38e9ef9bed98a8c04f33c9d0f80c72687f5758823d9dadbf6a62a",
+      "content_length": 2631,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "platform": "meta",
+      "status_code": 200,
+      "title": "Meta Other Policies Hub",
+      "url": "https://transparency.meta.com/policies/other-policies/"
+    },
     "meta_ranking_hub": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:34.551363+00:00",
+      "checked_at": "2026-06-22T13:25:49.661692+00:00",
       "content_hash": "256e8d97e15f06bfce026eb69284d11f79f00a9936eb6fa53c9f6beeba06180b",
       "content_length": 15089,
       "etag": null,
@@ -366,7 +405,7 @@
     },
     "pinterest_api_v5": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:17:07.665748+00:00",
+      "checked_at": "2026-06-22T13:26:17.559950+00:00",
       "content_hash": "b37b7bf548a1ea6c32c40221e585da53b38e9131bd91cc31996746e554ee553b",
       "content_length": 115,
       "etag": null,
@@ -379,10 +418,10 @@
     },
     "pinterest_branded_content": {
       "category": "commercial_policy",
-      "checked_at": "2026-06-17T04:17:06.384079+00:00",
+      "checked_at": "2026-06-22T13:26:16.361780+00:00",
       "content_hash": "39d831ebb6c591a04f126fec00600e82cecb55640b3b02d37e5b902607d7b4d5",
       "content_length": 7710,
-      "etag": "\"zbjqmhx75i3era\"",
+      "etag": "\"cagdlqnyca3era\"",
       "last_modified": null,
       "owner_file": "harness/references/pinterest-organic-posting-rules.md",
       "platform": "pinterest",
@@ -392,7 +431,7 @@
     },
     "pinterest_business_terms": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:21.604239+00:00",
+      "checked_at": "2026-06-22T13:25:37.665278+00:00",
       "content_hash": "488a4fd6c9a86d5811b41e83b79a440db6ed56650b47d094bb22e3830aa2dac4",
       "content_length": 23429,
       "etag": null,
@@ -405,10 +444,10 @@
     },
     "pinterest_community_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:19.234149+00:00",
-      "content_hash": "a7c0a1092435336c29851a89e7c64c2572f6414754c4752872496f6ec6aab4d8",
-      "content_length": 19279,
-      "etag": "W/\"122h71cbuox4z9q\"",
+      "checked_at": "2026-06-22T13:25:35.922932+00:00",
+      "content_hash": "9c47ef745de7ab9b696de7dcbfda7539bc5ca508281c3c8bfc2863f75dc9ebca",
+      "content_length": 23018,
+      "etag": "W/\"8y5szisc5e4z9q\"",
       "last_modified": null,
       "owner_file": "harness/references/pinterest-organic-posting-rules.md",
       "platform": "pinterest",
@@ -418,10 +457,10 @@
     },
     "pinterest_developer_guidelines": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:22.530125+00:00",
+      "checked_at": "2026-06-22T13:25:39.398298+00:00",
       "content_hash": "90b954fd7f80150781cc0a046c89a82ae8dfe2ce5bbc0edfb4efc5cd47fa92c7",
       "content_length": 10323,
-      "etag": "\"fxv5edv4dg41c2\"",
+      "etag": "\"6nzgz364c841c2\"",
       "last_modified": null,
       "owner_file": "harness/references/pinterest-organic-posting-rules.md",
       "platform": "pinterest",
@@ -431,7 +470,7 @@
     },
     "pinterest_developer_terms": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:23.068126+00:00",
+      "checked_at": "2026-06-22T13:25:39.900647+00:00",
       "content_hash": "040414c2ee3a43fdfc26db4d88905ab56c3465b65aeaad84d759641c7ac271de",
       "content_length": 471,
       "etag": null,
@@ -442,12 +481,25 @@
       "title": "Pinterest Developer and API Terms",
       "url": "https://developers.pinterest.com/terms/"
     },
+    "pinterest_genai_guidelines": {
+      "category": "ai_policy",
+      "checked_at": "2026-06-22T13:25:38.466053+00:00",
+      "content_hash": "a3d32498f86b2f51157175a40ce53b6cbc2a6558901c80e687c654e57e9d305f",
+      "content_length": 14587,
+      "etag": "W/\"m832l7q0v337j4\"",
+      "last_modified": null,
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "platform": "pinterest",
+      "status_code": 200,
+      "title": "Pinterest GenAI Acceptable Use Guidelines",
+      "url": "https://policy.pinterest.com/en/genai-acceptable-use-guidelines"
+    },
     "pinterest_terms": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:19.599461+00:00",
-      "content_hash": "551fd60ffb95291c7a9eb40a5bdabf0ca2c975146813e442acd5f0850b861a58",
-      "content_length": 23997,
-      "etag": "W/\"1138vn0o9g24vj3\"",
+      "checked_at": "2026-06-22T13:25:36.155528+00:00",
+      "content_hash": "7ca4e5fdd226e22f9af99364a1f0490d3bf710b1446bf186c9bc14bd6306c400",
+      "content_length": 24886,
+      "etag": "W/\"b350csv6lo4vj3\"",
       "last_modified": null,
       "owner_file": "harness/references/pinterest-organic-posting-rules.md",
       "platform": "pinterest",
@@ -457,7 +509,7 @@
     },
     "reddit_content_policy": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:28.925503+00:00",
+      "checked_at": "2026-06-22T13:25:44.769166+00:00",
       "content_hash": "c05e95fd38d56671aa6baf510226d780d7235ef12d288bf26fc120fe11b1e390",
       "content_length": 46121,
       "etag": null,
@@ -470,7 +522,7 @@
     },
     "reddit_developer_terms": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:29.331580+00:00",
+      "checked_at": "2026-06-22T13:25:45.186274+00:00",
       "content_hash": "1e2247e4d8300d2355b055aa0b9e90dbe65e166ee1ffcacc4694d0ac8eca9942",
       "content_length": 84505,
       "etag": null,
@@ -483,20 +535,33 @@
     },
     "reddit_developers_docs": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:17:11.505171+00:00",
+      "checked_at": "2026-06-22T13:26:21.353647+00:00",
       "content_hash": "d316157b570114349fd952504627a1f9ca68080fa612d1150dffc6b3ece80211",
       "content_length": 1233,
-      "etag": "\"6a303f76-72c2\"",
-      "last_modified": "Mon, 15 Jun 2026 18:07:50 GMT",
+      "etag": "\"6a342ac7-72c2\"",
+      "last_modified": "Thu, 18 Jun 2026 17:28:39 GMT",
       "owner_file": "harness/references/social-automation-rules.md",
       "platform": "reddit",
       "status_code": 200,
       "title": "Reddit Developers Docs",
       "url": "https://developers.reddit.com/docs"
     },
+    "reddit_public_content_policy": {
+      "category": "data_policy",
+      "checked_at": "2026-06-22T13:25:45.689764+00:00",
+      "content_hash": "71ea727f8346a41ad8cebfc5042eef5f96b50e41665840fa4210c1c631f0d629",
+      "content_length": 9742,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "platform": "reddit",
+      "status_code": 200,
+      "title": "Reddit Public Content Policy",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy"
+    },
     "reddit_responsible_builder_help": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:17:10.996830+00:00",
+      "checked_at": "2026-06-22T13:26:21.109288+00:00",
       "content_hash": "72000d13bcb3e2541f290bbd5de5d736496c4f5ce6da20c834e1930460c1fb17",
       "content_length": 7556,
       "etag": null,
@@ -509,7 +574,7 @@
     },
     "reddit_responsible_builder_policy": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:30.001689+00:00",
+      "checked_at": "2026-06-22T13:25:45.905852+00:00",
       "content_hash": "b3b3f19c471ed33ab5026f5a3d86e76b09e2e245666d49443b00b27e26774479",
       "content_length": 37,
       "etag": null,
@@ -522,7 +587,7 @@
     },
     "reddit_rules": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:17:09.926464+00:00",
+      "checked_at": "2026-06-22T13:26:20.284649+00:00",
       "content_hash": "c05e95fd38d56671aa6baf510226d780d7235ef12d288bf26fc120fe11b1e390",
       "content_length": 46121,
       "etag": null,
@@ -535,7 +600,7 @@
     },
     "reddit_spam_policy": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:17:10.504876+00:00",
+      "checked_at": "2026-06-22T13:26:20.804623+00:00",
       "content_hash": "6aa0edeb28735cc2b17f99719d768612c3b90f96bd1e8f69d8ee1f120ef6d56a",
       "content_length": 4330,
       "etag": null,
@@ -548,7 +613,7 @@
     },
     "reddit_user_agreement": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:28.333646+00:00",
+      "checked_at": "2026-06-22T13:25:44.132947+00:00",
       "content_hash": "be258df7f4e6e8af0f0b243f1615740a7bc1f5e99a5c6b224538867a405f5e0d",
       "content_length": 89491,
       "etag": null,
@@ -561,7 +626,7 @@
     },
     "snap_commercial_content": {
       "category": "commercial_policy",
-      "checked_at": "2026-06-17T04:16:27.136380+00:00",
+      "checked_at": "2026-06-22T13:25:42.614454+00:00",
       "content_hash": "9acc3bdc94be94c7d6502b43de8dca6a2b0768533af59145ac0663f6c1dd3aa8",
       "content_length": 5423,
       "etag": null,
@@ -574,7 +639,7 @@
     },
     "snap_community_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:25.582336+00:00",
+      "checked_at": "2026-06-22T13:25:41.360459+00:00",
       "content_hash": "2e389785e6ada921c5fa97e62f4e8a61cd440598083c6beaad9cba91e5236556",
       "content_length": 16733,
       "etag": null,
@@ -587,7 +652,7 @@
     },
     "snap_creator_monetization": {
       "category": "monetization",
-      "checked_at": "2026-06-17T04:16:27.880892+00:00",
+      "checked_at": "2026-06-22T13:25:43.610263+00:00",
       "content_hash": "efb5cd2971eaf2ce50ab1d2714844128ef7c2cf370df6929070e834a0b592ae0",
       "content_length": 11454,
       "etag": null,
@@ -600,7 +665,7 @@
     },
     "snap_developers": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:17:08.962791+00:00",
+      "checked_at": "2026-06-22T13:26:19.825784+00:00",
       "content_hash": "75b295816d80cc86bfdd3cf22faef6524ff7b7632e92ac98868a7d6f197b7c93",
       "content_length": 880,
       "etag": "W/\"6bb9-49773873e8\"",
@@ -613,7 +678,7 @@
     },
     "snap_discover_ranking": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:17:08.560672+00:00",
+      "checked_at": "2026-06-22T13:26:19.429765+00:00",
       "content_hash": "bba1de800239039eade6d2e0a61ad458a8d74ad0e2dc8114e38c77ba01043986",
       "content_length": 8995,
       "etag": null,
@@ -626,7 +691,7 @@
     },
     "snap_recommendation_eligibility": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:26.369421+00:00",
+      "checked_at": "2026-06-22T13:25:41.963890+00:00",
       "content_hash": "ae2a2db7cde7b017860763fbff1fca0c01148cbd222f09c331322fcaae2d259f",
       "content_length": 8166,
       "etag": null,
@@ -639,7 +704,7 @@
     },
     "snap_spotlight_ranking": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:17:08.152713+00:00",
+      "checked_at": "2026-06-22T13:26:18.655239+00:00",
       "content_hash": "f0c584ccbd3e817e6241fa11d6e15e9f261f8a048fcb5a256148fac7b1535d76",
       "content_length": 10530,
       "etag": null,
@@ -652,7 +717,7 @@
     },
     "snap_terms": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:24.830580+00:00",
+      "checked_at": "2026-06-22T13:25:40.699261+00:00",
       "content_hash": "9739c41dee462010640ca3016c04e985d18aea1b028fbb9c8274cc5e5af34209",
       "content_length": 99383,
       "etag": null,
@@ -663,9 +728,22 @@
       "title": "Snap Terms of Service",
       "url": "https://www.snap.com/terms"
     },
+    "threads_ai_labeling": {
+      "category": "ai_policy",
+      "checked_at": "2026-06-22T13:25:59.104931+00:00",
+      "content_hash": "a78cebc44214256ba361dcee3f1cc1408e55ea6940c65067615abd4fdcc2d788",
+      "content_length": 11,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "platform": "threads",
+      "status_code": 200,
+      "title": "Label AI Content on Threads",
+      "url": "https://help.instagram.com/407718162047721/"
+    },
     "threads_api": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:01.784782+00:00",
+      "checked_at": "2026-06-22T13:25:17.422804+00:00",
       "content_hash": "4090ce233117d6de07f17f43e83c91c3ef2d5b8c2c0516d4e7ffd059e05bf2ac",
       "content_length": 1326,
       "etag": null,
@@ -678,7 +756,7 @@
     },
     "threads_changelog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:16:38.665200+00:00",
+      "checked_at": "2026-06-22T13:25:55.640693+00:00",
       "content_hash": "6177f567888d75b68162464e37f9b7e5fca047fd0b85b162b77cdc16b3785393",
       "content_length": 14252,
       "etag": null,
@@ -689,9 +767,22 @@
       "title": "Threads API Changelog",
       "url": "https://developers.facebook.com/docs/threads/changelog/"
     },
+    "threads_feed_ai_system": {
+      "category": "recommendation",
+      "checked_at": "2026-06-22T13:25:58.137838+00:00",
+      "content_hash": "bd7f816b4b03e84204c4c8bd7f11287b0d7327f8f303fcf9e6173b1fc0f4b92a",
+      "content_length": 17098,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "platform": "threads",
+      "status_code": 200,
+      "title": "Threads Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/ig-threads-feed/"
+    },
     "threads_terms": {
       "category": "terms",
-      "checked_at": "2026-06-17T04:16:40.486975+00:00",
+      "checked_at": "2026-06-22T13:25:56.992131+00:00",
       "content_hash": "a78cebc44214256ba361dcee3f1cc1408e55ea6940c65067615abd4fdcc2d788",
       "content_length": 11,
       "etag": null,
@@ -704,10 +795,10 @@
     },
     "tiktok_ads_changelog_2026": {
       "category": "ads_policy",
-      "checked_at": "2026-06-17T04:16:11.152755+00:00",
+      "checked_at": "2026-06-22T13:25:28.294644+00:00",
       "content_hash": "2d246a329c183f081c564d3a5d09cf92add067a1f46cb48865a6b693907e2275",
       "content_length": 708,
-      "etag": "\"168dbb-D1AJ/BxXkcw62qlMDI14D550Q4U\"",
+      "etag": "\"166fce-UCa+DId/oWbGPiDfjrcx8Qx8DiM\"",
       "last_modified": null,
       "owner_file": "harness/references/tiktok-ads-policy-reference.md",
       "platform": "tiktok",
@@ -717,7 +808,7 @@
     },
     "tiktok_aigc": {
       "category": "ai_policy",
-      "checked_at": "2026-06-17T04:16:52.809208+00:00",
+      "checked_at": "2026-06-22T13:26:05.995251+00:00",
       "content_hash": "efc66004db417caefc2f41ac4a52cdb9ad8320301a9d6f0b6b0dbd34536c231e",
       "content_length": 9054,
       "etag": null,
@@ -730,7 +821,7 @@
     },
     "tiktok_brand_promotion_disclosure": {
       "category": "commercial_policy",
-      "checked_at": "2026-06-17T04:16:51.862779+00:00",
+      "checked_at": "2026-06-22T13:26:05.235442+00:00",
       "content_hash": "8b14aa07f002a3b1021bc7cd4877b984e0e86fd29657f7c9cb143d99e7addb09",
       "content_length": 7046,
       "etag": null,
@@ -743,7 +834,7 @@
     },
     "tiktok_commercial_music": {
       "category": "commercial_policy",
-      "checked_at": "2026-06-17T04:16:53.718255+00:00",
+      "checked_at": "2026-06-22T13:26:06.682035+00:00",
       "content_hash": "e24071b694c52006344b6d0d8a81546de94ddf6fa7915ad4dfb6f436d4356bb6",
       "content_length": 1961,
       "etag": null,
@@ -756,7 +847,7 @@
     },
     "tiktok_community_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:02.708439+00:00",
+      "checked_at": "2026-06-22T13:25:18.253002+00:00",
       "content_hash": "534de99a0ab4d3d6bc0c3f6a3190bbd237a8c9a126554e61ed06f6864bad2bd9",
       "content_length": 14,
       "etag": null,
@@ -769,8 +860,8 @@
     },
     "tiktok_content_posting_api": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:05.947122+00:00",
-      "content_hash": "b4b6fb2ee84e0b61dff6f896c4fb76a7c7980f11389f019ba605864a03d0aa75",
+      "checked_at": "2026-06-22T13:25:22.273553+00:00",
+      "content_hash": "93ed4879c8cb6f126efffbd03b48e9b27496d47a49567a7d35337124e9cd4da5",
       "content_length": 12589,
       "etag": null,
       "last_modified": null,
@@ -782,7 +873,7 @@
     },
     "tiktok_content_sharing_guidelines": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:07.826997+00:00",
+      "checked_at": "2026-06-22T13:25:24.730423+00:00",
       "content_hash": "a6cbdb04ea2e65fd8add8c1df3e7bb95449e6f1bcc48ade90dda077d7f5f6f95",
       "content_length": 14361,
       "etag": null,
@@ -795,7 +886,7 @@
     },
     "tiktok_developer_changelog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:16:56.398099+00:00",
+      "checked_at": "2026-06-22T13:26:08.912488+00:00",
       "content_hash": "d5c6e099c6877cf320cd2b99d121f918797aad29689cecb97b4e657de8fea9ad",
       "content_length": 14180,
       "etag": null,
@@ -808,7 +899,7 @@
     },
     "tiktok_not_recommended": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:04.128826+00:00",
+      "checked_at": "2026-06-22T13:25:19.717711+00:00",
       "content_hash": "534de99a0ab4d3d6bc0c3f6a3190bbd237a8c9a126554e61ed06f6864bad2bd9",
       "content_length": 14,
       "etag": null,
@@ -821,7 +912,7 @@
     },
     "tiktok_recommends_content": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:03.375985+00:00",
+      "checked_at": "2026-06-22T13:25:19.092210+00:00",
       "content_hash": "11b8b994ed84022384befa75c487180a185600834dfe4462e1bcab8df8523277",
       "content_length": 18010,
       "etag": null,
@@ -834,11 +925,11 @@
     },
     "x_api_changelog": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:15:54.359125+00:00",
+      "checked_at": "2026-06-22T13:25:09.909323+00:00",
       "content_hash": "69651004bc02804c7f1740985079239afc853c405821c60a716853a5e7dd27c5",
       "content_length": 80216,
       "etag": null,
-      "last_modified": "Wed, 17 Jun 2026 02:43:18 GMT",
+      "last_modified": "Sun, 21 Jun 2026 18:06:41 GMT",
       "owner_file": "harness/references/x-organic-posting-rules.md",
       "platform": "x",
       "status_code": 200,
@@ -847,7 +938,7 @@
     },
     "x_automation": {
       "category": "automation",
-      "checked_at": "2026-06-17T04:15:53.163112+00:00",
+      "checked_at": "2026-06-22T13:25:08.577624+00:00",
       "content_hash": "679ecd590c1a7c6e927366142768a2829bad2233674d9784f5790b41e33f58c7",
       "content_length": 20681,
       "etag": null,
@@ -860,11 +951,11 @@
     },
     "x_developer_policy": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:15:53.724266+00:00",
+      "checked_at": "2026-06-22T13:25:09.204228+00:00",
       "content_hash": "e22f5993307eec95eb65b8a2e48dd9a1395e81a6dd90a4c19dfeb737db39c1ac",
       "content_length": 27768,
       "etag": null,
-      "last_modified": "Wed, 17 Jun 2026 02:47:20 GMT",
+      "last_modified": "Sun, 21 Jun 2026 18:15:50 GMT",
       "owner_file": "harness/references/x-organic-posting-rules.md",
       "platform": "x",
       "status_code": 200,
@@ -873,7 +964,7 @@
     },
     "x_rules": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:15:52.903915+00:00",
+      "checked_at": "2026-06-22T13:25:08.296801+00:00",
       "content_hash": "1f4f4e1b39d27b86f69356eb548c1fa34c324aa9b85a9e10c329dc8850123201",
       "content_length": 11093,
       "etag": null,
@@ -884,11 +975,24 @@
       "title": "X Rules",
       "url": "https://help.x.com/en/rules-and-policies/x-rules"
     },
+    "x_search_recommendations": {
+      "category": "recommendation",
+      "checked_at": "2026-06-22T13:25:10.197565+00:00",
+      "content_hash": "67600fdca4c0e6d783013d0a668ed1af7798c08cfa65dc82b0dfef072a2e8c7f",
+      "content_length": 15190,
+      "etag": null,
+      "last_modified": null,
+      "owner_file": "knowledge/channels/twitter-x.md",
+      "platform": "x",
+      "status_code": 200,
+      "title": "X Search Recommendations",
+      "url": "https://help.x.com/en/resources/recommender-systems/search-recommendations"
+    },
     "youtube_ad_guideline_updates": {
       "category": "ads_policy",
-      "checked_at": "2026-06-17T04:16:17.015517+00:00",
-      "content_hash": "20d38f1fe50aaba49d955609371bb11f5043dab11715c57ff111a78319c19b6a",
-      "content_length": 27002,
+      "checked_at": "2026-06-22T13:25:33.536763+00:00",
+      "content_hash": "1f5ba573c1fef424974a2e370c780962de06f868b4b6cddcca9bcc0fb6b9d69d",
+      "content_length": 27003,
       "etag": null,
       "last_modified": null,
       "owner_file": "harness/references/youtube-organic-posting-rules.md",
@@ -899,7 +1003,7 @@
     },
     "youtube_api_terms": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:15.244108+00:00",
+      "checked_at": "2026-06-22T13:25:32.170428+00:00",
       "content_hash": "0f52aeb0234a1da94f59ccb02e83c6fb9201038b2bd22333794f7faf694b8f41",
       "content_length": 41777,
       "etag": null,
@@ -912,9 +1016,9 @@
     },
     "youtube_community_guidelines": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:12.148589+00:00",
-      "content_hash": "eb31f0559f47f022d3882fc20d70800ca918faf80e48f0364b183c41ab9e3e42",
-      "content_length": 7206,
+      "checked_at": "2026-06-22T13:25:29.084852+00:00",
+      "content_hash": "f1194a3e03dacf0e8b9286fa7ceed431c3e8eea69d892d53978bbf988816cb60",
+      "content_length": 7205,
       "etag": null,
       "last_modified": null,
       "owner_file": "harness/references/youtube-organic-posting-rules.md",
@@ -925,7 +1029,7 @@
     },
     "youtube_data_api_revision_history": {
       "category": "changelog",
-      "checked_at": "2026-06-17T04:17:05.855560+00:00",
+      "checked_at": "2026-06-22T13:26:15.888070+00:00",
       "content_hash": "1d6299298d1baa2fa4d7260e9ffc9691fe064e69c702b25c01c33b15a366671c",
       "content_length": 166567,
       "etag": null,
@@ -938,7 +1042,7 @@
     },
     "youtube_developer_policies": {
       "category": "developer",
-      "checked_at": "2026-06-17T04:16:16.066718+00:00",
+      "checked_at": "2026-06-22T13:25:32.702594+00:00",
       "content_hash": "7238dbb4fc8776e457899c7c8fba67cfb5f354e976b4e1adcde7a6347c0da791",
       "content_length": 59307,
       "etag": null,
@@ -951,8 +1055,8 @@
     },
     "youtube_fake_engagement": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:13.467975+00:00",
-      "content_hash": "423369a57b09d18e13bcd7f063405a0c420499eb9e9727b1f7809eaad7d670a5",
+      "checked_at": "2026-06-22T13:25:30.399975+00:00",
+      "content_hash": "a7d7e252106c1313f0cfa7e871412e88c6ffeb67bbb7bddd1a444d91b6baa7c6",
       "content_length": 9182,
       "etag": null,
       "last_modified": null,
@@ -964,8 +1068,8 @@
     },
     "youtube_genai_disclosure": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:16:14.265844+00:00",
-      "content_hash": "f25fe3bf62176f2435e710020e3bacbae629d3f824275d5e984e5cf3f6626317",
+      "checked_at": "2026-06-22T13:25:31.262865+00:00",
+      "content_hash": "d41f5c4486fea7fd1cd582d3a39bc8b5f4445d9cf7cced77015da4f8ce7dcc4d",
       "content_length": 9590,
       "etag": null,
       "last_modified": null,
@@ -977,8 +1081,8 @@
     },
     "youtube_paid_promotion": {
       "category": "commercial_policy",
-      "checked_at": "2026-06-17T04:17:04.040542+00:00",
-      "content_hash": "db87c78bba7a97d190f020382c4a41d5577ed8470e6e9c1eb10c2029ae70372b",
+      "checked_at": "2026-06-22T13:26:13.798641+00:00",
+      "content_hash": "5960b054b08919db8c4e5017ec6c4a0a4b73522b91ab55bc46f343a78357bf3e",
       "content_length": 12742,
       "etag": null,
       "last_modified": null,
@@ -990,9 +1094,9 @@
     },
     "youtube_recommendation_system_help": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:17:01.445727+00:00",
-      "content_hash": "611b851c7b0814d7221437612fb716a46be1cc51c3f97706b35b3097749af147",
-      "content_length": 9235,
+      "checked_at": "2026-06-22T13:26:09.727027+00:00",
+      "content_hash": "e44580a4ab10a7d92d5d48da9e7c4e76a8ca1f59d246e270a58dd174acd777ba",
+      "content_length": 9234,
       "etag": null,
       "last_modified": null,
       "owner_file": "knowledge/channels/youtube.md",
@@ -1003,7 +1107,7 @@
     },
     "youtube_recommendations": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:16:12.709190+00:00",
+      "checked_at": "2026-06-22T13:25:29.597857+00:00",
       "content_hash": "6ebb373ab3514b71243f44b448cac5c15aa35dc80424713977ff07b85025722a",
       "content_length": 5584,
       "etag": null,
@@ -1016,8 +1120,8 @@
     },
     "youtube_search_discovery_tips": {
       "category": "recommendation",
-      "checked_at": "2026-06-17T04:17:02.858378+00:00",
-      "content_hash": "8e7eaa8ee7711e78fb5a06b2f5a801bb3f01fd8069598a6175ac795e9c3d76ee",
+      "checked_at": "2026-06-22T13:26:12.505903+00:00",
+      "content_hash": "2507b0726d0f1eef354feab5770a5e6d5cfab0c8e22df94ab3d6342127fd94d4",
       "content_length": 6483,
       "etag": null,
       "last_modified": null,
@@ -1029,8 +1133,8 @@
     },
     "youtube_spam_policy": {
       "category": "policy",
-      "checked_at": "2026-06-17T04:17:04.907924+00:00",
-      "content_hash": "c64a2216f5273fbbac4728cc2ceb274d9ec02c1fdc08a73388aebef51e27ec9d",
+      "checked_at": "2026-06-22T13:26:15.116044+00:00",
+      "content_hash": "aa0f1f1d861973749a3babe31a803f468395e08ebe360daa5e084b969e1b509d",
       "content_length": 8560,
       "etag": null,
       "last_modified": null,
@@ -1041,6 +1145,6 @@
       "url": "https://support.google.com/youtube/answer/2801973?hl=en"
     }
   },
-  "updated_at": "2026-06-17T04:17:15.234623+00:00",
+  "updated_at": "2026-06-22T13:26:26.418290+00:00",
   "version": 1
 }

@@ -1,6 +1,6 @@
 # TikTok Organic Posting Rules
 
-Last researched: 2026-06-17
+Last researched: 2026-06-22
 
 Primary sources:
 - Community Guidelines: https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines
@@ -20,12 +20,14 @@ Primary sources:
 
 - Confirm the content is allowed by TikTok Community Guidelines before scripting or scheduling.
 - Check recommendation eligibility rules for content intended for For You distribution.
-- Use the Content Posting API only with the required scopes, user authorization, verified domains/URL prefixes, and required export-page UX.
+- Use the Content Posting API only with the required scopes, user authorization, verified domains/URL prefixes, required export-page UX, and current audit status.
+- Use `video.publish` for direct posting and `video.upload` for inbox/review upload flows, based on the current TikTok Content Posting API guide.
 - Disclose realistic AI-generated or altered content when required by platform tools or local law.
 - Use Content Disclosure settings for own-brand, third-party branded, affiliate, or incentivized posts.
 - Use the Commercial Music Library or documented music rights for commercial/promotional posts.
-- For API publishing, fetch creator info before export/publish UI and respect privacy, comment, duet, and stitch settings.
-- Treat unaudited app clients as private-post-only until current TikTok docs say otherwise.
+- For API publishing, fetch creator info before export/publish UI and respect privacy, comment, duet, stitch, and max-duration settings.
+- Treat unaudited direct-post clients as private-only until TikTok audit lifts visibility restrictions.
+- Post photos only through the documented photo endpoints and verified hosted URLs.
 - Check TikTok Ads policy before Spark Ads, boosting, TikTok Shop promotion, or paid creator amplification.
 
 ## Organic Distribution Guidance
@@ -35,6 +37,7 @@ Primary sources:
 - Avoid duplicate uploads, misleading captions, undisclosed commercial content, watermark reposting, low-quality clips, and content designed only to manipulate recommendation systems.
 - Do not use multiple accounts or edited near-duplicates to bypass originality or duplicate-content systems.
 - Treat comments/DMs as community interaction, not a bot funnel, unless the user opted in and the flow follows TikTok developer rules.
+- Treat direct-post/photo support as opt-in capabilities, not a reason to skip creator review, privacy, or disclosure controls.
 - Label hard numeric algorithm weights as heuristics unless the source is official and current.
 
 ## Harness Guardrails

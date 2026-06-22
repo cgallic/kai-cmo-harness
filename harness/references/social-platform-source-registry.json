@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_researched": "2026-06-17",
+  "last_researched": "2026-06-22",
   "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
   "sources": [
     {
@@ -283,6 +283,15 @@
       "notes": "Business account and commercial use terms."
     },
     {
+      "id": "pinterest_genai_guidelines",
+      "platform": "pinterest",
+      "category": "ai_policy",
+      "title": "Pinterest GenAI Acceptable Use Guidelines",
+      "url": "https://policy.pinterest.com/en/genai-acceptable-use-guidelines",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Official GenAI safety, deception, privacy, IP, and anti-scraping rules."
+    },
+    {
       "id": "pinterest_developer_guidelines",
       "platform": "pinterest",
       "category": "developer",
@@ -377,7 +386,7 @@
       "platform": "reddit",
       "category": "data_policy",
       "title": "Reddit Public Content Policy",
-      "url": "https://redditinc.com/policies/public-content-policy",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy",
       "owner_file": "harness/references/reddit-organic-posting-rules.md",
       "notes": "Public Reddit content/data access and commercial use policy."
     },
@@ -454,6 +463,24 @@
       "notes": "Meta-wide feed/recommendation AI system explainers."
     },
     {
+      "id": "meta_other_policies",
+      "platform": "meta",
+      "category": "commercial_policy",
+      "title": "Meta Other Policies Hub",
+      "url": "https://transparency.meta.com/policies/other-policies/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Gateway to branded content and Pages/Groups/Events policies that affect organic publishing."
+    },
+    {
+      "id": "facebook_feed_ai_system",
+      "platform": "meta",
+      "category": "recommendation",
+      "title": "Facebook Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/fb-feed/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Facebook Feed ranking explainer."
+    },
+    {
       "id": "instagram_feed_ai_system",
       "platform": "instagram",
       "category": "recommendation",
@@ -488,6 +515,24 @@
       "url": "https://help.instagram.com/769983657850450",
       "owner_file": "knowledge/channels/threads-organic.md",
       "notes": "Threads-specific terms surface."
+    },
+    {
+      "id": "threads_feed_ai_system",
+      "platform": "threads",
+      "category": "recommendation",
+      "title": "Threads Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/ig-threads-feed/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Threads feed ranking explainer."
+    },
+    {
+      "id": "threads_ai_labeling",
+      "platform": "threads",
+      "category": "ai_policy",
+      "title": "Label AI Content on Threads",
+      "url": "https://help.instagram.com/407718162047721/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Threads AI labeling, auto-detection, and disclosure help article."
     },
     {
       "id": "instagram_content_publishing_api",
@@ -722,6 +767,15 @@
       "url": "https://docs.joinmastodon.org/user/posting/",
       "owner_file": "knowledge/channels/mastodon-fediverse.md",
       "notes": "Posting behavior and feature guidance."
+    },
+    {
+      "id": "mastodon_quote_posts",
+      "platform": "mastodon",
+      "category": "policy",
+      "title": "Mastodon Quote Posts Guide",
+      "url": "https://docs.joinmastodon.org/user/quote-posts/",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "notes": "Official quote-post permissions, visibility, and author controls."
     },
     {
       "id": "mastodon_api_guidelines",
