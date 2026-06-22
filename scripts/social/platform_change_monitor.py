@@ -25,6 +25,7 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from scripts.autonomy.approval_queue import stage_findings
 from scripts.autonomy.impact import build_impact_card
 from scripts.autonomy.ledger import LedgerRecord, record_run
 
@@ -280,6 +281,10 @@ def main(argv: list[str] | None = None) -> int:
             str(REPORT.relative_to(ROOT)),
         ]
         record.actions_taken.append("Updated snapshot and impact report")
+        # Any finding the router staged for a human lands in the approval queue.
+        staged = stage_findings(record.findings, WORKFLOW)
+        if staged:
+            record.actions_taken.append(f"Staged {len(staged)} finding(s) for approval")
     else:
         record.actions_taken.append("Dry run; no files written")
 
