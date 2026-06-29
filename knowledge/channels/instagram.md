@@ -9,6 +9,8 @@ Primary references:
 - Meta organic rules: `harness/references/meta-organic-posting-rules.md`
 - Meta automation rules: `harness/references/social-automation-rules.md`
 
+Last researched: 2026-06-29
+
 ---
 
 ## Instagram in 2026
@@ -175,6 +177,7 @@ Before drafting or scheduling Instagram content:
 - Check Account Status and recommendation eligibility for content intended to reach non-followers.
 - Use platform disclosure tools for branded, affiliate, incentivized, or own-brand commercial content.
 - Check AI-generated/manipulated media labeling when realistic people, voices, civic material, or likenesses appear.
+- If publishing through the Instagram API, verify the current 100 API-published posts per 24-hour limit and set `is_ai_generated=true` when the new AI Info label applies. Source: https://developers.facebook.com/docs/instagram-platform/content-publishing/ and https://developers.facebook.com/docs/instagram-platform/changelog/ (accessed 2026-06-29).
 - Use approved Meta/Instagram APIs or partner tools for scheduling. Do not browser-bot likes, follows, comments, DMs, or scraping.
 
 ---

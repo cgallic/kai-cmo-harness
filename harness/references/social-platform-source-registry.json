@@ -387,8 +387,11 @@
       "category": "data_policy",
       "title": "Reddit Public Content Policy",
       "url": "https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy",
+      "fallback_urls": [
+        "https://redditinc.com/news/publishing-our-public-content-policy-and-introducing-a-new-community-for-researchers"
+      ],
       "owner_file": "harness/references/reddit-organic-posting-rules.md",
-      "notes": "Public Reddit content/data access and commercial use policy."
+      "notes": "Public Reddit content/data access and commercial use policy. Primary help-center page can be bot-blocked, so the official Reddit news post is the monitoring fallback."
     },
     {
       "id": "reddit_responsible_builder_policy",
@@ -720,8 +723,11 @@
       "category": "developer",
       "title": "Reddit Responsible Builder Policy",
       "url": "https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy",
+      "fallback_urls": [
+        "https://old.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/"
+      ],
       "owner_file": "harness/references/reddit-organic-posting-rules.md",
-      "notes": "Official help-center source for API/app approval expectations."
+      "notes": "Official help-center source for API/app approval expectations. old.reddit announcement is the monitoring fallback when the help-center page returns 403."
     },
     {
       "id": "reddit_developers_docs",

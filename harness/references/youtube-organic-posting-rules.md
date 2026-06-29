@@ -1,6 +1,6 @@
 # YouTube Organic Posting Rules
 
-Last researched: 2026-06-22
+Last researched: 2026-06-29
 
 Primary sources:
 - Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
@@ -20,7 +20,7 @@ Primary sources:
 
 - Check Community Guidelines for every video, Short, live stream, community post, and comment strategy.
 - Check fake engagement rules before any view, like, comment, share, subscriber, giveaway, or engagement CTA.
-- Disclose realistic AI-generated or altered content during upload when the platform requires it.
+- Disclose realistic AI-generated or altered content during upload when the platform requires it, especially when a real person appears to say/do something they did not, a real event/place is altered, or a realistic event is shown that never happened. Source: https://support.google.com/youtube/answer/14328491?hl=en (accessed 2026-06-29).
 - Declare paid promotion, sponsorship, endorsement, or product placement in upload settings when required, including Shorts, live streams, descriptions, comments, and other YouTube features tied to the promotion.
 - Set made-for-kids, age restriction, remixing, license, caption, and altered-content fields intentionally.
 - Use YouTube API only with compliant user consent, privacy policy, Terms link, data deletion, and quota/rate handling.
@@ -32,7 +32,7 @@ Primary sources:
 - Search ranking uses relevance, engagement, and quality with different weights by query type.
 - Watch history, broader viewer trends, current video topics, quality, and user controls affect recommendations.
 - Optimize for honest click-through, viewer satisfaction, retention, session fit, and topic clarity.
-- Avoid artificial metric inflation, engagement incentives, misleading metadata, reused/mass-produced content, and clickbait that disappoints viewers.
+- Avoid artificial metric inflation, engagement incentives, misleading metadata, reused/mass-produced content, and clickbait that disappoints viewers. That includes view exchanges, subscriber swaps, or other "sub4sub" mechanics. Source: https://support.google.com/youtube/answer/3399767?hl=en (accessed 2026-06-29).
 - Treat tags as a minor discovery input, mainly useful for misspellings, not as a ranking lever.
 - Check topic interest, competition, and seasonality before assuming a reach drop is a creative failure.
 - Mark analytics trend breaks when YouTube changes Shorts view counting or API metric definitions.

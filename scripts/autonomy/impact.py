@@ -184,6 +184,7 @@ def build_impact_card(result: dict[str, Any]) -> dict[str, Any]:
         "next_step": next_step,
         "owner_file": owner_file,
         "change_type": change_type,
+        "resolved_url": result.get("resolved_url"),
     }
     decision = route_decision(finding)
     finding.update(decision.as_dict())

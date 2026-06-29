@@ -1,6 +1,6 @@
 # Reddit Organic Posting Rules
 
-Last researched: 2026-06-22
+Last researched: 2026-06-29
 
 Primary sources:
 - User Agreement: https://redditinc.com/policies/user-agreement
@@ -20,6 +20,7 @@ Primary sources:
 - Do not use undisclosed brand accounts, fake users, bought accounts, coordinated voting, vote manipulation, astroturfing, or scraped personal data.
 - Get approval for any new OAuth/API access path if Reddit requires it.
 - Check reputation, account age, karma, flair, moderation queue, and community-specific self-promotion tolerance before posting.
+- If Reddit Help policy pages fail in automation, use the official Reddit news Public Content Policy post and the old.reddit `redditdev` Responsible Builder announcement as monitor fallbacks, then verify the live help-center pages manually in a browser before changing guidance. Sources: https://redditinc.com/news/publishing-our-public-content-policy-and-introducing-a-new-community-for-researchers and https://old.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/ (accessed 2026-06-29).
 
 ## Organic Distribution Guidance
 

@@ -55,37 +55,52 @@ def _clean_text(raw: bytes, content_type: str) -> str:
 
 
 def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
-    req = Request(
-        source["url"],
-        headers={
-            "User-Agent": USER_AGENT,
-            "Accept": "text/html,application/xhtml+xml,application/xml,text/plain;q=0.9,*/*;q=0.5",
-        },
-    )
-    started = time.monotonic()
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            body = response.read()
-            content_type = response.headers.get("content-type", "")
-            cleaned = _clean_text(body, content_type)
-            digest = hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
-            return {
-                "ok": True,
-                "status_code": getattr(response, "status", None),
-                "content_hash": digest,
-                "content_length": len(cleaned),
-                "fetched_at": datetime.now(timezone.utc).isoformat(),
-                "elapsed_ms": int((time.monotonic() - started) * 1000),
-                "etag": response.headers.get("etag"),
-                "last_modified": response.headers.get("last-modified"),
-                "content_type": content_type,
-            }
-    except HTTPError as exc:
-        return _error_result(exc, getattr(exc, "code", None), started)
-    except URLError as exc:
-        return _error_result(exc, None, started)
-    except TimeoutError as exc:
-        return _error_result(exc, None, started)
+    errors: list[dict[str, Any]] = []
+    urls = [source["url"], *source.get("fallback_urls", [])]
+
+    for candidate_url in urls:
+        req = Request(
+            candidate_url,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Accept": "text/html,application/xhtml+xml,application/xml,text/plain;q=0.9,*/*;q=0.5",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+        )
+        started = time.monotonic()
+        try:
+            with urlopen(req, timeout=timeout) as response:
+                body = response.read()
+                content_type = response.headers.get("content-type", "")
+                cleaned = _clean_text(body, content_type)
+                digest = hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
+                result = {
+                    "ok": True,
+                    "status_code": getattr(response, "status", None),
+                    "content_hash": digest,
+                    "content_length": len(cleaned),
+                    "fetched_at": datetime.now(timezone.utc).isoformat(),
+                    "elapsed_ms": int((time.monotonic() - started) * 1000),
+                    "etag": response.headers.get("etag"),
+                    "last_modified": response.headers.get("last-modified"),
+                    "content_type": content_type,
+                }
+                if candidate_url != source["url"]:
+                    result["resolved_url"] = candidate_url
+                return result
+        except HTTPError as exc:
+            error = _error_result(exc, getattr(exc, "code", None), started)
+        except URLError as exc:
+            error = _error_result(exc, None, started)
+        except TimeoutError as exc:
+            error = _error_result(exc, None, started)
+
+        error["attempted_url"] = candidate_url
+        errors.append(error)
+
+    final_error = errors[-1] if errors else _error_result(RuntimeError("fetch failed"), None, time.monotonic())
+    final_error["attempted_urls"] = urls
+    return final_error
 
 
 def _error_result(exc: BaseException, status_code: int | None, started: float) -> dict[str, Any]:
@@ -145,6 +160,7 @@ def check_sources(platforms: set[str] | None, limit: int | None, timeout: int) -
                 "etag": current.get("etag"),
                 "last_modified": current.get("last_modified"),
                 "status_code": current.get("status_code"),
+                "resolved_url": current.get("resolved_url"),
                 "checked_at": current.get("fetched_at"),
             }
         else:
@@ -213,6 +229,9 @@ def write_report(results: list[dict[str, Any]], path: Path = REPORT) -> None:
             lines.append(f"- **Decision:** `{card['decision']}` ({card['decision_reason']})")
             lines.append(f"- **Risk:** `{card['risk_level']}` · **Confidence:** {card['confidence']}")
             lines.append(f"- **Source:** {card['source_url']}")
+            resolved_url = card.get("resolved_url")
+            if resolved_url and resolved_url != card["source_url"]:
+                lines.append(f"- **Monitor fetch URL:** {resolved_url}")
             if card.get("owner_file"):
                 lines.append(f"- **Owner doc:** `{card['owner_file']}`")
             lines.append(f"- **Next step:** {card['next_step']}")

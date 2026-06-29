@@ -1,6 +1,6 @@
 # LinkedIn Organic Posting Rules
 
-Last researched: 2026-06-17
+Last researched: 2026-06-29
 
 Primary sources:
 - LinkedIn User Agreement: https://www.linkedin.com/legal/user-agreement
@@ -20,6 +20,7 @@ Primary sources:
 - Do not scrape, enrich, resell, or combine LinkedIn data outside approved API terms.
 - Review Developer AI Policy before using LinkedIn organic content, comments, profile data, or messages in AI workflows.
 - Keep authorization from the relevant Page/admin/account manager for scheduling, moderation, reporting, or publishing.
+- Pin LinkedIn API workflows to a currently supported Marketing version and review the recent-changes page before publish/reporting runs. LinkedIn's 202506 Marketing version is already sunset, and some post features remain version-gated. Source: https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05 (accessed 2026-06-29).
 - Check LinkedIn Ads policy before boosting or sponsoring organic posts.
 - Treat third-party reach multipliers, timing claims, and algorithm weights as benchmarks only unless LinkedIn documents them directly.
 

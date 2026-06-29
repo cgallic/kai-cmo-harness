@@ -1,6 +1,6 @@
 # TikTok Organic Posting Rules
 
-Last researched: 2026-06-22
+Last researched: 2026-06-29
 
 Primary sources:
 - Community Guidelines: https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines
@@ -28,6 +28,7 @@ Primary sources:
 - For API publishing, fetch creator info before export/publish UI and respect privacy, comment, duet, stitch, and max-duration settings.
 - Treat unaudited direct-post clients as private-only until TikTok audit lifts visibility restrictions.
 - Post photos only through the documented photo endpoints and verified hosted URLs.
+- Do not add brand logos, watermarks, promotional links, or promotional text overlays to content sent through Share Kit or Content Posting flows. TikTok's content-sharing guidelines treat that as a violation. Source: https://developers.tiktok.com/doc/content-sharing-guidelines (accessed 2026-06-29).
 - Check TikTok Ads policy before Spark Ads, boosting, TikTok Shop promotion, or paid creator amplification.
 
 ## Organic Distribution Guidance
