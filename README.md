@@ -93,7 +93,8 @@ curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/instal
 
 ```bash
 git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
-  && cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/ \
+  && mkdir -p ~/.claude/skills \
+  && cp -r /tmp/kai-install/harness/skills/kai /tmp/kai-install/harness/skills/kai-* /tmp/kai-install/harness/skills/kaicalls-design ~/.claude/skills/ \
   && rm -rf /tmp/kai-install \
   && echo "Installed. Type /kai-start in Claude Code."
 ```

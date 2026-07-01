@@ -4,7 +4,7 @@ set -euo pipefail
 # ============================================================================
 # Kai CMO Harness — Installer
 # ============================================================================
-# Installs 33 marketing slash commands into Claude Code.
+# Installs Kai marketing slash commands and KaiCalls design guidance into Claude Code.
 # Works on macOS, Linux, and Windows (Git Bash / WSL).
 #
 # Usage:
@@ -74,7 +74,13 @@ printf "\n${BOLD}  Installing skills...${RESET}\n"
 SKILL_COUNT=0
 SKIPPED=0
 
-for skill_dir in "$TMPDIR_KAI"/harness/skills/kai*; do
+skill_dirs=(
+    "$TMPDIR_KAI"/harness/skills/kai
+    "$TMPDIR_KAI"/harness/skills/kai-*
+    "$TMPDIR_KAI"/harness/skills/kaicalls-design
+)
+
+for skill_dir in "${skill_dirs[@]}"; do
     if [[ ! -d "$skill_dir" ]]; then
         continue
     fi
@@ -91,14 +97,6 @@ for skill_dir in "$TMPDIR_KAI"/harness/skills/kai*; do
     cp -r "$skill_dir" "$target"
     SKILL_COUNT=$((SKILL_COUNT + 1))
 done
-
-# Also install kaicalls-design if present
-if [[ -d "$TMPDIR_KAI/harness/skills/kaicalls-design" ]]; then
-    target="${SKILLS_DIR}/kaicalls-design"
-    [[ -d "$target" ]] && rm -rf "$target"
-    cp -r "$TMPDIR_KAI/harness/skills/kaicalls-design" "$target"
-    SKILL_COUNT=$((SKILL_COUNT + 1))
-fi
 
 if [[ "$SKILL_COUNT" -eq 0 ]]; then
     fail "No skills found in the repository. Something went wrong."
@@ -129,6 +127,12 @@ if [[ -f "${SKILLS_DIR}/kai-start/SKILL.md" ]]; then
     info "/kai-start onboarding ready"
 else
     warn "/kai-start not found (optional — you can use /kai directly)"
+fi
+
+if [[ -f "${SKILLS_DIR}/kaicalls-design/SKILL.md" ]] && [[ -f "${SKILLS_DIR}/kaicalls-design/references/full-color-tokens.md" ]] && [[ -f "${SKILLS_DIR}/kaicalls-design/references/component-examples.md" ]]; then
+    info "kaicalls-design references ready"
+else
+    fail "Verification failed — kaicalls-design reference files were not installed"
 fi
 
 # ── Done ─────────────────────────────────────────────────────────────────────
