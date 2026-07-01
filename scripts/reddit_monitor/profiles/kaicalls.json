@@ -35,7 +35,12 @@
     "sales",
     "b2bsales",
     "leadgeneration",
-    "outbound"
+    "outbound",
+    "PestControl",
+    "landscaping",
+    "AutoRepair",
+    "cleaningbusiness",
+    "GarageDoors"
   ],
   "trigger_keywords": [
     "voice ai",
@@ -86,6 +91,18 @@
     "lead response",
     "callback",
     "lose leads",
-    "losing leads"
+    "losing leads",
+    "ringcentral",
+    "google voice",
+    "openphone",
+    "quo",
+    "grasshopper",
+    "nextiva",
+    "getnextphone",
+    "nextphone",
+    "withallo",
+    "agentzap",
+    "skipcalls",
+    "marlie"
   ]
 }
