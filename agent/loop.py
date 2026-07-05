@@ -213,6 +213,13 @@ class AgentLoop:
         if fresh_graph:
             self._skip_descendants(fresh_graph, node_id)
 
+        # Replan instead of dead-end: flag the graph so the weekly CMO review
+        # (agent/tasks/cmo_review.py) re-decomposes the remaining work with
+        # this failure as context. needs_replan graphs are excluded from
+        # list_active_task_graphs, so execution of this graph stops here.
+        agent_db.update_task_graph_status(graph.graph_id, "needs_replan")
+        print(f"[{datetime.now()}] Task graph {graph.graph_id} marked needs_replan after node {node_id} failed")
+
     def _skip_descendants(self, graph, node_id: str):
         """Recursively mark all downstream child nodes as skipped in the database."""
         children = [edge[1] for edge in graph.edges if edge[0] == node_id]
@@ -232,6 +239,11 @@ class AgentLoop:
         """Update overall graph status if all nodes are terminal."""
         fresh_graph = agent_db.get_task_graph(graph_id)
         if not fresh_graph:
+            return
+
+        # A graph flagged for replan keeps that status — the weekly CMO
+        # review owns its next transition (needs_replan -> replanned).
+        if fresh_graph.status == "needs_replan":
             return
 
         all_terminal = True

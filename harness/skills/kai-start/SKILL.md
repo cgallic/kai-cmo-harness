@@ -105,7 +105,29 @@ Use this structure:
 
 Fill in everything you can from auto-detection. Mark unknowns with `[TODO]` — the user can fill these in later. Every field should have SOMETHING, even if approximate.
 
-## Step 4: Recommend First Command
+## Step 4: Create the First Goal (goal loop)
+
+Ask ONE question: "What's the single marketing number you want to move in the next 90 days?" (e.g. organic clicks, published pieces, signups). Then register it so the weekly CMO review can measure pace and plan work against it:
+
+```bash
+python -m scripts.harness_cli goals add \
+  --brand <brand-id> \
+  --name "<goal name>" \
+  --kpi <kpi_name> \
+  --target <number> \
+  --current <today's number, or 0> \
+  --deadline <ISO date ~90 days out>
+```
+
+Notes:
+- KPIs the harness can refresh automatically from the content log: `content_published`, `content_winners`, `organic_clicks`, `organic_impressions`. Any other KPI works but needs manual updates via `goals update --current`.
+- Use the real current value if the user knows it; never invent one. Unknown today is `--current 0` plus a `[TODO]` note in MARKETING.md.
+- Check progress anytime with `python -m scripts.harness_cli goals list`.
+- The Monday CMO review (agent scheduler task `cmo_review`) refreshes goal values, flags behind-pace goals, and proposes task graphs — all resulting actions still require human approval before anything publishes.
+
+If the user doesn't want a goal yet, skip this step — everything else works without one.
+
+## Step 5: Recommend First Command
 
 Based on what you found, recommend ONE command:
 

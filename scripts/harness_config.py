@@ -283,3 +283,80 @@ def get_config() -> HarnessConfig:
     if _config is None:
         _config = load_config()
     return _config
+
+
+# ── Publishing + calendar path accessors ────────────────────────────────────
+# Appended accessors (kept module-level so they re-read config.yaml/env at call
+# time — tests and long-running agents can flip these without a restart).
+
+
+def get_publishing_config() -> dict:
+    """Return the raw `publishing:` section of config.yaml (empty dict if absent)."""
+    raw = _load_config_yaml().get("publishing") or {}
+    return raw if isinstance(raw, dict) else {}
+
+
+def publishing_enabled() -> bool:
+    """Whether auto-publishing is enabled. Default OFF.
+
+    KAI_PUBLISH_ENABLED env var overrides config.yaml `publishing.enabled`.
+    Accepted truthy values: 1/true/yes/on; falsy: 0/false/no/off.
+    """
+    env = os.environ.get("KAI_PUBLISH_ENABLED", "").strip().lower()
+    if env in ("1", "true", "yes", "on"):
+        return True
+    if env in ("0", "false", "no", "off"):
+        return False
+    return bool(get_publishing_config().get("enabled", False))
+
+
+def get_site_publishing_config(site: str) -> dict:
+    """Per-site publishing target from config.yaml (`publishing.sites.<site>`).
+
+    Returns {} when the site has no publishing target configured. Expected keys:
+    `platform` (wordpress|ghost|webflow|markdown, required to publish) plus any
+    platform kwargs (status, categories, tags, output_dir, ...).
+    """
+    sites = get_publishing_config().get("sites") or {}
+    site_cfg = sites.get(site) or {}
+    return site_cfg if isinstance(site_cfg, dict) else {}
+
+
+def get_content_calendar_path() -> Path:
+    """Path to the content calendar markdown file.
+
+    KAI_CONTENT_CALENDAR_PATH env var overrides; default is
+    <data_dir>/content-calendar.md under the repo data dir.
+    """
+    env = os.environ.get("KAI_CONTENT_CALENDAR_PATH", "").strip()
+    if env:
+        return Path(env)
+    return get_config().data_dir / "content-calendar.md"
+
+
+def get_harness_script() -> Path:
+    """Path to the harness pipeline CLI the Discord handler shells out to.
+
+    KAI_HARNESS_SCRIPT env var overrides; default is
+    ``<cmo_base_dir>/scripts/harness_cli.py`` (repo-relative on a fresh
+    clone — deployed installs point CMO_BASE_DIR at their checkout).
+    Read at call time so tests and long-running agents can redirect it
+    without a restart.
+    """
+    env = os.environ.get("KAI_HARNESS_SCRIPT", "").strip()
+    if env:
+        return Path(env)
+    return get_config().cmo_base_dir / "scripts" / "harness_cli.py"
+
+
+def get_calendar_dir() -> Path:
+    """Directory holding the structured editorial calendar store (JSONL).
+
+    Defaults to ``<data_dir>/calendar`` (i.e. ``data/calendar``).
+    KAI_CALENDAR_DIR env var overrides — read at call time so tests and
+    long-running agents can redirect it without a restart.
+    """
+    env = os.environ.get("KAI_CALENDAR_DIR", "").strip()
+    if env:
+        return Path(env)
+    return get_config().data_dir / "calendar"

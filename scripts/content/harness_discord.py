@@ -27,13 +27,25 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dotenv import load_dotenv
-load_dotenv("/opt/cmo-analytics/.env")
+# Allow direct invocation (python3 harness_discord.py ...) from any cwd.
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-VENV_PYTHON = "/opt/cmo-analytics/venv/bin/python3"
-HARNESS = "/opt/cmo-analytics/scripts/kai_harness.py"
-CONTENT_LOG = "/opt/cmo-analytics/data/content_log.json"
-PENDING_DIR = "/opt/cmo-analytics/data/pending_checks"
+# harness_config loads .env (CMO_BASE_DIR/.env, then repo root) on import.
+from scripts.harness_config import get_config, get_harness_script
+from scripts.self_improvement.grades import get_grade
+
+_CFG = get_config()
+
+# All paths come from centralized config — override via env for deployed
+# installs (CMO_BASE_DIR, VENV_PYTHON, CMO_DATA_DIR, KAI_HARNESS_SCRIPT).
+# Defaults are repo-relative so a fresh clone works with no setup.
+BASE_DIR = str(_CFG.cmo_base_dir)
+VENV_PYTHON = _CFG.venv_python
+HARNESS = str(get_harness_script())
+CONTENT_LOG = str(_CFG.content_log)
+PENDING_DIR = str(_CFG.pending_checks_dir)
 
 FORMATS = ["blog", "linkedin", "email-lifecycle", "cold-email", "tiktok", "meta-ads", "google-ads", "press", "seo"]
 SITES = ["kaicalls", "buildwithkai", "abp", "meetkai", "connorgallic", "vocalscribe"]
@@ -59,7 +71,7 @@ def format_status() -> str:
     pending = list(Path(PENDING_DIR).glob("*.json")) if Path(PENDING_DIR).exists() else []
     pending_count = sum(1 for f in pending if json.loads(f.read_text()).get("status") == "pending")
 
-    winners = [e for e in log if e.get("performance_30d", {}).get("grade") == "winner"]
+    winners = [e for e in log if get_grade(e) == "winner"]
     total = len(log)
 
     lines = [
@@ -85,8 +97,10 @@ def format_report(site: str = "all", days: int = 30) -> str:
 
     by_grade: dict[str, list] = {"winner": [], "average": [], "underperformer": [], "pending": []}
     for e in log:
-        perf = e.get("performance_30d")
-        grade = perf.get("grade", "average") if perf else "pending"
+        # get_grade tolerates dict/legacy-str/None performance_30d.
+        grade = get_grade(e) or ("average" if e.get("performance_30d") else "pending")
+        if grade not in by_grade:
+            grade = "average"
         by_grade[grade].append(e)
 
     lines = [f"**📊 Content Report** — {site} ({days}d)\n"]
@@ -240,8 +254,8 @@ def parse_and_respond(command_str: str, channel_id: str) -> str:
         # Run in background — spawn subprocess
         log_file = f"/tmp/harness_run_{datetime.now(timezone.utc).strftime('%H%M%S')}.log"
         bg_cmd = (
-            f"cd /opt/cmo-analytics && source venv/bin/activate && "
-            f"python3 {HARNESS} run --task {fmt} --site {site} --keyword \"{keyword}\" "
+            f"cd {BASE_DIR} && "
+            f"{VENV_PYTHON} {HARNESS} run --task {fmt} --site {site} --keyword \"{keyword}\" "
             f"--skip-approval > {log_file} 2>&1 && "
             f"openclaw message send --channel discord --target {channel_id} "
             f"--message \"✅ Harness done: {fmt}/{site}/{keyword}. Draft at /tmp/harness_draft.md. "
@@ -293,8 +307,8 @@ def parse_kai_command(command_str: str, channel_id: str) -> str:
     # Spawn engine in background
     log_file = f"/tmp/kai_generate_{datetime.now(timezone.utc).strftime('%H%M%S')}.log"
     bg_cmd = (
-        f"cd /opt/cmo-analytics && source venv/bin/activate && "
-        f"python3 -c \""
+        f"cd {BASE_DIR} && "
+        f"{VENV_PYTHON} -c \""
         f"import asyncio; from scripts.content.engine import generate; "
         f"r = asyncio.run(generate('{fmt}', '{site}', '{keyword}')); "
         f"print(f'Status: {{r.status}}, Score: {{r.gate_report.get(\"score\", \"?\") if r.gate_report else \"?\"}}')"

@@ -31,6 +31,14 @@ DATA_DIR = REPO_ROOT / "data"
 INTEL_DIR = DATA_DIR / "intel"
 CONTENT_LOG = DATA_DIR / "content_log.json"
 
+# Allow direct invocation (python3 scripts/reporting/weekly_report.py) from any cwd.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+# performance_30d drifted across writers (dict | legacy str | None) — always
+# read grades through this helper (see scripts/self_improvement/grades.py).
+from scripts.self_improvement.grades import get_grade  # noqa: E402
+
 
 def _load_config() -> dict:
     config_path = REPO_ROOT / "config.yaml"
@@ -99,7 +107,7 @@ def gather_content_data() -> dict:
 
     log = json.loads(CONTENT_LOG.read_text())
     this_week = [e for e in log if e.get("created", "") > datetime.now(timezone.utc).strftime("%Y-%m-%d")]
-    winners = [e for e in log if e.get("performance_30d", {}).get("grade") == "winner"]
+    winners = [e for e in log if get_grade(e) == "winner"]
 
     return {
         "available": True,

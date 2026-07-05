@@ -41,7 +41,7 @@ Pillar: [Broad Topic]
 └── Cluster: [Specific angle 3] — targets "[keyword]"
 ```
 
-This structure builds topical authority for SEO. Load `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\qdp-qdh-qds-content-architecture.md` for the full architecture framework.
+This structure builds topical authority for SEO. Load `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` for the full architecture framework.
 
 ### Calendar Table
 
@@ -53,7 +53,7 @@ This structure builds topical authority for SEO. Load `E:\Dev2\kai-cmo-harness-w
 
 ### Persona Rotation
 
-Rotate across personas to avoid speaking to only one audience. Map each piece to one of the 8 personas from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`.
+Rotate across personas to avoid speaking to only one audience. Map each piece to one of the 8 personas from `knowledge/personas/_persona-index.md`.
 
 ### Idea Eval and Kill List
 
@@ -93,7 +93,7 @@ Present the content map to the user. Confirm:
 
 ## Phase 3: Brief Generation
 
-For each piece on the calendar, generate a brief using the schema from `E:\Dev2\kai-cmo-harness-work\harness\brief-schema.md`.
+For each piece on the calendar, generate a brief using the schema from `harness/brief-schema.md`.
 
 Output briefs to `workspace/content-calendar/briefs/[week]-[slug].json`.
 
@@ -118,7 +118,7 @@ If the user wants content produced (not just planned), batch-produce using `/kai
 5. Run quality gates (Four U's >= 12/16 for blog, banned words, SEO lint)
 6. Max 2 retries on failure
 
-All paths relative to `E:\Dev2\kai-cmo-harness-work\`.
+All paths are relative to the repo root (the directory containing CLAUDE.md).
 
 ### Parallelization
 

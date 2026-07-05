@@ -26,6 +26,7 @@ from google import genai as google_genai
 
 # Use centralized config
 from scripts.harness_config import get_config
+from scripts.self_improvement.grades import get_grade
 
 _CFG = get_config()
 
@@ -84,12 +85,12 @@ def is_winner(entry: dict) -> bool:
 
     # Social content: check social_metrics directly
     if platform in ("tiktok", "instagram") and entry.get("social_metrics"):
-        perf = entry.get("performance_30d", {})
-        return perf.get("grade") == "winner"
+        return get_grade(entry) == "winner"
 
-    # Web content: check GSC/GA4
+    # Web content: check GSC/GA4. performance_30d can be a legacy string
+    # grade (see scripts/self_improvement/grades.py) — never assume dict.
     perf = entry.get("performance_30d")
-    if not perf:
+    if not isinstance(perf, dict):
         return False
     gsc = perf.get("gsc", {})
     ga4 = perf.get("ga4", {})
@@ -107,7 +108,9 @@ def is_winner(entry: dict) -> bool:
 def analyze_winner(entry: dict) -> str:
     """Use Gemini to extract what made this piece win."""
     platform = entry.get("platform", "web")
-    perf = entry.get("performance_30d", {})
+    perf = entry.get("performance_30d")
+    if not isinstance(perf, dict):
+        perf = {}  # legacy string grade or unmeasured — no sub-metrics
 
     # Build performance section based on platform type
     if platform in ("tiktok", "instagram") and entry.get("social_metrics"):

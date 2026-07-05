@@ -31,6 +31,7 @@ def _init_db():
         CREATE TABLE IF NOT EXISTS campaigns (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT UNIQUE NOT NULL,
+            campaign_id TEXT,
             campaign_type TEXT,
             goal TEXT,
             product TEXT,
@@ -53,12 +54,26 @@ def _init_db():
         CREATE INDEX IF NOT EXISTS idx_metrics_campaign ON metrics(campaign_name);
         CREATE INDEX IF NOT EXISTS idx_metrics_channel ON metrics(campaign_name, channel);
     """)
+    # Migrate pre-campaign_id databases in place (ALTER is a no-op after the
+    # first run; CREATE TABLE IF NOT EXISTS never adds columns to old DBs).
+    cols = [row[1] for row in conn.execute("PRAGMA table_info(campaigns)")]
+    if "campaign_id" not in cols:
+        conn.execute("ALTER TABLE campaigns ADD COLUMN campaign_id TEXT")
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_campaigns_campaign_id ON campaigns(campaign_id)"
+    )
+    conn.commit()
     conn.close()
 
 
 def create_campaign(name: str, assets_dir: str = "", campaign_type: str = "", goal: str = "",
-                    product: str = "", keyword: str = ""):
-    """Register a new campaign for tracking."""
+                    product: str = "", keyword: str = "", campaign_id: str = ""):
+    """Register a new campaign for tracking.
+
+    ``campaign_id`` is the shared join key minted by campaign_planner
+    (``cmp-YYYYMMDD-<slug>``). It is read from the manifest.json in
+    ``assets_dir`` when not passed explicitly.
+    """
     _init_db()
     conn = sqlite3.connect(str(DB_PATH))
 
@@ -71,19 +86,42 @@ def create_campaign(name: str, assets_dir: str = "", campaign_type: str = "", go
             goal = goal or manifest.get("goal", "")
             product = product or manifest.get("product", "")
             keyword = keyword or manifest.get("keyword", "")
+            campaign_id = campaign_id or manifest.get("campaign_id", "")
 
     try:
         conn.execute(
-            "INSERT INTO campaigns (name, campaign_type, goal, product, keyword, assets_dir, start_date) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (name, campaign_type, goal, product, keyword, assets_dir,
+            "INSERT INTO campaigns (name, campaign_id, campaign_type, goal, product, keyword, assets_dir, start_date) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (name, campaign_id or None, campaign_type, goal, product, keyword, assets_dir,
              datetime.now(timezone.utc).strftime("%Y-%m-%d")),
         )
         conn.commit()
         print(f"Campaign '{name}' created.")
     except sqlite3.IntegrityError:
+        # Row exists — backfill campaign_id if we now have one and it is empty.
+        if campaign_id:
+            conn.execute(
+                "UPDATE campaigns SET campaign_id = ? WHERE name = ? "
+                "AND (campaign_id IS NULL OR campaign_id = '')",
+                (campaign_id, name),
+            )
+            conn.commit()
         print(f"Campaign '{name}' already exists.")
     conn.close()
+
+
+def find_campaign(campaign_id: str) -> dict | None:
+    """Look up a tracked campaign by its shared campaign_id join key."""
+    if not campaign_id:
+        return None
+    _init_db()
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    row = conn.execute(
+        "SELECT * FROM campaigns WHERE campaign_id = ?", (campaign_id,)
+    ).fetchone()
+    conn.close()
+    return dict(row) if row else None
 
 
 def update_metric(campaign_name: str, channel: str, metric: str, value: float):
@@ -112,6 +150,8 @@ def show_report(campaign_name: str):
 
     print(f"\n{'═'*60}")
     print(f"  Campaign: {campaign['name']}")
+    if campaign["campaign_id"]:
+        print(f"  Campaign ID: {campaign['campaign_id']}")
     print(f"  Type: {campaign['campaign_type']} | Goal: {campaign['goal']}")
     print(f"  Product: {campaign['product']} | Keyword: {campaign['keyword']}")
     print(f"  Status: {campaign['status']} | Started: {campaign['start_date']}")
@@ -170,6 +210,7 @@ def main():
     parser = argparse.ArgumentParser(description="Track campaign performance")
     parser.add_argument("--create", metavar="NAME", help="Create a new campaign")
     parser.add_argument("--dir", help="Campaign assets directory (for --create)")
+    parser.add_argument("--campaign-id", help="Shared campaign id (cmp-YYYYMMDD-<slug>; read from manifest.json if omitted)")
     parser.add_argument("--update", metavar="NAME", help="Update campaign metric")
     parser.add_argument("--channel", help="Channel (email, social, ads, landing_page, etc.)")
     parser.add_argument("--metric", help="Metric name (opens, clicks, spend, conversions, etc.)")
@@ -180,7 +221,7 @@ def main():
     args = parser.parse_args()
 
     if args.create:
-        create_campaign(args.create, assets_dir=args.dir or "")
+        create_campaign(args.create, assets_dir=args.dir or "", campaign_id=args.campaign_id or "")
     elif args.update:
         if not all([args.channel, args.metric, args.value is not None]):
             print("--update requires --channel, --metric, and --value")

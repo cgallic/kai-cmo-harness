@@ -9,6 +9,9 @@ Usage:
   kai-harness brief --site kaicalls --keyword "law firm answering service"
   kai-harness report [--days 30] [--site kaicalls]
   kai-harness patterns [--site all]
+  kai-harness goals add --brand kaicalls --name "Q3 organic" --kpi organic_clicks --target 5000 --deadline 2026-09-30
+  kai-harness goals list [--brand kaicalls] [--json]
+  kai-harness goals update goal_ab12cd34 --current 1200
   kai-harness status
 
 Three laws:
@@ -29,6 +32,13 @@ from pathlib import Path
 
 import yaml
 
+# Allow direct invocation (python3 scripts/harness_cli.py ...) from any cwd —
+# the Discord handler shells out to this file by path (get_harness_script()).
+# Module form (python -m scripts.harness_cli) works either way.
+_BOOTSTRAP_ROOT = Path(__file__).resolve().parents[1]
+if str(_BOOTSTRAP_ROOT) not in sys.path:
+    sys.path.insert(0, str(_BOOTSTRAP_ROOT))
+
 from scripts.harness_config import get_config
 from scripts.content._writer import (
     FORMAT_INSTRUCTIONS as _WRITER_FORMAT_INSTRUCTIONS,
@@ -42,7 +52,12 @@ from scripts.content._writer import (
 
 _CFG = get_config()
 
-from google import genai as google_genai
+# Optional dependency: only the generation commands need Gemini. Registry
+# commands (goals, report, status) must work without it installed.
+try:
+    from google import genai as google_genai
+except ImportError:
+    google_genai = None
 
 # ── Paths (derived from centralized config) ───────────────────────────────
 _REPO_ROOT   = _CFG.repo_root
@@ -285,6 +300,11 @@ def gemini(prompt: str, model: str | None = None) -> str:
     Raises RuntimeError after api_max_retries consecutive failures.
     """
     global _CONSECUTIVE_FAILURES
+    if google_genai is None:
+        raise RuntimeError(
+            "google-genai is not installed — content generation commands need it "
+            "(pip install google-genai)"
+        )
     model = model or _CFG.gemini_model
     timeout = _CFG.api_timeout
 
@@ -948,6 +968,93 @@ def cmd_weekly_report(args):
     print(out)
 
 
+def cmd_goals(args):
+    """Goal registry CRUD — kai-harness goals add|list|update.
+
+    Writes through kai.runtime.goals.GoalRegistry (files under
+    <KAI_RUNTIME_DIR|data/runtime>/goals/). The weekly CMO review task
+    (agent/tasks/cmo_review.py) reads these goals, refreshes KPI values,
+    and decomposes behind-pace goals into task graphs.
+    """
+    from kai.runtime.goals import GoalRegistry, compute_goal_pace
+
+    registry = GoalRegistry()
+
+    if args.goals_command == "add":
+        metadata = {"baseline_value": args.current}
+        if args.site:
+            metadata["site"] = args.site
+        goal = registry.create_goal(
+            brand_id=args.brand,
+            name=args.name,
+            kpi_name=args.kpi,
+            target_value=args.target,
+            current_value=args.current,
+            target_direction=args.direction,
+            deadline=args.deadline or "",
+            metadata=metadata,
+        )
+        print(f"Created goal {goal.goal_id}")
+        print(json.dumps(goal.model_dump(), indent=2, sort_keys=True))
+        return
+
+    if args.goals_command == "list":
+        goals = registry.list_goals(brand_id=args.brand)
+        if not args.all:
+            goals = [g for g in goals if g.status == "active"]
+        if args.json:
+            print(json.dumps(
+                [g.model_dump() for g in sorted(goals, key=lambda g: g.goal_id)],
+                indent=2, sort_keys=True,
+            ))
+            return
+        if not goals:
+            print("No goals found.")
+            return
+        header("Kai Harness — Goals")
+        for g in sorted(goals, key=lambda g: (g.brand_id, g.goal_id)):
+            pace = compute_goal_pace(g)
+            if pace["achieved"]:
+                flag = "achieved"
+            elif pace["behind_pace"]:
+                flag = "BEHIND PACE"
+            else:
+                flag = "on pace"
+            if pace["overdue"]:
+                flag += ", overdue"
+            deadline = g.deadline or "no deadline"
+            print(
+                f"  {g.goal_id}  [{g.brand_id}] {g.name}\n"
+                f"      {g.kpi_name}: {g.current_value:g} / {g.target_value:g} "
+                f"({g.target_direction}, due {deadline}) — {flag} — status={g.status}"
+            )
+        return
+
+    if args.goals_command == "update":
+        goal = registry.get_goal(args.id)
+        if goal is None:
+            print(f"Goal not found: {args.id}")
+            sys.exit(1)
+        if args.current is not None:
+            if goal.metadata is None:
+                goal.metadata = {}
+            # Anchor pace math to the original starting value.
+            goal.metadata.setdefault("baseline_value", goal.current_value)
+            goal.current_value = args.current
+        if args.target is not None:
+            goal.target_value = args.target
+        if args.deadline is not None:
+            goal.deadline = args.deadline
+        if args.status is not None:
+            goal.status = args.status
+        if args.name is not None:
+            goal.name = args.name
+        registry.save_goal(goal)
+        print(f"Updated goal {goal.goal_id}")
+        print(json.dumps(goal.model_dump(), indent=2, sort_keys=True))
+        return
+
+
 def cmd_dashboard(_args):
     header("Kai Harness — Dashboard")
     dashboard_path = SCRIPTS / "reporting" / "dashboard.html"
@@ -1046,6 +1153,34 @@ def main():
     # dashboard
     sub.add_parser("dashboard", help="Open marketing dashboard in browser")
 
+    # goals
+    gl = sub.add_parser("goals", help="Track brand goals / KPI targets (GoalRegistry)")
+    glsub = gl.add_subparsers(dest="goals_command", required=True)
+
+    gla = glsub.add_parser("add", help="Create a goal")
+    gla.add_argument("--brand",     required=True, help="Brand id the goal belongs to")
+    gla.add_argument("--name",      required=True, help="Human-readable goal name")
+    gla.add_argument("--kpi",       required=True,
+                     help="KPI name (auto-refreshable: content_published, content_winners, organic_clicks, organic_impressions)")
+    gla.add_argument("--target",    required=True, type=float, help="Target KPI value")
+    gla.add_argument("--current",   type=float, default=0.0, help="Current KPI value (default 0)")
+    gla.add_argument("--direction", choices=["increase", "decrease"], default="increase")
+    gla.add_argument("--deadline",  default="", help="ISO date, e.g. 2026-12-31")
+    gla.add_argument("--site",      help="Content-log site key if it differs from --brand")
+
+    gll = glsub.add_parser("list", help="List goals with pace vs deadline")
+    gll.add_argument("--brand", help="Filter by brand id")
+    gll.add_argument("--all",   action="store_true", help="Include non-active goals")
+    gll.add_argument("--json",  action="store_true", help="Machine-readable output")
+
+    glu = glsub.add_parser("update", help="Update a goal's value/target/status")
+    glu.add_argument("id", help="Goal id (goal_xxxxxxxx)")
+    glu.add_argument("--current",  type=float, help="New current KPI value")
+    glu.add_argument("--target",   type=float, help="New target KPI value")
+    glu.add_argument("--deadline", help="New ISO deadline")
+    glu.add_argument("--status",   choices=["active", "achieved", "failed"])
+    glu.add_argument("--name",     help="New goal name")
+
     args = p.parse_args()
     {
         "run":            cmd_run,
@@ -1060,6 +1195,7 @@ def main():
         "intel":          cmd_intel,
         "weekly-report":  cmd_weekly_report,
         "dashboard":      cmd_dashboard,
+        "goals":          cmd_goals,
     }[args.command](args)
 
 

@@ -58,6 +58,75 @@ def _find_bracket_placeholders(content: str) -> list[str]:
     return find_placeholders(content)
 
 
+def _slugify(keyword: str) -> str:
+    """URL slug for a keyword: lowercase, alphanumerics joined by hyphens."""
+    return re.sub(r"[^a-z0-9]+", "-", keyword.lower()).strip("-")
+
+
+def _publish_if_configured(
+    site: str,
+    title: str,
+    body: str,
+    content_hash: str,
+    keyword: str,
+    log_file: str | None = None,
+) -> dict:
+    """Publish an approved draft when publishing is explicitly enabled + configured.
+
+    NEVER fabricates URLs. Publishing is opt-in twice over: the operator must
+    enable it (config `publishing.enabled` or KAI_PUBLISH_ENABLED env — default
+    OFF) AND configure a platform for the site (`publishing.sites.<site>`).
+    Idempotent: skips the publish call when the same (site, content_hash) was
+    already published, returning the previously logged real URL.
+
+    Returns a dict:
+      published: bool — True only when a real URL/post exists
+      url: str | None — REAL url from the publisher or the prior log entry
+      skipped: str | None — why nothing was pushed
+        ("publishing_disabled" | "site_not_configured" | "already_published"
+         | "publish_failed")
+      result: raw publisher response when a publish was attempted
+    """
+    from scripts.harness_config import get_site_publishing_config, publishing_enabled
+    from scripts.content.content_log import find_entry_by_hash
+
+    if not publishing_enabled():
+        return {"published": False, "url": None, "skipped": "publishing_disabled"}
+
+    site_cfg = get_site_publishing_config(site)
+    platform = site_cfg.get("platform")
+    if not platform:
+        return {"published": False, "url": None, "skipped": "site_not_configured"}
+
+    prior = find_entry_by_hash(site, content_hash, log_file=log_file)
+    if prior and prior.get("url") and prior.get("status", "published") == "published":
+        return {
+            "published": True,
+            "url": prior["url"],
+            "skipped": "already_published",
+            "entry_id": prior.get("id"),
+        }
+
+    from scripts.publish import publish as publish_dispatch
+
+    kwargs = {key: value for key, value in site_cfg.items() if key != "platform"}
+    kwargs.setdefault("status", "draft")
+    kwargs.setdefault("slug", _slugify(keyword))
+    kwargs["title"] = title
+    kwargs["body"] = body
+
+    result = publish_dispatch(platform, **kwargs)
+    if result.get("success"):
+        return {
+            "published": True,
+            "url": result.get("url") or None,
+            "post_id": result.get("id"),
+            "result": result,
+        }
+    log.warning("Publish to %s failed for %s: %s", platform, site, result.get("message"))
+    return {"published": False, "url": None, "skipped": "publish_failed", "result": result}
+
+
 @dataclass
 class GenerateResult:
     """Result of a content generation run."""
@@ -239,6 +308,7 @@ async def generate(
     surface: str = "local",
     run_id: str | None = None,
     parent_run_id: str | None = None,
+    campaign_id: str | None = None,
 ) -> GenerateResult:
     """Generate content from 3 inputs: format, site, keyword.
 
@@ -255,6 +325,9 @@ async def generate(
         hook_options: Override hook options.
         dry_run: If True, generate brief only (no content/gates).
         skip_gates: If True, skip quality gates.
+        campaign_id: Shared campaign join key (``cmp-YYYYMMDD-<slug>``
+            minted by campaign_planner); threaded into the run record,
+            the content_log entry, and the 30-day pending-check file.
 
     Returns:
         GenerateResult with content, brief, gate report, and status.
@@ -289,6 +362,7 @@ async def generate(
                 "hook_options": hook_options or [],
                 "dry_run": dry_run,
                 "skip_gates": skip_gates,
+                "campaign_id": campaign_id,
             },
             "metadata": {
                 "product_mode": workspace_profile.product_mode,
@@ -549,10 +623,14 @@ async def generate(
         )
         artifact_refs["gate_proposal"] = gate_artifact["artifact_id"]
 
-        # 10. Log if approved
+        # 10. Publish (only if explicitly enabled+configured) and log if approved.
+        # Never fabricate URLs: unpublished approvals log url=None with status
+        # "approved_unpublished" and get NO 30-day check — mark_published()
+        # backfills the real URL when a human/skill ships it.
+        publish_info = {"published": False, "url": None, "skipped": "not_approved"}
         if final_status == "approved":
             try:
-                from scripts.content.content_log import log_entry
+                from scripts.content.content_log import compute_content_hash, log_entry
 
                 approved_artifact = runtime_store.record_artifact(
                     {
@@ -571,8 +649,17 @@ async def generate(
                     parent_artifact_id=gate_artifact["artifact_id"],
                 )
                 artifact_refs["approved_asset"] = approved_artifact["artifact_id"]
+                content_hash = compute_content_hash(draft)
+                publish_info = _publish_if_configured(
+                    site=site,
+                    title=brief.get("angle", keyword),
+                    body=draft,
+                    content_hash=content_hash,
+                    keyword=keyword,
+                )
+                published = bool(publish_info.get("published"))
                 log_record = log_entry(
-                    url=f"https://{site}.com/{keyword.replace(' ', '-').lower()}",
+                    url=publish_info.get("url"),
                     keyword=keyword,
                     site=site,
                     format=format,
@@ -583,22 +670,28 @@ async def generate(
                     proposal_id=proposal_id,
                     module_set=brand.module_ids,
                     artifact_refs=artifact_refs,
+                    content_hash=content_hash,
+                    status="published" if published else "approved_unpublished",
+                    campaign_id=campaign_id,
                 )
-                published_artifact = runtime_store.record_artifact(
-                    {
-                        "artifact_type": "published_asset",
-                        "brand_id": site,
-                        "workflow": workflow,
-                        "module_set": brand.module_ids,
-                        "parent_artifact_id": approved_artifact["artifact_id"],
-                        "data": {
-                            "log_entry": log_record,
+                if published:
+                    published_artifact = runtime_store.record_artifact(
+                        {
+                            "artifact_type": "published_asset",
+                            "brand_id": site,
+                            "workflow": workflow,
+                            "module_set": brand.module_ids,
+                            "parent_artifact_id": approved_artifact["artifact_id"],
+                            "data": {
+                                "log_entry": log_record,
+                                "publish_result": publish_info.get("result"),
+                                "content_hash": content_hash,
+                            },
                         },
-                    },
-                    run_id=run_id,
-                    parent_artifact_id=approved_artifact["artifact_id"],
-                )
-                artifact_refs["published_asset"] = published_artifact["artifact_id"]
+                        run_id=run_id,
+                        parent_artifact_id=approved_artifact["artifact_id"],
+                    )
+                    artifact_refs["published_asset"] = published_artifact["artifact_id"]
             except Exception as e:
                 log.warning("Failed to log content entry: %s", e)
         runtime_store.complete_run(
@@ -631,6 +724,12 @@ async def generate(
                 "site": site,
                 "keyword": keyword,
                 "persona": brief.get("persona"),
+                "campaign_id": campaign_id,
+                "publish": {
+                    "published": bool(publish_info.get("published")),
+                    "url": publish_info.get("url"),
+                    "skipped": publish_info.get("skipped"),
+                },
                 "approval_policy": policy,
                 "word_count": len(draft.split()),
                 "workspace": workspace_profile.model_dump(),

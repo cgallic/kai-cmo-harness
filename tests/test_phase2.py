@@ -308,9 +308,14 @@ async def test_failed_graph_execution_skips_descendants(use_test_db):
     # Sleep briefly to let the database updates and descendant skipping finish
     await asyncio.sleep(0.1)
 
-    # Verify that the parent is failed, child and grandchild are skipped, and graph is failed
+    # Verify that the parent is failed, child and grandchild are skipped, and
+    # the graph is flagged needs_replan (replan-instead-of-dead-end: the
+    # weekly CMO review re-decomposes remaining work instead of abandoning it)
     retrieved = use_test_db.get_task_graph(graph_id)
-    assert retrieved.status == "failed"
+    assert retrieved.status == "needs_replan"
     assert retrieved.nodes["node_parent"].status == "failed"
     assert retrieved.nodes["node_child"].status == "skipped"
     assert retrieved.nodes["node_grandchild"].status == "skipped"
+
+    # needs_replan graphs must drop out of the active set — execution stops.
+    assert all(g.graph_id != graph_id for g in use_test_db.list_active_task_graphs())

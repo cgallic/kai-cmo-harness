@@ -24,6 +24,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+from scripts.self_improvement.grades import get_grade  # noqa: E402
+
 KAI_DIR = Path.home() / ".kai-marketing"
 METRICS_DIR = KAI_DIR / "metrics"
 CITATIONS_DIR = KAI_DIR / "citations"
@@ -231,17 +237,18 @@ def cmd_report(args: argparse.Namespace) -> int:
         print(json.dumps(results, indent=2, default=str))
         return 0
 
-    winners = [r for r in results if r.get("performance_30d") == "winner"]
-    avg = [r for r in results if r.get("performance_30d") == "average"]
-    under = [r for r in results if r.get("performance_30d") == "underperformer"]
-    pending = [r for r in results if r.get("performance_30d") is None]
+    # get_grade tolerates performance_30d as dict, legacy string, or None
+    winners = [r for r in results if get_grade(r) == "winner"]
+    avg = [r for r in results if get_grade(r) == "average"]
+    under = [r for r in results if get_grade(r) == "underperformer"]
+    pending = [r for r in results if get_grade(r) is None]
 
     print(f"Content Performance Report — {len(results)} pieces")
     print(f"  Winners: {len(winners)}  |  Average: {len(avg)}  |  Under: {len(under)}  |  Pending: {len(pending)}")
     print()
     for r in results[-20:]:
         icon_map = {"winner": "+", "average": "~", "underperformer": "-"}
-        icon = icon_map.get(r.get("performance_30d") or "", "?")
+        icon = icon_map.get(get_grade(r) or "", "?")
         plat = r.get("platforms", {})
         devto = plat.get("devto") or {}
         li = (plat.get("linkedin") or {}).get("latest") or {}

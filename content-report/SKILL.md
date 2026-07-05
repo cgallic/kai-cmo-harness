@@ -24,6 +24,15 @@ Example: `/content-report`
 
 ## The Skill
 
+### Step 0: Fold In Any Legacy Log
+
+The CANONICAL publish log is `data/content_log.json` (the learning loop — performance_check, pattern_extract, weekly_report — reads only this file). If a legacy `~/.kai-marketing/content-log.jsonl` still exists, merge it first so its winners reach the learning loop (idempotent; safe to re-run):
+
+```bash
+python3 -m scripts.content.migrate_legacy_log
+python3 -m scripts.self_improvement.performance_check --reconcile-only   # rebuild 30-day checks in data/pending_checks/
+```
+
 ### Step 1: Refresh Data
 
 Before the report, refresh the data sources you care about. Skip any step where you don't have the API key.
@@ -118,7 +127,9 @@ Based on the data:
 
 | Source | Where it lives | Refreshed by |
 |--------|---------------|--------------|
-| Publish log | `~/.kai-marketing/content-log.jsonl` | `/content-gate` passes it through on publish |
+| Publish log (canonical) | `data/content_log.json` | `/content-write` Step 6 / `scripts.content.content_log.log_entry` + `mark_published` |
+| 30-day pending checks | `data/pending_checks/{id}.json` | Auto-created by `content_log` when a real URL is set; rebuilt by `performance_check --reconcile-only` |
+| Legacy publish log | `~/.kai-marketing/content-log.jsonl` | Read-only — fold into the canonical log via `scripts.content.migrate_legacy_log` (Step 0) |
 | Platform metrics (Dev.to, LinkedIn) | `~/.kai-marketing/metrics/{id}.json` | `kai-tracker pull-devto` / `kai-tracker linkedin` |
 | AI citation events | `~/.kai-marketing/citations/{id}.jsonl` | `kai-tracker citations` (cron-compatible) |
 | Citation targets | `~/.kai-marketing/citations-targets.json` | `kai-tracker targets --id <id> --add-query '...'` |
@@ -143,7 +154,7 @@ If a key is missing, the corresponding check is skipped with a warning — the r
 
 ## Chain State
 
-**Reads from:** `~/.kai-marketing/content-log.jsonl`, `~/.kai-marketing/metrics/`, `~/.kai-marketing/citations/`
+**Reads from:** `data/content_log.json` (canonical publish log), `data/pending_checks/`, `~/.kai-marketing/metrics/`, `~/.kai-marketing/citations/` (platform/citation scratch)
 **Feeds into:** `/content-retro` (weekly pattern analysis, now including citation patterns)
 
 ## Scheduling

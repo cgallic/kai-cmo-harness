@@ -13,9 +13,110 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+from .business_profile import deep_merge_profile, save_profile_overlay
 from .models import SerializableModel
 
 logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Durable-fact extraction — onboarding answers → profile overlay updates
+# ---------------------------------------------------------------------------
+
+# Raw BusinessProfile sections that may be passed through whole.
+_PROFILE_SECTION_KEYS = {
+    "identity", "offers", "geography", "personas", "trust",
+    "goals", "channels", "constraints", "metadata",
+}
+
+# Flat answer keys (kai/packaging/setup.py conventions) → (section, field).
+_FLAT_ANSWER_MAP = {
+    "business_name": ("identity", "name"),
+    "name": ("identity", "name"),
+    "website_url": ("identity", "url"),
+    "url": ("identity", "url"),
+    "business_description": ("identity", "description"),
+    "tagline": ("identity", "tagline"),
+    "year_founded": ("identity", "year_founded"),
+    "employee_count_range": ("identity", "employee_count_range"),
+    "primary_service": ("offers", "primary_offer"),
+    "primary_offer": ("offers", "primary_offer"),
+    "pricing_model": ("offers", "pricing_model"),
+    "average_deal_value": ("offers", "average_deal_value"),
+    "phone_number": ("channels", "phone_number"),
+    "primary_lead_source": ("channels", "primary_lead_source"),
+    "primary_kpi": ("goals", "primary_kpi"),
+    "monthly_budget_range": ("goals", "monthly_budget_range"),
+    "budget_ceiling": ("constraints", "budget_ceiling"),
+    "icp_description": ("personas", "icp_description"),
+    "years_in_business": ("trust", "years_in_business"),
+    "review_count": ("trust", "review_count"),
+    "review_average": ("trust", "review_average"),
+}
+
+# Flat geography answers land under geography.primary_location.
+_GEO_PRIMARY_MAP = {
+    "primary_city": "city",
+    "state_province": "state",
+    "service_radius_miles": "radius_miles",
+}
+
+# Session-scoped keys that never belong in the durable overlay.
+_TRANSIENT_ANSWER_KEYS = {
+    "brand_id", "onboarding_stage", "connections_pending",
+    "connections_complete", "known_client", "connected", "updated_at",
+}
+
+
+def _normalize_archetype_id(value: Any) -> str:
+    """Normalize archetype ids ('local_service' → 'local-service')."""
+    return str(value).strip().lower().replace("_", "-")
+
+
+def extract_profile_facts(answers: Dict[str, Any]) -> Dict[str, Any]:
+    """Map onboarding answers to a raw BusinessProfile overlay update.
+
+    Accepts both flat answer keys (business_name, primary_city, ...) and
+    whole profile sections (identity, offers, ...). Unknown scalar answers
+    are preserved under metadata so durable facts never evaporate; keys
+    starting with '_' and session-transient keys are dropped.
+    """
+    updates: Dict[str, Any] = {}
+    metadata: Dict[str, Any] = {}
+
+    for key, value in (answers or {}).items():
+        if key.startswith("_") or key in _TRANSIENT_ANSWER_KEYS:
+            continue
+        if value is None or (isinstance(value, str) and not value.strip()):
+            continue
+
+        if key == "archetype":
+            updates["archetype"] = _normalize_archetype_id(value)
+        elif key == "archetype_overlays" and isinstance(value, list):
+            updates["archetype_overlays"] = list(value)
+        elif key in _PROFILE_SECTION_KEYS and isinstance(value, dict):
+            updates[key] = deep_merge_profile(updates.get(key) or {}, value)
+        elif key in _FLAT_ANSWER_MAP:
+            section, field_name = _FLAT_ANSWER_MAP[key]
+            updates.setdefault(section, {})[field_name] = value
+        elif key in _GEO_PRIMARY_MAP:
+            geo = updates.setdefault("geography", {})
+            geo.setdefault("primary_location", {})[_GEO_PRIMARY_MAP[key]] = value
+        elif key == "service_list":
+            primary = str((answers or {}).get("primary_service", "")).strip().lower()
+            items = [s.strip() for s in str(value).split(",") if s.strip()]
+            if items:
+                updates.setdefault("offers", {})["offer_list"] = [
+                    {"name": item, "is_primary": item.lower() == primary}
+                    for item in items
+                ]
+        elif isinstance(value, (str, int, float, bool)):
+            metadata[key] = value
+
+    if metadata:
+        updates["metadata"] = deep_merge_profile(updates.get("metadata") or {}, metadata)
+
+    return updates
 
 
 # ---------------------------------------------------------------------------
@@ -195,9 +296,15 @@ class OnboardingFlow:
         name: str,
         archetype: str = "local_service",
         url: Optional[str] = None,
+        persist_profile: bool = True,
     ) -> Dict[str, Any]:
-        """Create the minimal brand record to start onboarding."""
-        return {
+        """Create the minimal brand record to start onboarding.
+
+        By default the durable identity facts (name, url, archetype) are
+        persisted to the brand's profile overlay so they survive the
+        session instead of evaporating with the process.
+        """
+        stub = {
             "brand_id": brand_id,
             "name": name,
             "archetype": archetype,
@@ -205,6 +312,47 @@ class OnboardingFlow:
             "onboarding_stage": "profile",
             "connections_pending": [],
             "connections_complete": [],
+        }
+        if persist_profile:
+            identity: Dict[str, Any] = {"name": name}
+            if url:
+                identity["url"] = url
+            save_profile_overlay(brand_id, {
+                "archetype": _normalize_archetype_id(archetype),
+                "identity": identity,
+            })
+        return stub
+
+    # ------------------------------------------------------------------
+    # Step 2: Persist profile answers (durable business facts)
+    # ------------------------------------------------------------------
+
+    def record_profile_answers(
+        self,
+        brand_id: str,
+        answers: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Persist durable business facts from onboarding answers.
+
+        Answers are mapped to the raw BusinessProfile schema via
+        ``extract_profile_facts`` and deep-merged into the brand's
+        profile overlay (data/runtime/profile/<brand>.json), so
+        subsequent ``build_business_profile`` calls — in this session
+        and future ones — reflect them.
+        """
+        updates = extract_profile_facts(answers)
+        if not updates:
+            return {
+                "brand_id": brand_id,
+                "persisted": False,
+                "updates": {},
+            }
+        record = save_profile_overlay(brand_id, updates)
+        return {
+            "brand_id": brand_id,
+            "persisted": True,
+            "updates": updates,
+            "updated_at": record.get("updated_at"),
         }
 
     # ------------------------------------------------------------------

@@ -3,7 +3,18 @@
 Content Publish Logger — Kai Harness
 
 Logs published content for 30-day performance tracking.
-Appends to /opt/meetkai-data/content-calendar.md and writes to content_log.json.
+Appends to the content calendar (KAI_CONTENT_CALENDAR_PATH, default
+<data_dir>/content-calendar.md) and writes to content_log.json.
+
+Entry lifecycle:
+  - status "approved_unpublished": passed gates + approval but not yet live
+    (url is None; no 30-day check scheduled — checks need a real URL).
+  - status "published": live with a REAL url; 30-day check scheduled.
+  - Legacy entries predate the status/content_hash fields — readers must
+    treat a missing status with a url as published.
+
+Idempotency: entries carry content_hash (sha256 of the draft body) and
+log_entry dedupes on (site, content_hash) — re-runs update in place.
 
 Usage:
   python3 content_log.py \
@@ -19,17 +30,27 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from scripts.harness_config import get_config
+from scripts.harness_config import get_config, get_content_calendar_path
 
 _CFG = get_config()
 
 LOG_FILE = str(_CFG.content_log)
-CALENDAR_FILE = "/opt/meetkai-data/content-calendar.md"
+
+
+def _calendar_file() -> str:
+    """Resolve the content calendar path at call time (env/config override)."""
+    return str(get_content_calendar_path())
+
+
+def compute_content_hash(body: str) -> str:
+    """sha256 of a draft body — the idempotency key for (site, content_hash)."""
+    return hashlib.sha256((body or "").encode("utf-8")).hexdigest()
 
 
 def load_log(log_file: str | None = None) -> list:
@@ -47,8 +68,23 @@ def save_log(entries: list, log_file: str | None = None):
         json.dump(entries, f, indent=2)
 
 
+def find_entry_by_hash(site: str, content_hash: str, log_file: str | None = None) -> dict | None:
+    """Return the log entry matching (site, content_hash), or None.
+
+    Legacy entries have no content_hash and never match.
+    """
+    if not content_hash:
+        return None
+    for entry in load_log(log_file):
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("site") == site and entry.get("content_hash") == content_hash:
+            return entry
+    return None
+
+
 def log_entry(
-    url: str,
+    url: str | None,
     keyword: str,
     site: str,
     format: str,
@@ -60,16 +96,75 @@ def log_entry(
     proposal_id: str | None = None,
     module_set: list[str] | None = None,
     artifact_refs: dict | None = None,
+    content_hash: str | None = None,
+    status: str | None = None,
+    campaign_id: str | None = None,
     log_file: str | None = None,
 ) -> dict:
-    """Programmatic API to log a published content entry.
+    """Programmatic API to log a content entry.
 
-    Returns the created entry dict.
+    url must be the REAL published URL — pass None when the piece is approved
+    but not published (status becomes "approved_unpublished"; no 30-day check
+    is scheduled; use mark_published() once it goes live).
+
+    Dedupes on (site, content_hash): a matching existing entry is updated in
+    place instead of appended, and never downgraded from published.
+
+    campaign_id is the shared join key minted by campaign_planner
+    (``cmp-YYYYMMDD-<slug>``); it is carried onto the entry and into the
+    30-day pending-check file so performance rolls up per campaign.
+
+    Returns the created (or updated) entry dict.
     """
     brief = brief or {}
     now = datetime.now(timezone.utc).isoformat()
-    entry_id = f"{site}-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
 
+    if status is None:
+        status = "published" if url else "approved_unpublished"
+
+    existing = find_entry_by_hash(site, content_hash, log_file) if content_hash else None
+    if existing is not None:
+        log = load_log(log_file)
+        # Re-find inside the list we will save (find_entry_by_hash reloaded).
+        entry = next(
+            (e for e in log if isinstance(e, dict)
+             and e.get("site") == site and e.get("content_hash") == content_hash),
+            None,
+        )
+        if entry is not None:
+            url_was_set = bool(entry.get("url"))
+            for key, value in (
+                ("keyword", keyword),
+                ("title", title or brief.get("angle")),
+                ("four_us_score", four_us or brief.get("four_us_score")),
+                ("persona", brief.get("persona")),
+                ("angle", brief.get("angle")),
+                ("notes", notes),
+                ("source_run", source_run),
+                ("proposal_id", proposal_id),
+                ("module_set", module_set),
+                ("artifact_refs", artifact_refs),
+                ("campaign_id", campaign_id),
+            ):
+                if value:
+                    entry[key] = value
+            if url and not url_was_set:
+                # Only a real URL can move an entry forward; never overwrite
+                # an existing URL with None or downgrade published status.
+                # Already-published entries keep their original published_at:
+                # re-stamping on a re-run (e.g. engine "already_published")
+                # would re-count the piece as new and shift the 30-day window.
+                entry["url"] = url
+                entry["status"] = "published"
+                entry["published_at"] = now
+            entry["updated_at"] = now
+            save_log(log, log_file)
+            if url and not url_was_set:
+                append_to_calendar(entry)
+                schedule_30day_check(entry)
+            return entry
+
+    entry_id = f"{site}-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
     entry = {
         "id": entry_id,
         "url": url,
@@ -88,37 +183,90 @@ def log_entry(
         "proposal_id": proposal_id,
         "module_set": module_set or [],
         "artifact_refs": artifact_refs or {},
+        "content_hash": content_hash,
+        "status": status,
+        "campaign_id": campaign_id,
     }
 
     log = load_log(log_file)
     log.append(entry)
     save_log(log, log_file)
-    append_to_calendar(entry)
-    schedule_30day_check(entry)
+    if url:
+        append_to_calendar(entry)
+        schedule_30day_check(entry)
 
     return entry
 
 
+def mark_published(
+    entry_id: str,
+    url: str,
+    published_at: str | None = None,
+    log_file: str | None = None,
+) -> dict | None:
+    """Backfill the REAL url onto an existing entry once it actually goes live.
+
+    Flips status to "published", appends the calendar line, and schedules the
+    30-day pending check (checks only make sense with a real URL). This is the
+    hook for humans/skills that publish manually after an
+    "approved_unpublished" run.
+
+    Returns the updated entry, or None if entry_id is unknown or url is empty.
+    """
+    if not url:
+        return None
+    log = load_log(log_file)
+    entry = next(
+        (e for e in log if isinstance(e, dict) and e.get("id") == entry_id), None
+    )
+    if entry is None:
+        return None
+    entry["url"] = url
+    entry["status"] = "published"
+    entry["published_at"] = published_at or datetime.now(timezone.utc).isoformat()
+    save_log(log, log_file)
+    append_to_calendar(entry)
+    schedule_30day_check(entry)
+    return entry
+
+
 def append_to_calendar(entry: dict):
+    if not entry.get("url"):
+        return  # calendar tracks live content only
     try:
-        os.makedirs(os.path.dirname(CALENDAR_FILE), exist_ok=True)
-        date_str = entry["published_at"][:10]
+        calendar_file = _calendar_file()
+        parent = os.path.dirname(calendar_file)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        date_str = (entry.get("published_at") or "")[:10]
         line = f"- [{entry['format'].upper()}] [{entry['site']}] {entry.get('title') or entry['keyword']} — {entry['url']} — published {date_str} [done]\n"
-        with open(CALENDAR_FILE, "a") as f:
+        with open(calendar_file, "a") as f:
             f.write(line)
     except Exception as e:
         print(f"  Warning: could not append to calendar: {e}")
 
 
 def schedule_30day_check(entry: dict):
-    """Write a pending check file for the performance_check cron to pick up."""
+    """Write a pending check file for the performance_check cron to pick up.
+
+    Skipped when the entry has no real URL — a check without a URL can never
+    be measured (and would poison the GSC learning loop).
+    """
+    if not entry.get("url"):
+        return None
     checks_dir = str(_CFG.pending_checks_dir)
     os.makedirs(checks_dir, exist_ok=True)
     check_id = entry["id"]
     check_file = f"{checks_dir}/{check_id}.json"
-    # Approximate +30 days via timestamp
-    from datetime import timedelta
-    due_dt = datetime.now(timezone.utc) + timedelta(days=30)
+    # Due +30 days after publish (falls back to now when unparseable)
+    published = entry.get("published_at")
+    try:
+        published_dt = datetime.fromisoformat(published)
+        if published_dt.tzinfo is None:
+            published_dt = published_dt.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        published_dt = datetime.now(timezone.utc)
+    due_dt = published_dt + timedelta(days=30)
     check_data = {
         "id": check_id,
         "url": entry["url"],
@@ -131,10 +279,12 @@ def schedule_30day_check(entry: dict):
         "proposal_id": entry.get("proposal_id"),
         "module_set": entry.get("module_set", []),
         "artifact_refs": entry.get("artifact_refs", {}),
+        "campaign_id": entry.get("campaign_id"),
     }
     with open(check_file, "w") as f:
         json.dump(check_data, f, indent=2)
     print(f"  30-day check scheduled: {check_file}")
+    return check_file
 
 
 def main():
@@ -150,6 +300,7 @@ def main():
     parser.add_argument("--notes")
     parser.add_argument("--source-run")
     parser.add_argument("--proposal-id")
+    parser.add_argument("--campaign-id", help="Shared campaign join key (cmp-YYYYMMDD-<slug>)")
     args = parser.parse_args()
 
     brief = {}
@@ -178,6 +329,9 @@ def main():
         "proposal_id": args.proposal_id,
         "module_set": [],
         "artifact_refs": {},
+        "content_hash": None,
+        "status": "published",  # CLI path requires --url, so it is live
+        "campaign_id": args.campaign_id,
     }
 
     log = load_log()
