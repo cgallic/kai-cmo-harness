@@ -3,6 +3,8 @@ name: kai-audit
 description: Full marketing audit — runs all relevant checklists against your product, site, and marketing in one go. Covers SEO, content, email, ads, social media, CRO, landing pages, technical SEO, and creative production. Produces a "state of your marketing" report with health scores per area and a prioritized fix list. Use when "marketing audit", "full audit", "audit everything", "marketing health check", "what's broken", "state of marketing", or any request to comprehensively assess marketing across all channels.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 One-click full marketing audit. Runs all relevant harness checklists and produces a health report.
 
 ## Non-Negotiable: Kai Data Provenance
@@ -34,6 +36,8 @@ python scripts/quality_gates/audit_provenance_lint.py workspace/marketing-audit 
 ```
 
 ## Phase 0.5: Source-Backed Data Acquisition
+
+**If the collector scripts are not available in this install** (skills-only or plugin install — no `scripts/audit/` in the Kai root), run the audit in **qualitative mode**: browse the target's public pages directly, cite the URL and retrieval date for every observation, put every quantitative claim you could not measure into `_data-gaps.md`, and say plainly in the report header that collector-backed metrics require the full harness (github.com/cgallic/kai-cmo-harness). Never estimate a number the collector would have measured.
 
 Before writing the audit, run the source-backed Kai collector. The collector is shared by all Kai workflows, not audit-only; this audit must consume its `audit-data.json` alias. Existing audit automations may keep using `python -m scripts.audit.collect`; non-audit Kai workflows should prefer `python -m kai.source_data.collect` and read `kai-data.json`.
 

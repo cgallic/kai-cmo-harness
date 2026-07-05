@@ -5,6 +5,8 @@ description: First-run onboarding for Kai CMO Harness. Walks new users through p
 
 # Kai CMO Harness — First-Run Setup
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 You are the onboarding guide for Kai CMO. Your job is to get a new user from "just installed" to "running their first command" in under 3 minutes.
 
 ## Instruction Contract
@@ -107,6 +109,8 @@ Fill in everything you can from auto-detection. Mark unknowns with `[TODO]` — 
 
 ## Step 4: Create the First Goal (goal loop)
 
+**Skip this step silently if `scripts/harness_cli.py` does not exist in the Kai install root or the current project** (skills-only and plugin installs don't ship the goal loop — everything else works without it; note the goal in MARKETING.md under a `## 90-Day Goal` heading instead).
+
 Ask ONE question: "What's the single marketing number you want to move in the next 90 days?" (e.g. organic clicks, published pieces, signups). Then register it so the weekly CMO review can measure pace and plan work against it:
 
 ```bash
@@ -129,31 +133,33 @@ If the user doesn't want a goal yet, skip this step — everything else works wi
 
 ## Step 5: Recommend First Command
 
-Based on what you found, recommend ONE command:
+Based on what you found, recommend ONE command. Only recommend `/kai-audit` when the full harness is present (the Kai install root has `scripts/audit/`); it depends on the audit collector scripts. On skills-only or plugin installs, recommend `/kai-growth-plan` instead — it runs anywhere.
 
 **If no marketing exists yet:**
 ```
 Your MARKETING.md is ready. Here's what I'd do first:
 
-→ /kai-audit
+→ /kai-growth-plan
 
-This runs the checklist set against your product and tells you where your marketing
-stands. It takes 60 seconds and gives you a prioritized list of what to work on.
+This turns what I just learned about your product into a stage-specific plan:
+channel bets, constraints, metrics, and what to ignore. Takes about 2 minutes.
 
 After that, try:
   /kai-email-system    — write every email your product needs
-  /kai-growth-plan     — get a marketing plan for your stage
+  /kai-landing-page    — rewrite your page with proof and CRO hypotheses
 ```
 
 **If some marketing exists (emails, blog, etc.):**
 ```
 Your MARKETING.md is ready. Based on what I see, you already have [X].
 
-→ /kai-audit
+→ /kai-growth-plan
 
-Run this first to see what's working and what's missing. Then we'll know
-exactly where to focus.
+Run this first to see where your existing work fits and what's missing.
+Then we'll know exactly where to focus.
 ```
+
+**If the full harness is installed (audit collectors available):** recommend `/kai-audit` first instead — a 60-second marketing health check with a prioritized list.
 
 **If the user seems technical / developer audience:**
 ```

@@ -32,20 +32,27 @@ See pre-generated examples in `demo/examples/`.
 
 ## Quick Start
 
-Install the skills:
+Inside Claude Code, type two lines — no terminal, no clone, no config:
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
+```text
+/plugin marketplace add cgallic/kai-cmo-harness
+/plugin install kai@kai-marketing-os
 ```
 
-Open Claude Code in a product repo and run:
+That installs every skill **plus the knowledge base they run on** (frameworks, checklists, channel guides, policy references, quality gates — ~7 MB) and keeps them updated. Then open any product repo and run:
 
 ```text
 /kai-start
 /kai-growth-plan
 ```
 
-`/kai-start` creates or refreshes `MARKETING.md` from the repo. `/kai-growth-plan` turns that context into a stage-specific plan, recommended workflows, metrics, budget notes, and anti-patterns.
+`/kai-start` reads your repo, plays back what your product is, and writes `MARKETING.md` — once, in about 2 minutes. `/kai-growth-plan` turns that context into a stage-specific plan, recommended workflows, metrics, budget notes, and anti-patterns.
+
+Prefer a shell one-liner? Same result:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
+```
 
 Want the short setup guide? Read [Quick Start](docs/QUICK_START.md).
 
@@ -83,21 +90,22 @@ Autonomous campaign management is a guarded phase, not the starting promise. Kai
 
 ## Install Options
 
-**One-liner:**
+**Plugin (recommended — Claude Code CLI or desktop):** two lines inside Claude Code. Auto-updating, includes the knowledge base, nothing touches your shell.
+
+```text
+/plugin marketplace add cgallic/kai-cmo-harness
+/plugin install kai@kai-marketing-os
+```
+
+Plugin skills are namespaced: type `/kai:kai-start`, `/kai:kai-growth-plan`, and so on.
+
+**Shell one-liner:** installs skills to `~/.claude/skills/` and the knowledge base to `~/.claude/kai/`. Use this if you prefer un-namespaced commands (`/kai-start`) or want to read the script first.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
 ```
 
-**Manual:**
-
-```bash
-git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install \
-  && mkdir -p ~/.claude/skills \
-  && cp -r /tmp/kai-install/harness/skills/kai /tmp/kai-install/harness/skills/kai-* /tmp/kai-install/harness/skills/kaicalls-design ~/.claude/skills/ \
-  && rm -rf /tmp/kai-install \
-  && echo "Installed. Type /kai-start in Claude Code."
-```
+**Repo copy (Cursor, Codex, claude.ai/code web, client repos):** these surfaces don't persist `~/.claude/skills`, so put Kai in the repo itself. Clone this repo and copy `AGENTS.md`, `knowledge/`, `harness/`, `memory/`, and `scripts/quality_gates/` into your project root — the agent picks it up from `AGENTS.md` on the next session. Details in [Quick Start](docs/QUICK_START.md).
 
 ## Repository Structure
 

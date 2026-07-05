@@ -5,6 +5,8 @@ description: Weekly marketing audit and operating review. Pulls the last 7 days 
 
 # kai-weekly-audit - Weekly Marketing Audit
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Run a fast weekly operating audit. This skill is the cadence layer above `/kai-audit`, `/kai-seo-audit`, `/kai-cro`, `/kai-daily-ad-review`, `/content-report`, and watcher output.
 
 ## Non-Negotiable: Data Provenance

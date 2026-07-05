@@ -1,0 +1,1 @@
+../../../harness/brief-schema.md

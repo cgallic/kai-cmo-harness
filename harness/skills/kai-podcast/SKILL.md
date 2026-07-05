@@ -5,6 +5,8 @@ description: Launch a podcast or plan podcast guest strategy — format, content
 
 # Kai Podcast Skill
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Launch a podcast OR plan a podcast guest strategy. Two modes: Host (launch your own show) and Guest (get booked on other shows).
 
 ---

@@ -5,6 +5,8 @@ description: Monthly marketing audit and executive review. Pulls the last 30 day
 
 # kai-monthly-audit - Monthly Marketing Audit
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Run a monthly strategic audit. This skill turns weekly signals into an executive narrative, channel decisions, budget guidance, and a next-month operating plan.
 
 ## Non-Negotiable: Data Provenance

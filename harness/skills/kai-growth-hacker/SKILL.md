@@ -1,9 +1,11 @@
 ---
 name: kai-growth-hacker
-description: Build an exhaustive first-growth-hire distribution operating system across B2B and B2C channels: LinkedIn, events, AI outbound, AEO, blogs, long-form writing, YouTube, webinars, X, influencers, AI UGC, organic TikTok, paid social, sponsorships, partnerships, lifecycle, referral, and community. Use when "growth hacker", "first growth hire", "distribution hire", "cover every channel", "channel hacking", "0 to ARR growth system", "growth operator", "growth hacker OS", or any request to fan out channel operators and plug the result into Kai workflows.
+description: 'Build an exhaustive first-growth-hire distribution operating system across B2B and B2C channels: LinkedIn, events, AI outbound, AEO, blogs, long-form writing, YouTube, webinars, X, influencers, AI UGC, organic TikTok, paid social, sponsorships, partnerships, lifecycle, referral, and community. Use when "growth hacker", "first growth hire", "distribution hire", "cover every channel", "channel hacking", "0 to ARR growth system", "growth operator", "growth hacker OS", or any request to fan out channel operators and plug the result into Kai workflows.'
 ---
 
 # Kai Growth Hacker - First-Hire Distribution OS
+
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
 Build a complete growth-hacker operating package. The package maps every plausible channel, scores stage fit, fans out specialist operators, creates test briefs, defines approval gates, and routes execution into the right Kai skills.
 

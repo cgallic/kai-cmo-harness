@@ -149,6 +149,8 @@ For retained or repeated SEO work, add `seo-ops-monitor.md` beside the audit rep
 ```markdown
 # SEO Audit Report: [site.com]
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Audit Mode: [sales_external/onboarding_connected/internal_demo]
 
 ## Health Score: [X]/100

@@ -3,6 +3,8 @@ name: kai-gate
 description: Run Kai CMO Harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when "score this", "quality check", "run quality gates", "check this content", "four u's score", "banned word check", "SEO lint", or any request to validate content quality before publishing.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Run the Kai CMO Harness quality gate pipeline on a piece of content.
 
 ## Gate Pipeline

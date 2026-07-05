@@ -1,0 +1,17 @@
+{
+  "name": "kai-marketing-os",
+  "owner": {
+    "name": "Connor Gallic",
+    "email": "me@connorgallic.com"
+  },
+  "description": "Kai Marketing OS — marketing skills, knowledge base, and quality gates for Claude Code.",
+  "plugins": [
+    {
+      "name": "kai",
+      "source": "./plugins/kai-marketing-os",
+      "description": "A marketing team in your terminal: 45+ /kai skills, a full marketing knowledge base, and quality gates. Type /kai:kai-start after install.",
+      "category": "marketing",
+      "keywords": ["marketing", "growth", "seo", "ads", "copywriting", "cmo"]
+    }
+  ]
+}

@@ -5,6 +5,8 @@ description: Convert Kai workflow data, CSV exports, audit folders, SDR package 
 
 # kai-data-dashboard - Data To Dashboard Handoff
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Turn existing Kai artifacts into a dashboard spec, data contract, or lightweight static dashboard. This skill is a companion surface. It should not replace analytics setup, audit analysis, or outbound strategy.
 
 Use `/kai-analytics` when the user needs a tracking plan or attribution model. Use `/kai-html-presentation` when the user needs a client-ready audit deck. Use this skill when the data already exists and needs to become a dashboard-ready operator surface.

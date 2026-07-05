@@ -3,6 +3,8 @@ name: kai-repurpose
 description: Take one pillar content piece and produce 15-25 derivative assets across platforms — social posts, email, LinkedIn article, video scripts, newsletter section, infographic brief, and more. The ultimate content multiplier. Use when "repurpose this", "turn this into", "make social posts from this blog", "content repurposing", "1 to many", "atomize this content", "extract posts from", or any request to derive multiple pieces from one source.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Take 1 pillar → produce 15-25 channel-specific assets. The content multiplier.
 
 ## Phase 0: Load Product Context

@@ -6,17 +6,22 @@ Kai Marketing OS gives Claude Code a marketing operating surface inside any prod
 
 ### 1. Install
 
+The fastest path is the plugin — two lines typed inside Claude Code (CLI or desktop):
+
+```text
+/plugin marketplace add cgallic/kai-cmo-harness
+/plugin install kai@kai-marketing-os
+```
+
+This installs all skills plus the knowledge base they load (frameworks, checklists, policy references, skill contracts, quality gates) and auto-updates with the repo. Plugin skills are namespaced: `/kai:kai-start`, `/kai:kai-growth-plan`.
+
+Or use the shell installer, which puts skills in `~/.claude/skills/` (un-namespaced: `/kai-start`) and the knowledge base in `~/.claude/kai/`:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
 ```
 
-Manual install:
-
-```bash
-git clone https://github.com/cgallic/kai-cmo-harness.git /tmp/kai-install
-cp -r /tmp/kai-install/harness/skills/kai* ~/.claude/skills/
-rm -rf /tmp/kai-install
-```
+Skills without the knowledge base run hollow — they load frameworks, contracts, and policy files by path. Both install paths above ship the two together; if you copy skills manually, copy `knowledge/`, `harness/references/`, `harness/skill-contracts/`, `harness/brief-schema.md`, and `scripts/quality_gates/` into `~/.claude/kai/` as well (the same layout `install.sh` produces).
 
 ### 2. Open A Product Repo
 
@@ -79,7 +84,7 @@ Claude Code will read `AGENTS.md` and use Kai's framework map, contracts, refere
 
 | Surface | Count | Examples |
 |---|---:|---|
-| Skill directories | 48 | `/kai`, `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-gate` |
+| Skill directories | 49 | `/kai`, `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-gate` |
 | Canonical `kai-*` docs | 45 | API-style skill docs with triggers, inputs, outputs, gates |
 | Public router commands | 42 | The commands shown by `/kai` |
 | Playbooks | 54 | CRO, experiments, growth hacker OS, pricing, SEO ops, content repurposing |
@@ -95,7 +100,7 @@ Run these before sharing publishable work:
 ```bash
 python scripts/quality_gates/banned_word_check.py --file draft.md
 python scripts/quality_gates/four_us_score.py --file draft.md
-python scripts/quality_gates/seo_lint.py --file draft.md
+python scripts/quality_gates/seo_lint.py --file draft.md --keyword "target keyword"
 python scripts/quality_gates/mutation_risk_lint.py draft.md
 python scripts/security/sanitize.py draft.md
 ```

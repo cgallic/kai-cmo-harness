@@ -3,6 +3,8 @@ name: kai-cro
 description: Conversion rate optimization audit — analyze a landing page, signup flow, or checkout funnel using the 5-layer CRO stack (technical performance, traffic quality, offer/pricing, design/layout, copy/messaging). Produces prioritized fix list with expected impact. Use when "CRO audit", "conversion audit", "why isn't this converting", "improve conversion rate", "landing page not converting", "optimize funnel", "signup flow audit", or any request to diagnose and fix conversion problems.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Run a CRO audit using the 5-layer optimization stack. Produces a prioritized fix list.
 
 ## Phase 0: Load Product Context
