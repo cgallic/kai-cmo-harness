@@ -90,7 +90,20 @@ python scripts/campaigns/campaign_tracker.py --update "Q1 Launch" --channel emai
 python scripts/campaigns/campaign_tracker.py --report "Q1 Launch"
 ```
 
-Editorial calendar store: `scripts/campaigns/calendar.py` (JSONL under `data/calendar`, path via `get_calendar_dir()` in `scripts/harness_config.py`).
+Editorial calendar store: `scripts/campaigns/calendar.py` (JSONL under `data/calendar`, path via `get_calendar_dir()` in `scripts/harness_config.py`). The agent loop's hourly `editorial_calendar_tick` turns due `planned` items into drafts (gate/approval unchanged); items stuck in `generating` are swept back to `planned` after `stale_generating_hours` (default 6).
+
+Campaign identity: `campaign_planner.py --save` mints a `campaign_id` (`cmp-YYYYMMDD-<slug>`), auto-creates the tracker row, and records a `campaign_plan` RuntimeStore artifact; the id threads through `engine.generate()` → `data/content_log.json` entries → 30-day pending checks. Merge a legacy `~/.kai-marketing/content-log.jsonl` with `python scripts/content/migrate_legacy_log.py` (idempotent).
+
+### Goals & Weekly CMO Review
+
+```bash
+python scripts/harness_cli.py goals add --brand <brand> --name "<goal name>" --kpi <kpi> --target <value> --deadline YYYY-MM-DD
+python scripts/harness_cli.py goals list      # pace vs deadline
+python scripts/harness_cli.py goals update <goal-id> --current <value>
+# Auto-refreshable KPIs: content_published, content_winners, organic_clicks, organic_impressions
+```
+
+Goals persist in `data/runtime/goals/` (`GoalRegistry`). The weekly `cmo_review` task (Mon 07:00, `agent/tasks/cmo_review.py`) refreshes goal progress from graded 30-day results, computes pace vs deadline, decomposes behind-pace goals into task graphs (`GoalDecomposer` → executed by `agent/loop.py`), flags failed graphs `needs_replan`, and writes a snapshot to `data/runtime/goals/reviews/`. All resulting actions flow through ActionStore approval + mandate validation. Without an LLM key it still snapshots and notifies — it just skips decomposition.
 
 ---
 

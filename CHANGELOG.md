@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.3.0 — 2026-07-05
+
+### Long-Horizon Loops (#37, #39)
+
+**Publish truthfulness**
+- Engine no longer logs fabricated URLs. Auto-publish is double-opt-in (`publishing.enabled` + `publishing.sites.<site>`, default OFF); otherwise entries log `approved_unpublished` (`url: null`) until `content_log.mark_published()` backfills the real URL — which also arms the 30-day check
+- Content-hash dedup on log + publish; WordPress slug-lookup updates instead of duplicating and never demotes a live post
+- Publisher success without a returned URL logs `approved_unpublished` (recoverable), never an unmeasurable `published/url=None`
+
+**Scheduler self-containment**
+- Agent loop now seeds the self-improvement crons itself: 30-day performance check (daily 02:00), pattern extract + defaults update (Mondays) — no external crontab needed
+- New editorial calendar (`scripts/campaigns/calendar.py`, `data/calendar/editorial.jsonl`) + hourly tick task: dated items become drafts through the normal gate/approval pipeline; stale `generating` items auto-recover
+
+**Goal loop (plan → act → measure → replan)**
+- `kai-harness goals add|list|update` writes the GoalRegistry
+- Weekly `cmo_review` task (Mon 07:00): goal pace from graded 30-day results → GoalDecomposer task graphs for behind-pace goals → executed by the existing loop; failed graphs flag `needs_replan`
+- All actions still gate through ActionStore approval + mandates
+
+**Learning-loop repair**
+- Grade vocabulary unified on `underperformer` (the `loser` grade was never produced — the negative flywheel could never fire); shared `grades.py` tolerates dict/legacy-string `performance_30d`
+- EC-15 partial: site-level GSC baseline captured when an entry gains a real URL; 30-day grading adds `baseline_relative` context (baseline-less entries grade identically to before)
+- EC-13 promoted: pattern-extract circuit breaker persists to disk, survives restarts, 1h cooldown
+
+**Campaign identity & state**
+- `campaign_id` minted at plan time, threaded planner → tracker → RuntimeStore `campaign_plan` artifact → content log → pending checks
+- `migrate_legacy_log.py` merges `~/.kai-marketing/content-log.jsonl` into canonical `data/content_log.json`; gateway job retention 7 → 45 days
+- Business-profile overlay store (`data/runtime/profile/`) — onboarding answers persist across sessions
+
+**Instruction chain & CI**
+- Recreated `.claude/rules/architecture-and-memory.md` + `scripts-and-tools.md` (were referenced but missing/gitignored); `doctor.py` fails on dangling doc references
+- CI runs the full test suite (was 2 files); fixed impossible `searchconsole` pin; removed duplicate `config.example.yaml`
+- Tests: 575 → 806 passing
+
 ## v0.2.0 — 2026-03-25
 
 ### Taste, Creative Production & Component Architecture
