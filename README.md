@@ -225,7 +225,9 @@ Push this repository to GitHub and link it to Vercel or Netlify. The repo includ
 
 ## Publishing
 
-Content pipeline now publishes directly to your CMS:
+Publishing is truthful and double-opt-in. The content engine never invents URLs: a gate-approved piece either publishes for real — when `publishing.enabled` plus a `publishing.sites.<site>.platform` entry are set in `config.yaml` (env override `KAI_PUBLISH_ENABLED`) — and logs the URL the CMS returned, or it's logged as `approved_unpublished` until you publish manually and backfill with `content_log.mark_published(entry_id, url)`. That backfill is also what arms the 30-day performance check. WordPress publishes are idempotent (slug lookup updates instead of duplicating) and default to `status=draft`.
+
+The legacy CLI path publishes explicitly:
 
 ```bash
 # Publish to WordPress
@@ -265,7 +267,18 @@ Generate all assets for a multi-channel campaign:
 kai-harness campaign --goal "product launch" --product myproduct --keyword "ai crm" --save campaigns/q1/
 ```
 
-Generates: landing page, 5-email sequence, social variants (LinkedIn/Twitter/Instagram), ad variants (Meta + Google), content calendar.
+Generates: landing page, 5-email sequence, social variants (LinkedIn/Twitter/Instagram), ad variants (Meta + Google), content calendar. `--save` mints a `campaign_id` that threads through the tracker, runtime artifacts, the content log, and 30-day performance checks.
+
+## Goals & the Weekly CMO Review
+
+Give the machine targets and it plans against them:
+
+```bash
+python scripts/harness_cli.py goals add --brand mysite --name "Q3 signups" --kpi signups --target 500 --deadline 2026-09-30
+python scripts/harness_cli.py goals list   # shows pace vs deadline
+```
+
+Every Monday the agent loop's `cmo_review` task measures each goal's pace from graded 30-day results, decomposes behind-pace goals into task graphs, and executes them through the normal approval gates. It also runs the 30-day performance check (nightly), weekly pattern extraction, and an hourly editorial-calendar tick (`data/calendar/editorial.jsonl`) — dated content plans become pipeline runs automatically.
 
 ## Reporting
 

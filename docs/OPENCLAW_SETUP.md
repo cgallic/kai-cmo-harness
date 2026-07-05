@@ -81,11 +81,15 @@ python -m agent.loop --test-schedule    # list upcoming tasks + cron expressions
 
 State persists in `agent/agent.db` (SQLite, gitignored). Default task types live in `agent/tasks/` — content pipeline, daily analytics, connector health, SEO optimization, social staleness, weekly report, lead outreach, ad management, and `execute_approved` (runs only after human approval).
 
-The self-improvement crons from `harness/ARCHITECTURE.md` ride along:
+The scheduler also seeds the long-horizon loop tasks itself — no external crontab required:
 
-- `0 2 * * *` — `performance_check.py` (30-day GSC/GA4 pull, winner/loser grading)
-- `0 14 * * 1` — `pattern_extract.py` (winner pattern mining → `what-works.md`)
-- `30 14 * * 1` — `harness_defaults_update.py` (threshold/defaults update, with `.bak` backups)
+- `0 2 * * *` — 30-day performance check (GSC/GA4 pull, winner/underperformer grading; missing credentials defer as a data gap, never a zero)
+- `0 14 * * 1` — weekly pattern extraction (winner mining → `what-works.md`)
+- `30 14 * * 1` — harness defaults update (threshold/defaults update, with `.bak` backups)
+- hourly — editorial calendar tick (`data/calendar/editorial.jsonl` due items → drafts; never publishes directly)
+- `0 7 * * 1` — weekly CMO review (`agent/tasks/cmo_review.py`: goal pace vs deadline → task-graph planning for behind-pace goals)
+
+The CMO review does nothing until at least one goal exists — create them with `python scripts/harness_cli.py goals add --brand <brand> --name "<goal>" --kpi <kpi> --target <value> --deadline YYYY-MM-DD`.
 
 ## 4. Run the loop
 
