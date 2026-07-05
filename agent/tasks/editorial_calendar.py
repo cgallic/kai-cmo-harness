@@ -4,7 +4,10 @@ Hourly task that pulls due ``planned`` items from the structured editorial
 calendar (``scripts/campaigns/calendar.py`` → ``data/calendar/editorial.jsonl``)
 and runs each through the SAME generation path ContentPipelineTask uses
 (``_generate_draft`` + ``_save_drafts``), advancing status
-planned -> generating -> ready.
+planned -> generating -> ready. Each tick first sweeps items a crashed run
+left stuck in ``generating`` back to ``planned``
+(``calendar.reset_stale_generating``; threshold via the config extra
+``stale_generating_hours``, default 6h).
 
 Approval doctrine: this task produces DRAFTS only. Drafts land in the client
 outputs directory and flow through the normal quality-gate + human-approval
@@ -45,6 +48,34 @@ class EditorialCalendarTickTask(BaseTask):
             logger.warning("Editorial calendar store unavailable: %s", e)
             return {"success": False, "error": f"calendar store unavailable: {e}"}
 
+        extra = getattr(task.config, "extra", None) or {}
+        try:
+            max_items = int(extra.get("max_items", DEFAULT_MAX_ITEMS_PER_RUN))
+        except (TypeError, ValueError):
+            max_items = DEFAULT_MAX_ITEMS_PER_RUN
+
+        default_stale_hours = getattr(
+            editorial_calendar, "DEFAULT_STALE_GENERATING_HOURS", 6.0
+        )
+        try:
+            stale_hours = float(extra.get("stale_generating_hours", default_stale_hours))
+        except (TypeError, ValueError):
+            stale_hours = default_stale_hours
+
+        # Sweep items a crashed run left stuck in "generating" back to
+        # "planned" so due_items() can pick them up again this tick.
+        recovered: List[Dict[str, Any]] = []
+        try:
+            recovered = editorial_calendar.reset_stale_generating(stale_hours)
+            if recovered:
+                logger.warning(
+                    "Recovered %d stale 'generating' item(s): %s",
+                    len(recovered),
+                    [i.get("id") for i in recovered],
+                )
+        except Exception:
+            logger.exception("stale 'generating' sweep failed; continuing tick")
+
         try:
             due = editorial_calendar.due_items()
         except Exception as e:
@@ -56,13 +87,8 @@ class EditorialCalendarTickTask(BaseTask):
                 "success": True,
                 "summary": "No editorial calendar items due",
                 "generated": 0,
+                "recovered_stale": len(recovered),
             }
-
-        extra = getattr(task.config, "extra", None) or {}
-        try:
-            max_items = int(extra.get("max_items", DEFAULT_MAX_ITEMS_PER_RUN))
-        except (TypeError, ValueError):
-            max_items = DEFAULT_MAX_ITEMS_PER_RUN
 
         pipeline = ContentPipelineTask()
         generated: List[Dict[str, Any]] = []
@@ -126,6 +152,7 @@ class EditorialCalendarTickTask(BaseTask):
                 f"— drafts await quality gate + human approval (nothing published)"
             ),
             "generated": len(generated),
+            "recovered_stale": len(recovered),
             "items": generated,
             "errors": failures,
         }

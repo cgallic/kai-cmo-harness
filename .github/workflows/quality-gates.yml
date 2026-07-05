@@ -3,6 +3,7 @@ name: Harness self-check
 # The harness validates its own promises on every change:
 #  - doctor: every file CLAUDE.md references exists, gate scripts compile
 #  - golden corpus: gate verdicts on known-good/known-bad content unchanged
+#  - full test suite: everything under tests/ passes
 # See docs/system/learning-loop.md ("Prove" stage).
 
 on:
@@ -20,13 +21,18 @@ jobs:
         with:
           python-version: "3.11"
 
+      # Fast gate signal first — doctor + golden corpus run on stdlib alone,
+      # so a broken reference or gate regression fails in seconds.
       - name: Harness doctor (hard checks)
         run: python scripts/doctor.py --ci
 
       - name: Golden corpus
         run: python scripts/quality_gates/golden_check.py
 
-      - name: Golden corpus + promoted edge cases (pytest)
+      - name: Install dependencies
         run: |
-          pip install pytest pyyaml
-          python -m pytest tests/test_golden_corpus.py tests/test_promoted_edge_cases.py -v
+          pip install -r scripts/requirements.txt
+          pip install pytest pytest-asyncio pyyaml requests pydantic fastapi httpx respx python-dotenv supabase anthropic google-generativeai
+
+      - name: Full test suite (pytest)
+        run: python -m pytest tests -q

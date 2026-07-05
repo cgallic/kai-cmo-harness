@@ -155,4 +155,4 @@ Use the same Pydantic/fallback import pattern as `gateway/models.py`.
 - `gateway/models.py` — Pydantic import fallback pattern
 - `kai/runtime/models.py` — KaiWorkspaceProfile for inspiration
 - `kai/runtime/store.py` — existing persistence patterns
-- `config.example.yaml` — workspace config section
+- `config.yaml.example` — workspace config section

@@ -318,6 +318,49 @@ def test_extract_profile_facts_maps_flat_answers():
     assert "_errors" not in str(updates)
 
 
+def test_extract_profile_facts_service_list_as_python_list():
+    """A real list must be handled element-wise — str(['a','b']) once leaked
+    "['a'" tokens into the durable overlay as offer names."""
+    updates = extract_profile_facts({
+        "primary_service": "Roof Repair",
+        "service_list": ["Roof Repair", "  Gutter Cleaning  ", ""],
+    })
+    assert updates["offers"]["offer_list"] == [
+        {"name": "Roof Repair", "is_primary": True},
+        {"name": "Gutter Cleaning", "is_primary": False},
+    ]
+    # No str()-of-list artifacts ever persist
+    for offer in updates["offers"]["offer_list"]:
+        assert "[" not in offer["name"]
+        assert "'" not in offer["name"]
+
+
+def test_extract_profile_facts_service_list_tuple_and_scalar_elements():
+    updates = extract_profile_facts({
+        "service_list": ("Plumbing", 24),
+    })
+    assert updates["offers"]["offer_list"] == [
+        {"name": "Plumbing", "is_primary": False},
+        {"name": "24", "is_primary": False},
+    ]
+
+
+def test_extract_profile_facts_service_list_comma_string_mixed_whitespace():
+    updates = extract_profile_facts({
+        "primary_service": "  roof repair ",
+        "service_list": " Roof Repair ,  Gutter Cleaning ,, ",
+    })
+    assert updates["offers"]["offer_list"] == [
+        {"name": "Roof Repair", "is_primary": True},
+        {"name": "Gutter Cleaning", "is_primary": False},
+    ]
+
+
+def test_extract_profile_facts_service_list_empty_list_ignored():
+    updates = extract_profile_facts({"service_list": []})
+    assert "offers" not in updates
+
+
 def test_extract_profile_facts_passes_sections_through():
     updates = extract_profile_facts({
         "trust": {"review_count": 12, "review_platforms": ["Google"]},

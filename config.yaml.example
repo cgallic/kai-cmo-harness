@@ -10,6 +10,18 @@ owner:
   company: "Your Company"
   timezone: "America/New_York"
 
+# Kai Runtime — canonical workspace profile for the Claude Code-style clone
+# (read by kai/runtime/loader.py; sensible defaults apply if omitted)
+workspace:
+  id: "my-business"
+  name: "My Business"
+  description: "Marketing-native Claude Code-style runtime with local and remote execution."
+  primary_user: "operator"
+  product_mode: "clone"
+  surfaces: ["local", "remote"]
+  enabled_plugins:
+    - "kai-marketing"
+
 # Products you're marketing. Add as many as needed.
 # Each product gets its own domain agent + analytics.
 products:
@@ -29,6 +41,9 @@ products:
       - Fact 1 about the product
       - Fact 2 with specific numbers
       - Pricing: $X/mo
+    # Classification hints for the business-profile loader (optional)
+    # archetype: "software"                  # software | professional-services | ...
+    # archetype_overlays: ["local-service"]
 
 # Discord channels (OpenClaw path only)
 discord:
@@ -37,6 +52,10 @@ discord:
   updates_channel_id: ""     # Daily/weekly reports
   health_channel_id: ""      # Infrastructure alerts
   research_channel_id: ""    # Research digest
+  # Per-site alert routing (read by scripts/harness_config.py)
+  fallback_channel: ""       # Used when a site has no channel mapping below
+  channels: {}               # Site key -> Discord channel ID
+  #  myproduct: "123456789012345678"
 
 # Harness settings
 harness:
@@ -45,6 +64,36 @@ harness:
   self_improvement: true         # Enable pattern extraction + harness defaults updates
   llm_provider: "gemini"         # gemini | openai | anthropic
   llm_model: "gemini-2.0-flash"  # Model for content generation
+
+# API settings (top-level — read by scripts/harness_config.py; env vars override)
+gemini_model: "gemini-2.0-flash"
+api_timeout: 30       # seconds — applied to all LLM API calls
+api_max_retries: 3    # circuit breaker: fail after N consecutive errors
+
+# Paths (override with env vars: CMO_BASE_DIR, WORKSPACE_DIR, CMO_DATA_DIR, etc.)
+paths:
+  # cmo_base_dir: "/opt/cmo-analytics"   # uncomment on server
+  # workspace_dir: "/root/.openclaw/workspace"
+  # data_dir: "/opt/cmo-analytics/data"
+  # marketing_md: "/root/.openclaw/workspace/MARKETING.md"
+  # knowledge_base: "/root/.openclaw/workspace/knowledge/playbooks"
+
+# Site-specific integrations — site key -> Search Console / GA4 property
+# (read by scripts/harness_config.py; GA4 values can be overridden with
+# GA4_PROPERTY_<SITEKEY> env vars)
+sites:
+  gsc_urls: {}
+  #  myproduct: "sc-domain:myproduct.com"
+  ga4_properties: {}
+  #  myproduct: ""
+
+# Performance and pattern thresholds (read by scripts/harness_config.py)
+thresholds:
+  win_position: 5       # GSC position <= N = winner
+  win_ctr: 0.05         # 5% CTR minimum for winner
+  win_time_on_page: 90  # seconds on page minimum for winner
+  min_n: 10             # minimum data points to declare a pattern
+  min_delta: 0.15       # minimum 15% lift to be actionable
 
 # Server deployment (OpenClaw path only)
 server:

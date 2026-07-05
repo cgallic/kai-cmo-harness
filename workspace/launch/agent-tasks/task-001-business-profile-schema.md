@@ -204,5 +204,5 @@ Every field that is a list should default to an empty list. Every field that is 
 - `kai/runtime/business_profile.py` — existing prototype to preserve compatibility with
 - `kai/runtime/models.py` — existing SerializableModel and KaiBrandProfile patterns
 - `gateway/models.py` — Pydantic import fallback pattern to replicate
-- `config.example.yaml` — existing config structure showing workspace/product fields
+- `config.yaml.example` — existing config structure showing workspace/product fields
 - `CLAUDE.md` — full project context

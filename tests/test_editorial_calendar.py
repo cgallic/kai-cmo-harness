@@ -167,6 +167,93 @@ class TestDueItems:
 
 
 # ---------------------------------------------------------------------------
+# Stale "generating" sweep (crash recovery)
+# ---------------------------------------------------------------------------
+
+
+def _rewrite_item(calendar_dir, item_id, **fields):
+    """Rewrite one stored record directly (simulate legacy/aged records)."""
+    store = calendar_dir / "editorial.jsonl"
+    lines = []
+    for line in store.read_text().splitlines():
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        if rec.get("id") == item_id:
+            for key, value in fields.items():
+                if value is None:
+                    rec.pop(key, None)
+                else:
+                    rec[key] = value
+        lines.append(json.dumps(rec))
+    store.write_text("\n".join(lines) + "\n")
+
+
+class TestResetStaleGenerating:
+    def test_stale_item_recovered_and_due_again(self):
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")
+
+        later = datetime.now(timezone.utc) + timedelta(hours=7)
+        reset = cal.reset_stale_generating(max_age_hours=6, now=later)
+
+        assert [i["id"] for i in reset] == [item["id"]]
+        stored = cal.get_item(item["id"])
+        assert stored["status"] == "planned"
+        assert "auto-reset" in stored["notes"]
+        # Recovered items are due again on the next tick
+        assert any(i["id"] == item["id"] for i in cal.due_items(now=later))
+
+    def test_fresh_generating_item_not_touched(self):
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")
+
+        soon = datetime.now(timezone.utc) + timedelta(hours=1)
+        assert cal.reset_stale_generating(max_age_hours=6, now=soon) == []
+        assert cal.get_item(item["id"])["status"] == "generating"
+
+    def test_note_appended_not_overwritten(self):
+        item = cal.add_item(
+            site="s", title="t", publish_at="2020-01-01T00:00:00Z", notes="from plan"
+        )
+        cal.mark_status(item["id"], "generating")
+
+        later = datetime.now(timezone.utc) + timedelta(hours=7)
+        cal.reset_stale_generating(max_age_hours=6, now=later)
+
+        notes = cal.get_item(item["id"])["notes"]
+        assert notes.startswith("from plan; ")
+        assert "auto-reset" in notes
+
+    def test_missing_timestamps_treated_as_stale(self, calendar_dir):
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")
+        # Legacy record without updated_at/created_at can never age out —
+        # the sweep must still recover it.
+        _rewrite_item(calendar_dir, item["id"], updated_at=None, created_at=None)
+
+        reset = cal.reset_stale_generating(max_age_hours=6)
+        assert [i["id"] for i in reset] == [item["id"]]
+        assert cal.get_item(item["id"])["status"] == "planned"
+
+    def test_other_statuses_never_swept(self):
+        planned = cal.add_item(site="s", title="p", publish_at="2020-01-01T00:00:00Z")
+        ready = cal.add_item(site="s", title="r", publish_at="2020-01-02T00:00:00Z")
+        cal.mark_status(ready["id"], "ready")
+
+        later = datetime.now(timezone.utc) + timedelta(days=30)
+        assert cal.reset_stale_generating(max_age_hours=6, now=later) == []
+        assert cal.get_item(planned["id"])["status"] == "planned"
+        assert cal.get_item(ready["id"])["status"] == "ready"
+
+    def test_mark_status_stamps_updated_at(self):
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        before = item["updated_at"]
+        updated = cal.mark_status(item["id"], "generating")
+        assert updated["updated_at"] >= before
+
+
+# ---------------------------------------------------------------------------
 # editorial_calendar_tick handler
 # ---------------------------------------------------------------------------
 
@@ -295,6 +382,65 @@ class TestEditorialCalendarTick:
         assert cal.get_item(ids[1])["status"] == "ready"
         assert cal.get_item(ids[2])["status"] == "planned"
         assert cal.get_item(ids[3])["status"] == "planned"
+
+    def test_tick_recovers_stale_generating_item(self, monkeypatch, calendar_dir):
+        """An item orphaned in 'generating' by a crash is swept back to
+        planned at the start of the tick and generated in the same run."""
+        from agent.tasks.editorial_calendar import EditorialCalendarTickTask
+
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")
+        stale_stamp = (datetime.now(timezone.utc) - timedelta(hours=7)).isoformat()
+        _rewrite_item(calendar_dir, item["id"], updated_at=stale_stamp)
+
+        self._patch_pipeline(
+            monkeypatch,
+            draft={"topic": "t", "content": "...", "status": "draft"},
+            saved=["/tmp/d.md"],
+        )
+        result = asyncio.run(EditorialCalendarTickTask().execute(_make_task()))
+
+        assert result["recovered_stale"] == 1
+        assert result["generated"] == 1
+        assert cal.get_item(item["id"])["status"] == "ready"
+
+    def test_tick_leaves_fresh_generating_alone(self, monkeypatch):
+        from agent.tasks.editorial_calendar import EditorialCalendarTickTask
+
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")  # updated_at = now
+
+        self._patch_pipeline(
+            monkeypatch,
+            draft={"topic": "t", "content": "...", "status": "draft"},
+            saved=["/tmp/d.md"],
+        )
+        result = asyncio.run(EditorialCalendarTickTask().execute(_make_task()))
+
+        assert result["recovered_stale"] == 0
+        assert result["generated"] == 0
+        assert cal.get_item(item["id"])["status"] == "generating"
+
+    def test_stale_threshold_configurable_via_extra(self, monkeypatch):
+        from agent.tasks.editorial_calendar import EditorialCalendarTickTask
+
+        item = cal.add_item(site="s", title="t", publish_at="2020-01-01T00:00:00Z")
+        cal.mark_status(item["id"], "generating")  # fresh, but threshold is 0h
+
+        self._patch_pipeline(
+            monkeypatch,
+            draft={"topic": "t", "content": "...", "status": "draft"},
+            saved=["/tmp/d.md"],
+        )
+        result = asyncio.run(
+            EditorialCalendarTickTask().execute(
+                _make_task(extra={"stale_generating_hours": 0})
+            )
+        )
+
+        assert result["recovered_stale"] == 1
+        assert result["generated"] == 1
+        assert cal.get_item(item["id"])["status"] == "ready"
 
     def test_handler_registered(self):
         from agent.tasks import get_task_handler
