@@ -12,8 +12,9 @@ Three commands:
          at least --min-count times. --write appends them to
          memory/lessons.md as (candidate) entries.
 
-  losers Read the content log and list published pieces graded "loser"
-         that are not yet diagnosed in memory/what-doesnt-work.md.
+  losers Read the content log and list published pieces graded
+         "underperformer" (the bottom 30-day grade) that are not yet
+         diagnosed in memory/what-doesnt-work.md.
 
 Usage:
   python scripts/self_improvement/lesson_capture.py add \
@@ -39,6 +40,15 @@ from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.self_improvement.grades import (  # noqa: E402
+    GRADE_UNDERPERFORMER,
+    get_grade,
+    get_published_at,
+)
+
 LESSONS_PATH = REPO_ROOT / "memory" / "lessons.md"
 ANTIPATTERNS_PATH = REPO_ROOT / "memory" / "what-doesnt-work.md"
 LEARNED_HEADER = "## Learned lessons"
@@ -223,22 +233,27 @@ def cmd_losers(args: argparse.Namespace) -> int:
         e
         for e in entries
         if isinstance(e, dict)
-        and (e.get("performance_30d") or {}).get("grade") == "loser"
+        and get_grade(e) == GRADE_UNDERPERFORMER
         and str(e.get("id", "")) not in diagnosed
     ]
     if not losers:
-        print("No undiagnosed losers in the content log.")
+        print("No undiagnosed underperformers in the content log.")
         return 0
 
-    print(f"{len(losers)} published piece(s) graded 'loser' with no diagnosis yet:\n")
+    print(f"{len(losers)} published piece(s) graded 'underperformer' with no diagnosis yet:\n")
     for e in losers:
-        perf = e.get("performance_30d", {})
+        perf = e.get("performance_30d")
+        gsc = perf.get("gsc", {}) if isinstance(perf, dict) else {}
         print(
             f"  id={e.get('id')} format={e.get('format')} keyword={e.get('keyword')!r} "
-            f"published={e.get('publish_date')} perf={json.dumps(perf.get('gsc', {}))}"
+            f"published={get_published_at(e)} perf={json.dumps(gsc)}"
         )
+    try:
+        antipatterns_display = ANTIPATTERNS_PATH.relative_to(REPO_ROOT)
+    except ValueError:
+        antipatterns_display = ANTIPATTERNS_PATH
     print(
-        f"\nDiagnose each and add an entry to {ANTIPATTERNS_PATH.relative_to(REPO_ROOT)} "
+        f"\nDiagnose each and add an entry to {antipatterns_display} "
         "under 'Measured losers' (include the id so it isn't re-flagged)."
     )
     return 0
@@ -260,7 +275,9 @@ def main() -> int:
     p_mine.add_argument("--write", action="store_true", help="Append candidates to lessons.md")
     p_mine.set_defaults(func=cmd_mine)
 
-    p_losers = sub.add_parser("losers", help="List undiagnosed losers from the content log")
+    p_losers = sub.add_parser(
+        "losers", help="List undiagnosed underperformers from the content log"
+    )
     p_losers.set_defaults(func=cmd_losers)
 
     args = parser.parse_args()

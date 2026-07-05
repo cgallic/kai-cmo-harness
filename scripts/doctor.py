@@ -22,6 +22,7 @@ import argparse
 import importlib.util
 import os
 import py_compile
+import re
 import sys
 from pathlib import Path
 
@@ -75,6 +76,41 @@ REQUIRED_PATHS = [
     "docs/system/governance-and-quality.md",
     "docs/system/learning-loop.md",
     "docs/OPENCLAW_SETUP.md",
+]
+
+# The instruction chain: files that CLAUDE.md/AGENTS.md tell every agent to
+# read (load-on-demand pointers, workspace core files, the memory layer).
+# If one of these is missing, agents get instructed to load files that do not
+# exist — which silently happened when .claude/rules/ was dropped in the
+# 2026-06-18 slimming. To update: when AGENTS.md or CLAUDE.md gains a new
+# pointer target (a "read this file" instruction outside the Framework Map),
+# add it here.
+INSTRUCTION_CHAIN_PATHS = [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".claude/rules/architecture-and-memory.md",
+    ".claude/rules/scripts-and-tools.md",
+    "memory/MEMORY.md",
+    "memory/lessons.md",
+    "memory/edge-cases.md",
+    "memory/what-doesnt-work.md",
+    "workspace/AGENTS.md",
+    "workspace/HEARTBEAT.md",
+    "workspace/IDENTITY.md",
+    "workspace/MARKETING.md",
+    "workspace/SOUL.md",
+    "workspace/TOOLS.md",
+    "workspace/USER.md",
+]
+
+# Markdown docs whose inline `path` references (Framework Map table, skill
+# contracts, checklists, rules files) are parsed and existence-checked by
+# check_instruction_chain(). Paths under data/ are runtime artifacts and are
+# skipped; so are globs, ellipses, and command arguments.
+REFERENCED_DOCS = [
+    "AGENTS.md",
+    ".claude/rules/architecture-and-memory.md",
+    ".claude/rules/scripts-and-tools.md",
 ]
 
 # Scripts that must at least compile on a fresh clone (no credentials needed).
@@ -141,6 +177,80 @@ def check_required_paths(report: Report) -> None:
         for p in missing:
             report.fail(f"missing referenced file: {p}")
     report.ok(f"{len(REQUIRED_PATHS) - len(missing)}/{len(REQUIRED_PATHS)} referenced files present")
+
+
+_PATH_TOKEN_RE = re.compile(r"[A-Za-z0-9_.\-/]+/?")
+
+
+def extract_repo_paths(markdown_text: str) -> list[str]:
+    """Extract repo-relative file/dir paths from inline-code spans in markdown.
+
+    Rules (kept deliberately conservative to avoid false failures):
+      - fenced code blocks are stripped (inline backticks only)
+      - a token counts as a path when it contains "/" and is made purely of
+        path characters (no spaces, globs, angle brackets, or "..." ellipses)
+      - `python <script>.py ...` command tokens contribute their script path
+      - absolute paths and data/ runtime artifacts are skipped
+    """
+    lines: list[str] = []
+    in_fence = False
+    for line in markdown_text.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            lines.append(line)
+
+    paths: set[str] = set()
+    for line in lines:
+        for token in re.findall(r"`([^`\n]+)`", line):
+            token = token.strip()
+            candidate = ""
+            if token.startswith(("python ", "python3 ")):
+                words = token.split()
+                if len(words) > 1 and words[1].endswith(".py"):
+                    candidate = words[1]
+            elif " " not in token and _PATH_TOKEN_RE.fullmatch(token):
+                candidate = token
+            if not candidate or "/" not in candidate:
+                continue
+            if ".." in candidate or "*" in candidate:
+                continue
+            if candidate.startswith(("/", "data/")):
+                continue
+            paths.add(candidate)
+    return sorted(paths)
+
+
+def check_instruction_chain(report: Report, root: Path = REPO_ROOT) -> None:
+    """Verify every file the instruction chain tells agents to load exists.
+
+    Covers the CLAUDE.md/AGENTS.md load-on-demand pointers (.claude/rules/*),
+    the workspace core files, the memory layer, and every path referenced in
+    the AGENTS.md Framework Map + the .claude/rules docs themselves.
+    """
+    missing_chain = [p for p in INSTRUCTION_CHAIN_PATHS if not (root / p).exists()]
+    for p in missing_chain:
+        report.fail(f"instruction chain broken: {p} is referenced by CLAUDE.md/AGENTS.md but missing")
+
+    checked = 0
+    for doc in REFERENCED_DOCS:
+        doc_path = root / doc
+        if not doc_path.exists():
+            continue  # already failed above (or not part of this tree)
+        try:
+            text = doc_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            report.fail(f"cannot read {doc}: {exc}")
+            continue
+        for rel in extract_repo_paths(text):
+            checked += 1
+            if not (root / rel).exists():
+                report.fail(f"{doc} references missing path: {rel}")
+    report.ok(
+        f"instruction chain intact ({len(INSTRUCTION_CHAIN_PATHS) - len(missing_chain)}"
+        f"/{len(INSTRUCTION_CHAIN_PATHS)} core files, {checked} doc-referenced paths checked)"
+    )
 
 
 def check_compiles(report: Report) -> None:
@@ -225,6 +335,7 @@ def main() -> int:
     report = Report()
     check_python(report)
     check_required_paths(report)
+    check_instruction_chain(report)
     check_compiles(report)
     check_golden_corpus(report)
     if not args.ci:

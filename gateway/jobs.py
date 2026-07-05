@@ -3,6 +3,7 @@
 import asyncio
 import gc
 import json
+import os
 import sqlite3
 import threading
 import uuid
@@ -14,6 +15,28 @@ from typing import Any, Callable, Dict, List, Optional
 from kai.runtime import get_default_runtime_store
 
 from .models import ArtifactType, JobInfo, JobStatus, RunSurface
+
+# Jobs/runs/artifacts must outlive the 30-day learning loop (the 30-day
+# performance check joins back to run/artifact ids), so retention defaults
+# to 45 days — NOT the old 7, which deleted lineage before it was graded.
+DEFAULT_JOB_RETENTION_DAYS = 45
+
+
+def get_job_retention_days() -> int:
+    """Job retention window in days (default 45).
+
+    Override with the KAI_JOB_RETENTION_DAYS env var. Invalid or
+    non-positive values fall back to the default.
+    """
+    raw = os.environ.get("KAI_JOB_RETENTION_DAYS", "").strip()
+    if raw:
+        try:
+            days = int(raw)
+            if days > 0:
+                return days
+        except ValueError:
+            pass
+    return DEFAULT_JOB_RETENTION_DAYS
 
 
 class JobQueue:
@@ -487,11 +510,23 @@ class JobQueue:
             )
         return artifacts
 
-    def cleanup_old_jobs(self, days: int = 7):
-        """Remove jobs older than N days."""
+    def cleanup_old_jobs(self, days: Optional[int] = None):
+        """Remove jobs/runs/artifacts older than the retention window.
+
+        Retention defaults to ``get_job_retention_days()`` (45 days,
+        KAI_JOB_RETENTION_DAYS to override). The configured retention is a
+        FLOOR: an explicit ``days`` argument may lengthen the window but
+        never shorten it below the configured value — legacy callers that
+        still pass ``days=7`` (pre-45-day default) must not delete lineage
+        the 30-day learning loop has yet to grade. To genuinely shorten
+        retention, set KAI_JOB_RETENTION_DAYS.
+        """
         from datetime import timedelta
 
-        cutoff = (datetime.utcnow() - timedelta(days=days)).isoformat()
+        retention = get_job_retention_days()
+        effective_days = retention if days is None else max(days, retention)
+
+        cutoff = (datetime.utcnow() - timedelta(days=effective_days)).isoformat()
 
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("DELETE FROM jobs WHERE created_at < ?", (cutoff,))

@@ -1,10 +1,25 @@
 skill: campaign
-version: 2.0
+version: 2.1
 harness: kai-harness
 
 description: >
   Multi-channel marketing campaign with coordinated assets across landing page,
   email sequence, social posts, and ads. Ensures cross-channel message consistency.
+
+# Campaign identity — the join key across every campaign store.
+# campaign_planner mints "cmp-YYYYMMDD-<slug>" and writes it into
+# manifest.json; with --save it also auto-creates the campaign_tracker row
+# and records a campaign_plan artifact in the RuntimeStore. Thread the same
+# id into engine.generate(campaign_id=...) so content_log entries and 30-day
+# pending checks roll up per campaign; editorial calendar items carry it too.
+identity:
+  campaign_id: cmp-YYYYMMDD-<slug>  # minted by scripts/campaigns/campaign_planner.py (mint_campaign_id)
+  stores:
+    - campaigns/<dir>/manifest.json            # planner output
+    - data/campaigns/campaigns.db              # campaign_tracker (campaign_id column)
+    - data/runtime/artifacts/                  # campaign_plan artifact (data.campaign_id)
+    - data/calendar/editorial.jsonl            # editorial calendar items (campaign_id field)
+    - data/content_log.json                    # content_log entries + data/pending_checks/*.json
 
 inputs:
   required:
@@ -15,8 +30,10 @@ inputs:
     - budget: number
     - timeline_weeks: int
     - product_id: string
+    - campaign_id: string  # reuse an existing id; minted when omitted
 
 outputs:
+  campaign_id: string  # cmp-YYYYMMDD-<slug> (also in manifest.json)
   landing_page_copy: markdown
   email_sequence: list  # 5 emails
   social_variants: list  # 3 per platform
@@ -36,5 +53,9 @@ hooks:
   post_write: run_quality_gate_per_asset
   on_fail: revise_failing_assets
   on_pass: post_campaign_for_approval
+  # content_log.log_entry(campaign_id=<campaign_id>) — url=None until a human
+  # actually publishes; mark_published() backfills the real URL.
   on_approve: save_campaign_bundle + content_log
+  # No longer prose-only: campaign_planner --save auto-runs
+  # campaign_tracker.create_campaign with the minted campaign_id.
   on_publish: create_campaign_tracker

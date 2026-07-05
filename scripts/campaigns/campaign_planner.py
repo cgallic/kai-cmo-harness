@@ -15,6 +15,7 @@ Generates: landing page copy, 5-email sequence, 3 social variants, 3 ad variants
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -26,6 +27,53 @@ load_dotenv()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 KNOWLEDGE = REPO_ROOT / "knowledge"
+
+
+def _slugify(text: str) -> str:
+    """Lowercase slug: alphanumerics joined by hyphens."""
+    return re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+
+
+def mint_campaign_id(goal: str, keyword: str = "", when: datetime | None = None) -> str:
+    """Mint the shared campaign identity: ``cmp-YYYYMMDD-<slug>``.
+
+    This is THE join key across the five campaign stores: planner
+    manifest.json, campaign_tracker SQLite, RuntimeStore ``campaign_plan``
+    artifacts, editorial calendar items, and content_log entries
+    (threaded via ``engine.generate(campaign_id=...)``).
+    """
+    when = when or datetime.now(timezone.utc)
+    slug = _slugify(goal) or _slugify(keyword) or "campaign"
+    return f"cmp-{when.strftime('%Y%m%d')}-{slug[:48].strip('-')}"
+
+
+def _record_campaign_plan_artifact(manifest: dict, save_dir: str) -> str | None:
+    """Record a ``campaign_plan`` artifact in the RuntimeStore.
+
+    Uses the artifact type declared in kai/runtime/models.py. Local
+    workspace state only — nothing here touches a live channel.
+    Returns the artifact_id, or None if the runtime store is unavailable.
+    """
+    try:
+        from kai.runtime import get_default_runtime_store
+
+        store = get_default_runtime_store()
+        artifact = store.record_artifact(
+            {
+                "artifact_type": "campaign_plan",
+                "brand_id": manifest.get("product", ""),
+                "workflow": "campaign-plan",
+                "data": {
+                    "campaign_id": manifest.get("campaign_id"),
+                    "manifest": manifest,
+                    "assets_dir": str(save_dir),
+                },
+            }
+        )
+        return artifact.get("artifact_id")
+    except Exception as e:  # never let bookkeeping kill the asset save
+        print(f"  Warning: could not record campaign_plan artifact: {e}")
+        return None
 
 
 def _load_config() -> dict:
@@ -96,9 +144,18 @@ def generate_campaign(
     keyword: str,
     campaign_type: str = "launch",
     save_dir: str | None = None,
+    campaign_id: str | None = None,
 ) -> dict:
-    """Generate all campaign assets."""
+    """Generate all campaign assets.
 
+    ``campaign_id`` is minted (``cmp-YYYYMMDD-<slug>``) when not supplied.
+    With ``save_dir``, it is written into manifest.json, a tracker row is
+    auto-created (campaign_tracker.create_campaign), and a ``campaign_plan``
+    artifact is recorded in the RuntimeStore — one join key across all
+    campaign stores.
+    """
+
+    campaign_id = campaign_id or mint_campaign_id(goal, keyword)
     template = CAMPAIGN_TEMPLATES.get(campaign_type, CAMPAIGN_TEMPLATES["launch"])
     product_context = _get_product_context(product_id)
     pe_framework = _load_framework("frameworks/content-copywriting/perception-engineering.md")
@@ -107,6 +164,7 @@ def generate_campaign(
 
     print(f"\n{'═'*60}")
     print(f"  Campaign Planner — {campaign_type.upper()}")
+    print(f"  Campaign ID: {campaign_id}")
     print(f"  Goal: {goal}")
     print(f"  Product: {product_id} | Keyword: {keyword}")
     print(f"{'═'*60}")
@@ -326,8 +384,9 @@ Requirements: Standard AP style, no banned words, specific numbers.""")
         for name, content in assets.items():
             (out / f"{name}.md").write_text(content)
 
-        # Save campaign manifest
+        # Save campaign manifest — campaign_id is the cross-store join key
         manifest = {
+            "campaign_id": campaign_id,
             "campaign_type": campaign_type,
             "goal": goal,
             "product": product_id,
@@ -342,6 +401,28 @@ Requirements: Standard AP style, no banned words, specific numbers.""")
         for name in assets:
             print(f"    {name}.md")
         print(f"    manifest.json")
+
+        # Auto-create the tracker row so the campaign is joinable from day 0
+        # (previously a prose-only hook in harness/skill-contracts/campaign.yaml).
+        try:
+            from scripts.campaigns.campaign_tracker import create_campaign
+
+            create_campaign(
+                campaign_id,
+                assets_dir=str(out),
+                campaign_type=campaign_type,
+                goal=goal,
+                product=product_id,
+                keyword=keyword,
+                campaign_id=campaign_id,
+            )
+        except Exception as e:
+            print(f"  Warning: could not create campaign tracker row: {e}")
+
+        # Record the campaign_plan artifact (declared in kai/runtime/models.py).
+        artifact_id = _record_campaign_plan_artifact(manifest, str(out))
+        if artifact_id:
+            print(f"  RuntimeStore campaign_plan artifact: {artifact_id}")
     else:
         for name, content in assets.items():
             print(f"\n{'═'*60}")
@@ -363,6 +444,7 @@ def main():
     parser.add_argument("--type", default="launch", choices=list(CAMPAIGN_TEMPLATES.keys()),
                         help="Campaign type")
     parser.add_argument("--save", help="Directory to save campaign assets")
+    parser.add_argument("--campaign-id", help="Reuse an existing campaign id (default: mint cmp-YYYYMMDD-<slug>)")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
@@ -372,6 +454,7 @@ def main():
         keyword=args.keyword,
         campaign_type=args.type,
         save_dir=args.save,
+        campaign_id=args.campaign_id,
     )
 
     if args.json:

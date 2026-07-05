@@ -192,6 +192,11 @@ class Scheduler:
         - ad_performance: 12:00 PM
         - seo_opportunities: 2:00 PM
         - weekly_report: Sunday 9:00 AM
+        - performance_check_30d: 2:00 AM daily
+        - pattern_extract_weekly: Monday 2:00 PM
+        - harness_defaults_update: Monday 2:30 PM
+        - editorial_calendar_tick: hourly
+        - cmo_review: Monday 7:00 AM
         """
         from uuid import uuid4
 
@@ -389,6 +394,44 @@ class Scheduler:
                     "notify_on_complete": True,
                     "extra": {"window_days": 7},
                 },
+            },
+            # Self-improvement loop (docs/OPENCLAW_SETUP.md section 3) —
+            # 30-day check → pattern mining → defaults update
+            {
+                "name": "30-Day Performance Check",
+                "cron_expression": "0 2 * * *",  # 2 AM daily
+                "task_type": "performance_check_30d",
+                "config": {"notify_on_complete": True}
+            },
+            {
+                "name": "Weekly Pattern Extraction",
+                "cron_expression": "0 14 * * 1",  # 2 PM Mondays
+                "task_type": "pattern_extract_weekly",
+                "config": {"notify_on_complete": True}
+            },
+            {
+                "name": "Harness Defaults Update",
+                "cron_expression": "30 14 * * 1",  # 2:30 PM Mondays
+                "task_type": "harness_defaults_update",
+                "config": {"notify_on_complete": True}
+            },
+            # Editorial calendar executor — drafts only; the approval flow
+            # (execute_approved_actions) is the only path that publishes.
+            {
+                "name": "Editorial Calendar Tick",
+                "cron_expression": "0 * * * *",  # Hourly
+                "task_type": "editorial_calendar_tick",
+                "config": {"notify_on_complete": False}
+            },
+            # Weekly CMO review — closes the goal loop (plan → act → measure
+            # → replan): refreshes goal KPIs, checks pace vs deadline, and
+            # decomposes behind-pace goals into task graphs the loop executes.
+            # Resulting actions still pass ActionStore approval + mandates.
+            {
+                "name": "Weekly CMO Review",
+                "cron_expression": "0 7 * * 1",  # 7 AM Mondays
+                "task_type": "cmo_review",
+                "config": {"notify_on_complete": True}
             },
         ]
 

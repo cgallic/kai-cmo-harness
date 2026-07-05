@@ -3,12 +3,28 @@
 Provides the structured business understanding that audit, scoring,
 and proposal layers consume. Archetype-aware with local-service as
 the first target.
+
+Also owns the durable profile overlay store: facts learned during a
+session (onboarding answers, enrichment) persist to
+``data/runtime/profile/<brand>.json`` and are deep-merged over
+config-derived values on every profile build, so learned state
+survives process restarts.
 """
 
 from __future__ import annotations
 
+import copy
+import json
+import os
+import re
+import threading
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+from scripts.harness_config import get_config
 
 from .models import KaiBrandProfile, SerializableModel
 
@@ -373,6 +389,168 @@ def _apply_defaults(target: dict, defaults: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Profile overlay store — durable, per-brand learned facts
+# ---------------------------------------------------------------------------
+#
+# Overlay file format (data/runtime/profile/<brand>.json):
+#   {
+#     "brand_id": "<brand>",
+#     "updated_at": "<ISO-8601 UTC>",
+#     "profile": { ...partial raw BusinessProfile dict... }
+#   }
+#
+# The "profile" payload uses the same raw-dict schema consumed by
+# build_business_profile(), so overlays merge cleanly over config-derived
+# values (overlay wins; nested dicts deep-merge; lists replace).
+
+_PROFILE_OVERLAY_SUBDIR = "profile"
+_OVERLAY_RESERVED_KEYS = {"brand_id", "updated_at"}
+_OVERLAY_LOCK = threading.RLock()
+
+
+def _sanitize_brand_id(brand_id: str) -> str:
+    """Make a brand id safe to use as a filename."""
+    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "-", str(brand_id).strip())
+    return cleaned.strip("-.") or "default"
+
+
+def profile_overlay_dir() -> Path:
+    """Directory holding per-brand profile overlays.
+
+    Follows the same KAI_RUNTIME_DIR convention as RuntimeStore, resolved
+    at call time so tests and long-running agents can repoint it.
+    """
+    cfg = get_config()
+    base = Path(os.environ.get("KAI_RUNTIME_DIR", str(cfg.data_dir / "runtime")))
+    return base / _PROFILE_OVERLAY_SUBDIR
+
+
+def profile_overlay_path(brand_id: str) -> Path:
+    """Path of the overlay file for a brand."""
+    return profile_overlay_dir() / f"{_sanitize_brand_id(brand_id)}.json"
+
+
+def deep_merge_profile(base: dict, updates: dict) -> dict:
+    """Deep-merge ``updates`` over ``base`` and return a new dict.
+
+    Nested dicts merge recursively; lists and scalars are replaced.
+    Neither input is mutated.
+    """
+    merged = dict(base)
+    for key, value in updates.items():
+        existing = merged.get(key)
+        if isinstance(value, dict) and isinstance(existing, dict):
+            merged[key] = deep_merge_profile(existing, value)
+        else:
+            merged[key] = copy.deepcopy(value)
+    return merged
+
+
+@lru_cache(maxsize=128)
+def _read_overlay_text(path_str: str) -> Optional[str]:
+    """Cached raw read of an overlay file (None when missing)."""
+    path = Path(path_str)
+    if not path.exists():
+        return None
+    return path.read_text(encoding="utf-8")
+
+
+def invalidate_profile_overlay_cache() -> None:
+    """Bust the in-process overlay read cache."""
+    _read_overlay_text.cache_clear()
+
+
+def _invalidate_workspace_profile_cache() -> None:
+    """Bust the lru-cached workspace profile so a session sees its own writes."""
+    try:
+        from .loader import load_workspace_profile
+        load_workspace_profile.cache_clear()
+    except Exception:  # pragma: no cover — cache bust must never fail a save
+        pass
+
+
+def load_profile_overlay_record(brand_id: str) -> Dict[str, Any]:
+    """Load the full overlay record (brand_id, updated_at, profile) for a brand.
+
+    Returns an empty dict when no overlay exists or the file is unreadable.
+    """
+    text = _read_overlay_text(str(profile_overlay_path(brand_id)))
+    if not text:
+        return {}
+    try:
+        record = json.loads(text)
+    except ValueError:
+        return {}
+    return record if isinstance(record, dict) else {}
+
+
+def load_profile_overlay(brand_id: str) -> Dict[str, Any]:
+    """Load the overlay profile payload for a brand (empty dict when absent)."""
+    payload = load_profile_overlay_record(brand_id).get("profile")
+    return payload if isinstance(payload, dict) else {}
+
+
+def save_profile_overlay(brand_id: str, updates: Dict[str, Any]) -> Dict[str, Any]:
+    """Deep-merge ``updates`` into the brand's stored overlay and persist it.
+
+    Nested dicts merge; lists replace. Stamps ``updated_at`` (UTC ISO-8601),
+    writes atomically, and invalidates the in-process caches so the current
+    session sees its own writes. Returns the persisted record.
+    """
+    if not brand_id or not str(brand_id).strip():
+        raise ValueError("brand_id is required")
+    if not isinstance(updates, dict):
+        raise TypeError(f"updates must be a dict, got {type(updates)!r}")
+
+    payload = {k: v for k, v in updates.items() if k not in _OVERLAY_RESERVED_KEYS}
+
+    with _OVERLAY_LOCK:
+        existing = load_profile_overlay(brand_id)
+        record = {
+            "brand_id": str(brand_id),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "profile": deep_merge_profile(existing, payload),
+        }
+        path = profile_overlay_path(brand_id)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path = path.with_suffix(path.suffix + ".tmp")
+        tmp_path.write_text(
+            json.dumps(record, indent=2, sort_keys=True, default=str),
+            encoding="utf-8",
+        )
+        tmp_path.replace(path)
+        invalidate_profile_overlay_cache()
+
+    _invalidate_workspace_profile_cache()
+    return record
+
+
+def clear_profile_overlay(brand_id: str) -> bool:
+    """Delete a brand's overlay file. Returns True if one existed."""
+    with _OVERLAY_LOCK:
+        path = profile_overlay_path(brand_id)
+        existed = path.exists()
+        if existed:
+            path.unlink()
+        invalidate_profile_overlay_cache()
+    if existed:
+        _invalidate_workspace_profile_cache()
+    return existed
+
+
+def _resolve_overlay_brand_id(raw: Dict[str, Any], brand: Optional[KaiBrandProfile]) -> Optional[str]:
+    """Mirror build_business_profile's brand_id derivation for overlay lookup."""
+    brand_id = raw.get("brand_id") or (brand.id if brand else None)
+    if brand_id:
+        return str(brand_id)
+    identity_raw = raw.get("identity") or {}
+    name = identity_raw.get("name") or (brand.name if brand else raw.get("name", ""))
+    if name:
+        return str(name).lower().replace(" ", "-")
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Loader / builder
 # ---------------------------------------------------------------------------
 
@@ -541,6 +719,7 @@ def build_business_profile(
     *,
     brand: Optional[KaiBrandProfile] = None,
     apply_archetype_defaults: bool = True,
+    apply_overlay: bool = True,
 ) -> BusinessProfile:
     """Build a BusinessProfile from a raw config dict.
 
@@ -548,9 +727,23 @@ def build_business_profile(
     active_channels, persona_defaults, archetype) are used as fallbacks
     for any fields not explicitly set in raw.
 
+    When apply_overlay is True (the default), any persisted profile
+    overlay for the brand (data/runtime/profile/<brand>.json) is
+    deep-merged over the config-derived values first — overlay wins,
+    nested dicts merge, lists replace.
+
     When apply_archetype_defaults is True, archetype-specific defaults
-    (e.g. LOCAL_SERVICE_DEFAULTS) are merged before building.
+    (e.g. LOCAL_SERVICE_DEFAULTS) are merged before building. Defaults
+    never overwrite config or overlay values — they only fill gaps.
     """
+    # Merge any persisted overlay over config-derived values
+    if apply_overlay:
+        overlay_brand_id = _resolve_overlay_brand_id(raw, brand)
+        if overlay_brand_id:
+            overlay = load_profile_overlay(overlay_brand_id)
+            if overlay:
+                raw = deep_merge_profile(dict(raw), overlay)
+
     # Determine archetype
     archetype = raw.get("archetype")
     if not archetype and brand:
@@ -605,14 +798,22 @@ def build_business_profile(
 def build_business_profile_from_brand(
     brand: KaiBrandProfile,
     overrides: Optional[Dict[str, Any]] = None,
+    *,
+    apply_overlay: bool = True,
 ) -> BusinessProfile:
     """Convenience: build a BusinessProfile primarily from a KaiBrandProfile.
 
     Any overrides dict is merged on top (useful for enrichment from
-    a dedicated profile YAML or operator input).
+    a dedicated profile YAML or operator input). Persisted profile
+    overlays merge over both unless apply_overlay is False.
     """
     raw = overrides or {}
-    return build_business_profile(raw, brand=brand, apply_archetype_defaults=True)
+    return build_business_profile(
+        raw,
+        brand=brand,
+        apply_archetype_defaults=True,
+        apply_overlay=apply_overlay,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -748,8 +949,11 @@ LOCAL_SERVICE_FIXTURE: Dict[str, Any] = {
 
 
 def load_local_service_fixture() -> BusinessProfile:
-    """Load the canonical local-service example profile."""
-    return build_business_profile(LOCAL_SERVICE_FIXTURE)
+    """Load the canonical local-service example profile.
+
+    Overlays are skipped so the fixture stays deterministic for demos/tests.
+    """
+    return build_business_profile(LOCAL_SERVICE_FIXTURE, apply_overlay=False)
 
 
 ANDON_WINDOW_CLEANING_FIXTURE: Dict[str, Any] = {
@@ -928,5 +1132,8 @@ ANDON_WINDOW_CLEANING_FIXTURE: Dict[str, Any] = {
 
 
 def load_andon_window_cleaning_fixture() -> BusinessProfile:
-    """Load the canonical Andon Window Cleaning business profile fixture."""
-    return build_business_profile(ANDON_WINDOW_CLEANING_FIXTURE)
+    """Load the canonical Andon Window Cleaning business profile fixture.
+
+    Overlays are skipped so the fixture stays deterministic for demos/tests.
+    """
+    return build_business_profile(ANDON_WINDOW_CLEANING_FIXTURE, apply_overlay=False)

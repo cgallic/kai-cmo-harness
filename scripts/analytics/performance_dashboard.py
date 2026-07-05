@@ -25,6 +25,8 @@ from pathlib import Path
 _ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(_ROOT))
 
+from scripts.self_improvement.grades import get_grade, get_published_at  # noqa: E402
+
 KAI_DIR = Path.home() / ".kai-marketing"
 SNAPSHOT_DIR = KAI_DIR / "analytics" / "snapshots"
 CONTENT_LOG = KAI_DIR / "content-log.jsonl"
@@ -74,7 +76,7 @@ def weekly_summary() -> dict:
     # This week's content
     this_week = []
     for e in entries:
-        pub_date = e.get("publish_date", "")
+        pub_date = get_published_at(e) or ""
         if pub_date:
             try:
                 pd = datetime.fromisoformat(pub_date).replace(tzinfo=timezone.utc)
@@ -83,12 +85,12 @@ def weekly_summary() -> dict:
             except (ValueError, TypeError):
                 pass
 
-    # Performance breakdown
-    graded = [e for e in entries if e.get("performance_30d")]
-    winners = [e for e in graded if e["performance_30d"] == "winner"]
-    average = [e for e in graded if e["performance_30d"] == "average"]
-    under = [e for e in graded if e["performance_30d"] == "underperformer"]
-    pending = [e for e in entries if not e.get("performance_30d")]
+    # Performance breakdown (performance_30d may be a dict or legacy string)
+    graded = [e for e in entries if get_grade(e)]
+    winners = [e for e in graded if get_grade(e) == "winner"]
+    average = [e for e in graded if get_grade(e) == "average"]
+    under = [e for e in graded if get_grade(e) == "underperformer"]
+    pending = [e for e in entries if not get_grade(e)]
 
     # Quality scores
     quality_entries = _load_jsonl(QUALITY_LOG)
@@ -127,7 +129,7 @@ def trend_analysis(weeks: int = 12) -> dict:
     weekly_data = defaultdict(lambda: {"published": 0, "winners": 0, "graded": 0})
 
     for e in entries:
-        pub_date = e.get("publish_date", "")
+        pub_date = get_published_at(e) or ""
         if not pub_date:
             continue
         try:
@@ -137,9 +139,10 @@ def trend_analysis(weeks: int = 12) -> dict:
 
         week_key = pd.strftime("%Y-W%U")
         weekly_data[week_key]["published"] += 1
-        if e.get("performance_30d"):
+        grade = get_grade(e)
+        if grade:
             weekly_data[week_key]["graded"] += 1
-            if e["performance_30d"] == "winner":
+            if grade == "winner":
                 weekly_data[week_key]["winners"] += 1
 
     # Sort by week and take last N

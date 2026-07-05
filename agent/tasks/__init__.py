@@ -24,6 +24,13 @@ from .creative_assets import CreativeAssetsTask
 from .social_staleness import SocialStalenessTask
 from .claude_agent import ClaudeAgentTask
 from .harness_review import HarnessReviewTask
+from .editorial_calendar import EditorialCalendarTickTask
+from .cmo_review import CMOReviewTask
+from .self_improvement import (
+    HarnessDefaultsUpdateTask,
+    PatternExtractWeeklyTask,
+    PerformanceCheck30dTask,
+)
 
 # Task type to handler mapping (generic handlers only)
 TASK_HANDLERS: dict[str, type[BaseTask]] = {
@@ -46,6 +53,14 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "claude_competitors": ClaudeAgentTask,
     # HALO-style harness review
     "harness_review": HarnessReviewTask,
+    # Self-improvement loop (30-day check → pattern mining → defaults update)
+    "performance_check_30d": PerformanceCheck30dTask,
+    "pattern_extract_weekly": PatternExtractWeeklyTask,
+    "harness_defaults_update": HarnessDefaultsUpdateTask,
+    # Editorial calendar executor (drafts only — approval flow publishes)
+    "editorial_calendar_tick": EditorialCalendarTickTask,
+    # Weekly CMO review — goal loop: measure KPIs, check pace, (re)plan
+    "cmo_review": CMOReviewTask,
 }
 
 
@@ -90,6 +105,11 @@ __all__ = [
     "SocialStalenessTask",
     "ClaudeAgentTask",
     "HarnessReviewTask",
+    "PerformanceCheck30dTask",
+    "PatternExtractWeeklyTask",
+    "HarnessDefaultsUpdateTask",
+    "EditorialCalendarTickTask",
+    "CMOReviewTask",
     "register_task",
     "get_task_handler",
 ]

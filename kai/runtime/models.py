@@ -228,7 +228,11 @@ class TaskGraph(SerializableModel):
     graph_id: str
     goal_id: Optional[str]
     brand_id: str
-    status: Literal["pending", "running", "completed", "failed"] = "pending"
+    # needs_replan: a node failed and the weekly CMO review should
+    # re-decompose the remaining work; replanned: a successor graph exists.
+    status: Literal[
+        "pending", "running", "completed", "failed", "needs_replan", "replanned"
+    ] = "pending"
     nodes: Dict[str, TaskNode] = field(default_factory=dict)
     edges: List[List[str]] = field(default_factory=list)  # List of [from_node, to_node]
     created_at: str = ""

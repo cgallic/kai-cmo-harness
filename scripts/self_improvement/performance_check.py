@@ -24,6 +24,7 @@ from pathlib import Path
 
 # Use centralized config
 from scripts.harness_config import get_config
+from scripts.self_improvement.grades import get_grade
 
 _CFG = get_config()
 
@@ -80,7 +81,10 @@ def reconcile_pending_checks(dry_run: bool = False) -> int:
         if entry.get("performance_30d"):
             continue  # already measured
         if not (entry.get("url") and entry.get("keyword") and entry.get("site")):
-            continue  # not checkable (e.g. social entries graded separately)
+            # Not checkable: social entries are graded separately, and
+            # approved-but-unpublished entries carry url=None — never
+            # schedule a GSC/GA4 pull for either.
+            continue
         check_file = checks_dir / f"{entry['id']}.json"
         if check_file.exists():
             continue
@@ -122,6 +126,10 @@ def get_pending_checks() -> list:
     for f in Path(PENDING_CHECKS_DIR).glob("*.json"):
         with open(f) as fh:
             check = json.load(fh)
+        if not check.get("url"):
+            # Approved-but-unpublished entries carry url=None — there is no
+            # live page to measure, so never schedule a GSC/GA4 pull for them.
+            continue
         due = datetime.fromisoformat(check["check_due"])
         if check["status"] == "pending" and due <= now:
             checks.append((f, check))
@@ -502,8 +510,8 @@ def check_social_entries(dry_run: bool = False) -> list:
             continue
         if not entry.get("social_metrics"):
             continue
-        # Skip if already graded
-        if entry.get("performance_30d", {}).get("grade"):
+        # Skip if already graded (tolerates legacy string-form performance_30d)
+        if get_grade(entry):
             continue
 
         evaluation = evaluate_social_performance(entry)

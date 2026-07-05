@@ -1,6 +1,6 @@
 # What Doesn't Work
 
-Anti-pattern log — the failure-side complement to `knowledge/playbooks/what-works.md`. Published losers, rejected drafts, and approaches that measured badly land here so they aren't retried.
+Anti-pattern log — the failure-side complement to `knowledge/playbooks/what-works.md`. Published underperformers, rejected drafts, and approaches that measured badly land here so they aren't retried.
 
 ## Format
 
@@ -9,9 +9,9 @@ Anti-pattern log — the failure-side complement to `knowledge/playbooks/what-wo
 ```
 
 Rules:
-- Only add entries with evidence: a 30-day "loser" grade, a human rejection with a stated reason, or 2+ gate failures with the same diagnosis.
+- Only add entries with evidence: a 30-day "underperformer" grade, a human rejection with a stated reason, or 2+ gate failures with the same diagnosis.
 - Generalize the anti-pattern, keep the evidence specific.
-- During `/kai-retro`, pull new losers from `content_log.json` (`performance_30d.grade == "loser"`) and add a diagnosis for each.
+- During `/kai-retro`, pull new underperformers from `content_log.json` (`performance_30d.grade == "underperformer"` — the grade vocabulary is winner/average/underperformer; "loser" is a retired legacy alias) and add a diagnosis for each. `python scripts/self_improvement/lesson_capture.py losers` surfaces the undiagnosed ones.
 - An anti-pattern confirmed 3+ times should graduate: add a contract constraint, checklist line, or lint rule, then mark it `(promoted)` here.
 
 ## Structural anti-patterns (seeded from harness doctrine)

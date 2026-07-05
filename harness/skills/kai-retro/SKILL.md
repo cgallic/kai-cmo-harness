@@ -9,7 +9,7 @@ Run the Kai learning retrospective. This is how the harness gets smarter: raw fa
 
 - Monthly, or after any sprint that produced 5+ gated pieces
 - Whenever the same gate failure shows up twice in one session
-- When a 30-day performance check grades new losers
+- When a 30-day performance check grades new underperformers
 
 ## Step 1 — Mine the gate logs
 
@@ -19,13 +19,13 @@ python scripts/self_improvement/lesson_capture.py mine
 
 This groups recurring failure signatures from `data/learning/gate_runs.jsonl`. Append candidates with `--write`. If the log is empty, note it and move on — the gates only log when they run.
 
-## Step 2 — Diagnose losers
+## Step 2 — Diagnose underperformers
 
 ```bash
 python scripts/self_improvement/lesson_capture.py losers
 ```
 
-For each undiagnosed loser, read the piece and its `content_log.json` entry, write a one-line diagnosis (hook type, persona mismatch, seasonality, thin proof — name the cause, not the symptom), and add it to `memory/what-doesnt-work.md` under "Measured losers" with the piece id. Check seasonality and competitor moves before blaming the content (see `memory/edge-cases.md` EC-15).
+This lists pieces whose 30-day grade is `underperformer` (the grade vocabulary is `winner`/`average`/`underperformer`; older docs said "loser") with no diagnosis yet. For each one, read the piece and its `content_log.json` entry, write a one-line diagnosis (hook type, persona mismatch, seasonality, thin proof — name the cause, not the symptom), and add it to `memory/what-doesnt-work.md` under "Measured losers" with the piece id. Check seasonality and competitor moves before blaming the content (see `memory/edge-cases.md` EC-15).
 
 ## Step 3 — Triage every lesson
 
@@ -67,7 +67,7 @@ Output a retro summary:
 ## Kai Retro — [date]
 
 **Mined:** [N] recurring failure signatures ([gate]: [signature] ×[count], ...)
-**Losers diagnosed:** [N] ([id]: [one-line diagnosis], ...)
+**Underperformers diagnosed:** [N] ([id]: [one-line diagnosis], ...)
 **Promoted:** [lesson] → [enforcement target] (+ golden case [id])
 **Retired:** [lesson] — [reason]
 **Edge cases:** [new/closed entries]

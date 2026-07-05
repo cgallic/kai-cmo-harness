@@ -103,14 +103,34 @@ If the gate **fails**:
 
 ### Step 6: Log to Content Chain
 
-After gate pass, append to `~/.kai-marketing/content-log.jsonl`:
-```json
-{"id": "{site}-{format}-{date}", "site": "{site}", "keyword": "{keyword}", "format": "{format}", "publish_date": "{date}", "four_us_score": {score}, "hook_type": "{hook_type}", "persona": "{persona}", "draft_path": "{draft_path}", "performance_30d": null}
+After gate pass, log to the CANONICAL content log (`data/content_log.json`) — this is the log the learning loop (performance_check, pattern_extract, weekly_report) actually reads. Do NOT append to `~/.kai-marketing/content-log.jsonl` (legacy; fold old entries in with `python3 -m scripts.content.migrate_legacy_log`) and do NOT write `~/.kai-marketing/pending/*.json` (orphaned — nothing reads them; canonical pending checks live in `data/pending_checks/` and are created automatically).
+
+The draft is not live yet, so log it WITHOUT a url (status becomes `approved_unpublished`; no 30-day check is scheduled until a real URL exists):
+
+```bash
+python3 - <<'PY'
+from scripts.content.content_log import log_entry, compute_content_hash
+
+body = open("{draft_path}").read()
+entry = log_entry(
+    url=None,                      # never fabricate a URL
+    keyword="{keyword}",
+    site="{site}",
+    format="{format}",
+    title="{title}",
+    four_us={score},
+    notes="hook_type={hook_type}; draft={draft_path}",
+    content_hash=compute_content_hash(body),
+    campaign_id={campaign_id_or_None},   # cmp-YYYYMMDD-<slug> if part of a campaign
+)
+print(entry["id"])
+PY
 ```
 
-Create a pending check file at `~/.kai-marketing/pending/{id}.json`:
-```json
-{"id": "{id}", "url": "", "check_after": "{date+30days}", "status": "pending"}
+When the piece actually goes live, backfill the REAL url — this flips status to `published` and schedules the 30-day check in `data/pending_checks/` automatically:
+
+```bash
+python3 -c "from scripts.content.content_log import mark_published; mark_published('{entry_id}', '{real_url}')"
 ```
 
 ## Error Handling
@@ -123,5 +143,5 @@ Create a pending check file at `~/.kai-marketing/pending/{id}.json`:
 ## Chain State
 
 **Reads from:** `~/.kai-marketing/briefs/{date}-{slug}.json`
-**Writes to:** `~/.kai-marketing/drafts/{date}-{slug}.md`, `~/.kai-marketing/content-log.jsonl`
-**Read by:** `/content-gate` (if user wants full gate proposal)
+**Writes to:** `~/.kai-marketing/drafts/{date}-{slug}.md` (scratch), `data/content_log.json` (canonical log; pending checks auto-created in `data/pending_checks/` once a real URL is set)
+**Read by:** `/content-gate` (if user wants full gate proposal), `/content-report`, the 30-day performance_check cron

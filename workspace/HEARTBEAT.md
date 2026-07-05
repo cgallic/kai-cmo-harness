@@ -65,14 +65,20 @@ LOW: [list]
 
 If no suppressed alerts exist, skip this step.
 
-### Step 4 — Proactive Memory Scan (every heartbeat, script self-throttles to 6h)
+### Step 4 — Proactive Memory Scan (OPTIONAL — external deployment tooling)
+
+This step depends on a `proactive_heartbeat.py` script that ships with the deployed OpenClaw analytics stack, **not with this repo**. A fresh clone does not have it — skip this step unless the operator has configured it.
+
+Run it only when the `KAI_PROACTIVE_HEARTBEAT` env var points at the script:
 
 ```bash
-cd /opt/cmo-analytics && source venv/bin/activate
-python3 scripts/proactive_heartbeat.py --json --force
+# Set by the deployment, e.g. KAI_PROACTIVE_HEARTBEAT=/opt/cmo-analytics/scripts/proactive_heartbeat.py
+if [ -n "$KAI_PROACTIVE_HEARTBEAT" ] && [ -f "$KAI_PROACTIVE_HEARTBEAT" ]; then
+    python3 "$KAI_PROACTIVE_HEARTBEAT" --json --force   # script self-throttles to 6h
+fi
 ```
 
-Read `/tmp/proactive_heartbeat_signals.json`. For each signal, post `message` field to `channel_id`.
+If it ran: read `/tmp/proactive_heartbeat_signals.json`. For each signal, post the `message` field to `channel_id`. If `KAI_PROACTIVE_HEARTBEAT` is unset or the script is absent, treat the memory scan as clean and continue to Step 5.
 
 ### Step 5 — Acknowledge
 

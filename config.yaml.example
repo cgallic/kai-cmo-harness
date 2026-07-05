@@ -56,6 +56,18 @@ server:
 
 # Publishing — CMS integration for content pipeline output
 publishing:
+  # Master switch for auto-publish after gate + approval. Default OFF: the
+  # engine logs approved content as status=approved_unpublished (url: null)
+  # and a human publishes + backfills via content_log.mark_published().
+  # Env override: KAI_PUBLISH_ENABLED=1/0.
+  enabled: false
+  # Per-site routing — a site auto-publishes only when listed here.
+  # Extra keys (status, categories, tags, output_dir, ...) pass through to
+  # the publisher; status defaults to "draft" so nothing goes live unseen.
+  sites: {}
+  #  kaicalls:
+  #    platform: "wordpress"        # wordpress | ghost | webflow | markdown
+  #    status: "draft"
   default_platform: "wordpress"    # wordpress | ghost | webflow | markdown
   wordpress:
     url_env: "WP_URL"

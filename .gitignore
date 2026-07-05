@@ -37,8 +37,11 @@ Thumbs.db
 .idea/
 *.code-workspace
 
-# Claude Code
-.claude/
+# Claude Code — local settings/state stay untracked, but .claude/rules/ SHIPS
+# with the repo (CLAUDE.md/AGENTS.md load-on-demand pointers and
+# doctor.py check_instruction_chain both require those files on a fresh clone).
+.claude/*
+!.claude/rules/
 
 # Temp
 /tmp/

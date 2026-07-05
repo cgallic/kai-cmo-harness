@@ -202,16 +202,69 @@ def publish(
         except Exception:
             pass  # Non-critical — proceed without featured image
 
-    # Create post
+    # Idempotency: if a post with this slug already exists, update it in
+    # place instead of creating a duplicate on re-runs.
+    existing_id = None
+    existing_status = None
+    existing_link = ""
+    if slug:
+        try:
+            lookup = requests.get(
+                f"{site_url}/wp-json/wp/v2/posts",
+                params={"slug": slug, "status": "any"},
+                auth=auth,
+                timeout=10,
+            )
+            if lookup.ok:
+                matches = lookup.json()
+                if isinstance(matches, list) and matches:
+                    existing_id = matches[0].get("id")
+                    existing_status = matches[0].get("status")
+                    existing_link = matches[0].get("link", "")
+        except Exception:
+            existing_id = None  # lookup failure falls back to create
+
+    # Create (or update) post
+    endpoint = f"{site_url}/wp-json/wp/v2/posts"
+    if existing_id:
+        # Approval doctrine: a human may have published (and edited) this post
+        # in WP admin since the draft was created. Overwriting a LIVE post's
+        # content — or demoting it back to draft via the status field — is a
+        # live-channel mutation without approval. Refuse unless the caller
+        # explicitly asked for status=publish (that explicit ask IS the
+        # human approval, e.g. the CLI --publish path).
+        if existing_status == "publish" and status != "publish":
+            return {
+                "success": True,
+                "platform": "wordpress",
+                "id": existing_id,
+                "url": existing_link,
+                "edit_url": f"{site_url}/wp-admin/post.php?post={existing_id}&action=edit",
+                "status": "publish",
+                "updated": False,
+                "skipped": "existing_live_post",
+                "message": (
+                    f"Post with slug '{slug}' is already live — left untouched. "
+                    "Edit or unpublish it in WP admin if you need changes."
+                ),
+            }
+        endpoint = f"{site_url}/wp-json/wp/v2/posts/{existing_id}"
+        if status != "publish":
+            # Preserve the existing post's status on re-runs: never let the
+            # engine's default status=draft demote a post whose status we
+            # could not confirm from the lookup.
+            post_data.pop("status", None)
+
     try:
         resp = requests.post(
-            f"{site_url}/wp-json/wp/v2/posts",
+            endpoint,
             json=post_data,
             auth=auth,
             timeout=30,
         )
         resp.raise_for_status()
         result = resp.json()
+        action = "Updated existing" if existing_id else "Published as"
         return {
             "success": True,
             "platform": "wordpress",
@@ -219,7 +272,8 @@ def publish(
             "url": result.get("link", ""),
             "edit_url": f"{site_url}/wp-admin/post.php?post={result.get('id')}&action=edit",
             "status": result.get("status"),
-            "message": f"Published as {result.get('status')} — {result.get('link', '')}",
+            "updated": bool(existing_id),
+            "message": f"{action} {result.get('status')} — {result.get('link', '')}",
         }
     except requests.HTTPError as e:
         error_body = ""

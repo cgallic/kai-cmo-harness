@@ -26,6 +26,14 @@ load_dotenv()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
+# Allow direct invocation (python3 scripts/reporting/ceo_deck.py) from any cwd.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+# performance_30d drifted across writers (dict | legacy str | None) — always
+# read grades through this helper (see scripts/self_improvement/grades.py).
+from scripts.self_improvement.grades import get_grade  # noqa: E402
+
 
 def _load_config() -> dict:
     config_path = REPO_ROOT / "config.yaml"
@@ -54,7 +62,7 @@ def _gather_data(site_key: str) -> dict:
     if content_log.exists():
         log = json.loads(content_log.read_text())
         data["content_total"] = len(log)
-        data["content_winners"] = len([e for e in log if e.get("performance_30d", {}).get("grade") == "winner"])
+        data["content_winners"] = len([e for e in log if get_grade(e) == "winner"])
     else:
         data["content_total"] = 0
         data["content_winners"] = 0
