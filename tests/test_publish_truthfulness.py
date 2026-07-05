@@ -16,6 +16,7 @@ Invariants enforced here:
   - Calendar path is configurable (KAI_CONTENT_CALENDAR_PATH), not hardcoded.
 """
 
+import asyncio
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -413,6 +414,299 @@ class TestEnginePublishDecision:
 
         assert _slugify("AI Receptionist for Law Firms") == "ai-receptionist-for-law-firms"
         assert _slugify("  weird -- punctuation!! ") == "weird-punctuation"
+
+
+# ---------------------------------------------------------------------------
+# EC-15: publish-time site baseline snapshot (never fabricated, never blocking)
+# ---------------------------------------------------------------------------
+
+
+class TestBaselineCapture:
+    @pytest.fixture()
+    def pc(self):
+        import scripts.self_improvement.performance_check as pc
+
+        return pc
+
+    def test_baseline_captured_when_gsc_available(self, sandbox, monkeypatch, pc):
+        monkeypatch.setattr(
+            pc, "pull_site_baseline",
+            lambda site, days=28: {
+                "clicks": 120, "impressions": 4000, "window_days": 28,
+                "start_date": "2026-06-07", "end_date": "2026-07-05",
+            },
+        )
+        entry = log_entry(
+            url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+            format="blog", content_hash=compute_content_hash(BODY),
+            log_file=sandbox["log_file"],
+        )
+        assert entry["baseline"]["gsc"]["clicks"] == 120
+        assert entry["baseline"]["gsc"]["impressions"] == 4000
+        assert entry["baseline"]["captured_at"]
+        # Persisted, not just in-memory.
+        persisted = load_log(sandbox["log_file"])[0]
+        assert persisted["baseline"]["gsc"]["clicks"] == 120
+
+    def test_unavailable_marker_when_credentials_missing(self, sandbox, monkeypatch):
+        monkeypatch.delenv("GOOGLE_CREDENTIALS_PATH", raising=False)
+        entry = log_entry(
+            url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+            format="blog", content_hash=compute_content_hash(BODY),
+            log_file=sandbox["log_file"],
+        )
+        # NEVER fabricated numbers — missing data is a data gap.
+        assert entry["baseline"]["status"] == "unavailable"
+        assert entry["baseline"]["reason"]
+        assert "gsc" not in entry["baseline"]
+
+    def test_baseline_crash_never_breaks_publish_logging(self, sandbox, monkeypatch, pc):
+        def boom(site, days=28):
+            raise RuntimeError("GSC exploded")
+
+        monkeypatch.setattr(pc, "pull_site_baseline", boom)
+        entry = log_entry(
+            url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+            format="blog", content_hash=compute_content_hash(BODY),
+            log_file=sandbox["log_file"],
+        )
+        assert entry["status"] == "published"
+        assert entry["baseline"]["status"] == "unavailable"
+        assert "GSC exploded" in entry["baseline"]["reason"]
+        assert len(_checks(sandbox)) == 1  # 30-day check still scheduled
+
+    def test_unpublished_entry_gets_no_baseline(self, sandbox):
+        entry = log_entry(
+            url=None, keyword="k", site="kaicalls", format="blog",
+            content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"],
+        )
+        assert "baseline" not in entry
+
+    def test_mark_published_captures_baseline_and_schedules_check(
+        self, sandbox, monkeypatch, pc
+    ):
+        monkeypatch.setattr(
+            pc, "pull_site_baseline",
+            lambda site, days=28: {"clicks": 50, "impressions": 900, "window_days": 28},
+        )
+        entry = log_entry(
+            url=None, keyword="k", site="kaicalls", format="blog",
+            content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"],
+        )
+        assert _checks(sandbox) == []
+        updated = mark_published(
+            entry["id"], "https://kaicalls.com/blog/shipped",
+            log_file=sandbox["log_file"],
+        )
+        assert updated["baseline"]["gsc"]["clicks"] == 50
+        checks = _checks(sandbox)
+        assert len(checks) == 1  # still schedules the 30-day check
+        assert json.loads(checks[0].read_text())["url"] == "https://kaicalls.com/blog/shipped"
+
+    def test_existing_baseline_never_overwritten(self, sandbox, monkeypatch, pc):
+        monkeypatch.setattr(
+            pc, "pull_site_baseline",
+            lambda site, days=28: {"clicks": 50, "impressions": 900, "window_days": 28},
+        )
+        entry = log_entry(
+            url=None, keyword="k", site="kaicalls", format="blog",
+            content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"],
+        )
+        mark_published(entry["id"], "https://kaicalls.com/blog/a", log_file=sandbox["log_file"])
+        monkeypatch.setattr(
+            pc, "pull_site_baseline",
+            lambda site, days=28: {"clicks": 9999, "impressions": 1, "window_days": 28},
+        )
+        updated = mark_published(
+            entry["id"], "https://kaicalls.com/blog/a", log_file=sandbox["log_file"]
+        )
+        # The publish-time snapshot is the baseline — re-runs keep it.
+        assert updated["baseline"]["gsc"]["clicks"] == 50
+
+    def test_dedup_url_backfill_captures_baseline(self, sandbox, monkeypatch, pc):
+        monkeypatch.setattr(
+            pc, "pull_site_baseline",
+            lambda site, days=28: {"clicks": 75, "impressions": 2000, "window_days": 28},
+        )
+        content_hash = compute_content_hash(BODY)
+        log_entry(url=None, keyword="k", site="kaicalls", format="blog",
+                  content_hash=content_hash, log_file=sandbox["log_file"])
+        log_entry(
+            url="https://kaicalls.com/blog/now-live", keyword="k", site="kaicalls",
+            format="blog", content_hash=content_hash, log_file=sandbox["log_file"],
+        )
+        persisted = load_log(sandbox["log_file"])[0]
+        assert persisted["status"] == "published"
+        assert persisted["baseline"]["gsc"]["clicks"] == 75
+
+    def test_pull_site_baseline_reports_error_without_credentials(self, monkeypatch, pc):
+        monkeypatch.delenv("GOOGLE_CREDENTIALS_PATH", raising=False)
+        result = pc.pull_site_baseline("kaicalls")
+        assert result.get("error")  # a data gap, never zeros
+
+
+# ---------------------------------------------------------------------------
+# Engine: publisher success WITHOUT a URL must stay measurable (recoverable)
+# ---------------------------------------------------------------------------
+
+
+class _FakeBrand:
+    id = "kaicalls"
+    module_ids: list = []
+
+    def model_dump(self):
+        return {"id": "kaicalls", "module_ids": []}
+
+
+class _FakeWorkspace:
+    product_mode = "local"
+    brands = [_FakeBrand()]
+
+    def get_brand(self, site):
+        return _FakeBrand() if site == "kaicalls" else None
+
+    def model_dump(self):
+        return {"product_mode": "local"}
+
+
+class _FakeStore:
+    def __init__(self):
+        self.runs: dict = {}
+        self.artifacts: list = []
+        self.completed: list = []
+        self.base_dir = Path("/nonexistent-runtime")
+
+    def start_run(self, payload, parent_run_id=None, run_id=None):
+        rid = run_id or "run-test"
+        self.runs[rid] = payload
+        return {"run_id": rid}
+
+    def record_artifact(self, record, run_id=None, parent_artifact_id=None):
+        rec = dict(record)
+        rec["artifact_id"] = f"art-{len(self.artifacts)}"
+        self.artifacts.append(rec)
+        return rec
+
+    def complete_run(self, run_id, status="completed", outputs=None, metadata=None):
+        self.completed.append({"run_id": run_id, "status": status, "outputs": outputs})
+
+
+class TestPublisherSuccessWithoutUrl:
+    @pytest.fixture()
+    def engine_env(self, sandbox, monkeypatch, tmp_path):
+        import scripts.content.engine as engine
+
+        # Publishing enabled + site configured (the real-publish path).
+        cfg = tmp_path / "config.yaml"
+        cfg.write_text(
+            "publishing:\n  enabled: true\n  sites:\n    kaicalls:\n"
+            "      platform: wordpress\n"
+        )
+        monkeypatch.setenv("CMO_CONFIG_PATH", str(cfg))
+
+        fake_store = _FakeStore()
+        monkeypatch.setattr(engine, "load_workspace_profile", lambda: _FakeWorkspace())
+        monkeypatch.setattr(engine, "get_default_runtime_store", lambda: fake_store)
+        monkeypatch.setattr(engine, "load_module_manifests", lambda: {})
+        monkeypatch.setattr(engine, "retrieve_memory_entries", lambda *a, **k: [])
+        monkeypatch.setattr(engine, "_make_gemini_fn", lambda: (lambda prompt: "x"))
+        monkeypatch.setattr(engine, "write_content", lambda prompt, fn: BODY)
+        monkeypatch.setattr(engine, "resolve_policy", lambda fmt, site: {"mode": "auto"})
+        monkeypatch.setattr(engine, "apply_approval", lambda status, policy: "approved")
+
+        async def fake_brief(**kwargs):
+            return {"persona": "Shock Absorber", "angle": "Missed calls cost $410"}
+
+        monkeypatch.setattr(engine.brief_generator, "generate_brief", fake_brief)
+
+        async def fake_propose(content, file_path, policy_name):
+            return {
+                "proposal_id": "prop-1",
+                "score": 14,
+                "grade": "A",
+                "status": "approved",
+                "top_fixes": [],
+                "violation_count": 0,
+            }
+
+        monkeypatch.setattr("scripts.quality.gate.propose", fake_propose)
+        return {"engine": engine, "store": fake_store}
+
+    def test_success_without_url_logs_approved_unpublished(
+        self, engine_env, sandbox, monkeypatch
+    ):
+        # Publisher responds success but returns no link.
+        monkeypatch.setattr(
+            "scripts.publish.publish",
+            lambda platform, **k: {"success": True, "id": 42},
+        )
+        engine = engine_env["engine"]
+        result = asyncio.run(engine.generate("blog", "kaicalls", "ai receptionist"))
+        assert result.status == "approved"
+
+        entries = load_log(sandbox["log_file"])
+        assert len(entries) == 1
+        entry = entries[0]
+        # NOT status=published/url=None — that entry would be skipped by the
+        # 30-day loop forever with no recovery path.
+        assert entry["status"] == "approved_unpublished"
+        assert entry["url"] is None
+        # Recovery path is named for the human doing the backfill.
+        assert "mark_published" in entry["notes"]
+        assert "post_id=42" in entry["notes"]
+        assert _checks(sandbox) == []  # no unmeasurable 30-day check
+
+        publish_meta = result.metadata["publish"]
+        assert publish_meta["published"] is True  # what the publisher said
+        assert publish_meta["url"] is None
+        assert publish_meta["url_missing"] is True
+        assert publish_meta["status"] == "approved_unpublished"
+        assert publish_meta["post_id"] == 42
+        # No published_asset artifact without a verifiable URL.
+        assert "published_asset" not in result.metadata["artifact_refs"]
+
+    def test_backfill_via_mark_published_recovers_the_entry(
+        self, engine_env, sandbox, monkeypatch
+    ):
+        monkeypatch.setattr(
+            "scripts.publish.publish",
+            lambda platform, **k: {"success": True, "id": 42},
+        )
+        engine = engine_env["engine"]
+        asyncio.run(engine.generate("blog", "kaicalls", "ai receptionist"))
+        entry = load_log(sandbox["log_file"])[0]
+
+        updated = mark_published(
+            entry["id"], "https://kaicalls.com/?p=42", log_file=sandbox["log_file"]
+        )
+        assert updated["status"] == "published"
+        checks = _checks(sandbox)
+        assert len(checks) == 1
+        assert json.loads(checks[0].read_text())["url"] == "https://kaicalls.com/?p=42"
+
+    def test_success_with_url_still_publishes_normally(
+        self, engine_env, sandbox, monkeypatch
+    ):
+        monkeypatch.setattr(
+            "scripts.publish.publish",
+            lambda platform, **k: {
+                "success": True, "id": 7, "url": "https://kaicalls.com/?p=7",
+            },
+        )
+        engine = engine_env["engine"]
+        result = asyncio.run(engine.generate("blog", "kaicalls", "ai receptionist"))
+
+        entry = load_log(sandbox["log_file"])[0]
+        assert entry["status"] == "published"
+        assert entry["url"] == "https://kaicalls.com/?p=7"
+        assert entry["notes"] == ""  # no backfill note on the happy path
+        assert len(_checks(sandbox)) == 1
+
+        publish_meta = result.metadata["publish"]
+        assert publish_meta["published"] is True
+        assert publish_meta["url_missing"] is False
+        assert "status" not in publish_meta
+        assert "published_asset" in result.metadata["artifact_refs"]
 
 
 # ---------------------------------------------------------------------------

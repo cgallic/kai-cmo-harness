@@ -658,23 +658,41 @@ async def generate(
                     keyword=keyword,
                 )
                 published = bool(publish_info.get("published"))
+                publish_url = publish_info.get("url") or None
+                # A publisher can report success without returning a URL.
+                # Logging that as status=published with url=None would hide
+                # the piece from the 30-day loop forever (url-less entries
+                # never get a pending check) — log it approved_unpublished
+                # instead, keep the publisher result in notes, and let a
+                # human backfill the real URL via content_log.mark_published().
+                url_missing = published and not publish_url
+                entry_notes = ""
+                if url_missing:
+                    publisher_result = publish_info.get("result") or {}
+                    entry_notes = (
+                        "publisher reported success without a URL "
+                        f"(post_id={publish_info.get('post_id')}, "
+                        f"result={json.dumps(publisher_result, default=str)[:500]}); "
+                        "backfill the real URL via content_log.mark_published()"
+                    )
                 log_record = log_entry(
-                    url=publish_info.get("url"),
+                    url=publish_url,
                     keyword=keyword,
                     site=site,
                     format=format,
                     title=brief.get("angle", keyword),
                     brief=brief,
                     four_us=gate_report.get("score", 0) if gate_report else 0,
+                    notes=entry_notes,
                     source_run=run_id,
                     proposal_id=proposal_id,
                     module_set=brand.module_ids,
                     artifact_refs=artifact_refs,
                     content_hash=content_hash,
-                    status="published" if published else "approved_unpublished",
+                    status="published" if (published and publish_url) else "approved_unpublished",
                     campaign_id=campaign_id,
                 )
-                if published:
+                if published and not url_missing:
                     published_artifact = runtime_store.record_artifact(
                         {
                             "artifact_type": "published_asset",
@@ -707,6 +725,18 @@ async def generate(
             },
         )
 
+        publish_meta = {
+            "published": bool(publish_info.get("published")),
+            "url": publish_info.get("url") or None,
+            "url_missing": bool(publish_info.get("published")) and not publish_info.get("url"),
+            "skipped": publish_info.get("skipped"),
+        }
+        if publish_meta["url_missing"]:
+            # Publisher succeeded without a URL — the log entry stays
+            # approved_unpublished until mark_published() backfills it.
+            publish_meta["status"] = "approved_unpublished"
+            publish_meta["post_id"] = publish_info.get("post_id")
+
         return GenerateResult(
             content=draft,
             brief=brief,
@@ -725,11 +755,7 @@ async def generate(
                 "keyword": keyword,
                 "persona": brief.get("persona"),
                 "campaign_id": campaign_id,
-                "publish": {
-                    "published": bool(publish_info.get("published")),
-                    "url": publish_info.get("url"),
-                    "skipped": publish_info.get("skipped"),
-                },
+                "publish": publish_meta,
                 "approval_policy": policy,
                 "word_count": len(draft.split()),
                 "workspace": workspace_profile.model_dump(),

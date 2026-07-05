@@ -22,7 +22,10 @@ import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
 
-from google import genai as google_genai
+try:
+    from google import genai as google_genai
+except ImportError:  # pragma: no cover - minimal runtimes without google-genai
+    google_genai = None
 
 # Use centralized config
 from scripts.harness_config import get_config
@@ -46,16 +49,124 @@ logging.basicConfig(
 )
 
 
-# ── Gemini client with timeout ───────────────────────────────────────────
-_CONSECUTIVE_FAILURES = 0
+# ── Gemini client with timeout + persistent circuit breaker (EC-13) ──────
+
+def _breaker_state_path() -> str:
+    """Breaker state file: env override, else <data_dir>/learning/."""
+    env = os.environ.get("KAI_PATTERN_BREAKER_STATE_FILE", "").strip()
+    if env:
+        return env
+    return str(_CFG.data_dir / "learning" / "pattern_extract_breaker.json")
+
+
+def _breaker_cooldown_seconds() -> float:
+    """Cooldown before an open breaker closes again (default 1h)."""
+    raw = os.environ.get("KAI_PATTERN_BREAKER_COOLDOWN_SECONDS", "").strip()
+    try:
+        return float(raw) if raw else 3600.0
+    except ValueError:
+        return 3600.0
+
+
+class GeminiCircuitBreaker:
+    """Circuit breaker whose state survives process restarts (EC-13).
+
+    The consecutive-failure count and ``opened_at`` timestamp persist to
+    a small JSON file under the data dir, so a crash-looping deployment
+    cannot reset the breaker by restarting and keep hammering the API.
+    State-file read/write failures never crash the caller — the breaker
+    degrades to the old in-memory behavior.
+    """
+
+    def __init__(self, state_path=None, max_failures=None, cooldown_seconds=None):
+        self.state_path = str(state_path or _breaker_state_path())
+        self.max_failures = int(
+            max_failures if max_failures is not None else _CFG.api_max_retries
+        )
+        self.cooldown_seconds = float(
+            cooldown_seconds if cooldown_seconds is not None else _breaker_cooldown_seconds()
+        )
+        self.consecutive_failures = 0
+        self.opened_at = None  # aware UTC datetime, or None
+        self._load()
+
+    # -- persistence (never raises) ------------------------------------
+
+    def _load(self):
+        try:
+            with open(self.state_path) as f:
+                raw = json.load(f)
+            failures = int(raw.get("consecutive_failures", 0))
+            opened_raw = raw.get("opened_at")
+            opened = datetime.fromisoformat(opened_raw) if opened_raw else None
+            if opened is not None and opened.tzinfo is None:
+                opened = opened.replace(tzinfo=timezone.utc)
+        except Exception:
+            return  # missing/corrupt state — fall back to in-memory defaults
+        self.consecutive_failures = max(failures, 0)
+        self.opened_at = opened
+
+    def _save(self):
+        try:
+            parent = os.path.dirname(self.state_path)
+            if parent:
+                os.makedirs(parent, exist_ok=True)
+            payload = {
+                "consecutive_failures": self.consecutive_failures,
+                "opened_at": self.opened_at.isoformat() if self.opened_at else None,
+            }
+            with open(self.state_path, "w") as f:
+                json.dump(payload, f)
+        except Exception as e:
+            log.warning("Could not persist breaker state to %s: %s", self.state_path, e)
+
+    # -- breaker protocol ------------------------------------------------
+
+    @property
+    def is_open(self) -> bool:
+        return self.consecutive_failures >= self.max_failures
+
+    def check(self):
+        """Raise RuntimeError if open; close after the cooldown expires."""
+        if not self.is_open:
+            return
+        now = datetime.now(timezone.utc)
+        if self.opened_at is None:
+            # Legacy/partial state: start the cooldown clock now.
+            self.opened_at = now
+            self._save()
+        elif (now - self.opened_at).total_seconds() >= self.cooldown_seconds:
+            log.info("Circuit breaker cooldown expired — closing and retrying")
+            self.reset()
+            return
+        raise RuntimeError(
+            f"Circuit breaker open: {self.consecutive_failures} consecutive API failures."
+        )
+
+    def record_failure(self):
+        self.consecutive_failures += 1
+        if self.is_open and self.opened_at is None:
+            self.opened_at = datetime.now(timezone.utc)
+        self._save()
+
+    def record_success(self):
+        if self.consecutive_failures or self.opened_at is not None:
+            self.reset()
+
+    def reset(self):
+        self.consecutive_failures = 0
+        self.opened_at = None
+        self._save()
+
+
+_BREAKER = GeminiCircuitBreaker()
+
 
 def _gemini(prompt: str) -> str:
-    """Call Gemini with timeout and circuit breaker."""
-    global _CONSECUTIVE_FAILURES
-    if _CONSECUTIVE_FAILURES >= _CFG.api_max_retries:
-        raise RuntimeError(
-            f"Circuit breaker open: {_CONSECUTIVE_FAILURES} consecutive API failures."
-        )
+    """Call Gemini with timeout and a restart-surviving circuit breaker."""
+    _BREAKER.check()
+    if google_genai is None:
+        raise RuntimeError("google-genai is not installed — cannot call Gemini")
     try:
         client = google_genai.Client(
             api_key=_CFG.gemini_api_key,
@@ -64,12 +175,12 @@ def _gemini(prompt: str) -> str:
         response = client.models.generate_content(
             model=_CFG.gemini_model, contents=prompt,
         )
-        _CONSECUTIVE_FAILURES = 0
+        _BREAKER.record_success()
         return response.text.strip()
     except Exception as e:
-        _CONSECUTIVE_FAILURES += 1
+        _BREAKER.record_failure()
         log.error("Gemini call failed (attempt %d/%d): %s",
-                  _CONSECUTIVE_FAILURES, _CFG.api_max_retries, e)
+                  _BREAKER.consecutive_failures, _BREAKER.max_failures, e)
         raise
 
 

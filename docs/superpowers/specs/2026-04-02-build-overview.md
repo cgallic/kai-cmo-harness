@@ -130,7 +130,7 @@ The repo documentation was rewritten to stop presenting the project as a generic
 - `docs/ARCHITECTURE.md`
 - `harness/ARCHITECTURE.md`
 - `config.yaml`
-- `config.example.yaml`
+- `config.yaml.example`
 
 ### Product direction now reflected in the repo
 

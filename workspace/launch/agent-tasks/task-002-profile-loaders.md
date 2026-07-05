@@ -26,9 +26,9 @@ Build `kai/loaders/profile_loader.py` and `kai/loaders/__init__.py` with functio
 **Loader functions — each returns a partial `Dict[str, Any]` representing BusinessProfile fields:**
 
 1. **`load_from_yaml(file_path: str) -> Dict[str, Any]`**
-   - Parse a YAML file (like `config.example.yaml` or a dedicated `business.yaml`)
+   - Parse a YAML file (like `config.yaml.example` or a dedicated `business.yaml`)
    - Map known YAML keys to BusinessProfile field paths
-   - Handle the `products` array from config.example.yaml — map each product entry to the BusinessProfile structure
+   - Handle the `products` array from config.yaml.example — map each product entry to the BusinessProfile structure
    - Handle nested workspace/brand config structures
    - If the YAML has a `business_profile` top-level key, treat it as a direct mapping
    - If the YAML has `products[0]` style entries, extract the first product as a partial profile
@@ -131,7 +131,7 @@ Build `kai/loaders/profile_loader.py` and `kai/loaders/__init__.py` with functio
 ## Reference Materials
 
 - `kai/models/business_profile.py` (created by Task 001) — the schema being loaded into
-- `config.example.yaml` — existing YAML config format to support
+- `config.yaml.example` — existing YAML config format to support
 - `kai/runtime/models.py` — KaiBrandProfile structure for brand_config loader
 - `kai/runtime/loader.py` — existing loader patterns in the runtime
 - `gateway/models.py` — Pydantic import pattern

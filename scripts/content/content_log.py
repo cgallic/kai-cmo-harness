@@ -68,6 +68,48 @@ def save_log(entries: list, log_file: str | None = None):
         json.dump(entries, f, indent=2)
 
 
+def _attach_baseline(entry: dict) -> None:
+    """Snapshot site-level GSC performance onto the entry at publish time.
+
+    EC-15: 30-day grading was absolute and seasonality-blind — no record of
+    how the whole site was doing when the piece shipped. This stores
+    entry["baseline"] = {"gsc": {...}, "captured_at": iso} from a 28-day
+    site-level GSC pull, or {"status": "unavailable", "reason": ...,
+    "captured_at": iso} when credentials/config are missing. NEVER fabricates
+    numbers — a missing baseline is a data gap and readers must treat it as
+    one. Any failure is swallowed with a warning: baseline capture must never
+    break publishing or logging. Idempotent: an existing baseline (the
+    original publish-time snapshot) is never overwritten.
+    """
+    if not isinstance(entry, dict) or "baseline" in entry:
+        return
+    captured_at = datetime.now(timezone.utc).isoformat()
+    try:
+        from scripts.self_improvement.performance_check import pull_site_baseline
+
+        gsc = pull_site_baseline(entry.get("site"))
+        if isinstance(gsc, dict) and not gsc.get("error"):
+            entry["baseline"] = {"gsc": gsc, "captured_at": captured_at}
+        else:
+            reason = (
+                gsc.get("error")
+                if isinstance(gsc, dict)
+                else f"unexpected baseline result: {gsc!r}"
+            )
+            entry["baseline"] = {
+                "status": "unavailable",
+                "reason": reason,
+                "captured_at": captured_at,
+            }
+    except Exception as e:  # broad guard — never break the publish path
+        print(f"  Warning: baseline capture failed: {e}")
+        entry["baseline"] = {
+            "status": "unavailable",
+            "reason": str(e),
+            "captured_at": captured_at,
+        }
+
+
 def find_entry_by_hash(site: str, content_hash: str, log_file: str | None = None) -> dict | None:
     """Return the log entry matching (site, content_hash), or None.
 
@@ -157,6 +199,7 @@ def log_entry(
                 entry["url"] = url
                 entry["status"] = "published"
                 entry["published_at"] = now
+                _attach_baseline(entry)
             entry["updated_at"] = now
             save_log(log, log_file)
             if url and not url_was_set:
@@ -188,6 +231,9 @@ def log_entry(
         "campaign_id": campaign_id,
     }
 
+    if url:
+        _attach_baseline(entry)
+
     log = load_log(log_file)
     log.append(entry)
     save_log(log, log_file)
@@ -206,9 +252,10 @@ def mark_published(
 ) -> dict | None:
     """Backfill the REAL url onto an existing entry once it actually goes live.
 
-    Flips status to "published", appends the calendar line, and schedules the
-    30-day pending check (checks only make sense with a real URL). This is the
-    hook for humans/skills that publish manually after an
+    Flips status to "published", captures a site-level GSC baseline snapshot
+    (EC-15 — best-effort, never blocks), appends the calendar line, and
+    schedules the 30-day pending check (checks only make sense with a real
+    URL). This is the hook for humans/skills that publish manually after an
     "approved_unpublished" run.
 
     Returns the updated entry, or None if entry_id is unknown or url is empty.
@@ -224,6 +271,7 @@ def mark_published(
     entry["url"] = url
     entry["status"] = "published"
     entry["published_at"] = published_at or datetime.now(timezone.utc).isoformat()
+    _attach_baseline(entry)
     save_log(log, log_file)
     append_to_calendar(entry)
     schedule_30day_check(entry)
@@ -333,6 +381,7 @@ def main():
         "status": "published",  # CLI path requires --url, so it is live
         "campaign_id": args.campaign_id,
     }
+    _attach_baseline(entry)
 
     log = load_log()
     log.append(entry)

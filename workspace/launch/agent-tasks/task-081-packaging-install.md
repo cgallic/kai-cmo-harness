@@ -69,8 +69,8 @@ Create `kai/packaging/` module with an installer, setup wizard, plugin packaging
     - `workspace/{business_id}/content/` — generated content
     - `workspace/{business_id}/config/` — business-specific config
   - Return list of created directory paths
-- `generate_config(self, template_path: str = "config.example.yaml") -> str`:
-  - Read config.example.yaml
+- `generate_config(self, template_path: str = "config.yaml.example") -> str`:
+  - Read config.yaml.example
   - Generate a new config.yaml with placeholder values
   - Return path to generated config
 - `validate_installation(self) -> Dict[str, Any]`:
@@ -253,7 +253,7 @@ A step-by-step operational guide covering:
 
 ## Reference Materials
 
-- `config.example.yaml` — existing config template
+- `config.yaml.example` — existing config template
 - `install.sh` — existing install script patterns
 - `kai/runtime/business_profile.py` — BusinessProfile for setup wizard mapping
 - `kai/runtime/store.py` — workspace directory conventions

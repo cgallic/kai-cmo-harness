@@ -73,6 +73,28 @@ def _normalize_archetype_id(value: Any) -> str:
     return str(value).strip().lower().replace("_", "-")
 
 
+def _split_multi_value(value: Any) -> List[str]:
+    """Normalize a multi-value answer into a clean list of strings.
+
+    Lists/tuples are taken element-wise (so ['a', 'b'] never round-trips
+    through ``str()`` and leaks tokens like "['a'" into the durable
+    overlay); strings split on commas; other scalars coerce to a single
+    item. Every entry is stripped and blanks are dropped.
+    """
+    if isinstance(value, (list, tuple)):
+        parts: Any = value
+    elif isinstance(value, str):
+        parts = value.split(",")
+    else:
+        parts = [value]
+    items: List[str] = []
+    for part in parts:
+        text = (part if isinstance(part, str) else str(part)).strip()
+        if text:
+            items.append(text)
+    return items
+
+
 def extract_profile_facts(answers: Dict[str, Any]) -> Dict[str, Any]:
     """Map onboarding answers to a raw BusinessProfile overlay update.
 
@@ -104,7 +126,7 @@ def extract_profile_facts(answers: Dict[str, Any]) -> Dict[str, Any]:
             geo.setdefault("primary_location", {})[_GEO_PRIMARY_MAP[key]] = value
         elif key == "service_list":
             primary = str((answers or {}).get("primary_service", "")).strip().lower()
-            items = [s.strip() for s in str(value).split(",") if s.strip()]
+            items = _split_multi_value(value)
             if items:
                 updates.setdefault("offers", {})["offer_list"] = [
                     {"name": item, "is_primary": item.lower() == primary}

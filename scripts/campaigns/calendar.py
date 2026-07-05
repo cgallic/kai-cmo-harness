@@ -47,7 +47,7 @@ import os
 import sys
 import tempfile
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -60,6 +60,11 @@ from scripts.harness_config import get_calendar_dir
 VALID_STATUSES = ("planned", "generating", "ready", "published", "skipped")
 
 CALENDAR_FILENAME = "editorial.jsonl"
+
+# Items stuck in "generating" longer than this are treated as orphaned by a
+# crashed tick and swept back to "planned" (override per-task via the
+# scheduler config extra ``stale_generating_hours``).
+DEFAULT_STALE_GENERATING_HOURS = 6.0
 
 
 def calendar_path() -> Path:
@@ -263,6 +268,58 @@ def mark_status(
 
     _write_items(items)
     return updated
+
+
+def reset_stale_generating(
+    max_age_hours: float = DEFAULT_STALE_GENERATING_HOURS,
+    now: Optional[datetime] = None,
+) -> List[Dict[str, Any]]:
+    """Sweep items stuck in ``generating`` back to ``planned``.
+
+    The tick handler marks items planned -> generating BEFORE draft
+    generation, and ``due_items`` only selects ``planned`` — so a crash
+    mid-generation would strand the item forever. Any ``generating`` item
+    whose ``updated_at`` (``created_at`` fallback) is at least
+    ``max_age_hours`` old — or missing/unparseable, since such an item
+    could never age out — is reset to ``planned`` with an explanatory
+    note appended, so the next tick retries it. Fresh ``generating``
+    items are left untouched.
+
+    Returns the list of items that were reset.
+    """
+    if now is None:
+        now = _now_utc()
+    elif now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    else:
+        now = now.astimezone(timezone.utc)
+
+    max_age = timedelta(hours=max_age_hours)
+    items = _load_items()
+    reset: List[Dict[str, Any]] = []
+    for item in items:
+        if item.get("status") != "generating":
+            continue
+        stamp = item.get("updated_at") or item.get("created_at")
+        try:
+            stale = (now - _parse_utc(stamp)) >= max_age
+        except ValueError:
+            stale = True  # no usable timestamp — it would never age out
+        if not stale:
+            continue
+        note = (
+            f"auto-reset: stuck in 'generating' longer than {max_age_hours:g}h "
+            f"(interrupted run suspected); returned to planned"
+        )
+        existing = (item.get("notes") or "").strip()
+        item["notes"] = f"{existing}; {note}" if existing else note
+        item["status"] = "planned"
+        item["updated_at"] = now.isoformat()
+        reset.append(item)
+
+    if reset:
+        _write_items(items)
+    return reset
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
