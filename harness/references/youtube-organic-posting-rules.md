@@ -1,6 +1,6 @@
 # YouTube Organic Posting Rules
 
-Last researched: 2026-06-29
+Last researched: 2026-07-06
 
 Primary sources:
 - Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
@@ -24,13 +24,14 @@ Primary sources:
 - Declare paid promotion, sponsorship, endorsement, or product placement in upload settings when required, including Shorts, live streams, descriptions, comments, and other YouTube features tied to the promotion.
 - Set made-for-kids, age restriction, remixing, license, caption, and altered-content fields intentionally.
 - Use YouTube API only with compliant user consent, privacy policy, Terms link, data deletion, and quota/rate handling.
-- Check advertiser-friendly updates before monetized videos or paid amplification.
+- Check advertiser-friendly updates before monetized videos or paid amplification. The current help page still surfaces March 2026 shocking-content clarification and February 2026 firearms/magazine eligibility changes, so monetization assumptions can move independently of Community Guidelines. Source: https://support.google.com/youtube/answer/9725604?hl=en (accessed 2026-07-06).
 
 ## Organic Distribution Guidance
 
 - YouTube recommendations appear in Watch Next, Search, home surfaces, Shorts, and news/shelf surfaces.
 - Search ranking uses relevance, engagement, and quality with different weights by query type.
 - Watch history, broader viewer trends, current video topics, quality, and user controls affect recommendations.
+- YouTube's current creator-facing recommendation page explicitly frames the system around helping each viewer find videos they want to watch and maximizing long-term viewer satisfaction. Optimize for audience fit first, not “beating the algorithm.” Source: https://support.google.com/youtube/answer/16533387?hl=en (accessed 2026-07-06).
 - Optimize for honest click-through, viewer satisfaction, retention, session fit, and topic clarity.
 - Avoid artificial metric inflation, engagement incentives, misleading metadata, reused/mass-produced content, and clickbait that disappoints viewers. That includes view exchanges, subscriber swaps, or other "sub4sub" mechanics. Source: https://support.google.com/youtube/answer/3399767?hl=en (accessed 2026-06-29).
 - Treat tags as a minor discovery input, mainly useful for misspellings, not as a ranking lever.

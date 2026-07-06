@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from scripts.autonomy.impact import build_impact_card
@@ -35,6 +36,16 @@ REGISTRY = ROOT / "harness" / "references" / "social-platform-source-registry.js
 SNAPSHOT = ROOT / "harness" / "references" / "social-platform-source-snapshot.json"
 REPORT = ROOT / "harness" / "references" / "social-platform-monitor-report.md"
 USER_AGENT = "KaiCMOHarnessPolicyMonitor/1.0 (+https://github.com/cgallic/kai-cmo-harness)"
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/138.0.0.0 Safari/537.36"
+)
+CUSTOM_UA_HOSTS = {
+    "creators.instagram.com",
+    "developers.facebook.com",
+    "transparency.meta.com",
+}
 
 
 def _load_json(path: Path, fallback: dict[str, Any]) -> dict[str, Any]:
@@ -61,11 +72,7 @@ def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
     for candidate_url in urls:
         req = Request(
             candidate_url,
-            headers={
-                "User-Agent": USER_AGENT,
-                "Accept": "text/html,application/xhtml+xml,application/xml,text/plain;q=0.9,*/*;q=0.5",
-                "Accept-Language": "en-US,en;q=0.9",
-            },
+            headers=_headers_for_url(candidate_url),
         )
         started = time.monotonic()
         try:
@@ -73,6 +80,7 @@ def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
                 body = response.read()
                 content_type = response.headers.get("content-type", "")
                 cleaned = _clean_text(body, content_type)
+                _validate_source_content(source, cleaned)
                 digest = hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
                 result = {
                     "ok": True,
@@ -101,6 +109,24 @@ def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
     final_error = errors[-1] if errors else _error_result(RuntimeError("fetch failed"), None, time.monotonic())
     final_error["attempted_urls"] = urls
     return final_error
+
+
+def _validate_source_content(source: dict[str, Any], cleaned: str) -> None:
+    minimum_length = source.get("minimum_content_length")
+    if minimum_length and len(cleaned) < int(minimum_length):
+        raise ValueError(
+            f"content shorter than minimum_content_length={minimum_length}"
+        )
+
+
+def _headers_for_url(candidate_url: str) -> dict[str, str]:
+    host = urlparse(candidate_url).netloc.lower()
+    user_agent = USER_AGENT if host in CUSTOM_UA_HOSTS else BROWSER_USER_AGENT
+    return {
+        "User-Agent": user_agent,
+        "Accept": "text/html,application/xhtml+xml,application/xml,text/plain;q=0.9,*/*;q=0.5",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
 
 
 def _error_result(exc: BaseException, status_code: int | None, started: float) -> dict[str, Any]:
