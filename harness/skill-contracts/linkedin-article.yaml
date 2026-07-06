@@ -3,7 +3,7 @@ version: 3.0
 harness: kai-harness
 format: linkedin-article
 risk_tier: medium
-word_count: 700-1000
+word_count: 2200-3000
 min_four_us: 12
 seo_lint: false
 
@@ -62,7 +62,7 @@ quality_gates:
 deterministic_checks:
   - id: word_count_range
     evaluator: script
-    pass_when: "700 <= word_count <= 1000"
+    pass_when: "2200 <= word_count <= 3000"
   - id: linkedin_format
     evaluator: quality_gate
     pass_when: "short paragraphs, no markdown H1/H2 headers, and readable spacing"
