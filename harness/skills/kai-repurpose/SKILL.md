@@ -84,7 +84,7 @@ From one pillar, produce:
 | 11 | TikTok video script (contrarian take) | TikTok | 15-30 seconds |
 | 12 | Email newsletter section | Email | 100-200 words |
 | 13 | Email standalone (value-add) | Email | 300-500 words |
-| 14 | LinkedIn article (expanded angle) | LinkedIn | 700-1000 words |
+| 14 | LinkedIn article (expanded angle) | LinkedIn | 2,200-3,000 words |
 | 15 | YouTube Shorts script | YouTube | 30-60 seconds |
 | 16-25 | Additional platform-specific variants | Various | Various |
 
