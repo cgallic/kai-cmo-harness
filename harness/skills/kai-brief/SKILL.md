@@ -30,7 +30,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 ### 2. Select Persona
 
-Read `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md` for the full list. Quick reference:
+Read `knowledge/personas/_persona-index.md` for the full list. Quick reference:
 
 | Persona | Core Hook | Best For |
 |---------|-----------|----------|
@@ -47,7 +47,7 @@ Load the full persona file before writing the brief. It contains language patter
 
 ### 3. Output Brief
 
-Follow the schema from `E:\Dev2\kai-cmo-harness-work\harness\brief-schema.md`:
+Follow the schema from `harness/brief-schema.md`:
 
 ```json
 {

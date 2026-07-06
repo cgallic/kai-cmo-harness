@@ -31,7 +31,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 6. **Sales alignment** — Is sales involved? What's the handoff point?
 7. **Channels available** — Email, LinkedIn, ads, direct mail, events, phone?
 8. **Budget** — Per-account spend range
-9. **Persona alignment** — Which harness persona(s) map to the buying committee? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+9. **Persona alignment** — Which harness persona(s) map to the buying committee? Load from `knowledge/personas/_persona-index.md`
 
 ---
 
@@ -39,7 +39,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Build the ABM campaign architecture:
 
-1. **Load ABM playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\account-based-MARKETING.md`
+1. **Load ABM playbook**: `knowledge/playbooks/account-based-marketing.md`
 2. **Tier accounts by fit and intent**:
    - **Tier 1** (1:1): Top 10-25 accounts. Fully personalized. High-touch.
    - **Tier 2** (1:few): 25-100 accounts. Cluster by industry/use case. Semi-personalized.
@@ -85,16 +85,16 @@ Apply harness writing rules:
 
 Validate before launch:
 
-1. **Four U's Score**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score**: `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **10/16** for emails and outreach
    - Minimum: **12/16** for content and landing pages
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
 3. **AI Slop Check** — Zero filler. ABM demands precision.
 4. **Personalization depth check** — Does each Tier 1 message reference something specific to the account?
 5. **Platform policy compliance** — Check ad copy against platform rules:
-   - LinkedIn: `E:\Dev2\kai-cmo-harness-work\harness\references\linkedin-ads-rules.md`
-   - Google Display: `E:\Dev2\kai-cmo-harness-work\harness\references\google-ads-policy-reference.md`
-6. **CAN-SPAM / cold email compliance**: `E:\Dev2\kai-cmo-harness-work\harness\references\cold-email-rules.md`
+   - LinkedIn: `harness/references/linkedin-ads-rules.md`
+   - Google Display: `harness/references/google-ads-policy-reference.md`
+6. **CAN-SPAM / cold email compliance**: `harness/references/cold-email-rules.md`
 
 Max 2 auto-retry cycles on gate failures.
 
@@ -114,4 +114,4 @@ Deliver the ABM campaign package:
 - **Measurement framework** (engagement score, pipeline influence, deal velocity)
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `abm-campaign-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `abm-campaign-YYYY-MM-DD.md`

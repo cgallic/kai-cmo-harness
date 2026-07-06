@@ -21,9 +21,9 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 Load these files as context before starting:
 
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\partnership-coMARKETING.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\email-lifecycle.md`
+- `knowledge/playbooks/partnership-comarketing.md`
+- `knowledge/personas/_persona-index.md`
+- `knowledge/channels/email-lifecycle.md`
 
 ## Phase 1 — Discovery
 
@@ -95,8 +95,8 @@ Build these deliverables:
 
 1. Deliver the partnership brief and campaign plan as structured documents.
 2. Run all outreach copy through quality gates:
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+   - `python scripts/quality_gates/banned_word_check.py <file>`
+   - `python scripts/quality_gates/four_us_score.py <file>`
 3. Flag any co-branded content that needs legal review (claims, testimonials, data sharing).
 4. Present the complete package with a timeline summary.
 
@@ -104,6 +104,6 @@ Build these deliverables:
 
 - No banned Tier 1 words in any outreach or co-branded copy.
 - All partner claims must be verifiable — no inflated audience numbers.
-- Email outreach must comply with CAN-SPAM (reference: `E:\Dev2\kai-cmo-harness-work\harness\references\cold-email-rules.md`).
+- Email outreach must comply with CAN-SPAM (reference: `harness/references/cold-email-rules.md`).
 - Cross-promotion emails require clear sender identification.
 - Max 2 auto-retry cycles on quality gate failures.

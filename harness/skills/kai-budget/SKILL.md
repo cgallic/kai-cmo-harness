@@ -21,9 +21,9 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 Load these files as context before starting:
 
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\marketing-budget-forecasting.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\saas-metrics-guide.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+- `knowledge/playbooks/marketing-budget-forecasting.md`
+- `knowledge/playbooks/saas-metrics-guide.md`
+- `knowledge/personas/_persona-index.md`
 
 ## Phase 1 — Discovery
 

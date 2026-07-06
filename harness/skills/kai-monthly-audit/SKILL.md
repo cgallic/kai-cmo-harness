@@ -9,7 +9,7 @@ Run a monthly strategic audit. This skill turns weekly signals into an executive
 
 ## Non-Negotiable: Data Provenance
 
-Before writing findings, load `E:\Dev2\kai-cmo-harness-work\harness\references\audit-data-provenance.md`.
+Before writing findings, load `harness/references/audit-data-provenance.md`.
 
 Declare the data mode:
 

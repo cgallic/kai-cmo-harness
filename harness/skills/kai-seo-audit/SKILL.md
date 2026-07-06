@@ -7,7 +7,7 @@ Run a technical SEO audit using the harness SOPs and checklists. Produces a prio
 
 ## Non-Negotiable: Kai Data Provenance
 
-Before writing any finding, load `E:\Dev2\kai-cmo-harness-work\harness\references\audit-data-provenance.md`.
+Before writing any finding, load `harness/references/audit-data-provenance.md`.
 
 Declare the audit mode:
 
@@ -66,9 +66,9 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Audit Execution
 
 Load these before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\technical-seo-audit-sop.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\technical-seo-checklist.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\seo-checklist.md`
+- `knowledge/checklists/technical-seo-audit-sop.md`
+- `knowledge/checklists/technical-seo-checklist.md`
+- `knowledge/checklists/seo-checklist.md`
 
 ### Audit Layers (run in order)
 

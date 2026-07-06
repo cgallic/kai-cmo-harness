@@ -25,7 +25,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 1. **Event type** — Webinar, workshop, panel, AMA, product demo, conference talk?
 2. **Goal** — Lead generation, nurture, product launch, thought leadership, retention?
-3. **Target audience** — Which persona(s)? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+3. **Target audience** — Which persona(s)? Load from `knowledge/personas/_persona-index.md`
 4. **Topic candidates** — What expertise can we share that the audience needs?
 5. **Speakers** — Internal, external guests, customer panels?
 6. **Platform** — Zoom, Teams, StreamYard, Crowdcast, in-person, hybrid?
@@ -39,7 +39,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Build the event marketing plan:
 
-1. **Load event playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\event-webinar-MARKETING.md`
+1. **Load event playbook**: `knowledge/playbooks/event-webinar-marketing.md`
 2. **Topic validation** — Score topic against:
    - Audience pain relevance (does it solve a real problem?)
    - Competitive differentiation (can only WE teach this?)
@@ -85,10 +85,10 @@ Apply harness writing rules:
 
 Validate before launch:
 
-1. **Four U's Score** (on emails and registration page): `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score** (on emails and registration page): `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **10/16** (email threshold) for emails
    - Minimum: **12/16** (content threshold) for registration page
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
 3. **AI Slop Check** — No filler phrases
 4. **Subject line check** — Under 50 characters, no spam triggers
 5. **CTA clarity check** — Every asset has exactly one clear next step
@@ -110,4 +110,4 @@ Deliver the complete event marketing package:
 - **Promotion timeline with dates**
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `webinar-[topic-slug]-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `webinar-[topic-slug]-YYYY-MM-DD.md`

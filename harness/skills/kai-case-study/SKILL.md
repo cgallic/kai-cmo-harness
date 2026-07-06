@@ -28,7 +28,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 3. **The problem** — What was broken before? Quantify the pain.
 4. **The solution** — What did we do? Be specific about the product/service.
 5. **The results** — Hard numbers. Revenue, time saved, conversion lift, cost reduction.
-6. **Persona alignment** — Which harness persona does this customer map to? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+6. **Persona alignment** — Which harness persona does this customer map to? Load from `knowledge/personas/_persona-index.md`
 7. **Permission** — Does the customer approve named use? Or anonymized?
 
 ---
@@ -37,8 +37,8 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Structure the case study:
 
-1. **Load content checklist**: `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\content-checklist.md`
-2. **Load perception engineering**: `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\perception-engineering.md`
+1. **Load content checklist**: `knowledge/checklists/content-checklist.md`
+2. **Load perception engineering**: `knowledge/frameworks/content-copywriting/perception-engineering.md`
 3. **Define the narrative arc**:
    - **Before state** — The specific pain, in the customer's words
    - **Turning point** — Why they chose us (decision trigger)
@@ -72,9 +72,9 @@ Apply perception engineering layers:
 
 Run all gates before delivery:
 
-1. **Four U's Score**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score**: `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **12/16** (content threshold)
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
    - Zero Tier 1 violations
 3. **AI Slop Check** — No filler phrases ("In conclusion", "It's worth noting that", etc.)
 4. **Specificity check** — Every claim has a number or named example. No vague praise.
@@ -94,4 +94,4 @@ Deliver the final case study package:
 - **Four U's scorecard**
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `case-study-[company]-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `case-study-[company]-YYYY-MM-DD.md`

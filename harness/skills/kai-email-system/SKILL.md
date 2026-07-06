@@ -52,7 +52,7 @@ Then create `MARKETING.md` in the **project root** (next to CLAUDE.md) with this
 
 ## Personas
 
-Map to the closest harness personas from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`, then customize for this product:
+Map to the closest harness personas from `knowledge/personas/_persona-index.md`, then customize for this product:
 
 ### Persona 1: [Name] — based on [harness persona name]
 - **Who they are:** [1-2 sentences]
@@ -148,13 +148,13 @@ Produce emails in priority order (P0 first). For each email:
 ### 3a. Load Context
 
 Read these harness files before writing:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\email-lifecycle.md` — lifecycle patterns, subject line formulas, anti-patterns
-- `E:\Dev2\kai-cmo-harness-work\harness\skill-contracts\email-lifecycle.yaml` — quality gates and output format
-- `E:\Dev2\kai-cmo-harness-work\harness\skill-contracts\email.yaml` — general email contract
+- `knowledge/channels/email-lifecycle.md` — lifecycle patterns, subject line formulas, anti-patterns
+- `harness/skill-contracts/email-lifecycle.yaml` — quality gates and output format
+- `harness/skill-contracts/email.yaml` — general email contract
 
 For cold outreach emails, also load:
-- `E:\Dev2\kai-cmo-harness-work\harness\skill-contracts\cold-email.yaml`
-- `E:\Dev2\kai-cmo-harness-work\harness\references\cold-email-rules.md`
+- `harness/skill-contracts/cold-email.yaml`
+- `harness/references/cold-email-rules.md`
 
 ### 3b. Write Each Email
 
@@ -270,4 +270,4 @@ When producing emails, use parallel agents for independent emails. Emails within
 
 ## Persona Application
 
-If `MARKETING.md` specifies a persona, load the full persona file from `E:\Dev2\kai-cmo-harness-work\knowledge\personas/` and match email tone to the persona's language patterns and pain points. If no persona applies, use the brand voice from `MARKETING.md`.
+If `MARKETING.md` specifies a persona, load the full persona file from `knowledge/personas/` and match email tone to the persona's language patterns and pain points. If no persona applies, use the brand voice from `MARKETING.md`.

@@ -21,10 +21,10 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 Load these files as context before starting:
 
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\customer-retention.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\growth-loops-applied.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\email-lifecycle.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+- `knowledge/playbooks/customer-retention.md`
+- `knowledge/playbooks/growth-loops-applied.md`
+- `knowledge/channels/email-lifecycle.md`
+- `knowledge/personas/_persona-index.md`
 
 ## Phase 1 — Discovery
 
@@ -122,14 +122,14 @@ For customers who have already churned:
 
 1. Deliver the retention playbook and engagement scoring spec.
 2. Run all email sequences through quality gates:
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+   - `python scripts/quality_gates/banned_word_check.py <file>`
+   - `python scripts/quality_gates/four_us_score.py <file>`
 3. Include a 90-day implementation roadmap and monthly metrics to track (churn rate, cohort retention, health score distribution, NPS trend, expansion vs. contraction revenue).
 
 ## Constraints
 
 - No banned Tier 1 words in any customer-facing copy.
-- Win-back emails must comply with CAN-SPAM (reference: `E:\Dev2\kai-cmo-harness-work\harness\references\cold-email-rules.md`).
+- Win-back emails must comply with CAN-SPAM (reference: `harness/references/cold-email-rules.md`).
 - Loyalty program rewards must not erode margins below profitability.
 - Discount offers in rescue plays capped at 20% unless user approves higher.
 - All email sequences target 10+/16 on Four U's scoring.

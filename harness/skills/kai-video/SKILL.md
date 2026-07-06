@@ -29,10 +29,10 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Script Production
 
 Load these before writing:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\video-content-creation.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\tiktok-algorithm.md` (if TikTok)
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\youtube.md` (if YouTube)
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\instagram.md` (if Reels)
+- `knowledge/playbooks/video-content-creation.md`
+- `knowledge/channels/tiktok-algorithm.md` (if TikTok)
+- `knowledge/channels/youtube.md` (if YouTube)
+- `knowledge/channels/instagram.md` (if Reels)
 
 ### Short-Form Script Structure (15-60 seconds)
 
@@ -130,8 +130,8 @@ Load these before writing:
 
 If the user has long-form content, generate a clipping plan:
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\video-clipping-automation-workflow.md`
-Load for any transcript, caption, podcast, webinar, or third-party source: `E:\Dev2\kai-cmo-harness\harness\references\transcript-video-research-rules.md`
+Load: `knowledge/playbooks/video-clipping-automation-workflow.md`
+Load for any transcript, caption, podcast, webinar, or third-party source: `harness/references/transcript-video-research-rules.md`
 
 | Clip # | Timestamp | Hook | Platform | Length | Script Adaptation |
 |--------|-----------|------|----------|--------|-------------------|
