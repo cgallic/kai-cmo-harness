@@ -26,7 +26,7 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 ## Phase 1: Topic Space Discovery
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\aeo-ai-search-playbook-2026.md`
+- `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md`
 
 Read from `MARKETING.md`. Only ask about things not covered there:
 
@@ -54,7 +54,7 @@ This scorecard becomes the "before" measurement. Run it again at 30/60/90 days t
 ## Phase 2: Entity Map
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\entity-seo-knowledge-graph-deep-dive.md`
+- `knowledge/frameworks/aeo-ai-search/entity-seo-knowledge-graph-deep-dive.md`
 
 ### Map the Entity Landscape
 
@@ -98,8 +98,8 @@ Output: `workspace/topical-map/_entity-map.md`
 ## Phase 3: Query Fan-Out Coverage Matrix
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\query-fan-out-guide.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\qdp-qdh-qds-content-architecture.md`
+- `knowledge/frameworks/aeo-ai-search/query-fan-out-guide.md`
+- `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md`
 
 ### How AI Search Decomposes Queries
 
@@ -148,8 +148,8 @@ Output: `workspace/topical-map/_fan-out-matrix.md`
 ## Phase 4: Information Gain Audit
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\patent-information-gain-US12013887B2.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\hidden-aeo-edges.md`
+- `knowledge/frameworks/aeo-ai-search/patent-information-gain-US12013887B2.md`
+- `knowledge/frameworks/aeo-ai-search/hidden-aeo-edges.md`
 
 ### Why Information Gain Matters
 
@@ -193,8 +193,8 @@ Output: `workspace/topical-map/_information-gain-audit.md`
 ## Phase 5: Content Node Architecture
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\geo-academic-research-synthesis.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\perplexity-ranking-reverse-engineered.md`
+- `knowledge/frameworks/aeo-ai-search/geo-academic-research-synthesis.md`
+- `knowledge/frameworks/aeo-ai-search/perplexity-ranking-reverse-engineered.md`
 
 ### Synthesize Into Hub-and-Spoke Architecture
 
@@ -293,8 +293,8 @@ Output: `workspace/topical-map/_content-nodes.md`, `workspace/topical-map/_schem
 ## Phase 6: 90-Day Publishing Calendar + Distribution Plan
 
 Load before starting:
-- `E:\Dev2\kai-cmo-harness-work\harness\brief-schema.md`
-- `E:\Dev2\kai-cmo-harness-work\harness\skills\kai-content-calendar\SKILL.md` (for format compatibility)
+- `harness/brief-schema.md`
+- `harness/skills/kai-content-calendar/SKILL.md` (for format compatibility)
 
 ### AEO Sequencing Rules
 
@@ -341,7 +341,7 @@ Each content node gets a distribution plan. Publishing on your site alone leaves
 
 ### Brief Generation
 
-Generate briefs for the first 4 weeks using the schema from `E:\Dev2\kai-cmo-harness-work\harness\brief-schema.md`, extended with AEO-specific fields:
+Generate briefs for the first 4 weeks using the schema from `harness/brief-schema.md`, extended with AEO-specific fields:
 
 ```json
 {

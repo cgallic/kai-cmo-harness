@@ -214,7 +214,7 @@ Before writing any ad, load the platform's policy reference and skill contract. 
 | Amazon | `harness/references/amazon-ads-policy-reference.md` | — | — | 18-month claim evidence rule |
 | X/Twitter | `harness/references/x-ads-policy-reference.md` | — | — | Verification tier affects access |
 
-All paths relative to `E:\Dev2\kai-cmo-harness-work\`.
+All paths relative to the project root.
 
 Also load: `harness/references/advertising-compliance.md` for FTC/GDPR/CAN-SPAM requirements that apply to ALL platforms.
 

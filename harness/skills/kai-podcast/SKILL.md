@@ -25,7 +25,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 1. **Mode** — Are we launching a show (Host) or getting booked on shows (Guest)?
 2. **Goal** — Brand awareness, thought leadership, lead gen, networking, SEO backlinks?
-3. **Target audience** — Which persona(s)? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+3. **Target audience** — Which persona(s)? Load from `knowledge/personas/_persona-index.md`
 4. **Topic territory** — What subjects can we own? What's our unique angle?
 5. **Existing assets** — Blog posts, talks, interviews that prove expertise?
 6. **Commitment level** — Weekly, biweekly, monthly? (Host) / How many appearances per month? (Guest)
@@ -54,8 +54,8 @@ Guardrails:
 
 ### Host Mode — Launch a Podcast
 
-1. **Load podcast channel guide**: `E:\Dev2\kai-cmo-harness-work\knowledge\channels\podcast.md`
-2. **Load podcast marketing playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\podcast-MARKETING.md`
+1. **Load podcast channel guide**: `knowledge/channels/podcast.md`
+2. **Load podcast marketing playbook**: `knowledge/playbooks/podcast-marketing.md`
 3. **Show concept**:
    - Name (3-5 candidates, check availability)
    - Format (solo, interview, co-host, panel, hybrid)
@@ -68,7 +68,7 @@ Guardrails:
 
 ### Guest Mode — Get Booked on Shows
 
-1. **Load podcast marketing playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\podcast-MARKETING.md`
+1. **Load podcast marketing playbook**: `knowledge/playbooks/podcast-marketing.md`
 2. **Speaker positioning**:
    - 3 signature topics you can speak on
    - Unique stories/frameworks/data you bring
@@ -104,10 +104,10 @@ Guardrails:
 
 Validate written assets:
 
-1. **Four U's Score**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score**: `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **12/16** for show descriptions and episode outlines
    - Minimum: **10/16** for emails and pitches
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
 3. **AI Slop Check** — No filler. Every sentence earns its place.
 4. **Pitch specificity check** — Does the pitch reference the host's show specifically?
 
@@ -135,4 +135,4 @@ Deliver the podcast package:
 - **Tracking spreadsheet structure**
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `podcast-[host|guest]-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `podcast-[host|guest]-YYYY-MM-DD.md`
