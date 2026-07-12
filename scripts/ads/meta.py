@@ -631,6 +631,7 @@ def cmd_create_campaign(args: argparse.Namespace) -> None:
         "objective": args.objective,
         "status": args.status or "PAUSED",
         "special_ad_categories": f"[{args.special_ad_category}]" if args.special_ad_category else "[]",
+        "is_adset_budget_sharing_enabled": "false",
         "access_token": _token(),
     }
 
