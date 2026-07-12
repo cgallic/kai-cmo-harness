@@ -47,6 +47,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--platform", required=True, choices=list_platforms(),
                    help="Destination ad platform")
     p.add_argument("--asset", required=True, type=Path, help="Path to image/video file")
+    p.add_argument("--asset-ref", default=None,
+                   help="Reuse an already uploaded platform asset ref after a failed ad-create attempt.")
     p.add_argument("--kind", required=True, choices=["image", "video"])
     p.add_argument("--adset-id", required=True,
                    help="Meta ad-set id / TikTok ad-group id / Google ad-group resource / LinkedIn campaign URN")
@@ -104,8 +106,17 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.execute:
-            print(f"[1/2] Uploading {args.kind} to {args.platform}: {args.asset}", file=sys.stderr)
-            upload = uploader.upload_asset(asset)
+            if args.asset_ref:
+                print(f"[1/2] Reusing uploaded {args.kind} ref on {args.platform}: {args.asset_ref}", file=sys.stderr)
+                upload = UploadResult(
+                    platform=args.platform,
+                    kind=args.kind,
+                    ref=args.asset_ref,
+                    raw={"reused": True, "asset": str(args.asset)},
+                )
+            else:
+                print(f"[1/2] Uploading {args.kind} to {args.platform}: {args.asset}", file=sys.stderr)
+                upload = uploader.upload_asset(asset)
             print(f"      → ref={upload.ref}", file=sys.stderr)
         else:
             print(f"[1/2] Dry-run asset preview for {args.platform}: {args.asset}", file=sys.stderr)

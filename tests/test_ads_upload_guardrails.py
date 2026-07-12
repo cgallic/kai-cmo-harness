@@ -87,6 +87,26 @@ def test_upload_cli_execute_with_approval_uploads_and_creates_paused(monkeypatch
     assert dummy.create_called is True
 
 
+def test_upload_cli_reuses_existing_asset_ref_without_upload(monkeypatch, tmp_path):
+    asset = tmp_path / "ad.mp4"
+    asset.write_bytes(b"fake")
+    dummy = _DummyUploader()
+    monkeypatch.setattr(upload, "get_uploader", lambda platform: dummy)
+
+    exit_code = upload.main(
+        _args(
+            asset,
+            "--execute",
+            "--approval-id", "act_123",
+            "--asset-ref", "video_123",
+        )
+    )
+
+    assert exit_code == 0
+    assert dummy.upload_called is False
+    assert dummy.create_called is True
+
+
 def test_meta_video_creative_uses_video_data(monkeypatch):
     captured = {}
 
