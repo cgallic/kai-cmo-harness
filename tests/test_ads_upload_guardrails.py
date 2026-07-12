@@ -147,6 +147,31 @@ def test_meta_campaign_create_disables_adset_budget_sharing(monkeypatch):
     assert captured["is_adset_budget_sharing_enabled"] == "false"
 
 
+def test_meta_adset_create_uses_lowest_cost_without_cap(monkeypatch):
+    captured = {}
+    monkeypatch.setenv("META_AD_ACCOUNT_ID", "act_123")
+    monkeypatch.setenv("META_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(
+        meta_cli,
+        "_dry_run_banner",
+        lambda method, url, payload: captured.update(payload),
+    )
+    args = meta_cli.argparse.Namespace(
+        campaign_id="campaign_1",
+        name="Lead test",
+        daily_budget="2",
+        optimization_goal="OFFSITE_CONVERSIONS",
+        targeting='{"geo_locations":{"countries":["US"]}}',
+        promoted_object='{"pixel_id":"pixel_1","custom_event_type":"LEAD"}',
+        execute=False,
+        approval_id=None,
+    )
+
+    meta_cli.cmd_create_adset(args)
+
+    assert captured["bid_strategy"] == "LOWEST_COST_WITHOUT_CAP"
+
+
 def test_tiktok_uploader_upload_asset_requires_approval_context(monkeypatch, tmp_path):
     asset = tmp_path / "ad.png"
     asset.write_bytes(b"fake")
