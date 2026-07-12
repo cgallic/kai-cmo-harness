@@ -148,11 +148,15 @@ class MetaUploader(AdUploader):
             },
         }
         if asset.kind == "video":
+            thumbnail_hash = asset.raw.get("thumbnail_hash")
+            if not thumbnail_hash:
+                raise UploadError("Meta video creative requires a thumbnail image/hash")
             object_story_spec: dict[str, Any] = {
                 "page_id": page_id,
                 "video_data": {
                     **common_data,
                     "video_id": asset.ref,
+                    "image_hash": thumbnail_hash,
                     "title": creative.headline,
                 },
             }

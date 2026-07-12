@@ -124,7 +124,12 @@ def test_meta_video_creative_uses_video_data(monkeypatch):
         cta="LEARN_MORE",
         page_id="page_1",
     )
-    asset = UploadResult(platform="meta", kind="video", ref="video_1", raw={})
+    asset = UploadResult(
+        platform="meta",
+        kind="video",
+        ref="video_1",
+        raw={"thumbnail_hash": "thumb_1"},
+    )
 
     uploader.create_ad("adset_1", creative, asset, execute=False)
 
@@ -132,6 +137,7 @@ def test_meta_video_creative_uses_video_data(monkeypatch):
     payload = __import__("json").loads(creative_json)
     story = payload["object_story_spec"]
     assert story["video_data"]["video_id"] == "video_1"
+    assert story["video_data"]["image_hash"] == "thumb_1"
     assert "link_data" not in story
 
 

@@ -49,6 +49,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--asset", required=True, type=Path, help="Path to image/video file")
     p.add_argument("--asset-ref", default=None,
                    help="Reuse an already uploaded platform asset ref after a failed ad-create attempt.")
+    p.add_argument("--thumbnail", type=Path, default=None,
+                   help="Video thumbnail image. Uploaded through the same approved canonical path.")
     p.add_argument("--kind", required=True, choices=["image", "video"])
     p.add_argument("--adset-id", required=True,
                    help="Meta ad-set id / TikTok ad-group id / Google ad-group resource / LinkedIn campaign URN")
@@ -118,6 +120,12 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"[1/2] Uploading {args.kind} to {args.platform}: {args.asset}", file=sys.stderr)
                 upload = uploader.upload_asset(asset)
             print(f"      → ref={upload.ref}", file=sys.stderr)
+            if args.kind == "video" and args.thumbnail:
+                print(f"      → uploading thumbnail: {args.thumbnail}", file=sys.stderr)
+                thumbnail_upload = uploader.upload_asset(
+                    CreativeAsset(path=args.thumbnail, kind="image", title=f"{asset.title or asset.path.stem}-thumbnail")
+                )
+                upload.raw["thumbnail_hash"] = thumbnail_upload.ref
         else:
             print(f"[1/2] Dry-run asset preview for {args.platform}: {args.asset}", file=sys.stderr)
             upload = UploadResult(
@@ -127,6 +135,7 @@ def main(argv: list[str] | None = None) -> int:
                 raw={
                     "dry_run": True,
                     "asset": str(args.asset),
+                    "thumbnail_hash": "DRY_RUN_THUMBNAIL_HASH" if args.thumbnail else None,
                     "guardrail": "No upload performed without --execute and --approval-id",
                 },
             )
