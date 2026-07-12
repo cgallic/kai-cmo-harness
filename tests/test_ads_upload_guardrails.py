@@ -8,6 +8,9 @@ from scripts.ads import upload
 from scripts.ads import google as google_cli
 from scripts.ads import meta as meta_cli
 from scripts.ads.uploaders import AdRef, UploadError, UploadResult
+from scripts.ads.uploaders.base import CreativeSpec
+from scripts.ads.uploaders.meta import MetaUploader
+from scripts.ads.uploaders import meta as meta_uploader_module
 from scripts.ads.uploaders.tiktok import TikTokUploader
 
 
@@ -82,6 +85,34 @@ def test_upload_cli_execute_with_approval_uploads_and_creates_paused(monkeypatch
     assert exit_code == 0
     assert dummy.upload_called is True
     assert dummy.create_called is True
+
+
+def test_meta_video_creative_uses_video_data(monkeypatch):
+    captured = {}
+
+    def fake_run_meta(*args, capture=True):
+        captured["args"] = args
+        return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(meta_uploader_module, "_run_meta", fake_run_meta)
+    uploader = MetaUploader()
+    creative = CreativeSpec(
+        name="Creature",
+        headline="Just Call Kai Today",
+        description="Kai answers after-hours calls.",
+        link="https://kaicalls.com",
+        cta="LEARN_MORE",
+        page_id="page_1",
+    )
+    asset = UploadResult(platform="meta", kind="video", ref="video_1", raw={})
+
+    uploader.create_ad("adset_1", creative, asset, execute=False)
+
+    creative_json = captured["args"][captured["args"].index("--creative-json") + 1]
+    payload = __import__("json").loads(creative_json)
+    story = payload["object_story_spec"]
+    assert story["video_data"]["video_id"] == "video_1"
+    assert "link_data" not in story
 
 
 def test_google_cli_execute_requires_approval_id_before_credentials():
