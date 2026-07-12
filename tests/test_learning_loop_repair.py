@@ -221,6 +221,44 @@ class TestPendingChecksSkipNullUrl:
         due = pc.get_pending_checks()
         assert [c["id"] for _, c in due] == ["due"]
 
+    def test_get_pending_checks_normalizes_legacy_check_after(self, perf):
+        pc, content_log, checks_dir = perf
+        content_log.write_text(json.dumps([{
+            "id": "legacy-1",
+            "url": "https://example.com/legacy",
+            "keyword": "legacy keyword",
+            "site": "meetkai",
+            "publish_date": "2026-01-01",
+            "performance_30d": None,
+        }]))
+        check_file = checks_dir / "legacy-1.json"
+        check_file.write_text(json.dumps({
+            "url": "https://example.com/legacy",
+            "check_after": "2020-01-01",
+            "status": "pending",
+        }))
+
+        due = pc.get_pending_checks()
+
+        assert len(due) == 1
+        assert due[0][1]["id"] == "legacy-1"
+        assert due[0][1]["keyword"] == "legacy keyword"
+        assert due[0][1]["site"] == "meetkai"
+        assert due[0][1]["published_at"] == "2026-01-01"
+        normalized = json.loads(check_file.read_text())
+        assert normalized["check_due"] == "2020-01-01"
+
+    def test_get_pending_checks_skips_malformed_record_without_stopping_batch(self, perf, caplog):
+        pc, content_log, checks_dir = perf
+        content_log.write_text("[]")
+        (checks_dir / "bad.json").write_text(json.dumps({"status": "pending"}))
+        self._check(checks_dir, "due")
+
+        due = pc.get_pending_checks()
+
+        assert [c["id"] for _, c in due] == ["due"]
+        assert "Skipping invalid pending check" in caplog.text
+
     def test_reconcile_skips_approved_unpublished_null_url(self, perf):
         pc, content_log, checks_dir = perf
         entries = [

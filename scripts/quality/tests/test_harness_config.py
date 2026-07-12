@@ -6,6 +6,8 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 
@@ -201,6 +203,22 @@ quality:
         fw = get_filler_words()
         assert fw == ["um", "uh", "like"], f"Expected custom list: {fw}"
         print("PASS: Custom filler words list")
+
+
+def test_ga4_property_uses_deployed_env_contract(tmp_path, monkeypatch):
+    """The harness reads the GA_<SITE>_PROPERTY_ID name emitted by setup.sh."""
+    config = tmp_path / "config.yaml"
+    config.write_text("sites:\n  ga4_properties:\n    meetkai: ''\n")
+    monkeypatch.setenv("CMO_CONFIG_PATH", str(config))
+    monkeypatch.setenv("GA_MEETKAI_PROPERTY_ID", "123456789")
+    monkeypatch.delenv("GA4_PROPERTY_MEETKAI", raising=False)
+
+    import scripts.harness_config as hc
+    hc._config = None
+    try:
+        assert hc.get_config().sites.ga4_properties["meetkai"] == "123456789"
+    finally:
+        hc._config = None
 
 
 if __name__ == "__main__":
