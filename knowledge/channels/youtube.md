@@ -116,6 +116,8 @@ BAD:
 
 ## YouTube SEO
 
+Use official YouTube help pages for policy or ranking claims. The factor ordering below is an operating heuristic, not a published weight table. YouTube's current recommendation and search/discovery docs emphasize audience fit, viewer satisfaction, content performance, topic interest, competition, and seasonality over any single CTR hack. Sources: https://support.google.com/youtube/answer/16533387?hl=en and https://support.google.com/youtube/answer/11914225?co=YOUTUBE._YTVideoType%3Dvideo&hl=en (accessed 2026-07-13).
+
 ### Ranking Factors (by importance)
 
 1. **Click-through rate (CTR)** — title + thumbnail determine this
@@ -170,6 +172,7 @@ Before publishing or scheduling YouTube content:
 - Load `harness/references/youtube-organic-posting-rules.md`.
 - Check Community Guidelines, spam/fake engagement, external links, and advertiser-friendly guidance.
 - Set paid promotion, made-for-kids, age restriction, AI/altered content, license, captions, and remix fields intentionally.
+- If using the API, set the altered/synthetic-media and brand-partner fields intentionally and track quota by method. YouTube's July 2026 revision history adds `brandPartner` for creator-initiated paid partnerships and splits `videos.insert`, `search.list`, and `videos.batchGetStats` into distinct quota buckets. Source: https://developers.google.com/youtube/v3/revision_history (accessed 2026-07-13).
 - Do not use artificial views, engagement incentives, repetitive AI batches, or scraped reposting.
 - Mark analytics trend breaks when Shorts view counting or API metric definitions change.
 

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_researched": "2026-07-06",
+  "last_researched": "2026-07-13",
   "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
   "sources": [
     {
@@ -702,6 +702,15 @@
       "notes": "Monthly monitor source for Snap developer surfaces."
     },
     {
+      "id": "snap_public_content_moderation",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "Is Stories content on Snapchat moderated?",
+      "url": "https://help.snapchat.com/hc/en-us/articles/7012263915412-Is-Stories-content-on-Snapchat-moderated",
+      "owner_file": "knowledge/channels/snapchat-organic.md",
+      "notes": "Official moderation and limited-distribution guidance for public Stories and Spotlight content."
+    },
+    {
       "id": "reddit_rules",
       "platform": "reddit",
       "category": "policy",
@@ -739,6 +748,15 @@
       "url": "https://developers.reddit.com/docs",
       "owner_file": "harness/references/social-automation-rules.md",
       "notes": "Developer platform documentation."
+    },
+    {
+      "id": "reddit_developer_platform_accessing_data",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Developer Platform & Accessing Reddit Data",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Official approval, commercial-use, monetized publishing, and AI-training restrictions for Reddit developer services."
     },
     {
       "id": "bluesky_community_guidelines",

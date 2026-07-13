@@ -1,18 +1,18 @@
 # TikTok Organic Posting Rules
 
-Last researched: 2026-07-06
+Last researched: 2026-07-13
 
 Primary sources:
-- Community Guidelines: https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines
+- Community Guidelines: https://www.tiktok.com/community-guidelines/en/
 - How TikTok recommends content: https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content
-- Account recommendation eligibility: https://support.tiktok.com/en/safety-hc/account-and-user-safety/why-is-my-account-not-being-recommended
+- Account recommendation eligibility: https://www.tiktok.com/community-guidelines/en/for-you-feed-and-search/
 - Content Posting API: https://developers.tiktok.com/doc/content-posting-api-get-started
 - Direct Post API: https://developers.tiktok.com/doc/content-posting-api-reference-direct-post
 - Query Creator Info: https://developers.tiktok.com/doc/content-posting-api-reference-query-creator-info
 - TikTok Developer Changelog: https://developers.tiktok.com/doc/changelog
-- Brand/product/service promotion: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service
-- AI-generated content: https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content
-- Commercial music: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/commercial-use-of-music-on-tiktok
+- Brand/product/service promotion: https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers
+- AI-generated content: https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/
+- Commercial music: https://ads.tiktok.com/help/article/commercial-music-library
 - Content sharing guidelines: https://developers.tiktok.com/doc/content-sharing-guidelines
 - TikTok ad policy change log: https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026
 
@@ -22,13 +22,13 @@ Primary sources:
 - Check recommendation eligibility rules for content intended for For You distribution.
 - Use the Content Posting API only with the required scopes, user authorization, verified domains/URL prefixes, required export-page UX, and current audit status.
 - Use `video.publish` for direct posting and `video.upload` for inbox/review upload flows, based on the current TikTok Content Posting API guide.
-- Disclose realistic AI-generated or altered content when required by platform tools or local law. TikTok's AI guidance says realistic AI-generated or meaningfully altered content must be labeled, can be auto-labeled from TikTok effects or C2PA credentials, and can still be removed if it misleads or uses prohibited likenesses. Source: https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content (accessed 2026-07-06).
-- Use Content Disclosure settings for own-brand, third-party branded, affiliate, or incentivized posts. TikTok's July 2026 help flow says branded or promotional posts must turn on the disclosure setting and may be removed or restricted if the proper disclosure is missing. Source: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service (accessed 2026-07-06).
-- Use the Commercial Music Library or documented music rights for commercial/promotional posts. TikTok's music guidance says commercial content should use CML tracks, and off-library music requires confirming that all necessary rights are secured. Source: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/commercial-use-of-music-on-tiktok (accessed 2026-07-06).
+- Disclose realistic AI-generated or altered content when required by platform tools or local law. TikTok's AI guidance says realistic AI-generated or meaningfully altered content must be labeled, can be auto-labeled from TikTok effects or C2PA credentials, and can still be removed if it misleads or uses prohibited likenesses. Source: https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/ (accessed 2026-07-13).
+- Use Content Disclosure settings for own-brand, third-party branded, affiliate, or incentivized posts. TikTok's July 2026 help flow says branded or promotional posts must turn on the disclosure setting and may be removed or restricted if the proper disclosure is missing. Source: https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers (accessed 2026-07-13).
+- Use the Commercial Music Library or documented music rights for commercial/promotional posts. TikTok's music guidance says commercial content should use CML tracks, and off-library music requires confirming that all necessary rights are secured. Source: https://ads.tiktok.com/help/article/commercial-music-library (accessed 2026-07-13).
 - For API publishing, fetch creator info before export/publish UI and respect privacy, comment, duet, stitch, and max-duration settings.
-- Treat unaudited direct-post clients as private-only until TikTok audit lifts visibility restrictions.
+- Treat unaudited direct-post clients as private-only until TikTok audit lifts visibility restrictions. TikTok's current developer guidance says unaudited Direct Post clients are capped at 5 users per 24-hour window, all posting accounts must be private at post time, and content stays `SELF_ONLY` until audit approval. Source: https://developers.tiktok.com/doc/content-sharing-guidelines and https://developers.tiktok.com/doc/content-posting-api-get-started (accessed 2026-07-13).
 - Post photos only through the documented photo endpoints and verified hosted URLs.
-- Do not add brand logos, watermarks, promotional links, or promotional text overlays to content sent through Share Kit or Content Posting flows. TikTok's content-sharing guidelines treat that as a violation. Source: https://developers.tiktok.com/doc/content-sharing-guidelines (accessed 2026-06-29).
+- Do not add brand logos, watermarks, promotional links, or promotional text overlays to content sent through Share Kit or Content Posting flows. TikTok's content-sharing guidelines treat that as a violation. Source: https://developers.tiktok.com/doc/content-sharing-guidelines (accessed 2026-07-13).
 - Check TikTok Ads policy before Spark Ads, boosting, TikTok Shop promotion, or paid creator amplification.
 
 ## Organic Distribution Guidance
@@ -40,7 +40,7 @@ Primary sources:
 - Treat comments/DMs as community interaction, not a bot funnel, unless the user opted in and the flow follows TikTok developer rules.
 - Treat direct-post/photo support as opt-in capabilities, not a reason to skip creator review, privacy, or disclosure controls.
 - Label hard numeric algorithm weights as heuristics unless the source is official and current.
-- TikTok's official disclosure help says turning on the commercial disclosure setting does not by itself reduce feed distribution. Treat disclosure as a compliance requirement, not a reach tradeoff. Source: https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service (accessed 2026-07-06).
+- TikTok's official disclosure help says turning on the commercial disclosure setting does not by itself reduce feed distribution. Treat disclosure as a compliance requirement, not a reach tradeoff. Source: https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers (accessed 2026-07-13).
 
 ## Harness Guardrails
 

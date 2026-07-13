@@ -6,9 +6,11 @@
 
 ## Quick Reference
 
+Official TikTok help should anchor any policy-sensitive claim. TikTok's July 2026 recommendation article says each surface has its own recommendation system, and that user interactions, content information, and user/device information are weighted differently by surface. For most users, interactions are generally weighted more heavily on For You, Following, Friends, LIVE, and notifications, while Search weighs content-match information more heavily. The numeric thresholds and proxy weights below are benchmark heuristics, not official TikTok doctrine. Source: https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content (accessed 2026-07-13).
+
 - **First 60 minutes** are critical - content half-life is under 1 hour
-- **3-second retention** must exceed 65% to unlock algorithmic favor (4-7x impressions)
-- Signal hierarchy: Rewatch (5) > Completion (4) > Share (3) > Comment (2) > Like (1)
+- **3-second retention** benchmark: many operators treat 65%+ as a useful threshold, but TikTok does not publish this number as an official requirement
+- Signal hierarchy benchmark: Rewatch > Completion > Share > Comment > Like is a working heuristic, not a published official weighting
 - **Share signal** is the key to breaking out of personalized feed into viral distribution
 - Avoid: Watermarks, excessive hashtags (>5), low technical quality
 

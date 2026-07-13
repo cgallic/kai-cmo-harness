@@ -1,6 +1,6 @@
 # Reddit Organic Posting Rules
 
-Last researched: 2026-07-06
+Last researched: 2026-07-13
 
 Primary sources:
 - User Agreement: https://redditinc.com/policies/user-agreement
@@ -17,6 +17,7 @@ Primary sources:
 - Read and follow each subreddit rule before posting. Subreddit rules can be stricter than platform rules.
 - Use Reddit API/data only under Developer Terms and Public Content Policy.
 - Use approved API or licensed access for commercial Reddit data use. Do not scrape Reddit public content for AI/model-training, enrichment, or monitoring outside approved terms.
+- Treat ads-backed tools, subscription products, monetized publishing of Reddit content, paid services, and model training as permission-gated commercial uses until Reddit approves the exact use case or contract path. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data and https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy (accessed 2026-07-13).
 - Do not use undisclosed brand accounts, fake users, bought accounts, coordinated voting, vote manipulation, astroturfing, or scraped personal data.
 - Get approval for any new OAuth/API access path if Reddit requires it.
 - Check reputation, account age, karma, flair, moderation queue, and community-specific self-promotion tolerance before posting.
