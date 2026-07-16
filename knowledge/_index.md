@@ -106,6 +106,10 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 ---
 
+## People (Cloned Experts)
+
+22+ expert knowledge distillations live in `knowledge/people/` — offers (Hormozi, Abraham, Kennedy, Schwartz), positioning/pricing (Dunford, Ramanujam, Campbell, Gurley), growth (Balfour, Verna, Walker), paid creative (Denney, Hott), local/phone-led (Mello, Hawkins, Shaw), sales (Gordon), media models (Ramsey, Wardrop, Farley), and more. Full index with load-when triggers: `knowledge/people/_people-index.md`.
+
 ## Personas
 
 | File | Use When |

@@ -87,7 +87,8 @@ Load the primary framework as context, then validate against the checklist. Full
 | Competitor analysis | `knowledge/playbooks/competitive-intelligence.md` + `knowledge/frameworks/competitor-content-analysis.md` | — |
 | Campaign planning | `knowledge/playbooks/campaign-orchestration.md` | — |
 | Offer construction / full-funnel build (Hormozi sequence) | `knowledge/playbooks/hormozi-100m-funnel.md` + `knowledge/people/alex-hormozi-knowledge.md` | — |
-| Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/cro-audit-checklist.md` |
+| Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` + `knowledge/people/tommy-mello-knowledge.md` | `knowledge/checklists/cro-audit-checklist.md` |
+| Expert framework lookup (who said what, load-when triggers) | `knowledge/people/_people-index.md` | — |
 
 ---
 
