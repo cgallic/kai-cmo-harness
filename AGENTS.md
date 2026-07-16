@@ -12,7 +12,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-Inventory reachable from here: 48 skill directories, 45 canonical `kai-*` skill docs, 42 public `/kai` router commands, 54 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skill docs, 47 public `/kai` router commands, 59 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract (critical)
 
@@ -86,6 +86,7 @@ Load the primary framework as context, then validate against the checklist. Full
 | Site architecture | `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `knowledge/checklists/seo-checklist.md` |
 | Competitor analysis | `knowledge/playbooks/competitive-intelligence.md` + `knowledge/frameworks/competitor-content-analysis.md` | — |
 | Campaign planning | `knowledge/playbooks/campaign-orchestration.md` | — |
+| Offer construction / full-funnel build (Hormozi sequence) | `knowledge/playbooks/hormozi-100m-funnel.md` + `knowledge/people/alex-hormozi-knowledge.md` | — |
 | Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/cro-audit-checklist.md` |
 
 ---

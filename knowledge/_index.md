@@ -148,6 +148,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/combinatorial-creative-bench.md` | **Combinatorial creative bench** - P.D.A. concept math, 60/30/10 portfolio allocation, named kill / graduate / iterate rules |
 | `playbooks/creative-test-resolution-protocol.md` | **Creative test resolution** - Controls, data floors, read windows, and kill / iterate / graduate decisions |
 | `playbooks/creative-intelligence-ledger.md` | **Creative intelligence ledger** - Durable memory for hooks, angles, awareness stages, mechanics, results, and next actions |
+| `playbooks/hormozi-100m-funnel.md` | **Hormozi $100M funnel sequence** - Value Equation, Grand Slam Offer, client-financed acquisition, Core Four; runs `/kai-offer-builder` → `/kai-proof-builder` → `/kai-hook-bench` → `/kai-content-batching` → `/kai-funnel-audit` |
 | `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
 | `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
 | `playbooks/paid-media-launch-playbook.md` | **Paid media launch** - Measurement-first Meta and Google launch flow, target CPA x 50 budget rule, creative matrix, first 14-day checks |
