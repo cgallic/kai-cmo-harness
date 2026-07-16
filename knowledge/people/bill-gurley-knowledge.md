@@ -27,7 +27,7 @@
 
 ## Background
 
-Bill Gurley spent two decades-plus as a General Partner at Benchmark Capital, backing Uber, OpenTable, Zillow, GrubHub, Nextdoor, and Stitch Fix (per his Above the Crowd bio). Before venture: design engineer at Compaq (486/50, multi-processor servers), then four years as a Wall Street research analyst at CS First Boston, where he was lead analyst on Amazon's IPO and made the Institutional Investor All-American Research Team in 1995 and 1996. BS in Computer Science (Florida, 1989), MBA (Texas, 1993), CFA. He has written the *Above the Crowd* blog since the 1990s newsletter era; the essays distilled here are the canon founders pass around.
+Bill Gurley spent two decades-plus as a General Partner at Benchmark Capital, backing Uber, OpenTable, Zillow, GrubHub, Nextdoor, and Stitch Fix (per his Above the Crowd bio). Before venture: design engineer at Compaq (486/50, multi-processor servers), then four years as a Wall Street research analyst — three at CS First Boston covering PC hardware/software (Dell, Compaq, Microsoft), then on Frank Quattrone's team at Deutsche Morgan Grenfell, where he was lead analyst on Amazon's 1997 IPO. Institutional Investor All-American Research Team, 1995 and 1996. BS in Computer Science (Florida, 1989), MBA (Texas, 1993), CFA. He has written the *Above the Crowd* blog since the 1990s newsletter era; the essays distilled here are the canon founders pass around.
 
 Why he matters to a marketing OS: Gurley is the sharpest public thinker on **revenue quality, unit-economics self-deception, and marketplace dynamics**. His frameworks are diagnostic tools for whether growth spend is building an asset or renting one.
 
@@ -54,7 +54,7 @@ Source: "All Revenue Is Not Created Equal: The Keys to the 10X Revenue Club," Ab
 1. **Sustainable competitive advantage (moat).** Can you be confident the business exists in the same form decades out? His contrast: Coca-Cola at 3.6x revenue on ~5% growth vs. RIM at 0.77x on ~12% growth — durability priced higher than growth.
 2. **Network effects.** Incremental users make the product better for everyone (eBay, Skype, Google AdWords, Facebook). "Strong form network effect companies are far and few between. Fortunately, when they do exist, they are typically leading candidates for the 10X+ price/revenue multiple club."
 3. **Visibility and predictability.** Recurring, forecastable revenue beats episodic hits. His 2011 data points: SaaS (Salesforce ~7.5x, SuccessFactors ~7.9x) vs. hit-driven game publishers (Activision ~2x, EA ~1.7x).
-4. **Customer lock-in / switching costs.** Low churn extends customer life and pricing power. His threshold: annual churn at or below ~5% is top-decile territory.
+4. **Customer lock-in / switching costs.** Low churn extends customer life and pricing power. His threshold: annual churn at or below ~5% marks an unusually valuable, locked-in customer base.
 5. **Gross margin level.** "You cannot generate much cash from a revenue stream that is saddled with large, variable costs." Low-margin revenue (Amazon retail ~20%, Walmart ~25% in 2011) caps the multiple regardless of brand strength.
 6. **Marginal profitability trend.** In a scaling business, incremental margin should exceed current margin. Declining marginal profitability is an early-warning siren — he cites Google's Q1 2011 stock drop on exactly this signal.
 7. **Customer concentration.** Fragmented customer bases (AdWords' long tail) keep pricing power with the seller; any customer over 10% of revenue is an S-1 disclosure item for a reason.
@@ -137,7 +137,7 @@ Source: "A Rake Too Far: Optimal Platform Pricing Strategy," Above the Crowd, Ap
 
 Source: "How to Miss by a Mile: An Alternative Look at Uber's Potential Market Size," Above the Crowd, July 11, 2014. Written contra Aswath Damodaran's $5.9B Uber valuation, which assumed Uber captures a slice of the historical ~$100B taxi/limo market.
 
-- **The error:** assuming a new product leaves market size untouched. When a product cuts price, cuts pickup time, and expands coverage, it *creates* demand that never showed up in historical data. Evidence at the time: Uber's San Francisco revenue already exceeded the city's entire historical taxi/limo market (~$120M) and was still growing ~20% monthly.
+- **The error:** assuming a new product leaves market size untouched. When a product cuts price, cuts pickup time, and expands coverage, it *creates* demand that never showed up in historical data. Evidence cited in the essay: Kalanick's claim that San Francisco's historical taxi/limo spend was ~$120M and Uber SF was already "a very healthy multiple bigger than that," on top of earlier 20% month-over-month growth.
 - **The mechanisms:** scale → higher driver utilization → lower prices → elastic new demand; density → sub-5-minute pickups → whole new use cases (suburbs, safe nights out, car-ownership substitution). His scenario math reached a $450B-$1.3T potential market. Kalanick's line, quoted approvingly: "it's not about the market that exists, it's about the market we're creating."
 - **Decision rule for growth plans:** when the offer meaningfully changes price or convenience, size the market bottom-up from use cases the product unlocks — not top-down from incumbent category revenue. Conversely, if the product does NOT change the experience economics, historical TAM is the honest ceiling.
 
@@ -145,7 +145,7 @@ Source: "How to Miss by a Mile: An Alternative Look at Uber's Potential Market S
 
 ## Study the History of Your Industry
 
-Source: "Runnin' Down a Dream: How to Succeed and Thrive in a Career You Love," speech at UT's McCombs School of Business (2018), expanded into the book *Runnin' Down a Dream* (Penguin Random House, February 2026). The doctrine the Kai transcript referenced him for.
+Source: "Runnin' Down a Dream: How to Succeed and Thrive in a Career You Love," speech at UT's McCombs School of Business (2018), expanded into the book *Runnin' Down a Dream: How to Thrive in a Career You Actually Love* (Crown Currency, an imprint of Penguin Random House, February 24, 2026). The doctrine the Kai transcript referenced him for.
 
 The pattern he found across his heroes:
 
@@ -155,7 +155,7 @@ The pattern he found across his heroes:
 
 The operational doctrine:
 
-1. **Study the history, know the pioneers.** "It's the bedrock foundation for what you're going to build upon" — and it lets you speak the language of the people who came before you (speech, per James Clear's transcript).
+1. **Study the history, know the pioneers.** "It's the bedrock foundation" for everything you build — and it lets you speak the language of the people who came before you (speech, per James Clear's transcript).
 2. **Hone your craft constantly** — aim to be the most knowledgeable person in your niche.
 3. **Develop mentors** by demonstrating preparation, not by asking cold.
 4. **Embrace peers** — share findings; the community compounds your learning.
@@ -248,7 +248,7 @@ Rules that carry into budgeting:
 | `knowledge/playbooks/business-model-marketing.md` | 10 revenue-quality factors, marketplace 10-factor scorecard, rake strategy, monogamous-vs-promiscuous category test |
 | `/kai-budget` | The 5-10% affiliate-fee benchmark vs. 30-50% LTV-rationalized spend; SAC-rises-with-scale assumption; scarce-capital discipline doctrine from On the Road to Recap |
 | `/kai-growth-plan` | Dynamic TAM sizing playbook, multiples-better rule before channel spend, liquidity-quality-before-breadth sequencing, monetization-timing heuristic |
-| `/kai-competitor-teardown` and audits | Revenue-quality audit as a lens on any target's model; platform-dependency flags |
+| `/kai-competitors` and audits | Revenue-quality audit as a lens on any target's model; platform-dependency flags |
 | Knowledge cloner workflow | Study-the-history doctrine is the philosophical basis for cloning pioneers before operating in a channel |
 
 Usage rule: any Kai growth plan or budget that leans on an LTV:CAC ratio must run the LTV Model Stress-Test playbook above and state whether acquisition spend passes the ~10%-of-revenue sniff test.
@@ -267,5 +267,5 @@ Usage rule: any Kai growth plan or budget that leans on an LTV:CAC ratio must ru
 - https://abovethecrowd.com/about/
 - https://jamesclear.com/great-speeches/runnin-down-a-dream-by-bill-gurley (speech transcript)
 - https://podcastnotes.org/investors-field-guide/gurley/ (Invest Like the Best, July 2019)
-- https://www.penguinrandomhouse.com/books/769256/runnin-down-a-dream-by-bill-gurley/ (book, Feb 2026)
+- https://www.penguinrandomhouse.com/books/769256/runnin-down-a-dream-by-bill-gurley/ (book — Crown Currency, Feb 24, 2026)
 - https://www.forbes.com/sites/bruceupbin/2012/08/30/the-dangerous-seduction-of-the-lifetime-value-ltv-formula/ (Forbes syndication of the LTV essay)

@@ -18,8 +18,9 @@
 9. [Tactical Playbooks](#tactical-playbooks)
 10. [Notable Quotes](#notable-quotes)
 11. [Anti-Patterns / What He Argues Against](#anti-patterns--what-he-argues-against)
-12. [How This Maps Into Kai](#how-this-maps-into-kai)
-13. [Sources](#sources)
+12. [Edges & Open Questions](#edges--open-questions)
+13. [How This Maps Into Kai](#how-this-maps-into-kai)
+14. [Sources](#sources)
 
 ---
 
@@ -27,7 +28,7 @@
 
 Darren Shaw started building websites in 1996 during his first year at the University of Alberta — by his own account, failing courses because he was in the computer lab writing HTML instead of attending class. He founded **Whitespark** in Edmonton in 2005 as a web design and development shop, then pivoted the company entirely to local search in 2010, launching its first SaaS product, the **Local Citation Finder**, the same year. Whitespark now serves over 100,000 businesses and agencies with citation building, review management, rank tracking, and GBP management tools (per Whitespark's founder bio page).
 
-His signature contribution is the **Local Search Ranking Factors (LSRF) survey** — originally created by David Mihm in 2008, taken over by Shaw in 2017. It is the industry's longest-running aggregation of expert opinion on what actually moves Google local rankings. He has presented local SEO research at MozCon, LocalU, SearchLove, and dozens of podcasts for over 14 years.
+His signature contribution is the **Local Search Ranking Factors (LSRF) survey** — originally created by David Mihm in 2008, taken over by Shaw in 2017. It is the industry's longest-running aggregation of expert opinion on what actually moves Google local rankings. He has presented local SEO research at MozCon, LocalU, SearchLove, and dozens of podcasts for well over a decade.
 
 What makes Shaw distinct from most local SEO commentators: he runs the survey (aggregate expert opinion), runs software on tens of thousands of listings (observational data), and repeatedly changes his public position when the evidence changes — most visibly on citations, which his own company sells.
 
@@ -36,7 +37,7 @@ What makes Shaw distinct from most local SEO commentators: he runs the survey (a
 ## Core Philosophy & Mental Models
 
 ### 1. Aggregate expert opinion beats any single guru
-"No one knows exactly how Google's algorithm works." The LSRF survey exists because the honest epistemic position in local SEO is triangulation: survey ~40-47 practitioners who run controlled tests and thousands of client campaigns, then look at where they converge and where they diverge. Shaw explicitly labels the results "opinions... not the inner workings of Google" (Near Media EP 247, March 2026). Treat all local ranking claims — including his — as hypotheses ranked by practitioner consensus.
+"No one knows exactly how Google's algorithm works" — as SearchLab's 2023 LSRF summary frames the survey's premise. The LSRF survey exists because the honest epistemic position in local SEO is triangulation: survey ~40-47 practitioners who run controlled tests and thousands of client campaigns, then look at where they converge and where they diverge. Shaw explicitly labels the results opinions — "it's an opinion piece for sure" (Near Media EP 247, March 2026). Treat all local ranking claims — including his — as hypotheses ranked by practitioner consensus.
 
 ### 2. Rankings follow *activity*, not setup
 The recurring thread across his GBP, review, and photo advice: Google rewards businesses that look **alive**. One-time optimization is table stakes; sustained signals (new reviews weekly, regular photo uploads, updated hours, fresh content) are the differentiator. His review-recency thesis is the sharpest version: a stream of new reviews is partly an *engagement proxy* — evidence the business is operating and customers are interacting.
@@ -57,13 +58,13 @@ Keyword-stuffed business names and fake-review networks work precisely because t
 
 ## The Local Search Ranking Factors Survey
 
-**Mechanics (2026 edition, published November 6, 2025):** 47 top local SEO experts scored 187 factors across four result surfaces — the local pack/Maps, localized organic results, conversions, and (new in 2026) **AI search visibility**. The survey takes contributors 2+ hours; results are aggregated into ranked factor lists and category weight treemaps.
+**Mechanics (2026 edition, published November 2025):** 47 top local SEO experts scored 187 factors across four result surfaces — the local pack/Maps, localized organic results, conversions, and (new in 2026) **AI search visibility**. The survey is a lengthy exercise for contributors; results are aggregated into ranked factor lists and category weight treemaps.
 
 ### Headline findings by surface (2026)
 
 | Surface | #1 Factor | Notable |
 |---|---|---|
-| Local pack / Maps | **Primary GBP category** | Keywords in business name #3; being open at search time #5; hidden SAB address #7; review recency #11 |
+| Local pack / Maps | **Primary GBP category** | Keywords in business name #3; being open at search time #5; visible address #7 (hidden SAB addresses forfeit it); review recency #11 |
 | Localized organic | **Dedicated page for each product/service** | On-page relevance architecture beats domain-level authority plays |
 | AI search (new) | **Presence on expert-curated "best of" lists** | Third-party review-site authority and unstructured mentions dominate; behavioral signals absent (LLMs can't see them) |
 | Local Services Ads | **Budget/bidding** | Reviews #2, response speed #4; Google removed proximity from its LSA ranking documentation in May 2024 (Shaw flagged this on X) |
@@ -138,7 +139,7 @@ From his "How to Outrank 99% of Local Competitors" tier list (Whitespark blog). 
 
 Shaw's 2025 thesis: **review recency is the most underrated local ranking factor** — ranked #20 by the 2023 survey, #11 by 2026, and in his view deserving top-5 (Whitespark blog, 2025).
 
-**Evidence he cites:** Joy Hawkins's January 2023 case study — staff incentivized to request reviews → rankings rose; incentive stopped → reviews slowed and rankings fell; restarted → rankings recovered. Plus GatherUp's 2025 consumer survey: 98% of consumers read reviews, 45% weigh recent reviews most.
+**Evidence he cites:** Joy Hawkins's January 2023 case study — staff incentivized to request reviews → rankings rose; incentive stopped → reviews slowed and rankings fell; restarted → rankings recovered. Consumer data points the same direction: GatherUp's "Beyond the Stars" 2025 survey (1,000+ US consumers) found ~73% read local business reviews always or most of the time before choosing, and 54% say a review must be a month old or less to influence their decision.
 
 **Operational rules:**
 1. **Velocity target = top competitor + 1.** If the leader gets 2 reviews/month, you need 3. Set the target from a competitor audit, not a vanity number.
@@ -148,7 +149,7 @@ Shaw's 2025 thesis: **review recency is the most underrated local ranking factor
 5. **Incentivize staff, never customers.** Paying reviewers violates Google guidelines; rewarding employees for *asking* is compliant and proven.
 6. **Recency beats perfection:** "getting a negative review is actually better than getting no new reviews at all" — staleness is the bigger ranking risk.
 7. **Respond to reviews** — modest ranking evidence, strong conversion and (in AI search) relevance-parsing value.
-8. **Diversify beyond Google** for the AI era: industry-specific review sites (Avvo, Healthgrades, Houzz, TripAdvisor, etc.) feed LLM recommendations even though they don't move the map pack (Near Media EP 247).
+8. **Diversify beyond Google** for the AI era: industry-specific review sites feed LLM recommendations even though they don't move the map pack (Near Media EP 247; think Avvo, Healthgrades, Houzz — illustrative examples, not his list).
 
 ---
 
@@ -158,9 +159,9 @@ The 2026 survey added AI visibility as a scored surface, and Shaw's 2026 intervi
 
 - **Different retrieval, different levers.** LLMs can't see Google's behavioral data, so the pack's rising signal class is absent. Instead they weigh mentions, list placements, review-site authority, and clean entity descriptions across the web.
 - **Rank the lists, not just the pack.** #1 AI factor: expert-curated "best of {category} in {city}" lists. Getting placed on the ones that already rank is the new link building.
-- **"Traditional SEO focuses on rankings and clicks. AI-driven SEO focuses on mentions and recommendations."** GBP remains foundational — Shaw calls it your "AI recommendation application," since Gemini and Google AI surfaces draw on it directly.
+- **Mentions and recommendations replace rankings and clicks as the scoreboard** (paraphrase of his 2026 commentary — in the LLM era "it's not really the links as much as it's the mentions"). GBP remains foundational, since Gemini and Google AI surfaces draw on it directly.
 - **Brand reverence over keyword positions (with Mike Blumenthal, EP 258):** AI answers are non-deterministic and sentiment-aware. The strategic goal shifts to being the most *revered* brand in the local market — niche specialization ("engagement rings," not "jewelry store"), accreditations, community presence (Reddit, sponsorships, local media), and review sentiment strong enough to survive an LLM's summarization. "Traditional SEO is only table stakes."
-- **Write for machine parsing:** shorter, declarative site copy ("we are X, we do Y in Z") is replacing 10,000-word service pages; fields long dismissed as cosmetic (GBP description, services text, citation descriptions) become relevance inputs for LLMs even where they never moved map rankings.
+- **Write for machine parsing:** shorter, declarative site copy ("we are X, we do Y in Z") over sprawling long-form service pages; fields long dismissed as cosmetic (GBP description, services text, citation descriptions) become relevance inputs for LLMs even where they never moved map rankings (paraphrase of his 2026 interviews).
 
 ---
 
@@ -177,23 +178,23 @@ The 2026 survey added AI visibility as a scored surface, and Shaw's 2026 intervi
 8. AI visibility pass: which "best of" lists rank for your category+city, and are you on them? Are you present and well-reviewed on the vertical review sites LLMs cite?
 
 ### SAB (service-area business) handling
-Hidden addresses ranked as the #7 pack factor in 2026 — with weird behavior: sometimes Google appears to rank you from a *previous* verified location, or drop a near-random pin (Shaw suspects bugs). His recommendation: if at all feasible, establish a real staffed office where customers can visit, and display it.
+Having a visible address ranked as the #7 pack factor in 2026 — hidden-address SABs give that signal up, and show weird behavior: sometimes Google appears to rank you from a *previous* verified location, or drop a near-random pin (Shaw suspects bugs). His recommendation: if at all feasible, establish a real staffed office where customers can visit, and display it.
 
 ### LSA playbook
-Budget/bidding first, reviews second, **speed-to-lead** fourth — and Google "uses AI to get transcripts and understand how calls were handled," so answer fast, answer professionally, and close on the phone. (Direct tie-in to phone-led lead capture: a missed or badly handled LSA call is now a ranking input, not just a lost sale.)
+Budget/bidding first (per the 2026 report), reviews second, **speed-to-lead** fourth — and "Google uses their AI to get a transcript and understand how the call was handled. Did you close the lead?" (7 Factors post), so answer fast, answer professionally, and close on the phone. (Direct tie-in to phone-led lead capture: a missed or badly handled LSA call is now a ranking input, not just a lost sale.)
 
 ---
 
 ## Notable Quotes
 
-- "No one knows exactly how Google's algorithm works." — the survey's founding premise (2023 LSRF)
+- "No one knows exactly how Google's algorithm works." — the survey's founding premise as phrased by SearchLab's 2023 LSRF summary (not Shaw verbatim)
 - "Keywords in the business name [are] the number one most impactful thing." — GBP tier list
 - "I have seen businesses improve rankings just by implementing a regular photo upload strategy." — GBP tier list
 - "Getting a negative review is actually better than getting no new reviews at all." — review recency essay, 2025
 - "Service areas don't impact rankings. All they do is draw a red outline on the map." — GBP tier list
 - "Geotagging images [is] one of the most widely spread myths in the SEO industry." — GBP tier list
 - "Citation description optimization is a hot new tactic for 2026." — Near Media EP 247
-- "Traditional SEO focuses on rankings and clicks. AI-driven SEO focuses on mentions and recommendations." — 2026 commentary
+- paraphrase: traditional SEO optimizes for rankings and clicks; AI-era local SEO optimizes for mentions and recommendations — his 2026 commentary ("it's not really the links as much as it's the mentions")
 - "Google has a stranglehold on this industry." — on GBP data + behavioral signals as Google's AI moat, Near Media EP 247
 
 ---
@@ -230,7 +231,7 @@ Signals Shaw flags as unsettled — track these rather than treating them as doc
 |---|---|
 | `knowledge/playbooks/local-seo-gbp-optimization.md` | Primary companion. The GBP tier list is the priority order for any GBP engagement; the review velocity rules (+1 target, 30:1 ratio, cadence-over-bursts) are the review-program spec. |
 | `/kai-seo-audit` (local mode) | Use the "local pack audit sequence" above as the local module checklist. Cite survey positions (primary category #1, name keywords #3, hours #5, review recency #11) when prioritizing recommendations — attributed to Whitespark LSRF 2026, and verify current-year numbers via the collector before putting them in client deliverables (Kai Data Provenance Rule applies). |
-| `/kai-cro-audit` + KaiCalls fit checks | Shaw's LSA finding — call handling transcribed and scored by Google, speed-to-lead a top-4 LSA factor — is direct third-party support for phone-led lead-capture recommendations on local businesses. |
+| `/kai-cro` + KaiCalls fit checks | Shaw's LSA finding — call handling transcribed and scored by Google, speed-to-lead a top-4 LSA factor — is direct third-party support for phone-led lead-capture recommendations on local businesses. |
 | `knowledge/people/joy-hawkins-knowledge.md` | Cross-reference: Shaw's survey repeatedly incorporates Hawkins/Sterling Sky test results (services factor, review keywords demotion, hours testing, review velocity case study). Load both for local SEO work. |
 | AEO/AI-search workflows (`kai-surround-sound`, AEO playbook) | His AI-visibility findings (best-of lists #1, mentions over links, semantic-triple entity descriptions, review-site diversification) are the local-business instantiation of Kai's entity/citation AEO doctrine. |
 | Citation/directory recommendations in any audit | Enforce his decision rule: one-time top-50 + vertical citations, no recurring fees for single locations, but treat citations as an active AI-visibility surface in 2026. |
@@ -253,6 +254,7 @@ Signals Shaw flags as unsettled — track these rather than treating them as doc
 - https://www.nearmedia.co/ep-247-from-the-archives-local-search-ranking-factors-darren-shaw-on-reviews-ai-search-what-drives-local-rank/ — Near Media interview, March 2026
 - https://www.nearmedia.co/ep-258-from-keyword-rankings-to-brand-reverence-the-new-local-ai-seo-blueprint-with-darren-shaw/ — Near Media interview, May 2026
 - https://www.sterlingsky.ca/vicinity-algorithm-update/ — Vicinity update context (Sterling Sky)
+- https://go.gatherup.com/beyond-the-stars-2025 — GatherUp "Beyond the Stars" 2025 consumer review survey
 - https://w3marketinghub.com/seo/local-seo-ranking/ — third-party 2026 weight summary
 - https://blckalpaca.at/en/knowledge-base/seo-geo/local-seo/local-ranking-factors-2026-the-complete-overview — third-party 2026 weight summary
 - https://x.com/DarrenShaw_/status/1793305472340291623 — Shaw on proximity removed from LSA ranking docs (May 2024)

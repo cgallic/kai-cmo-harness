@@ -26,7 +26,7 @@
 
 April Dunford is the most operationally specific positioning thinker working today. Per her own bio (aprildunford.com/about): she studied Engineering at the University of Waterloo, then spent roughly 25 years as a startup executive — repeat VP of Marketing at seven venture-backed B2B technology startups, most of which were acquired (DataMirror to IBM, Janna Systems to Siebel Systems, Watcom to Sybase via Powersoft). She states the combined acquisition value exceeded two billion dollars, and that she positioned or repositioned 16 products across that run, later running large teams inside IBM, Siebel, and Sybase.
 
-In 2015 she moved to consulting. She reports having worked hands-on with over 200 technology companies on positioning (clients named publicly include Google, IBM, Postman, and Epic Games — per her Lenny's Podcast appearance). Her formative story: at Janna Systems she repositioned a generic mid-market CRM as relationship-mapping software for investment banks; that "big fish, small pond" move preceded the company's acquisition by Siebel and is the seed anecdote of her method.
+After her operator run she moved to full-time consulting, founding the positioning consultancy Ambient Strategy. She reports having worked hands-on with over 200 technology companies on positioning (the updated-edition book bio says over 300) (clients named publicly include Google, IBM, Postman, and Epic Games — per her Lenny's Podcast appearance). Her formative story: at Janna Systems she repositioned a generic mid-market CRM as relationship-mapping software for investment banks; that "big fish, small pond" move preceded the company's acquisition by Siebel and is the seed anecdote of her method.
 
 Books: **Obviously Awesome** (2019; updated and expanded edition released ~Feb 2026) — the positioning methodology. **Sales Pitch** (2023) — how positioning becomes a sales narrative. Her stated reason for writing the first book: positioning was universally acknowledged as important but nobody had ever published a usable *process* for doing it.
 
@@ -250,7 +250,7 @@ Six root causes to check before concluding you're undifferentiated (from her Sub
 | Sales/landing pages (`/kai-write`, `knowledge/frameworks/cro-landing-pages.md`) | Page narrative order mirrors the pitch: insight → alternatives' gap → perfect world → product as embodiment → value themes → proof → low-fear CTA. Positioning components are the input brief; provenance rules apply to every proof claim. |
 | Audits (`/kai-audit`, CRO audits) | Add the weak-positioning symptom list to diagnosis: enthusiasm gap, "you're like Salesforce" confusion, price pressure, post-purchase churn. Flag positioning as root cause before recommending traffic or CRO spend. |
 | Personas / segmentation | Dunford-grade granularity: observable firmographics + behavior ("3-person agencies on Notion with $20K budgets"), plus identify the internal champion in multi-stakeholder deals. Cross-check against `knowledge/personas/_persona-index.md`. |
-| Campaign planning (`/kai-campaign`) | Positioning is upstream of every campaign brief; if symptoms of weak positioning exist, run the positioning exercise before spinning up creative. Trends (incl. AI angles) only layer on after components 1-5 are locked. |
+| Campaign planning (`/kai-launch`, `knowledge/playbooks/campaign-orchestration.md`) | Positioning is upstream of every campaign brief; if symptoms of weak positioning exist, run the positioning exercise before spinning up creative. Trends (incl. AI angles) only layer on after components 1-5 are locked. |
 
 ---
 
@@ -258,7 +258,7 @@ Six root causes to check before concluding you're undifferentiated (from her Sub
 
 - https://www.aprildunford.com/post/an-introduction-to-positioning — her canonical definition, 5 components, positioning-statement critique
 - https://www.aprildunford.com/post/a-quickstart-guide-to-positioning — 5-step workflow and component dependency logic
-- https://www.aprildunford.com/about — career history, startups, acquisitions, 16 products, consulting since 2015
+- https://www.aprildunford.com/about — career history, startups, acquisitions, 16 products, 200+ consulting clients
 - https://www.aprildunford.com/books — Obviously Awesome overview
 - https://aprildunford.substack.com/p/the-no-differentiation-illusion — six causes of differentiation blindness, wins-over-losses
 - https://aprildunford.substack.com/p/announcement-obviously-awesome-the — updated edition changes (10 steps → 5 components + 5 steps, multi-product, Feb 2026)

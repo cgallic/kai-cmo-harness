@@ -1,7 +1,7 @@
 # Barry Hott: Knowledge Distillation
 
 **Created:** July 2026
-**Sources:** Hott Growth site/blog, Building Ads with Barry course page, podcast appearances (Andrew Faris, Ecommerce Conversations/Practical Ecommerce, Marketing Mindset), Motion talk on AI-native ads, Chew On This newsletter feature, CanvasRebel interview, Ad World Prime masterclass page, Foreplay expert profile
+**Sources:** Hott Growth site/blog, Building Ads with Barry course page, podcast appearances (Andrew Faris, Ecommerce Conversations/Practical Ecommerce), Motion talk on AI-native ads, Chew On This newsletter feature, CanvasRebel interview, Ad World Prime masterclass page, Foreplay expert profile
 
 ---
 
@@ -104,7 +104,7 @@ The argument is sequencing: attention and relatability first, visual brand ident
 **Evidence he cites:**
 - Lone River brand-lift testing: unpretentious ads beat polished versions with **~30% lift in action intent** in a Facebook brand lift study (per his Hott Growth blog post).
 - Secondary reporting around his talks cites a case where shifting polished ads to UGC-style creative raised ROAS ~72% and revenue ~90% within days (unverified — appears in event/podcast promotional copy, not a first-party writeup).
-- Course page documents example improvements: thumb-stop rate 34%→48%, CTR 1.74→3.32, CPC $1.99→$1.25 (per buildingadswithbarry.com sales page; self-reported).
+- A student testimonial on the course sales page reports: engagement rate 35%→50%, thumb-stop rate 34%→48%, CTR 1.74→3.32, CPC $1.99→$1.25 (per buildingadswithbarry.com; self-reported student results, not audited course-wide data).
 
 **Boundary conditions (his own caveats):**
 - Any ad can be bad; ugly is not a success guarantee.
@@ -190,7 +190,7 @@ From his 2025 Motion talk on making AI ads look human:
 
 1. **Same doctrine, new tool.** If the audience consumes AI content, make AI content; if they consume human content, keep humans on camera and use AI upstream (scripts, variants).
 2. **AI's failure mode is over-polish.** AI-generated motion is too smooth (his falcon-video comparison: AI glided, real footage shook). Deliberately re-introduce imperfection — the "uglify" step now applies to AI output.
-3. **Stitch short generations as hooks.** At the time of the talk, VEO3 produced 8-second clips with audio; useful as hook segments spliced ahead of human footage (per Motion talk, May 2025 — model capabilities date quickly).
+3. **Stitch short generations as hooks.** At the time of the talk, VEO3 produced 8-second clips with audio; he framed stitching those clips together as a near-future possibility ("it will be very interesting in the near future when people can start stitching together those eight-second clips"), not an established practice (per Motion talk, May 2025 — model capabilities date quickly).
 4. **Hard ethical line:** fabricated testimonials, including synthetic-media ones, are deceptive under FTC 2023 guidance — never fabricate endorsements or experiences.
 5. **The authenticity arms race:** as AI mimics competence, humans win by being "weirder, messier, uglier" — genuine vulnerability and unexpected choices are the un-fakeable signals.
 

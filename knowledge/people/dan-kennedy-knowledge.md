@@ -29,7 +29,7 @@
 
 Dan S. Kennedy (b. 1954, Cleveland, Ohio, per biographical profiles) is the central figure of small-business direct-response marketing in America. After early business failures in the 1970s, he built a career across four tracks: direct-response copywriting (fees reported at $100,000+ per project plus royalties, per multiple bio profiles), professional speaking (3,000+ paid speeches, sharing bills with Ronald Reagan and Colin Powell, per his speaker bios), consulting (25+ years with infomercial giant Guthy-Renker, the company behind Proactiv, per bio profiles), and publishing (20+ books, most under the **No B.S.** brand).
 
-His Magnetic Marketing system, first sold as a course in the early 1990s, became the backbone of the **Glazer-Kennedy Insider's Circle (GKIC)** — a membership community that grew from a first meeting of 27 business owners in Chicago (1993, per biographical accounts) to a network spanning 100+ cities. In September 2021, ClickFunnels (Russell Brunson) acquired the Magnetic Marketing IP; Brunson openly credits Kennedy as his primary influence. Kennedy entered hospice care in August 2019, was publicly eulogized, then recovered and returned to work — an episode he discusses publicly.
+His Magnetic Marketing system, first sold as a course in the early 1990s, became the backbone of the **Glazer-Kennedy Insider's Circle (GKIC)** — a membership community that grew from a first meeting of 27 business owners in Chicago (1993, per biographical accounts) to a network spanning 100+ cities. In 2021 (Brunson announced the deal publicly in October 2021), ClickFunnels (Russell Brunson) acquired the Magnetic Marketing IP; Brunson openly credits Kennedy as his primary influence. Kennedy entered hospice care in August 2019, was publicly eulogized, then recovered and returned to work — an episode he discusses publicly.
 
 Why he matters for Kai: nearly every modern funnel orthodoxy — lead magnets, tripwires, nurture sequences, deadline funnels, premium positioning, LTV-funded acquisition — is a renamed Kennedy mechanism. He is the primary source; most funnel gurus are derivatives.
 
@@ -71,7 +71,7 @@ Platforms change; the sloth on the couch does not. Kennedy treats prospects as d
 
 Kennedy's master diagnostic, from *Magnetic Marketing* and *No B.S. Direct Marketing* (he also calls it the Results Triangle). Three sides, no hierarchy — each feeds the others, and a failure in any one side collapses the campaign.
 
-**MARKET (who):** Identify the highest-probability buyers first — before writing a word of copy or picking a channel. Kennedy defines market as a psychographic profile, not a demographic or geographic bucket. His discipline: analyze actual buyer data rather than assumed personas. His illustrative case (from *No B.S. Direct Marketing*): a matchmaking service assumed its market was "single men," but buyer analysis showed it was twice-divorced long-haul truckers — a completely different message and media plan.
+**MARKET (who):** Identify the highest-probability buyers first — before writing a word of copy or picking a channel. Kennedy defines market as a psychographic profile, not a demographic or geographic bucket. His discipline: analyze actual buyer data rather than assumed personas. His illustrative case (from *No B.S. Direct Marketing*): an international-bride matchmaking service assumed its market was single men from all walks of life, but buyer analysis showed half its clients were twice-divorced long-haul truck drivers — a completely different message and media plan.
 
 **MESSAGE (what):** A message engineered for that specific market — speaking to their secrets, problems, threats, and desires, not the product's features. Generic messages fail because the reader's first filter is "is this specifically for me?" Kennedy's term: **message-to-market match**. In his Marketing Speak interview he names the strategic issues for getting mail opened as "message to market match, obvious specific relevance, and goodwill."
 
@@ -111,7 +111,7 @@ Kennedy's conversion mechanics reduce to three interlocking requirements:
 - **Purchase offers** — buy X, get Y. Kennedy warns that raw discounting damages price integrity; prefer added value (bonuses, extended terms) over price cuts.
 - **Lead-generation offers** — free information or service that identifies interested prospects at low commitment ("low threshold" offers). Most small-business advertising should be two-step: sell the opt-in first, the product second.
 
-**2. Every offer carries a deadline — and the deadline is real.** His model prospect is "a giant sloth spread out on the couch" (per the *No B.S. Direct Marketing* urgency discussion): interested people who feel no cost to waiting will wait forever. Mechanisms he prescribed: hard calendar deadlines, limited units, limited-per-territory exclusivity (powerful in B2B), countdown clocks, disappearing bonuses. Fake deadlines destroy trust and train the list to ignore you — urgency must be verifiable.
+**2. Every offer carries a deadline — and the deadline is real.** His model prospect is "a giant sloth, spread out on the couch" (per the *No B.S. Direct Marketing* urgency discussion): interested people who feel no cost to waiting will wait forever. Mechanisms he prescribed: hard calendar deadlines, limited units, limited-per-territory exclusivity (powerful in B2B), countdown clocks, disappearing bonuses. Fake deadlines destroy trust and train the list to ignore you — urgency must be verifiable.
 
 **3. Every claim and every deadline gets a reason-why.** Explaining *why* the offer is generous, *why* the deadline exists, *why* the price is what it is ("we bought the last 214 units at closeout") raises belief and response. Unexplained generosity reads as a trap; unexplained urgency reads as a tactic.
 
@@ -190,7 +190,7 @@ From *The Ultimate Sales Letter* (1990, revised through 4th edition). The asset 
 
 **A-pile doctrine:** all incoming mail gets sorted into A-pile (personal, must-open), B-pile (maybe later), C-pile (trash). Everything about a mailing's physical form — plain envelopes, real stamps, handwriting, lumpy enclosures, FedEx — exists to win A-pile placement. The email translation: subject lines and sender names that read personal, not promotional.
 
-**On length:** "There is no length too long for a rapidly interested person in a topic" (Marketing Speak interview). Long copy outperforms when interest is high; brevity is a design preference, not a sales principle. He cites an 84-page mail piece that worked and a 47-minute video converting at 18% (same interview, his client anecdotes — unverified).
+**On length:** "There is no length that is too long for a rapidly interested person in a topic" (Marketing Speak interview). Long copy outperforms when interest is high; brevity is a design preference, not a sales principle. He cites an 84-page mail piece that worked and a 47-minute video converting at 18% (same interview — self-reported client anecdotes, not independently verified).
 
 ---
 
@@ -238,7 +238,7 @@ From *No B.S. Guide to Maximum Referrals and Customer Retention* (with Shaun Buc
 
 > "Brand building is for patient marketers with deep pockets filled with other people's money." — *No B.S. Direct Marketing* (per hooshmand.net book notes).
 
-> "There is no length too long for a rapidly interested person in a topic." — Marketing Speak interview.
+> "There is no length that is too long for a rapidly interested person in a topic." — Marketing Speak interview.
 
 > "Pure risk reversal works better than conditional risk reversal." — Marketing Speak interview.
 

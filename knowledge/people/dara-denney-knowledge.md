@@ -30,10 +30,10 @@
 Dara Denney is a performance creative strategist — self-described "humanitarian-turned-educator-turned-advertiser" (per her LinkedIn) with a BA in English Language & Literature. Career arc, per her LinkedIn and podcast tellings:
 
 - **~7-8 years agency-side**, starting as a trained media buyer before shifting to creative strategy for Meta ads (per her eCommerce Evolution podcast appearance, ep. 287).
-- **Thesis** (agency, later acquired by Barrington Media Group): Director of Performance Creative from January 2022, then Senior Director of Performance Creative through mid-2023 (per her LinkedIn). She ran the whole creative department — a UGC creator division, ~15 video editors, graphic designers, motion graphics artists, and creative directors (per eCommerce Evolution ep. 287).
+- **Thesis** (agency, acquired by Barrington Media Group in January 2022, per Fort Point Capital's announcement): Director of Performance Creative from January 2022, then Senior Director of Performance Creative through mid-2023 (per her LinkedIn). She ran the whole creative department — a UGC creator division, ~15 video editors, graphic designers, motion graphics artists, and creative directors (per eCommerce Evolution ep. 287).
 - **Independent consultant** for DTC brands; client roster has included Speedo, Laura Geller, Daily Harvest, and Condé Nast (per the eCommerce Evolution episode page).
 - **Chief Evangelist at Motion** (creative analytics platform) since roughly August 2024 (per her LinkedIn), and partner at boutique performance agency Point Guard Media (per Motion's expert library page).
-- **Creator/educator:** 100K+ subscriber YouTube channel with weekly episodes, a weekly newsletter, and the Performance Creative Master Course. Public profiles credit her with managing $100M+ in paid social spend (per Mentorpass/speaking profiles — her own claim, not independently audited).
+- **Creator/educator:** 100K+ subscriber YouTube channel (per public creator-economy coverage of her channel) with weekly episodes, a weekly newsletter, and the Performance Creative Master Course. Public profiles credit her with managing $100M+ in paid social spend (per Mentorpass/speaking profiles — her own claim, not independently audited).
 
 Why she matters for Kai: she is the most systematized public voice on **creative strategy as an operating system** — analysis frameworks, testing structures, team SOPs, and briefing templates for Meta/TikTok paid social, backed by cross-account pattern data (she tracks top creatives across ~20 brands monthly, per eCommerce Evolution ep. 287).
 
@@ -51,13 +51,13 @@ Contrarian core belief: "It's actually the metrics that are the least important 
 "Your creator and the talent that you work with is more important candidly than the script, the arbitrary hooks that you're making" (per Motion expert library). Formats are platform-specific and decay; messaging angles and creator fit travel across platforms and time.
 
 ### 4. Specificity is a performance mechanic, not a style choice
-"The more specific you can be, the more you're going to stick out in people's minds" (eCommerce Evolution ep. 287). Exact prices ("$9 smoothies," not "$10"), exact ages ("43," not "in her forties"), verbatim customer review language. Her winning Daily Harvest ad opened "If you've ever spent $9 on a smoothie" — the number matched the customer base's real life.
+"The more specific you can be, the more that you're going to stick out in the minds of your users" (eCommerce Evolution ep. 287). Exact prices ("$9 smoothies," not "$10"), exact ages ("43," not "in her forties"), verbatim customer review language. Her winning Daily Harvest ad opened "If you have ever spent $9 on a smoothie" — the number matched the customer base's real life.
 
 ### 5. Subjectivity is a trained skill
 "The data isn't always going to reveal why a creative worked. So the more comfortable you can get with being subjective... that's where creative teams start making bigger unlocks" (eCommerce Evolution ep. 287). Media buyers hide in hook rates; strategists must also make qualitative judgments (tone, casting, visual energy) and treat them as testable hypotheses.
 
 ### 6. The economy beats the algorithm
-On the panic around Meta's Andromeda update: "When consumer confidence dips, performance marketing isn't a creative problem or an algorithm problem. It's an economic one" (Motion Andromeda/BFCM article). Consumer behavior shifts — saving, delaying, trading down — matter more than ranking-system changes. "The algorithm has always favoured difference."
+On the panic around Meta's Andromeda update, her position — as summarized by Motion's Andromeda/BFCM article — is that when consumer confidence dips, performance marketing is an economic problem, not a creative or algorithm problem. Her own words there: "The [United States] government is shut down, and big tech companies are doing layoffs. When it comes to Andromeda, sure, make sure you have visual diversity and focus less on variations. But I'm capping my teams at two." Consumer behavior shifts — saving, delaying, trading down — matter more than ranking-system changes. (Note: the related line "the algorithm has always favoured difference" in that article belongs to Marin Istvanic, not Denney.)
 
 ### 7. Persona-mapped creative (the Andromeda shift)
 Her most-repeated 2025-26 point: "What a lot of people don't talk about with Andromeda is that it's also grouping these different ads into different personas" (Motion expert library). Every creative should be built for, and tagged to, an explicit intended audience — not just launched broad and hoped over.
@@ -128,7 +128,7 @@ From Motion's 2025 creative testing guide built with her, plus her "How to Test 
 
 **Kill rule:** in throttled structures, pause a concept after spending **2-3× target CPA** without a conversion (per the Motion 2025 testing guide).
 
-**Budget-to-volume rule:** for every **$25K/month** in Meta spend, plan **3-4 creative tests per week** (eCommerce Evolution ep. 287). A "test" is typically one asset with multiple hook variants, not a fully new concept.
+**Budget-to-volume rule:** "for every additional 25 grand that you're spending every month, that's another creative test to add per week" (eCommerce Evolution ep. 287) — i.e., roughly **1 test/week per $25K/month** in Meta spend, so ~3-4 tests/week at $75-100K/month. A "test" is typically one asset with multiple hook variants, not a fully new concept.
 
 **Uneven delivery is fine:** "I'm not really concerned about getting the same amount of spend between each variation. If one wins heads and tails above it, that's a really good sign" (eCommerce Evolution ep. 287). She reads decisive delivery skew as signal, not as a broken test.
 
@@ -226,7 +226,7 @@ Operating rhythms she prescribes: monthly creative roadmap sprints with daily st
 2. Mine ad comments and reviews for verbatim language and objections.
 3. Roadmap: iterations on winners + format staples + several big swings; map every concept to a persona.
 4. Brief creators/editors with exact specs, reference ads, three-hook structure, b-roll requests.
-5. Launch per spend-appropriate test structure; 3-4 tests/week per $25K monthly spend.
+5. Launch per spend-appropriate test structure; ~1 test/week per $25K monthly spend.
 6. Kill at 2-3× CPA unspent-converted; scale winners to broad, +20% every 3 days.
 7. Month-end retro; write learnings into next month's briefs.
 
@@ -245,11 +245,11 @@ Operating rhythms she prescribes: monthly creative roadmap sprints with daily st
 
 > "The heyday of easy UGC getting results... is just no longer that easy. You just actually have to make really good content." — eCommerce Evolution podcast, ep. 287
 
-> "The more specific you can be, the more you're going to stick out in people's minds." — eCommerce Evolution podcast, ep. 287
+> "The more specific you can be, the more that you're going to stick out in the minds of your users." — eCommerce Evolution podcast, ep. 287
 
 > "If you are showing up the same [way] every single time, you're blending in the background." — eCommerce Evolution podcast, ep. 287
 
-> "When consumer confidence dips, performance marketing isn't a creative problem or an algorithm problem. It's an economic one." — Motion Andromeda/BFCM article
+> "The [United States] government is shut down, and big tech companies are doing layoffs. When it comes to Andromeda, sure, make sure you have visual diversity and focus less on variations. But I'm capping my teams at two." — Motion Andromeda/BFCM article (the article's own framing of her point — "when consumer confidence dips, performance marketing isn't a creative problem or an algorithm problem, it's an economic one" — is the author's narration, not her verbatim words)
 
 > "Nine out of 10 times when I talk with brands and... they think it's something about the creative strategist... it's actually a failure of process." — Motion expert library
 
@@ -277,7 +277,7 @@ Operating rhythms she prescribes: monthly creative roadmap sprints with daily st
 |---|---|
 | `/kai-hook-bench` | Hook/hold definitions, benchmark bands (25/35/45%+ hook; 40-60% hold), the three-hook test structure (reaction / value-prop / problem), decision ladder for low hook vs. low hold vs. high-CTR-low-CVR |
 | `knowledge/playbooks/ad-creative-best-practices.md` | Five core formats + lazy formulas, specificity mechanics, golden-nugget review sourcing, customer-language mining, squint test |
-| `knowledge/playbooks/meta-creative-testing-decision-framework.md` | Three-phase testing system, structure-by-spend table, 2-3× CPA kill rule, 3-4 tests/week per $25K rule, scaling rules (broad-first, +20%/3 days, never pause incumbents), unicorn win-rate calibration |
+| `knowledge/playbooks/meta-creative-testing-decision-framework.md` | Three-phase testing system, structure-by-spend table, 2-3× CPA kill rule, ~1 test/week per $25K/month rule, scaling rules (broad-first, +20%/3 days, never pause incumbents), unicorn win-rate calibration |
 | `knowledge/playbooks/combinatorial-creative-bench.md` | Five content dimensions (format/creator/messaging/imagery/persona) as combinatorial axes; persona-mapping requirement post-Andromeda; diversity-over-variations rule |
 | `knowledge/checklists/meta-advertising-checklist.md` + `knowledge/checklists/ad-launch-checklist.md` | Pre-launch checks: persona tag on every creative, hook variants briefed, b-roll requested, statics-first message testing for new angles |
 | `harness/skill-contracts/meta-ads.yaml` (`/kai-write` ad flows) | Specificity rules (exact numbers, verbatim customer language), format selection guidance, founder-letter for sale periods |
@@ -306,3 +306,4 @@ Operating rhythms she prescribes: monthly creative roadmap sprints with daily st
 - https://www.linkedin.com/posts/daradenney_how-to-test-facebook-ads-creatives-at-every-activity-7311431250341232640-aB_v — testing at every budget (2025)
 - https://www.linkedin.com/posts/daradenney_the-10-best-iterations-to-scale-meta-ads-activity-7265401447251337216-nZPY — iterations to scale creative
 - https://www.mentorpass.co/daradenney — profile ($100M+ spend claim)
+- https://fortpointcapital.com/news/barrington-media-group-acquires-thesis — Thesis acquisition by Barrington Media Group (January 2022)

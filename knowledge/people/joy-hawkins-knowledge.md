@@ -25,7 +25,7 @@
 
 ## Background
 
-Joy Hawkins is the owner of **Sterling Sky** (local SEO agency, Uxbridge, Ontario + a US entity), the **Local Search Forum** (bought from her mentor Linda Buquet), and **LocalU** (conference/education series where she is also faculty). She has worked in local SEO since **2006**, self-taught, starting at a Toronto company selling AdWords when Google Places launched, then ~8 years at Imprezzio Marketing (from 2009) troubleshooting the hardest ranking cases across ~1,300 SMB clients before founding Sterling Sky. Credentials that matter for weighting her claims:
+Joy Hawkins is the owner of **Sterling Sky** (local SEO agency, Uxbridge, Ontario + a US entity), the **Local Search Forum** (bought from her mentor Linda Buquet), and **LocalU** (conference/education series where she is also faculty). She has worked in local SEO since **2006**, self-taught, starting at a Toronto company selling AdWords when Google Places launched, then ~8 years at Imprezzio Marketing (from 2009) troubleshooting the hardest ranking cases at an agency serving ~1,300 SEO/SEM clients (LocalU interview) before founding Sterling Sky. Credentials that matter for weighting her claims:
 
 - **Google Business Profile Product Expert** (volunteer on Google's own forum) and former Google MapMaker Regional Lead (USA) — she sees Google's moderation behavior from the inside.
 - Search Engine Land columnist; speaker at MozCon, Pubcon, SearchLove, brightonSEO, State of Search, SMX, Whitespark Local Search Summit.
@@ -68,12 +68,12 @@ Her repeatable experiment design, reverse-engineered from published studies:
 2. **Establish a baseline** with a geo-grid / rank tracker (she uses Places Scout; also cites Local Falcon grids) across a wide keyword set — the Posts test tracked **441 keywords per location** for 9 weeks.
 3. **Change exactly one field.** Add the keyword, the service, the photos, the hours — nothing else.
 4. **Watch the 48-hour window** for real factors; run multi-week observation for slow factors.
-5. **Reverse the change** (A-B-A design). The salad bar test added "Salad Bar" to a restaurant's GBP name, removed it, then re-added it: rankings jumped to ~position 4, fell back to unranked, jumped again.
+5. **Reverse the change** (A-B-A design). The salad bar test added "Salad Bar" to a restaurant's GBP name, removed it, then re-added it: rankings jumped dramatically within hours, fell back when the keyword was removed, and jumped again when re-added.
 6. **Audit every anomaly for confounds** (listing filters, SERP feature changes, job packs) before attributing.
 7. **Repeat across clients** before claiming a conclusion ("we have repeated this test many, many times with our clients").
 8. **Publish, including null results.** Null results (posts, geotags) are treated as equally valuable output.
 
-Decision rule embedded here: a case study is a *pattern claim*, not proof — "individual examples may not serve as definitive proof of how Google's algorithm operates; collectively, they provide valuable insights" (review recency study).
+Decision rule embedded here: a case study is a *pattern claim*, not proof — "individual examples may not serve as definitive proof of how Google's algorithm operates, collectively, they provide valuable insights" (review recency study).
 
 ---
 
@@ -82,10 +82,10 @@ Decision rule embedded here: a case study is a *pattern claim*, not proof — "i
 What actually moves local pack rankings, per Sterling Sky's tests and the 8,186-business "near me" study (Nov 2025, with Places Scout: 5 home-service queries across 100 large + 50 mid + 50 small US cities, top-10 pack results):
 
 ### Tier 1 — proven, fast-acting levers
-- **Keywords in the GBP business name.** The strongest controllable signal she has documented. Salad bar test: unranked → ~position 4 within hours/days. When Google stripped keywords from a drug rehab's stuffed name, it fell from position 1 to 7 in two days. Multiple keywords **side-by-side** in the name compound the effect. Caveat: adding descriptors violates Google's guidelines and risks suspension — the compliant route is an actual legal rebrand/DBA.
+- **Keywords in the GBP business name.** The strongest controllable signal she has documented. Salad bar test: dramatic pack-ranking jump within hours of adding the keyword. When Google stripped keywords from a drug rehab's stuffed name, it fell from position 1 to 7 in two days. Multiple keywords **side-by-side** in the name compound the effect. Caveat: adding descriptors violates Google's guidelines and risks suspension — the compliant route is an actual legal rebrand/DBA.
 - **Primary category (and category changes).** Moves rankings within ~48 hours (cited as a known-mover control in her geotag study).
 - **Predefined services.** Her discovery (credited by Darren Shaw at Whitespark, who replicated it Oct 2024): checking Google's *predefined* service options — not free-text custom services — lifted an untouched electrical contractor from position 41+ into positions 4-10 on many terms within ~3 days, strongest on long-tail queries.
-- **Openness / business hours.** New factor she documented after the **November 2023 core update**: listings sink or vanish from the pack when the business is marked closed and recover when open. Verified via grid reports run 2 hours apart (7am closed vs 9am open) for lawyers, psychiatrists, restaurants; confirmed by others in Japan. 24-hour businesses gain at night. Per Whitespark's 2025 factor writeup, rankings even begin to degrade in the final hour a business is open. Implication: hours are now a strategic field, not an administrative one — but only list 24/7 if you genuinely answer.
+- **Openness / business hours.** New factor she documented after the **November 2023 core update**: listings sink or vanish from the pack when the business is marked closed and recover when open. Verified via ranking reports run two hours apart (closed vs open — e.g., a lawyer, a psychiatrist on weekends, restaurants); confirmed by a reader in Japan. 24-hour businesses gain at night. Per Whitespark's 2025 factor writeup, rankings even begin to degrade in the final hour a business is open. Implication: hours are now a strategic field, not an administrative one — but only list 24/7 if you genuinely answer.
 
 ### Tier 2 — proven, gradual levers
 - **Review velocity and recency** (see The Review Engine below).
@@ -107,7 +107,7 @@ She is explicit that proximity remains the dominant uncontrollable factor and th
 
 Sterling Sky's review doctrine, from the review-count case study (updated April 2025) and the review-recency case study (July 2025):
 
-1. **The Magic 10 threshold.** Going from 9 → 10 reviews produced a measurable Maps ranking bump across three separate same-industry businesses in different regions (2025 retest of a 2022 finding). Going 10 → 11 produced no comparable bump. Earlier test: an insurance practitioner listing rose when reviews went 3 → 16, with no further gain 16 → 31. Independent corroboration she cites: Joel Headley (PatientPop saw appointment-lead lift above ten reviews) and Mike Blumenthal (LocalU).
+1. **The Magic 10 threshold.** Going from 9 → 10 reviews produced a measurable Maps ranking bump across three separate same-industry businesses in different regions (2025 retest of an earlier Sterling Sky finding). Going 10 → 11 produced no comparable bump. Earlier test: an insurance practitioner listing rose when reviews went 3 → 16, with no further gain 16 → 31. Independent corroboration she cites: Joel Headley (PatientPop saw appointment-lead lift above ten reviews) and Mike Blumenthal (LocalU).
 2. **Velocity over volume.** Reviews received *this month* matter more than lifetime total (near-me study). A dental client pulling 60+ reviews/month dominated the pack; after they stopped for **18 days**, rankings "fell off a cliff," while competitors getting 15-45/month held steady.
 3. **Recency is a diagnostic.** When a client's rankings sank post-Vicinity update, the root cause was that incoming reviews had flat-lined after the owner stopped a staff incentive program; restarting it recovered rankings. Another client filtered out of historic keywords had gone 3+ years without a new review.
 4. **Cadence is competitor-relative.** Use Pleper's Chrome extension on a Maps search to see average/top/bottom review counts for the pack you're fighting for; match or beat the winners' cadence. Weekly in competitive markets, monthly may suffice in small ones. The one absolute: never let reviews stop.
@@ -161,7 +161,7 @@ From her long-running "Ultimate Guide to Fighting Spam on Google Maps" (maintain
 Her "State of Local SEO in 2026" thesis (June 2026): rankings can hold steady while *outcomes* decline, because Google is restructuring the SERP itself.
 
 **The evidence she published:**
-- **Clicks-to-call from GBPs are falling.** Jepto data she commissioned across 179 profiles / 34 US law firms shows a 2-year decline in profile calls — specific to mobile (call buttons), not desktop website clicks.
+- **Clicks-to-call from GBPs are falling.** Jepto data compiled at her request across 179 profiles / 34 US law firms shows a 2-year decline in profile calls — specific to mobile (call buttons), not desktop website clicks.
 - **AI-powered local packs** (mobile, US): appearing on ~7% of tracked keywords; show only 1-2 businesses instead of 3; have **no call buttons**; and feature different businesses than the 3-pack. Places Scout analysis: AI packs surfaced 5,943 unique businesses vs 18,330 in traditional packs (~32%); in 88% of 322 markets, AI packs showed fewer unique businesses.
 - **Call buttons replaced by images** in several industries (tracked with Jepto since the dentist rollout, with sizable call-click declines).
 - **Pay-to-play acceleration:** local pack ads on mobile grew from ~1% of her tracked reports (early 2025) to ~22% (Dec 2025); LSAs from ~11% to ~31% of tracked queries.
@@ -172,7 +172,7 @@ Her "State of Local SEO in 2026" thesis (June 2026): rankings can hold steady wh
 2. Open more locations to offset shrinking per-listing visibility.
 3. Run Google Ads (all formats) — ads are inheriting the call buttons and placement organic is losing, and ad ROI improved for her clients.
 4. Move expertise content to YouTube/Reddit — slow, but durable as AI eats informational search.
-5. Track AI referral traffic now (GA4), before it matters.
+5. Track AI referral traffic now (she points to Seer's tracking template), before it matters.
 
 **Penalty-era recovery (Aug 2025 spam update case study, Feb 2026):** she diagnosed a client's organic collapse to 5-year-old exact-match-anchor comment/PBN links being devalued (referring domains up while traffic down = devaluation signature; the linking sites were tanking too). Her recovery play is the **Avalanche technique** (credited to Kyle Roof): abandon the lost head terms, win the keywords already in positions 3-10 — the "SEO goldmine," since position 2 → 1 substantially lifts CTR — and rebuild credibility upward. "When you build your house on sand, you have to expect that one day it will come crashing down."
 
@@ -209,8 +209,8 @@ Monthly sweep of your money categories in target cities → evidence workbook pe
 
 - "SEO isn't magic. It's about the process, testing, and a lot of paying attention to what Google does (not just what they say)." — near-me study, Nov 2025
 - "It's not the total reviews. It's the recent ones." — near-me study, Nov 2025
-- "There is a lot of value in Google posts, they just aren't a ranking factor." — comment on her Posts study, 2021
-- "Fixing business names is important because the business name is a ranking factor, so those who are breaking the guidelines are reaping a benefit that those who are following the rules cannot have." — spam guide comments, 2016
+- "I think there is a lot of value in Google posts, they just aren't a ranking factor." — comment on her Posts study, July 2021
+- "Fixing business names is important because the business name is a ranking factor so those who are breaking the guidelines are reaping a benefit that those who are following the rules cannot have." — spam guide comments, June 2016
 - "When you build your house on sand, you have to expect that one day it will come crashing down." — on black-hat link building, Aug 2025 spam update case study
 - "You definitely have to be good at solving puzzles and be one of those people that is never content with your current processes." — LocalU interview
 - "If you spend time geotagging photos as a part of your local SEO strategy, I would advise spending that time elsewhere." — geotagging study

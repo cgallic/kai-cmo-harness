@@ -183,7 +183,7 @@ Include these when weighing his claims:
 | `knowledge/playbooks/influencer-marketing.md` + `/kai-influencer` | Retainer-vs-one-off doctrine, hybrid comp structure (base + 5-30% commission), skill-tier rate cards, certified-bench sourcing model |
 | `knowledge/channels/tiktok-algorithm.md` | Emotion-first hooks, format reuse over originality, trend-speed operations, promotional-framing reach penalty |
 | `knowledge/channels/tiktok-shop.md` | GMV Max pay-to-play thesis, creator repricing, off-platform diversification trigger, affiliate vs. retainer income ordering |
-| `/kai-campaign` (creator campaigns) | Product-evaluation-before-creator-assignment gate; forecastable creator spend via rate tiers |
+| `/kai-ad-campaign` (creator campaigns) | Product-evaluation-before-creator-assignment gate; forecastable creator spend via rate tiers |
 | `knowledge/playbooks/what-works.md` candidates | Two-sided flywheel pattern (tuition-funded supply + retainer-funded demand) for any train-certify-deploy talent marketplace |
 
 **Caution flag for Kai outputs:** most quantitative claims here are self-reported or press-release figures. When citing them in client-facing work, attribute explicitly ("per Creators Corner's March 2026 acquisition release") — never present as independently verified benchmarks. Kai Data Provenance Rule applies.

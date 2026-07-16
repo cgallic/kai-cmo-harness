@@ -26,7 +26,7 @@
 
 ## Background & Origin Story
 
-Born 1947 in Brooklyn, New York (per published bios). No college degree; worked a string of jobs — cost accounting, truck leasing at Hertz, and stints at Entrepreneur magazine and the mail-order company that sold Icy Hot — before consulting full-time.
+Born January 8, 1949, in Indianapolis, Indiana (per published bios). No formal education past high school; worked a string of sales and marketing jobs — including stints at Entrepreneur magazine and the mail-order operation behind Icy Hot (per his own retellings) — before consulting full-time in the mid-1970s.
 
 **The Icy Hot deal (his signature case study, per his own retelling in *Getting Everything You Can* and bio profiles — self-reported):** Instead of buying media, Abraham offered magazines, mail-order agencies, and broadcasters a deal for their *unsold* inventory: run Icy Hot ads, keep 100% of the $3 purchase price, plus 45 cents on top — a 115% payout on every front-end sale. The company lost money on every first order and got rich on reorders, because a pain-relief customer repurchases for years. He credits this with growing Icy Hot from roughly $20K to $13M in revenue in under two years (self-reported, unverified). The lesson is the seed of everything he teaches: **when you know the lifetime value of a customer, you can pay more than everyone else to acquire one — including more than 100% of the first sale.**
 
@@ -313,6 +313,7 @@ Optimization (squeeze more from existing activities), breakthrough-by-borrowing 
 
 ## Sources
 
+- https://en.wikipedia.org/wiki/Jay_Abraham
 - https://www.abraham.com/topic/risk-reversal/
 - https://www.abraham.com/topic/host-beneficiary-relationships/
 - https://www.abraham.com/topic/lifetime-client-value/

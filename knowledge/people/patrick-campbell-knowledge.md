@@ -41,7 +41,7 @@ Campbell's authority rests on datasets, so this doc tags every load-bearing clai
 
 Patrick Campbell grew up in a Wisconsin farming community with blue-collar parents, studied economics/econometrics, then worked as an intelligence analyst in the US intelligence community (he has described NSA-adjacent work) and later at Google building econometric models — "same models, looking for terrorists vs. looking for money," per his SaaS Club and Salesflare interviews. A stint at Boston startup Gemvara exposed him to how arbitrarily software companies set prices.
 
-In 2012 he cashed out his 401(k) and founded **Price Intelligently** (co-founders Aaron White and Chris O'Donnell), a pricing-research firm that productized willingness-to-pay surveying. He worked solo for the first nine months and did ~$130K revenue in the first six months almost entirely through inbound content (per his SaaS Club appearance). In 2015 the company launched **ProfitWell**, a free subscription-metrics product that grew to 30,000+ companies and became both the brand and the dataset moat, monetized through **Retain** (failed-payment recovery) and pricing services. Fully bootstrapped for a decade, ProfitWell sold to **Paddle in May 2022 for ~$200M in cash and equity** (per Paddle's announcement and the Practical Founders podcast); Campbell became Paddle's Chief Strategy Officer. He also ran a media arm (Recur Studios: *Pricing Page Teardown* with Peter Zotto, *Protect the Hustle*, the *ProfitWell Report*).
+In 2012 he cashed out his 401(k) and founded **Price Intelligently** (co-founders Aaron White and Chris O'Donnell), a pricing-research firm that productized willingness-to-pay surveying. He worked solo for the first nine months and did ~$130K revenue in the first six months almost entirely through inbound content (self-reported, per his SaaS Club appearance). In 2015 the company launched **ProfitWell**, a free subscription-metrics product that grew to 30,000+ companies and became both the brand and the dataset moat, monetized through **Retain** (failed-payment recovery) and pricing services. Fully bootstrapped for a decade, ProfitWell sold to **Paddle in May 2022 for ~$200M in cash and equity** (per Paddle's announcement and the Practical Founders podcast); Campbell served as Paddle's Chief Strategy Officer post-acquisition, stepping back from the full-time CSO role around 2023 into an advisory relationship with Paddle. He also ran a media arm (Recur Studios: *Pricing Page Teardown* with Peter Zotto, *Protect the Hustle*, the *ProfitWell Report*).
 
 Why he matters to Kai: he is the closest thing SaaS has to an empirical pricing researcher — his claims come with sample sizes, and his whole career is a demonstration of freemium-as-distribution plus media-as-moat.
 
@@ -115,7 +115,7 @@ Short instruments win: 3–5 questions every ~3 weeks got ~4x the response rate 
 
 **Definition:** the unit you charge for (per seat, per 1,000 visits, per GB, per transaction).
 
-> "If you get everything else wrong but get your value metric right, you'll do ok." — per his Lenny's Newsletter framework. **[PC opinion]**
+> "If you get everything else wrong in pricing, but you get your value metric right, you'll do ok." — per his Lenny's Newsletter framework. **[PC opinion]**
 
 **Three tests of a good value metric** (Lenny's, Leveling Up podcast):
 1. **Immediately understandable** — customer parses it without a call.
@@ -124,7 +124,7 @@ Short instruments win: 3–5 questions every ~3 weeks got ~4x the response rate 
 
 **How to find one:** list 5–10 candidate proxy metrics, test via the preference survey, validate that bigger customers genuinely consume more of the metric. **[PC method]**
 
-**The data:** value-metric pricing correlates with up to **75% lower churn and 30%+ more expansion revenue** vs. feature-only tiering **[PW data — correlational, per Lenny's]**. Only ~10% of companies use a well-fitted value metric (BoS 2022) **[PW data]**. Per-seat pricing persists mostly as a legacy of licensed-software habits, not because it maps to value — seats often anti-correlate with value (collaboration products want MORE seats used, not fewer). **[PC opinion]**
+**The data:** companies using value metrics typically grow at **double the rate, with half the churn and ~2x the expansion revenue** of feature-only tiering **[PW data — correlational, per Lenny's]**. Only ~10% of companies use a well-fitted value metric (BoS 2022) **[PW data]**. Per-seat pricing persists mostly as a legacy of licensed-software habits, not because it maps to value — seats often anti-correlate with value (collaboration products want MORE seats used, not fewer). **[PC opinion]**
 
 Trade-off he acknowledges: usage-based metrics increase downgrades while decreasing full churn — net positive, but plan for the downgrade motion (BoS 2022).
 
@@ -158,8 +158,8 @@ Three levels: (1) cosmetic — display local currency; (2) market-adjusted price
 ProfitWell's discounting study (minimal-discount cohort of 55 companies vs. aggressive-discount cohort of 33, drawn from the free metrics platform — small samples, note it) found: **[PW data]**
 
 - Discount-acquired customers show **lower willingness to pay** and higher price sensitivity.
-- Their churn runs **more than double** the rate of full-price customers.
-- Net effect: **LTV reduced by ~32%** ("over 30%" is his usual phrasing, per the Paddle/ProfitWell discounting post).
+- Their churn runs **substantially higher** than full-price customers' ("churned at a much higher rate than the core group," per the Paddle/ProfitWell discounting post).
+- Net effect: **LTV reduced by ~32%** (32.41% in the study; "over 30%" is his usual phrasing, per the Paddle/ProfitWell discounting post).
 - Mechanical effect: a 20% discount on a $500/mo customer with $6K CAC stretches payback from 12 to 15 months.
 
 **Rules for when discounting is allowed** (Paddle/ProfitWell post + Lenny's):
@@ -256,7 +256,7 @@ Distilled from *Pricing Page Teardown* (his show with Peter Zotto) plus First Ro
 
 > "Freemium is an acquisition model, not a revenue model." — Intercom podcast
 
-> "If you get everything else wrong but get your value metric right, you'll do ok." — Lenny's Newsletter guest framework
+> "If you get everything else wrong in pricing, but you get your value metric right, you'll do ok." — Lenny's Newsletter guest framework
 
 > "It's so much easier to make 100 people happy at a higher price than to make 1,000 people kind of happy at a lower price." — First Round Review
 
@@ -272,7 +272,7 @@ Distilled from *Pricing Page Teardown* (his show with Peter Zotto) plus First Ro
 2. **Set-and-forget pricing.** A price untouched for years is a compounding revenue leak; he cites companies unchanged for 10 years as the extreme failure case (SaaS Club).
 3. **Per-seat pricing by default.** A licensing-era habit; often punishes the adoption you want. Test it against 5–10 value-metric candidates before accepting it.
 4. **Acquisition addiction.** Funding another channel while monetization (13% lever) and retention (7% lever) sit unworked.
-5. **Advertised blanket discounts.** Train buyers to wait, attract low-WTP cohorts, double churn, cut LTV ~30%. If you must discount: discrete, segmented, time-boxed, under ~20%.
+5. **Advertised blanket discounts.** Train buyers to wait, attract low-WTP cohorts, raise churn, cut LTV ~30%. If you must discount: discrete, segmented, time-boxed, under ~20%.
 6. **1–10 ranking surveys.** Produce flat, unusable preference data; forced trade-offs or nothing.
 7. **Permanent grandfathering.** Politeness that quietly caps ARPU; use time-boxed transitions instead.
 8. **Freemium as a revenue line or as a year-one move.** It's an acquisition machine that requires customer knowledge you don't have yet at launch.

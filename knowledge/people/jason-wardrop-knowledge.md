@@ -98,7 +98,7 @@ YouTube video → free course + bonuses opt-in → extended-trial affiliate sign
 ```
 
 1. **Free-course front end** — "Get Free Course + BONUSES!" (launchmy.agency). The free course replaces a lead magnet PDF; it pre-sells the workflow the software executes.
-2. **Negotiated trial advantage** — his HighLevel partner page offers a **30-day Pro trial instead of the standard 14 days**. A structurally better deal that no ordinary affiliate link matches — negotiated by being the vendor's top performer. Edge: super-affiliates should always ask the vendor for an exclusive term; it converts better than any bonus.
+2. **Negotiated trial advantage** — his HighLevel partner page offers a **30-day trial of HighLevel Unlimited or Pro instead of the standard 14 days** (verified live on gohighlevel.com/jason-wardrop, July 2026). A structurally better deal that no ordinary affiliate link matches — negotiated by being the vendor's top performer. Edge: super-affiliates should always ask the vendor for an exclusive term; it converts better than any bonus.
 3. **The stack itself** — his live page claims **"$14,352+" in bonuses**: 1-on-1 kickoff call, account setup help, 24/7 customer-success Zoom room, an "AI Employee System," AI Lead Finder, one-click client onboarding templates, a "Zero to First Client" course, weekly live Q&A, private operator community, scripts/SOPs/outreach assets, plus his Real Estate Agency Accelerator and Affiliate Cashflow Academy trainings. Note the composition: most bonuses are **onboarding and first-win assets** — they exist to keep the referred subscriber alive past the trial, because his income is 40% of every future month.
 4. **Risk reversal + social proof** — "Join 2,000+ successful operators," cancel-anytime framing, video testimonials, "first-ever Affiliate of the Year" authority badge.
 5. **Back-end upsells** — his own paid programs (Real Estate Agency Accelerator at $997 or 3×$367 per Center For Work Life; Agency Partner Program ~$1,000 per ScamRisk) monetize the same audience a second time. Historical portfolio: 6-Figure Agency Blueprint, Launch My Agency, Million Dollar Agency, Agency Partner Program.
@@ -116,7 +116,7 @@ Why his model works where one-time affiliate marketing burned him out.
 
 - **40% monthly recurring commission** on all plans: $38.80/mo ($97 plan), $118.80/mo ($297 plan), $198.80/mo ($497 plan).
 - **5% tier-2 commission** on revenue from customers referred by affiliates you recruited.
-- 30-day cookie per most program documentation (some sources claim 60–90 days — conflicting; verify current terms before modeling).
+- Cookie/attribution window: HighLevel's official affiliate help docs do not state one; third-party roundups most commonly cite 90 days (some say 30–60 — conflicting; verify current terms at gohighlevel.com/affiliate-policy before modeling).
 
 ### One-time vs recurring — the structural difference
 
@@ -233,7 +233,7 @@ Independent reviews are mixed-to-negative and Kai must carry this context whenev
 | `/kai-growth-hacker` (`harness/skills/kai-growth-hacker/`) + `knowledge/playbooks/growth-hacker-first-hire-os.md` | Framework 1 (search-intent volume engine) and the channel-launch playbook — a canonical compounding-loop example: content asset → recurring revenue annuity |
 | `knowledge/channels/youtube.md` | Framework 1 operating rules: tutorial series structure, X-vs-Y interception, template-gated CTAs, single-funnel routing |
 | `knowledge/playbooks/demand-generation.md` | Framework 2 (bonus-stack bridge funnel) and Framework 4 (education as demand generation for a required tool) |
-| `/kai-competitor-teardown` / `knowledge/playbooks/competitive-intelligence.md` | Use the volume-vs-depth contrast (Wardrop vs depth-first affiliates like Declan O'Reilly, per Kai internal transcript research) when tearing down affiliate/creator competitors |
+| `/kai-competitors` (`harness/skills/kai-competitors/`) / `knowledge/playbooks/competitive-intelligence.md` | Use the volume-vs-depth contrast (Wardrop vs depth-first affiliates like Declan O'Reilly, per Kai internal transcript research) when tearing down affiliate/creator competitors |
 | `knowledge/playbooks/conversion-rate-optimization.md` | Bonus-stack composition rules (onboarding assets as churn insurance), extended-trial negotiation as a structural conversion edge |
 | Compliance gates (`harness/references/creator-disclosure.md`, `advertising-compliance.md`) | The criticisms section — affiliate relationships must be disclosed, "free + required subscription" framing is banned, income claims need substantiation |
 
@@ -243,7 +243,7 @@ Independent reviews are mixed-to-negative and Kai must carry this context whenev
 
 ## Sources
 
-- https://blog.gohighlevel.com/becoming-a-successful-highlevel-affiliate-with-jason-wardrop/ (HighLevel official blog — Heroes interview companion)
+- https://blog.gohighlevel.com/becoming-a-successful-highlevel-affiliate-with-jason-wardrop/ (HighLevel official blog — Heroes interview companion; URL redirects as of July 2026 due to a blog migration — the interview itself remains live on YouTube below)
 - https://www.youtube.com/watch?v=VhHWXQ0JgFY (HighLevel Heroes interview with co-founder Shaun Clark)
 - https://gohighlevele.com/blogs/meet-jason-wardrop-highlevels-2024-affiliate-of-the-year/ (Affiliate of the Year announcement)
 - https://www.gohighlevel.com/jason-wardrop (his live affiliate landing page — bonus stack, 30-day trial)

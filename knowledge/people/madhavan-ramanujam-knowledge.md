@@ -27,7 +27,7 @@
 
 ## Background
 
-Madhavan Ramanujam is the most-cited pricing strategist in tech. Alumnus of IIT Chennai and Stanford GSB; spent six-plus years at i2 Technologies on Fortune 500 consulting before joining Simon-Kucher & Partners, the pricing consultancy. There he rose to senior partner (later managing partner) in the San Francisco office, led 125+ monetization projects, and advised companies including Uber, Asana, and LinkedIn (per his Simon-Kucher bio and Lenny's Podcast intro). Per his 2025 Wiley author bio, he has advised 250+ companies including 30+ unicorns, and is now co-founder and general partner at 49 Palms Ventures.
+Madhavan Ramanujam is one of tech's best-known pricing strategists. Alumnus of IIT Chennai and Stanford GSB; spent six-plus years at i2 Technologies on Fortune 500 consulting before joining Simon-Kucher & Partners, the pricing consultancy. There he rose to senior partner (later managing partner) in the San Francisco office, led 125+ monetization projects, and advised companies including Uber, Asana, and LinkedIn (per his Simon-Kucher bio and Lenny's Podcast intro). Per his 2025 Wiley author bio, he has advised 250+ companies including 30+ unicorns, and is now co-founder and general partner at 49 Palms Ventures.
 
 Two books define his public body of work:
 
@@ -78,7 +78,7 @@ His diagnostic taxonomy for why new products fail commercially (from *Monetizing
 
 ### 3. Hidden Gem
 **What:** A genuinely valuable product that never gets properly commercialized — usually because it sits outside the core business, threatens cannibalization, or dies with a mid-level gatekeeper.
-**Example:** Kodak built a digital camera in 1974, shelved it until 1995, went bankrupt in 2012.
+**Example:** Kodak had digital photography technology in 1974, didn't introduce a digital camera until 1995, went bankrupt in 2012 (per his First Round talk).
 **Trigger conditions to hunt for gems:** business-model transitions, industry disruption, product-to-service shifts.
 **Fix:** Make WTP evidence, not internal politics, decide what ships.
 
@@ -245,7 +245,7 @@ Signals: quota hit early and often, no price objections, sellouts/waitlists, dis
 
 > Acceptable prices are where customers end up happy; expensive is where they're not unhappy; prohibitively expensive is where "they are laughing at you." — Lenny's Podcast, Dec 2022 (paraphrased ladder definitions)
 
-> Sometimes the best product innovation is the monetization model itself. — First Round Review talk (on Michelin)
+> "Sometimes the best product innovation is the monetization model itself." — First Round Review talk (verbatim; on Michelin)
 
 ---
 
@@ -299,7 +299,7 @@ Fair-use caveats for Kai when applying this doc:
 7. Graham Mann's book notes — *Monetizing Innovation* — https://grahammann.net/book-notes/monetizing-innovation-georg-tacke-madhavan-ramanujam
 8. The Rabbit Hole (blas.com) book notes — *Monetizing Innovation* — https://blas.com/monetizing-innovation/
 9. Simon-Kucher — *Scaling Innovation* book page — https://www.simon-kucher.com/en/insights/scaling-innovation-how-smart-companies-architect-profitable-growth-0
-10. Wiley — *Scaling Innovation* listing (publication details, author bios incl. 49 Palms Ventures) — https://www.wiley.com/en-us/Scaling+Innovation%3A+How+Smart+Companies+Architect+Profitable+Growth-p-00046275
+10. Wiley — *Scaling Innovation* listing (publication details, author bios incl. 49 Palms Ventures) — https://www.wiley.com/en-us/Scaling+Innovation%3A+How+Smart+Companies+Architect+Profitable+Growth-p-9781119633136
 11. Amazon — *Scaling Innovation* listing (Aug 5, 2025 publication; 400+ companies / 50+ unicorns blurb) — https://www.amazon.com/Scaling-Innovation-Companies-Architect-Profitable/dp/1119633060
 12. Simon-Kucher leadership bio — Madhavan Ramanujam — https://www.simon-kucher.com/en-ch/people/leadership/madhavan-ramanujam
 13. Product Talk (Teresa Torres) — "How Can You Test a Customer's Willingness to Pay?" (critique) — https://www.producttalk.org/willingness-to-pay/

@@ -26,7 +26,7 @@
 
 ## Background
 
-Chris Walker grew up in the Boston area and graduated from Worcester Polytechnic Institute with a B.S. in Electrical & Computer Engineering and Biomedical Engineering (per his Refine Labs founder bio). He started in MedTech product design, moved into product management, then product marketing at a B2B medical device company. There he ran an unconventional experiment: distributing ungated case studies and clinical evidence to his exact target market through Facebook ads, measured against pipeline rather than lead forms. Per his own account, that program scaled from a $5K test budget to $50K/month and returned over $20 in qualified pipeline per $1 of ad spend within 6 months.
+Chris Walker graduated from Worcester Polytechnic Institute with a B.S. in Electrical & Computer Engineering and Biomedical Engineering (per his LinkedIn profile). He started in MedTech product design, moved into product management, then product marketing at a B2B medical device company. There he ran an unconventional experiment: distributing ungated case studies and clinical evidence to his exact target market through Facebook ads, measured against pipeline rather than lead forms. Per his own account, that program scaled from a $5K test budget to $50K/month and returned over $20 in qualified pipeline per $1 of ad spend within 6 months.
 
 **2019** — Founds Refine Labs, a demand strategy and research firm for B2B SaaS, "because no company would let me do marketing the way I wanted to" (paraphrase of his stated founding reason). Launches the **State of Demand Gen** podcast the same year; it later becomes **B2B Revenue Vitals**, then **GTM Live** under Passetto.
 
@@ -34,7 +34,9 @@ Chris Walker grew up in the Boston area and graduated from Worcester Polytechnic
 
 **January 2024** — Promotes COO Megan Bowen to CEO of Refine Labs, moves to Executive Chairman, and announces **Passetto**, a data/analytics-led GTM strategy consultancy focused on unit economics and growth-lever identification (per his LinkedIn announcements).
 
-**July 2025** — Sells his remaining Refine Labs shares; Bowen becomes majority owner (per Refine Labs' ownership update and Walker's LinkedIn post). Walker's full-time focus is Passetto and the GTM Live show.
+**July 2025** — Sells his remaining Refine Labs shares; Bowen becomes majority owner, with Grandin Holdings joining as a strategic investor (per Refine Labs' ownership update and Walker's LinkedIn post).
+
+**Early 2026** — Steps down as Passetto CEO, sells his shares to the team, and stays on as a limited partner; Carolyn Dilks becomes Passetto CEO and, with co-founder Trevor Gibson, now hosts GTM Live (per Dilks's LinkedIn post and the GTM Live feed). Walker's current venture is **ENCODED**, a neuroscience-based performance-training company outside B2B marketing (per his LinkedIn profile). This doc distills his 2019-2026 B2B marketing body of work; he is no longer operating Refine Labs or Passetto day to day.
 
 The through-line: an engineer's instinct applied to marketing — measure the system honestly, find where the model contradicts reality, rebuild the model.
 
@@ -162,7 +164,7 @@ The engine was Refine Labs' own top revenue source and drove ~$4M ARR in three y
 
 Walker's post-2024 evolution reframes everything above in CFO language:
 
-- **Scoreboard:** growth rate, **net revenue retention**, and **CAC payback period** are the metrics GTM decisions answer to (per his Dreamdata interview). He cites average CAC payback at private SaaS companies of 48-60 months (per Passetto's GTM bloat article) — evidence that the standard playbook is economically broken.
+- **Scoreboard:** growth rate, **net revenue retention**, and **CAC payback period** are the metrics GTM decisions answer to (per his Dreamdata interview). He argues fully-loaded CAC payback at typical private SaaS companies runs several times longer than the sub-12-month target Passetto recommends; a specific "48-60 months" average circulates from his talks but is unverified against a primary Passetto publication. Either way, his conclusion is that the standard playbook is economically broken.
 - **Sales velocity decomposition:** pipeline generated × win rate × ACV ÷ sales cycle length. Diagnose which factor is the binding constraint before adding spend.
 - **GTM bloat:** spend on tech stacks, over-headcounted SDR teams, and low-intent programs that adds cost without adding pipeline. The fix sequence: unify the data (CRM + finance + marketing) → compute true cost per HIRO pipeline and CAC payback per pipeline source → cut the worst quartile → reallocate to the best sources.
 - **Implication for marketers:** arguing "brand matters" loses; showing CAC payback by pipeline source wins. Translate creation-vs-capture into unit economics or the CFO will translate it for you.
@@ -193,7 +195,7 @@ Walker's post-2024 evolution reframes everything above in CFO language:
 
 > "Revenue teams that are measured on metrics that matter — qualified pipeline and revenue — should recognize this reality immediately because it's the fastest path to hitting your goals." — Pipeline Sources announcement
 
-> "Buyers trust their peers way more… they make those searches in places where their peers are — a Slack community, a Reddit channel, a Facebook group." — UserGems interview
+> "When people are making buying decisions, they make those searches elsewhere. They make those searches in places where their peers are – a Slack community, a Reddit channel, a Facebook group, a direct message, an email, or a Zoom." — UserGems interview
 
 > "Marketing is an aggregation of a thousand touch points and activities every day that drive the outcome you're looking for over time." — UserGems interview
 
@@ -233,7 +235,8 @@ Use Walker when: B2B pipeline is stalling despite rising lead volume, attributio
 
 ## Sources
 
-- https://www.refinelabs.com/chris-walker — founder bio (education, MedTech background)
+- https://www.refinelabs.com/chris-walker — founder bio (2019 founding; notes he is no longer in day-to-day operations)
+- https://www.linkedin.com/in/chriswalker171/ — education (WPI, ECE + Biomedical Engineering), MedTech background, current ENCODED role
 - https://www.refinelabs.com/article/paid-social-philosophy-drives-revenue-impact-at-scale — paid social philosophy, 300+ company validation, measurement quote
 - https://www.refinelabs.com/article/pipeline-sources — Pipeline Sources framework, sales velocity/win-rate example, Walker quote
 - https://www.refinelabs.com/article/megan-ownership-update — 2025 ownership transition to Megan Bowen
@@ -245,7 +248,8 @@ Use Walker when: B2B pipeline is stalling despite rising lead volume, attributio
 - https://www.fame.so/post/state-of-demand-gen-chris-walker-podcast — podcast/content engine workflow, ~$4M ARR in 3 years
 - https://www.usergems.com/blog/how-to-win-in-marketing-with-chris-walker-of-refine-labs — dark social, peer trust, focus philosophy, quotes
 - https://www.typeform.com/blog/interviews/meaningful-chris-walker/ — self-test heuristic quote
-- https://www.passetto.com/blogs/go-to-market-bloat — GTM bloat, 48-60 month CAC payback figure
+- https://www.passetto.com/blogs/go-to-market-bloat — GTM bloat framing; CAC payback as a top-level scoreboard metric (no specific month benchmark published)
+- https://www.linkedin.com/posts/carolyn-dilks_a-few-months-ago-chris-walker-gave-me-permission-activity-7415042231549759488-rbnx — Walker steps down as Passetto CEO (early 2026), sells shares to team, stays as limited partner
 - https://dreamdata.io/blog/chris-walker-b2b-marketing-2024 — top-level metrics (growth, NRR, CAC payback), sales velocity components
 - https://getrecast.com/hdyhau/ — critical perspective on self-reported attribution limits
 - https://www.insightly.com/episodes/demand-creation-vs-demand-capture/ — creation/capture/conversion phase definitions
