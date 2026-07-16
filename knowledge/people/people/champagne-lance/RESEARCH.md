@@ -1,5 +1,7 @@
 # Champagne Lance — Research Outline
 
+**Status:** covered by tactical-playbook.md, vssl-longform-content.md, business-models-breakdown.md, distribution-moat-edges.md, and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Key presenter (~2:28-2:38)
 **Known For:** 500K TikTok followers, 68M views/month, reaction content + soft-sell strategy
 

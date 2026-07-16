@@ -1,5 +1,9 @@
 # Drew — Research Outline
 
+**Status:** covered by business-models-breakdown.md and tactical-playbook.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
+> **Note (2026-07-16):** Ben Bader, mentioned below in connection with Trendspot, died in October 2025; the medical examiner ruled the death natural (cardiovascular disease). The "got burned by Trendspot" characterization is Drew's account from the Space and is unverified — handle any reference to Ben Bader respectfully and stick to verified facts in derived content.
+
 **Role in Space:** Presenter
 **Known For:** TikTok Shop success, Creators Corner sales closer, live selling
 

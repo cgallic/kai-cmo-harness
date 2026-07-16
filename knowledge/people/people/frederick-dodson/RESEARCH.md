@@ -1,5 +1,7 @@
 # Frederick Dodson — Research Outline
 
+**Status:** covered by levels-of-energy-copywriting.md and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role:** Referenced author/thinker
 **Known For:** "Levels of Energy" book, consciousness scale applied to marketing
 

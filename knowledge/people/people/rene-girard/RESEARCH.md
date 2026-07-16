@@ -1,5 +1,7 @@
 # René Girard — Research Outline
 
+**Status:** covered by mimesis-framework.md and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role:** Referenced thinker (foundational)
 **Known For:** Mimetic Theory, Peter Thiel's mentor at Stanford
 

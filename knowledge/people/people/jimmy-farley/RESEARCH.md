@@ -1,5 +1,6 @@
 # Jimmy Farley — Research Outline
 
+**Status:** GRADUATED 2026-07-16 → `knowledge/people/jimmy-farley-knowledge.md` (13 public sources; Bader/Trendspot items remain open questions there)
 **Role:** Referenced figure
 **Known For:** Founder of Creators Corner (TikTok creator training + brand placement)
 

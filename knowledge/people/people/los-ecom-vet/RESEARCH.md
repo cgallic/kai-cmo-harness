@@ -1,5 +1,7 @@
 # Los — Research Outline
 
+**Status:** covered by local-dominance-strategy.md, business-models-breakdown.md, distribution-moat-edges.md, tactical-playbook.md, and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Key presenter (joined ~1:31, dominated conversation)
 **Known For:** 20-year e-commerce veteran, 6 exits, $700M in ad spend, $14M/year agency (former)
 
