@@ -53,7 +53,7 @@ Home-service demand is urgent, phone-native, and perishable. A homeowner with a 
 
 ### 2. Operations, not marketing, is usually the bottleneck
 
-"Many contractors blame marketing when results fall short, but often the real issue lies in operations" (RYNOx ep. 315, March 2026). Before buying more leads, fix booking rate, conversion rate, and average ticket — the multipliers on the leads you already have.
+"Many contractors are quick to blame marketing when results fall short, but often the real issue lies in operations" (RYNOx ep. 315 recap, March 2026). Before buying more leads, fix booking rate, conversion rate, and average ticket — the multipliers on the leads you already have.
 
 ### 3. KPIs compound multiplicatively
 
@@ -104,7 +104,7 @@ His most distinctive, most quantified system. The benchmark he cites: **average 
 ### Operating rules
 
 1. **Measure booking rate per CSR, not per team.** He knows each CSR's individual booking rate, average call duration, and cancellation rate (ServiceTitan webinar: "I know every single CSR and what their booking rate is").
-2. **Pay CSRs on booking performance.** Performance pay, not hourly-only; he has said he wants top CSRs earning $60-70/hour, which only happens by booking calls all day (Handyman Startup interview).
+2. **Pay CSRs on booking performance.** Performance pay, not hourly-only; he has said he wants top CSRs earning $60-70/hour, which only happens by booking calls all day (Smart Business Revolution interview).
 3. **Speed-to-lead targets:** A1's average response to a web form fill was 2 minutes 13 seconds, with a stated goal of under 1 minute; average time to book a phone lead 6 minutes 10 seconds (Owned & Operated "Legends"). Respond instantly to Angi/HomeAdvisor-type leads or lose them to whoever does (Handyman Startup interview).
 4. **Answer after hours.** Hire evening CSR coverage; set the Google Business Profile to open 24/7 so the phone rings when competitors are closed (Handyman Startup; RYNOx ep. 315).
 5. **Add web chat** as a capture channel for people who won't call (Handyman Startup interview).
@@ -191,7 +191,7 @@ An ABC15 Phoenix investigation found A1's early Google profile filled with suspe
 
 The *Elevate* core move: he spends as much marketing effort on candidates as on customers.
 
-1. **Run recruiting as a funnel** with ads, landing pages, and follow-up speed — on LinkedIn, TikTok, Indeed, Glassdoor — targeting people who already have jobs and are proven (Service MVP recap of *Elevate*).
+1. **Run recruiting as a funnel** with ads, landing pages, and follow-up speed — on LinkedIn, TikTok, Indeed, Glassdoor (Service MVP recap of *Elevate*). Targeting already-employed, proven candidates is a recurring Mello theme but is not in that recap (unverified).
 2. **"If you don't have A+ people knocking on your door to work with you, you haven't done your job"** — employer brand (pay transparency, tech income stories, shop tours, the podcast itself) is the recruiting ad (Service MVP recap).
 3. **Hire for attitude, train for skill.** Home-grown techs via the 8-week academy beat poaching experienced techs with bad habits (interview recaps).
 4. **Show the money.** A1 techs earn $100K-300K with benefits including pet insurance and paid training (Owned & Operated "Legends"); recruiting collateral names the numbers.
@@ -275,6 +275,7 @@ Hire attitude → 8-week academy → visible scorecard (conversion, OJA, review 
 ## Sources
 
 - https://www.handymanstartup.com/grow-garage-door-company-tommy-mello/ — long-form interview (booking rate, speed-to-lead, options, financing, tech scorecard, trip charge)
+- https://smartbusinessrevolution.com/tommy-mello-selling-garage-doors-and-scaling-a-home-service-business-to-40m/2/ — Smart Business Revolution interview (CSR $60-70/hour performance-pay target)
 - https://www.servicetitan.com/blog/webinar-recap-maximize-your-leads-with-tommy-mello — four-KPI worked example, CSR tracking, dispatch ratio, GBP tactics
 - https://www.ownedandoperated.com/post/owned-and-operated-legends-how-tommy-mello-built-a-200m-home-service-business — revenue milestones, rebrand/pricing, equity program, onboarding cadence, top-tech behaviors
 - https://fieldedge.com/blog/turning-technicians-into-sales-superstars-lessons-from-tommy-mello/ — technician sales philosophy, visible metrics, dream manager
