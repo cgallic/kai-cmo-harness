@@ -49,10 +49,10 @@ Ramsey never built a funnel that leads to the show; the show is the funnel. Thre
 A scripted ad claims competence; a live call demonstrates it under uncertainty. The listener watches the host handle a problem the host didn't pick, which is unfakeable expertise signaling. The same mechanic explains why callers' problems generalize: thousands of listeners share each caller's situation, so one answer serves one caller and markets to a segment.
 
 ### 3. Sell the Plan, Not the Products
-Ramsey Solutions deliberately sells no financial products (no funds, insurance, mortgages) — Ramsey frames this as staying unbiased (per the Hormozi interview). Revenue comes from education (courses, books, curricula) and from endorsing vetted third parties who pay for access to the audience. The editorial/commerce separation is itself a trust asset — though the 2023 timeshare-exit lawsuit (listeners allege Ramsey was paid ~$30M to promote a company accused of deceptive practices; $150M suit, per Wikipedia) shows the model's reputational failure mode when endorsement vetting breaks.
+Ramsey Solutions deliberately sells no financial products (no funds, insurance, mortgages) — Ramsey frames this as staying unbiased (per the Hormozi interview). Revenue comes from education (courses, books, curricula) and from endorsing vetted third parties who pay for access to the audience. The editorial/commerce separation is itself a trust asset — though the 2021 timeshare-exit lawsuit (listeners allege Ramsey was paid $30M+ from 2015–2021 to promote a company accused of deceptive practices; $150M class-action filed April 2021, per Wikipedia and CBS News) shows the model's reputational failure mode when endorsement vetting breaks.
 
 ### 4. Behavior Beats Math
-His most-quoted line: personal finance is "20% head knowledge and 80% behavior." The debt snowball (pay smallest balance first, not highest interest) is mathematically suboptimal and behaviorally superior — quick wins keep people in the program (a defense echoed by behavioral-finance analysts like Kitces and a Journal of Consumer Research finding on small wins, per press coverage). The marketing lesson: design frameworks for completion rates, not for optimality on paper. A plan people finish beats a plan people abandon.
+His most-quoted line: personal finance is "80% behavior and 20% head knowledge." The debt snowball (pay smallest balance first, not highest interest) is mathematically suboptimal and behaviorally superior — quick wins keep people in the program (a defense echoed by behavioral-finance analysts like Kitces and a Journal of Consumer Research finding on small wins, per press coverage). The marketing lesson: design frameworks for completion rates, not for optimality on paper. A plan people finish beats a plan people abandon.
 
 ### 5. One Message, Decades of Repetition
 Ramsey has taught essentially the same seven steps since 1994. Repetition is not a bug; it is the moat. New audience members constantly enter at step zero, and consistency across 30+ years makes the brand legible, quotable, and teachable by others — which is what makes succession possible.
@@ -94,7 +94,7 @@ Self-syndication (1996) meant Ramsey kept the ad inventory, the affiliate relati
 3. **Course / membership** — Financial Peace University (launched 1994; Ramsey claims 10M+ participants and teaching in ~50,000 churches, per his 2023 Hormozi interview), sold directly and bundled into the Ramsey+ subscription with the EveryDollar budgeting app (third-party guides report Ramsey+ around $129.99/yr and EveryDollar premium around $79.99/yr — prices change; verify before citing).
 4. **Live events** — arena-scale reinforcement, community, and story harvesting.
 5. **Referral marketplace** — RamseyTrusted/SmartVestor pros absorb the demand the education creates (Framework 7).
-6. **B2B/institutional spin-outs** — SmartDollar (employee financial wellness; 10,000+ companies per the Hormozi interview), Ramsey Education high-school curriculum (Ramsey claims reach into ~48% of US high schools, ~6.5M students — his figure, unverified), EntreLeadership (business coaching, est. 2005).
+6. **B2B/institutional spin-outs** — SmartDollar (employee financial wellness; 10,000+ companies per the Hormozi interview), Ramsey Education high-school curriculum (Ramsey claims reach into ~48% of US high schools, ~6.5M students — his figure, unverified), EntreLeadership (business coaching).
 
 **Decision rules embedded in the ladder:**
 - **The distribution channel doubles as the church/community channel.** FPU spread through churches — a pre-built trust network with weekly meetings and a values match. Lesson: find the institution that already gathers your buyers and make them the classroom.
@@ -134,7 +134,7 @@ Self-syndication (1996) meant Ramsey kept the ad inventory, the affiliate relati
 
 **Operational takeaways:**
 1. **Free content, paid carriage math.** Local stations get a proven ratings product; Ramsey gets reach plus national ad inventory. He entered radio itself the same way — offering the first month free to a bankrupt station that needed airtime. Pattern: when you have no distribution, price your content at zero to a distributor whose scarce asset is attention slots, then convert the audience you accumulate.
-2. **The daily production feed is the master asset.** Three live hours a day yields the podcast (full episodes), YouTube (livestream + full episodes), a clips channel (The Ramsey Show Highlights, ~4.5M subscribers and 10,000+ videos per HypeAuditor/vidiq, 2026), Shorts/Reels (confrontational-call moments regularly hit 8-figure views), and quote graphics. One recording session, every platform. This is the canonical content-batching case study.
+2. **The daily production feed is the master asset.** Three live hours a day yields the podcast (full episodes), YouTube (livestream + full episodes), a clips channel (The Ramsey Show Highlights, ~4.5M subscribers and 10,000+ videos per HypeAuditor/vidiq, 2026), Shorts/Reels (individual confrontational-call clips have drawn multi-million view counts — order of magnitude observable on the channel, exact figures unverified), and quote graphics. One recording session, every platform. This is the canonical content-batching case study.
 3. **Digital wasn't a pivot; it was a re-plumb.** The show didn't change for podcast/YouTube — distribution was added around an unchanged core. The Ramsey Show has hit #1 on Apple Podcasts' overall chart and #1 in Spotify's business category (per Ramsey newsroom, 2024). Radio remains the trust-heavy, older-skew channel; YouTube/TikTok clips recruit the younger audience (Money.com documented the millennial influx).
 4. **Ramsey Network as a shelf.** Once the flagship proved the model, the same distribution muscle launched 11 podcasts and 9 YouTube shows around individual Personalities — the network is the succession plan's delivery vehicle.
 
@@ -148,7 +148,7 @@ Self-syndication (1996) meant Ramsey kept the ad inventory, the affiliate relati
 - **2008** — Ramsey begins a stated succession plan: "incrementally letting go" of CEO duties while staying on-air (per Wikipedia).
 - **2012** — Formal "Ramsey Personalities" program: hire/develop communicators (Rachel Cruze, Ken Coleman, later George Kamel, Dr. John Delony, Jade Warshaw) who teach the same doctrine in their own voice.
 - **2020** — *The Dave Ramsey Show* renamed *The Ramsey Show*. Ramsey's own framing: the rebrand "sets the show up for generational success; that it doesn't die when I do."
-- **2021+** — Personalities get their own shows, books, and audience segments (Kamel → YouTube-native younger money audience; Delony → mental health; Cruze → families/next generation, per Barrett Media, Jan 2026). Dave's daughter Rachel Cruze joined in 2010 and co-hosts; son-in-law-free corporate succession runs separately (Daniel Ramsey named company president in 2023).
+- **2021+** — Personalities get their own shows, books, and audience segments (Kamel → YouTube-native younger money audience; Delony → mental health; Cruze → families/next generation, per Barrett Media, Jan 2026). Dave's daughter Rachel Cruze joined the company in 2010 and co-hosts; corporate succession runs on a separate track from the on-air bench — Dave's son Daniel Ramsey was named company president in 2023 (per the Ramsey Solutions leadership page and Wikipedia).
 
 **The operating rules that make it work:**
 1. **Successors are co-hosts first.** Every Personality earns trust *inside* the flagship show, borrowing Dave's audience under his supervision, before getting a solo vehicle. The flagship is the farm system.
@@ -219,7 +219,7 @@ When you lack distribution: identify distributors whose scarce resource is filli
 
 ## Notable Quotes
 
-> "Personal finance is 20% head knowledge and 80% behavior." — Dave Ramsey (signature line, widely attributed across his books and show)
+> "Personal finance is 80% behavior and 20% head knowledge." — Dave Ramsey (signature line across his books and show; posted verbatim on his X account, Oct 2019)
 
 > The 2020 rebrand "sets the show up for generational success; that it doesn't die when I do." — Dave Ramsey on renaming *The Dave Ramsey Show* to *The Ramsey Show* (per Wikipedia)
 
@@ -236,7 +236,7 @@ When you lack distribution: identify distributors whose scarce resource is filli
 - **Renting your audience.** Self-syndication over network deals; owned channels over platform dependence.
 
 **Failure modes observed from outside (do not copy):**
-- **Endorsement without maintenance.** The $150M timeshare-exit lawsuit (alleging ~$30M paid to Ramsey to promote a firm accused of deception, per Wikipedia) shows what happens when the paid-endorsement engine outruns vetting.
+- **Endorsement without maintenance.** The $150M timeshare-exit class action filed by listeners in April 2021 (alleging $30M+ paid to Ramsey from 2015–2021 to promote a firm accused of deception, per Wikipedia and CBS News) shows what happens when the paid-endorsement engine outruns vetting.
 - **Doctrine outrunning evidence.** The "12% average return" projection is disputed by many professionals (per Wikipedia and Kitces-linked criticism); a media brand built on certainty resists correcting numbers. Kai's provenance rules exist precisely to prevent this.
 - **One-size prescriptions presented as universal.** Critics (White Coat Investor, debt.org, others) document cases where snowball rigidity costs users real money. When cloning the *style*, keep an honest escape hatch for edge cases.
 
@@ -259,7 +259,7 @@ Ramsey also appeared on Hormozi's podcast (Sept 2023, ep 664/683), which is the 
 | `/kai-podcast` + `knowledge/channels/podcast.md` | Framework 1 (call-in trust engine) and Framework 4 (one recording → all platforms; free-carriage bootstrapping) when a client wants a show that sells. Use the call-in/teardown playbook as the default format for expert-led brands. |
 | `/kai-proof-builder` | Framework 3 in full — the proof-ritual design rules (name, liturgy, costly action, aggregate number, scheduled segment) are the house standard for UGC proof mechanics. |
 | `/kai-content-batching` | Framework 4, takeaway 2: the daily-feed-as-master-asset model; Ramsey is the canonical example of one session → episode/clips/shorts/quotes. |
-| `/kai-campaign` / funnel planning (`knowledge/playbooks/campaign-orchestration.md`, `hormozi-100m-funnel.md`) | Framework 2 (content-to-product ladder) and Framework 7 (two-sided monetization) as alternative funnel architectures — especially for audience businesses weighing affiliate/endorsement revenue. Always pair Framework 7 with disclosure + vetting requirements (KaiCalls Fit Rule analogue). |
+| `/kai-ad-campaign` / funnel planning (`knowledge/playbooks/campaign-orchestration.md`, `knowledge/playbooks/hormozi-100m-funnel.md`) | Framework 2 (content-to-product ladder) and Framework 7 (two-sided monetization) as alternative funnel architectures — especially for audience businesses weighing affiliate/endorsement revenue. Always pair Framework 7 with disclosure + vetting requirements (KaiCalls Fit Rule analogue). |
 | Brand strategy / founder-brand engagements | Framework 5 (Personalities succession) whenever a founder-fronted brand asks "what happens when I step back" — and Framework 6 when designing a proprietary framework meant to spread. |
 | Cross-reference | `knowledge/people/alex-hormozi-knowledge.md` (volume + give-away-secrets doctrine descends partly from this model); `knowledge/people/dan-kennedy-knowledge.md` (direct-response ancestry). |
 
@@ -287,3 +287,6 @@ Ramsey also appeared on Hormozi's podcast (Sept 2023, ep 664/683), which is the 
 - https://www.whitecoatinvestor.com/dave-ramseys-baby-steps-are-too-rigid/ — rigidity criticism
 - https://hypeauditor.com/youtube/UC7eBNeDW1GQf2NJQ6G6gAxw/ — The Ramsey Show Highlights channel stats (~4.5M subs, 2026)
 - https://www.zoominfo.com/c/lampo-group-llc-dba-ramsey-solutions/357928039 — third-party revenue/employee estimates (unverified)
+- https://www.cbsnews.com/news/dave-ramsey-getting-sued-150-million-lawsuit-timeshare-exit/ — timeshare-exit class action: $150M suit filed April 2021, $30M+ alleged promotion payments 2015–2021
+- https://x.com/DaveRamsey/status/1184494709353398272 — verbatim "80% behavior and 20% head knowledge" line, Oct 2019
+- https://www.ramseysolutions.com/company/leadership — Daniel Ramsey listed as president (corporate succession)

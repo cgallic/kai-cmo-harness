@@ -1,7 +1,7 @@
 # Elena Verna: Knowledge Distillation
 
 **Created:** July 2026
-**Sources:** Elena's Growth Scoop (Substack), four Lenny's Podcast appearances (2022-2025), Lenny's Newsletter guest essays, Amplitude blog posts, Bain Capital Ventures interview, LinkedIn/bio pages. 13 sources, listed at the end.
+**Sources:** Elena's Growth Scoop (Substack), four Lenny's Podcast appearances (2022-2025), Lenny's Newsletter guest essays, Amplitude blog posts, Bain Capital Ventures interview, LinkedIn/bio pages. 14 sources, listed at the end.
 
 ---
 
@@ -307,7 +307,7 @@ From "10 Growth Tactics That Never Work" (Lenny's Podcast, Jan 2025) plus recurr
 | `knowledge/playbooks/growth-loops-applied.md` | Verna's loops-vs-funnels operationalization, Racecar portfolio balance, loop decay (18-month evolution rule, 20-25% exploration allocation) |
 | `/kai-growth-hacker` + `knowledge/playbooks/growth-hacker-first-hire-os.md` + `knowledge/checklists/growth-hacker-first-hire-checklist.md` | Six Rules of Hiring: Builder/Optimizer/Innovator profiles, homegrown-talent bias, $1M-ARR prerequisite, embedded-before-standalone, growth-model-before-hire |
 | `/kai-growth-plan` + `knowledge/playbooks/demand-generation.md` | Motions x Levers 3x3 as the plan skeleton; squad sequencing (activation → monetization); PLG vs sales-led preconditions; owned/earned-over-paid channel bias |
-| `knowledge/playbooks/conversion-rate-optimization.md` + `/kai-cro-audit` | Freemium/trial/reverse-trial decision table and benchmarks; activation-first diagnosis ("churn with extra steps"); her anti-micro-optimization and pre/post testing stance |
+| `knowledge/playbooks/conversion-rate-optimization.md` + `/kai-cro` | Freemium/trial/reverse-trial decision table and benchmarks; activation-first diagnosis ("churn with extra steps"); her anti-micro-optimization and pre/post testing stance |
 | `knowledge/playbooks/what-works.md` feedback loop | Her experiment-qualification discipline and over-testing warnings |
 | SaaS/PLG client audits (`/kai-audit`) | B2B2C ladder (user → team → company) as the audit lens for any collaboration or seat-based product; PQA/PQL vocabulary for pipeline recommendations |
 
@@ -325,7 +325,7 @@ From "10 Growth Tactics That Never Work" (Lenny's Podcast, Jan 2025) plus recurr
 4. "Elena Verna on how B2B growth is changing..." — Lenny's Podcast, Jun 2022: https://www.lennysnewsletter.com/p/elena-verna-on-why-every-company
 5. "The Ultimate Guide to Product-Led Sales" — Lenny's Newsletter, Apr 2023: https://www.lennysnewsletter.com/p/the-ultimate-guide-to-product-led
 6. "10 Growth Tactics That Never Work" — Lenny's Podcast, Jan 2025: https://www.lennysnewsletter.com/p/10-growth-tactics-that-never-work-elena-verna
-7. "The New AI Growth Playbook for 2026: How Lovable Hit $200M ARR" — Lenny's Podcast, Dec 2025: https://www.lennysnewsletter.com/p/the-new-ai-growth-playbook-for-2026-elena-verna
+7. "The new AI growth playbook for 2026: How Lovable hit $200M ARR in one year" — Lenny's Podcast, Dec 18, 2025: https://www.lennysnewsletter.com/p/the-new-ai-growth-playbook-for-2026-elena-verna
 8. "Trial or Freemium? Get the Best of Both with a Reverse Trial" — Amplitude blog: https://amplitude.com/blog/reverse-trial
 9. "Six Rules of Hiring for Growth" — Lenny's Newsletter, Nov 2021: https://www.lennysnewsletter.com/p/hiring-growth
 10. "PLG Expert Elena Verna Breaks Down the New B2B Growth Standard" — Bain Capital Ventures, Dec 2023: https://baincapitalventures.com/insight/plg-expert-elena-verna-breaks-down-the-new-b2b-growth-standard/

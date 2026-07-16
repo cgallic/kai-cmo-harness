@@ -23,11 +23,11 @@
 
 ## Background
 
-**1927** — Born March 18 in Butte, Montana (per the Scientific Advertising author profile). **1949** — Moves to New York, joins direct-response agency Huber Hoge & Sons as a messenger boy; works up to copy chief. **1954** — Goes independent. Becomes one of the highest-paid direct-mail copywriters of his era, selling books, courses, and health/self-improvement products by mail order. **1966** — Publishes *Breakthrough Advertising*, still treated as the canonical text on matching copy to market state; long out of print and famous for used copies selling at collector prices. Wrote roughly 10 books total, including *The Brilliance Breakthrough*.
+**1927** — Born March 18 in Butte, Montana (per the Scientific Advertising author profile). **1949** — Moves to New York, joins direct-response agency Huber Hoge & Sons as a messenger boy; works up to copy chief. **1954** — Goes independent. Becomes one of the highest-paid direct-mail copywriters of his era, selling books, courses, and health/self-improvement products by mail order. **1966** — Publishes *Breakthrough Advertising*, still treated as the canonical text on matching copy to market state; long out of print and famous for used copies selling at collector prices. Wrote 10 books total (per his New York Times obituary), including *The Brilliance Breakthrough*.
 
 His flagship client relationship was **Rodale Press**: per Scientific Advertising's account, about 30 sales letters that sold more than 8 million books and generated over $200 million. He also helped build Boardroom, Inc. into a major direct-mail publisher. He and his wife Barbara assembled one of the significant private collections of modern American art — his 1995 New York Times obituary headline identified him as a modern-art collector first. **1995** — Dies September 6, age 68.
 
-His most-circulated teaching outside the book is a seminar to Rodale Press copywriters (the widely shared recording is commonly dated May 1994; some accounts describe earlier Rodale talks — treat exact dating as soft). That speech is the source of the "copy is assembled" doctrine and his eight rules of marketing.
+His most-circulated teaching outside the book is a seminar to Rodale Press copywriters (the widely shared recording is commonly dated May 11, 1994; some accounts describe earlier Rodale talks — treat exact dating as soft). That speech is the source of the "copy is assembled" doctrine and his eight rules of marketing.
 
 ---
 
@@ -145,7 +145,7 @@ Ordered here from hottest to coldest, as Schwartz presented them.
 
 ### Escalation response rule
 
-When a competitor moves the market up a level, matching their old play fails — you must either **escalate within the current level** (bigger claim at 2, stronger mechanism at 4) or **jump to the next level first**. Sophistication only moves up (absent a true product breakthrough); yesterday's winning headline formula is the strongest evidence of what will no longer work.
+When a competitor moves the market up a level, matching their old play fails — you must either **escalate within the current level** (bigger claim at 2, stronger mechanism at 4) or **be first to reach the level above**. Sophistication only moves up (absent a true product breakthrough); yesterday's winning headline formula is the strongest evidence of what will no longer work.
 
 ---
 
@@ -219,7 +219,7 @@ Then re-style the claim for the sophistication level (direct → inflated → me
 
 > "Be the best listener you ever met." — from his eight rules of marketing, Rodale seminar
 
-> "Write to the chimpanzee brain — simply and directly." — from his eight rules of marketing, Rodale seminar
+> "Write to the chimpanzee brain, simply, directly." — from his eight rules of marketing, Rodale seminar (as transcribed by Chad Godoy and writedirection.com)
 
 ---
 
@@ -252,8 +252,9 @@ Then re-style the claim for the sophistication level (direct → inflated → me
 
 - https://www.scientificadvertising.com/eugene_schwartz_live_at_rodale_press/ — Rodale seminar context; ~30 letters, 8M+ books, $200M+ for Rodale
 - https://www.scientificadvertising.com/authors/schwartz/ — biography (Butte 1927, Huber Hoge, 1954 independent, NYT obituary)
+- https://www.nytimes.com/1995/09/08/obituaries/eugene-schwartz-68-modern-art-collector-dies.html — NYT obituary ("Eugene Schwartz, 68, Modern-Art Collector, Dies"; died Sept 6, 1995; author of 10 books)
 - https://www.verygoodcopy.com/verygoodcopy-blog-3/eugene-schwartz — "power is in the product" quote, 80/20 research doctrine
-- https://chadgodoy.wordpress.com/2018/12/14/eugene-schwartz-eight-great-rules-of-marketing/ — the eight rules from the Rodale seminar
+- https://chadgodoy.wordpress.com/2018/12/14/eugene-schwartz-eight-great-rules-of-marketing/ and https://writedirection.com/rules-of-great-copywriting-from-eugene-schwartz/ — the eight rules from the Rodale seminar, verbatim wording ("Write to the chimpanzee brain, simply, directly"; "Be the best listener you ever met")
 - https://copyblogger.com/schwartz-copywriting-system/ — timer system details (33:20 account), assembly workflow
 - https://cardenalgroup.com/market-sophistication/ — five sophistication levels with per-level strategy and example headlines
 - https://mirasee.com/blog/eugene-schwartz-breakthrough-advertising/ — the mass-desire passage ("channel and direct it")

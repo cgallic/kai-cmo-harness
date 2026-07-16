@@ -33,11 +33,11 @@ Cole Gordon is a high-ticket sales trainer and the founder/CEO of **Closers.io**
 **Career arc (per Wikitia bio, Ippei and ScamRisk reviews, and his own podcast retellings):**
 
 - Worked as a bartender earning roughly $18K/year before entering sales.
-- At 24, chose entrepreneurship over medical school (per his Wikitia biography). An early paid-advertising agency failed; a cold-email venture also flopped before he moved into phone sales (a "350 cold emails that never delivered" detail appears in podcast promos — unverified).
+- At 24, chose entrepreneurship over medical school (per his Wikitia biography). An early paid-advertising agency failed; a cold-email venture also flopped before he moved into phone sales (his own podcast retellings; a "350 cold emails that never delivered" detail appears in podcast promos — unverified).
 - Joined **Traffic & Funnels** as a commissioned rep, reportedly starting as the weakest performer and becoming the company's top salesperson — the origin of his conviction that closing is a learnable mechanical skill, not a personality trait.
 - Founded Closers.io in **late 2019** (per Wikitia). Scaled his own sales organization to **$2.5M/month within roughly 2 years** (claim repeated on EOFire 2022 and Beyond a Million); podcast promos state **$0 to $30M/year in 26 months** (his own framing, not audited).
-- By **December 2022**, Closers.io claimed **13,000+ trained reps approaching 15,000**, roughly **2,000 sales applicants per month**, 400+ one-on-one interviews monthly, and a network of 400+ sales teams (company press release). Sales Team Accelerator client names cited include Tony Robbins, Frank Kern, Dean Graziosi, and Jay Abraham (Beyond a Million episode notes).
-- **Conflicting revenue data:** GetLatka listed Closers.io at ~$15M ARR in 2025, versus the $30M/year self-reported figure. Treat all revenue numbers as promotional claims.
+- By **December 2022**, Closers.io claimed **13,000+ trained reps approaching 15,000**, roughly **2,000 sales applicants per month**, and a network of 400+ sales teams (company press release, Dec 28, 2022); the **400+ one-on-one interviews monthly** figure comes from Gordon's podcast interviews, not the press release. Sales Team Accelerator client names cited include Tony Robbins, Frank Kern, Dean Graziosi, and Jay Abraham (Beyond a Million episode notes).
+- **Conflicting revenue data:** GetLatka listed Closers.io at ~$15M revenue in 2025 (GetLatka's own estimate), versus the $30M/year self-reported figure. Treat all revenue numbers as promotional claims.
 
 He also hosts the podcast *Confessions of a Salesman* and runs a YouTube channel with long-form sales training.
 
@@ -46,7 +46,7 @@ He also hosts the podcast *Confessions of a Salesman* and runs a YouTube channel
 ## Core Philosophy & Mental Models
 
 ### 1. No problem, no sale
-"Business is about solving problems. When you solve a problem, you create value and people exchange money for value. Sales is demonstrating you can solve a problem for someone else. And if there's no problem, there's no sale." (Beyond a Million, ep. 22). Everything downstream — call structure, questions, pitch — exists to surface and dimensionalize a real problem or unfulfilled desire.
+"If there's no problem, there's no sale" (Beyond a Million, ep. 22). His chain of logic on that episode: business is about solving problems; solving a problem creates value; people exchange money for value; so sales is demonstrating you can solve a problem for somebody else. Everything downstream — call structure, questions, pitch — exists to surface and dimensionalize a real problem or unfulfilled desire.
 
 ### 2. Prospects close themselves
 The rep's job is not to persuade; it is to install (or surface) a stack of beliefs through questions. "Every sale depends on meeting the beliefs of the buyer before you pitch them... they'll create an objection-less close themselves" (The Sales Evangelist, ep. 1575). Convincing is a symptom of skipped discovery.
@@ -83,7 +83,7 @@ Gordon's signature framework. A prospect buys when — and only when — all sev
 | 7 | **Trust** | "I trust you, the method, and the process to deliver" | Gordon: trust in the *methodology* matters even more than trust in the company — you must explain why the mechanism works for *them* |
 
 Notes:
-- Source orderings vary slightly between appearances (EOFire lists pain, doubt, desire, cost, money, support, trust; Sales Evangelist and the Belief Ladder prompt write-ups put cost-of-inaction third). Pain is always first, trust always last.
+- Source orderings vary slightly between appearances (EOFire and Sales Evangelist list pain, doubt, cost, desire, money, support, trust; The Sales Whisperer recap puts support before money). Pain is always first, trust always last.
 - Diagnostic use: score a call transcript against the seven beliefs; every stall or objection traces back to a specific missing rung. This is how Nicolas Cole & Dickie Bush operationalized it as a transcript-analysis prompt.
 
 ---
@@ -132,7 +132,7 @@ Gordon's own origin data point: using the identical script as senior colleagues,
 - **Status delta:** proof assets (testimonials, case studies) raise the rep's perceived status relative to the prospect, which changes how the same words land.
 - Expected impact from sub-communication work: ~5 points of close rate for beginners, potentially 10–20+ for practiced reps (his blog's estimate, not an audited benchmark).
 
-This is why he insists "pre-written scripts will only take you so far in high-ticket sales" — scripts are the floor; tonality, listening, and belief are the variance.
+This is why he insists "pre-written scripts will only take you so far in high-ticket sales" (his own Facebook post of that title) — scripts are the floor; tonality, listening, and belief are the variance.
 
 ---
 
@@ -141,9 +141,9 @@ This is why he insists "pre-written scripts will only take you so far in high-ti
 Gordon's hiring and training system refuses to treat sales as a bolt-on fix:
 
 - **Prerequisites before hiring reps** ("Rule 1 foundations," Agency Mavericks): a validated offer, an "optimal selling system" that is predictable/reliable/repeatable, and real market demand. Reps amplify an economic engine; they cannot create one.
-- **Positioning before scaling:** "You can't be everything to everybody because it makes you nothing to nobody" — undifferentiated offers make every call harder and every closer look bad.
+- **Positioning before scaling:** "Can't be everything to everybody because it makes you nothing to nobody" (Agency Mavericks) — undifferentiated offers make every call harder and every closer look bad.
 - **The offer is part of the rep's compensation.** In his hiring framework, a "compelling offer to the candidate" includes lead flow quality and a product that actually converts — A-player closers audit *your* offer and economics before joining, exactly the way he trains them to (Closers.io team-building guide).
-- **Rep-side offer diligence:** in his closer career framework (EOFire), step two of *Calibrate → Source → Ramp → Ascend* is **sourcing a quality offer** — evaluating proof, lead flow, show rates, and economics before taking a seat. Closers on bad offers starve regardless of skill.
+- **Rep-side offer diligence:** in his closer career framework (EOFire), step two of *Calibrate → Source → Ramp → Ascent* is **sourcing a quality offer** — evaluating proof, lead flow, show rates, and economics before taking a seat. Closers on bad offers starve regardless of skill.
 - Implication he draws repeatedly: chronic low close rates with competent reps = offer/positioning/lead-quality problem, not a closing problem.
 
 ---
@@ -183,8 +183,8 @@ Closers.io runs a two-sided talent model — effectively a marketplace with trai
 
 - **Demand side — Sales Team Accelerator:** done-with-you program for founders (agencies, coaches, consultants, typically $1M–$4M companies per his Sales Whisperer appearance) to recruit, hire, train, and manage in-house remote teams. Teams are built *internal* to the client, not outsourced — Gordon explicitly positions against agency-style outsourced closing.
 - **Supply side — Remote Closing Academy (RCA):** certification pipeline for aspiring setters/closers — reported ~40 hours of training plus up to six coaching calls/week (Wikitia), typical completion 2–8 weeks, with job-placement support into the demand-side network. Reported price point ~$8,400 (Ippei/ScamRisk reviewers; one commenter cited a $997 entry offer — pricing is not public), no-refund policy.
-- **The flywheel:** RCA graduates feed the placement pool; STA clients absorb the graduates; the company vets via ~400 interviews/month to place "top 1%" talent. Marketing describes it as the industry's largest distribution network of sales reps (company press release, Dec 2022).
-- **Performance guarantees as marketing:** e.g., a placed appointment setter books 40+ sales calls in the first month or the client doesn't pay (his own ad on Facebook).
+- **The flywheel:** RCA graduates feed the placement pool; STA clients absorb the graduates; the company vets via ~400 interviews/month (per Gordon's podcast interviews) to place "top 1%" talent. Marketing describes it as the industry's largest distribution network of sales reps (company press release, Dec 2022).
+- **Performance guarantees as marketing:** e.g., a placed appointment setter books 40+ sales calls in the first month or the client doesn't pay (his own Facebook ad — unverified, ad no longer retrievable).
 - **Economics pitched to reps:** $10K+/month within ~60 days as the headline outcome (company marketing; see Criticism below for the reality distribution).
 
 ---
@@ -200,11 +200,11 @@ Closers.io runs a two-sided talent model — effectively a marketplace with trai
 
 ## Tactical Playbooks
 
-### Closer career ladder — Calibrate → Source → Ramp → Ascend (EOFire 2022)
+### Closer career ladder — Calibrate → Source → Ramp → Ascent (EOFire 2022)
 1. **Calibrate:** learn the entire sales process and its KPIs before taking a seat.
 2. **Source:** pick a quality offer — proof, lead flow, economics — before picking a paycheck.
 3. **Ramp:** master the KPIs of your own funnel stage; get to competence fast with call review.
-4. **Ascend:** move from closer toward leadership/management ("closers into leaders" is his brand's literal frame).
+4. **Ascent:** move from closer toward leadership/management ("closers into leaders" is his brand's literal frame).
 
 His entry advice for beginners: get a job selling for a company you admire in an industry you care about, and out-contribute the role (EOFire).
 
@@ -252,9 +252,9 @@ Score recorded calls belief-by-belief: which of the seven were established, wher
 
 Include these when using Gordon's material in client-facing work — his numbers are marketing-grade:
 
-- **Income-claim gap:** third-party reviews (ScamRisk, Ippei) report students earning far below advertised figures; one reviewer cited a rep at under a quarter of the low-end claim after a year at 45+ hrs/week. Reviewers peg average commissions nearer ~$500/close than the promoted $1,000+.
+- **Income-claim gap:** third-party reviews (ScamRisk, Ippei) report students earning far below advertised figures; one reviewer cited a rep at under a quarter of the low-end claim after a year at 45+ hrs/week (ScamRisk). ScamRisk pegs the average online-coaching commission nearer ~$500/close than the promoted $1,000+.
 - **Structural downsides of the remote-closing career:** 50–70% no-show rates on booked calls, cyclical commission income, no control over lead quality or employment terms, and — as reviewers frame it — "a job, not a business."
-- **Program terms:** ~$8,400 reported price, no refunds; some students report thin coaching relative to promises. Trustpilot rating ~4.3/5 ("Excellent") as of the sources reviewed — sentiment is mixed-positive, not uniform.
+- **Program terms:** ~$8,400 reported price, no refunds; some students report thin coaching relative to promises. Trustpilot rating ~4.3/5 ("Excellent") as of the sources reviewed (unverified against Trustpilot directly) — sentiment is mixed-positive, not uniform.
 - **Revenue claims conflict:** self-reported $30M/year vs. GetLatka's ~$15M ARR (2025). Cite neither as fact without labeling the source.
 
 None of this invalidates the frameworks — the Belief Ladder, call structure, and hiring funnel are sound operating doctrine — but quote his outcome numbers only with attribution.
@@ -278,7 +278,7 @@ None of this invalidates the frameworks — the Belief Ladder, call structure, a
 
 ## Sources
 
-- https://www.eofire.com/podcast/colegordon/ — EOFire podcast (2022): seven buying beliefs, Calibrate/Source/Ramp/Ascend, career advice
+- https://www.eofire.com/podcast/colegordon/ — EOFire podcast (2022): seven buying beliefs, Calibrate/Source/Ramp/Ascent, career advice
 - https://thesalesevangelist.com/episode1575/ — The Sales Evangelist ep. 1575: 8-step/Belief Ladder process, energy vs. mechanics
 - https://writewithai.substack.com/p/the-cole-gordon-belief-ladder-prompt — Belief Ladder operationalized as transcript-analysis rubric
 - https://beyondamillion.com/audio/22-2-5m-month-teaching-strategic-sales-systems-with-cole-gordon/ — Beyond a Million ep. 22: business model, $2.5M/month claim, hiring approach
@@ -296,3 +296,4 @@ None of this invalidates the frameworks — the Belief Ladder, call structure, a
 - https://getlatka.com/companies/closers.io — GetLatka revenue listing (~$15M ARR, 2025)
 - https://www.youtube.com/watch?v=V_WdORvLs34 — Pace Morby interview (June 2026): "The Truth About Sales, AI, and Building Wealth Online" (transcript not retrievable; cited for existence of his AI commentary)
 - https://www.facebook.com/closersintoleaders/videos/is-ai-going-to-replace-salespeople-soon-/561419440055426/ — Closers.io video on AI and salespeople (content not retrievable)
+- https://www.facebook.com/colegordonsalesrecruiting/posts/pre-written-scripts-will-only-take-you-so-far-in-high-ticket-salesthats-why-a-pl/399210668652458/ — Gordon's Facebook post: "Pre-written scripts will only take you so far in high-ticket sales"
