@@ -24,7 +24,7 @@
 
 ## Background
 
-Brian Balfour is the founder and CEO of **Reforge**, the growth-education company he started after leaving HubSpot (2016, per multiple profiles). Before that he was **VP of Growth at HubSpot**, where he built the growth team for new products — HubSpot Sales (originally "Sidekick") and the HubSpot CRM — and it is that product line whose numbers anchor his Four Fits essays. Per his own bio (brianbalfour.com/about): co-founder of **Boundless** (CMO; acquired by Valore) and **Viximo** (VP Product Marketing; acquired by Tapjoy), earlier ventures Unique Production and Celestine, EIR at **Trinity Ventures**, and advisor/investor to companies including Drift, Loom, Help Scout, and Gametime. University of Michigan alumnus.
+Brian Balfour is the founder of **Reforge**, the growth-education company he started after leaving HubSpot (2016, per multiple profiles). He led Reforge as CEO until **Miro acquired Reforge in March 2026**; he is now **Chief Growth Officer at Miro** (Miro newsroom, Mar 24, 2026), with Reforge Learning continuing to operate at reforge.com. Before that he was **VP of Growth at HubSpot**, where he built the growth team for new products — HubSpot Sales (originally "Sidekick") and the HubSpot CRM — and it is that product line whose numbers anchor his Four Fits essays. Per his own bio (brianbalfour.com/about): co-founder of **Boundless** (CMO; acquired by Valore) and **Viximo** (VP Product Marketing; acquired by Tapjoy), earlier ventures Unique Production and Celestine, EIR at **Trinity Ventures**, and advisor/investor to companies including Drift, Loom, Help Scout, and Gametime. University of Michigan alumnus.
 
 His body of work sits in three layers: the **Four Fits** strategy framework (a five-essay series on brianbalfour.com, updated for AI in 2025), the **growth loops** model of how products compound (the Reforge essay "Growth Loops are the New Funnels," co-developed with Casey Winters, Kevin Kwok, and Andrew Chen), and the **growth machine** operating layer — process, team, and experiment cadence. Reforge itself is his lab: he published the hypothesis canvas behind its $0→$30M journey as an essay.
 
@@ -34,9 +34,9 @@ His body of work sits in three layers: the **Four Fits** strategy framework (a f
 
 ### 1. Distribution is the biggest risk, not product
 
-> "Distribution and growth has become the biggest risk to growing a large technology company." — "Building a Growth Machine," brianbalfour.com
+> "We now live in a world where distribution and growth has become the biggest risk to growing a large technology company." — "Building a Growth Machine," brianbalfour.com
 
-The observation that anchors everything: **"There are terrible products that have reached $1B+ and amazing products that never make it anywhere"** (Four Fits series). Product quality alone predicts nothing about scale; the alignment of product, market, channel, and money model does.
+The observation that anchors everything: **"There are also terrible products by many people's definition that reach far greater than $100M+"** — while well-loved products stall ("Product Market Fit Isn't Enough"). Product quality alone predicts nothing about scale; the alignment of product, market, channel, and money model does.
 
 ### 2. Smooth Sailers vs. Tugboats
 
@@ -106,7 +106,7 @@ Channel families and the product attributes they demand:
 
 ### Fit 3: Channel-Model Fit — the ARPU ↔ CAC spectrum
 
-**"Your channels are determined by your model and vice versa."** Model = pricing structure + annual revenue per user (he prefers annual ARPU over LTV because startups need sub-one-year payback to show momentum). Every business lives somewhere on the ARPU ↔ CAC spectrum:
+**"Channel Model Fit is simple - channels are determined by your model"** — and in practice the constraint runs both ways. Model = pricing structure + annual revenue per user (he prefers annual ARPU over LTV because startups need sub-one-year payback to show momentum). Every business lives somewhere on the ARPU ↔ CAC spectrum:
 
 | ARPU | Fitting channels | Examples he cites |
 |---|---|---|
@@ -137,7 +137,7 @@ Working the variables: define the market precisely and research its true size; t
 
 The worked example from "Building a Growth Framework Towards a $100 Million Product" (all numbers his):
 
-1. **Market-Product Fit (2014):** market = individual-contributor salespeople; problem = not knowing what prospects do with their emails. Product = Chrome extension ("Instantly know who opened and clicked your emails"), freemium, $10/mo unlimited tier. Proof = flattening retention curves.
+1. **Market-Product Fit (2014):** market = individual-contributor salespeople; problem = not knowing what prospects do with their emails. Product = Chrome extension whose hook was instantly knowing who opened and clicked your emails (paraphrase), freemium, $10/mo unlimited tier. Proof = flattening retention curves.
 2. **Product-Channel + Channel-Model Fit (months 1-12):** quick time-to-value + $10 price → virality and paid (Facebook ads) fit; grew ~2,000 → 100,000 WAU, with roughly 70% of growth from those channels.
 3. **Model-Market Fit crisis (months 12-18):** only ~2-3M addressable salespeople; $120/yr ARPU would require 33-50% market capture to reach $100M — unrealistic. Customer interviews revealed unexpected users (founders, recruiters, marketers) → redefined market as **"relationship-focused professionals,"** expanding TAM.
 4. **The $25 tier failure (month ~18):** a mid-tier priced into the danger zone — too expensive for viral/paid to move, too cheap to fund content + sales. Killed; replaced by a $50/mo tier with more features, which cleared the zone.
@@ -195,12 +195,13 @@ From "Building a Growth Machine" (his canonical process essay, born at HubSpot):
 - **Zoom out (strategic):** identify the opportunity, set goals, understand the problem — grounded in the growth model and the fits.
 - **Zoom in (tactical):** brainstorm → prioritize → design a Minimum Viable Test (MVT) → run → analyze → **systemize** what wins → spread the learning across the org.
 
-**Five principles of the machine:**
+**Four principles of the machine** (the brianbalfour.com growth-machine hub lists four):
 1. **Maximize learning** — markets shift constantly; learning rate is the only controllable input.
 2. **Seek impact** — growth teams need success metrics distinct from product/marketing so their contribution is legible.
 3. **Balance art + science** — creative and story on one side, quantitative analysis and user behavior on the other; either alone fails.
 4. **Embrace change** — build the team and process for permanent adaptation; nothing is "done."
-5. **Process before tactics** — principles and process first; tactics last.
+
+Above all four sits his recurring meta-rule: **process before tactics** — principles and process first; tactics last (the "hacktics" critique).
 
 **Team and career notes** (10-lessons interview): inspect the work, not the person; before committing to a goal ask "what does it take to win — and what does it cost?"; the year is made in the first six months; expect problems to never end; find **sparring partners**, not mentors; and budget **2x+ activation energy** for anything that requires the org to change. Retention work decomposes into three levers: **activation** (reach the aha moment), **engagement** (deepen usage), **resurrection** (win back churned users).
 
@@ -210,7 +211,7 @@ From "Building a Growth Machine" (his canonical process essay, born at HubSpot):
 
 From "The Four Fits: A Growth Framework for the AI Era" (his Substack, Sept 25, 2025) — the framework holds, but every fit now decays faster:
 
-- **Market-Product Fit can collapse overnight.** His anchor case: Chegg — per his essay, valuation fell from ~$1.2B to ~$150M within 2024 after ChatGPT absorbed its homework-help value prop, and Chegg took 26 months to ship AI features. Adaptation windows compressed from years to months.
+- **Market-Product Fit can collapse overnight.** His anchor case: Chegg — per his essay, valuation fell from ~$1.2B (Jan 2024) to ~$150M (Oct 2024) after ChatGPT absorbed its homework-help value prop, and Chegg took 26 months to ship its first AI features. Adaptation windows compressed from years to months.
 - **Product-Channel Fit disruption:** "For many product categories, people are starting their research on ChatGPT instead of traditional search engines." SEO- and social-dependent loops are exposed; new channels (AI assistants) reward different product shapes. Unlike web→mobile, the shift is near-instant.
 - **Channel-Model Fit breakdown:** LLM serving costs break freemium math; users demand the newest (most expensive) models; the danger zone widens. His Replit numbers (per the essay): ~50x revenue growth in 12 months, ~40M users, ~175K paying — but only ~0.44% free-to-paid conversion, illustrating the new economics.
 - **Model-Market Fit recalibration:** AI shrinks some markets (fewer seats) while enabling new models — his example: Intercom's Fin pricing at $0.99 per resolved ticket, monetizing outcomes instead of seats. Three collapse risks he names: ARPU compression, TAM contraction, SAM fragmentation.
@@ -267,7 +268,7 @@ He also built the first public **AI-assisted loop teardown**: LinkedIn collabora
 
 > "Products are built to fit with channels. Channels do not mold to products." — "Product Channel Fit Will Make or Break Your Growth Strategy," brianbalfour.com
 
-> "There are terrible products that have reached $1B+ and amazing products that never make it anywhere." — Four Fits series, brianbalfour.com
+> "There are also terrible products by many people's definition that reach far greater than $100M+." — "Product Market Fit Isn't Enough," brianbalfour.com
 
 > "The road to $100M doesn't start with product… You are starting with the solution, and then trying to fit it to the problem. We need to do the reverse." — "Building a Growth Framework Towards a $100 Million Product"
 
@@ -279,7 +280,7 @@ He also built the first public **AI-assisted loop teardown**: LinkedIn collabora
 
 > "Self-reinforcing systems create compounding returns. They are a powerful force." — "The Universal Growth Loop," brianbalfour.com
 
-> "Distribution and growth has become the biggest risk to growing a large technology company." — "Building a Growth Machine"
+> "We now live in a world where distribution and growth has become the biggest risk to growing a large technology company." — "Building a Growth Machine"
 
 ---
 
@@ -333,6 +334,7 @@ He also built the first public **AI-assisted loop teardown**: LinkedIn collabora
 - https://brianbalfour.com/quick-takes/fighting-off-rising-cac — three saturations; channel ceilings; HubSpot sequencing; counter-moves
 - https://brianbalfour.com/essays/a-breakdown-of-linkedins-ai-assisted-growth-loop — AI-assisted UGC loop; 0→1M uniques (per Ahrefs); creator canyon
 - https://brianbalfour.com/about — biography: Reforge, HubSpot, Boundless, Viximo, Trinity Ventures, advisor roles
+- https://miro.com/newsroom/miro-acquires-reforge-to-help-organizations-navigate-the-transition-to-ai/ — Miro acquires Reforge (Mar 24, 2026); Balfour joins Miro as Chief Growth Officer
 - https://blog.brianbalfour.com/p/the-four-fits-a-growth-framework — Sept 2025 AI-era update; Chegg, Replit, Intercom Fin examples
 - https://www.reforge.com/blog/growth-loops — "Growth Loops are the New Funnels" (co-authored with Winters, Kwok, Chen); original paywalled/403 — content reconstructed via mirrors and secondary summaries
 - https://www.lennysnewsletter.com/p/brian-balfour-10-lessons-on-career — 10 lessons; growth-as-system; use cases over personas; sparring partners
