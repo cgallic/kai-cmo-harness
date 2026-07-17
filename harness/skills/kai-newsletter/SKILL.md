@@ -39,14 +39,15 @@ Build the newsletter edition plan:
 1. **Load strategy framework**: `knowledge/channels/newsletter-strategy.md`
 2. **Load email lifecycle patterns**: `knowledge/channels/email-lifecycle.md`
 3. **Load skill contract**: `harness/skill-contracts/email-lifecycle.yaml`
-4. **Define edition structure**:
+4. **Load growth economics** (only when the request involves list growth, acquisition budget, subscriber value, or list-quality diagnosis): `knowledge/playbooks/newsletter-growth-economics.md`
+5. **Define edition structure**:
    - Hero story / lead piece
    - Supporting content (2-3 items)
    - Quick links / resource roundup
    - CTA (one primary, one secondary max)
-5. **Subject line candidates** — Generate 5+ options, score for open-rate potential
-6. **Preview text** — Complement (not repeat) the subject line
-7. **Segment targeting** — Which list segment receives this edition?
+6. **Subject line candidates** — Generate 5+ options, score for open-rate potential
+7. **Preview text** — Complement (not repeat) the subject line
+8. **Segment targeting** — Which list segment receives this edition?
 
 ---
 

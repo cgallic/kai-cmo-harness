@@ -12,7 +12,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skill docs, 47 public `/kai` router commands, 59 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skill docs, 47 public `/kai` router commands, 67 playbook docs, 36 checklists, 33 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract (critical)
 
@@ -89,6 +89,8 @@ Load the primary framework as context, then validate against the checklist. Full
 | Offer construction / full-funnel build (Hormozi sequence) | `knowledge/playbooks/hormozi-100m-funnel.md` + `knowledge/people/alex-hormozi-knowledge.md` | — |
 | Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` + `knowledge/people/tommy-mello-knowledge.md` | `knowledge/checklists/cro-audit-checklist.md` |
 | Expert framework lookup (who said what, load-when triggers) | `knowledge/people/_people-index.md` | — |
+| Doctrine conflicts / which framework governs | `knowledge/_arbitration.md` + `knowledge/frameworks/marketing-science/diagnosis-first-operating-order.md` | — |
+| Measurement honesty (attribution, incrementality, test rigor) | `knowledge/frameworks/marketing-science/attribution-and-incrementality.md` + `knowledge/frameworks/marketing-science/experiment-rigor.md` | — |
 
 ---
 
