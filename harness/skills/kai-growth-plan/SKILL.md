@@ -3,6 +3,8 @@ name: kai-growth-plan
 description: Generate a stage-appropriate marketing plan based on your company's MRR/stage. Uses the marketing-by-stage playbook to tell you exactly what to do (and what NOT to do) at pre-launch, early ($0-10K MRR), growth ($10-100K MRR), or scale ($100K+ MRR). Use when "what should I do for marketing", "growth plan", "marketing plan", "I just raised a round", "marketing strategy", "what's the right marketing for my stage", "GTM strategy", or any request for a stage-appropriate marketing roadmap.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Generate a marketing plan matched to your company stage. The wrong strategy at the wrong stage wastes money.
 
 ## Phase 0: Load Product Context

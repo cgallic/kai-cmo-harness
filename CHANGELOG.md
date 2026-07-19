@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased — 2026-07-05
+
+### Install UX overhaul — plugin marketplace + installer v2
+
+**Claude Code plugin (new hero install path)**
+- Repo is now a plugin marketplace: `/plugin marketplace add cgallic/kai-cmo-harness` then `/plugin install kai@kai-marketing-os` — two lines inside Claude Code, no terminal
+- `plugins/kai-marketing-os/` packages skills + knowledge + references + contracts + quality gates (~7 MB) via symlinks, dereferenced at install; workspace/site/media junk never ships
+- `version` intentionally omitted from plugin.json → SHA-based auto-updates on every push
+
+**install.sh v2.0.0**
+- Now installs the knowledge base to `~/.claude/kai/` (v1 shipped skills whose referenced frameworks/contracts/gates were never installed)
+- `kaicalls-design` is optional (warn, not fail); uses local checkout when run from one
+- Executable bits fixed on `install.sh`, `setup.sh`, `deploy.sh`, `setup`, `bin/*` (previously `./install.sh` failed on every fresh clone)
+
+**Skills**
+- 34 skills gained a "Kai root note" so `knowledge/`/`harness/`/`scripts/` paths resolve in all three install modes (repo, plugin cache, `~/.claude/kai`) and missing `scripts/` commands are skipped-and-declared, never fabricated
+- `/kai-start`: goal-loop step auto-skips without `scripts/harness_cli.py`; first recommendation is now `/kai-growth-plan` (works anywhere) instead of `/kai-audit` (repo-only collectors)
+- `/kai-audit`: explicit qualitative mode when collectors are unavailable — unmeasured numbers go to `_data-gaps.md`, never estimated
+- Fixed `kai-growth-hacker` YAML frontmatter (unquoted `:` silently dropped all skill metadata)
+
+**Docs**
+- README + Quick Start lead with the plugin path; manual install now includes the knowledge payload; research + design decisions in `docs/install-ux-research.md`
+
 ## v0.3.0 — 2026-07-05
 
 ### Long-Horizon Loops (#37, #39)

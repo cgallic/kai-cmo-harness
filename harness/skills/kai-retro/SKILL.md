@@ -3,6 +3,8 @@ name: kai-retro
 description: Run a learning retrospective on the Kai harness. Mines gate-failure logs and 30-day performance results into lessons, triages candidate lessons (promote/keep/retire), and graduates repeated lessons into enforced gate checks with golden corpus cases. Use when "retro", "what have we learned", "triage lessons", "promote lessons", "why does this keep failing", "harness retrospective", or monthly / after any heavy content sprint.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Run the Kai learning retrospective. This is how the harness gets smarter: raw failure logs become lessons, repeated lessons become enforced checks. Read `memory/MEMORY.md` first for the graduation ladder.
 
 ## When to run

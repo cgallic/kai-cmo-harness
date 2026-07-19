@@ -3,6 +3,8 @@ name: kai-reddit-listen
 description: Monitor Reddit for conversation-fit opportunities — watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord. Use when "reddit monitor", "reddit listener", "reddit outreach", "watch subreddits", "find reddit opportunities", "listen on reddit", "community listening", or any request to automate finding posts you should reply to on Reddit.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Build and run a profile-driven Reddit listener. Engine lives at `scripts/reddit_monitor/`; each brand/client is a **profile** (subreddits + trigger keywords + LLM prompt + Discord webhook).
 
 ## When to use

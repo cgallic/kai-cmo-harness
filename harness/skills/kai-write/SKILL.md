@@ -3,6 +3,8 @@ name: kai-write
 description: Write a single piece of marketing content using Kai CMO Harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when "write a blog post", "draft an email", "LinkedIn article", "cold outreach", "write ad copy", "press release", "TikTok script", or any single content creation request. For building a complete email system, use /kai-email-system instead.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Write one piece of content using the Kai CMO Harness. Loads the right framework, applies quality gates, outputs ready-to-publish copy.
 
 ## Phase 0: Load Product Context

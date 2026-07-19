@@ -12,6 +12,8 @@ description: >
 
 # kai-sdr-operator - SDR Package Builder
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Create a reusable SDR operating package. The package should let a human or future agent connect lead sources, enrich accounts, score fit, prepare compliant outreach, triage replies, prep meetings, write follow-up, update CRM handoff records, and learn from outcomes.
 
 This skill is the orchestrator. Use `/kai-cold-outreach` for the actual cold email copy after the lead-source, suppression, sender, and claim evidence gates are clear. Use `/kai-sdr-reply-triage` for replies and `/kai-sales-meeting-prep` for booked calls. Use `/kai-data-dashboard` only when the user explicitly asks for a dashboard surface.

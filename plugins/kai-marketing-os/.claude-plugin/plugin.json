@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "kai",
+  "displayName": "Kai Marketing OS",
+  "description": "A marketing team in your terminal: 45+ /kai skills for growth plans, landing pages, emails, ads, SEO/AEO, audits, and content — backed by a real knowledge base (54 playbooks, 36 checklists, 27 frameworks, 26 channel guides) and quality gates that block slop before it ships.",
+  "author": {
+    "name": "Connor Gallic",
+    "email": "me@connorgallic.com",
+    "url": "https://github.com/cgallic"
+  },
+  "homepage": "https://meetkai.xyz",
+  "repository": "https://github.com/cgallic/kai-cmo-harness",
+  "license": "MIT",
+  "keywords": [
+    "marketing",
+    "growth",
+    "seo",
+    "aeo",
+    "ads",
+    "copywriting",
+    "landing-pages",
+    "email",
+    "content",
+    "cmo"
+  ]
+}

@@ -3,6 +3,8 @@ name: kai-surround-sound
 description: LLM brand manipulation — build a consensus web so ChatGPT, Claude, Perplexity, and Google AI Overviews mention your brand when people ask about your category. Uses surround sound methodology, entity SEO, and LLM citation science. Use when "get mentioned in AI", "LLM brand presence", "surround sound", "AI search visibility", "Perplexity ranking", "ChatGPT mentions", "AI Overview inclusion", "entity authority", "brand mentions in AI", or any request to influence how AI systems perceive and recommend your brand.
 ---
 
+> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+
 Build a consensus web that makes LLMs mention your brand. The bleeding edge of marketing.
 
 ## Phase 0: Load Product Context
