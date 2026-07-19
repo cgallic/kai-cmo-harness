@@ -9,6 +9,8 @@ Primary references:
 - Spotlight ranking help: https://help.snapchat.com/hc/en-us/articles/8961653169940-How-We-Rank-Content-on-Spotlight
 - Snapchat organic rules: `harness/references/snapchat-organic-posting-rules.md`
 
+Last researched: 2026-07-13
+
 ## Channel Role
 
 Use Snapchat for mobile-native creator content, youth-skewing brand moments, behind-the-scenes updates, Spotlight entertainment, and creator/partner distribution.
@@ -16,7 +18,8 @@ Use Snapchat for mobile-native creator content, youth-skewing brand moments, beh
 ## Distribution Notes
 
 - Allowed content and recommendation-eligible content are different checks.
-- Spotlight ranking looks for viewer interest signals and negative skip behavior.
+- Spotlight ranking looks for predicted favorites, shares, and viewing time, then layers in negative skip behavior and content understanding. Source: https://help.snapchat.com/hc/en-us/articles/8961653169940-How-We-Rank-Content-on-Spotlight (accessed 2026-07-13).
+- Public Stories and Spotlight submissions are reviewed before broader distribution and can stay in limited distribution when moderation or eligibility checks do not fully clear. Source: https://help.snapchat.com/hc/en-us/articles/7012263915412-Is-Stories-content-on-Snapchat-moderated (accessed 2026-07-13).
 - Public content needs fast visual comprehension, vertical framing, audio/caption clarity, and originality.
 - Commercial content must be disclosed and may require age/location controls.
 

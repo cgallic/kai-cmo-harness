@@ -52,7 +52,7 @@ quality_gates:
   - x_account_capability_checked == true  # required for X long posts, Articles, Spaces, creator monetization, or promoted candidates
 
 word_count: 50-900  # varies by platform and post_type
-# linkedin update: 150-700 words | linkedin article: 700-1000
+# linkedin update: 150-700 words | linkedin article: 2200-3000
 # X update: 20-50 words by default | X thread: 150-500 words total | X long-form/Article only when account capability is declared
 # instagram/facebook/threads: 20-400 words depending on format
 # tiktok/youtube/snapchat: script-first; short-form hooks must land in first 1-3 seconds

@@ -30,10 +30,10 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Audit Execution
 
 Load these before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\conversion-rate-optimization.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\funnel-hack-offer-architecture.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\cro-audit-checklist.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\landing-page-messaging-checklist.md`
+- `knowledge/playbooks/conversion-rate-optimization.md`
+- `knowledge/playbooks/funnel-hack-offer-architecture.md`
+- `knowledge/checklists/cro-audit-checklist.md`
+- `knowledge/checklists/landing-page-messaging-checklist.md`
 
 ### Competitor Funnel-Hack Step (required for ecommerce/CRO)
 

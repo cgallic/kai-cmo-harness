@@ -219,9 +219,13 @@ def load_config() -> HarnessConfig:
     gsc_urls = sites_raw.get("gsc_urls", {})
     ga4_props = {}
     for site_key, prop_id in sites_raw.get("ga4_properties", {}).items():
-        # Allow env var override per site
-        env_key = f"GA4_PROPERTY_{site_key.upper()}"
-        ga4_props[site_key] = os.environ.get(env_key, str(prop_id))
+        # setup.sh and deployed .env files use GA_<SITE>_PROPERTY_ID.
+        # Retain GA4_PROPERTY_<SITE> as a compatibility fallback.
+        env_key = f"GA_{site_key.upper()}_PROPERTY_ID"
+        legacy_env_key = f"GA4_PROPERTY_{site_key.upper()}"
+        ga4_props[site_key] = os.environ.get(
+            env_key, os.environ.get(legacy_env_key, str(prop_id))
+        )
     sites = SiteConfig(gsc_urls=gsc_urls, ga4_properties=ga4_props)
 
     # Build threshold config

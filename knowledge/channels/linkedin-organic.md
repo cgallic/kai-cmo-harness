@@ -15,6 +15,17 @@ Primary references:
 
 Use official LinkedIn sources for policy and ranking claims. Treat third-party reach multipliers, timing windows, and format hierarchy claims as benchmarks to test, not platform doctrine.
 
+## Official Baseline vs Benchmarks
+
+Official LinkedIn help pages currently confirm a narrower set of facts than most "LinkedIn algorithm" threads imply:
+
+- LinkedIn says Feed uses hundreds of signals across post context plus profile, network, and activity history.
+- LinkedIn says demographic fields such as age, race, and gender are not visibility signals.
+- LinkedIn's prohibited-software page bans bots, crawlers, browser plug-ins/extensions, fake engagement, and tools that manipulate content algorithms.
+- LinkedIn's publishing-platform page still says article posts are public and job openings do not belong on the publishing platform.
+
+Treat the rest of this guide's numeric hierarchies, timing windows, and format multipliers as benchmark hypotheses or internal operating defaults unless a line is explicitly tied to an official source.
+
 ## How the LinkedIn Feed Algorithm Works
 
 LinkedIn uses a multi-stage pipeline to rank content in users' feeds:

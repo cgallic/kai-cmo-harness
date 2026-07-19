@@ -304,11 +304,15 @@ Short-form detection is heuristic: if draft contains `VARIANT A`, `Touch 1`, `Su
 
 ## Cron Schedule
 
-| Time | Script | Purpose |
-|------|--------|---------|
-| `0 2 * * *` | `performance_check.py --all` | 30d performance pulls |
-| `0 14 * * 1` | `pattern_extract.py --weekly --site all` | Weekly pattern aggregation |
-| `30 14 * * 1` | `harness_defaults_update.py` | Update MARKETING.md defaults (fires 30min after pattern extract) |
+These are seeded automatically into the agent loop by `agent/scheduler.py` `create_default_tasks()` (handlers in `agent/tasks/`) — an external crontab is only needed on deployments that don't run `python -m agent.loop`:
+
+| Time | Task | Purpose |
+|------|------|---------|
+| `0 2 * * *` | `performance_check_30d` (`performance_check.py --all`) | 30d performance pulls, winner/underperformer grading |
+| `0 14 * * 1` | `pattern_extract_weekly` (`pattern_extract.py --weekly --site all`) | Weekly pattern aggregation |
+| `30 14 * * 1` | `harness_defaults_update` (`harness_defaults_update.py`) | Update MARKETING.md defaults (fires 30min after pattern extract) |
+| `0 * * * *` | `editorial_calendar_tick` | Due `data/calendar/editorial.jsonl` items → drafts (gate/approval unchanged) |
+| `0 7 * * 1` | `cmo_review` | Goal pace vs deadline → task-graph planning for behind-pace goals |
 
 ---
 

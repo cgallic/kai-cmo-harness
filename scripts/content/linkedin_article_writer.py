@@ -272,7 +272,7 @@ def write_article(headline: str, cluster_name: str, cluster_context: str = "") -
 Cluster topic: {cluster_name}{context_block}
 
 Requirements:
-- 900–1,200 words
+- 2,200–3,000 words (this is a floor — do not stop before 2,200)
 - Start with a specific scenario, data point, or concrete problem — NOT "I'm excited to share" or any opener about yourself
 - Short paragraphs (2–4 sentences max)
 - Use bold headers (##) to break the article into 4–6 sections
@@ -289,7 +289,7 @@ Output the full article in markdown. Include the title as an H1 at the top."""
             {"role": "user", "content": prompt}
         ],
         temperature=0.7,
-        max_tokens=2000,
+        max_tokens=4500,
     )
     return response.choices[0].message.content.strip()
 

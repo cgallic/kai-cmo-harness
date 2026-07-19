@@ -198,5 +198,5 @@ Build the `kai/normalization/` module with four sub-modules: channels, locations
 ## Reference Materials
 
 - `kai/models/business_profile.py` (Task 001) — the schema fields these normalizers feed into
-- `config.example.yaml` — example of raw channel/site data that needs normalization
+- `config.yaml.example` — example of raw channel/site data that needs normalization
 - `CLAUDE.md` — Framework Map showing channel names used across the system

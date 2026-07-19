@@ -8,6 +8,9 @@ from scripts.ads import upload
 from scripts.ads import google as google_cli
 from scripts.ads import meta as meta_cli
 from scripts.ads.uploaders import AdRef, UploadError, UploadResult
+from scripts.ads.uploaders.base import CreativeSpec
+from scripts.ads.uploaders.meta import MetaUploader
+from scripts.ads.uploaders import meta as meta_uploader_module
 from scripts.ads.uploaders.tiktok import TikTokUploader
 
 
@@ -84,6 +87,60 @@ def test_upload_cli_execute_with_approval_uploads_and_creates_paused(monkeypatch
     assert dummy.create_called is True
 
 
+def test_upload_cli_reuses_existing_asset_ref_without_upload(monkeypatch, tmp_path):
+    asset = tmp_path / "ad.mp4"
+    asset.write_bytes(b"fake")
+    dummy = _DummyUploader()
+    monkeypatch.setattr(upload, "get_uploader", lambda platform: dummy)
+
+    exit_code = upload.main(
+        _args(
+            asset,
+            "--execute",
+            "--approval-id", "act_123",
+            "--asset-ref", "video_123",
+        )
+    )
+
+    assert exit_code == 0
+    assert dummy.upload_called is False
+    assert dummy.create_called is True
+
+
+def test_meta_video_creative_uses_video_data(monkeypatch):
+    captured = {}
+
+    def fake_run_meta(*args, capture=True):
+        captured["args"] = args
+        return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(meta_uploader_module, "_run_meta", fake_run_meta)
+    uploader = MetaUploader()
+    creative = CreativeSpec(
+        name="Creature",
+        headline="Just Call Kai Today",
+        description="Kai answers after-hours calls.",
+        link="https://kaicalls.com",
+        cta="LEARN_MORE",
+        page_id="page_1",
+    )
+    asset = UploadResult(
+        platform="meta",
+        kind="video",
+        ref="video_1",
+        raw={"thumbnail_hash": "thumb_1"},
+    )
+
+    uploader.create_ad("adset_1", creative, asset, execute=False)
+
+    creative_json = captured["args"][captured["args"].index("--creative-json") + 1]
+    payload = __import__("json").loads(creative_json)
+    story = payload["object_story_spec"]
+    assert story["video_data"]["video_id"] == "video_1"
+    assert story["video_data"]["image_hash"] == "thumb_1"
+    assert "link_data" not in story
+
+
 def test_google_cli_execute_requires_approval_id_before_credentials():
     args = google_cli.argparse.Namespace(
         type="campaign",
@@ -122,6 +179,54 @@ def test_meta_campaign_create_rejects_active_status():
         meta_cli.cmd_create_campaign(args)
 
     assert exc.value.code == 1
+
+
+def test_meta_campaign_create_disables_adset_budget_sharing(monkeypatch):
+    captured = {}
+    monkeypatch.setenv("META_AD_ACCOUNT_ID", "act_123")
+    monkeypatch.setenv("META_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(
+        meta_cli,
+        "_dry_run_banner",
+        lambda method, url, payload: captured.update(payload),
+    )
+    args = meta_cli.argparse.Namespace(
+        name="Leads",
+        objective="OUTCOME_LEADS",
+        special_ad_category=None,
+        status="PAUSED",
+        execute=False,
+        approval_id=None,
+    )
+
+    meta_cli.cmd_create_campaign(args)
+
+    assert captured["is_adset_budget_sharing_enabled"] == "false"
+
+
+def test_meta_adset_create_uses_lowest_cost_without_cap(monkeypatch):
+    captured = {}
+    monkeypatch.setenv("META_AD_ACCOUNT_ID", "act_123")
+    monkeypatch.setenv("META_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(
+        meta_cli,
+        "_dry_run_banner",
+        lambda method, url, payload: captured.update(payload),
+    )
+    args = meta_cli.argparse.Namespace(
+        campaign_id="campaign_1",
+        name="Lead test",
+        daily_budget="2",
+        optimization_goal="OFFSITE_CONVERSIONS",
+        targeting='{"geo_locations":{"countries":["US"]}}',
+        promoted_object='{"pixel_id":"pixel_1","custom_event_type":"LEAD"}',
+        execute=False,
+        approval_id=None,
+    )
+
+    meta_cli.cmd_create_adset(args)
+
+    assert captured["bid_strategy"] == "LOWEST_COST_WITHOUT_CAP"
 
 
 def test_tiktok_uploader_upload_asset_requires_approval_context(monkeypatch, tmp_path):

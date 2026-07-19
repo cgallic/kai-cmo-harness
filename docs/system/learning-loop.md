@@ -57,7 +57,7 @@ These come from the systems that demonstrably work — Claude Code's two-tier me
 | Every gate run (pass or fail, with failure signatures) | `data/learning/gate_runs.jsonl` | `gate_logger.py`, wired into the gate CLIs | automatic |
 | Correction received, repeated mistake, platform surprise | `memory/lessons.md` | the agent, via `lesson_capture.py add` or direct edit | the five write triggers in `memory/MEMORY.md` |
 | Harness/API sharp edges with enforcement status | `memory/edge-cases.md` | the agent during retro or incident | new gotcha discovered |
-| Published pieces graded `loser` at 30 days | `memory/what-doesnt-work.md` | the agent during `/kai-retro` | `lesson_capture.py losers` surfaces them |
+| Published pieces graded `underperformer` at 30 days | `memory/what-doesnt-work.md` | the agent during `/kai-retro` | `lesson_capture.py losers` surfaces them |
 | Published pieces graded `winner` at 30 days | `knowledge/playbooks/what-works.md` | `pattern_extract.py` (cron) | existing pipeline |
 
 The JSONL log is machine-local (gitignored under `data/`). The markdown memory is git-backed and travels with the repo — clone the repo, inherit the lessons.

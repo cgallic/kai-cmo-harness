@@ -62,9 +62,13 @@ def _load_env_file() -> Dict[str, str]:
 
 
 def env(key: str, default: str = "") -> str:
-    """Get an env var: .env.local first, then os.environ, then default."""
+    """Get an env var: explicit process environment, then env file, then default.
+
+    Operators may source a current secret before invoking the CLI. That explicit
+    runtime choice must not be silently replaced by a stale repo-local value.
+    """
     loaded = _load_env_file()
-    return loaded.get(key, os.environ.get(key, default))
+    return os.environ.get(key, loaded.get(key, default))
 
 
 def has_creds(*keys: str) -> bool:
@@ -158,9 +162,16 @@ def _request(
                     time.sleep(wait)
                     continue
                 # Permanent error: raise
+                details = [
+                    f"subcode={err['error_subcode']}" if err.get("error_subcode") else "",
+                    err.get("error_user_title", ""),
+                    err.get("error_user_msg", ""),
+                ]
+                detail_text = " | ".join(part for part in details if part)
                 raise APIError(
                     f"API error{' (' + label + ')' if label else ''}: "
                     f"[{err.get('code', '?')}] {err.get('message', 'Unknown error')}"
+                    f"{' | ' + detail_text if detail_text else ''}"
                 )
 
             return body

@@ -81,7 +81,7 @@ Produce assets in dependency order:
 
 Each asset follows the standard harness pipeline:
 
-1. Load the right framework from `E:\Dev2\kai-cmo-harness-work\knowledge/`
+1. Load the right framework from `knowledge/`
 2. Load the skill contract from `harness/skill-contracts/`
 3. Load platform policy (for ads) from `harness/references/`
 4. Write against the framework + persona

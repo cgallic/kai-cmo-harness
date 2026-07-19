@@ -12,7 +12,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-Inventory reachable from here: 48 skill directories, 45 canonical `kai-*` skill docs, 42 public `/kai` router commands, 54 playbook docs, 36 checklists, 27 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skill docs, 47 public `/kai` router commands, 67 playbook docs, 36 checklists, 33 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
 
 ## Instruction Contract (critical)
 
@@ -86,7 +86,11 @@ Load the primary framework as context, then validate against the checklist. Full
 | Site architecture | `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `knowledge/checklists/seo-checklist.md` |
 | Competitor analysis | `knowledge/playbooks/competitive-intelligence.md` + `knowledge/frameworks/competitor-content-analysis.md` | — |
 | Campaign planning | `knowledge/playbooks/campaign-orchestration.md` | — |
-| Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/cro-audit-checklist.md` |
+| Offer construction / full-funnel build (Hormozi sequence) | `knowledge/playbooks/hormozi-100m-funnel.md` + `knowledge/people/alex-hormozi-knowledge.md` | — |
+| Phone lead capture / AI receptionist | `knowledge/playbooks/conversion-rate-optimization.md` + `knowledge/playbooks/demand-generation.md` + `knowledge/people/tommy-mello-knowledge.md` | `knowledge/checklists/cro-audit-checklist.md` |
+| Expert framework lookup (who said what, load-when triggers) | `knowledge/people/_people-index.md` | — |
+| Doctrine conflicts / which framework governs | `knowledge/_arbitration.md` + `knowledge/frameworks/marketing-science/diagnosis-first-operating-order.md` | — |
+| Measurement honesty (attribution, incrementality, test rigor) | `knowledge/frameworks/marketing-science/attribution-and-incrementality.md` + `knowledge/frameworks/marketing-science/experiment-rigor.md` | — |
 
 ---
 
@@ -167,7 +171,7 @@ Competent Cog ("system treats you like a child") · Shock Absorber ("accountabil
 
 `Research --> Brief --> Write --> Quality Gate --> Approval --> Publish --> Log --> 30-day Check`
 
-1. **Research** — find the framework via `knowledge/_index.md`; load it.  2. **Brief** — structured brief via `harness/brief-schema.md` (persona, angle, keywords, format).  3. **Write** — apply framework + quality rules + persona hooks; follow the skill contract.  4. **Gate** — run four_us_score, banned_word_check, seo_lint (SEO only); all must pass.  5. **Retry** — max 2 cycles; fix only the specific issues flagged, never full rewrites.  6. **Escalate** — after 2 failures, surface to human with failure details; log the repeated diagnosis to `memory/lessons.md`.  7. **Publish** — deliver to channel.  8. **Log** — what, when, which persona.  9. **30-day Check** — winners feed `knowledge/playbooks/what-works.md`; losers get diagnosed into `memory/what-doesnt-work.md` via `/kai-retro`.
+1. **Research** — find the framework via `knowledge/_index.md`; load it.  2. **Brief** — structured brief via `harness/brief-schema.md` (persona, angle, keywords, format).  3. **Write** — apply framework + quality rules + persona hooks; follow the skill contract.  4. **Gate** — run four_us_score, banned_word_check, seo_lint (SEO only); all must pass.  5. **Retry** — max 2 cycles; fix only the specific issues flagged, never full rewrites.  6. **Escalate** — after 2 failures, surface to human with failure details; log the repeated diagnosis to `memory/lessons.md`.  7. **Publish** — auto-publish only when `publishing.enabled` + `publishing.sites.<site>` are configured (default OFF); otherwise the entry is logged `approved_unpublished` with `url: null` and a human publishes, then backfills the real URL via `content_log.mark_published()`. NEVER log a URL that wasn't returned by a publisher.  8. **Log** — `data/content_log.json` (canonical): what, when, persona, content_hash, campaign_id; a site-level GSC baseline snapshot is captured when the entry gains a real URL.  9. **30-day Check** — scheduled only for entries with real URLs; winners feed `knowledge/playbooks/what-works.md`; pieces graded `underperformer` get diagnosed into `memory/what-doesnt-work.md` via `/kai-retro`.
 
 ---
 

@@ -1,6 +1,6 @@
 # YouTube Organic Posting Rules
 
-Last researched: 2026-06-29
+Last researched: 2026-07-13
 
 Primary sources:
 - Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
@@ -20,19 +20,22 @@ Primary sources:
 
 - Check Community Guidelines for every video, Short, live stream, community post, and comment strategy.
 - Check fake engagement rules before any view, like, comment, share, subscriber, giveaway, or engagement CTA.
-- Disclose realistic AI-generated or altered content during upload when the platform requires it, especially when a real person appears to say/do something they did not, a real event/place is altered, or a realistic event is shown that never happened. Source: https://support.google.com/youtube/answer/14328491?hl=en (accessed 2026-06-29).
+- Disclose realistic AI-generated or altered content during upload when the platform requires it, especially when a real person appears to say/do something they did not, a real event/place is altered, or a realistic event is shown that never happened. Source: https://support.google.com/youtube/answer/14328491?hl=en (accessed 2026-07-13).
 - Declare paid promotion, sponsorship, endorsement, or product placement in upload settings when required, including Shorts, live streams, descriptions, comments, and other YouTube features tied to the promotion.
 - Set made-for-kids, age restriction, remixing, license, caption, and altered-content fields intentionally.
-- Use YouTube API only with compliant user consent, privacy policy, Terms link, data deletion, and quota/rate handling.
-- Check advertiser-friendly updates before monetized videos or paid amplification.
+- Use YouTube API only with compliant user consent, privacy policy, Terms link, data deletion, and quota/rate handling. The July 7, 2026 revision history added `brandPartner` support to `videos.insert`, `videos.update`, and `videos.list` for creator-initiated brand partner access, and the same revision-history page keeps `status.containsSyntheticMedia` as the altered/synthetic disclosure field for API uploads. Source: https://developers.google.com/youtube/v3/revision_history (accessed 2026-07-13).
+- Monitor quota by method, not as one flat bucket. As of June 1, 2026, `videos.insert` and `search.list` have their own quota buckets, and June 3, 2026 added `videos.batchGetStats` with a separate quota bucket. Source: https://developers.google.com/youtube/v3/revision_history (accessed 2026-07-13).
+- Check advertiser-friendly updates before monetized videos or paid amplification. The current help page still surfaces March 2026 shocking-content clarification and February 2026 firearms/magazine eligibility changes, so monetization assumptions can move independently of Community Guidelines. Source: https://support.google.com/youtube/answer/9725604?hl=en (accessed 2026-07-13).
 
 ## Organic Distribution Guidance
 
 - YouTube recommendations appear in Watch Next, Search, home surfaces, Shorts, and news/shelf surfaces.
 - Search ranking uses relevance, engagement, and quality with different weights by query type.
 - Watch history, broader viewer trends, current video topics, quality, and user controls affect recommendations.
+- YouTube's current creator-facing recommendation page explicitly frames the system around helping each viewer find videos they want to watch and maximizing long-term viewer satisfaction. Optimize for audience fit first, not “beating the algorithm.” Source: https://support.google.com/youtube/answer/16533387?hl=en (accessed 2026-07-13).
 - Optimize for honest click-through, viewer satisfaction, retention, session fit, and topic clarity.
-- Avoid artificial metric inflation, engagement incentives, misleading metadata, reused/mass-produced content, and clickbait that disappoints viewers. That includes view exchanges, subscriber swaps, or other "sub4sub" mechanics. Source: https://support.google.com/youtube/answer/3399767?hl=en (accessed 2026-06-29).
+- Avoid artificial metric inflation, engagement incentives, misleading metadata, reused/mass-produced content, and clickbait that disappoints viewers. That includes view exchanges, subscriber swaps, or other "sub4sub" mechanics. YouTube's fake-engagement page also now explicitly folds deceptive AI voice/likeness impersonation into the same enforcement surface when it misleads viewers about who owns or authorizes a channel. Source: https://support.google.com/youtube/answer/3399767?hl=en (accessed 2026-07-13).
+- Treat spam policy scope as broader than public uploads only. YouTube's current spam page says the policy also applies to unlisted/private content, comments, links, posts, thumbnails, and coordinated channel networks. Source: https://support.google.com/youtube/answer/2801973?hl=en (accessed 2026-07-13).
 - Treat tags as a minor discovery input, mainly useful for misspellings, not as a ranking lever.
 - Check topic interest, competition, and seasonality before assuming a reach drop is a creative failure.
 - Mark analytics trend breaks when YouTube changes Shorts view counting or API metric definitions.

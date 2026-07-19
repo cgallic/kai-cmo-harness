@@ -1,5 +1,7 @@
 # Ghosty — Research Outline
 
+**Status:** covered by distribution-moat-edges.md and business-models-breakdown.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Presenter (~1:55-1:58)
 **Known For:** Growth consulting (marketing + sales for scaling companies), Austin-based
 

@@ -1,5 +1,7 @@
 # Declan O'Reilly — Research Outline
 
+**Status:** covered by ultra-niche-audience-matching.md, business-models-breakdown.md, tactical-playbook.md, distribution-moat-edges.md, and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Key presenter
 **Known For:** Top GoHighLevel affiliate globally, $100K+/month from 20K YouTube subscribers
 

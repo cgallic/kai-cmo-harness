@@ -221,6 +221,44 @@ class TestPendingChecksSkipNullUrl:
         due = pc.get_pending_checks()
         assert [c["id"] for _, c in due] == ["due"]
 
+    def test_get_pending_checks_normalizes_legacy_check_after(self, perf):
+        pc, content_log, checks_dir = perf
+        content_log.write_text(json.dumps([{
+            "id": "legacy-1",
+            "url": "https://example.com/legacy",
+            "keyword": "legacy keyword",
+            "site": "meetkai",
+            "publish_date": "2026-01-01",
+            "performance_30d": None,
+        }]))
+        check_file = checks_dir / "legacy-1.json"
+        check_file.write_text(json.dumps({
+            "url": "https://example.com/legacy",
+            "check_after": "2020-01-01",
+            "status": "pending",
+        }))
+
+        due = pc.get_pending_checks()
+
+        assert len(due) == 1
+        assert due[0][1]["id"] == "legacy-1"
+        assert due[0][1]["keyword"] == "legacy keyword"
+        assert due[0][1]["site"] == "meetkai"
+        assert due[0][1]["published_at"] == "2026-01-01"
+        normalized = json.loads(check_file.read_text())
+        assert normalized["check_due"] == "2020-01-01"
+
+    def test_get_pending_checks_skips_malformed_record_without_stopping_batch(self, perf, caplog):
+        pc, content_log, checks_dir = perf
+        content_log.write_text("[]")
+        (checks_dir / "bad.json").write_text(json.dumps({"status": "pending"}))
+        self._check(checks_dir, "due")
+
+        due = pc.get_pending_checks()
+
+        assert [c["id"] for _, c in due] == ["due"]
+        assert "Skipping invalid pending check" in caplog.text
+
     def test_reconcile_skips_approved_unpublished_null_url(self, perf):
         pc, content_log, checks_dir = perf
         entries = [
@@ -244,6 +282,179 @@ class TestPendingChecksSkipNullUrl:
         content_log.write_text(json.dumps(entries))
         assert pc.reconcile_pending_checks() == 1
         assert sorted(f.stem for f in checks_dir.glob("*.json")) == ["live-1"]
+
+
+# ---------------------------------------------------------------------------
+# EC-15 — baseline-relative grading (absolute behavior preserved bit-for-bit
+# when no baseline exists; relative context added when one does)
+# ---------------------------------------------------------------------------
+
+
+class TestBaselineRelativeGrading:
+    @pytest.fixture
+    def pc(self):
+        from scripts.self_improvement import performance_check as pc
+
+        return pc
+
+    def test_absolute_grading_unchanged_without_baseline(self, pc):
+        """No baseline -> result is EXACTLY the historical dict (same keys,
+        same values) for winner / average / underperformer inputs."""
+        cases = [
+            (  # winner
+                {"position": pc.WIN_POSITION, "ctr": pc.WIN_CTR, "impressions": 500,
+                 "clicks": 25},
+                {"avg_session_duration": pc.WIN_TIME_ON_PAGE},
+                {"is_winner": True, "is_underperformer": False, "grade": "winner"},
+            ),
+            (  # average
+                {"position": 12, "ctr": 0.03, "impressions": 50, "clicks": 2},
+                {"avg_session_duration": 10},
+                {"is_winner": False, "is_underperformer": False, "grade": "average"},
+            ),
+            (  # underperformer: no position at all
+                {"position": None, "ctr": 0, "impressions": 0, "clicks": 0},
+                {},
+                {"is_winner": False, "is_underperformer": True,
+                 "grade": "underperformer"},
+            ),
+            (  # underperformer: position > 20
+                {"position": 25, "ctr": 0.015, "impressions": 200, "clicks": 3},
+                {},
+                {"is_winner": False, "is_underperformer": True,
+                 "grade": "underperformer"},
+            ),
+        ]
+        for gsc, ga4, expected in cases:
+            assert pc.evaluate_performance({"url": "u", "keyword": "k"}, gsc, ga4) == expected
+
+    def test_relative_context_added_with_baseline(self, pc):
+        baseline = {"gsc": {"clicks": 30, "impressions": 1000, "window_days": 28},
+                    "captured_at": "2026-06-05T00:00:00+00:00"}
+        gsc = {"position": 12, "ctr": 0.03, "impressions": 100, "clicks": 3}
+        result = pc.evaluate_performance(
+            {"url": "u", "keyword": "k"}, gsc, {"avg_session_duration": 10},
+            baseline=baseline,
+        )
+        rel = result["baseline_relative"]
+        assert rel["site_clicks_at_publish"] == 30
+        assert rel["click_share"] == 0.1
+        assert rel["impression_share"] == 0.1
+        assert rel["baseline_captured_at"] == "2026-06-05T00:00:00+00:00"
+        assert result["grade"] == "average"  # absolute grade unchanged here
+
+    def test_underperformer_softened_when_page_carries_site_share(self, pc):
+        """Position 25 is an absolute underperformer, but the page holds 10%
+        of site clicks — the trough is site-wide (EC-15), so grade average."""
+        baseline = {"gsc": {"clicks": 30, "impressions": 1000, "window_days": 28},
+                    "captured_at": "2026-06-05T00:00:00+00:00"}
+        gsc = {"position": 25, "ctr": 0.015, "impressions": 200, "clicks": 3}
+        result = pc.evaluate_performance(
+            {"url": "u", "keyword": "k"}, gsc, {}, baseline=baseline
+        )
+        assert result["grade"] == "average"
+        assert result["is_underperformer"] is False
+        assert result["regraded_by_baseline"] is True
+
+    def test_underperformer_kept_when_share_below_threshold(self, pc):
+        baseline = {"gsc": {"clicks": 1000, "impressions": 50000, "window_days": 28},
+                    "captured_at": "2026-06-05T00:00:00+00:00"}
+        gsc = {"position": 25, "ctr": 0.015, "impressions": 200, "clicks": 3}
+        result = pc.evaluate_performance(
+            {"url": "u", "keyword": "k"}, gsc, {}, baseline=baseline
+        )
+        assert result["grade"] == "underperformer"
+        assert result["baseline_relative"]["click_share"] == 0.003
+        assert "regraded_by_baseline" not in result
+
+    def test_unavailable_baseline_treated_as_absent(self, pc):
+        baseline = {"status": "unavailable", "reason": "No GSC credentials",
+                    "captured_at": "2026-06-05T00:00:00+00:00"}
+        gsc = {"position": 25, "ctr": 0.015, "impressions": 200, "clicks": 3}
+        result = pc.evaluate_performance(
+            {"url": "u", "keyword": "k"}, gsc, {}, baseline=baseline
+        )
+        # A data gap never becomes numbers: exact absolute behavior.
+        assert result == {"is_winner": False, "is_underperformer": True,
+                          "grade": "underperformer"}
+
+    def test_zero_site_clicks_yields_null_share_and_no_regrade(self, pc):
+        baseline = {"gsc": {"clicks": 0, "impressions": 0, "window_days": 28},
+                    "captured_at": "2026-06-05T00:00:00+00:00"}
+        gsc = {"position": None, "ctr": 0, "impressions": 0, "clicks": 0}
+        result = pc.evaluate_performance(
+            {"url": "u", "keyword": "k"}, gsc, {}, baseline=baseline
+        )
+        assert result["baseline_relative"]["click_share"] is None
+        assert result["grade"] == "underperformer"
+
+
+class TestRunCheckBaselineWiring:
+    @pytest.fixture
+    def perf(self, tmp_path, monkeypatch):
+        from scripts.self_improvement import performance_check as pc
+
+        content_log = tmp_path / "content_log.json"
+        checks_dir = tmp_path / "pending_checks"
+        checks_dir.mkdir()
+        monkeypatch.setattr(pc, "CONTENT_LOG", str(content_log))
+        monkeypatch.setattr(pc, "PENDING_CHECKS_DIR", str(checks_dir))
+        monkeypatch.setattr(pc, "post_to_discord", lambda *a, **k: None)
+        monkeypatch.setattr(pc, "retro_score_content", lambda *a, **k: None)
+        monkeypatch.setattr(
+            pc, "pull_gsc_data",
+            lambda url, keyword, site: {"position": 25, "ctr": 0.015,
+                                        "impressions": 200, "clicks": 3},
+        )
+        monkeypatch.setattr(pc, "pull_ga4_data", lambda url, site: {"sessions": 4})
+        return pc, content_log, checks_dir
+
+    def _seed(self, pc, content_log, checks_dir, baseline=None):
+        entry = {
+            "id": "kaicalls-20260601-000000",
+            "url": "https://kaicalls.com/blog/x",
+            "keyword": "k",
+            "site": "kaicalls",
+            "published_at": "2026-06-01T00:00:00+00:00",
+            "performance_30d": None,
+        }
+        if baseline is not None:
+            entry["baseline"] = baseline
+        content_log.write_text(json.dumps([entry]))
+        check = {
+            "id": entry["id"], "url": entry["url"], "keyword": "k",
+            "site": "kaicalls", "published_at": entry["published_at"],
+            "check_due": "2026-07-01T00:00:00+00:00", "status": "pending",
+        }
+        check_file = checks_dir / f"{entry['id']}.json"
+        check_file.write_text(json.dumps(check))
+        return check_file, check
+
+    def test_performance_30d_schema_unchanged_without_baseline(self, perf):
+        """All existing entries have no baseline — their written record must
+        be identical to today's shape (no new keys, absolute grade)."""
+        pc, content_log, checks_dir = perf
+        check_file, check = self._seed(pc, content_log, checks_dir)
+        pc.run_check(check_file, check, dry_run=False)
+        entry = json.loads(content_log.read_text())[0]
+        perf30 = entry["performance_30d"]
+        assert set(perf30.keys()) == {"gsc", "ga4", "grade", "checked_at"}
+        assert perf30["grade"] == "underperformer"
+        assert perf30["gsc"] == {"position": 25, "ctr": 0.015,
+                                 "impressions": 200, "clicks": 3}
+
+    def test_performance_30d_carries_baseline_relative(self, perf):
+        pc, content_log, checks_dir = perf
+        baseline = {"gsc": {"clicks": 30, "impressions": 1000, "window_days": 28},
+                    "captured_at": "2026-06-01T00:00:00+00:00"}
+        check_file, check = self._seed(pc, content_log, checks_dir, baseline=baseline)
+        pc.run_check(check_file, check, dry_run=False)
+        entry = json.loads(content_log.read_text())[0]
+        perf30 = entry["performance_30d"]
+        assert perf30["baseline_relative"]["click_share"] == 0.1
+        assert perf30["baseline_relative"]["site_clicks_at_publish"] == 30
+        # 10% of site clicks vetoes the absolute "underperformer" verdict.
+        assert perf30["grade"] == "average"
 
 
 # ---------------------------------------------------------------------------

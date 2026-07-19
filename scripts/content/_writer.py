@@ -110,7 +110,7 @@ STRUCTURE:
 [CTA — one sentence, low friction]
 
 REQUIREMENTS:
-- 600-900 words
+- 2,200-3,000 words (floor is 2,200 — do not stop before it)
 - One idea per paragraph
 - No hashtags, no "Thoughts?" endings
 - Every paragraph separated by a blank line""",

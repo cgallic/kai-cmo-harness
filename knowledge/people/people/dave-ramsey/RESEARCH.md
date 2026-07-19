@@ -1,5 +1,6 @@
 # Dave Ramsey — Research Outline
 
+**Status:** GRADUATED 2026-07-16 → `knowledge/people/dave-ramsey-knowledge.md` (media/funnel-model distillation; TODOs below covered there)
 **Role:** Referenced figure
 **Known For:** Live call radio show model that Hormozi adapted for content
 

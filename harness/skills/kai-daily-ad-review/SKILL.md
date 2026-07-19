@@ -12,7 +12,7 @@ This is NOT the same as `/kai-ad-campaign` (which creates/evaluates campaigns en
 Run the unified pull script. It auto-detects which platforms have credentials and pulls everything.
 
 ```bash
-cd E:/Dev2/kai-cmo-harness-work && python scripts/ads/pull_all.py
+python scripts/ads/pull_all.py
 ```
 
 This writes structured JSON to `workspace/ads/pulls/YYYY-MM-DD/`:

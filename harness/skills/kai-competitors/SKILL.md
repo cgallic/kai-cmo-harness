@@ -24,7 +24,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 3. **Depth** — quick (30 min, top 3) or deep (2-3 hours, full landscape)?
 4. **Output need** — strategy doc, sales battlecard, or both?
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\competitive-intelligence.md`
+Load: `knowledge/playbooks/competitive-intelligence.md`
 
 ## Phase 2: 5-Layer Analysis
 

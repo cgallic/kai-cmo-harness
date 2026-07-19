@@ -21,9 +21,9 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 Load these files as context before starting:
 
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\brand-positioning.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\perception-engineering.md`
+- `knowledge/playbooks/brand-positioning.md`
+- `knowledge/personas/_persona-index.md`
+- `knowledge/frameworks/content-copywriting/perception-engineering.md`
 
 ## Phase 1 — Discovery
 
@@ -74,9 +74,9 @@ Build these deliverables:
 
 1. Deliver the full messaging framework as a structured document.
 2. Run all copy through the banned word check:
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+   - `python scripts/quality_gates/banned_word_check.py <file>`
 3. Run the Four U's score on the positioning statement and taglines:
-   - `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+   - `python scripts/quality_gates/four_us_score.py <file>`
 4. Present the final package with a summary of scores and any flags.
 
 ## Constraints

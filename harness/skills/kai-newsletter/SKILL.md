@@ -24,7 +24,7 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 Read from `MARKETING.md`. Only ask about things not covered there:
 
 1. **Newsletter purpose** — What is the goal? (nurture, educate, drive traffic, retain)
-2. **Audience** — Which persona(s) from the harness? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+2. **Audience** — Which persona(s) from the harness? Load from `knowledge/personas/_persona-index.md`
 3. **Cadence** — Weekly, biweekly, monthly?
 4. **Existing content** — Any blog posts, articles, or assets to feature?
 5. **Brand voice** — Formal, conversational, irreverent?
@@ -36,17 +36,18 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Build the newsletter edition plan:
 
-1. **Load strategy framework**: `E:\Dev2\kai-cmo-harness-work\knowledge\channels\newsletter-strategy.md`
-2. **Load email lifecycle patterns**: `E:\Dev2\kai-cmo-harness-work\knowledge\channels\email-lifecycle.md`
-3. **Load skill contract**: `E:\Dev2\kai-cmo-harness-work\harness\skill-contracts\email-lifecycle.yaml`
-4. **Define edition structure**:
+1. **Load strategy framework**: `knowledge/channels/newsletter-strategy.md`
+2. **Load email lifecycle patterns**: `knowledge/channels/email-lifecycle.md`
+3. **Load skill contract**: `harness/skill-contracts/email-lifecycle.yaml`
+4. **Load growth economics** (only when the request involves list growth, acquisition budget, subscriber value, or list-quality diagnosis): `knowledge/playbooks/newsletter-growth-economics.md`
+5. **Define edition structure**:
    - Hero story / lead piece
    - Supporting content (2-3 items)
    - Quick links / resource roundup
    - CTA (one primary, one secondary max)
-5. **Subject line candidates** — Generate 5+ options, score for open-rate potential
-6. **Preview text** — Complement (not repeat) the subject line
-7. **Segment targeting** — Which list segment receives this edition?
+6. **Subject line candidates** — Generate 5+ options, score for open-rate potential
+7. **Preview text** — Complement (not repeat) the subject line
+8. **Segment targeting** — Which list segment receives this edition?
 
 ---
 
@@ -72,9 +73,9 @@ Apply these rules from the harness:
 
 Run all gates before delivery:
 
-1. **Four U's Score**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score**: `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **10/16** (email threshold)
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
    - Zero Tier 1 violations
 3. **AI Slop Check** — No phrases like "In conclusion", "It's important to note", "In today's rapidly evolving"
 4. **Subject line validation** — Under 50 characters, no spam trigger words, no ALL CAPS
@@ -94,4 +95,4 @@ Deliver the final newsletter package:
 - **Four U's scorecard**
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `newsletter-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `newsletter-YYYY-MM-DD.md`

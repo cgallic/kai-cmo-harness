@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 43 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 47 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 43 Marketing Skills
+# Kai Marketing OS - 47 Marketing Skills
 
 > **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
@@ -51,6 +51,10 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-case-study` | Customer case studies from interview/data |
 | `/kai-product-maker` | Ship a Gumroad-ready digital product — ebook, card deck, flipbook |
 | `/kai-repurpose` | 1 pillar → 15-25 assets across all channels |
+| `/kai-content-batching` | Pillars → gated 30-day multi-platform content batch |
+| `/kai-offer-builder` | Grand Slam Offer construction scored on the Value Equation |
+| `/kai-hook-bench` | Ranked, provenance-tagged hook bank per persona and channel |
+| `/kai-proof-builder` | Provenance-clean proof library — testimonials, stats, case proof |
 | `/kai-launch` | Full product launch (orchestrates everything above) |
 | `/kai-retarget` | Retargeting/remarketing campaigns |
 | `/kai-influencer` | Influencer/creator marketing campaigns |
@@ -69,6 +73,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-monthly-audit` | Monthly marketing audit - 30-day executive review and next-month plan |
 | `/kai-seo-audit` | Technical SEO audit with prioritized fixes |
 | `/kai-cro` | Conversion rate audit — 5-layer optimization stack |
+| `/kai-funnel-audit` | Full-funnel awareness + lead-capture audit on collected data |
 | `/kai-html-presentation` | HTML presentation builder for audit and report delivery |
 | `/kai-data-dashboard` | Dashboard-ready specs or static dashboards from sourced Kai data |
 
@@ -122,6 +127,7 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`
+- **"Build the whole funnel"** → run the sequence in `knowledge/playbooks/hormozi-100m-funnel.md`, starting with `/kai-offer-builder`
 - **"What are people saying?"** → `/kai-brand-pulse`
 - **"Improve AI-search visibility"** → `/kai-surround-sound`
 - **"Why does this keep failing?"** → `/kai-retro`

@@ -1,6 +1,6 @@
 # LinkedIn Organic Posting Rules
 
-Last researched: 2026-06-29
+Last researched: 2026-07-06
 
 Primary sources:
 - LinkedIn User Agreement: https://www.linkedin.com/legal/user-agreement
@@ -23,6 +23,7 @@ Primary sources:
 - Pin LinkedIn API workflows to a currently supported Marketing version and review the recent-changes page before publish/reporting runs. LinkedIn's 202506 Marketing version is already sunset, and some post features remain version-gated. Source: https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05 (accessed 2026-06-29).
 - Check LinkedIn Ads policy before boosting or sponsoring organic posts.
 - Treat third-party reach multipliers, timing claims, and algorithm weights as benchmarks only unless LinkedIn documents them directly.
+- LinkedIn's official feed-ranking help says feed visibility uses hundreds of signals from post context, profile/network/activity, and does not use demographic fields such as age, race, or gender as visibility signals. Source: https://www.linkedin.com/help/linkedin/answer/a9554004 (accessed 2026-07-06).
 
 ## Organic Distribution Guidance
 
@@ -31,7 +32,7 @@ Primary sources:
 - Avoid pods, coordinated engagement, fake employee advocacy, engagement bait, irrelevant tagging, and copy-paste employee posts.
 - Put external links where the strategy calls for them, but do not hide material claims or required disclosures.
 - Keep AI-assisted content edited into a specific human POV with evidence, examples, and accountable claims.
-- Do not use browser extensions or agents to automate profile views, connection requests, likes, comments, shares, scraping, or member-data enrichment.
+- Do not use browser extensions or agents to automate profile views, connection requests, likes, comments, shares, scraping, member-data enrichment, or any tool that modifies LinkedIn's UI or manipulates feed ranking. Source: https://www.linkedin.com/help/linkedin/answer/a1341387 (accessed 2026-07-06).
 
 ## Harness Guardrails
 

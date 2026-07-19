@@ -227,7 +227,7 @@ class Installer:
     # Config generation
     # ------------------------------------------------------------------
 
-    def generate_config(self, template_path: str = "config.example.yaml") -> str:
+    def generate_config(self, template_path: str = "config.yaml.example") -> str:
         """Read a config template and write config.yaml with placeholders.
 
         Tries YAML parsing first (pyyaml); falls back to a plain-text copy

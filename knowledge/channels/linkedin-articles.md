@@ -6,7 +6,7 @@
 
 | Metric | Target |
 |--------|--------|
-| **Length** | 1,200-2,000 words |
+| **Length** | 2,200-3,000 words |
 | **Headline** | Under 50 characters |
 | **Subheadings** | Every 200-300 words |
 | **Hashtags** | 3-5 relevant tags |
@@ -127,9 +127,9 @@ Right: "Respond to comments quickly."
 
 **Rule 3: Use short, declarative sentences**
 ```
-Wrong: "When it comes to LinkedIn articles, which have been shown to perform better than posts for long-term visibility, the optimal length appears to be somewhere between 1,200 and 2,000 words."
+Wrong: "When it comes to LinkedIn articles, which have been shown to perform better than posts for long-term visibility, the optimal length appears to be somewhere between 2,200 and 3,000 words."
 
-Right: "LinkedIn articles outperform posts for long-term visibility. The optimal length is 1,200-2,000 words."
+Right: "LinkedIn articles outperform posts for long-term visibility. The optimal length is 2,200-3,000 words."
 ```
 
 ### List & Formatting Rules
@@ -221,8 +221,8 @@ Right: "Use strong hooks in your opening. For example: 'We analyzed 10,000 cold 
 
 **Rule 12: Bold the ANSWER, not the query terms**
 ```
-Wrong: "The **optimal length** for LinkedIn articles is 1,200-2,000 words."
-Right: "The optimal length for LinkedIn articles is **1,200-2,000 words**."
+Wrong: "The **optimal length** for LinkedIn articles is 2,200-3,000 words."
+Right: "The optimal length for LinkedIn articles is **2,200-3,000 words**."
 ```
 
 ### Internal Linking Rules (For Articles That Link Out)
@@ -292,7 +292,7 @@ LinkedIn articles are indexed by Google, providing:
 - [ ] Related keywords throughout body
 - [ ] Descriptive subheadings with keyword variants
 - [ ] Alt text on images (if applicable)
-- [ ] 1,200-2,000 words for depth
+- [ ] 2,200-3,000 words for depth
 
 ---
 
@@ -357,7 +357,7 @@ LinkedIn articles are indexed by Google, providing:
 Structure & Format
 [ ] Headline under 50 characters
 [ ] Hook in first 200 characters
-[ ] 1,200-2,000 words
+[ ] 2,200-3,000 words
 [ ] Subheadings every 200-300 words
 [ ] Short paragraphs (2-4 sentences)
 [ ] Cover image (1280x720)

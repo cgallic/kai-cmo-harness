@@ -25,7 +25,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 1. **Campaign goal** — Awareness, conversions, content generation, social proof?
 2. **Product/service** — What are we promoting? Price point, differentiator.
-3. **Target audience** — Which persona(s)? Load from `E:\Dev2\kai-cmo-harness-work\knowledge\personas\_persona-index.md`
+3. **Target audience** — Which persona(s)? Load from `knowledge/personas/_persona-index.md`
 4. **Platforms** — Instagram, TikTok, YouTube, LinkedIn, podcast, other?
 5. **Budget** — Total campaign budget and per-creator range
 6. **Timeline** — Launch date, campaign duration, key milestones
@@ -38,7 +38,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Build the influencer campaign strategy:
 
-1. **Load influencer playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\influencer-MARKETING.md`
+1. **Load influencer playbook**: `knowledge/playbooks/influencer-marketing.md`
 2. **Define creator tiers**:
    - **Nano** (1K-10K followers): High engagement, low cost, authentic feel
    - **Micro** (10K-100K): Niche authority, good reach/engagement balance
@@ -86,9 +86,9 @@ Create campaign deliverables:
 
 Validate before launch:
 
-1. **Four U's Score** (on briefs and outreach): `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score** (on briefs and outreach): `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **10/16**
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
 3. **FTC compliance check** — All content requires clear disclosure
 4. **Platform policy check** — Branded content tags, paid partnership labels
 5. **Brief clarity check** — Could a creator execute this without a follow-up call?
@@ -108,4 +108,4 @@ Deliver the influencer campaign package:
 - **Contract checklist** (key terms to include)
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `influencer-campaign-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `influencer-campaign-YYYY-MM-DD.md`

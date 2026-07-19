@@ -9,7 +9,7 @@ One-click full marketing audit. Runs all relevant harness checklists and produce
 
 ## Non-Negotiable: Kai Data Provenance
 
-Before writing any finding, load `E:\Dev2\kai-cmo-harness-work\harness\references\audit-data-provenance.md`.
+Before writing any finding, load `harness/references/audit-data-provenance.md`.
 
 Every audit must declare one of these modes:
 
@@ -101,7 +101,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 ## Phase 2: Checklist Execution
 
-Run applicable checklists from `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\`. Skip checklists for channels the user isn't using.
+Run applicable checklists from `knowledge/checklists/`. Skip checklists for channels the user isn't using.
 
 ### Audit Modules
 

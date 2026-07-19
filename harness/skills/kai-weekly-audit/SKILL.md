@@ -11,7 +11,7 @@ Run a fast weekly operating audit. This skill is the cadence layer above `/kai-a
 
 ## Non-Negotiable: Data Provenance
 
-Before writing findings, load `E:\Dev2\kai-cmo-harness-work\harness\references\audit-data-provenance.md`.
+Before writing findings, load `harness/references/audit-data-provenance.md`.
 
 Declare the data mode:
 

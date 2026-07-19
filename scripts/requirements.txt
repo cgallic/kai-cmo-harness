@@ -16,7 +16,7 @@ openai>=1.0.0              # OpenRouter-compatible client for agent loop + OpenA
 google-analytics-data>=0.18.0
 google-auth>=2.20.0
 google-auth-oauthlib>=1.0.0
-searchconsole>=0.2.0
+searchconsole>=0.1.0        # Latest on PyPI is 0.1.0 — >=0.2.0 does not exist
 
 # Data
 supabase>=2.0.0

@@ -170,7 +170,7 @@ def load_from_yaml(file_path: str) -> Dict[str, Any]:
     1. **Direct profile key** -- the YAML has a ``business_profile:``
        top-level key whose children map directly to BusinessProfile fields.
     2. **Products array** -- the YAML has ``products:`` with one or more
-       product entries (as in ``config.example.yaml``).  The first product
+       product entries (as in ``config.yaml.example``).  The first product
        is extracted and mapped to profile fields.
     3. **Workspace / brand config** -- nested ``workspace:`` with name,
        description, and product metadata.
@@ -242,7 +242,7 @@ def load_from_yaml(file_path: str) -> Dict[str, Any]:
 def _map_product_to_profile(
     product: Dict[str, Any], raw: Dict[str, Any]
 ) -> Dict[str, Any]:
-    """Map a products[] entry from config.example.yaml to profile fields."""
+    """Map a products[] entry from config.yaml.example to profile fields."""
     partial: Dict[str, Any] = {}
 
     # Identity

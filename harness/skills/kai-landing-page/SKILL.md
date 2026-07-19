@@ -28,10 +28,10 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Page Architecture
 
 Load these before planning:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\content-copywriting\perception-engineering.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\landing-page-messaging-checklist.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\landing-page-messaging-workflow.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\conversion-rate-optimization.md`
+- `knowledge/frameworks/content-copywriting/perception-engineering.md`
+- `knowledge/checklists/landing-page-messaging-checklist.md`
+- `knowledge/playbooks/landing-page-messaging-workflow.md`
+- `knowledge/playbooks/conversion-rate-optimization.md`
 
 Generate a page wireframe (sections in order) before writing copy:
 

@@ -19,7 +19,7 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 ## Step 1: Identify Format and Load Context
 
-Determine the content format from the user's request, then load the corresponding files from the harness at `E:\Dev2\kai-cmo-harness-work`:
+Determine the content format from the user's request, then load the corresponding files from the harness (paths relative to the project root):
 
 | Format | Framework | Contract | Checklist |
 |--------|-----------|----------|-----------|

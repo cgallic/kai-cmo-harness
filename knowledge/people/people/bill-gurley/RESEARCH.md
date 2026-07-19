@@ -1,5 +1,6 @@
 # Bill Gurley — Research Outline
 
+**Status:** GRADUATED 2026-07-16 → `knowledge/people/bill-gurley-knowledge.md` (full distillation; TODOs below covered there)
 **Role:** Referenced figure
 **Known For:** Benchmark VC, "study history of your industry" framework
 

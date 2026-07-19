@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_researched": "2026-06-22",
+  "last_researched": "2026-07-13",
   "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
   "sources": [
     {
@@ -107,9 +107,9 @@
       "platform": "tiktok",
       "category": "policy",
       "title": "TikTok Community Guidelines",
-      "url": "https://support.tiktok.com/en/safety-hc/account-and-user-safety/community-guidelines",
+      "url": "https://www.tiktok.com/community-guidelines/en/",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
-      "notes": "Core organic content rules."
+      "notes": "Core organic content rules. Switched from the support-center stub to the public guidelines page because the support URL was returning a machine-unusable shell in monitor runs."
     },
     {
       "id": "tiktok_recommends_content",
@@ -125,9 +125,9 @@
       "platform": "tiktok",
       "category": "recommendation",
       "title": "Why Is My Account Not Being Recommended?",
-      "url": "https://support.tiktok.com/en/safety-hc/account-and-user-safety/why-is-my-account-not-being-recommended",
+      "url": "https://www.tiktok.com/community-guidelines/en/for-you-feed-and-search/",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
-      "notes": "Account and content recommendation eligibility checks."
+      "notes": "Account and content recommendation-eligibility checks. Switched from the support-center article to the public For You Feed and Search guideline page because the support URL was returning a machine-unusable shell in monitor runs."
     },
     {
       "id": "tiktok_content_posting_api",
@@ -516,6 +516,7 @@
       "category": "terms",
       "title": "Threads Terms",
       "url": "https://help.instagram.com/769983657850450",
+      "minimum_content_length": 200,
       "owner_file": "knowledge/channels/threads-organic.md",
       "notes": "Threads-specific terms surface."
     },
@@ -534,6 +535,7 @@
       "category": "ai_policy",
       "title": "Label AI Content on Threads",
       "url": "https://help.instagram.com/407718162047721/",
+      "minimum_content_length": 200,
       "owner_file": "harness/references/meta-organic-posting-rules.md",
       "notes": "Threads AI labeling, auto-detection, and disclosure help article."
     },
@@ -578,27 +580,27 @@
       "platform": "tiktok",
       "category": "commercial_policy",
       "title": "TikTok Promoting a Brand, Product, or Service",
-      "url": "https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/promoting-a-brand-product-or-service",
+      "url": "https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
-      "notes": "Own-brand and third-party branded content disclosure requirements."
+      "notes": "Own-brand and third-party branded-content disclosure requirements. Switched to the official Business Help Center page because the support-center URL was returning a machine-unusable shell in monitor runs."
     },
     {
       "id": "tiktok_aigc",
       "platform": "tiktok",
       "category": "ai_policy",
       "title": "TikTok AI-Generated Content",
-      "url": "https://support.tiktok.com/en/using-tiktok/creating-videos/ai-generated-content",
+      "url": "https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
-      "notes": "Realistic AIGC labeling and likeness restrictions."
+      "notes": "Realistic AIGC labeling and likeness restrictions. Switched from the support-center article to the public community-guidelines page because the support URL was returning a machine-unusable shell in monitor runs."
     },
     {
       "id": "tiktok_commercial_music",
       "platform": "tiktok",
       "category": "commercial_policy",
       "title": "Commercial Use of Music on TikTok",
-      "url": "https://support.tiktok.com/en/business-and-creator/creator-and-business-accounts/commercial-use-of-music-on-tiktok",
+      "url": "https://ads.tiktok.com/help/article/commercial-music-library",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
-      "notes": "Commercial Music Library and rights checks."
+      "notes": "Commercial Music Library and rights checks. Switched to the official Business Help Center page because the support-center URL was returning a machine-unusable shell in monitor runs."
     },
     {
       "id": "tiktok_developer_changelog",
@@ -700,6 +702,15 @@
       "notes": "Monthly monitor source for Snap developer surfaces."
     },
     {
+      "id": "snap_public_content_moderation",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "Is Stories content on Snapchat moderated?",
+      "url": "https://help.snapchat.com/hc/en-us/articles/7012263915412-Is-Stories-content-on-Snapchat-moderated",
+      "owner_file": "knowledge/channels/snapchat-organic.md",
+      "notes": "Official moderation and limited-distribution guidance for public Stories and Spotlight content."
+    },
+    {
       "id": "reddit_rules",
       "platform": "reddit",
       "category": "policy",
@@ -737,6 +748,15 @@
       "url": "https://developers.reddit.com/docs",
       "owner_file": "harness/references/social-automation-rules.md",
       "notes": "Developer platform documentation."
+    },
+    {
+      "id": "reddit_developer_platform_accessing_data",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Developer Platform & Accessing Reddit Data",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Official approval, commercial-use, monetized publishing, and AI-training restrictions for Reddit developer services."
     },
     {
       "id": "bluesky_community_guidelines",

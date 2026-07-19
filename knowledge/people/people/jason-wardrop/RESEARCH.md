@@ -1,7 +1,8 @@
 # Jason Wardrop — Research Outline
 
 **Role:** Referenced figure
-**Known For:** GoHighLevel affiliate doing ~$600K/month
+**Status:** GRADUATED 2026-07-16 → `knowledge/people/jason-wardrop-knowledge.md` (full distillation; TODOs below covered there — income figure verified as self-reported/unverified, public record confirms 105K+ referrals and 2024 Affiliate of the Year)
+**Known For:** GoHighLevel affiliate doing ~$600K/month (self-reported, unverified)
 
 ## What We Know (from transcript)
 - GHL affiliate earning approximately $600K/month

@@ -36,6 +36,12 @@ WIN_POSITION = _CFG.thresholds.win_position
 WIN_CTR = _CFG.thresholds.win_ctr
 WIN_TIME_ON_PAGE = _CFG.thresholds.win_time_on_page
 
+# EC-15 baseline: publish-time site-level GSC snapshot window, and the page's
+# share of site clicks above which an absolute "underperformer" is read as a
+# site-wide trough (softened to "average") rather than a content miss.
+BASELINE_WINDOW_DAYS = 28
+BASELINE_RELATIVE_CLICK_SHARE = 0.05
+
 SITE_URLS = _CFG.sites.gsc_urls
 GA4_PROPERTY_IDS = _CFG.sites.ga4_properties
 DISCORD_CHANNEL_IDS = _CFG.discord.channels
@@ -58,6 +64,37 @@ def load_log() -> list:
 def save_log(entries: list):
     with open(CONTENT_LOG, "w") as f:
         json.dump(entries, f, indent=2)
+
+
+def _normalize_pending_check(check_file: Path, check: dict, entries: list) -> dict | None:
+    """Upgrade legacy pending-check records at the read boundary."""
+    entries_by_id = {entry.get("id"): entry for entry in entries if entry.get("id")}
+    entries_by_url = {entry.get("url"): entry for entry in entries if entry.get("url")}
+    entry = entries_by_id.get(check.get("id")) or entries_by_url.get(check.get("url"))
+    normalized = dict(check)
+    if entry:
+        normalized.setdefault("id", entry.get("id"))
+        normalized.setdefault("keyword", entry.get("keyword"))
+        normalized.setdefault("site", entry.get("site"))
+        normalized.setdefault(
+            "published_at", entry.get("published_at") or entry.get("publish_date")
+        )
+    if not normalized.get("check_due") and normalized.get("check_after"):
+        normalized["check_due"] = normalized["check_after"]
+
+    required = ("id", "url", "keyword", "site", "check_due")
+    missing = [key for key in required if not normalized.get(key)]
+    if missing:
+        log.warning("Skipping invalid pending check %s (missing: %s)", check_file, ", ".join(missing))
+        return None
+
+    if normalized != check:
+        temp_file = check_file.with_suffix(f"{check_file.suffix}.tmp")
+        with open(temp_file, "w") as f:
+            json.dump(normalized, f, indent=2)
+        os.replace(temp_file, check_file)
+        log.info("Normalized legacy pending check %s", check_file)
+    return normalized
 
 
 def reconcile_pending_checks(dry_run: bool = False) -> int:
@@ -123,15 +160,21 @@ def get_pending_checks() -> list:
         return []
     checks = []
     now = datetime.now(timezone.utc)
+    entries = load_log()
     for f in Path(PENDING_CHECKS_DIR).glob("*.json"):
         with open(f) as fh:
             check = json.load(fh)
+        check = _normalize_pending_check(f, check, entries)
+        if check is None:
+            continue
         if not check.get("url"):
             # Approved-but-unpublished entries carry url=None — there is no
             # live page to measure, so never schedule a GSC/GA4 pull for them.
             continue
         due = datetime.fromisoformat(check["check_due"])
-        if check["status"] == "pending" and due <= now:
+        if due.tzinfo is None:
+            due = due.replace(tzinfo=timezone.utc)
+        if check.get("status") == "pending" and due <= now:
             checks.append((f, check))
     return checks
 
@@ -198,6 +241,89 @@ def pull_gsc_data(url: str, keyword: str, site: str) -> dict:
         return {"error": str(e)}
 
 
+def pull_site_baseline(site: str, days: int = BASELINE_WINDOW_DAYS) -> dict:
+    """Site-level GSC clicks/impressions for the trailing window.
+
+    EC-15 baseline snapshot: content_log calls this at publish time and
+    stores the result on the entry so the 30-day grade can be read relative
+    to how the whole site was doing when the piece shipped. Returns
+    {"error": ...} when credentials or the site mapping are missing —
+    callers store that as a data gap, NEVER as zeros.
+    """
+    # Cheap checks BEFORE the google imports: fresh clones without
+    # credentials must degrade to a data-gap marker, never an import crash.
+    creds_path = os.environ.get("GOOGLE_CREDENTIALS_PATH")
+    if not creds_path or not os.path.exists(creds_path):
+        return {"error": "No GSC credentials"}
+
+    site_url = SITE_URLS.get(site)
+    if not site_url:
+        return {"error": f"Unknown site: {site}"}
+
+    try:
+        from datetime import timedelta
+
+        from google.oauth2 import service_account
+        from googleapiclient.discovery import build
+
+        creds = service_account.Credentials.from_service_account_file(
+            creds_path,
+            scopes=["https://www.googleapis.com/auth/webmasters.readonly"],
+        )
+        service = build("searchconsole", "v1", credentials=creds)
+        end = datetime.now(timezone.utc).date()
+        start = end - timedelta(days=days)
+        response = service.searchanalytics().query(
+            siteUrl=site_url,
+            body={
+                "startDate": start.isoformat(),
+                "endDate": end.isoformat(),
+                "rowLimit": 1,
+            },
+        ).execute()
+
+        rows = response.get("rows", [])
+        return {
+            "clicks": sum(r.get("clicks", 0) for r in rows),
+            "impressions": sum(r.get("impressions", 0) for r in rows),
+            "window_days": days,
+            "start_date": start.isoformat(),
+            "end_date": end.isoformat(),
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def compute_baseline_relative(baseline: dict | None, gsc: dict) -> dict | None:
+    """Relative context for a page vs the publish-time site baseline (EC-15).
+
+    Returns None when no usable baseline exists — grading then falls back to
+    the historical absolute thresholds. "unavailable" baselines carry no
+    numbers and are treated as absent (a data gap, never zeros).
+    """
+    if not isinstance(baseline, dict):
+        return None
+    base_gsc = baseline.get("gsc")
+    if not isinstance(base_gsc, dict) or base_gsc.get("error"):
+        return None
+    site_clicks = base_gsc.get("clicks")
+    site_impressions = base_gsc.get("impressions")
+    if not isinstance(site_clicks, (int, float)) or not isinstance(site_impressions, (int, float)):
+        return None
+    clicks = gsc.get("clicks", 0) or 0
+    impressions = gsc.get("impressions", 0) or 0
+    return {
+        "site_clicks_at_publish": site_clicks,
+        "site_impressions_at_publish": site_impressions,
+        "click_share": round(clicks / site_clicks, 4) if site_clicks > 0 else None,
+        "impression_share": (
+            round(impressions / site_impressions, 4) if site_impressions > 0 else None
+        ),
+        "window_days": base_gsc.get("window_days"),
+        "baseline_captured_at": baseline.get("captured_at"),
+    }
+
+
 def pull_ga4_data(url: str, site: str) -> dict:
     """Pull GA4 sessions + engagement for a specific page URL."""
     try:
@@ -205,11 +331,10 @@ def pull_ga4_data(url: str, site: str) -> dict:
         from google.analytics.data_v1beta.types import (
             DateRange,
             Dimension,
-            DimensionFilter,
+            Filter,
             FilterExpression,
             Metric,
             RunReportRequest,
-            StringFilter,
         )
 
         property_id = GA4_PROPERTY_IDS.get(site)
@@ -234,9 +359,9 @@ def pull_ga4_data(url: str, site: str) -> dict:
             ],
             date_ranges=[DateRange(start_date="30daysAgo", end_date="today")],
             dimension_filter=FilterExpression(
-                filter=DimensionFilter(
+                filter=Filter(
                     field_name="pagePath",
-                    string_filter=StringFilter(
+                    string_filter=Filter.StringFilter(
                         match_type="CONTAINS",
                         value=path,
                     ),
@@ -258,8 +383,16 @@ def pull_ga4_data(url: str, site: str) -> dict:
         return {"error": str(e)}
 
 
-def evaluate_performance(entry: dict, gsc: dict, ga4: dict) -> dict:
-    """Determine if content is a winner, average, or underperformer."""
+def evaluate_performance(entry: dict, gsc: dict, ga4: dict, baseline: dict | None = None) -> dict:
+    """Determine if content is a winner, average, or underperformer.
+
+    With a publish-time site baseline (EC-15) the result gains a
+    "baseline_relative" key, and an absolute "underperformer" holding at
+    least BASELINE_RELATIVE_CLICK_SHARE of site clicks is softened to
+    "average" (the weak absolute numbers read as a site-wide trough, not a
+    content miss). Without a baseline the result is exactly the historical
+    absolute grading — same keys, same values.
+    """
     platform = entry.get("platform", "web")
 
     # Social content uses social_metrics instead of GSC/GA4
@@ -283,11 +416,26 @@ def evaluate_performance(entry: dict, gsc: dict, ga4: dict) -> dict:
         or (ctr < 0.01 and gsc.get("impressions", 0) > 100)
     )
 
-    return {
+    result = {
         "is_winner": is_winner,
         "is_underperformer": is_underperformer,
         "grade": "winner" if is_winner else ("underperformer" if is_underperformer else "average"),
     }
+
+    baseline_relative = compute_baseline_relative(baseline, gsc)
+    if baseline_relative is not None:
+        result["baseline_relative"] = baseline_relative
+        click_share = baseline_relative.get("click_share")
+        if (
+            result["grade"] == "underperformer"
+            and click_share is not None
+            and click_share >= BASELINE_RELATIVE_CLICK_SHARE
+        ):
+            result["grade"] = "average"
+            result["is_underperformer"] = False
+            result["regraded_by_baseline"] = True
+
+    return result
 
 
 def evaluate_social_performance(entry: dict) -> dict:
@@ -449,7 +597,16 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
 
     gsc = pull_gsc_data(url, keyword, site)
     ga4 = pull_ga4_data(url, site)
-    evaluation = evaluate_performance({"url": url, "keyword": keyword}, gsc, ga4)
+    # Publish-time site baseline lives on the log entry (EC-15) — grade
+    # relative to it when present, absolute (historical behavior) when not.
+    log = load_log()
+    logged_entry = next(
+        (e for e in log if isinstance(e, dict) and e.get("id") == entry_id), None
+    )
+    baseline = (logged_entry or {}).get("baseline")
+    evaluation = evaluate_performance(
+        {"url": url, "keyword": keyword}, gsc, ga4, baseline=baseline
+    )
 
     # Retro-score with quality scorer
     quality = retro_score_content(url, site)
@@ -461,7 +618,6 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
         print(f"  Quality: {quality['overall_score']}/100 (grade {quality['grade']})")
 
     # Update log
-    log = load_log()
     for e in log:
         if e["id"] == entry_id:
             e["performance_30d"] = {
@@ -470,6 +626,8 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
                 "grade": evaluation["grade"],
                 "checked_at": datetime.now(timezone.utc).isoformat(),
             }
+            if evaluation.get("baseline_relative") is not None:
+                e["performance_30d"]["baseline_relative"] = evaluation["baseline_relative"]
             if quality:
                 e["quality_retro"] = quality
             break

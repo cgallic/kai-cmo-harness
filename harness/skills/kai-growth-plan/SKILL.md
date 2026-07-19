@@ -31,10 +31,10 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 ## Phase 2: Stage Diagnosis
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\marketing-by-stage.md`
-Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\growth-loops-applied.md`
-Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\demand-generation.md`
-Also load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\saas-metrics-guide.md`
+Load: `knowledge/playbooks/marketing-by-stage.md`
+Also load: `knowledge/playbooks/growth-loops-applied.md`
+Also load: `knowledge/playbooks/demand-generation.md`
+Also load: `knowledge/playbooks/saas-metrics-guide.md`
 Also load: `knowledge/playbooks/growth-hacker-first-hire-os.md` when the request asks for distribution, a first growth hire, growth hacking, channel coverage, or a channel operating system.
 
 ### Stage Map
@@ -96,7 +96,7 @@ What to measure at this stage (from SaaS metrics guide):
 |---------|------------|-----------|-----|
 | [channel] | [%] | [$] | [reason] |
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\marketing-budget-forecasting.md` for budget frameworks.
+Load: `knowledge/playbooks/marketing-budget-forecasting.md` for budget frameworks.
 
 ## Phase 4: Skill Routing
 

@@ -58,9 +58,9 @@ Bites: scheduled learning loop. Enforcement: scripts/self_improvement/safe_write
 **30-day checks → a lost `pending_checks/<id>.json` meant that piece was never re-measured.** Now enforced: `reconcile_pending_checks()` in `performance_check.py` rebuilds missing check files from `content_log.json` on every run (also `--reconcile-only`).
 Bites: long-running deployments. Enforcement: scripts/self_improvement/performance_check.py + tests/test_promoted_edge_cases.py. Added: 2026-06-09
 
-### EC-13 Circuit breaker resets on restart
-**`pattern_extract.py` stops after 3 consecutive Gemini failures → the counter is in-memory only.** A crash-looping agent hammers the API forever. Persist breaker state if you see repeated restarts.
-Bites: OpenClaw mode. Enforcement: in-process only. Added: 2026-06-09
+### EC-13 Circuit breaker resets on restart *(promoted 2026-07-05)*
+**`pattern_extract.py` stops after 3 consecutive Gemini failures → the counter was in-memory only, so a crash-looping agent hammered the API forever.** Now enforced: breaker state (consecutive-failure count + opened_at) persists to `data/learning/pattern_extract_breaker.json` and an open breaker is honored across restarts with a 1h cooldown (`KAI_PATTERN_BREAKER_STATE_FILE` / `KAI_PATTERN_BREAKER_COOLDOWN_SECONDS` overrides); an unreadable/corrupt state file falls back to in-memory, never crashes.
+Bites: OpenClaw mode. Enforcement: scripts/self_improvement/pattern_extract.py (GeminiCircuitBreaker) + tests/test_pattern_extract_breaker.py. Added: 2026-06-09
 
 ### EC-14 Winners are analyzed, losers were not
 **Learning loop → pattern extraction historically only read `grade == "winner"`.** Log losers to `memory/what-doesnt-work.md` so failed angles aren't retried. `/kai-retro` covers this.
@@ -68,7 +68,7 @@ Bites: pattern quality. Enforcement: /kai-retro workflow. Added: 2026-06-09
 
 ### EC-15 30-day window ignores seasonality and competitor moves
 **Winner/loser grading → a piece judged in a seasonal trough or after a competitor launch gets a misleading grade.** Note context in the log entry; allow manual re-grade.
-Bites: pattern extraction. Enforcement: none. Added: 2026-06-09
+Bites: pattern extraction. Enforcement: partial (publish-time site-level GSC baseline snapshot in scripts/content/content_log.py + baseline_relative context/regrade in scripts/self_improvement/performance_check.py; seasonality windows and competitor moves still open). Added: 2026-06-09
 
 ## Governance gotchas
 

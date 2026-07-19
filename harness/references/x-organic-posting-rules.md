@@ -2,7 +2,7 @@
 
 > **Use when**: Scheduling X posts, generating X replies, setting up automation, planning contests, using creator/affiliate disclosures, or preparing organic posts that may later become promoted posts.
 
-Last updated: 2026-06-17
+Last updated: 2026-07-13
 
 Ruleset ID: `x_twitter_posting_automation_2026_06_17`
 
@@ -56,6 +56,7 @@ Every X publishing workflow must set:
 - Show exactly what will be published before posting through a user-authorized workflow.
 - Honor opt-outs immediately for automated replies, mentions, and DMs.
 - Clearly identify API-based bot accounts and who is responsible for them.
+- If an API-published organic or creator post is a paid partnership, set `paid_partnership=true` so X applies the paid-promotion label. Source: https://docs.x.com/changelog (accessed 2026-07-13).
 - Keep development, staging, and production API applications clearly identified and do not use development or staging apps for production.
 - Keep API keys and access credentials private.
 - Respect API rate limits and plan limits. Do not circumvent limits.
@@ -146,6 +147,7 @@ Before using Premium-only or live surfaces:
 
 - Confirm the account has the needed capability for longer posts or Articles.
 - For Articles, confirm the piece is worth native long-form treatment and has a short distribution post.
+- If publishing Articles through the API, require the same capability check and human review as manual Article publishing. X's changelog added draft and publish Article endpoints on June 11, 2026. Source: https://docs.x.com/changelog (accessed 2026-07-13).
 - For Spaces, confirm whether recording is enabled, whether speakers understand clipping/recording, and how recordings or clips will be reused.
 - For creator monetization accounts, confirm content follows monetization standards and avoids undisclosed AI-generated armed-conflict video.
 

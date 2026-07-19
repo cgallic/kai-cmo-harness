@@ -1,5 +1,7 @@
 # Preston Rhodes — Research Outline
 
+**Status:** covered by mimesis-framework.md, vssl-longform-content.md, local-dominance-strategy.md, business-models-breakdown.md, distribution-moat-edges.md, tactical-playbook.md, and people-tools-resources.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Host
 **Known For:** AI/automation, VSSL practitioner, dropped out to build internet businesses
 

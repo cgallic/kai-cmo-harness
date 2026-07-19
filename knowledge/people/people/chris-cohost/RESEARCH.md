@@ -1,5 +1,7 @@
 # Chris (Co-host) — Research Outline
 
+**Status:** covered by distribution-moat-edges.md and business-models-breakdown.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Co-host (Tampa, FL)
 **Known For:** IRL business advocate, "versatilist" thesis, distribution-as-moat thinking
 

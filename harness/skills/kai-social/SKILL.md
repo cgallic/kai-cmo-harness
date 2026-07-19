@@ -30,13 +30,13 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Social Calendar
 
 Load these before planning:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\social-media-strategy.md`
+- `knowledge/playbooks/social-media-strategy.md`
 - Platform-specific channels as needed:
-  - `E:\Dev2\kai-cmo-harness-work\knowledge\channels\instagram.md`
-  - `E:\Dev2\kai-cmo-harness-work\knowledge\channels\x-twitter.md`
-  - `E:\Dev2\kai-cmo-harness-work\knowledge\channels\tiktok-algorithm.md`
-  - `E:\Dev2\kai-cmo-harness-work\knowledge\channels\youtube.md`
-  - `E:\Dev2\kai-cmo-harness-work\knowledge\channels\linkedin-articles.md`
+  - `knowledge/channels/instagram.md`
+  - `knowledge/channels/x-twitter.md`
+  - `knowledge/channels/tiktok-algorithm.md`
+  - `knowledge/channels/youtube.md`
+  - `knowledge/channels/linkedin-articles.md`
 
 Generate `workspace/social/_calendar.md`:
 

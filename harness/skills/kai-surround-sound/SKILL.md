@@ -30,11 +30,11 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 ## Phase 2: Consensus Audit
 
 Load these before starting:
-- `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\surround-sound-llm-manipulation.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\llm-citation-tracking.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\entity-seo-knowledge-graph-deep-dive.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\perplexity-ranking-reverse-engineered.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\geo-academic-research-synthesis.md`
+- `knowledge/playbooks/surround-sound-llm-manipulation.md`
+- `knowledge/frameworks/aeo-ai-search/llm-citation-tracking.md`
+- `knowledge/frameworks/aeo-ai-search/entity-seo-knowledge-graph-deep-dive.md`
+- `knowledge/frameworks/aeo-ai-search/perplexity-ranking-reverse-engineered.md`
+- `knowledge/frameworks/aeo-ai-search/geo-academic-research-synthesis.md`
 
 ### Audit the Current Consensus Web
 
@@ -55,7 +55,7 @@ Map where your brand appears (and doesn't) across LLM training/retrieval sources
 
 Before you can surround-sound from third parties, your own site has to be legible to the agents routing back. If ChatGPT can't parse your homepage, every pulse you build elsewhere dead-ends.
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\checklists\agent-readiness-checklist.md`
+Load: `knowledge/checklists/agent-readiness-checklist.md`
 
 Run the checklist against the user's primary domain. Report:
 
@@ -135,7 +135,7 @@ Skip to Month 1 only if the linter reports Pass on P0.
 
 ### AEO-Optimized Content Rules
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\frameworks\aeo-ai-search\aeo-ai-search-playbook-2026.md`
+Load: `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md`
 
 For every content piece in the plan:
 - **Atomic facts** — one verifiable claim per sentence

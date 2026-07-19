@@ -631,6 +631,7 @@ def cmd_create_campaign(args: argparse.Namespace) -> None:
         "objective": args.objective,
         "status": args.status or "PAUSED",
         "special_ad_categories": f"[{args.special_ad_category}]" if args.special_ad_category else "[]",
+        "is_adset_budget_sharing_enabled": "false",
         "access_token": _token(),
     }
 
@@ -669,6 +670,7 @@ def cmd_create_adset(args: argparse.Namespace) -> None:
         "daily_budget": str(budget_cents),
         "billing_event": "IMPRESSIONS",
         "optimization_goal": args.optimization_goal,
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "targeting": args.targeting,  # JSON string
         "status": "PAUSED",
         "access_token": _token(),

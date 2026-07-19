@@ -54,9 +54,9 @@ Present sequence map + variant strategy before writing.
 ## Phase 3: Production
 
 Load these before writing:
-- `E:\Dev2\kai-cmo-harness-work\harness\skill-contracts\cold-email.yaml`
-- `E:\Dev2\kai-cmo-harness-work\harness\references\cold-email-rules.md`
-- `E:\Dev2\kai-cmo-harness-work\knowledge\channels\email-lifecycle.md` (subject line formulas)
+- `harness/skill-contracts/cold-email.yaml`
+- `harness/references/cold-email-rules.md`
+- `knowledge/channels/email-lifecycle.md` (subject line formulas)
 
 ### Per-Touch Output
 

@@ -25,7 +25,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 2. **Platforms** — which channels should get derivative content?
 3. **Priority** — what matters most? (social reach, email engagement, SEO, video views)
 
-Load: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\content-repurposing.md`
+Load: `knowledge/playbooks/content-repurposing.md`
 
 ## Phase 2: Extraction Map
 
@@ -50,7 +50,7 @@ Generate `workspace/repurposed/_extraction-map.md`:
 
 When the source is a transcript, podcast, webinar, interview, or long article, run a quote mining pass before derivative production.
 
-Load `E:\Dev2\kai-cmo-harness\harness\references\transcript-video-research-rules.md` before quote mining third-party video, audio, podcast, webinar, or transcript material.
+Load `harness/references/transcript-video-research-rules.md` before quote mining third-party video, audio, podcast, webinar, or transcript material.
 
 Create `workspace/repurposed/_quote-bank.md` with:
 - **Source location**: file path, URL, episode name, transcript timestamp, or paragraph locator
@@ -86,7 +86,7 @@ From one pillar, produce:
 | 11 | TikTok video script (contrarian take) | TikTok | 15-30 seconds |
 | 12 | Email newsletter section | Email | 100-200 words |
 | 13 | Email standalone (value-add) | Email | 300-500 words |
-| 14 | LinkedIn article (expanded angle) | LinkedIn | 700-1000 words |
+| 14 | LinkedIn article (expanded angle) | LinkedIn | 2,200-3,000 words |
 | 15 | YouTube Shorts script | YouTube | 30-60 seconds |
 | 16-25 | Additional platform-specific variants | Various | Various |
 

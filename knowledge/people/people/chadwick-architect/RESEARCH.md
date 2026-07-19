@@ -1,5 +1,7 @@
 # Chadwick — Research Outline
 
+**Status:** covered by distribution-moat-edges.md (2026-07-16) — full web clone not warranted; space-transcript knowledge already distilled.
+
 **Role in Space:** Presenter (~1:05-1:11, ~1:44-1:49)
 **Known For:** Enterprise systems architect, 47 years old, consciousness/iteration framework
 

@@ -37,18 +37,18 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 
 Build the retargeting architecture:
 
-1. **Load retargeting playbook**: `E:\Dev2\kai-cmo-harness-work\knowledge\playbooks\retargeting-reMARKETING.md`
+1. **Load retargeting playbook**: `knowledge/playbooks/retargeting-remarketing.md`
 2. **Load platform policy references** (for each active platform):
-   - Meta: `E:\Dev2\kai-cmo-harness-work\harness\references\meta-ads-rules.md`
-   - Google: `E:\Dev2\kai-cmo-harness-work\harness\references\google-ads-policy-reference.md`
-   - LinkedIn: `E:\Dev2\kai-cmo-harness-work\harness\references\linkedin-ads-rules.md`
-   - TikTok: `E:\Dev2\kai-cmo-harness-work\harness\references\tiktok-ads-policy-reference.md`
-   - Microsoft: `E:\Dev2\kai-cmo-harness-work\harness\references\microsoft-ads-rules.md`
-   - Pinterest: `E:\Dev2\kai-cmo-harness-work\harness\references\pinterest-ads-rules.md`
-   - Snapchat: `E:\Dev2\kai-cmo-harness-work\harness\references\snapchat-ads-policy-reference.md`
-   - Amazon: `E:\Dev2\kai-cmo-harness-work\harness\references\amazon-ads-policy-reference.md`
-   - X/Twitter: `E:\Dev2\kai-cmo-harness-work\harness\references\x-ads-policy-reference.md`
-3. **Load compliance framework**: `E:\Dev2\kai-cmo-harness-work\harness\references\advertising-compliance.md`
+   - Meta: `harness/references/meta-ads-rules.md`
+   - Google: `harness/references/google-ads-policy-reference.md`
+   - LinkedIn: `harness/references/linkedin-ads-rules.md`
+   - TikTok: `harness/references/tiktok-ads-policy-reference.md`
+   - Microsoft: `harness/references/microsoft-ads-rules.md`
+   - Pinterest: `harness/references/pinterest-ads-rules.md`
+   - Snapchat: `harness/references/snapchat-ads-policy-reference.md`
+   - Amazon: `harness/references/amazon-ads-policy-reference.md`
+   - X/Twitter: `harness/references/x-ads-policy-reference.md`
+3. **Load compliance framework**: `harness/references/advertising-compliance.md`
 4. **Define audience segments**:
    - Segment by intent level (visited homepage vs. visited pricing vs. started checkout)
    - Set recency windows (1-3 days, 3-7 days, 7-30 days, 30-90 days)
@@ -78,9 +78,9 @@ Build the campaign assets:
 
 Validate before launch:
 
-1. **Four U's Score** (on ad copy): `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\four_us_score.py <file>`
+1. **Four U's Score** (on ad copy): `python scripts/quality_gates/four_us_score.py <file>`
    - Minimum: **10/16** (ad threshold)
-2. **Banned Word Check**: `python E:\Dev2\kai-cmo-harness-work\scripts\quality_gates\banned_word_check.py <file>`
+2. **Banned Word Check**: `python scripts/quality_gates/banned_word_check.py <file>`
 3. **Platform policy compliance** — Check each ad against its platform's TOS
 4. **Frequency cap validation** — Confirm caps are set per segment
 5. **Exclusion list verification** — Confirm converters are excluded
@@ -102,4 +102,4 @@ Deliver the retargeting package:
 - **Policy compliance checklist** (per platform)
 - **Gate pass/fail summary**
 
-Write output to `E:\Dev2\kai-cmo-harness-work\workspace\` with filename pattern: `retarget-campaign-YYYY-MM-DD.md`
+Write output to `workspace/` with filename pattern: `retarget-campaign-YYYY-MM-DD.md`
