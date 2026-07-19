@@ -141,6 +141,7 @@ def log_entry(
     content_hash: str | None = None,
     status: str | None = None,
     campaign_id: str | None = None,
+    frameworks: list[str] | None = None,
     log_file: str | None = None,
 ) -> dict:
     """Programmatic API to log a content entry.
@@ -155,6 +156,11 @@ def log_entry(
     campaign_id is the shared join key minted by campaign_planner
     (``cmp-YYYYMMDD-<slug>``); it is carried onto the entry and into the
     30-day pending-check file so performance rolls up per campaign.
+
+    frameworks is the list of repo-relative knowledge/reference paths that
+    actually informed the draft (from the engine's framework loader). It is
+    stored on the entry so 30-day grades can be aggregated per framework
+    (scripts/self_improvement/framework_attribution.py).
 
     Returns the created (or updated) entry dict.
     """
@@ -187,6 +193,7 @@ def log_entry(
                 ("module_set", module_set),
                 ("artifact_refs", artifact_refs),
                 ("campaign_id", campaign_id),
+                ("frameworks", frameworks),
             ):
                 if value:
                     entry[key] = value
@@ -229,6 +236,7 @@ def log_entry(
         "content_hash": content_hash,
         "status": status,
         "campaign_id": campaign_id,
+        "frameworks": frameworks or [],
     }
 
     if url:

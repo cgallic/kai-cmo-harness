@@ -85,9 +85,14 @@ Prefer the executable form: if a lesson can be a regex, threshold, or checklist 
 Run `/kai-retro` monthly or after any sprint with 5+ gated pieces:
 
 ```bash
-python scripts/self_improvement/lesson_capture.py mine     # recurring gate failures --> candidate lessons
-python scripts/self_improvement/lesson_capture.py losers   # undiagnosed 30-day losers
+python scripts/self_improvement/lesson_capture.py mine            # recurring gate failures --> candidate lessons
+python scripts/self_improvement/lesson_capture.py losers          # undiagnosed 30-day losers
+python scripts/self_improvement/framework_attribution.py          # per-framework 30-day grade report + review candidates
+python scripts/knowledge_freshness.py                             # stale/undated knowledge docs
+python scripts/intel/expert_drift.py --check                      # new material from cloned experts' sources
 ```
+
+Content-log entries record which frameworks informed each draft (`frameworks` field, written by the engine), so the attribution report grades the frameworks themselves from measured outcomes. Frameworks flagged as review candidates get diagnosed via `/kai-retro` — never auto-edited.
 
 Then triage every lesson — promote / keep / merge / retire (never delete; git keeps history).
 

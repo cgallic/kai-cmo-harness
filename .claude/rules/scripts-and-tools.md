@@ -53,6 +53,7 @@ python scripts/harness_cli.py run --task blog --site mysite --keyword "..." --pu
 | `python scripts/intel/content_gap.py --site X` | Keywords competitors rank for that you don't |
 | `python scripts/intel/market_brief.py` | AI-synthesized weekly competitive brief |
 | `python scripts/intel/brand_pulse.py <brand> --domain <domain>` | Brand-pulse snapshot (reviews, mentions, share of voice) |
+| `python scripts/intel/expert_drift.py --init/--discover/--check` | Expert-drift monitor — watches cloned experts' cited sources (`knowledge/people/_expert-sources.json`) for new material; report lands in `data/intel/expert-drift-report.md` |
 
 Reddit listening: `scripts/reddit_monitor/reddit_listener.py` + `scripts/reddit_monitor/reddit_digest.py` (profiles in `scripts/reddit_monitor/profiles`).
 
