@@ -17,6 +17,18 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 ## Core Frameworks
 
+### Marketing Science (`frameworks/marketing-science/`)
+
+| File | Use When |
+|------|----------|
+| `../_arbitration.md` | **Doctrine conflicts** - which framework governs, by stage/vertical/evidence state; load before any planning skill |
+| `diagnosis-first-operating-order.md` | Before strategy or tactics - the diagnosis checklist, evidence bars, failure-mode taxonomy |
+| `brand-growth-laws.md` | Targeting breadth decisions - mental/physical availability, distinctive assets, category entry points, light-buyer math |
+| `brand-activation-budget.md` | Budget splits - long/short evidence, ESOV, allocation worksheet by stage and category |
+| `experiment-rigor.md` | Before reading any test - sample floors, peeking, Twyman's law, low-traffic alternatives |
+| `attribution-and-incrementality.md` | Before crediting any channel - platform ROAS bias, MMM vs MTA vs incrementality, holdout design |
+| `growth-metrics-and-pmf.md` | Metrics architecture - AARRR instrumentation, North Star selection, PMF survey, cohort reading |
+
 ### Content & Copywriting (`frameworks/content-copywriting/`)
 
 | File | Use When |
@@ -153,6 +165,14 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/creative-test-resolution-protocol.md` | **Creative test resolution** - Controls, data floors, read windows, and kill / iterate / graduate decisions |
 | `playbooks/creative-intelligence-ledger.md` | **Creative intelligence ledger** - Durable memory for hooks, angles, awareness stages, mechanics, results, and next actions |
 | `playbooks/hormozi-100m-funnel.md` | **Hormozi $100M funnel sequence** - Value Equation, Grand Slam Offer, client-financed acquisition, Core Four; runs `/kai-offer-builder` → `/kai-proof-builder` → `/kai-hook-bench` → `/kai-content-batching` → `/kai-funnel-audit` |
+| `playbooks/demand-side-research.md` | **Switch interviews / JTBD** - timeline reconstruction, four forces, VoC mining; feeds offer construction and messaging |
+| `playbooks/messaging-architecture.md` | **The messaging stack** - category frame → strategic narrative → positioning → homepage hierarchy, with agreement audit and testing methods |
+| `playbooks/referral-and-word-of-mouth.md` | **Referral engineering** - sharing drivers, program design, k-factor math, incentive rules |
+| `playbooks/retention-habit-loops.md` | **Behavioral retention** - habit-loop design, activation moments, ethics guardrails |
+| `playbooks/community-as-channel.md` | **Community-led growth** - when community fits, member journey, programming, measurement |
+| `playbooks/services-value-pricing.md` | **Service-business pricing** - value pricing, productized services, expertise positioning, retainer design |
+| `playbooks/product-led-seo.md` | **Programmatic SEO** - when template pages work, quality bars, data requirements, build order |
+| `playbooks/newsletter-growth-economics.md` | **Newsletter growth** - acquisition channels ranked, unit economics, list hygiene |
 | `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
 | `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
 | `playbooks/paid-media-launch-playbook.md` | **Paid media launch** - Measurement-first Meta and Google launch flow, target CPA x 50 budget rule, creative matrix, first 14-day checks |
