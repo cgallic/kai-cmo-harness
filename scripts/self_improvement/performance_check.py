@@ -66,6 +66,37 @@ def save_log(entries: list):
         json.dump(entries, f, indent=2)
 
 
+def _normalize_pending_check(check_file: Path, check: dict, entries: list) -> dict | None:
+    """Upgrade legacy pending-check records at the read boundary."""
+    entries_by_id = {entry.get("id"): entry for entry in entries if entry.get("id")}
+    entries_by_url = {entry.get("url"): entry for entry in entries if entry.get("url")}
+    entry = entries_by_id.get(check.get("id")) or entries_by_url.get(check.get("url"))
+    normalized = dict(check)
+    if entry:
+        normalized.setdefault("id", entry.get("id"))
+        normalized.setdefault("keyword", entry.get("keyword"))
+        normalized.setdefault("site", entry.get("site"))
+        normalized.setdefault(
+            "published_at", entry.get("published_at") or entry.get("publish_date")
+        )
+    if not normalized.get("check_due") and normalized.get("check_after"):
+        normalized["check_due"] = normalized["check_after"]
+
+    required = ("id", "url", "keyword", "site", "check_due")
+    missing = [key for key in required if not normalized.get(key)]
+    if missing:
+        log.warning("Skipping invalid pending check %s (missing: %s)", check_file, ", ".join(missing))
+        return None
+
+    if normalized != check:
+        temp_file = check_file.with_suffix(f"{check_file.suffix}.tmp")
+        with open(temp_file, "w") as f:
+            json.dump(normalized, f, indent=2)
+        os.replace(temp_file, check_file)
+        log.info("Normalized legacy pending check %s", check_file)
+    return normalized
+
+
 def reconcile_pending_checks(dry_run: bool = False) -> int:
     """Regenerate missing pending-check files from the content log.
 
@@ -129,15 +160,21 @@ def get_pending_checks() -> list:
         return []
     checks = []
     now = datetime.now(timezone.utc)
+    entries = load_log()
     for f in Path(PENDING_CHECKS_DIR).glob("*.json"):
         with open(f) as fh:
             check = json.load(fh)
+        check = _normalize_pending_check(f, check, entries)
+        if check is None:
+            continue
         if not check.get("url"):
             # Approved-but-unpublished entries carry url=None — there is no
             # live page to measure, so never schedule a GSC/GA4 pull for them.
             continue
         due = datetime.fromisoformat(check["check_due"])
-        if check["status"] == "pending" and due <= now:
+        if due.tzinfo is None:
+            due = due.replace(tzinfo=timezone.utc)
+        if check.get("status") == "pending" and due <= now:
             checks.append((f, check))
     return checks
 
@@ -294,11 +331,10 @@ def pull_ga4_data(url: str, site: str) -> dict:
         from google.analytics.data_v1beta.types import (
             DateRange,
             Dimension,
-            DimensionFilter,
+            Filter,
             FilterExpression,
             Metric,
             RunReportRequest,
-            StringFilter,
         )
 
         property_id = GA4_PROPERTY_IDS.get(site)
@@ -323,9 +359,9 @@ def pull_ga4_data(url: str, site: str) -> dict:
             ],
             date_ranges=[DateRange(start_date="30daysAgo", end_date="today")],
             dimension_filter=FilterExpression(
-                filter=DimensionFilter(
+                filter=Filter(
                     field_name="pagePath",
-                    string_filter=StringFilter(
+                    string_filter=Filter.StringFilter(
                         match_type="CONTAINS",
                         value=path,
                     ),
