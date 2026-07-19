@@ -140,24 +140,36 @@ class MetaUploader(AdUploader):
                 "creative.page_id (or META_PAGE_ID env) required for Meta ads"
             )
 
-        link_data: dict[str, Any] = {
+        common_data: dict[str, Any] = {
             "message": creative.description,
-            "link": creative.link,
-            "name": creative.headline,
             "call_to_action": {
                 "type": creative.cta,
                 "value": {"link": creative.link},
             },
         }
         if asset.kind == "video":
-            link_data["video_id"] = asset.ref
+            thumbnail_hash = asset.raw.get("thumbnail_hash")
+            if not thumbnail_hash:
+                raise UploadError("Meta video creative requires a thumbnail image/hash")
+            object_story_spec: dict[str, Any] = {
+                "page_id": page_id,
+                "video_data": {
+                    **common_data,
+                    "video_id": asset.ref,
+                    "image_hash": thumbnail_hash,
+                    "title": creative.headline,
+                },
+            }
         else:
-            link_data["image_hash"] = asset.ref
-
-        object_story_spec: dict[str, Any] = {
-            "page_id": page_id,
-            "link_data": link_data,
-        }
+            object_story_spec = {
+                "page_id": page_id,
+                "link_data": {
+                    **common_data,
+                    "link": creative.link,
+                    "name": creative.headline,
+                    "image_hash": asset.ref,
+                },
+            }
         ig_user_id = creative.instagram_user_id or os.getenv("META_INSTAGRAM_USER_ID")
         if ig_user_id:
             # NOTE per harness/references/meta-ads-api-reference.md: use

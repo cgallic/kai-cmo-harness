@@ -162,9 +162,16 @@ def _request(
                     time.sleep(wait)
                     continue
                 # Permanent error: raise
+                details = [
+                    f"subcode={err['error_subcode']}" if err.get("error_subcode") else "",
+                    err.get("error_user_title", ""),
+                    err.get("error_user_msg", ""),
+                ]
+                detail_text = " | ".join(part for part in details if part)
                 raise APIError(
                     f"API error{' (' + label + ')' if label else ''}: "
                     f"[{err.get('code', '?')}] {err.get('message', 'Unknown error')}"
+                    f"{' | ' + detail_text if detail_text else ''}"
                 )
 
             return body
