@@ -2,7 +2,8 @@
   "alex-hormozi": {
     "doc": "knowledge/people/alex-hormozi-knowledge.md",
     "domains": [],
-    "feeds": []
+    "feeds": [],
+    "last_discovered": "2026-07-19T20:09:10.862398+00:00"
   },
   "april-dunford": {
     "doc": "knowledge/people/april-dunford-knowledge.md",
@@ -11,7 +12,10 @@
       "aprildunford.substack.com",
       "businessofsoftware.org"
     ],
-    "feeds": []
+    "feeds": [
+      "https://aprildunford.substack.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:09:21.318940+00:00"
   },
   "barry-hott": {
     "doc": "knowledge/people/barry-hott-knowledge.md",
@@ -20,7 +24,10 @@
       "adworldprime.com",
       "canvasrebel.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://canvasrebel.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:09:34.306234+00:00"
   },
   "bill-gurley": {
     "doc": "knowledge/people/bill-gurley-knowledge.md",
@@ -29,7 +36,12 @@
       "jamesclear.com",
       "podcastnotes.org"
     ],
-    "feeds": []
+    "feeds": [
+      "https://abovethecrowd.com/feed",
+      "https://jamesclear.com/feed",
+      "https://podcastnotes.org/feed"
+    ],
+    "last_discovered": "2026-07-19T20:09:37.117333+00:00"
   },
   "brian-balfour": {
     "doc": "knowledge/people/brian-balfour-knowledge.md",
@@ -38,7 +50,10 @@
       "blog.brianbalfour.com",
       "miro.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://blog.brianbalfour.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:09:47.415652+00:00"
   },
   "chris-walker": {
     "doc": "knowledge/people/chris-walker-knowledge.md",
@@ -47,7 +62,10 @@
       "databox.com",
       "dreamdata.io"
     ],
-    "feeds": []
+    "feeds": [
+      "https://databox.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:09:56.105348+00:00"
   },
   "cole-gordon": {
     "doc": "knowledge/people/cole-gordon-knowledge.md",
@@ -56,7 +74,11 @@
       "beyondamillion.com",
       "getlatka.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://beyondamillion.com/feed",
+      "https://closers.io/feed"
+    ],
+    "last_discovered": "2026-07-19T20:10:04.968615+00:00"
   },
   "dan-kennedy": {
     "doc": "knowledge/people/dan-kennedy-knowledge.md",
@@ -65,7 +87,10 @@
       "www.breakthroughmarketingsecrets.com",
       "www.elaunchers.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://www.breakthroughmarketingsecrets.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:10:19.803081+00:00"
   },
   "dara-denney": {
     "doc": "knowledge/people/dara-denney-knowledge.md",
@@ -74,7 +99,10 @@
       "www.youtube.com",
       "fortpointcapital.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://fortpointcapital.com/rss.xml"
+    ],
+    "last_discovered": "2026-07-19T20:10:31.058027+00:00"
   },
   "darren-shaw": {
     "doc": "knowledge/people/darren-shaw-knowledge.md",
@@ -83,7 +111,12 @@
       "searchlabdigital.com",
       "www.nearmedia.co"
     ],
-    "feeds": []
+    "feeds": [
+      "https://searchlabdigital.com/feed",
+      "https://whitespark.ca/feed",
+      "https://www.nearmedia.co/feed"
+    ],
+    "last_discovered": "2026-07-19T20:10:33.265902+00:00"
   },
   "dave-ramsey": {
     "doc": "knowledge/people/dave-ramsey-knowledge.md",
@@ -92,7 +125,11 @@
       "barrettmedia.com",
       "eathealthy365.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://barrettmedia.com/feed",
+      "https://www.ramseysolutions.com/rss"
+    ],
+    "last_discovered": "2026-07-19T20:10:40.486749+00:00"
   },
   "elena-verna": {
     "doc": "knowledge/people/elena-verna-knowledge.md",
@@ -101,7 +138,12 @@
       "www.lennysnewsletter.com",
       "amplitude.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://amplitude.com/feed",
+      "https://www.elenaverna.com/feed",
+      "https://www.lennysnewsletter.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:10:42.689757+00:00"
   },
   "eugene-schwartz": {
     "doc": "knowledge/people/eugene-schwartz-knowledge.md",
@@ -110,7 +152,12 @@
       "auresnotes.com",
       "betweenthelinescopy.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://auresnotes.com/feed",
+      "https://betweenthelinescopy.com/feed",
+      "https://www.scientificadvertising.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:10:49.893748+00:00"
   },
   "jason-wardrop": {
     "doc": "knowledge/people/jason-wardrop-knowledge.md",
@@ -119,7 +166,8 @@
       "www.youtube.com",
       "blog.gohighlevel.com"
     ],
-    "feeds": []
+    "feeds": [],
+    "last_discovered": "2026-07-19T20:11:05.730648+00:00"
   },
   "jay-abraham": {
     "doc": "knowledge/people/jay-abraham-knowledge.md",
@@ -128,7 +176,11 @@
       "www.asbn.com",
       "boutiquegrowth.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://boutiquegrowth.com/feed",
+      "https://www.asbn.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:11:15.155723+00:00"
   },
   "jimmy-farley": {
     "doc": "knowledge/people/jimmy-farley-knowledge.md",
@@ -137,7 +189,8 @@
       "ippei.com",
       "jimmyfarley.gumroad.com"
     ],
-    "feeds": []
+    "feeds": [],
+    "last_discovered": "2026-07-19T20:11:27.416274+00:00"
   },
   "joy-hawkins": {
     "doc": "knowledge/people/joy-hawkins-knowledge.md",
@@ -146,7 +199,11 @@
       "whitespark.ca",
       "localu.org"
     ],
-    "feeds": []
+    "feeds": [
+      "https://whitespark.ca/feed",
+      "https://www.sterlingsky.ca/feed"
+    ],
+    "last_discovered": "2026-07-19T20:11:36.286311+00:00"
   },
   "madhavan-ramanujam": {
     "doc": "knowledge/people/madhavan-ramanujam-knowledge.md",
@@ -155,12 +212,18 @@
       "www.simon-kucher.com",
       "blas.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://blas.com/feed",
+      "https://www.lennysnewsletter.com/feed",
+      "https://www.simon-kucher.com/rss.xml"
+    ],
+    "last_discovered": "2026-07-19T20:11:39.713791+00:00"
   },
   "nick-cosman": {
     "doc": "knowledge/people/nick-cosman-knowledge.md",
     "domains": [],
-    "feeds": []
+    "feeds": [],
+    "last_discovered": "2026-07-19T20:11:39.713816+00:00"
   },
   "patrick-campbell": {
     "doc": "knowledge/people/patrick-campbell-knowledge.md",
@@ -169,12 +232,16 @@
       "www.paddle.com",
       "blog.profitwell.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://saasclub.io/feed"
+    ],
+    "last_discovered": "2026-07-19T20:11:49.852363+00:00"
   },
   "sam-ovens": {
     "doc": "knowledge/people/sam-ovens-knowledge.md",
     "domains": [],
-    "feeds": []
+    "feeds": [],
+    "last_discovered": "2026-07-19T20:11:49.852388+00:00"
   },
   "tommy-mello": {
     "doc": "knowledge/people/tommy-mello-knowledge.md",
@@ -183,6 +250,9 @@
       "fieldedge.com",
       "joinhampton.com"
     ],
-    "feeds": []
+    "feeds": [
+      "https://fieldedge.com/feed"
+    ],
+    "last_discovered": "2026-07-19T20:11:58.004801+00:00"
   }
 }
