@@ -1,6 +1,6 @@
 # TikTok Organic Posting Rules
 
-Last researched: 2026-07-13
+Last researched: 2026-07-20
 
 Primary sources:
 - Community Guidelines: https://www.tiktok.com/community-guidelines/en/
@@ -24,6 +24,7 @@ Primary sources:
 - Use `video.publish` for direct posting and `video.upload` for inbox/review upload flows, based on the current TikTok Content Posting API guide.
 - Disclose realistic AI-generated or altered content when required by platform tools or local law. TikTok's AI guidance says realistic AI-generated or meaningfully altered content must be labeled, can be auto-labeled from TikTok effects or C2PA credentials, and can still be removed if it misleads or uses prohibited likenesses. Source: https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/ (accessed 2026-07-13).
 - Use Content Disclosure settings for own-brand, third-party branded, affiliate, or incentivized posts. TikTok's July 2026 help flow says branded or promotional posts must turn on the disclosure setting and may be removed or restricted if the proper disclosure is missing. Source: https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers (accessed 2026-07-13).
+- If a Direct Post workflow marks content as branded/commercial, do not offer private-only visibility. TikTok's current content-sharing guidelines say branded-content disclosures can only be used with public/friends visibility, and `SELF_ONLY` should be disabled or automatically switched away when the commercial-content toggle is on. Source: https://developers.tiktok.com/doc/content-sharing-guidelines (accessed 2026-07-20).
 - Use the Commercial Music Library or documented music rights for commercial/promotional posts. TikTok's music guidance says commercial content should use CML tracks, and off-library music requires confirming that all necessary rights are secured. Source: https://ads.tiktok.com/help/article/commercial-music-library (accessed 2026-07-13).
 - For API publishing, fetch creator info before export/publish UI and respect privacy, comment, duet, stitch, and max-duration settings.
 - Treat unaudited direct-post clients as private-only until TikTok audit lifts visibility restrictions. TikTok's current developer guidance says unaudited Direct Post clients are capped at 5 users per 24-hour window, all posting accounts must be private at post time, and content stays `SELF_ONLY` until audit approval. Source: https://developers.tiktok.com/doc/content-sharing-guidelines and https://developers.tiktok.com/doc/content-posting-api-get-started (accessed 2026-07-13).

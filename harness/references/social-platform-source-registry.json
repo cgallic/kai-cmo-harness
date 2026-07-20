@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_researched": "2026-07-13",
+  "last_researched": "2026-07-20",
   "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
   "sources": [
     {
@@ -189,6 +189,7 @@
       "category": "policy",
       "title": "YouTube GenAI Disclosure",
       "url": "https://support.google.com/youtube/answer/14328491?hl=en",
+      "timeout": 20,
       "owner_file": "harness/references/youtube-organic-posting-rules.md",
       "notes": "Disclosure for realistic AI-generated or altered content."
     },
@@ -216,6 +217,7 @@
       "category": "ads_policy",
       "title": "YouTube Advertiser-Friendly Guideline Updates",
       "url": "https://support.google.com/youtube/answer/9725604?hl=en",
+      "timeout": 20,
       "owner_file": "harness/references/youtube-organic-posting-rules.md",
       "notes": "Monitor because organic videos may monetize or become paid media."
     },
@@ -380,6 +382,15 @@
       "url": "https://redditinc.com/policies/developer-terms",
       "owner_file": "harness/references/reddit-organic-posting-rules.md",
       "notes": "API and licensed materials use rules."
+    },
+    {
+      "id": "reddit_data_api_terms",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Data API Terms",
+      "url": "https://redditinc.com/policies/data-api-terms",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Canonical Data API license, content-use, identity, rate-limit, commercial-use, and monetization restrictions."
     },
     {
       "id": "reddit_public_content_policy",
@@ -626,6 +637,7 @@
       "category": "recommendation",
       "title": "YouTube Search and Discovery Tips",
       "url": "https://support.google.com/youtube/answer/11914225?hl=en",
+      "timeout": 20,
       "owner_file": "knowledge/channels/youtube.md",
       "notes": "Official creator guidance for search/discovery."
     },
@@ -755,6 +767,10 @@
       "category": "developer",
       "title": "Developer Platform & Accessing Reddit Data",
       "url": "https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data",
+      "fallback_urls": [
+        "https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki",
+        "https://redditinc.com/policies/data-api-terms"
+      ],
       "owner_file": "harness/references/social-automation-rules.md",
       "notes": "Official approval, commercial-use, monetized publishing, and AI-training restrictions for Reddit developer services."
     },

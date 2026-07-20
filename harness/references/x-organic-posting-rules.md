@@ -2,7 +2,7 @@
 
 > **Use when**: Scheduling X posts, generating X replies, setting up automation, planning contests, using creator/affiliate disclosures, or preparing organic posts that may later become promoted posts.
 
-Last updated: 2026-07-13
+Last updated: 2026-07-20
 
 Ruleset ID: `x_twitter_posting_automation_2026_06_17`
 
@@ -60,6 +60,7 @@ Every X publishing workflow must set:
 - Keep development, staging, and production API applications clearly identified and do not use development or staging apps for production.
 - Keep API keys and access credentials private.
 - Respect API rate limits and plan limits. Do not circumvent limits.
+- For X search/listening automations, assume the v2 search endpoints now use X's core search index. X's May 4, 2026 API changelog says keyword-based search no longer returns reposts and adds `min_likes:`, `min_replies:`, and `min_reposts:` precision operators. Source: https://docs.x.com/changelog (accessed 2026-07-20).
 - Preserve X Content integrity when displaying posts through the API, and remove unavailable content promptly when required.
 - Keep professional profiles authentic, complete, and clearly identified.
 - Label sensitive, adult, or violent media when allowed.
@@ -160,3 +161,5 @@ Use this decision order:
 1. Block if consent, duplicate, impersonation, automation, link safety, sensitive media, or claim support fails.
 2. Route to review if the post touches automation, paid promotion, contests, incentives, regulated categories, or sensitive events.
 3. Publish or schedule only when the post passes the channel guide, this reference, and the social-post contract.
+
+If an official X Help Center rules page returns `403` in automation, reopen it in a browser before changing guidance. Treat that as a source-reachability issue first, not automatic evidence that the policy itself changed.

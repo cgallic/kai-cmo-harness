@@ -69,6 +69,7 @@ def _clean_text(raw: bytes, content_type: str) -> str:
 def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
     errors: list[dict[str, Any]] = []
     urls = [source["url"], *source.get("fallback_urls", [])]
+    source_timeout = int(source.get("timeout", timeout))
 
     for candidate_url in urls:
         req = Request(
@@ -77,7 +78,7 @@ def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
         )
         started = time.monotonic()
         try:
-            with urlopen(req, timeout=timeout) as response:
+            with urlopen(req, timeout=source_timeout) as response:
                 body = response.read()
                 content_type = response.headers.get("content-type", "")
                 cleaned = _clean_text(body, content_type)

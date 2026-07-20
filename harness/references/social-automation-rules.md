@@ -1,6 +1,6 @@
 # Social Automation Rules
 
-Last researched: 2026-07-13
+Last researched: 2026-07-20
 
 Use this before any scheduled post, API publish, reply automation, DM flow, data collection, listening job, or engagement workflow.
 
@@ -36,4 +36,4 @@ Only use platform-approved APIs, official partner tools, or a user-controlled sc
 - [ ] No duplicate-content evasion or near-duplicate cross-account posting.
 - [ ] Human approval captured before live-channel mutation unless Connor explicitly approved autonomous publishing.
 
-Reddit's July 2026 developer-access help says monetized publishing of Reddit content, paid services, ads-backed use cases, and model training all require Reddit permission or contract review before launch. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data (accessed 2026-07-13).
+Reddit's July 2026 developer-access help says monetized publishing of Reddit content, paid services, ads-backed use cases, and model training all require Reddit permission or contract review before launch. Reddit's current Data API Terms also require use of Reddit-issued OAuth/user-agent identity and prohibit deriving revenue from Data API access without written approval. Sources: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data and https://redditinc.com/policies/data-api-terms (accessed 2026-07-20).

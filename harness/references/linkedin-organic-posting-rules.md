@@ -1,6 +1,6 @@
 # LinkedIn Organic Posting Rules
 
-Last researched: 2026-07-06
+Last researched: 2026-07-20
 
 Primary sources:
 - LinkedIn User Agreement: https://www.linkedin.com/legal/user-agreement
@@ -18,11 +18,12 @@ Primary sources:
 
 - Use LinkedIn member, page, and company data only through approved products and permissions.
 - Do not scrape, enrich, resell, or combine LinkedIn data outside approved API terms.
-- Review Developer AI Policy before using LinkedIn organic content, comments, profile data, or messages in AI workflows.
+- Review Developer AI Policy before using LinkedIn organic content, comments, profile data, or messages in AI workflows. LinkedIn's current policy says Marketing API page/member data generally cannot be used to train AI or supplied as prompt/input except where the policy expressly allows it, and AI features using LinkedIn data must disclose that they are AI-powered, explain their operation, disclose if end-user data is used to further train/improve the system or shared with third parties, and warn that outputs may be inaccurate. Source: https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-05 (accessed 2026-07-20).
 - Keep authorization from the relevant Page/admin/account manager for scheduling, moderation, reporting, or publishing.
-- Pin LinkedIn API workflows to a currently supported Marketing version and review the recent-changes page before publish/reporting runs. LinkedIn's 202506 Marketing version is already sunset, and some post features remain version-gated. Source: https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05 (accessed 2026-06-29).
+- Pin LinkedIn API workflows to a currently supported Marketing version and review the recent-changes page before publish/reporting runs. LinkedIn's current recent-changes page warns that Marketing version 202507 is sunset, continues the rolling monthly sunset schedule, and keeps version-gated behavior on Marketing/community APIs. Source: https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05 (accessed 2026-07-20).
 - Check LinkedIn Ads policy before boosting or sponsoring organic posts.
 - Treat third-party reach multipliers, timing claims, and algorithm weights as benchmarks only unless LinkedIn documents them directly.
+- When posting through the Posts API, keep the `Linkedin-Version` header pinned and validate that the workflow still supports the current post schema before scheduling. LinkedIn's current Posts API examples remain versioned and rely on explicit `lifecycleState` and distribution fields, so stale version pins can break otherwise-valid publish flows. Source: https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-05 (accessed 2026-07-20).
 - LinkedIn's official feed-ranking help says feed visibility uses hundreds of signals from post context, profile/network/activity, and does not use demographic fields such as age, race, or gender as visibility signals. Source: https://www.linkedin.com/help/linkedin/answer/a9554004 (accessed 2026-07-06).
 
 ## Organic Distribution Guidance

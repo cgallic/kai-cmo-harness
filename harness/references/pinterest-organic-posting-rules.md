@@ -1,6 +1,6 @@
 # Pinterest Organic Posting Rules
 
-Last researched: 2026-07-13
+Last researched: 2026-07-20
 
 Primary sources:
 - Community Guidelines: https://policy.pinterest.com/en/community-guidelines
@@ -14,17 +14,18 @@ Primary sources:
 
 - Check Community Guidelines for content, destination links, deceptive practices, regulated goods, and spam risk.
 - Use Pinterest API only under the current Developer and API Terms.
-- Follow Business Terms for commercial accounts, catalogs, shops, affiliates, and promoted content. Pinterest's current Terms of Service also say commercial use should run through a business account and that sponsored/branded posts are subject to the Commercial and Branded Content Guidelines. Source: https://policy.pinterest.com/en/terms-of-service and https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-13).
+- Follow Business Terms for commercial accounts, catalogs, shops, affiliates, and promoted content. Pinterest's current Terms of Service say commercial use should run through a business account and that sponsored/branded posts are subject to the Commercial and Branded Content Guidelines. Source: https://policy.pinterest.com/en/terms-of-service and https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-20).
 - Apply Pinterest's GenAI acceptable-use rules when using Pinterest AI tools or AI-generated creative destined for Pinterest.
-- Do not use Pinterest GenAI tools or Pinterest data for scraping, reverse engineering, jailbreaking, or collecting personal/sensitive information without rights. Source: https://policy.pinterest.com/en/genai-acceptable-use-guidelines and https://policy.pinterest.com/en/terms-of-service (accessed 2026-06-29).
+- Do not use Pinterest GenAI tools or Pinterest data for scraping, reverse engineering, jailbreaking, or collecting personal/sensitive information without rights. Pinterest's current GenAI rules also treat misleading/deceptive AI use, impersonation, misinformation, scams, and privacy abuse as policy violations, not just quality issues. Source: https://policy.pinterest.com/en/genai-acceptable-use-guidelines and https://policy.pinterest.com/en/terms-of-service (accessed 2026-07-20).
 - Use accurate links, landing pages, product data, and disclosures.
-- For paid partnerships, require a clear commercial disclosure such as `#ad` or Pinterest's paid partnership tool. Pinterest's branded-content page also warns against posting irrelevant content to irrelevant boards as an authenticity problem. Source: https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-06).
+- For paid partnerships, require a clear commercial disclosure such as `#ad` or Pinterest's paid partnership tool. Pinterest's current branded-content page also warns against paying people to save Pins, fake-account distribution, quid-pro-quo saves, irrelevant boards, and repetitive affiliate Pin volume. Source: https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-20).
 
 ## Organic Distribution Guidance
 
 - Pinterest is search-and-discovery led. Keyword clarity, image quality, destination quality, board relevance, and freshness matter.
 - Create fresh Pin creatives for existing URLs instead of repeatedly pinning the same creative.
 - Avoid link cloaking, misleading images, irrelevant boards, mass pinning, duplicate assets, and low-quality affiliate pages.
+- Treat affiliate content as one authentic-account workflow. Pinterest's affiliate guidance says affiliate content should add unique value, operate from your authentic presence, and avoid repetitive or spammy affiliate distribution. Source: https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-20).
 - AI-generated Pins still need accurate attribution, safe claims, and no impersonation, misinformation, privacy abuse, or spam.
 - Pinterest's current community guidelines explicitly cover harmful synthetic/manipulated content used to degrade, shame, or mislead people. Treat synthetic harassment or deceptive edits as removal/distribution-risk content, not just a creative concern. Source: https://policy.pinterest.com/en/community-guidelines and https://policy.pinterest.com/en/genai-acceptable-use-guidelines (accessed 2026-07-06).
 - Treat claims about health, finance, body image, employment, and regulated goods as high-risk.
