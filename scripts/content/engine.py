@@ -156,18 +156,25 @@ def _make_gemini_fn():
     return call
 
 
-def _load_framework_texts(fmt: str, repo_root: Path, workspace: Path) -> str:
-    """Load and concatenate framework files for a format."""
+def _load_framework_texts(fmt: str, repo_root: Path, workspace: Path) -> tuple[str, list[str]]:
+    """Load and concatenate framework files for a format.
+
+    Returns (concatenated_text, loaded_rel_paths). The loaded paths are the
+    frameworks that actually informed the draft — they flow onto the content
+    log entry so 30-day grades can be aggregated per framework.
+    """
     rel_paths = get_framework_paths(fmt)
     texts = []
+    loaded: list[str] = []
     for rel in rel_paths:
         # Try workspace first (deployed), then repo root (dev)
         for base in [workspace, repo_root]:
             candidate = base / rel
             if candidate.exists():
                 texts.append(candidate.read_text()[:1500])
+                loaded.append(rel)
                 break
-    return "\n\n---\n\n".join(texts)
+    return "\n\n---\n\n".join(texts), loaded
 
 
 def _load_patterns(repo_root: Path, workspace: Path) -> str:
@@ -417,7 +424,7 @@ async def generate(
         # 3. Load all context
         repo_root = cfg.repo_root
         workspace = cfg.workspace_dir
-        framework_texts = _load_framework_texts(format, repo_root, workspace)
+        framework_texts, framework_paths = _load_framework_texts(format, repo_root, workspace)
         patterns = _load_patterns(repo_root, workspace)
         contract = _load_skill_contract(format, workspace)
         site_facts = _load_site_facts(site, repo_root)
@@ -691,6 +698,7 @@ async def generate(
                     content_hash=content_hash,
                     status="published" if (published and publish_url) else "approved_unpublished",
                     campaign_id=campaign_id,
+                    frameworks=framework_paths,
                 )
                 if published and not url_missing:
                     published_artifact = runtime_store.record_artifact(

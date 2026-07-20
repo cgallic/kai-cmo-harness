@@ -70,4 +70,5 @@ Raw research outlines from the space transcript. Each stub's top **Status** line
 ## Maintenance
 
 - New clones follow `knowledge-cloning-workflow.md` and this doc's format; add a row here on creation.
-- These docs decay: roles change, benchmarks stale. Re-verify volatile claims older than ~12 months before citing them in publishable work (Kai Data Provenance Rule applies).
+- These docs decay: roles change, benchmarks stale. Re-verify volatile claims older than ~12 months before citing them in publishable work (Kai Data Provenance Rule applies). `python scripts/knowledge_freshness.py --dir knowledge/people` flags overdue docs.
+- Experts keep publishing: `python scripts/intel/expert_drift.py --check` diffs their cited sources (`_expert-sources.json`) against last check and reports new material to triage into the docs.
