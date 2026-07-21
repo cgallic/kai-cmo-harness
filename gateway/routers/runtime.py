@@ -9,6 +9,7 @@ from kai.runtime import (
     load_module_manifests,
     load_workspace_profile,
 )
+from scripts.capability_manifest import discover_inventory
 
 
 router = APIRouter()
@@ -39,6 +40,12 @@ async def list_modules():
         "modules": [manifest.model_dump() for manifest in manifests.values()],
         "count": len(manifests),
     }
+
+
+@router.get("/capabilities")
+async def list_capabilities():
+    """Return the generated capability inventory from canonical repo sources."""
+    return discover_inventory()
 
 
 @router.get("/state")

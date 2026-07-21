@@ -67,6 +67,7 @@ REQUIRED_PATHS = [
     "scripts/self_improvement/lesson_capture.py",
     "scripts/content/engine.py",
     "scripts/audit/collect.py",
+    "scripts/capability_manifest.py",
     "scripts/intel/brand_pulse.py",
     "memory/MEMORY.md",
     "memory/lessons.md",
@@ -74,6 +75,7 @@ REQUIRED_PATHS = [
     "memory/what-doesnt-work.md",
     "evals/golden/manifest.json",
     "docs/system/governance-and-quality.md",
+    "docs/system/capability-manifest.json",
     "docs/system/learning-loop.md",
     "docs/OPENCLAW_SETUP.md",
 ]
@@ -121,6 +123,7 @@ COMPILE_PATHS = [
     "scripts/quality_gates/golden_check.py",
     "scripts/self_improvement/lesson_capture.py",
     "scripts/intel/brand_pulse.py",
+    "scripts/capability_manifest.py",
     "scripts/doctor.py",
 ]
 
@@ -286,6 +289,26 @@ def check_golden_corpus(report: Report) -> None:
                 report.fail(f"golden case {r['id']}: {r['detail']}")
 
 
+def check_capability_manifest(report: Report) -> None:
+    """Fail when the generated inventory or its bounded doc blocks drift."""
+    try:
+        manifest_path = REPO_ROOT / "scripts" / "capability_manifest.py"
+        spec = importlib.util.spec_from_file_location("_doctor_capability_manifest", manifest_path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"cannot load {manifest_path}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        errors = module.check_manifest(REPO_ROOT)
+    except Exception as exc:
+        report.fail(f"capability manifest check crashed: {exc}")
+        return
+    if errors:
+        for error in errors:
+            report.fail(f"capability manifest: {error}")
+        return
+    report.ok("capability manifest and generated inventory docs current")
+
+
 def check_learning_layer(report: Report) -> None:
     learn_dir = REPO_ROOT / "data" / "learning"
     try:
@@ -337,6 +360,7 @@ def main() -> int:
     check_required_paths(report)
     check_instruction_chain(report)
     check_compiles(report)
+    check_capability_manifest(report)
     check_golden_corpus(report)
     if not args.ci:
         check_learning_layer(report)

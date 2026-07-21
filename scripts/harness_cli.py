@@ -40,6 +40,7 @@ if str(_BOOTSTRAP_ROOT) not in sys.path:
     sys.path.insert(0, str(_BOOTSTRAP_ROOT))
 
 from scripts.harness_config import get_config
+from kai.packaging.agency_setup import AgencySetupError, run_agency_setup
 from scripts.content._writer import (
     FORMAT_INSTRUCTIONS as _WRITER_FORMAT_INSTRUCTIONS,
     FORMAT_TO_POLICY as _WRITER_FORMAT_TO_POLICY,
@@ -1066,6 +1067,43 @@ def cmd_dashboard(_args):
         print("  Dashboard not found.")
 
 
+def cmd_agency_setup(args):
+    """Create durable Company Autopilot context in one command."""
+
+    answers = {}
+    if args.answers:
+        answers_path = Path(args.answers).resolve()
+        answers = json.loads(answers_path.read_text(encoding="utf-8"))
+        if not isinstance(answers, dict):
+            raise ValueError("--answers must point to a JSON object")
+
+    direct_answers = {
+        "business_name": args.name,
+        "business_description": args.description,
+        "business_type": args.business_type,
+        "primary_service": args.primary_service,
+        "service_list": args.services,
+        "operator_email": args.owner_email,
+    }
+    answers.update({key: value for key, value in direct_answers.items() if value is not None})
+
+    try:
+        response = run_agency_setup(args.workspace, answers)
+    except AgencySetupError as exc:
+        raise SystemExit(f"Agency setup rejected: {exc}") from exc
+
+    if args.json:
+        print(json.dumps(response, indent=2, sort_keys=True))
+        return
+
+    receipt = response["receipt"]
+    header("Company Autopilot — Agency Setup")
+    print(f"  Agency:  {receipt['brand_id']}")
+    print(f"  Status:  {receipt['status']}")
+    print(f"  Receipt: {response['receipt_path']}")
+    print("\n  Durable context is ready. Provider verification remains a separate gate.")
+
+
 # ── CLI ────────────────────────────────────────────────────────────────────
 def main():
     p = argparse.ArgumentParser(prog="kai-harness", description="Kai Harness — Marketing Pipeline")
@@ -1153,6 +1191,30 @@ def main():
     # dashboard
     sub.add_parser("dashboard", help="Open marketing dashboard in browser")
 
+    # agency-setup
+    aset = sub.add_parser(
+        "agency-setup",
+        help="Create durable Company Autopilot agency context in one command",
+    )
+    aset.add_argument("--workspace", default=str(WORKSPACE), help="Target workspace directory")
+    aset.add_argument("--answers", help="JSON object containing all SetupWizard answers")
+    aset.add_argument("--name", help="Agency or business name")
+    aset.add_argument("--description", help="One-sentence agency description")
+    aset.add_argument(
+        "--business-type",
+        choices=[
+            "Local Service Business",
+            "Ecommerce/Online Store",
+            "Professional Services/B2B",
+            "Multi-Location Business",
+        ],
+        help="Business archetype",
+    )
+    aset.add_argument("--primary-service", help="Primary service or offer")
+    aset.add_argument("--services", help="Comma-separated service list")
+    aset.add_argument("--owner-email", help="Approval owner email")
+    aset.add_argument("--json", action="store_true", help="Print the full setup receipt as JSON")
+
     # goals
     gl = sub.add_parser("goals", help="Track brand goals / KPI targets (GoalRegistry)")
     glsub = gl.add_subparsers(dest="goals_command", required=True)
@@ -1195,6 +1257,7 @@ def main():
         "intel":          cmd_intel,
         "weekly-report":  cmd_weekly_report,
         "dashboard":      cmd_dashboard,
+        "agency-setup":   cmd_agency_setup,
         "goals":          cmd_goals,
     }[args.command](args)
 
