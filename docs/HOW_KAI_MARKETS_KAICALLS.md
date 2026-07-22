@@ -49,7 +49,7 @@ That rule exists because a marketing OS that quietly shills its owner's products
 You do not need a voice-agent product to use this loop. The transferable shape is:
 
 1. Put the strategy question through evidence → asset inventory → examined angles → wedges-with-gaps.
-2. Let distribution follow where your category is actually bought (for most: search, AI answers, comparisons, communities).
+2. Let distribution follow where your category is bought (for most: search, AI answers, comparisons, communities).
 3. Gate every artifact with the same thresholds you would apply to a stranger's work.
 4. Write the losers down (`memory/what-doesnt-work.md`) so the next run starts smarter.
 
