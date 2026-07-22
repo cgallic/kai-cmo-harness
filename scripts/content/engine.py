@@ -186,6 +186,15 @@ def _load_patterns(repo_root: Path, workspace: Path) -> str:
     return ""
 
 
+def _load_anti_patterns(repo_root: Path, workspace: Path) -> str:
+    """Load measured losers and anti-patterns from memory/what-doesnt-work.md."""
+    for base in [workspace, repo_root]:
+        wdw = base / "memory" / "what-doesnt-work.md"
+        if wdw.exists():
+            return wdw.read_text()[-2000:]
+    return ""
+
+
 def _format_module_guidance(site: str) -> tuple[str, list[dict]]:
     """Return prompt guidance and serialized module metadata for a brand."""
     workspace_profile = load_workspace_profile()
@@ -426,6 +435,7 @@ async def generate(
         workspace = cfg.workspace_dir
         framework_texts, framework_paths = _load_framework_texts(format, repo_root, workspace)
         patterns = _load_patterns(repo_root, workspace)
+        anti_patterns = _load_anti_patterns(repo_root, workspace)
         contract = _load_skill_contract(format, workspace)
         site_facts = _load_site_facts(site, repo_root)
         non_negotiables, learned_defaults = _load_marketing_md(workspace)
@@ -501,6 +511,7 @@ async def generate(
             learned_defaults=learned_defaults,
             non_negotiables=non_negotiables,
             module_guidance=module_guidance,
+            anti_patterns=anti_patterns,
         )
         draft = write_content(prompt, gemini_fn)
         draft_artifact = runtime_store.record_artifact(

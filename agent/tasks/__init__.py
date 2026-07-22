@@ -24,6 +24,7 @@ from .creative_assets import CreativeAssetsTask
 from .social_staleness import SocialStalenessTask
 from .claude_agent import ClaudeAgentTask
 from .harness_review import HarnessReviewTask
+from .watchers_tick import WatchersTickTask
 from .editorial_calendar import EditorialCalendarTickTask
 from .cmo_review import CMOReviewTask
 from .self_improvement import (
@@ -44,6 +45,7 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "creative_assets": CreativeAssetsTask,
     "og_image": CreativeAssetsTask,
     "social_staleness_check": SocialStalenessTask,
+    "watchers_tick": WatchersTickTask,
     # Claude Agent SDK — autonomous marketing tasks
     "claude_agent": ClaudeAgentTask,
     "claude_audit": ClaudeAgentTask,

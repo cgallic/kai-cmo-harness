@@ -28,6 +28,105 @@ from .framework import (
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Live HTTP layer (stdlib only, per framework design principle #1)
+# ---------------------------------------------------------------------------
+
+_HTTP_TIMEOUT = 10.0
+_MAX_HTML_BYTES = 500_000
+_USER_AGENT = "KaiWatcher/1.0 (+https://github.com/cgallic/kai-cmo-harness)"
+
+
+def _http_status(url: str, method: str = "HEAD") -> tuple[Optional[int], Optional[float]]:
+    """Return ``(status_code, response_time_ms)`` for *url*.
+
+    Falls back to GET when the server rejects HEAD with 405. Returns
+    ``(None, None)`` when the host cannot be reached at all.
+    """
+    import socket
+    import time
+    import urllib.error
+    import urllib.request
+
+    req = urllib.request.Request(url, method=method, headers={"User-Agent": _USER_AGENT})
+    start = time.monotonic()
+    try:
+        with urllib.request.urlopen(req, timeout=_HTTP_TIMEOUT) as resp:
+            return resp.status, (time.monotonic() - start) * 1000.0
+    except urllib.error.HTTPError as exc:
+        if exc.code == 405 and method == "HEAD":
+            return _http_status(url, method="GET")
+        return exc.code, (time.monotonic() - start) * 1000.0
+    except (urllib.error.URLError, socket.timeout, OSError, ValueError) as exc:
+        logger.debug("watcher fetch failed for %s: %s", url, exc)
+        return None, None
+
+
+def _fetch_html(url: str) -> Optional[str]:
+    """GET *url* and return up to ``_MAX_HTML_BYTES`` of decoded HTML, or None."""
+    import socket
+    import urllib.error
+    import urllib.request
+
+    req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=_HTTP_TIMEOUT) as resp:
+            return resp.read(_MAX_HTML_BYTES).decode("utf-8", errors="ignore")
+    except (urllib.error.URLError, socket.timeout, OSError, ValueError) as exc:
+        logger.debug("watcher HTML fetch failed for %s: %s", url, exc)
+        return None
+
+
+def _cert_expiry(domain: str) -> tuple[Optional[str], Optional[int]]:
+    """Return ``(not_after_iso, days_remaining)`` for the TLS cert of *domain*.
+
+    An expired certificate fails the default verification handshake, so that
+    specific failure is reported as ``(None, 0)`` — expired now — rather than
+    swallowed as unreachable.
+    """
+    import socket
+    import ssl
+
+    try:
+        ctx = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=_HTTP_TIMEOUT) as sock:
+            with ctx.wrap_socket(sock, server_hostname=domain) as tls:
+                cert = tls.getpeercert()
+        not_after = cert.get("notAfter") if cert else None
+        if not not_after:
+            return None, None
+        expires = datetime.strptime(not_after, "%b %d %H:%M:%S %Y %Z").replace(
+            tzinfo=timezone.utc
+        )
+        return expires.date().isoformat(), (expires - datetime.now(timezone.utc)).days
+    except ssl.SSLCertVerificationError as exc:
+        if "expired" in str(exc).lower():
+            return None, 0
+        logger.debug("watcher cert verification failed for %s: %s", domain, exc)
+        return None, None
+    except (ssl.SSLError, socket.timeout, OSError, ValueError) as exc:
+        logger.debug("watcher cert check failed for %s: %s", domain, exc)
+        return None, None
+
+
+_PHONE_STRIP = str.maketrans("", "", "()-. +")
+
+
+def _normalize_phone(raw: str) -> str:
+    """Reduce a phone string to its trailing 10 digits for comparison."""
+    digits = "".join(ch for ch in raw.translate(_PHONE_STRIP) if ch.isdigit())
+    return digits[-10:]
+
+
+_TRACKING_PATTERNS = {
+    "GA4": ("gtag(", "gtag/js", "google-analytics.com", "G-"),
+    "GTM": ("googletagmanager.com", "gtm.js", "GTM-"),
+    "other analytics": (
+        "plausible.io", "fathom", "posthog", "matomo", "segment.com",
+        "heap.io", "mixpanel", "umami", "fbevents.js", "clarity.ms",
+    ),
+}
+
 
 # ============================================================================
 # WebsiteHealthWatcher
@@ -80,6 +179,9 @@ class WebsiteHealthWatcher(Watcher):
         if not url:
             return findings
 
+        # Fresh HTML cache per run so checks share one fetch per page
+        self._html_cache: Dict[str, Optional[str]] = {}
+
         # --- Individual checks ---
         finding = self._check_site_uptime(url, business_id)
         if finding is not None:
@@ -115,15 +217,36 @@ class WebsiteHealthWatcher(Watcher):
     ) -> Optional[WatcherFinding]:
         """Check website uptime via HTTP HEAD request.
 
-        In production this would perform an HTTP HEAD request to *url* and
-        evaluate the status code and response time.  A non-200 response
-        produces a critical finding requiring immediate operator attention.
+        Performs an HTTP HEAD request (GET fallback on 405) against *url* and
+        evaluates the status code and response time.  A non-200 response or an
+        unreachable host produces a critical finding requiring immediate
+        operator attention.
         """
-        # --- Stub: retrieve live HTTP status ---
-        status_code: Optional[int] = None  # Would come from HTTP HEAD
-        response_time_ms: Optional[float] = None
+        status_code, response_time_ms = _http_status(url)
 
-        if status_code is not None and status_code != 200:
+        if status_code is None:
+            return create_watcher_finding(
+                watcher_name=self.name,
+                business_id=business_id,
+                title="Website is unreachable",
+                description=(
+                    f"The main website at {url} did not respond within "
+                    f"{int(_HTTP_TIMEOUT)}s. Visitors cannot access the site, "
+                    "which means zero lead capture until this is resolved."
+                ),
+                suppression_key=f"site_down_{_domain(url)}",
+                urgency=FindingUrgency.IMMEDIATE.value,
+                severity="critical",
+                category="website_health",
+                evidence={"url": url, "status_code": None, "response_time_ms": None},
+                proposed_action={
+                    "action_type": "alert_operator",
+                    "description": "Alert the operator immediately — the website is unreachable.",
+                    "auto_eligible": False,
+                },
+            )
+
+        if status_code != 200:
             return create_watcher_finding(
                 watcher_name=self.name,
                 business_id=business_id,
@@ -158,14 +281,19 @@ class WebsiteHealthWatcher(Watcher):
     ) -> List[WatcherFinding]:
         """Check each key page for non-200 responses.
 
-        In production this would issue HTTP GET requests against each path
-        appended to *url* and flag any page returning a non-200 status.
-        Homepage and /contact are rated severity "high"; others "medium".
+        Issues an HTTP HEAD request (GET fallback on 405) against each path
+        appended to *url* and flags any page returning a definite non-200
+        status.  Pages that time out are skipped rather than flagged, to avoid
+        false alarms from transient network conditions.  Homepage and /contact
+        are rated severity "high"; others "medium".
         """
         findings: List[WatcherFinding] = []
-        # --- Stub: iterate pages and check status ---
-        # page_statuses: Dict[str, int] would be collected from HTTP GETs
+        base = url.rstrip("/")
         page_statuses: Dict[str, int] = {}
+        for page in key_pages:
+            status, _rt = _http_status(f"{base}{page}")
+            if status is not None:
+                page_statuses[page] = status
 
         for page, status in page_statuses.items():
             if status != 200:
@@ -203,21 +331,26 @@ class WebsiteHealthWatcher(Watcher):
     ) -> Optional[WatcherFinding]:
         """Check SSL certificate expiration date.
 
-        In production this would open a TLS connection, extract the
-        ``notAfter`` field from the certificate, and compare it against the
-        current date.  Thresholds: <= 0 days (expired, critical/immediate),
-        <= 7 days (critical/immediate), <= 30 days (warning/soon).
+        Opens a TLS connection, extracts the ``notAfter`` field from the
+        certificate, and compares it against the current date.  Thresholds:
+        <= 0 days (expired, critical/immediate), <= 7 days (critical/immediate),
+        <= 30 days (warning/soon).  Skipped for non-HTTPS sites.
         """
+        import urllib.parse
+
         domain = _domain(url)
-        # --- Stub: retrieve certificate expiry ---
-        expiry_date: Optional[str] = None
-        days_remaining: Optional[int] = None
+        if not url.lower().startswith("https://"):
+            return None
+        host = urllib.parse.urlparse(url).hostname or ""
+        if not host:
+            return None
+        expiry_date, days_remaining = _cert_expiry(host)
 
         if days_remaining is not None:
             if days_remaining <= 0:
                 severity = "critical"
                 urgency = FindingUrgency.IMMEDIATE.value
-                title = f"SSL certificate for {domain} has expired"
+                title = f"SSL certificate for {host} has expired"
                 desc = (
                     f"The SSL certificate expired {abs(days_remaining)} days ago. "
                     "Browsers will show a security warning and most visitors will leave."
@@ -225,7 +358,7 @@ class WebsiteHealthWatcher(Watcher):
             elif days_remaining <= 7:
                 severity = "critical"
                 urgency = FindingUrgency.IMMEDIATE.value
-                title = f"SSL certificate for {domain} expires in {days_remaining} days"
+                title = f"SSL certificate for {host} expires in {days_remaining} days"
                 desc = (
                     "The certificate is about to expire. Renew immediately to "
                     "avoid browser security warnings."
@@ -233,7 +366,7 @@ class WebsiteHealthWatcher(Watcher):
             elif days_remaining <= 30:
                 severity = "warning"
                 urgency = FindingUrgency.SOON.value
-                title = f"SSL certificate for {domain} expires in {days_remaining} days"
+                title = f"SSL certificate for {host} expires in {days_remaining} days"
                 desc = (
                     "The certificate will expire within the next month. "
                     "Schedule a renewal to avoid disruption."
@@ -251,7 +384,7 @@ class WebsiteHealthWatcher(Watcher):
                 severity=severity,
                 category="website_health",
                 evidence={
-                    "domain": domain,
+                    "domain": host,
                     "expiry_date": expiry_date,
                     "days_remaining": days_remaining,
                 },
@@ -263,20 +396,33 @@ class WebsiteHealthWatcher(Watcher):
         url: str,
         business_id: str,
     ) -> Optional[WatcherFinding]:
-        """Check that form submission endpoints respond with 200.
+        """Check that form submission endpoints are reachable.
 
-        In production this would discover form elements on key pages, extract
-        their ``action`` URL, and issue a lightweight OPTIONS or HEAD request
-        to verify the endpoint is reachable.  A broken form means leads are
-        silently lost.
+        Discovers ``<form>`` elements on the homepage, extracts their
+        ``action`` URL, and issues a lightweight HEAD request to verify the
+        endpoint exists.  Only definite failures (404/410/5xx) are flagged —
+        endpoints that reject HEAD (405) are considered reachable.  A broken
+        form means leads are silently lost.
         """
+        import re
+        import urllib.parse
+
         domain = _domain(url)
-        # --- Stub: discover and test form endpoints ---
         form_url: Optional[str] = None
         endpoint: Optional[str] = None
         status_code: Optional[int] = None
 
-        if status_code is not None and status_code != 200:
+        html = self._page_html(url)
+        if html:
+            match = re.search(r"<form[^>]+action=[\"']([^\"']+)[\"']", html, re.IGNORECASE)
+            if match:
+                action = match.group(1).strip()
+                if action and not action.lower().startswith(("javascript:", "mailto:", "#")):
+                    form_url = url
+                    endpoint = urllib.parse.urljoin(url, action)
+                    status_code, _rt = _http_status(endpoint)
+
+        if status_code is not None and (status_code in (404, 410) or status_code >= 500):
             return create_watcher_finding(
                 watcher_name=self.name,
                 business_id=business_id,
@@ -314,15 +460,35 @@ class WebsiteHealthWatcher(Watcher):
     ) -> Optional[WatcherFinding]:
         """Compare the phone number on key pages to the expected number.
 
-        In production this would scrape the homepage, contact page, and
-        footer for phone number patterns and compare each against
-        *expected_phone*.  A missing or mismatched phone number is a direct
-        lead-loss issue.
+        Scrapes the homepage and contact page for the expected phone number
+        (digit-normalized comparison) and for ``tel:`` links carrying a
+        different number.  A missing or mismatched phone number is a direct
+        lead-loss issue.  Pages that cannot be fetched are not flagged.
         """
+        import re
+
         domain = _domain(url)
-        # --- Stub: scrape pages for phone numbers ---
         found_phone: Optional[str] = None
         pages_checked: List[str] = ["/", "/contact"]
+
+        expected_digits = _normalize_phone(expected_phone)
+        base = url.rstrip("/")
+        fetched_any = False
+        tel_numbers: List[str] = []
+        for page in pages_checked:
+            html = self._page_html(f"{base}{page}" if page != "/" else url)
+            if html is None:
+                continue
+            fetched_any = True
+            page_digits = "".join(ch for ch in html if ch.isdigit())
+            if expected_digits and expected_digits in page_digits:
+                return None  # expected number is present — nothing to flag
+            tel_numbers.extend(re.findall(r"href=[\"']tel:([^\"']+)[\"']", html, re.IGNORECASE))
+
+        if not fetched_any or not expected_digits:
+            return None  # cannot verify — do not raise a false alarm
+        if tel_numbers:
+            found_phone = tel_numbers[0].strip()
 
         if found_phone is None:
             # Phone number not found on any page
@@ -374,16 +540,25 @@ class WebsiteHealthWatcher(Watcher):
     ) -> Optional[WatcherFinding]:
         """Check for the presence of GA4, GTM, or other tracking scripts.
 
-        In production this would fetch the homepage HTML and search for known
-        tracking script patterns (``gtag``, ``gtm.js``, GA4 measurement IDs,
-        Facebook Pixel, etc.).  Missing analytics means the business is
-        flying blind.
+        Fetches the homepage HTML and searches for known tracking script
+        patterns (``gtag``, ``gtm.js``, GA4 measurement IDs, common
+        third-party analytics).  Flags only when no known analytics tool is
+        detected at all — missing analytics means the business is flying
+        blind.  An unfetchable homepage is not flagged.
         """
         domain = _domain(url)
-        # --- Stub: scan page source for tracking snippets ---
         scripts_expected = ["GA4", "GTM"]
         scripts_found: List[str] = []
         scripts_missing: List[str] = []
+
+        html = self._page_html(url)
+        if html is None:
+            return None  # cannot verify — uptime check covers unreachable sites
+        for label, needles in _TRACKING_PATTERNS.items():
+            if any(needle in html for needle in needles):
+                scripts_found.append(label)
+        if not scripts_found:
+            scripts_missing = scripts_expected
 
         if scripts_missing:
             return create_watcher_finding(
@@ -419,6 +594,16 @@ class WebsiteHealthWatcher(Watcher):
         )
 
     # -- Helpers -----------------------------------------------------------
+
+    def _page_html(self, page_url: str) -> Optional[str]:
+        """Fetch *page_url* HTML once per run, caching the result (or None)."""
+        cache = getattr(self, "_html_cache", None)
+        if cache is None:
+            cache = {}
+            self._html_cache = cache
+        if page_url not in cache:
+            cache[page_url] = _fetch_html(page_url)
+        return cache[page_url]
 
     @staticmethod
     def _get_business_id(profile: Any) -> str:

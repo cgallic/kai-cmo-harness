@@ -384,6 +384,13 @@ class Scheduler:
                 "task_type": "connector_health_check",
                 "config": {"notify_on_complete": True}
             },
+            # kai.watchers marketing monitors (website health, ads, leads, social)
+            {
+                "name": "Marketing Watchers Tick",
+                "cron_expression": "30 6 * * *",  # 6:30 AM daily
+                "task_type": "watchers_tick",
+                "config": {"notify_on_complete": False}
+            },
             # HALO-style weekly harness review
             {
                 "name": "Weekly Harness Review",
