@@ -393,6 +393,7 @@ No SaaS account is required. The core harness is local files and Claude Code ski
 
 - [MeetKai](https://meetkai.xyz): the operator layer behind Kai Marketing OS workflows.
 - [KaiCalls](https://kaicalls.com): a Kai-owned AI voice agent product for small-business phone answering and lead capture when the business is phone-led.
+- [How Kai markets KaiCalls](docs/HOW_KAI_MARKETS_KAICALLS.md): the dogfooding case study — every KaiCalls marketing decision runs through this repo.
 - [Connor Gallic](https://connorgallic.com): founder building Kai, KaiCalls, and AI automation systems.
 - [How Kai runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md): plain-English explanation of the paid media workflow.
 - [System guide](docs/system/README.md): architecture pages, Mermaid diagrams, and runtime schemas.
