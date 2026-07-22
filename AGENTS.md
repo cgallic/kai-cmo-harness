@@ -12,7 +12,9 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `scripts/quality/` is the quality/policy layer
 - `gateway/` is the remote runner and connector surface
 
-Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skill docs, 47 public `/kai` router commands, 67 playbook docs, 36 checklists, 33 framework docs, 26 channel guides, 8 audience persona profiles, and a quality gate pipeline that enforces standards before anything ships.
+<!-- capability-counts:start -->
+Inventory reachable from here: 54 skill directories, 52 canonical `kai-*` skills, 47 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 36 harness references, and 33 skill contracts.
+<!-- capability-counts:end -->
 
 ## Instruction Contract (critical)
 

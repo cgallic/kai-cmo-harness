@@ -7,6 +7,7 @@ import { AttentionItems } from "@/components/dashboard/attention-items";
 import { AIActivity } from "@/components/dashboard/ai-activity";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { PendingActions } from "@/components/dashboard/pending-actions";
+import { AutopilotCommandCenter } from "@/components/dashboard/autopilot-command-center";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn, scoreColor } from "@/lib/utils";
@@ -104,6 +105,8 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <AutopilotCommandCenter />
+
       {/* Hero: Score + Brand + Actions */}
       <div className="card flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div className="flex items-center gap-4 flex-1">

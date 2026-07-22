@@ -42,6 +42,14 @@ def _get_integration_registry():
         return None
 
 
+def _get_company_autopilot_service():
+    try:
+        from kai.runtime.company_autopilot import CompanyAutopilotService
+        return CompanyAutopilotService()
+    except (ImportError, Exception):
+        return None
+
+
 def _require_store(name: str, store):
     if store is None:
         raise HTTPException(
@@ -291,6 +299,26 @@ async def toggle_kill_switch(integration_id: str, enabled: bool = True):
 # ============================================================================
 # Operator Dashboard
 # ============================================================================
+
+
+@router.get("/command-center")
+async def company_autopilot_command_center(brand_id: Optional[str] = None):
+    """Return the single highest-priority proof-bound company bottleneck."""
+    service = _require_store(
+        "Company Autopilot service",
+        _get_company_autopilot_service(),
+    )
+    return service.command_center(brand_id=brand_id)
+
+
+@router.get("/portfolio")
+async def company_autopilot_portfolio(brand_id: Optional[str] = None):
+    """Return evidence-derived lifecycle and blocker rows across brands."""
+    service = _require_store(
+        "Company Autopilot service",
+        _get_company_autopilot_service(),
+    )
+    return service.portfolio(brand_id=brand_id)
 
 
 @router.get("/dashboard")

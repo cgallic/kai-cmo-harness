@@ -71,6 +71,47 @@ export interface DashboardResponse {
   channel_summary: Record<string, unknown>;
 }
 
+export interface Bottleneck {
+  brand_id: string;
+  brand_name: string;
+  lifecycle: string;
+  health: string;
+  blocked_gate: string;
+  owner: string;
+  next_action: string;
+  close_condition: string;
+  evidence_refs: string[];
+  summary?: string;
+  proof_state?: string;
+}
+
+export interface ImplementationCoach {
+  state: string;
+  message: string;
+  next_action: string;
+  close_condition: string;
+  evidence_refs: string[];
+}
+
+export interface PortfolioBrand {
+  brand_id: string;
+  brand_name: string;
+  lifecycle: string;
+  health: string;
+  blocked_gate: string;
+  owner: string;
+  next_action: string;
+  close_condition: string;
+  evidence_refs: string[];
+}
+
+export interface AutopilotCommandCenterResponse {
+  primary_bottleneck: Bottleneck | null;
+  coach: ImplementationCoach;
+  portfolio: PortfolioBrand[];
+  timestamp: string;
+}
+
 export interface AgentStatus {
   running: boolean;
   paused: boolean;

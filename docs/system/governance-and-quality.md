@@ -4,22 +4,26 @@ Kai should be useful without being reckless. Governance is split into instructio
 
 ## Authoritative Inventory
 
-Use these counts when public docs, skill docs, or agent prompts need a system inventory. Update this table before changing counts elsewhere.
+Use these generated counts when public docs, skill docs, or agent prompts need a system inventory.
 
-| Surface | Count | Counting rule |
-|---|---:|---|
-| Skill directories | 48 | Directories under `harness/skills/`. This includes canonical `kai-*` skill directories, the `/kai` router, and `kaicalls-design`. |
-| Canonical `kai-*` skill docs | 45 | Public API-style pages in `docs/skill-manifest/`. |
-| Public `/kai` router commands | 42 | Commands listed by `harness/skills/kai/SKILL.md`. Router-visible commands are a subset of the canonical `kai-*` skill inventory. |
-| Playbook docs | 54 | Markdown playbooks under `knowledge/playbooks/`, excluding local `CLAUDE.md` metadata. |
-| Checklists | 36 | Markdown checklists under `knowledge/checklists/`, excluding local `CLAUDE.md` metadata. |
-| Framework docs | 27 | Markdown framework files under `knowledge/frameworks/`. |
-| Channel guides | 26 | Markdown channel guides under `knowledge/channels/`. |
-| Audience persona profiles | 8 | Named persona files under `knowledge/personas/`, excluding the index and local metadata. |
-| Harness references | 18 | Markdown or YAML/JSON references under `harness/references/`. |
-| Skill contracts | 30 | YAML contracts under `harness/skill-contracts/`. |
+<!-- capability-counts:start -->
+Generated from `docs/system/capability-manifest.json`. Regenerate with `python -m scripts.capability_manifest generate`; verify with `python -m scripts.capability_manifest check`.
 
-Inventory date: 2026-06-17. Regenerate with scoped file counts before publishing a release.
+| Surface | Count |
+|---|---:|
+| Skill directories | 54 |
+| Canonical `kai-*` skills | 52 |
+| Public `/kai` router commands | 47 |
+| Public skill manifest pages | 45 |
+| Canonical skills missing manifest pages | 7 |
+| Playbook docs | 67 |
+| Checklists | 37 |
+| Framework docs | 38 |
+| Channel guides | 31 |
+| Audience persona profiles | 8 |
+| Harness references | 36 |
+| Skill contracts | 33 |
+<!-- capability-counts:end -->
 
 ## Instruction Contract
 

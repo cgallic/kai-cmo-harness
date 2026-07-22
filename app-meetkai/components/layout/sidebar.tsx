@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 
 const navItems = [
-  { href: "/dashboard", label: "Command Center", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Autopilot Command", icon: LayoutDashboard },
   { href: "/connect", label: "Connections", icon: Link2 },
   { href: "/content", label: "Library", icon: FileText },
   { href: "/actions", label: "Approvals", icon: Zap },
