@@ -4,7 +4,39 @@
 
 Use it when you want an AI operator to create growth plans, landing pages, emails, ads, SEO/AEO work, audits, content calendars, SDR handoff, or repurposed assets from the same files your product team already uses.
 
-## Why People Star This Repo
+**The only requirement is Claude Code (or Cursor/Codex) already running.** No SaaS account, no API keys, no config files. If your terminal can run `/kai-start`, you have the whole system.
+
+## Try Kai In 60 Seconds — No API Key
+
+Inside Claude Code:
+
+```text
+/plugin marketplace add cgallic/kai-cmo-harness
+/plugin install kai@kai-marketing-os
+/kai:kai-gate <paste or point at any draft — a landing page, an email, your README>
+```
+
+Kai scores the draft against the Four U's rubric, the banned-word tiers, and platform rules, then returns a scorecard with a pass/fail verdict and specific fixes. Your OAuth session does the judging — nothing leaves your machine, nothing to sign up for.
+
+## What The Output Looks Like
+
+Every piece Kai writes must pass the gate before it ships. This is the actual scorecard format, from `demo/examples/saas-blog-post/`:
+
+> ## Four U's Score: 13/16
+>
+> | Dimension | Score | Reasoning |
+> |-----------|-------|-----------|
+> | **Unique** | 4/4 | Stage-matched framework (pre-revenue / post-PMF / scaling) not found in any top-10 result. Survey data and switching cost table are original angles. |
+> | **Useful** | 3/4 | 30-minute CRM evaluation checklist is immediately actionable. Deducted 1 point: no downloadable comparison template. |
+> | **Ultra-Specific** | 3/4 | 23 hours migration time, 73% abandon rate, $14,000 switching cost. Deducted 1 point: some claims cite vendor-published data. |
+> | **Urgent** | 3/4 | Switching-tax framing creates cost-of-inaction pressure. Deducted 1 point: no seasonal urgency hook. |
+>
+> **Total: 13/16** — Passes threshold (minimum 12).
+> **Banned Words Check: PASS** · **SEO Compliance: PASS (1 warning)**
+
+Three complete worked examples — brief, draft, and scorecard — live in [`demo/examples/`](demo/examples/): a SaaS blog post, a law-firm landing page, and an e-commerce product page.
+
+## What You Get
 
 - **47 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
 - **52 `kai-*` skills** with triggers, inputs, outputs, gates, provenance, and failure modes.
@@ -13,33 +45,9 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 - **Local-first by default**: use it inside Claude Code from your repo before wiring live channels.
 - **Approval-led automation**: dry-run first, review the artifact, then approve external actions.
 
-## 30-Second Demo
+## Quick Start: From Install To Growth Plan
 
-See it work before you read anything else:
-
-```bash
-git clone https://github.com/cgallic/kai-cmo-harness.git
-cd kai-cmo-harness
-pip install google-genai requests beautifulsoup4
-export GEMINI_API_KEY=your-free-key    # Get one at https://aistudio.google.com/apikey
-
-python demo/demo.py --url "https://yoursite.com" --keyword "best crm for startups"
-```
-
-One command. One API key. Outputs a scored blog post in ~60 seconds: research -> brief -> write -> quality gate -> scorecard.
-
-See pre-generated examples in `demo/examples/`.
-
-## Quick Start
-
-Inside Claude Code, type two lines — no terminal, no clone, no config:
-
-```text
-/plugin marketplace add cgallic/kai-cmo-harness
-/plugin install kai@kai-marketing-os
-```
-
-That installs every skill **plus the knowledge base they run on** (frameworks, checklists, channel guides, policy references, quality gates — ~7 MB) and keeps them updated. Then open any product repo and run:
+The plugin install above ships every skill **plus the knowledge base they run on** (frameworks, checklists, channel guides, policy references, quality gates — ~7 MB) and keeps them updated. Then open any product repo and run:
 
 ```text
 /kai-start
@@ -54,7 +62,7 @@ Prefer a shell one-liner? Same result:
 curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
 ```
 
-Want the short setup guide? Read [Quick Start](docs/QUICK_START.md).
+Want the short setup guide? Read [Quick Start](docs/QUICK_START.md). Want to watch the whole pipeline run as a script (research → brief → write → gate → scorecard)? `python demo/demo.py --url "https://yoursite.com" --keyword "best crm for startups"` does it in ~60 seconds with one free Gemini key.
 
 ## Useful First Runs
 
@@ -87,6 +95,21 @@ Kai makes marketing behave more like engineering work: source-aware, inspectable
 Kai is not a prompt pack, a standalone chatbot, or a content spinner. It is a local operating surface for marketing work that needs source context, policy checks, quality gates, and repeatable workflows.
 
 Autonomous campaign management is a guarded phase, not the starting promise. Kai ships the trusted operating layer first: product context, policy constraints, evidence, approvals, memory, and connector health.
+
+## Why Not A Blank Chat?
+
+Fair question — Claude is free-form and prompt packs are everywhere. Here is the honest comparison:
+
+| | Blank Claude chat | Prompt pack | Marketing script toolbox | **Kai** |
+|---|---|---|---|---|
+| Reads your product repo first | You paste context manually | No | No | Yes — `/kai-start` builds the profile once |
+| Channel playbooks + platform policy | From model memory, unverified | Static templates | Per-script docs | 67 playbooks, 26 channel guides, per-platform ad policy references, loaded per task |
+| Quality gate before shipping | No | No | Sometimes a lint script | Four U's 12/16 threshold, banned-word tiers, SEO lint, provenance lint — every piece |
+| Claims traced to sources | No | No | No | Provenance rules: no invented metrics, data gaps declared, collector-sourced numbers |
+| Approval before live actions | N/A | N/A | Env-var scripts fire directly | Dry-run first, human approval gates every mutation |
+| Remembers what worked | Per-conversation only | No | No | Git-backed memory: lessons, edge cases, measured losers, 30-day checks |
+
+The chat box is faster for a one-off caption. Kai is for marketing you have to stand behind: repeatable, source-aware, and checked before it ships.
 
 ## How It Works
 
@@ -373,21 +396,21 @@ Deploy it by clicking **One-Click Deploy** in the dashboard (Netlify token requi
 | Content pipeline + quality gates | Built | LLM-backed via `scripts/content/engine.py` |
 | Knowledge base | Built | Current inventory is documented in `docs/system/governance-and-quality.md` |
 | Connector execution | Wired, credential-gated | Pipedream-backed execution and direct script clients exist; live external actions require connected accounts and credentials |
-| Learning + memory | Partial | Writeback and persistence exist; automatic retrieval into every proposal/content path is still being connected |
-| Creative module | Partial | Generates briefs/templates; final prose is currently produced through the content scripts and Claude Code skills |
-| Watchers/monitoring | Partial | Threshold logic is real; live data feeds, scheduling, and notifications are still being connected |
-| Autonomous campaign loops | Guarded roadmap | Ad/reward components exist; unattended live-channel operation remains approval-gated and connector-dependent |
-| Remote automation scheduling | Planned | Defined in module manifests, not triggered |
+| Learning + memory | Built | Approval writeback persists learnings; the writing prompt auto-retrieves winners (`what-works.md`), measured losers (`memory/what-doesnt-work.md`), and runtime memory; proposals attach prior brand learnings via `action_from_finding`; framework attribution grades knowledge docs from 30-day results |
+| Creative module | Built (by design) | Emits structured briefs, recipes, and variant/QA specs; final prose renders through the LLM-backed `scripts/content/` writers and Claude Code skills — a deliberate separation, not a gap |
+| Watchers/monitoring | Built, credential-gated feeds | Website-health watchers fetch live (HTTP status, TLS expiry, forms, phone, tracking); watcher packs run on the agent loop's daily `watchers_tick` and dispatch immediate findings via Discord/WhatsApp; ad/lead watchers read connector data and need credentials |
+| Autonomous campaign loops | Guarded, working | Scheduled ad/lead/content tasks and reward scoring run via the operator-started agent loop; publishing happens only through the approval queue and credentialed connectors — never unattended |
+| Remote automation scheduling | Planned | Declared in module manifests but not yet dispatched; today's scheduled surface is the agent cron loop plus a monthly GitHub Actions policy monitor |
 
 For the full assessment, see `docs/superpowers/specs/2026-04-03-system-current-state-report.md`.
 
 ## Requirements
 
-- [Claude Code](https://claude.ai/download)
-- A terminal
-- Optional: analytics/ad-platform credentials if you want Kai to pull real performance data
+- [Claude Code](https://claude.ai/download) running. That's the whole list.
+- Cursor, Codex, and claude.ai/code work too, via the repo-copy install.
+- Optional, only for live data: analytics/ad-platform credentials if you want Kai to pull real performance numbers or publish through connectors.
 
-No SaaS account is required. The core harness is local files and Claude Code skills.
+No SaaS account, no signup, no API key for the core workflow. The harness is local files plus the agent you already run.
 
 ## Related Links
 

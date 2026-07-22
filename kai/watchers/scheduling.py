@@ -297,6 +297,37 @@ class NotificationSystem:
         self.add_to_digest(business_id, entry)
         return "daily_digest"
 
+    # -- Delivery -----------------------------------------------------------
+
+    def dispatch_finding(
+        self,
+        finding: Any,
+        preference: NotificationPreference,
+        send_fn: Any,
+    ) -> str:
+        """Route *finding* and deliver it through *send_fn* when immediate.
+
+        ``send_fn`` is a caller-provided callable taking a single message
+        string — e.g. the agent loop's Discord/WhatsApp notifier — so this
+        layer stays dependency-free.  Digest-routed findings stay queued for
+        the daily/weekly digest builders.  Delivery failures are logged and
+        never propagate into the watcher run.
+
+        Returns the routing decision: "immediate", "daily_digest", or
+        "weekly_digest".
+        """
+        route = self.route_finding(finding, preference)
+        if route == "immediate" and send_fn is not None:
+            severity = str(_get_attr(finding, "severity", "medium")).upper()
+            title = _get_attr(finding, "title", "(untitled finding)")
+            desc = _get_attr(finding, "description", "")[:280]
+            watcher_name = _get_attr(finding, "watcher_name", "watcher")
+            try:
+                send_fn(f"[{severity}] {title}\n{desc}\n— {watcher_name}")
+            except Exception:
+                logger.warning("dispatch_finding: send_fn failed", exc_info=True)
+        return route
+
     # -- Digest building ----------------------------------------------------
 
     def add_to_digest(self, business_id: str, entry: DigestEntry) -> None:

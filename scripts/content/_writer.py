@@ -365,6 +365,7 @@ def assemble_write_prompt(
     non_negotiables: str,
     module_guidance: str = "",
     format_instructions: str | None = None,
+    anti_patterns: str = "",
 ) -> str:
     """Build the full write prompt from all context pieces. Pure function."""
     fmt = brief.get("format", "blog")
@@ -406,6 +407,9 @@ Audience pain: {brief.get('audience_pain')}
 
 ## Winning patterns from past content
 {patterns or "None yet — write specifically and hook-first."}
+
+## Avoid — measured losers and anti-patterns (from memory/what-doesnt-work.md)
+{anti_patterns or "None recorded yet."}
 
 ## Non-negotiables
 - No banned words: leverage, utilize, synergy, innovative, revolutionary, game-changer,

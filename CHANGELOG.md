@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased — 2026-07-22
+## Unreleased — 2026-07-22 (second pass)
+
+### Adoption-focused README + status-table completions
+
+**README**
+- Leads with a 60-second no-API-key first run (`/kai:kai-gate` right after plugin install) and a real gate scorecard excerpt from `demo/examples/`
+- New "Why Not A Blank Chat?" honest comparison (blank chat / prompt pack / script toolbox / Kai)
+- Requirements reduced to the truth: Claude Code (or Cursor/Codex) running — nothing else
+
+**Status-table completions (audited against the code, then wired)**
+- Learning + memory → Built: the writing prompt now auto-retrieves measured losers (`memory/what-doesnt-work.md`) alongside winners and runtime memory (`scripts/content/engine.py` + `_writer.py`); proposals can attach prior brand learnings via `action_from_finding(base_dir=...)`
+- Watchers/monitoring → Built with credential-gated feeds: `WebsiteHealthWatcher` checks are live (stdlib HTTP status with GET-fallback, TLS expiry via real handshake, form-endpoint reachability, phone presence/mismatch, tracking-script detection); new `watchers_tick` agent task runs archetype watcher packs on the daily cron loop; `NotificationSystem.dispatch_finding` delivers immediate findings through the agent notification channel; `create_default_registry()` registers all 13 watchers
+- Creative module relabeled Built (by design): recipe generator + LLM-backed writers is the intended architecture
+- Autonomous campaign loops relabeled Guarded, working; remote automation scheduling stays honestly Planned
+- 14 new regression tests (`tests/test_watchers_live.py`); full suite 888 passing
+
+## 2026-07-22
 
 ### Launch polish — clean root, accurate README
 

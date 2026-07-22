@@ -167,8 +167,19 @@ def classify_finding(finding: dict) -> str:
     return "website"
 
 
-def action_from_finding(finding: dict, *, brand_id: str, source_run_id: Optional[str] = None) -> dict:
-    """Convert a watcher finding into an ActionRecord-shaped dict."""
+def action_from_finding(
+    finding: dict,
+    *,
+    brand_id: str,
+    source_run_id: Optional[str] = None,
+    base_dir: Optional[Path] = None,
+) -> dict:
+    """Convert a watcher finding into an ActionRecord-shaped dict.
+
+    Pass ``base_dir`` (the runtime store base, e.g. ``data/runtime``) to
+    attach prior brand learnings for this action family — retrieved from the
+    memory writeback store — so proposals start from what already worked.
+    """
 
     family = classify_finding(finding)
     spec = LOCAL_SERVICE_ACTIONS[family]
@@ -176,6 +187,11 @@ def action_from_finding(finding: dict, *, brand_id: str, source_run_id: Optional
     evidence_list = evidence if isinstance(evidence, list) else [finding]
     title = finding.get("title") or finding.get("type") or spec["action_type"]
     recommendation = finding.get("recommendation") or finding.get("description") or title
+    prior_learnings: List[dict] = []
+    if base_dir is not None:
+        prior_learnings = retrieve_memory_entries(
+            base_dir, brand_id=brand_id, tags=[family]
+        )[:5]
 
     return {
         "brand_id": brand_id,
@@ -187,6 +203,7 @@ def action_from_finding(finding: dict, *, brand_id: str, source_run_id: Optional
             "recommendation": recommendation,
             "workflow_id": spec["workflow_id"],
             "local_service_family": family,
+            "prior_learnings": prior_learnings,
         },
         "evidence": evidence_list,
         "source_run_id": source_run_id,

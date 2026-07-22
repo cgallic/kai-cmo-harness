@@ -133,7 +133,37 @@ from .scheduling import (
     get_watcher_pack_for_archetype,
 )
 
+
+def create_default_registry() -> WatcherRegistry:
+    """Return a ``WatcherRegistry`` with every concrete watcher registered.
+
+    This is the standard entry point for runners (e.g. the agent loop's
+    ``watchers_tick`` task): archetype filtering then happens naturally via
+    ``get_watchers_for_archetype`` / ``WatcherScheduler.run_all_due``.
+    """
+    registry = WatcherRegistry()
+    for watcher_cls in (
+        WebsiteHealthWatcher,
+        LocalVisibilityWatcher,
+        PagePerformanceWatcher,
+        SocialStalenessWatcher,
+        ContentFreshnessWatcher,
+        EngagementDeclineWatcher,
+        AdFatigueWatcher,
+        SpendAnomalyWatcher,
+        ROASWatcher,
+        SpeedToLeadWatcher,
+        FollowUpGapWatcher,
+        ReviewVelocityWatcher,
+        DormantCustomerWatcher,
+    ):
+        registry.register(watcher_cls())
+    return registry
+
+
 __all__ = [
+    # Registry factory
+    "create_default_registry",
     # Framework enums
     "WatcherScheduleType",
     "FindingUrgency",
