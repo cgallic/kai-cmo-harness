@@ -21,7 +21,7 @@ draft agent  →  /content-gate (rule-based)  →  /voice-gate (LLM-as-judge)  �
 ```
 
 - `/content-gate` enforces mechanical rules: Four U's score, banned-word detection, SEO lint. Cheap, fast, deterministic.
-- `/voice-gate` is the complementary subjective pass. Claude Code's session reads the client's voice guide (e.g., `clients/<client>/outputs/personas/<writer>-writing-guide.md`) and the draft, then applies `voice-gate/judge-prompt.md` inline to produce `<draft-stem>.VOICE-GATE.md`. No external API, no Python, no env vars — the OAuth session is the judge.
+- `/voice-gate` is the complementary subjective pass. Claude Code's session reads the client's voice guide (e.g., `clients/<client>/outputs/personas/<writer>-writing-guide.md`) and the draft, then applies `harness/voice-gate/judge-prompt.md` inline to produce `<draft-stem>.VOICE-GATE.md`. No external API, no Python, no env vars — the OAuth session is the judge.
 - Human review is the final filter. Voice Gate is not a publish-without-human step.
 
 ### Voice Gate — when to use it

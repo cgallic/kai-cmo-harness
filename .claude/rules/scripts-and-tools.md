@@ -1,6 +1,6 @@
 # Scripts & Tools — load-on-demand detail
 
-> Referenced from `AGENTS.md` / `CLAUDE.md` ("Load-on-demand detail"). Restored 2026-07-05 from the pre-slimming `CLAUDE.md.bak-20260618` sections (Publishing & Social, Competitive Intelligence, Campaign Management, Reporting, Google Ads Integration, Knowledge Cloner, OpenClaw Autonomous Mode) and verified against the current scripts. Every path below is checked by `python scripts/doctor.py`.
+> Referenced from `AGENTS.md` / `CLAUDE.md` ("Load-on-demand detail"). Restored 2026-07-05 from the pre-slimming CLAUDE.md sections (Publishing & Social, Competitive Intelligence, Campaign Management, Reporting, Google Ads Integration, Knowledge Cloner, OpenClaw Autonomous Mode) and verified against the current scripts. Every path below is checked by `python scripts/doctor.py`.
 >
 > **Approval doctrine applies to everything here:** nothing publishes or mutates a live channel without human approval. Publishing is OFF by default (`publishing.enabled` in `config.yaml`, `KAI_PUBLISH_ENABLED` env override — see `scripts/harness_config.py`).
 

@@ -8,9 +8,9 @@ issues + what's working + systemic patterns). Complements the rule-based
 content-gate (which scores structural rules); this gate covers the
 subjective voice dimension.
 
-The judge prompt is versioned at voice-gate/judge-prompt.md and renders
+The judge prompt is versioned at harness/voice-gate/judge-prompt.md and renders
 three placeholders: {{voice_guide}}, {{persona}} (optional),
-{{draft}}. See voice-gate/README.md.
+{{draft}}. See harness/voice-gate/README.md.
 
 CLI surface:
     python -m scripts.voice_gate.runner <draft-path> \\
@@ -57,7 +57,10 @@ DEFAULT_MAX_ISSUES = 30
 MAX_TOKENS = 8192
 
 JUDGE_PROMPT_PATH = (
-    Path(__file__).resolve().parent.parent.parent / "voice-gate" / "judge-prompt.md"
+    Path(__file__).resolve().parent.parent.parent
+    / "harness"
+    / "voice-gate"
+    / "judge-prompt.md"
 )
 
 

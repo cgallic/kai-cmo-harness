@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased — 2026-07-05
+## Unreleased — 2026-07-22
+
+### Launch polish — clean root, accurate README
+
+- **Root cleanup**: retired the legacy `/content-*` skill family, the old `setup` installer, `kai-upgrade`, and the root router `SKILL.md` into `legacy/` (with a README mapping each item to its replacement, per `docs/install-ux-research.md`); moved `voice-gate/` to `harness/voice-gate/` (runner path updated), `taste/` research notes to `docs/research/taste/`, status reports (`TODO.md`, `TEST-RESULTS.md`, `INTEGRATION-SUMMARY.md`, `CONTEXT_HEALTH.md`) to `docs/status/`, `VIDEO-PRODUCTION.md` to `docs/`, and demo audio to `demo/audio/`
+- **Deleted**: stray test audio artifacts, `restart.prompt` (personal session notes), and both `.bak-20260618` context backups
+- **README rewrite**: removed the duplicated second half (repeated positioning, tables, and repo maps), corrected stale counts (47 public `/kai` commands, 52 `kai-*` skills, 67 playbooks, 33 frameworks), added the 8 missing commands to the reference tables (`/kai-start`, `/kai-brand-pulse`, `/kai-content-batching`, `/kai-funnel-audit`, `/kai-hook-bench`, `/kai-offer-builder`, `/kai-proof-builder`, `/kai-retro`), replaced the nonexistent `kai-harness` wrapper and `serve.sh` references with real invocations, and consolidated to a single repository map reflecting the new layout
+
+## 2026-07-05
 
 ### Install UX overhaul — plugin marketplace + installer v2
 

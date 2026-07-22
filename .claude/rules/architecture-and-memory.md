@@ -1,6 +1,6 @@
 # Architecture & Memory — load-on-demand detail
 
-> Referenced from `AGENTS.md` / `CLAUDE.md` ("Load-on-demand detail"). Restored 2026-07-05 from the pre-slimming `CLAUDE.md.bak-20260618` sections (Memory & Self-Learning, Directory Structure, Ad Policy Compliance Gate) and updated against the current tree. Every path below is verified by `python scripts/doctor.py` — if you add a path here, doctor must keep passing.
+> Referenced from `AGENTS.md` / `CLAUDE.md` ("Load-on-demand detail"). Restored 2026-07-05 from the pre-slimming CLAUDE.md sections (Memory & Self-Learning, Directory Structure, Ad Policy Compliance Gate) and updated against the current tree. Every path below is verified by `python scripts/doctor.py` — if you add a path here, doctor must keep passing.
 
 ---
 
