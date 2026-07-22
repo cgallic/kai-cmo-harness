@@ -66,3 +66,6 @@ workspace/ads/mutations/
 
 # context-health re-grounding runtime state
 .claude/state/
+
+# Test audio artifacts (root)
+/test-*.mp3
