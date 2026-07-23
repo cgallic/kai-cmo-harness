@@ -6,6 +6,8 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 **The only requirement is Claude Code (or Cursor/Codex) already running.** No SaaS account, no API keys, no config files. If your terminal can run `/kai-start`, you have the whole system.
 
+> Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
+
 ## Try Kai In 60 Seconds — No API Key
 
 Inside Claude Code:
