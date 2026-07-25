@@ -31,6 +31,7 @@ Content: {content}
 - If answering well would require faking experience Connor doesn't have (legal advice, plumbing/HVAC/electrical diagnosis, being a realtor) — score **≤ 20**.
 - If it's a generic gear/lifestyle/community post in a vertical sub (e.g. "show me your everyday-carry") — score **≤ 15**.
 - If the post is someone advertising, launching, or showing off their OWN AI receptionist / voice-agent product (a promo or "check out what I built", not a genuine question or pain point) — score **≤ 25**. Commenting on a competitor's launch is not an opportunity.
+- If the post asks a generic market-research question such as "do missed calls cost businesses money?" without a first-person problem or recommendation request — score **≤ 25**. These are usually vendor content, not buyers.
 - If the post is about finding a job, hiring a receptionist, stacking jobs, or offering receptionist/answering-service services — score **≤ 20**. The lane is for buyers asking for a solution.
 - The angle must answer this post. For answering-service recommendations or missed-call pain, use Connor's measured inbound-call experience. Never use his Meta-ad or directory-acquisition story there.
 - Be a harsh grader. Connor wants ~10 genuinely good threads a day, not 100 mediocre ones. When unsure between two tiers, pick the LOWER one.

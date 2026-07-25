@@ -183,6 +183,24 @@ def test_expanded_search_queries_dedupes_and_expands_verticals():
     assert queries == ["fixed", "HVAC missed calls"]
 
 
+def test_search_result_has_buyer_intent_requires_explicit_ask():
+    assert digest.search_result_has_buyer_intent({
+        "title": "Anyone recommend a virtual receptionist?",
+        "content": "We keep missing calls while our HVAC techs are out.",
+    })
+    assert not digest.search_result_has_buyer_intent({
+        "title": "Do missed calls cost HVAC businesses money?",
+        "content": "A generic market-research question.",
+    })
+
+
+def test_search_result_has_buyer_intent_rejects_self_promotion():
+    assert not digest.search_result_has_buyer_intent({
+        "title": "I need an answering service",
+        "content": "I built one. DM me to book a demo.",
+    })
+
+
 def test_render_html_supports_legacy_reddit_rows():
     html = digest.render_html(
         {"page_title": "Opportunities"},

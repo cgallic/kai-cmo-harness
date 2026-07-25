@@ -113,6 +113,55 @@ def matched_triggers(text: str, keywords: list[str]) -> list[str]:
     return [kw for kw in keywords if kw.lower() in lower]
 
 
+_SEARCH_BUYER_INTENT = (
+    "i need ",
+    "i'm looking",
+    "i am looking",
+    "we need ",
+    "we're looking",
+    "we are looking",
+    "we keep ",
+    "we're missing",
+    "we are missing",
+    "i can't answer",
+    "i cannot answer",
+    "anyone recommend",
+    "can anyone recommend",
+    "does anybody know",
+    "what do you use",
+    "who do you use",
+    "anyone have a virtual",
+    "anyone using",
+    "need help with",
+    "looking for a",
+)
+_SEARCH_PROMO_SIGNALS = (
+    "i built ",
+    "we built ",
+    "i launched ",
+    "we launched ",
+    "we help ",
+    "our ai ",
+    "our service ",
+    "free ai ",
+    "book a demo",
+    "dm me",
+    "message me",
+    "we offer ",
+    "i offer ",
+    "check out ",
+    "try my ",
+)
+
+
+def search_result_has_buyer_intent(post: dict) -> bool:
+    """Keep search results with an explicit buyer ask, not generic SEO/promo."""
+    text = f"{post.get('title', '')} {post.get('content', '')}".lower()
+    if any(signal in text for signal in _SEARCH_PROMO_SIGNALS):
+        return False
+    return any(signal in text for signal in _SEARCH_BUYER_INTENT)
+
+
 def fetch_subreddit(subreddit: str, limit: int) -> list[dict]:
     url = f"https://www.reddit.com/r/{subreddit}/new.rss"
     try:
@@ -290,7 +339,7 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
             new_seen.append(post["id"])
             text = f"{post['title']} {post['content']}"
             matches = matched_triggers(text, profile["trigger_keywords"])
-            if matches:
+            if matches and search_result_has_buyer_intent(post):
                 post["matched_keywords"] = matches
                 candidates.append(post)
 
