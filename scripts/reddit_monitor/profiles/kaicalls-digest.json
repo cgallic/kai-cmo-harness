@@ -15,13 +15,13 @@
   "search_max_daily_cost_usd": 1.0,
   "search_cost_guard_per_query_usd": 0.02,
   "search_queries": [
-    "site:facebook.com/groups \"looking for an answering service\"",
-    "site:facebook.com/groups \"need a receptionist\" small business",
-    "site:facebook.com/groups \"missed calls\" (plumber OR HVAC OR electrician OR roofer)",
-    "site:facebook.com/groups \"can't answer the phone\" business",
-    "site:facebook.com/groups \"after hours calls\" small business",
-    "site:facebook.com/groups \"virtual receptionist\" recommendation",
-    "site:facebook.com/groups \"ai receptionist\" recommendation"
+    "site:facebook.com/groups \"I am looking for an answering service\"",
+    "site:facebook.com/groups \"I need a receptionist\" small business",
+    "site:facebook.com/groups \"we keep missing calls\" (plumber OR HVAC OR electrician OR roofer)",
+    "site:facebook.com/groups \"I can't answer the phone\" business",
+    "site:facebook.com/groups \"need help with after hours calls\" small business",
+    "site:facebook.com/groups \"anyone recommend a virtual receptionist\"",
+    "site:facebook.com/groups \"anyone using an AI receptionist\""
   ],
   "search_verticals": [
     "plumbing business owners",
@@ -36,10 +36,10 @@
     "cleaning business owners"
   ],
   "search_query_templates": [
-    "site:facebook.com/groups \"{vertical}\" \"looking for an answering service\"",
-    "site:facebook.com/groups \"{vertical}\" (\"missed calls\" OR \"can't answer the phone\")",
-    "site:facebook.com/groups \"{vertical}\" (\"after hours calls\" OR \"virtual receptionist\")",
-    "\"{vertical}\" (\"answering service recommendation\" OR \"what do you use for missed calls\")"
+    "site:facebook.com/groups \"{vertical}\" (\"I need an answering service\" OR \"I am looking for an answering service\")",
+    "site:facebook.com/groups \"{vertical}\" (\"we keep missing calls\" OR \"I can't answer the phone\")",
+    "site:facebook.com/groups \"{vertical}\" \"anyone recommend\" (\"answering service\" OR \"virtual receptionist\")",
+    "\"{vertical}\" (\"what do you use for missed calls\" OR \"recommend an answering service\")"
   ],
   "subreddits": [
     "AIReceptionists",
