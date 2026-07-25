@@ -6,29 +6,43 @@ built for KaiCalls (`hermes:/opt/cmo-analytics/reddit-monitor/`) and
 generalized on 2026-04-23 so new profiles can be added without touching the
 engine.
 
-The production KaiCalls path uses `reddit_digest.py`: it combines subreddit RSS
-with Google Organic results from the existing DataForSEO account, scores each
-result, and writes one daily review page. It never drafts or posts a reply.
+The production KaiCalls path uses `reddit_digest.py`: it combines subreddit RSS,
+bounded Google Organic searches, and named-business prospecting from DataForSEO
+Business Listings plus recent Google reviews. It writes one daily review page
+and never drafts or posts a reply.
 Search queries can discover public Facebook Group pages, but the monitor never
 logs in, joins a group, or reads private content. Each configured Google query
 runs at most once per day even though Reddit collection runs hourly; the seen
 state records the pre-call attempt, reserved budget, and returned provider cost.
-The KaiCalls profile combines 7 fixed queries with 4 templates across 10 buyer
-verticals for 47 daily searches. Three templates target indexed public Facebook
-Group posts; one searches the wider public web for direct recommendations and
-missed-call pain. Each attempt reserves `$0.02` before the provider call, so the
-configured set can authorize at most `$0.94/day`. Current canaries observed
-`$0.01` for `site:` searches and lower cost for general searches, making expected
-spend roughly `$0.39/day`. The hard `$1/day` ceiling remains fail-closed.
+The KaiCalls profile runs 10 public-search queries and rotates through 5 of 90
+category/metro listing segments per day. It can submit at most 50 asynchronous
+review tasks. The normal configured workload reserves `$0.20` for organic search,
+`$0.15` for listings, and `$0.25` for review tasks: `$0.60/day`. Independent
+source ceilings total `$0.90/day`, below Connor's `$1/day` limit. Reservations
+are persisted before paid calls, so provider timeouts fail closed.
+Businesses become eligible for a fresh review check after 60 days instead of
+being suppressed forever.
+
+Keyword matches are candidates, not leads. Public conversations pass only when
+the classifier identifies a buyer, a supported intent type, at least 0.8
+confidence, and an exact source quote. Named businesses pass only when a recent
+Google review contains an exact quote proving unanswered-phone, callback,
+intake, or after-hours pain. Generic low ratings and vague communication
+complaints are rejected. Output includes the source quote, review link, business
+name, phone, website, and market for manual review.
 
 ```
 scripts/reddit-monitor/
 ├── reddit_listener.py          # generalized engine
-├── reddit_digest.py            # scored Reddit + public-search review page
+├── reddit_digest.py            # evidenced public conversations + named prospects
+├── review_prospecting.py       # listings/review task rotation and qualification
 ├── run_listener.sh             # cron/pipeline wrapper
 ├── profiles/
 │   ├── kaicalls.json           # KaiCalls config (subs, keywords, webhook env)
 │   ├── kaicalls.prompt.md      # KaiCalls LLM prompt (builder identity, voice)
+│   ├── kaicalls-digest.json    # spend limits, sources, categories, metros
+│   ├── kaicalls-digest.prompt.md
+│   ├── kaicalls-review-prospect.prompt.md
 │   ├── example.json            # scaffold for a new profile
 │   └── example.prompt.md       # scaffold for a new prompt
 └── .seen/                      # per-profile seen-posts state (runtime-created)
@@ -63,6 +77,10 @@ python reddit_digest.py --profile kaicalls-digest --dry-run --out-dir /tmp/opps
 # one-query paid-source canary, isolated from production state/output
 python reddit_digest.py --profile kaicalls-digest --dry-run --search-only \
   --search-query-cap 1 --state-dir /tmp/opps-state --out-dir /tmp/opps
+
+# named-prospect source only (listing scan + review task submit/poll)
+python reddit_digest.py --profile kaicalls-digest --dry-run --prospecting-only \
+  --state-dir /tmp/opps-state --out-dir /tmp/opps
 ```
 
 ## Required env
@@ -103,8 +121,14 @@ Digest profiles may also set:
 | `search_query_templates` | `[]` | Templates containing `{vertical}` |
 | `search_max_daily_cost_usd` | `1.0` | Fail-closed daily paid-source ceiling |
 | `search_cost_guard_per_query_usd` | `0.01` | Pre-call reservation used before the provider returns actual cost; KaiCalls sets `$0.02` |
+| `search_candidate_cap_per_query` | `3` | Maximum keyword-matching results retained from one query for evidence scoring |
 | `score_threshold` | `70` | Minimum LLM fit score written to the review page |
 | `max_items` | `12` | Maximum daily review-page items after URL dedupe |
+| `prospecting_enabled` | `false` | Enables named-business listings and Google-review evidence |
+| `prospecting_max_daily_cost_usd` | `0.7` | Independent fail-closed ceiling for listings plus review tasks |
+| `prospecting_daily_listing_cap` | `0` | Number of category/metro segments rotated each day |
+| `prospecting_daily_review_task_cap` | `50` | Maximum asynchronous review tasks submitted per day |
+| `prospecting_business_refresh_days` | `60` | Cooldown before a business can be checked for newer reviews |
 
 The digest reads `DATAFORSEO_AUTH_B64` or
 `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD`. On `agent`, those credentials remain

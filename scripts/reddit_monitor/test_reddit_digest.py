@@ -87,8 +87,14 @@ def test_collect_candidates_dedupes_same_url_across_queries(tmp_path, monkeypatc
     assert len(rows) == 1
     assert rows[0]["matched_keywords"] == ["missed calls"]
     state = json.loads(seen_path.read_text(encoding="utf-8"))
-    assert state["posts"] == [row["id"]]
+    assert state["posts"] == []
+    assert list(state["pending_candidates"]) == [row["id"]]
     assert state["search_cost_usd_by_date"][digest.date.today().isoformat()] == 0.02
+
+    digest.finalize_candidates(seen_path, [row["id"]], 100)
+    state = json.loads(seen_path.read_text(encoding="utf-8"))
+    assert state["posts"] == [row["id"]]
+    assert state["pending_candidates"] == {}
 
 
 def test_collect_candidates_runs_each_paid_query_once_per_day(tmp_path, monkeypatch):
@@ -183,29 +189,58 @@ def test_expanded_search_queries_dedupes_and_expands_verticals():
     assert queries == ["fixed", "HVAC missed calls"]
 
 
-def test_search_result_has_buyer_intent_requires_explicit_ask():
-    assert digest.search_result_has_buyer_intent({
+def test_validate_public_decision_requires_exact_buyer_evidence():
+    post = {
         "title": "Anyone recommend a virtual receptionist?",
         "content": "We keep missing calls while our HVAC techs are out.",
-    })
-    assert not digest.search_result_has_buyer_intent({
-        "title": "Do missed calls cost HVAC businesses money?",
-        "content": "A generic market-research question.",
-    })
+    }
+    result = digest.validate_public_decision({
+        "score": 92,
+        "reason": "Direct operational pain.",
+        "angle": "Share measured inbound-call capture.",
+        "actor_role": "buyer",
+        "intent_type": "operational_pain",
+        "confidence": 0.94,
+        "evidence_quote": "We keep missing calls while our HVAC techs are out.",
+    }, post)
+
+    assert result["score"] == 92
+    assert result["evidence_valid"] is True
 
 
-def test_search_result_has_buyer_intent_rejects_self_promotion():
-    assert not digest.search_result_has_buyer_intent({
-        "title": "I need an answering service",
-        "content": "I built one. DM me to book a demo.",
-    })
-
-
-def test_search_result_has_buyer_intent_rejects_receptionist_offer():
-    assert not digest.search_result_has_buyer_intent({
+def test_validate_public_decision_caps_vendor_with_buyer_language():
+    post = {
         "title": "Receptionist available for Cheyenne businesses",
         "content": "We can help if you keep missing calls after hours.",
+    }
+    result = digest.validate_public_decision({
+        "score": 90,
+        "reason": "The topic matches.",
+        "angle": "Pitch KaiCalls.",
+        "actor_role": "vendor",
+        "intent_type": "operational_pain",
+        "confidence": 0.99,
+        "evidence_quote": "keep missing calls after hours",
+    }, post)
+
+    assert result["score"] == 25
+    assert result["angle"] == ""
+
+
+def test_validate_public_decision_rejects_paraphrased_evidence():
+    result = digest.validate_public_decision({
+        "score": 90,
+        "actor_role": "buyer",
+        "intent_type": "direct_need",
+        "confidence": 0.95,
+        "evidence_quote": "We miss every call after hours.",
+    }, {
+        "title": "Need some help",
+        "content": "Our phone coverage is not great.",
     })
+
+    assert result["score"] == 25
+    assert result["evidence_quote"] == ""
 
 
 def test_render_html_supports_legacy_reddit_rows():
