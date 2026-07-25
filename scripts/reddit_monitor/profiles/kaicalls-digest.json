@@ -1,6 +1,6 @@
 {
   "name": "kaicalls-digest",
-  "page_title": "KaiCalls — Reddit opportunities",
+  "page_title": "KaiCalls — lead-finding opportunities",
   "model": "openai/gpt-4.1-mini",
   "discord_webhook_env": "REDDIT_MONITOR_DISCORD_WEBHOOK_KAICALLS",
   "prompt_file": "kaicalls-digest.prompt.md",
@@ -9,6 +9,38 @@
   "content_max_chars": 1200,
   "score_threshold": 70,
   "max_items": 12,
+  "search_results_per_query": 10,
+  "search_daily_query_cap": 50,
+  "search_timeframe": "m",
+  "search_max_daily_cost_usd": 1.0,
+  "search_cost_guard_per_query_usd": 0.02,
+  "search_queries": [
+    "site:facebook.com/groups \"looking for an answering service\"",
+    "site:facebook.com/groups \"need a receptionist\" small business",
+    "site:facebook.com/groups \"missed calls\" (plumber OR HVAC OR electrician OR roofer)",
+    "site:facebook.com/groups \"can't answer the phone\" business",
+    "site:facebook.com/groups \"after hours calls\" small business",
+    "site:facebook.com/groups \"virtual receptionist\" recommendation",
+    "site:facebook.com/groups \"ai receptionist\" recommendation"
+  ],
+  "search_verticals": [
+    "plumbing business owners",
+    "HVAC business owners",
+    "electrical contractors",
+    "roofing contractors",
+    "law firm owners",
+    "dental practice owners",
+    "med spa owners",
+    "auto repair shop owners",
+    "home service business owners",
+    "cleaning business owners"
+  ],
+  "search_query_templates": [
+    "site:facebook.com/groups \"{vertical}\" \"looking for an answering service\"",
+    "site:facebook.com/groups \"{vertical}\" (\"missed calls\" OR \"can't answer the phone\")",
+    "site:facebook.com/groups \"{vertical}\" (\"after hours calls\" OR \"virtual receptionist\")",
+    "\"{vertical}\" (\"answering service recommendation\" OR \"what do you use for missed calls\")"
+  ],
   "subreddits": [
     "AIReceptionists",
     "VoiceAutomationAI",
