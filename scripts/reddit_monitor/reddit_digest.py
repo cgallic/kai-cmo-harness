@@ -120,7 +120,8 @@ _SEARCH_BUYER_INTENT = (
     "we need ",
     "we're looking",
     "we are looking",
-    "we keep ",
+    "we keep missing",
+    "we keep getting missed",
     "we're missing",
     "we are missing",
     "i can't answer",
@@ -151,6 +152,11 @@ _SEARCH_PROMO_SIGNALS = (
     "i offer ",
     "check out ",
     "try my ",
+    "receptionist available",
+    "services available",
+    "affordable ",
+    "we can help",
+    "helping businesses",
 )
 
 

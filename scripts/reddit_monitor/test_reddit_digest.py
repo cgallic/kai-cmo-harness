@@ -201,6 +201,13 @@ def test_search_result_has_buyer_intent_rejects_self_promotion():
     })
 
 
+def test_search_result_has_buyer_intent_rejects_receptionist_offer():
+    assert not digest.search_result_has_buyer_intent({
+        "title": "Receptionist available for Cheyenne businesses",
+        "content": "We can help if you keep missing calls after hours.",
+    })
+
+
 def test_render_html_supports_legacy_reddit_rows():
     html = digest.render_html(
         {"page_title": "Opportunities"},
