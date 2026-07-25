@@ -17,6 +17,21 @@ Content: {content}
 - Connor's acquisition story: lost $497 on Meta ads (0 customers), then 3 of 7 customers came from one free AI-tools directory listing + LinkedIn/TikTok presence. That is his ONLY paid-acquisition story.
 - Connor's genuine expertise: building voice/phone agents (latency, the dead-air pause after a caller stops, transcription of proper nouns, splitting one agent into several), the economics of missed calls for service businesses, and solo-founder/early-MRR lessons.
 
+# FIRST PROVE WHO IS SPEAKING
+
+Classify the author from the supplied title and snippet:
+
+- `buyer`: the author explicitly describes their own business problem, asks for
+  a recommendation, or says they need a solution.
+- `vendor`: the author sells, promotes, researches, or offers a receptionist,
+  answering, marketing, or voice-agent service.
+- `jobseeker`: the author wants work or applies for a receptionist role.
+- `unknown`: the snippet does not prove who the author is.
+
+Do not guess from the group name, industry, query, or topic. Copy one exact
+`evidence_quote` from the supplied title or content that proves buyer role and
+intent. If no exact quote does that, the author is not a qualified buyer.
+
 # SCORE 0-100 — HOW GOOD IS THIS OPPORTUNITY
 
 - **90-100**: Directly about choosing/comparing AI receptionists, answering services, or voice agents; OR a service-business owner describing missed-call / can't-answer-the-phone / after-hours / speed-to-lead pain. Connor has first-hand, specific value to add and his product literally solves this.
@@ -30,7 +45,9 @@ Content: {content}
 - If the post is about OUTBOUND, cold calling, dialing prospects, or sales pitching — score **≤ 30**. Connor only has the receiving side; the "I'm not the right peer on dialing, but..." pivot is low-value and reads as forced.
 - If answering well would require faking experience Connor doesn't have (legal advice, plumbing/HVAC/electrical diagnosis, being a realtor) — score **≤ 20**.
 - If it's a generic gear/lifestyle/community post in a vertical sub (e.g. "show me your everyday-carry") — score **≤ 15**.
-- If the post is someone advertising, launching, or showing off their OWN AI receptionist / voice-agent product (a promo or "check out what I built", not a genuine question or pain point) — score **≤ 25**. Commenting on a competitor's launch is not an opportunity.
+- If the post is someone advertising, launching, researching, or showing off
+  their OWN receptionist / answering / voice-agent service — set `actor_role`
+  to `vendor` and score **≤ 25**.
 - If the post asks a generic market-research question such as "do missed calls cost businesses money?" without a first-person problem or recommendation request — score **≤ 25**. These are usually vendor content, not buyers.
 - If the post is about finding a job, hiring a receptionist, stacking jobs, or offering receptionist/answering-service services — score **≤ 20**. The lane is for buyers asking for a solution.
 - The angle must answer this post. For answering-service recommendations or missed-call pain, use Connor's measured inbound-call experience. Never use his Meta-ad or directory-acquisition story there.
@@ -41,11 +58,22 @@ Content: {content}
 - **score**: integer 0-100 per the rubric above.
 - **reason**: ONE sentence, ≤ 25 words, on why it's a fit (or not). Plain English. No marketing words.
 - **angle**: ONE sentence naming the lived-experience hook Connor would lead with — a thing he actually did or measured, not advice. Example: "the $497 Meta burn vs. 3 customers from one free directory listing" or "the dead-air pause over 800ms that makes callers think the line dropped." Null if score is below 70.
+- **actor_role**: `buyer`, `vendor`, `jobseeker`, or `unknown`.
+- **intent_type**: `direct_need`, `recommendation_request`,
+  `operational_pain`, or `none`.
+- **confidence**: number from 0 to 1. Use less than 0.8 when the snippet could
+  plausibly be promotional or lacks author context.
+- **evidence_quote**: an exact quote from the supplied title/content proving
+  buyer role and intent, or null. Never paraphrase.
 
 Return JSON only:
 
 {{
   "score": 0,
   "reason": "one sentence",
-  "angle": "one sentence or null"
+  "angle": "one sentence or null",
+  "actor_role": "unknown",
+  "intent_type": "none",
+  "confidence": 0.0,
+  "evidence_quote": null
 }}

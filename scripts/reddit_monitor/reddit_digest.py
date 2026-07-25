@@ -33,6 +33,7 @@ import feedparser
 import requests
 from openai import OpenAI
 from dotenv import load_dotenv
+import review_prospecting
 
 _here = Path(__file__).parent
 _env_candidates = [
@@ -78,11 +79,23 @@ def load_profile(profiles_dir: Path, name: str) -> dict:
     profile.setdefault("search_query_templates", [])
     profile.setdefault("search_max_daily_cost_usd", 1.0)
     profile.setdefault("search_cost_guard_per_query_usd", 0.01)
+    profile.setdefault("search_candidate_cap_per_query", 3)
+    profile.setdefault("prospecting_enabled", False)
 
     prompt_path = profiles_dir / profile["prompt_file"]
     if not prompt_path.exists():
         raise FileNotFoundError(f"Prompt file not found: {prompt_path}")
     profile["_prompt_template"] = prompt_path.read_text(encoding="utf-8")
+    prospect_prompt = profile.get("prospecting_prompt_file")
+    if prospect_prompt:
+        prospect_prompt_path = profiles_dir / prospect_prompt
+        if not prospect_prompt_path.exists():
+            raise FileNotFoundError(
+                f"Prospecting prompt file not found: {prospect_prompt_path}"
+            )
+        profile["_prospecting_prompt_template"] = (
+            prospect_prompt_path.read_text(encoding="utf-8")
+        )
     return profile
 
 
@@ -111,61 +124,6 @@ def write_json(path: Path, data) -> None:
 def matched_triggers(text: str, keywords: list[str]) -> list[str]:
     lower = text.lower()
     return [kw for kw in keywords if kw.lower() in lower]
-
-
-_SEARCH_BUYER_INTENT = (
-    "i need ",
-    "i'm looking",
-    "i am looking",
-    "we need ",
-    "we're looking",
-    "we are looking",
-    "we keep missing",
-    "we keep getting missed",
-    "we're missing",
-    "we are missing",
-    "i can't answer",
-    "i cannot answer",
-    "anyone recommend",
-    "can anyone recommend",
-    "does anybody know",
-    "what do you use",
-    "who do you use",
-    "anyone have a virtual",
-    "anyone using",
-    "need help with",
-    "looking for a",
-)
-_SEARCH_PROMO_SIGNALS = (
-    "i built ",
-    "we built ",
-    "i launched ",
-    "we launched ",
-    "we help ",
-    "our ai ",
-    "our service ",
-    "free ai ",
-    "book a demo",
-    "dm me",
-    "message me",
-    "we offer ",
-    "i offer ",
-    "check out ",
-    "try my ",
-    "receptionist available",
-    "services available",
-    "affordable ",
-    "we can help",
-    "helping businesses",
-)
-
-
-def search_result_has_buyer_intent(post: dict) -> bool:
-    """Keep search results with an explicit buyer ask, not generic SEO/promo."""
-    text = f"{post.get('title', '')} {post.get('content', '')}".lower()
-    if any(signal in text for signal in _SEARCH_PROMO_SIGNALS):
-        return False
-    return any(signal in text for signal in _SEARCH_BUYER_INTENT)
 
 
 def fetch_subreddit(subreddit: str, limit: int) -> list[dict]:
@@ -276,24 +234,48 @@ def expanded_search_queries(profile: dict) -> list[str]:
     return list(dict.fromkeys(query for query in queries if query))
 
 
+def finalize_candidates(seen_path: Path, candidate_ids: list[str], seen_limit: int) -> None:
+    if not candidate_ids:
+        return
+    state = read_json(seen_path, {"posts": []})
+    pending = state.get("pending_candidates")
+    if not isinstance(pending, dict):
+        pending = {}
+    posts = list(state.get("posts") or [])
+    known = set(posts)
+    for candidate_id in candidate_ids:
+        pending.pop(candidate_id, None)
+        if candidate_id not in known:
+            posts.append(candidate_id)
+            known.add(candidate_id)
+    state["pending_candidates"] = pending
+    state["posts"] = posts[-seen_limit:]
+    write_json(seen_path, state)
+
+
 def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
     seen = read_json(seen_path, {"posts": [], "last_check": None})
     seen_ids = set(seen.get("posts", []))
     new_seen = list(seen_ids)
-    run_seen = set(seen_ids)
+    pending = seen.get("pending_candidates")
+    if not isinstance(pending, dict):
+        pending = {}
+    run_seen = set(seen_ids) | set(pending)
 
-    candidates = []
+    candidates = list(pending.values())
     for subreddit in profile["subreddits"]:
         for post in fetch_subreddit(subreddit, profile["posts_per_sub"]):
             if post["id"] in run_seen:
                 continue
             run_seen.add(post["id"])
-            new_seen.append(post["id"])
             text = f"{post['title']} {post['content']}"
             matches = matched_triggers(text, profile["trigger_keywords"])
             if matches:
                 post["matched_keywords"] = matches
+                pending[post["id"]] = post
                 candidates.append(post)
+            else:
+                new_seen.append(post["id"])
 
     day = date.today().isoformat()
     checked = seen.get("search_queries_checked_on")
@@ -338,18 +320,46 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
             continue
         checked[query] = day
         daily_cost += cost
+        accepted_for_query = 0
         for post in search_posts:
             if post["id"] in run_seen:
                 continue
             run_seen.add(post["id"])
-            new_seen.append(post["id"])
             text = f"{post['title']} {post['content']}"
             matches = matched_triggers(text, profile["trigger_keywords"])
-            if matches and search_result_has_buyer_intent(post):
+            if matches:
                 post["matched_keywords"] = matches
+                pending[post["id"]] = post
                 candidates.append(post)
+                accepted_for_query += 1
+                if accepted_for_query >= int(
+                    profile.get("search_candidate_cap_per_query", 3)
+                ):
+                    break
+            else:
+                new_seen.append(post["id"])
+        # Persist fetched candidates before the next paid call. If scoring or
+        # the process later fails, the exact paid result is retried from state
+        # without purchasing the query again.
+        seen["posts"] = new_seen[-profile["seen_limit"]:]
+        pending_cap = max(100, int(profile["seen_limit"]))
+        pending = dict(list(pending.items())[-pending_cap:])
+        seen["pending_candidates"] = pending
+        seen["search_queries_checked_on"] = checked
+        seen["search_queries_attempted_on"] = attempted
+        interim_costs = seen.get("search_cost_usd_by_date")
+        if not isinstance(interim_costs, dict):
+            interim_costs = {}
+        interim_costs[day] = round(daily_cost, 6)
+        seen["search_cost_usd_by_date"] = dict(
+            sorted(interim_costs.items())[-31:]
+        )
+        write_json(seen_path, seen)
 
     seen["posts"] = new_seen[-profile["seen_limit"]:]
+    pending_cap = max(100, int(profile["seen_limit"]))
+    pending = dict(list(pending.items())[-pending_cap:])
+    seen["pending_candidates"] = pending
     seen["last_check"] = datetime.now().isoformat()
     seen["search_queries_checked_on"] = checked
     seen["search_queries_attempted_on"] = attempted
@@ -365,6 +375,45 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
 # --------------------------------------------------------------------------- #
 # scoring
 # --------------------------------------------------------------------------- #
+def _normal(text: str) -> str:
+    return " ".join(str(text).split()).casefold()
+
+
+def validate_public_decision(data: dict, post: dict) -> dict:
+    source_text = f"{post.get('title', '')}\n{post.get('content', '')}"
+    evidence = str(data.get("evidence_quote") or "").strip()
+    confidence = float(data.get("confidence") or 0)
+    actor_role = str(data.get("actor_role") or "unknown").strip()
+    intent_type = str(data.get("intent_type") or "none").strip()
+    evidence_valid = (
+        len(evidence) >= 12
+        and _normal(evidence) in _normal(source_text)
+    )
+    valid = (
+        actor_role == "buyer"
+        and intent_type in {
+            "direct_need",
+            "recommendation_request",
+            "operational_pain",
+        }
+        and confidence >= 0.8
+        and evidence_valid
+    )
+    score = min(100, max(0, int(data.get("score") or 0)))
+    if not valid:
+        score = min(score, 25)
+    return {
+        "score": score,
+        "reason": str(data.get("reason") or "").strip(),
+        "angle": str(data.get("angle") or "").strip() if valid else "",
+        "actor_role": actor_role,
+        "intent_type": intent_type,
+        "confidence": confidence,
+        "evidence_quote": evidence if evidence_valid else "",
+        "evidence_valid": evidence_valid,
+    }
+
+
 def llm_score(client: OpenAI, profile: dict, post: dict) -> dict:
     prompt = profile["_prompt_template"].format(
         subreddit=post.get("subreddit", ""),
@@ -380,14 +429,54 @@ def llm_score(client: OpenAI, profile: dict, post: dict) -> dict:
             response_format={"type": "json_object"},
         )
         data = json.loads((resp.choices[0].message.content or "").strip())
-        return {
-            "score": int(data.get("score", 0)),
-            "reason": (data.get("reason") or "").strip(),
-            "angle": (data.get("angle") or "").strip(),
-        }
+        return validate_public_decision(data, post)
     except Exception as exc:
         print(f"    ! score error: {exc}")
-        return {"score": 0, "reason": f"score error: {exc}", "angle": ""}
+        return {
+            "score": 0,
+            "reason": f"score error: {exc}",
+            "angle": "",
+            "scoring_failed": True,
+        }
+
+
+def qualify_review_prospect(
+    client: OpenAI,
+    profile: dict,
+    business: dict,
+    reviews: list[dict],
+) -> dict:
+    source_text = "\n\n".join(
+        f"REVIEW {index + 1} ({review.get('timestamp') or 'date unknown'}, "
+        f"{review.get('rating') or '?'} stars):\n{review['text']}"
+        for index, review in enumerate(reviews)
+    )
+    prompt = profile["_prospecting_prompt_template"].format(
+        business_name=business["name"],
+        category=business.get("category") or "",
+        market=business.get("market") or "",
+        rating=business.get("rating") or "",
+        review_count=business.get("review_count") or "",
+        reviews=source_text[:6000],
+    )
+    try:
+        response = client.chat.completions.create(
+            model=profile["model"],
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+        )
+        data = json.loads(
+            (response.choices[0].message.content or "").strip()
+        )
+        return review_prospecting.validate_qualification(data, source_text)
+    except Exception as exc:
+        print(f"    ! prospect qualification error: {exc}")
+        return {
+            "is_fit": False,
+            "score": 0,
+            "reason": f"qualification error: {exc}",
+        }
 
 
 # --------------------------------------------------------------------------- #
@@ -405,6 +494,25 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
     cards = []
     for it in items:
         sc = int(it["score"])
+        evidence = html.escape(it.get("evidence_quote") or "")
+        prospect = it.get("prospect") or {}
+        contact_bits = [
+            str(value) for value in (
+                prospect.get("phone"),
+                prospect.get("website"),
+                prospect.get("market"),
+            )
+            if value
+        ]
+        evidence_html = (
+            f'<div class="evidence"><span>Evidence</span> “{evidence}”</div>'
+            if evidence else ""
+        )
+        contact_html = (
+            f'<div class="contact"><span>Prospect</span> '
+            f'{html.escape(" · ".join(contact_bits))}</div>'
+            if contact_bits else ""
+        )
         cards.append(f"""
       <article class="card">
         <div class="badge {score_class(sc)}">{sc}</div>
@@ -413,6 +521,8 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
           <a class="title" href="{html.escape(it['url'])}" target="_blank" rel="noopener">{html.escape(it['title'])}</a>
           <div class="why"><span>Why</span> {html.escape(it.get('reason',''))}</div>
           <div class="angle"><span>Angle</span> {html.escape(it.get('angle',''))}</div>
+          {evidence_html}
+          {contact_html}
         </div>
       </article>""")
     body = "\n".join(cards) if cards else '<p class="empty">No comment-worthy threads found yet today.</p>'
@@ -441,8 +551,8 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
   .sub {{ color:#8b949e; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }}
   .title {{ display:block; color:#e6edf3; font-weight:600; font-size:16px; text-decoration:none; margin:2px 0 8px; }}
   .title:hover {{ color:#58a6ff; text-decoration:underline; }}
-  .why, .angle {{ font-size:14px; color:#c9d1d9; margin-top:3px; }}
-  .why span, .angle span {{ display:inline-block; min-width:46px; color:#8b949e; font-size:11px;
+  .why, .angle, .evidence, .contact {{ font-size:14px; color:#c9d1d9; margin-top:3px; }}
+  .why span, .angle span, .evidence span, .contact span {{ display:inline-block; min-width:62px; color:#8b949e; font-size:11px;
             text-transform:uppercase; letter-spacing:.04em; }}
   .empty {{ color:#8b949e; text-align:center; padding:40px; }}
   footer {{ max-width:820px; margin:24px auto 0; color:#6e7681; font-size:12px; }}
@@ -451,11 +561,11 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
 <body>
   <header>
     <h1>{html.escape(profile['page_title'])}</h1>
-    <div class="meta">{day} &middot; {len(items)} threads worth a comment &middot; updated {updated}</div>
+    <div class="meta">{day} &middot; {len(items)} evidenced prospects and conversations &middot; updated {updated}</div>
   </header>
   <main>{body}
   </main>
-  <footer>Scored by fit (90+ = direct, 80s = strong, 70s = worth a look). Public sources only. You write the comment.</footer>
+  <footer>Every item needs source-verifiable buyer evidence. Public sources only. Review and contact manually.</footer>
 </body>
 </html>"""
 
@@ -488,6 +598,10 @@ def main() -> int:
                     help="skip Reddit sources (manual canary/debug mode)")
     ap.add_argument("--search-query-cap", type=int, default=None,
                     help="lower the profile's daily paid-query cap for this run")
+    ap.add_argument("--prospecting-only", action="store_true",
+                    help="skip Reddit/organic sources and run named-account prospecting")
+    ap.add_argument("--no-prospecting", action="store_true",
+                    help="skip named-account prospecting")
     args = ap.parse_args()
 
     try:
@@ -501,6 +615,13 @@ def main() -> int:
         profile["search_daily_query_cap"] = min(
             profile["search_daily_query_cap"], max(0, args.search_query_cap)
         )
+    if args.prospecting_only:
+        profile["subreddits"] = []
+        profile["search_daily_query_cap"] = 0
+    if args.search_only:
+        profile["prospecting_enabled"] = False
+    if args.no_prospecting:
+        profile["prospecting_enabled"] = False
 
     threshold = args.min_score if args.min_score is not None else profile["score_threshold"]
     out_dir = Path(args.out_dir)
@@ -518,14 +639,33 @@ def main() -> int:
     print(f"[{datetime.now()}] profile={profile['name']} subs={len(profile['subreddits'])} "
           f"thr={threshold} day={day}")
 
+    prospects = []
+    if profile.get("prospecting_enabled"):
+        prospect_state_path = (
+            Path(args.state_dir) / f"{profile['name']}-prospecting.json"
+        )
+        prospects = review_prospecting.run(
+            profile,
+            prospect_state_path,
+            _dataforseo_auth_header(),
+            lambda business, reviews: qualify_review_prospect(
+                client, profile, business, reviews
+            ),
+            write_json,
+        )
+        print(f"found {len(prospects)} evidenced named prospects")
+
     candidates = collect_candidates(profile, seen_path)
     print(f"found {len(candidates)} new keyword matches, scoring...")
 
-    fresh = []
+    fresh = list(prospects)
+    scored_candidate_ids = []
     for post in candidates:
         res = llm_score(client, profile, post)
         mark = "✓" if res["score"] >= threshold else "·"
         print(f"  {mark} {res['score']:>3}  {post.get('source_context', 'public web')} — {post['title'][:55]}")
+        if not res.get("scoring_failed"):
+            scored_candidate_ids.append(post["id"])
         if res["score"] >= threshold:
             post.update(res)
             post["found_at"] = datetime.now(timezone.utc).isoformat()
@@ -547,11 +687,28 @@ def main() -> int:
         "published_at": p.get("published_at", ""),
         "matched_keywords": p.get("matched_keywords", []),
         "search_query": p.get("search_query", ""),
+        "actor_role": p.get("actor_role", ""),
+        "intent_type": p.get("intent_type", ""),
+        "confidence": p.get("confidence"),
+        "evidence_quote": p.get("evidence_quote", ""),
+        "pain_type": p.get("pain_type", ""),
+        "prospect": p.get("prospect"),
         "found_at": p["found_at"],
     } for p in added)
     bucket.sort(key=lambda b: b["score"], reverse=True)
     bucket = bucket[:profile["max_items"]]
     write_json(bucket_path, bucket)
+    finalize_candidates(
+        seen_path,
+        scored_candidate_ids,
+        int(profile["seen_limit"]),
+    )
+    if prospects:
+        review_prospecting.finalize_ready(
+            prospect_state_path,
+            [prospect["id"] for prospect in prospects],
+            write_json,
+        )
 
     # render page (dated archive + index = latest)
     page_html = render_html(profile, bucket, day)
@@ -567,7 +724,7 @@ def main() -> int:
     if added and last_ping != day and webhook and not args.dry_run:
         url = f"{args.base_url}/{day}.html"
         msg = (f"📋 **Lead-finding opportunities — {day}**\n"
-               f"{len(bucket)} public threads worth a look today. You write the reply.\n{url}")
+               f"{len(bucket)} evidenced prospects or buyer conversations to review.\n{url}")
         if post_to_discord(webhook, msg):
             write_json(ping_path, {"date": day})
             print(f"→ pinged discord: {url}")
