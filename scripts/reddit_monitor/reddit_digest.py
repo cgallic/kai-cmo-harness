@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-Reddit Digest — scores posts for comment-worthiness and publishes a daily
-review PAGE instead of auto-drafting replies.
+Opportunity Digest — scores public intent posts for comment-worthiness and
+publishes a daily review PAGE instead of auto-drafting replies.
 
 Difference from reddit_listener.py:
   - The LLM returns a numeric fit score (0-100) + one-line reason + one-line
     angle. It does NOT write a draft reply. Connor writes the comment himself.
+  - Profiles may combine subreddit RSS with bounded Google Organic queries.
+    The latter is used for public Facebook Group posts that Google exposes.
   - Only posts scoring >= score_threshold are kept, sorted high-to-low, capped.
   - Output is an HTML page (served over http) that accumulates the day's finds,
     plus a single Discord ping per day linking to it.
@@ -19,11 +21,12 @@ day that has at least one find.
 """
 
 import argparse
+import base64
 import html
 import json
 import os
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import feedparser
@@ -32,10 +35,17 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 _here = Path(__file__).parent
-for _candidate in (_here / ".env", _here.parent / ".env", _here.parent.parent / ".env"):
+_env_candidates = [
+    _here / ".env",
+    _here.parent / ".env",
+    _here.parent.parent / ".env",
+    Path("/srv/cmo-agent-system/.env"),
+]
+if os.environ.get("REDDIT_MONITOR_ENV"):
+    _env_candidates.insert(0, Path(os.environ["REDDIT_MONITOR_ENV"]))
+for _candidate in _env_candidates:
     if _candidate.exists():
         load_dotenv(_candidate)
-        break
 
 
 # --------------------------------------------------------------------------- #
@@ -60,6 +70,14 @@ def load_profile(profiles_dir: Path, name: str) -> dict:
     profile.setdefault("content_max_chars", 1200)
     profile.setdefault("score_threshold", 70)
     profile.setdefault("max_items", 12)
+    profile.setdefault("search_queries", [])
+    profile.setdefault("search_results_per_query", 20)
+    profile.setdefault("search_daily_query_cap", 8)
+    profile.setdefault("search_timeframe", "m")
+    profile.setdefault("search_verticals", [])
+    profile.setdefault("search_query_templates", [])
+    profile.setdefault("search_max_daily_cost_usd", 1.0)
+    profile.setdefault("search_cost_guard_per_query_usd", 0.01)
 
     prompt_path = profiles_dir / profile["prompt_file"]
     if not prompt_path.exists():
@@ -82,7 +100,9 @@ def read_json(path: Path, default):
 
 def write_json(path: Path, data) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    temp_path = path.with_suffix(f"{path.suffix}.tmp")
+    temp_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    os.replace(temp_path, path)
 
 
 # --------------------------------------------------------------------------- #
@@ -106,29 +126,183 @@ def fetch_subreddit(subreddit: str, limit: int) -> list[dict]:
             "id": entry.id,
             "title": entry.title,
             "url": entry.link,
+            "source": "reddit",
+            "source_context": f"r/{subreddit}",
             "subreddit": subreddit,
             "content": entry.get("summary", "")[:1500],
+            "published_at": entry.get("published", ""),
         })
     return posts
+
+
+def _dataforseo_auth_header() -> str:
+    encoded = os.environ.get("DATAFORSEO_AUTH_B64", "").strip()
+    if not encoded:
+        login = os.environ.get("DATAFORSEO_LOGIN", "").strip()
+        password = os.environ.get("DATAFORSEO_PASSWORD", "").strip()
+        if not login or not password:
+            raise RuntimeError("DataForSEO credentials are not configured")
+        encoded = base64.b64encode(f"{login}:{password}".encode()).decode()
+    return f"Basic {encoded}"
+
+
+def fetch_google_search(
+    query: str, limit: int, timeframe: str = "m"
+) -> tuple[list[dict], float]:
+    """Fetch Google organic results through the existing DataForSEO account.
+
+    This intentionally reads only search-indexed public pages. It does not log
+    in to Facebook, join groups, scrape private content, or post anything.
+    """
+    response = requests.post(
+        "https://api.dataforseo.com/v3/serp/google/organic/live/advanced",
+        timeout=30,
+        headers={
+            "Authorization": _dataforseo_auth_header(),
+            "Content-Type": "application/json",
+        },
+        json=[{
+            "keyword": query,
+            "location_code": 2840,
+            "language_code": "en",
+            "device": "desktop",
+            "depth": min(max(1, int(limit)), 10),
+            "tag": "kaicalls-lead-finding",
+            "search_param": f"&tbs=qdr:{timeframe}",
+        }],
+    )
+    response.raise_for_status()
+    payload = response.json()
+    if int(payload.get("status_code") or 0) != 20000:
+        raise RuntimeError(
+            f"DataForSEO error {payload.get('status_code')}: "
+            f"{payload.get('status_message')}"
+        )
+
+    posts = []
+    tasks = payload.get("tasks") or []
+    if not tasks or int(tasks[0].get("status_code") or 0) != 20000:
+        task = tasks[0] if tasks else {}
+        raise RuntimeError(
+            f"DataForSEO task error {task.get('status_code')}: "
+            f"{task.get('status_message')}"
+        )
+    results = tasks[0].get("result") or []
+    items = (results[0].get("items") or []) if results else []
+    for item in items:
+        if item.get("type") != "organic":
+            continue
+        result_url = item.get("url", "")
+        if not result_url:
+            continue
+        is_facebook_group = "facebook.com/groups" in result_url.lower()
+        posts.append({
+            "id": f"search:{result_url}",
+            "title": item.get("title", ""),
+            "url": result_url,
+            "source": "facebook_group" if is_facebook_group else "web_search",
+            "source_context": (
+                "Facebook Group via Google" if is_facebook_group else "Google Organic"
+            ),
+            "subreddit": "",
+            "content": (item.get("description") or "")[:1500],
+            "published_at": item.get("timestamp") or "",
+            "search_query": query,
+            "search_rank": item.get("rank_group"),
+        })
+    return posts, float(tasks[0].get("cost") or 0)
+
+
+def expanded_search_queries(profile: dict) -> list[str]:
+    queries = [str(value).strip() for value in profile.get("search_queries", [])]
+    for vertical in profile.get("search_verticals", []):
+        for template in profile.get("search_query_templates", []):
+            queries.append(str(template).format(vertical=vertical).strip())
+    return list(dict.fromkeys(query for query in queries if query))
 
 
 def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
     seen = read_json(seen_path, {"posts": [], "last_check": None})
     seen_ids = set(seen.get("posts", []))
     new_seen = list(seen_ids)
+    run_seen = set(seen_ids)
 
     candidates = []
     for subreddit in profile["subreddits"]:
         for post in fetch_subreddit(subreddit, profile["posts_per_sub"]):
-            if post["id"] in seen_ids:
+            if post["id"] in run_seen:
                 continue
+            run_seen.add(post["id"])
             new_seen.append(post["id"])
             text = f"{post['title']} {post['content']}"
-            if matched_triggers(text, profile["trigger_keywords"]):
+            matches = matched_triggers(text, profile["trigger_keywords"])
+            if matches:
+                post["matched_keywords"] = matches
+                candidates.append(post)
+
+    day = date.today().isoformat()
+    checked = seen.get("search_queries_checked_on")
+    if not isinstance(checked, dict):
+        checked = {}
+    attempted = seen.get("search_queries_attempted_on")
+    if not isinstance(attempted, dict):
+        attempted = {}
+    daily_cost = float((seen.get("search_cost_usd_by_date") or {}).get(day) or 0)
+    max_daily_cost = float(profile.get("search_max_daily_cost_usd", 1.0))
+    cost_guard = float(profile.get("search_cost_guard_per_query_usd", 0.01))
+    attempts_today = sum(value == day for value in attempted.values())
+    queries = expanded_search_queries(profile)[:profile["search_daily_query_cap"]]
+    for query in queries:
+        if checked.get(query) == day or attempted.get(query) == day:
+            continue
+        reserved_cost = attempts_today * cost_guard
+        if max(reserved_cost, daily_cost) + cost_guard > max_daily_cost + 1e-9:
+            print(
+                f"  ! daily Google budget reached: {attempts_today} attempts, "
+                f"${max_daily_cost:.2f} cap"
+            )
+            break
+        # Claim before the paid call. A timeout or malformed provider response
+        # may still be billable, so it must not be retried every hour.
+        attempted[query] = day
+        attempts_today += 1
+        seen["search_queries_attempted_on"] = attempted
+        seen["search_reserved_cost_usd_by_date"] = {
+            **(seen.get("search_reserved_cost_usd_by_date") or {}),
+            day: round(attempts_today * cost_guard, 6),
+        }
+        write_json(seen_path, seen)
+        try:
+            search_posts, cost = fetch_google_search(
+                query,
+                profile["search_results_per_query"],
+                profile.get("search_timeframe", "m"),
+            )
+        except Exception as exc:
+            print(f"  ! error fetching Google query {query!r}: {exc}")
+            continue
+        checked[query] = day
+        daily_cost += cost
+        for post in search_posts:
+            if post["id"] in run_seen:
+                continue
+            run_seen.add(post["id"])
+            new_seen.append(post["id"])
+            text = f"{post['title']} {post['content']}"
+            matches = matched_triggers(text, profile["trigger_keywords"])
+            if matches:
+                post["matched_keywords"] = matches
                 candidates.append(post)
 
     seen["posts"] = new_seen[-profile["seen_limit"]:]
     seen["last_check"] = datetime.now().isoformat()
+    seen["search_queries_checked_on"] = checked
+    seen["search_queries_attempted_on"] = attempted
+    costs = seen.get("search_cost_usd_by_date")
+    if not isinstance(costs, dict):
+        costs = {}
+    costs[day] = round(daily_cost, 6)
+    seen["search_cost_usd_by_date"] = dict(sorted(costs.items())[-31:])
     write_json(seen_path, seen)
     return candidates
 
@@ -138,7 +312,8 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
 # --------------------------------------------------------------------------- #
 def llm_score(client: OpenAI, profile: dict, post: dict) -> dict:
     prompt = profile["_prompt_template"].format(
-        subreddit=post["subreddit"],
+        subreddit=post.get("subreddit", ""),
+        source_context=post.get("source_context") or post.get("source") or "public web",
         title=post["title"],
         content=post["content"][:profile["content_max_chars"]],
     )
@@ -179,7 +354,7 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
       <article class="card">
         <div class="badge {score_class(sc)}">{sc}</div>
         <div class="body">
-          <div class="sub">r/{html.escape(it['subreddit'])}</div>
+          <div class="sub">{html.escape(it.get('source_context') or ('r/' + it.get('subreddit','')))}</div>
           <a class="title" href="{html.escape(it['url'])}" target="_blank" rel="noopener">{html.escape(it['title'])}</a>
           <div class="why"><span>Why</span> {html.escape(it.get('reason',''))}</div>
           <div class="angle"><span>Angle</span> {html.escape(it.get('angle',''))}</div>
@@ -225,7 +400,7 @@ def render_html(profile: dict, items: list[dict], day: str) -> str:
   </header>
   <main>{body}
   </main>
-  <footer>Scored by fit (90+ = direct, 80s = strong, 70s = worth a look). You write the comment.</footer>
+  <footer>Scored by fit (90+ = direct, 80s = strong, 70s = worth a look). Public sources only. You write the comment.</footer>
 </body>
 </html>"""
 
@@ -244,7 +419,7 @@ def post_to_discord(webhook: str, content: str) -> bool:
 # main
 # --------------------------------------------------------------------------- #
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Reddit Digest (scored review page)")
+    ap = argparse.ArgumentParser(description="Opportunity Digest (scored review page)")
     ap.add_argument("--profile", required=True)
     ap.add_argument("--profiles-dir", default=str(_here / "profiles"))
     ap.add_argument("--state-dir", default=str(_here / ".seen"))
@@ -254,6 +429,10 @@ def main() -> int:
                     help="public url that maps to --out-dir")
     ap.add_argument("--dry-run", action="store_true", help="no discord; still writes page")
     ap.add_argument("--min-score", type=int, default=None, help="override score_threshold")
+    ap.add_argument("--search-only", action="store_true",
+                    help="skip Reddit sources (manual canary/debug mode)")
+    ap.add_argument("--search-query-cap", type=int, default=None,
+                    help="lower the profile's daily paid-query cap for this run")
     args = ap.parse_args()
 
     try:
@@ -261,6 +440,12 @@ def main() -> int:
     except (FileNotFoundError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
+    if args.search_only:
+        profile["subreddits"] = []
+    if args.search_query_cap is not None:
+        profile["search_daily_query_cap"] = min(
+            profile["search_daily_query_cap"], max(0, args.search_query_cap)
+        )
 
     threshold = args.min_score if args.min_score is not None else profile["score_threshold"]
     out_dir = Path(args.out_dir)
@@ -285,10 +470,10 @@ def main() -> int:
     for post in candidates:
         res = llm_score(client, profile, post)
         mark = "✓" if res["score"] >= threshold else "·"
-        print(f"  {mark} {res['score']:>3}  r/{post['subreddit']} — {post['title'][:55]}")
+        print(f"  {mark} {res['score']:>3}  {post.get('source_context', 'public web')} — {post['title'][:55]}")
         if res["score"] >= threshold:
             post.update(res)
-            post["found_at"] = datetime.now().isoformat()
+            post["found_at"] = datetime.now(timezone.utc).isoformat()
             fresh.append(post)
 
     # accumulate into today's bucket (so frequent runs grow one page)
@@ -298,7 +483,15 @@ def main() -> int:
     added = [p for p in fresh if p["url"] not in have]
     bucket.extend({
         "score": p["score"], "reason": p["reason"], "angle": p["angle"],
-        "subreddit": p["subreddit"], "title": p["title"], "url": p["url"],
+        "source": p.get("source", "reddit"),
+        "source_context": p.get("source_context") or (
+            f"r/{p.get('subreddit')}" if p.get("subreddit") else "public web"
+        ),
+        "subreddit": p.get("subreddit", ""),
+        "title": p["title"], "url": p["url"],
+        "published_at": p.get("published_at", ""),
+        "matched_keywords": p.get("matched_keywords", []),
+        "search_query": p.get("search_query", ""),
         "found_at": p["found_at"],
     } for p in added)
     bucket.sort(key=lambda b: b["score"], reverse=True)
@@ -318,8 +511,8 @@ def main() -> int:
     last_ping = read_json(ping_path, {"date": None}).get("date")
     if added and last_ping != day and webhook and not args.dry_run:
         url = f"{args.base_url}/{day}.html"
-        msg = (f"📋 **Reddit opportunities — {day}**\n"
-               f"{len(bucket)} threads worth a comment today. You write the reply.\n{url}")
+        msg = (f"📋 **Lead-finding opportunities — {day}**\n"
+               f"{len(bucket)} public threads worth a look today. You write the reply.\n{url}")
         if post_to_discord(webhook, msg):
             write_json(ping_path, {"date": day})
             print(f"→ pinged discord: {url}")
