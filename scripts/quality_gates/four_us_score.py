@@ -11,10 +11,20 @@ Scores content on:
 Minimum passing score: 12/16
 Any single U < 2 = hard fail regardless of total
 
+The judge is pluggable. Gemini is used when GEMINI_API_KEY is set, but any agent
+(Claude, Codex, a human reviewer) can score instead: emit the rubric with
+--prompt-only, then hand the resulting JSON back via --scores. Thresholds,
+report formatting and gate logging are identical either way, so a result is
+comparable no matter who judged it.
+
 Usage:
   python3 four_us_score.py --text "content here"
   python3 four_us_score.py --file draft.md
   python3 four_us_score.py --file draft.md --json
+
+  # agent-scored, no API key required
+  python3 four_us_score.py --file draft.md --prompt-only
+  python3 four_us_score.py --file draft.md --scores '{"unique":3,"useful":4,"ultra_specific":3,"urgent":2}'
 """
 
 import argparse
@@ -23,11 +33,22 @@ import os
 import sys
 from pathlib import Path
 
+# Windows consoles default to cp1252 and cannot encode the report's ✅ / █ glyphs,
+# which made every gate run crash with UnicodeEncodeError instead of reporting.
+for _stream in (sys.stdout, sys.stderr):
+    _reconfigure = getattr(_stream, "reconfigure", None)
+    if _reconfigure is not None:
+        try:
+            _reconfigure(encoding="utf-8")
+        except ValueError:
+            pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from gate_logger import log_gate_result
 
 MIN_TOTAL = 12
 MIN_SINGLE = 2
+DIMENSIONS = ("unique", "useful", "ultra_specific", "urgent")
 
 SCORING_PROMPT = """You are a ruthless content quality scorer using the Four U's framework.
 
@@ -77,6 +98,43 @@ Return ONLY valid JSON, no explanation outside the JSON:
 }}"""
 
 
+def parse_agent_scores(raw: str) -> dict:
+    """Validate scores produced by an agent judge instead of the Gemini call."""
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    try:
+        scores = json.loads(raw.strip())
+    except json.JSONDecodeError as exc:
+        print(f"ERROR: --scores is not valid JSON: {exc}", file=sys.stderr)
+        sys.exit(2)
+    if not isinstance(scores, dict):
+        print("ERROR: --scores must be a JSON object", file=sys.stderr)
+        sys.exit(2)
+
+    missing = [d for d in DIMENSIONS if d not in scores]
+    if missing:
+        print(f"ERROR: --scores is missing dimension(s): {', '.join(missing)}", file=sys.stderr)
+        sys.exit(2)
+    for dimension in DIMENSIONS:
+        try:
+            scores[dimension] = int(scores[dimension])
+        except (TypeError, ValueError):
+            print(f"ERROR: --scores '{dimension}' must be an integer 1-4", file=sys.stderr)
+            sys.exit(2)
+        if not MIN_SINGLE - 1 <= scores[dimension] <= 4:
+            print(
+                f"ERROR: --scores '{dimension}' is {scores[dimension]}; must be 1-4",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+    if not isinstance(scores.get("notes"), dict):
+        scores["notes"] = {}
+    return scores
+
+
 def score_content(content: str) -> dict:
     try:
         from google import genai as google_genai
@@ -108,6 +166,9 @@ def score_content(content: str) -> dict:
         contents=SCORING_PROMPT.format(content=content[:8000]),
     )
 
+    if not response.text:
+        print("ERROR: the model returned an empty response", file=sys.stderr)
+        sys.exit(2)
     raw = response.text.strip()
     # Strip markdown if present
     if raw.startswith("```"):
@@ -182,13 +243,23 @@ def main():
     parser.add_argument("--text", help="Content text to score")
     parser.add_argument("--file", help="Path to content file")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument(
+        "--prompt-only",
+        action="store_true",
+        help="Print the scoring rubric for an agent judge and exit; no API call",
+    )
+    parser.add_argument(
+        "--scores",
+        help='Scores from an agent judge, e.g. \'{"unique":3,"useful":4,'
+        '"ultra_specific":3,"urgent":2}\'. Skips the Gemini call entirely.',
+    )
     args = parser.parse_args()
 
     if not args.text and not args.file:
         parser.error("Provide --text or --file")
 
     if args.file:
-        with open(args.file) as f:
+        with open(args.file, encoding="utf-8") as f:
             content = f.read()
     else:
         content = args.text
@@ -197,7 +268,11 @@ def main():
         print("ERROR: Empty content", file=sys.stderr)
         sys.exit(1)
 
-    scores = score_content(content)
+    if args.prompt_only:
+        print(SCORING_PROMPT.format(content=content[:8000]))
+        sys.exit(0)
+
+    scores = parse_agent_scores(args.scores) if args.scores else score_content(content)
     report = format_report(scores, as_json=args.json)
     print(report)
 
@@ -216,7 +291,11 @@ def main():
         passed=passed,
         source=args.file,
         failures=failures,
-        stats={"total": total, **{k: scores[k] for k in ["unique", "useful", "ultra_specific", "urgent"]}},
+        stats={
+            "total": total,
+            "judge": "agent" if args.scores else "gemini",
+            **{k: scores[k] for k in DIMENSIONS},
+        },
     )
     sys.exit(0 if passed else 1)
 
