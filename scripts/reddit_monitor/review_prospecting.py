@@ -449,8 +449,10 @@ def run(
     state["prospecting_listing_days_attempted"] = sorted(attempted_days)[-31:]
     write_json(state_path, state)
 
+    budget_blocked = False
     for segment in select_daily_segments(profile, current_day):
         if max(reserved, actual) + listing_guard > max_cost + 1e-9:
+            budget_blocked = True
             break
         reserved += listing_guard
         reserved_by_day[day] = round(reserved, 6)
@@ -522,6 +524,14 @@ def run(
                 }
             state["pending_review_tasks"] = pending
             state.get("prospecting_unknown_batches", {}).pop(unknown_key, None)
+
+    # A day whose cap prices out the first listing call never reaches a
+    # provider, so it records no cost. Mark it as an explicit hold; without
+    # this the outcome tripwire cannot tell a held day from a broken scan.
+    if actual <= 0 and budget_blocked:
+        hold_days = set(state.get("prospecting_budget_hold_days") or [])
+        hold_days.add(day)
+        state["prospecting_budget_hold_days"] = sorted(hold_days)[-31:]
 
     actual_by_day[day] = round(actual, 6)
     state["prospecting_cost_usd_by_date"] = dict(

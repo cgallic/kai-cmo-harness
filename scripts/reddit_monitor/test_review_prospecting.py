@@ -184,6 +184,45 @@ def test_run_reserves_before_paid_listing_and_review_calls(
     assert state["prospecting_reserved_cost_usd_by_date"]["2026-07-25"] == 0.08
     assert state["prospecting_cost_usd_by_date"]["2026-07-25"] == 0.035
     assert len(state["pending_review_tasks"]) == 10
+    assert "prospecting_budget_hold_days" not in state
+
+
+def test_run_records_budget_hold_when_cap_prices_out_rotation(
+    tmp_path, monkeypatch
+):
+    def unexpected(*args, **kwargs):
+        raise AssertionError("a held day must not reach a paid provider")
+
+    monkeypatch.setattr(prospecting, "fetch_business_listings", unexpected)
+    monkeypatch.setattr(prospecting, "submit_review_tasks", unexpected)
+    profile = {
+        "prospecting_categories": ["plumber"],
+        "prospecting_locations": [
+            {"name": "Houston", "coordinate": "1,2,25"},
+        ],
+        "prospecting_daily_listing_cap": 1,
+        "prospecting_listing_limit": 10,
+        "prospecting_daily_review_task_cap": 10,
+        "prospecting_review_depth": 20,
+        "prospecting_max_daily_cost_usd": 0.0,
+        "prospecting_listing_cost_guard_usd": 0.03,
+        "prospecting_review_task_cost_guard_usd": 0.005,
+    }
+    state_path = tmp_path / "state.json"
+
+    prospecting.run(
+        profile,
+        state_path,
+        "Basic test",
+        lambda *args: {},
+        lambda path, data: path.write_text(json.dumps(data), encoding="utf-8"),
+        today=date(2026, 7, 25),
+    )
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert state["prospecting_budget_hold_days"] == ["2026-07-25"]
+    assert state["prospecting_cost_usd_by_date"]["2026-07-25"] == 0.0
+    assert state["prospecting_listing_days_attempted"] == ["2026-07-25"]
 
 
 def test_submit_review_tasks_keeps_businesses_aligned(monkeypatch):
