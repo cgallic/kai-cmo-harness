@@ -1,6 +1,6 @@
 # YouTube Organic Posting Rules
 
-Last researched: 2026-07-20
+Last researched: 2026-07-27
 
 Primary sources:
 - Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
@@ -20,7 +20,7 @@ Primary sources:
 
 - Check Community Guidelines for every video, Short, live stream, community post, and comment strategy.
 - Check fake engagement rules before any view, like, comment, share, subscriber, giveaway, or engagement CTA.
-- Disclose realistic AI-generated or altered content during upload when the platform requires it, especially when a real person appears to say/do something they did not, a real event/place is altered, or a realistic event is shown that never happened. YouTube's current GenAI help also says disclosure itself does not reduce audience or monetization eligibility, but repeated non-disclosure can trigger manual labels, removals, or YouTube Partner Program suspension. Source: https://support.google.com/youtube/answer/14328491?hl=en (accessed 2026-07-20).
+- Disclose realistic AI-generated or altered content during upload when the platform requires it, especially when a real person appears to say/do something they did not, a real event/place is altered, or a realistic event is shown that never happened. YouTube's current GenAI help also says disclosure itself does not reduce audience or monetization eligibility, repeated non-disclosure can trigger manual labels, removals, or YouTube Partner Program suspension, and YouTube may auto-label content from YouTube GenAI tools, C2PA metadata, or internal AI detection. Source: https://support.google.com/youtube/answer/14328491?hl=en (accessed 2026-07-27).
 - Declare paid promotion, sponsorship, endorsement, or product placement in upload settings when required, including Shorts, live streams, descriptions, comments, and other YouTube features tied to the promotion.
 - Set made-for-kids, age restriction, remixing, license, caption, and altered-content fields intentionally.
 - Use YouTube API only with compliant user consent, privacy policy, Terms link, data deletion, and quota/rate handling. The July 7, 2026 revision history added `brandPartner` support to `videos.insert`, `videos.update`, and `videos.list` for creator-initiated brand partner access, and the same revision-history page keeps `status.containsSyntheticMedia` as the altered/synthetic disclosure field for API uploads. Source: https://developers.google.com/youtube/v3/revision_history (accessed 2026-07-13).

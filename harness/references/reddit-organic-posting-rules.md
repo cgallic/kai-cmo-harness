@@ -1,6 +1,6 @@
 # Reddit Organic Posting Rules
 
-Last researched: 2026-07-20
+Last researched: 2026-07-27
 
 Primary sources:
 - User Agreement: https://redditinc.com/policies/user-agreement
@@ -18,6 +18,7 @@ Primary sources:
 - Read and follow each subreddit rule before posting. Subreddit rules can be stricter than platform rules.
 - Use Reddit API/data only under Developer Terms, Data API Terms, and Public Content Policy. Reddit's current Data API Terms say app access must use Reddit-issued OAuth/user-agent identity, content can only be copied/displayed as needed to develop and run the app, and commercial use beyond the stated license may require a separate agreement. Source: https://redditinc.com/policies/data-api-terms (accessed 2026-07-20).
 - Use approved API or licensed access for commercial Reddit data use. Do not scrape Reddit public content for AI/model-training, enrichment, or monitoring outside approved terms.
+- Do not display Reddit content inside an ads-backed, paywalled, or otherwise monetized product surface without Reddit's permission and contract path. Reddit's current developer-access help says you cannot display Reddit content and run advertisements in your app, website, or service, and it treats monetized publishing of Reddit content as a commercial use that requires permission. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data (accessed 2026-07-27).
 - Treat ads-backed tools, subscription products, monetized publishing of Reddit content, paid services, and model training as permission-gated commercial uses until Reddit approves the exact use case or contract path. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data and https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy (accessed 2026-07-13).
 - Do not use the Data APIs to spam, incentivize, or harass users, and do not train AI on Reddit user content without the applicable rightsholder permission. Source: https://redditinc.com/policies/data-api-terms (accessed 2026-07-20).
 - Do not use undisclosed brand accounts, fake users, bought accounts, coordinated voting, vote manipulation, astroturfing, or scraped personal data.

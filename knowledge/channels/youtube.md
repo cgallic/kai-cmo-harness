@@ -8,6 +8,7 @@ Primary references:
 - YouTube Community Guidelines: https://support.google.com/youtube/answer/9288567?hl=en
 - Recommendations on YouTube: https://www.youtube.com/howyoutubeworks/recommendations/
 - YouTube recommendation system help: https://support.google.com/youtube/answer/16533387?hl=en
+- How YouTube search works: https://support.google.com/youtube/answer/16090438?hl=en
 - Search & discovery tips: https://support.google.com/youtube/answer/11914225?hl=en
 - YouTube organic rules: `harness/references/youtube-organic-posting-rules.md`
 - Social automation rules: `harness/references/social-automation-rules.md`
@@ -116,7 +117,7 @@ BAD:
 
 ## YouTube SEO
 
-Use official YouTube help pages for policy or ranking claims. The factor ordering below is an operating heuristic, not a published weight table. YouTube's current recommendation and search/discovery docs emphasize audience fit, viewer satisfaction, content performance, topic interest, competition, and seasonality over any single CTR hack. Sources: https://support.google.com/youtube/answer/16533387?hl=en and https://support.google.com/youtube/answer/11914225?co=YOUTUBE._YTVideoType%3Dvideo&hl=en (accessed 2026-07-13).
+Use official YouTube help pages for policy or ranking claims. The factor ordering below is an operating heuristic, not a published weight table. YouTube's current search help says search prioritizes relevance, engagement, and quality, while its recommendation and search/discovery docs emphasize audience fit, viewer satisfaction, content performance, topic interest, competition, and seasonality over any single CTR hack. Sources: https://support.google.com/youtube/answer/16090438?hl=en, https://support.google.com/youtube/answer/16533387?hl=en, and https://support.google.com/youtube/answer/11914225?co=YOUTUBE._YTVideoType%3Dvideo&hl=en (accessed 2026-07-27).
 
 ### Ranking Factors (by importance)
 

@@ -1,6 +1,6 @@
 # Pinterest Organic Posting Rules
 
-Last researched: 2026-07-20
+Last researched: 2026-07-27
 
 Primary sources:
 - Community Guidelines: https://policy.pinterest.com/en/community-guidelines
@@ -14,6 +14,7 @@ Primary sources:
 
 - Check Community Guidelines for content, destination links, deceptive practices, regulated goods, and spam risk.
 - Use Pinterest API only under the current Developer and API Terms.
+- Follow Pinterest's developer-data constraints. Pinterest's current Developer Guidelines say you generally may not store information accessed through Pinterest Materials except campaign analytics about your own account, should call the API each time you need Pinterest account data, and cannot offer platform insights or competitor benchmarking without explicit written authorization. Source: https://policy.pinterest.com/en/developer-guidelines (accessed 2026-07-27).
 - Follow Business Terms for commercial accounts, catalogs, shops, affiliates, and promoted content. Pinterest's current Terms of Service say commercial use should run through a business account and that sponsored/branded posts are subject to the Commercial and Branded Content Guidelines. Source: https://policy.pinterest.com/en/terms-of-service and https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-20).
 - Apply Pinterest's GenAI acceptable-use rules when using Pinterest AI tools or AI-generated creative destined for Pinterest.
 - Do not use Pinterest GenAI tools or Pinterest data for scraping, reverse engineering, jailbreaking, or collecting personal/sensitive information without rights. Pinterest's current GenAI rules also treat misleading/deceptive AI use, impersonation, misinformation, scams, and privacy abuse as policy violations, not just quality issues. Source: https://policy.pinterest.com/en/genai-acceptable-use-guidelines and https://policy.pinterest.com/en/terms-of-service (accessed 2026-07-20).

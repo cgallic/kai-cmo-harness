@@ -1,12 +1,12 @@
 # Social Platform Monitor Report
 
-Last run: 2026-07-20 13:34 UTC
+Last run: 2026-07-27 13:29 UTC
 
-Checked: 91 sources
-Changed: 13
-New: 0
+Checked: 92 sources
+Changed: 15
+New: 1
 Errors: 5
-Unchanged: 73
+Unchanged: 71
 
 ## Impact Cards
 
@@ -22,18 +22,6 @@ Unchanged: 73
 - **Owner doc:** `knowledge/channels/twitter-x.md`
 - **Next step:** Find a canonical replacement URL for `x_rules` or mark the registry entry deprecated
 
-### [x] X Automation Rules
-
-- **What changed:** Source unreachable (HTTP Error 403: Forbidden)
-- **Why it matters:** automation rules may have changed; the scheduler or write actions may need updated guardrails (area: API automation)
-- **Action taken:** Flagged for manual review; registry entry left unchanged
-- **Remaining risk:** Guidance for this source cannot be verified until the link is fixed or replaced
-- **Decision:** `escalate` (source unresolved; needs manual review)
-- **Risk:** `medium` · **Confidence:** high
-- **Source:** https://help.x.com/en/rules-and-policies/x-automation
-- **Owner doc:** `harness/references/x-organic-posting-rules.md`
-- **Next step:** Find a canonical replacement URL for `x_automation` or mark the registry entry deprecated
-
 ### [x] X Search Recommendations
 
 - **What changed:** Source unreachable (HTTP Error 403: Forbidden)
@@ -46,9 +34,21 @@ Unchanged: 73
 - **Owner doc:** `knowledge/channels/twitter-x.md`
 - **Next step:** Find a canonical replacement URL for `x_search_recommendations` or mark the registry entry deprecated
 
+### [tiktok] TikTok Content Posting API
+
+- **What changed:** Content hash changed (6cb1ab70b558 -> 1012ae8db9ad)
+- **Why it matters:** developer terms may have changed; API usage limits or content-usage rules may affect automations (area: API automation)
+- **Action taken:** Snapshot hash updated; change logged for owner-doc review
+- **Remaining risk:** The specific rule change is not yet read into the owner doc
+- **Decision:** `auto_fix` (safe docs change)
+- **Risk:** `low` · **Confidence:** medium
+- **Source:** https://developers.tiktok.com/doc/content-posting-api-get-started
+- **Owner doc:** `harness/references/tiktok-organic-posting-rules.md`
+- **Next step:** Review `harness/references/tiktok-organic-posting-rules.md` against the live page and update it
+
 ### [tiktok] TikTok Content Sharing Guidelines
 
-- **What changed:** Content hash changed (0253523af068 -> c88e566e0aa7)
+- **What changed:** Content hash changed (a159b43b2f5e -> 5802a983d1b8)
 - **Why it matters:** developer terms may have changed; API usage limits or content-usage rules may affect automations (area: API automation)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -60,7 +60,7 @@ Unchanged: 73
 
 ### [youtube] YouTube Community Guidelines
 
-- **What changed:** Content hash changed (088a19d3003f -> 952ba88727fe)
+- **What changed:** Content hash changed (6cc199468ef9 -> 53dbaa535e86)
 - **Why it matters:** allowed-content rules may have shifted; recheck the owner doc and the pre-publish gate (area: allowed content)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -72,7 +72,7 @@ Unchanged: 73
 
 ### [youtube] YouTube Fake Engagement Policy
 
-- **What changed:** Content hash changed (25cd1fe062ea -> dacfd65a7c07)
+- **What changed:** Content hash changed (6120bcb8f672 -> 4e7c24e666cd)
 - **Why it matters:** allowed-content rules may have shifted; recheck the owner doc and the pre-publish gate (area: allowed content)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -84,7 +84,7 @@ Unchanged: 73
 
 ### [youtube] YouTube GenAI Disclosure
 
-- **What changed:** Content hash changed (1255b1903b57 -> e1fc002c62b8)
+- **What changed:** Content hash changed (dbd46f088751 -> 6cbfdf5e48d0)
 - **Why it matters:** allowed-content rules may have shifted; recheck the owner doc and the pre-publish gate (area: allowed content)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -96,7 +96,7 @@ Unchanged: 73
 
 ### [youtube] YouTube Advertiser-Friendly Guideline Updates
 
-- **What changed:** Content hash changed (09abc52452cd -> 073d9de5e345)
+- **What changed:** Content hash changed (0a59246729e8 -> 436b90030c8c)
 - **Why it matters:** ad eligibility or prohibited-content rules may have changed; recheck ad copy gates before the next paid run (area: paid amplification)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -106,9 +106,21 @@ Unchanged: 73
 - **Owner doc:** `harness/references/youtube-organic-posting-rules.md`
 - **Next step:** Review `harness/references/youtube-organic-posting-rules.md` against the live page and update it
 
+### [pinterest] Pinterest Developer Guidelines
+
+- **What changed:** Content hash changed (5bc0ddfa9295 -> 0b23044172a7)
+- **Why it matters:** developer terms may have changed; API usage limits or content-usage rules may affect automations (area: API automation)
+- **Action taken:** Snapshot hash updated; change logged for owner-doc review
+- **Remaining risk:** The specific rule change is not yet read into the owner doc
+- **Decision:** `auto_fix` (safe docs change)
+- **Risk:** `low` · **Confidence:** medium
+- **Source:** https://policy.pinterest.com/en/developer-guidelines
+- **Owner doc:** `harness/references/pinterest-organic-posting-rules.md`
+- **Next step:** Review `harness/references/pinterest-organic-posting-rules.md` against the live page and update it
+
 ### [reddit] Reddit Public Content Policy
 
-- **What changed:** Content hash changed (6bb6c36c5f55 -> 71ea727f8346)
+- **What changed:** Content hash changed (6bb6c36c5f55 -> 912638befec0)
 - **Why it matters:** data-use or privacy terms may have changed; recheck what data automations may collect or store (area: privacy/data use)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -142,21 +154,21 @@ Unchanged: 73
 - **Owner doc:** `harness/references/meta-organic-posting-rules.md`
 - **Next step:** Find a canonical replacement URL for `threads_ai_labeling` or mark the registry entry deprecated
 
-### [tiktok] TikTok Developer Changelog
+### [meta] Graph API Changelog
 
-- **What changed:** Content hash changed (7e91e9c13bcd -> 87d4a81a24a5)
+- **What changed:** Content hash changed (e95ba8aafd66 -> b288dcf0f34c)
 - **Why it matters:** an API change may affect posting limits, required upload fields, or the scheduler (area: scheduling/rate limits)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
 - **Decision:** `auto_fix` (safe docs change)
 - **Risk:** `low` · **Confidence:** medium
-- **Source:** https://developers.tiktok.com/doc/changelog
-- **Owner doc:** `harness/references/tiktok-organic-posting-rules.md`
-- **Next step:** Review `harness/references/tiktok-organic-posting-rules.md` against the live page and update it
+- **Source:** https://developers.facebook.com/docs/graph-api/changelog/version25.0/
+- **Owner doc:** `harness/references/meta-organic-posting-rules.md`
+- **Next step:** Review `harness/references/meta-organic-posting-rules.md` against the live page and update it
 
 ### [youtube] YouTube Recommendation System
 
-- **What changed:** Content hash changed (54f3caea96a1 -> 9ba167c63092)
+- **What changed:** Content hash changed (9ba167c63092 -> 2165ed71f1f2)
 - **Why it matters:** ranking or eligibility guidance may have changed; recheck distribution playbooks (area: recommendation eligibility)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -166,9 +178,21 @@ Unchanged: 73
 - **Owner doc:** `knowledge/channels/youtube.md`
 - **Next step:** Review `knowledge/channels/youtube.md` against the live page and update it
 
+### [youtube] How YouTube Search Works
+
+- **What changed:** New source added to monitoring; baseline captured
+- **Why it matters:** ranking or eligibility guidance may have changed; recheck distribution playbooks (area: recommendation eligibility)
+- **Action taken:** Baseline snapshot captured
+- **Remaining risk:** No prior baseline to diff against yet
+- **Decision:** `auto_fix` (safe snapshot change)
+- **Risk:** `low` · **Confidence:** medium
+- **Source:** https://support.google.com/youtube/answer/16090438?hl=en
+- **Owner doc:** `knowledge/channels/youtube.md`
+- **Next step:** Confirm the owner doc reflects current guidance
+
 ### [youtube] YouTube Search and Discovery Tips
 
-- **What changed:** Content hash changed (25e029ef6950 -> e80c124e249c)
+- **What changed:** Content hash changed (7515543535a5 -> bd2004161e7f)
 - **Why it matters:** ranking or eligibility guidance may have changed; recheck distribution playbooks (area: recommendation eligibility)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -180,7 +204,7 @@ Unchanged: 73
 
 ### [youtube] YouTube Paid Promotion Declarations
 
-- **What changed:** Content hash changed (4faf966a2682 -> 6fbdd53433c7)
+- **What changed:** Content hash changed (3d2733a61716 -> b4cabfc65cfc)
 - **Why it matters:** branded-content or disclosure requirements may have changed; recheck commercial-disclosure rules (area: commercial disclosure)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -192,7 +216,7 @@ Unchanged: 73
 
 ### [youtube] YouTube Spam Policy
 
-- **What changed:** Content hash changed (a34036709e99 -> 2940d9fe82fd)
+- **What changed:** Content hash changed (27767d93df4a -> 0b7da599c2aa)
 - **Why it matters:** allowed-content rules may have shifted; recheck the owner doc and the pre-publish gate (area: allowed content)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -204,32 +228,31 @@ Unchanged: 73
 
 ### [reddit] Reddit Spam Policy
 
-- **What changed:** Previously broken source is reachable again
+- **What changed:** Source unreachable (HTTP Error 403: Forbidden)
 - **Why it matters:** allowed-content rules may have shifted; recheck the owner doc and the pre-publish gate (area: allowed content)
-- **Action taken:** Snapshot refreshed now that the source is reachable
-- **Remaining risk:** Confirm the recovered page still matches the owner doc
-- **Decision:** `auto_fix` (safe snapshot change)
-- **Risk:** `low` · **Confidence:** high
+- **Action taken:** Flagged for manual review; registry entry left unchanged
+- **Remaining risk:** Guidance for this source cannot be verified until the link is fixed or replaced
+- **Decision:** `escalate` (source unresolved; needs manual review)
+- **Risk:** `medium` · **Confidence:** high
 - **Source:** https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
 - **Owner doc:** `harness/references/reddit-organic-posting-rules.md`
-- **Next step:** Spot-check `harness/references/reddit-organic-posting-rules.md`
+- **Next step:** Find a canonical replacement URL for `reddit_spam_policy` or mark the registry entry deprecated
 
 ### [reddit] Reddit Responsible Builder Policy
 
-- **What changed:** Content hash changed (e7054729961b -> 43811818b773)
+- **What changed:** Content hash changed (db216492abc6 -> 060576c462fc)
 - **Why it matters:** developer terms may have changed; API usage limits or content-usage rules may affect automations (area: API automation)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
 - **Decision:** `auto_fix` (safe docs change)
 - **Risk:** `low` · **Confidence:** medium
 - **Source:** https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
-- **Monitor fetch URL:** https://old.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
 - **Owner doc:** `harness/references/reddit-organic-posting-rules.md`
 - **Next step:** Review `harness/references/reddit-organic-posting-rules.md` against the live page and update it
 
 ### [reddit] Developer Platform & Accessing Reddit Data
 
-- **What changed:** Content hash changed (00ea93121695 -> 5f67fe463b62)
+- **What changed:** Content hash changed (0dc68857a9a3 -> 27879efae1dd)
 - **Why it matters:** developer terms may have changed; API usage limits or content-usage rules may affect automations (area: API automation)
 - **Action taken:** Snapshot hash updated; change logged for owner-doc review
 - **Remaining risk:** The specific rule change is not yet read into the owner doc
@@ -253,11 +276,11 @@ Unchanged: 73
 - `unchanged` [instagram] Instagram Algorithms and Ranking - https://creators.instagram.com/grow/algorithms-and-ranking
 - `unchanged` [instagram] Instagram Reels Chaining - https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/
 - `unchanged` [linkedin] LinkedIn Prohibited Software and Extensions - https://www.linkedin.com/help/linkedin/answer/a1341387
-- `unchanged` [linkedin] LinkedIn Marketing API Recent Changes - https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-05
+- `unchanged` [linkedin] LinkedIn Marketing API Recent Changes - https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-07
 - `unchanged` [linkedin] LinkedIn API Terms of Use - https://www.linkedin.com/legal/l/api-terms-of-use
-- `unchanged` [linkedin] LinkedIn Developer AI Policy - https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-05
+- `unchanged` [linkedin] LinkedIn Developer AI Policy - https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-07
 - `unchanged` [linkedin] LinkedIn Marketing API Terms - https://www.linkedin.com/legal/l/marketing-api-terms
-- `unchanged` [linkedin] LinkedIn Posts API - https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-05
+- `unchanged` [linkedin] LinkedIn Posts API - https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-07
 - `unchanged` [linkedin] LinkedIn Professional Community Policies - https://www.linkedin.com/help/linkedin/answer/a403270/linkedin-professional-community-policies
 - `unchanged` [linkedin] LinkedIn Publishing Platform Guidelines - https://www.linkedin.com/help/linkedin/answer/a519782
 - `unchanged` [linkedin] How LinkedIn Feed Ranks Content - https://www.linkedin.com/help/linkedin/answer/a9554004
@@ -267,7 +290,7 @@ Unchanged: 73
 - `unchanged` [mastodon] Mastodon Posting Guide - https://docs.joinmastodon.org/user/posting/
 - `unchanged` [mastodon] Mastodon Quote Posts Guide - https://docs.joinmastodon.org/user/quote-posts/
 - `unchanged` [meta] Meta Advertising Standards - https://transparency.meta.com/policies/ad-standards/
-- `unchanged` [meta] Graph API Changelog - https://developers.facebook.com/docs/graph-api/changelog/
+- `changed` [meta] Graph API Changelog - https://developers.facebook.com/docs/graph-api/changelog/version25.0/
 - `unchanged` [meta] Meta Other Policies Hub - https://transparency.meta.com/policies/other-policies/
 - `unchanged` [meta] Meta Developer Policies - https://developers.facebook.com/devpolicy/
 - `unchanged` [meta] Meta Community Standards - https://transparency.meta.com/policies/community-standards/
@@ -276,7 +299,7 @@ Unchanged: 73
 - `unchanged` [pinterest] Pinterest GenAI Acceptable Use Guidelines - https://policy.pinterest.com/en/genai-acceptable-use-guidelines
 - `unchanged` [pinterest] Pinterest Commercial and Branded Content Guidelines - https://policy.pinterest.com/en/commercial-and-branded-content-guidelines
 - `unchanged` [pinterest] Pinterest API v5 - https://developers.pinterest.com/docs/api/v5/
-- `unchanged` [pinterest] Pinterest Developer Guidelines - https://policy.pinterest.com/en-gb/developer-guidelines
+- `changed` [pinterest] Pinterest Developer Guidelines - https://policy.pinterest.com/en/developer-guidelines
 - `unchanged` [pinterest] Pinterest Developer and API Terms - https://developers.pinterest.com/terms/
 - `unchanged` [pinterest] Pinterest Community Guidelines - https://policy.pinterest.com/en/community-guidelines
 - `unchanged` [pinterest] Pinterest Business Terms - https://business.pinterest.com/business-terms-of-service/
@@ -290,7 +313,7 @@ Unchanged: 73
 - `unchanged` [reddit] Reddit Responsible Builder Policy Announcement - https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
 - `unchanged` [reddit] Reddit Content Policy - https://redditinc.com/policies/content-policy
 - `unchanged` [reddit] Reddit Rules - https://redditinc.com/policies/reddit-rules
-- `unchanged` [reddit] Reddit Spam Policy - https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
+- `error` [reddit] Reddit Spam Policy - https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
 - `unchanged` [reddit] Reddit User Agreement - https://redditinc.com/policies/user-agreement
 - `unchanged` [snapchat] Snap Commercial Content Policy - https://values.snap.com/policy/content-guidelines-recommendation-eligibility/recommendation-eligibility/commercial-content
 - `unchanged` [snapchat] Snap for Developers - https://developers.snap.com/
@@ -308,15 +331,15 @@ Unchanged: 73
 - `error` [threads] Threads Terms - https://help.instagram.com/769983657850450
 - `unchanged` [tiktok] TikTok Ad Policy Change Log 2026 - https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026
 - `unchanged` [tiktok] TikTok AI-Generated Content - https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/
-- `changed` [tiktok] TikTok Developer Changelog - https://developers.tiktok.com/doc/changelog
+- `unchanged` [tiktok] TikTok Developer Changelog - https://developers.tiktok.com/doc/changelog
 - `unchanged` [tiktok] TikTok Promoting a Brand, Product, or Service - https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers
 - `unchanged` [tiktok] Commercial Use of Music on TikTok - https://ads.tiktok.com/help/article/commercial-music-library
-- `unchanged` [tiktok] TikTok Content Posting API - https://developers.tiktok.com/doc/content-posting-api-get-started
+- `changed` [tiktok] TikTok Content Posting API - https://developers.tiktok.com/doc/content-posting-api-get-started
 - `changed` [tiktok] TikTok Content Sharing Guidelines - https://developers.tiktok.com/doc/content-sharing-guidelines
 - `unchanged` [tiktok] TikTok Community Guidelines - https://www.tiktok.com/community-guidelines/en/
 - `unchanged` [tiktok] Why Is My Account Not Being Recommended? - https://www.tiktok.com/community-guidelines/en/for-you-feed-and-search/
 - `unchanged` [tiktok] How TikTok Recommends Content - https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content
-- `error` [x] X Automation Rules - https://help.x.com/en/rules-and-policies/x-automation
+- `unchanged` [x] X Automation Rules - https://help.x.com/en/rules-and-policies/x-automation
 - `unchanged` [x] X API Changelog - https://docs.x.com/changelog
 - `unchanged` [x] X Developer Policy - https://docs.x.com/developer-terms/policy
 - `error` [x] X Rules - https://help.x.com/en/rules-and-policies/x-rules
@@ -333,3 +356,4 @@ Unchanged: 73
 - `changed` [youtube] YouTube Recommendation System - https://support.google.com/youtube/answer/16533387?hl=en
 - `unchanged` [youtube] Recommendations on YouTube - https://www.youtube.com/howyoutubeworks/recommendations/
 - `changed` [youtube] YouTube Search and Discovery Tips - https://support.google.com/youtube/answer/11914225?hl=en
+- `new` [youtube] How YouTube Search Works - https://support.google.com/youtube/answer/16090438?hl=en

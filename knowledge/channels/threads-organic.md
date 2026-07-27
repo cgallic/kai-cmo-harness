@@ -10,7 +10,7 @@ Primary references:
 - Threads/fediverse help: https://help.instagram.com/169559812696339
 - Meta organic rules: `harness/references/meta-organic-posting-rules.md`
 
-Last researched: 2026-07-20
+Last researched: 2026-07-27
 
 ## Channel Role
 
@@ -23,6 +23,7 @@ Use Threads for public conversation, founder POV, fast reactions, soft community
 - Community and personalization features can shift distribution quickly. Monitor official Threads changelog and Meta Newsroom.
 - The API surface is expanding beyond text posting. Current official changelog items include share-to-Instagram Stories, location tagging, geo-gated content, and post-link limits, so feature-specific automations need a live capability check before they queue. Source: https://developers.facebook.com/docs/threads/changelog/ (accessed 2026-06-29).
 - Threads-specific Terms of Use supplement the Instagram Terms of Use, so do not assume Instagram-only product help is the whole policy surface for Threads workflows. Source: https://help.instagram.com/769983657850450 (accessed 2026-07-20 in browser/search).
+- Threads' current AI-labeling help says content may be labeled automatically when Meta detects AI signals, and creators can also self-label AI-generated or AI-modified content before sharing. Source: https://help.instagram.com/407718162047721/ (accessed 2026-07-27 in browser/search).
 - Fediverse sharing changes who can see, quote, or interact with content depending on settings and server behavior. Meta's current fediverse help also warns that shared Threads content can travel to other servers and privacy expectations change once content leaves the Threads-only surface. Sources: https://help.instagram.com/169559812696339 and https://help.instagram.com/387800897233223/ (accessed 2026-07-20 in browser/search).
 
 ## Guardrails

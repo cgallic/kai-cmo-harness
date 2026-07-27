@@ -1,6 +1,6 @@
 # Meta, Instagram, Facebook, and Threads Organic Posting Rules
 
-Last researched: 2026-06-29
+Last researched: 2026-07-27
 
 Primary sources:
 - Meta Community Standards: https://transparency.meta.com/policies/community-standards/
@@ -26,12 +26,13 @@ Primary sources:
 - Treat AI-generated content, synthetic media, affiliate content, contests, testimonials, and regulated goods as policy-sensitive.
 - Check Meta Advertising Standards before boosting any organic post.
 - Check Meta's other-policies hub before branded content, affiliate, partner, Page-admin, or group/community publishing workflows.
+- Treat Threads Terms as supplemental to Instagram Terms for Threads workflows. Do not assume Instagram-only product help covers Threads publishing, identity, or federation-specific obligations. Source: https://help.instagram.com/769983657850450 (accessed 2026-07-27 in browser/search).
 - Use only approved APIs and permission scopes for posting, moderation, messaging, insights, or Threads management.
 - Keep user consent, token scope, and account ownership records for any scheduled/published content.
 - Check live Instagram/Threads API docs before scheduling. Current Meta publishing-limit language can differ by guide and endpoint.
 - If Instagram content is AI-generated or meaningfully AI-altered, set the API self-disclosure field at publish time. The Instagram Platform changelog says `is_ai_generated=true` now applies the AI Info label on media or carousel containers. Source: https://developers.facebook.com/docs/instagram-platform/changelog/ (accessed 2026-06-29).
 - Review Community Notes exposure for factual, political, health, finance, public-interest, or brand-claim posts.
-- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing. Threads can auto-label detected AI signals, but creators still need to label when required.
+- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing. Threads' current help article says content may be auto-labeled when Meta detects AI signals, but creators still need to label AI-generated or AI-modified content when required. Source: https://help.instagram.com/407718162047721/ (accessed 2026-07-27 in browser/search).
 
 ## Organic Distribution Guidance
 

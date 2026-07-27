@@ -2,7 +2,7 @@
 
 > **Use when**: Scheduling X posts, generating X replies, setting up automation, planning contests, using creator/affiliate disclosures, or preparing organic posts that may later become promoted posts.
 
-Last updated: 2026-07-20
+Last updated: 2026-07-27
 
 Ruleset ID: `x_twitter_posting_automation_2026_06_17`
 
@@ -60,6 +60,7 @@ Every X publishing workflow must set:
 - Keep development, staging, and production API applications clearly identified and do not use development or staging apps for production.
 - Keep API keys and access credentials private.
 - Respect API rate limits and plan limits. Do not circumvent limits.
+- For self-serve API access, only send a programmatic reply when the original author has explicitly summoned the replying account, such as by @mentioning it or quoting one of its Posts. X's February 23, 2026 changelog says additional restrictions also apply to programmatic @mentions and quotes on self-serve tiers. Source: https://docs.x.com/changelog (accessed 2026-07-27).
 - For X search/listening automations, assume the v2 search endpoints now use X's core search index. X's May 4, 2026 API changelog says keyword-based search no longer returns reposts and adds `min_likes:`, `min_replies:`, and `min_reposts:` precision operators. Source: https://docs.x.com/changelog (accessed 2026-07-20).
 - Preserve X Content integrity when displaying posts through the API, and remove unavailable content promptly when required.
 - Keep professional profiles authentic, complete, and clearly identified.
@@ -79,6 +80,7 @@ Block publishing when any condition is true:
 - Automation targets trends or attempts to influence trends.
 - The workflow sends unsolicited bulk automated replies, mentions, or DMs.
 - The workflow uses keyword-search auto-replies without opt-in.
+- The workflow uses self-serve API replies, quotes, or @mentions unless the original author has explicitly summoned the account first.
 - The workflow uses automated likes, automated reply hiding, aggressive automated reposting, follow churn, list adds, or collection adds.
 - The post uses misleading links, deceptive redirects, phishing, malicious URLs, fraudulent discounts, money-flipping, scams, or social engineering.
 - The account or post creates impersonation or confusing affiliation risk.

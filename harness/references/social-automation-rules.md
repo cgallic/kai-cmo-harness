@@ -1,6 +1,6 @@
 # Social Automation Rules
 
-Last researched: 2026-07-20
+Last researched: 2026-07-27
 
 Use this before any scheduled post, API publish, reply automation, DM flow, data collection, listening job, or engagement workflow.
 
@@ -35,5 +35,9 @@ Only use platform-approved APIs, official partner tools, or a user-controlled sc
 - [ ] No scraping or enrichment outside approved APIs and retention terms.
 - [ ] No duplicate-content evasion or near-duplicate cross-account posting.
 - [ ] Human approval captured before live-channel mutation unless Connor explicitly approved autonomous publishing.
+
+X's current API changelog says self-serve programmatic replies are only allowed when the original author has explicitly summoned the account, such as by @mention or quote. Treat reactive X reply bots as blocked on self-serve tiers unless that exact condition is satisfied. Source: https://docs.x.com/changelog (accessed 2026-07-27).
+
+Reddit's current developer-access help says ads-backed or paywalled use of displayed Reddit content requires Reddit's permission and contract path, and apps cannot display Reddit content while also running advertisements without that approval. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data (accessed 2026-07-27).
 
 Reddit's July 2026 developer-access help says monetized publishing of Reddit content, paid services, ads-backed use cases, and model training all require Reddit permission or contract review before launch. Reddit's current Data API Terms also require use of Reddit-issued OAuth/user-agent identity and prohibit deriving revenue from Data API access without written approval. Sources: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data and https://redditinc.com/policies/data-api-terms (accessed 2026-07-20).
