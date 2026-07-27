@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — 2026-07-27
+
+### New skill: `/kai-client-dashboard`
+
+- Added `harness/skills/kai-client-dashboard/SKILL.md`: builds a white-labeled, client-facing intelligence dashboard for an agency's own clients — brand auto-extraction from the client's URL, a three-tier build (Basic/Standard/Advanced), an onboarding feature wizard, a 10-page inventory, a Deliverables page, and an Agent Registry page populated from real scheduled work
+- Distinguished from existing dashboard surfaces rather than duplicating them: `/kai-data-dashboard` remains the data/spec layer this skill calls once sources are connected, and `scripts/build_dashboard.py` remains the operator's own internal ops dashboard, not a client deliverable
+- Public-access guidance is provenance-gated: default public/no-login posture is scoped to aggregate metrics only, with an explicit split-access or obscured-and-gated pattern required before any PII-bearing page (Leads, Communications, deal data) ships, per `knowledge/checklists/privacy-sanitizer-checklist.md`
+- SMS/prerecorded-voice engagement automation requires a logged consent and opt-out path per `harness/skills/kai-sdr-operator/references/compliance-matrix.md` before enrollment
+- Added the manifest page (`docs/skill-manifest/kai-client-dashboard.md`), registered the skill in the `/kai` router and README command tables, cross-linked it from `kai-data-dashboard`, and refreshed skill-count references across `AGENTS.md`, `README.md`, `docs/skill-manifest/README.md`, and the router (55 skill directories, 53 canonical `kai-*` skills, 48 public `/kai` commands, 46 manifest pages)
+
 ## Unreleased — 2026-07-22 (second pass)
 
 ### Adoption-focused README + status-table completions

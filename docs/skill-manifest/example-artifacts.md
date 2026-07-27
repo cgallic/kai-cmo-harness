@@ -22,6 +22,7 @@ This inventory is limited to repo-owned artifact areas: `workspace/`, `examples/
 | `kai-brief` | [Northstar Media Lab brief](../../workspace/demo-clients/northstar-media-lab/brief.md) | This is a concrete client/demo brief used by downstream email and presentation outputs. |
 | `kai-budget` | [growth budget allocation](../../workspace/growth-plan/_budget-allocation.md) | This is a dedicated budget allocation artifact inside the growth-plan package. |
 | `kai-case-study` | [GeoLinks case study](../../workspace/case-study-geolinks-2026-05-08.md) | This is a full case study draft with source notes, snapshot, challenge, and answer sections. |
+| `kai-client-dashboard` | No committed example artifact found | No client-facing dashboard build (brand shell, page set, or deployed instance) was found in the searched artifact folders. |
 | `kai-cold-outreach` | No committed example artifact found | The searched folders include launch, lifecycle, sales, and retention emails, but no cold outreach sequence artifact. |
 | `kai-competitors` | [competitive intelligence reassessment](../competitive-intelligence-reassessment.md); [competitive review prompt](../competitive-review-prompt.md) | These are real competitive analysis and review artifacts from the repo docs. |
 | `kai-content-calendar` | No committed example artifact found | Launch and growth files include planned content ideas, but no calendar-form artifact for dates, channels, owners, and topics was found. |
