@@ -51,10 +51,10 @@ def _minimal_tree(root: Path) -> None:
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
     assert inventory["counts"] == {
-        "skill_directories": 54,
-        "canonical_kai_skills": 52,
-        "public_router_commands": 47,
-        "public_manifest_pages": 45,
+        "skill_directories": 55,
+        "canonical_kai_skills": 53,
+        "public_router_commands": 48,
+        "public_manifest_pages": 46,
         "undocumented_canonical_skills": 7,
         "playbook_docs": 67,
         "checklists": 37,

@@ -1,6 +1,6 @@
 # Kai Public Skill Manifest
 
-This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 45 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
+This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 46 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
 New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those commands show the core loop: read the repo, pick distribution, create the work, check the work, and keep the record.
 
@@ -55,6 +55,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 
 - [Kai Ad Campaign](./kai-ad-campaign.md) - `kai-ad-campaign`
 - [Kai Case Study](./kai-case-study.md) - `kai-case-study`
+- [Kai Client Dashboard](./kai-client-dashboard.md) - `kai-client-dashboard`
 - [Kai Content Calendar](./kai-content-calendar.md) - `kai-content-calendar`
 - [Kai HTML Presentation](./kai-html-presentation.md) - `kai-html-presentation`
 - [Kai Influencer](./kai-influencer.md) - `kai-influencer`
@@ -103,7 +104,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 
 | Surface | Count | Notes |
 |---|---:|---|
-| Canonical `harness/skills/kai-*` pages | 45 | One manifest page per canonical public `kai-*` skill page. |
+| Canonical `harness/skills/kai-*` pages | 46 | One manifest page per canonical public `kai-*` skill page. |
 | Router/helper directories excluded | 2 | `harness/skills/kai` and `harness/skills/kaicalls-design`. |
 | Public router commands listed by `/kai` | 42 | Router-visible commands remain separate from the full canonical skill inventory. |
 | Manifest rule IDs | 82 | Defined in `rule-registry.md`; derived from local methodology docs. |

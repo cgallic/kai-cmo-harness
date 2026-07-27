@@ -40,8 +40,8 @@ Three complete worked examples — brief, draft, and scorecard — live in [`dem
 
 ## What You Get
 
-- **47 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
-- **52 `kai-*` skills** with triggers, inputs, outputs, gates, provenance, and failure modes.
+- **48 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
+- **53 `kai-*` skills** with triggers, inputs, outputs, gates, provenance, and failure modes.
 - **A real knowledge base**: 67 playbooks, 36 checklists, 33 frameworks, 26 channel guides, 8 personas, platform policy references, and 33 skill contracts.
 - **Guardrails built in**: Four U's scoring, banned-word checks, SEO lint, policy references, provenance lint, privacy scanning, and mutation-risk lint.
 - **Local-first by default**: use it inside Claude Code from your repo before wiring live channels.
@@ -153,9 +153,9 @@ Verify any install from a clone:
 python scripts/doctor.py   # confirms referenced files exist, gates run, golden corpus passes
 ```
 
-## The 47 Public `/kai` Commands
+## The 48 Public `/kai` Commands
 
-The tables below list the 47 public router commands plus `/kai-start`, the onboarding skill that bootstraps every project. These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. Type `/kai` for the router and help menu. The [public skill manifest](docs/skill-manifest/README.md) documents 45 canonical `kai-*` skill pages with the same schema: triggers, inputs, outputs, gates, provenance, and failure modes.
+The tables below list the 48 public router commands plus `/kai-start`, the onboarding skill that bootstraps every project. These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. Type `/kai` for the router and help menu. The [public skill manifest](docs/skill-manifest/README.md) documents 46 canonical `kai-*` skill pages with the same schema: triggers, inputs, outputs, gates, provenance, and failure modes.
 
 ### Produce marketing assets
 
@@ -178,6 +178,7 @@ The tables below list the 47 public router commands plus `/kai-start`, the onboa
 | `/kai-reddit-listen` | Monitor subreddits and draft profile-driven replies to Discord |
 | `/kai-newsletter` | Newsletter editions, subject lines, and structure |
 | `/kai-case-study` | Customer case study from interview notes or product data |
+| `/kai-client-dashboard` | White-labeled, client-facing intelligence dashboard with brand shell, page set, and retention plays |
 | `/kai-product-maker` | Ship a Gumroad-ready digital product: ebook, card deck, flipbook, or guide |
 | `/kai-repurpose` | One source asset turned into 15–25 channel-native pieces |
 | `/kai-launch` | Product launch system: emails, ads, PR, social, content, and timeline |
@@ -249,7 +250,7 @@ kai-cmo-harness/
 ├── plugins/kai-marketing-os/      # Plugin package
 │
 ├── harness/                       # Operator surface
-│   ├── skills/                    # /kai router + 52 kai-* skills + kaicalls-design
+│   ├── skills/                    # /kai router + 53 kai-* skills + kaicalls-design
 │   ├── skill-contracts/           # 33 per-format output contracts (YAML)
 │   ├── references/                # Ad policies, organic rules, compliance references
 │   ├── voice-gate/                # LLM-as-judge voice-consistency gate
@@ -385,11 +386,13 @@ python -m http.server 8000
 
 Deploy it by clicking **One-Click Deploy** in the dashboard (Netlify token required), running `./deploy.sh` (macOS/Linux) or `deploy.bat` (Windows), or pushing the repo to Vercel/Netlify — `vercel.json` and `netlify.toml` are included.
 
+This is the operator's own dashboard, not a client deliverable. To stand up a white-labeled, client-facing dashboard for one of your own clients, use `/kai-client-dashboard`.
+
 ## Current Status (v1.0.0, updated July 2026)
 
 | Layer | Status | Notes |
 |-------|--------|-------|
-| Claude Code skill surface | Working | 47 public `/kai` router commands and 52 `kai-*` skills load repo context, frameworks, contracts, and policy references |
+| Claude Code skill surface | Working | 48 public `/kai` router commands and 53 `kai-*` skills load repo context, frameworks, contracts, and policy references |
 | Runtime models + persistence | Built | Atomic writes, thread-safe records, audit log |
 | Business profiling + audit engines | Built | Archetype detection, overlay inference, 8 audit categories, severity-weighted scoring, and multi-location support |
 | Proposal ranking + bundling | Built | 5-factor weighted, dependency-aware |

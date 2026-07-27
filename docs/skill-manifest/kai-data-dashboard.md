@@ -58,6 +58,7 @@ This skill applies manifest-level rule IDs from [rule-registry.md](./rule-regist
 - [kai-sdr-operator](./kai-sdr-operator.md)
 - [kai-weekly-audit](./kai-weekly-audit.md)
 - [kai-monthly-audit](./kai-monthly-audit.md)
+- [kai-client-dashboard](./kai-client-dashboard.md)
 
 ### Quality gates
 - Every number has a source, retrieval date, or `internal_demo` label.

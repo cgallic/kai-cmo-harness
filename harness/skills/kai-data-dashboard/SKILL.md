@@ -9,7 +9,7 @@ description: Convert Kai workflow data, CSV exports, audit folders, SDR package 
 
 Turn existing Kai artifacts into a dashboard spec, data contract, or lightweight static dashboard. This skill is a companion surface. It should not replace analytics setup, audit analysis, or outbound strategy.
 
-Use `/kai-analytics` when the user needs a tracking plan or attribution model. Use `/kai-html-presentation` when the user needs a client-ready audit deck. Use this skill when the data already exists and needs to become a dashboard-ready operator surface.
+Use `/kai-analytics` when the user needs a tracking plan or attribution model. Use `/kai-html-presentation` when the user needs a client-ready audit deck. Use `/kai-client-dashboard` when the ask is a durable, white-labeled, client-facing product with its own onboarding wizard and page set — that skill calls this one for the data-contract layer underneath it. Use this skill when the data already exists and needs to become a dashboard-ready operator surface.
 
 ## Phase 0: Identify The Source
 

@@ -1,9 +1,9 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 47 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 48 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 47 Marketing Skills
+# Kai Marketing OS - 48 Marketing Skills
 
 > **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
@@ -49,6 +49,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 | `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
 | `/kai-newsletter` | Newsletter editions — content, subject lines, scheduling |
 | `/kai-case-study` | Customer case studies from interview/data |
+| `/kai-client-dashboard` | White-labeled, client-facing intelligence dashboard — brand shell, page set, retention plays |
 | `/kai-product-maker` | Ship a Gumroad-ready digital product — ebook, card deck, flipbook |
 | `/kai-repurpose` | 1 pillar → 15-25 assets across all channels |
 | `/kai-content-batching` | Pillars → gated 30-day multi-platform content batch |
