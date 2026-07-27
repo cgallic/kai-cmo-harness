@@ -70,43 +70,48 @@ def _fetch_source(source: dict[str, Any], timeout: int) -> dict[str, Any]:
     errors: list[dict[str, Any]] = []
     urls = [source["url"], *source.get("fallback_urls", [])]
     source_timeout = int(source.get("timeout", timeout))
+    retries = max(1, int(source.get("retries", 2)))
 
     for candidate_url in urls:
-        req = Request(
-            candidate_url,
-            headers=_headers_for_url(candidate_url),
-        )
-        started = time.monotonic()
-        try:
-            with urlopen(req, timeout=source_timeout) as response:
-                body = response.read()
-                content_type = response.headers.get("content-type", "")
-                cleaned = _clean_text(body, content_type)
-                _validate_source_content(source, cleaned)
-                digest = hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
-                result = {
-                    "ok": True,
-                    "status_code": getattr(response, "status", None),
-                    "content_hash": digest,
-                    "content_length": len(cleaned),
-                    "fetched_at": datetime.now(timezone.utc).isoformat(),
-                    "elapsed_ms": int((time.monotonic() - started) * 1000),
-                    "etag": response.headers.get("etag"),
-                    "last_modified": response.headers.get("last-modified"),
-                    "content_type": content_type,
-                }
-                if candidate_url != source["url"]:
-                    result["resolved_url"] = candidate_url
-                return result
-        except HTTPError as exc:
-            error = _error_result(exc, getattr(exc, "code", None), started)
-        except URLError as exc:
-            error = _error_result(exc, None, started)
-        except TimeoutError as exc:
-            error = _error_result(exc, None, started)
+        for attempt in range(1, retries + 1):
+            req = Request(
+                candidate_url,
+                headers=_headers_for_url(candidate_url),
+            )
+            started = time.monotonic()
+            try:
+                with urlopen(req, timeout=source_timeout) as response:
+                    body = response.read()
+                    content_type = response.headers.get("content-type", "")
+                    cleaned = _clean_text(body, content_type)
+                    _validate_source_content(source, cleaned)
+                    digest = hashlib.sha256(cleaned.encode("utf-8")).hexdigest()
+                    result = {
+                        "ok": True,
+                        "status_code": getattr(response, "status", None),
+                        "content_hash": digest,
+                        "content_length": len(cleaned),
+                        "fetched_at": datetime.now(timezone.utc).isoformat(),
+                        "elapsed_ms": int((time.monotonic() - started) * 1000),
+                        "etag": response.headers.get("etag"),
+                        "last_modified": response.headers.get("last-modified"),
+                        "content_type": content_type,
+                    }
+                    if candidate_url != source["url"]:
+                        result["resolved_url"] = candidate_url
+                    return result
+            except HTTPError as exc:
+                error = _error_result(exc, getattr(exc, "code", None), started)
+            except URLError as exc:
+                error = _error_result(exc, None, started)
+            except TimeoutError as exc:
+                error = _error_result(exc, None, started)
 
-        error["attempted_url"] = candidate_url
-        errors.append(error)
+            error["attempted_url"] = candidate_url
+            error["attempt"] = attempt
+            if attempt < retries:
+                time.sleep(1)
+            errors.append(error)
 
     final_error = errors[-1] if errors else _error_result(RuntimeError("fetch failed"), None, time.monotonic())
     final_error["attempted_urls"] = urls

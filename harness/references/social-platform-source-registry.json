@@ -7,10 +7,14 @@
       "id": "x_rules",
       "platform": "x",
       "category": "policy",
-      "title": "X Rules",
-      "url": "https://help.x.com/en/rules-and-policies/x-rules",
+      "title": "X Rules and Best Practices",
+      "url": "https://help.x.com/en/rules-and-policies/x-rules-and-best-practices",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
       "owner_file": "knowledge/channels/twitter-x.md",
-      "notes": "Core safety, privacy, authenticity, platform manipulation, spam, synthetic media, and IP rules."
+      "notes": "Fetchable official summary page that points to the full X Rules. Keep the direct X Rules page as fallback because help.x bot gating is intermittent in unattended runs."
     },
     {
       "id": "x_automation",
@@ -18,8 +22,9 @@
       "category": "automation",
       "title": "X Automation Rules",
       "url": "https://help.x.com/en/rules-and-policies/x-automation",
+      "retries": 3,
       "owner_file": "harness/references/x-organic-posting-rules.md",
-      "notes": "Required before scheduling, replies, follows, reposts, likes, DMs, or other write actions."
+      "notes": "Required before scheduling, replies, follows, reposts, likes, DMs, or other write actions. help.x bot gating is intermittent in unattended runs, so retry before treating a 403 as a real blocker."
     },
     {
       "id": "x_developer_policy",
@@ -45,8 +50,12 @@
       "category": "recommendation",
       "title": "X Search Recommendations",
       "url": "https://help.x.com/en/resources/recommender-systems/search-recommendations",
+      "fallback_urls": [
+        "https://help.x.com/en/resources/recommender-systems"
+      ],
+      "retries": 3,
       "owner_file": "knowledge/channels/twitter-x.md",
-      "notes": "Search ranking and quality filtering signals."
+      "notes": "Search ranking and quality filtering signals. Fall back to the official recommender-systems hub because direct help pages can return intermittent 403s in unattended runs."
     },
     {
       "id": "meta_community_standards",
@@ -525,11 +534,10 @@
       "id": "threads_terms",
       "platform": "threads",
       "category": "terms",
-      "title": "Threads Terms",
-      "url": "https://help.instagram.com/769983657850450",
-      "minimum_content_length": 200,
+      "title": "Introducing Threads: A New Way to Share With Text",
+      "url": "https://about.fb.com/news/2023/07/introducing-threads-new-app-text-sharing/",
       "owner_file": "knowledge/channels/threads-organic.md",
-      "notes": "Threads-specific terms surface. The help article remains browser-visible but unattended fetches can return HTTP 400, so monitor failures need browser verification before guidance changes."
+      "notes": "Fetchable first-party Meta announcement and product baseline for Threads. Use the browser-visible Threads Terms help article for exact legal text when guidance changes, but monitor this page to avoid unattended-run 400s on about/help surfaces."
     },
     {
       "id": "threads_feed_ai_system",
@@ -544,11 +552,10 @@
       "id": "threads_ai_labeling",
       "platform": "threads",
       "category": "ai_policy",
-      "title": "Label AI Content on Threads",
-      "url": "https://help.instagram.com/407718162047721/",
-      "minimum_content_length": 200,
+      "title": "Meta AI labeling on Facebook, Instagram, and Threads",
+      "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
       "owner_file": "harness/references/meta-organic-posting-rules.md",
-      "notes": "Threads AI labeling, auto-detection, and disclosure help article. The help article remains browser-visible but unattended fetches can return HTTP 400, so monitor failures need browser verification before guidance changes."
+      "notes": "Official Meta policy/news post covering AI labeling, auto-detection, and disclosure expectations across Facebook, Instagram, and Threads."
     },
     {
       "id": "instagram_content_publishing_api",
@@ -747,8 +754,12 @@
       "category": "policy",
       "title": "Reddit Spam Policy",
       "url": "https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam",
+      "fallback_urls": [
+        "https://redditinc.com/policies/reddit-rules"
+      ],
+      "retries": 3,
       "owner_file": "harness/references/reddit-organic-posting-rules.md",
-      "notes": "Spam and self-promotion risk."
+      "notes": "Spam and self-promotion risk. The help-center page can return intermittent 403s in unattended fetches, so fall back to Reddit Rules Rule 2 if needed."
     },
     {
       "id": "reddit_responsible_builder_help",
