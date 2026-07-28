@@ -327,7 +327,21 @@ COWORK_MAX_BYTES = 200 * 1024 * 1024
 
 
 def check_eco(report: Report) -> None:
-    """The ECO gate must load its floors and refuse a self-issued verdict."""
+    """The ECO gate must load its floors and refuse a self-issued verdict.
+
+    Doctor itself is stdlib-only, so the semantic half of this check runs only
+    when PyYAML is available (it is an optional dep).  `tests/test_eco.py`
+    enforces the same invariants where dependencies are installed.
+    """
+    floors_path = REPO_ROOT / "harness" / "eco-floors.yaml"
+    if not floors_path.exists():
+        report.fail("harness/eco-floors.yaml is missing — no work type has a declared floor")
+        return
+
+    if importlib.util.find_spec("yaml") is None:
+        report.warn("pyyaml not installed — ECO floor/verdict checks skipped (tests/test_eco.py covers them)")
+        return
+
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
     try:

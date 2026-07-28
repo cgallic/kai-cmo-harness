@@ -41,7 +41,15 @@ try:  # full repo, or plugin install with `scripts` on the path
         EcoFloors,
         EcoRecordStore,
     )
-except ImportError:  # run directly from inside scripts/quality_gates/
+except ModuleNotFoundError as exc:
+    if exc.name == "yaml":
+        print(
+            "\n  The ECO gate needs PyYAML to read harness/eco-floors.yaml.\n"
+            "  Install it with: pip install pyyaml\n",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    # Run directly from inside scripts/quality_gates/ — `scripts` is not a package here.
     sys.path.insert(0, str(Path(__file__).absolute().parent))
     from eco_core import (  # type: ignore[no-redef]
         VERDICT_CLOSED,
