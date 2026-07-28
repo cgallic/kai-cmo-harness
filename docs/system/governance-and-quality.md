@@ -13,6 +13,7 @@ Generated from `docs/system/capability-manifest.json`. Regenerate with `python -
 |---|---:|
 | Skill directories | 56 |
 | Canonical `kai-*` skills | 54 |
+| Goal-oriented v2 skills | 56 |
 | Public `/kai` router commands | 49 |
 | Public skill manifest pages | 47 |
 | Canonical skills missing manifest pages | 7 |

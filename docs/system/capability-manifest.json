@@ -2,6 +2,7 @@
   "schema_version": 1,
   "sources": {
     "skills": "harness/skills/*/SKILL.md",
+    "v2_skills": "harness/skills-v2/*/SKILL.md",
     "public_router_commands": "harness/skills/kai/SKILL.md",
     "public_manifest_pages": "docs/skill-manifest/kai-*.md",
     "knowledge": "repository filesystem counts using counting_rules"
@@ -9,6 +10,7 @@
   "counting_rules": {
     "skill_directories": "Immediate directories under harness/skills.",
     "canonical_kai_skills": "Immediate kai-* directories under harness/skills with their SKILL.md as source.",
+    "v2_goal_oriented_skills": "Immediate directories under harness/skills-v2 with a SKILL.md; the goal-oriented rewrite of the same skill set.",
     "public_router_commands": "Unique /kai-* rows in the PURSUE, PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
     "public_manifest_pages": "kai-*.md files under docs/skill-manifest.",
     "knowledge_markdown": "Markdown files under the named surface; recursive only for frameworks; AGENTS.md and CLAUDE.md excluded.",
@@ -19,6 +21,7 @@
   "counts": {
     "skill_directories": 56,
     "canonical_kai_skills": 54,
+    "v2_goal_oriented_skills": 56,
     "public_router_commands": 49,
     "public_manifest_pages": 47,
     "undocumented_canonical_skills": 7,

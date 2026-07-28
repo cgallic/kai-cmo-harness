@@ -53,6 +53,7 @@ def test_current_inventory_is_derived_from_live_sources():
     assert inventory["counts"] == {
         "skill_directories": 56,
         "canonical_kai_skills": 54,
+        "v2_goal_oriented_skills": 56,
         "public_router_commands": 49,
         "public_manifest_pages": 47,
         "undocumented_canonical_skills": 7,

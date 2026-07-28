@@ -14,18 +14,15 @@ A verdict on a piece of content that the writer cannot argue with: a per-dimensi
 Work type `internal-research` — floor **E2/C2/O0** (`harness/eco-floors.yaml`). The gate report is an internal artifact; nothing leaves the workspace, and SHIPPED is terminal.
 
 - **E2** — the gate report exists and carries every section below: Four U's total plus each dimension with its reason, banned words, AI slop, voice patterns, SEO lint (or SKIPPED), and an overall verdict.
-- **C2** — every declared check actually ran at its stated threshold. A check that was skipped is reported as SKIPPED with the reason, never silently omitted.
-- **O0** — no outcome obligation.
+- **C2** — every declared check ran at its stated threshold. A skipped check is reported as SKIPPED with the reason, never silently omitted. **O0** — no outcome obligation.
 
 This skill grades other people's work. It does not issue a completion verdict on its own gate report, and a gate PASS is Craft evidence only — it is not Execution or Outcome for the piece being gated. Promoting a recurring failure into a new lint rule or banned-word tier is a separate `harness-change` item (floor **E3/C3/O1**, gates `doctor`, `golden_check`, `pytest`) and requires a golden corpus case proving the new check.
 
 ## Constraints
 
-Run all four checks. Report each separately.
+All four checks run on every piece, each reported separately.
 
-### 1. Four U's
-
-Score each dimension 1-4:
+**Four U's.** Score each dimension 1-4. Thresholds: **12/16** for blog/SEO/articles, **10/16** for email/ads.
 
 | U | Question | Score |
 |---|----------|-------|
@@ -34,19 +31,13 @@ Score each dimension 1-4:
 | **Ultra-specific** | Numbers, named tools, concrete examples? | 1-4 |
 | **Urgent** | Is there a reason to engage today? | 1-4 |
 
-**Thresholds:** 12/16 for blog/SEO/articles. 10/16 for email/ads.
-
-### 2. Banned words
-
-**Instant reject (Tier 1):** leverage, utilize, synergy, innovative, deep dive, circle back, touch base, moving forward, at the end of the day
+**Banned words — instant reject (Tier 1):** leverage, utilize, synergy, innovative, deep dive, circle back, touch base, moving forward, at the end of the day
 
 **AI slop (also reject):** "In conclusion", "It's important to note", "In today's rapidly evolving", "This comprehensive guide", "Without further ado", "It's worth noting that"
 
-Flag exact locations of violations.
+Flag exact locations of every violation.
 
-### 3. Voice patterns (programmatic — DO NOT skip)
-
-Binary clichés ("X-not-Y" / "It's not X, it's Y" / "isn't X — it's Y") read as LinkedIn slop and slip past subjective scoring. Run these regexes against the file with the Grep tool. Any match = FAIL.
+**Voice patterns (programmatic — DO NOT skip).** Binary clichés ("X-not-Y" / "It's not X, it's Y" / "isn't X — it's Y") read as LinkedIn slop and slip past subjective scoring. Run these regexes against the file with the Grep tool. Any match = FAIL.
 
 | Pattern | Catches |
 |---|---|
@@ -68,16 +59,11 @@ Skip matches inside HTML comments (`<!-- ... -->`) and code fences (```` ``` ```
 
 **Project hook integration:** if the project has `.claude/hooks/voice-gate.py`, that hook fires PostToolUse on Edit/Write and catches these patterns at draft time. The gate step still runs the regexes — belt and suspenders.
 
-### 4. SEO lint (search content only)
+**SEO lint (search content only).** Apply only if the content targets search engines. Check against Algorithmic Authorship rules: conditions after main clause; instructions start with verbs; sentences under 20 words; bold the answer, not query terms; no links in first sentence of paragraphs.
 
-Apply only if the content targets search engines. Check against Algorithmic Authorship rules: conditions after main clause; instructions start with verbs; sentences under 20 words; bold the answer, not query terms; no links in first sentence of paragraphs.
+**Reporting.** Report Four U's as a total out of 16 **plus each dimension with its own score and reason**; report banned words, AI slop, voice patterns, and SEO lint each as PASS / FAIL / SKIPPED with line numbers for every violation. On FAIL, name the specific fixes needed and offer to auto-fix and re-score.
 
-### Reporting and governance
-
-- Report Four U's as a total out of 16 **plus each dimension with its own score and reason**. Report banned words, AI slop, voice patterns, and SEO lint each as PASS / FAIL / SKIPPED with line numbers for every violation.
-- On FAIL, name the specific fixes needed. Offer to auto-fix and re-score.
-- **Panel scoring is advisory and optional** — use it only when the user asks for a second opinion or the artifact is high-stakes. Recommended roles: audience reviewer (persona fit, plain-language clarity), channel reviewer (platform fit, format, norms), proof reviewer (source locations, attribution, unsupported claims), conversion reviewer (CTA clarity, objection handling). Score 1-5 per reviewer with concern and suggested fix.
-- Panel governance: label panel output as simulated review, never expert validation. Do not create fake credentials, endorsements, or named reviewers. Treat missing source locations as a gate issue, not a panel preference. Run panel scoring on drafts first; publishing still requires approval. Panel output cannot override a hard fail from banned words, source gaps, policy risk, or missing approval.
+**Panel scoring is advisory and optional** — only when the user asks for a second opinion or the artifact is high-stakes. Roles: audience reviewer (persona fit, plain-language clarity), channel reviewer (platform fit, format, norms), proof reviewer (source locations, attribution, unsupported claims), conversion reviewer (CTA clarity, objection handling), each scored 1-5 with concern and suggested fix. Label panel output as simulated review, never expert validation. Do not create fake credentials, endorsements, or named reviewers. Treat missing source locations as a gate issue, not a panel preference. Run panel scoring on drafts first; publishing still requires approval. Panel output cannot override a hard fail from banned words, source gaps, policy risk, or missing approval.
 
 ## Context
 
@@ -85,8 +71,7 @@ Apply only if the content targets search engines. Check against Algorithmic Auth
 |---|---|
 | Full Algorithmic Authorship rule set for SEO lint | `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` |
 | Per-format thresholds and gate minimums | `harness/skill-contracts/` (the contract matching the piece's format) |
-| Known loser patterns beyond the regex table | `memory/what-doesnt-work.md`, `memory/lessons.md` |
-| Write triggers for capturing a repeat failure | `memory/MEMORY.md` |
+| Known loser patterns, and the write triggers for a repeat failure | `memory/what-doesnt-work.md`, `memory/lessons.md`, `memory/MEMORY.md` |
 
 **Learning hook.** Gate script runs log to `data/learning/gate_runs.jsonl` automatically. If the **same diagnosis fails twice on one piece**, append a lesson to `memory/lessons.md` before escalating (write trigger #3 in `memory/MEMORY.md`). Recurring failures across pieces get mined by `/kai-retro` and promoted into new gate checks with golden corpus cases.
 
@@ -95,4 +80,4 @@ Apply only if the content targets search engines. Check against Algorithmic Auth
 - The same diagnosis fails twice on one piece — log the lesson, then hand the piece to a human with the specific failures listed.
 - The content's format is unclear, so the correct Four U's threshold (12/16 vs 10/16) cannot be chosen.
 - A violation sits in quoted source material or a client-supplied claim where rewriting changes the meaning.
-- A check cannot run in this install — say so and report it as SKIPPED rather than assuming a pass.
+- A check cannot run in this install — say so, report it SKIPPED, and never assume a pass.

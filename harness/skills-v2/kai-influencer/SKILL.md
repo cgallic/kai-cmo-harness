@@ -7,9 +7,7 @@ description: Plan influencer marketing campaigns — find creators, write briefs
 
 ## Objective
 
-A creator campaign a brand can actually run: the right tier of creators for the goal, a brief each one can execute without a follow-up call, contract terms that settle usage rights before anyone films, per-creator tracking that makes ROI readable, and a material-connection disclosure on every piece of content. The deliverable is the campaign package — strategy, briefs, outreach, tracking plan, contract checklist — not a list of creator names.
-
-Follower count is the cheapest and least predictive input. Audience overlap and engagement quality carry the campaign.
+A creator campaign a brand can actually run: the right tier of creators for the goal, a brief each one can execute without a follow-up call, contract terms that settle usage rights before anyone films, per-creator tracking that makes ROI readable, and a material-connection disclosure on every piece of content. The deliverable is the campaign package — strategy, briefs, outreach, tracking plan, contract checklist — not a list of creator names. Follower count is the cheapest and least predictive input; audience overlap and engagement quality carry the campaign.
 
 ## Done when
 
@@ -68,9 +66,7 @@ Work type `campaign` — floor **E5/C3/O4** (`harness/eco-floors.yaml`, contract
 
 **Measurement plan must cover:** reach and impressions · engagement (likes, comments, shares, saves) · UTM-tracked clicks · conversions from promo codes and affiliate links · cost per engagement and cost per acquisition · content quality score (is it reusable as paid creative?). Tracking is set up per creator before launch, not reconstructed after.
 
-**Package contents:** campaign strategy document · creator brief template ready to customize per creator · outreach templates per tier · tracking and measurement plan · contract checklist · gate results.
-
-**Output** goes to `workspace/` with the filename pattern `influencer-campaign-YYYY-MM-DD.md`.
+**Package contents:** campaign strategy document · creator brief template ready to customize per creator · outreach templates per tier · tracking and measurement plan · contract checklist · gate results. **Output** goes to `workspace/` with the filename pattern `influencer-campaign-YYYY-MM-DD.md`.
 
 ## Escalate when
 
