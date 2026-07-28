@@ -13,16 +13,15 @@ A structured content brief that fixes the strategy before drafting starts: forma
 
 Work type `strategy-plan` — floor **E3/C3/O1** (`harness/eco-floors.yaml`).
 
-- **E3** — the brief conforms to `harness/brief-schema.md` and the requester accepted it. `/kai-write` does not proceed on an unapproved brief.
-- **C3** — `banned_word_check` clean, and the three validation rules below all hold under a read by someone other than the brief's author.
+- **E3** — the brief conforms to `harness/brief-schema.md` and the requester accepted it; `/kai-write` does not proceed on an unapproved brief.
+- **C3** — `banned_word_check` clean, and the three validation rules below hold under a read by someone other than the brief's author.
 - **O1** — the brief names the piece it spawns and its publish date. A brief nothing gets written from is not finished.
 
 ## Constraints
 
 - **Read `MARKETING.md` from the project root first.** It carries product, ICP, value prop, monetization, voice, current channels, and competitive landscape. If it does not exist, build it from the codebase — CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, email/ad/analytics config — using the template from `/kai-email-system`, and confirm the draft. Do not ask the user what the product is.
 - **Six things must be known before the brief is written:** the format (blog, email, LinkedIn, ad, press), the topic or keyword, who it is for, the angle, what the reader should do next, and what proof or data exists to use.
-- **Load the full persona file, not just the one-line hook.** It carries the language patterns, pain points, and hooks that shape the angle.
-- **The brief follows the schema in `harness/brief-schema.md`** — that file is the format contract. Fields are neither invented nor dropped.
+- **Load the full persona file, not just the one-line hook** — it carries the language patterns, pain points, and hooks that shape the angle. **The brief then follows the schema in `harness/brief-schema.md`**, which is the format contract: fields are neither invented nor dropped.
 - **Three rules must hold before handoff:** `hook_options` has exactly 3 variants; `angle` is differentiated from `target_keyword` rather than restating it; `proof_available` names real data or a named example, never a vague gesture at proof.
 
 ## Context
@@ -33,7 +32,7 @@ Work type `strategy-plan` — floor **E3/C3/O1** (`harness/eco-floors.yaml`).
 | Full persona profiles, language, pain points | `knowledge/personas/_persona-index.md` |
 | Product, ICP, voice, channels | `MARKETING.md` (project root) |
 
-**Persona selection** — pick one, then load its full file:
+**Persona selection** — pick one from the set below, then load its full file:
 
 | Persona | Core hook | Best for |
 |---|---|---|

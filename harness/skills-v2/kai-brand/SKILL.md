@@ -26,7 +26,7 @@ Work type `strategy-plan` — floor **E3/C3/O1** (`harness/eco-floors.yaml`).
 - **If a URL is provided, fetch and analyze the live site messaging** before proposing new messaging, and name the gap between what the market says and what the user believes.
 - **Every claim must be substantiable.** No empty superlatives.
 - **Taglines are under 8 words.**
-- **No Tier 1 banned words** (leverage, utilize, synergy, innovative, and the rest of the list) and **no AI slop phrases** — in new copy, and flagged where they appear in existing copy.
+- **Zero Tier 1 banned words and zero AI slop phrases** — enforced by `python scripts/quality_gates/banned_word_check.py <file>` on new copy, and flagged where they already appear in the brand's existing copy.
 - Positioning that cannot survive a competitor saying the same sentence does not ship.
 
 ## Context

@@ -54,6 +54,8 @@ Assets stay drafts until a human approves them. This skill does not send, publis
 
 **Email sequence** — confirmation with calendar invite, 1-week reminder with agenda preview, day-before with prep instructions, 1-hour reminder, post-event replay plus resources for attendees, post-event "you missed this" for no-shows, then a 3–5 email nurture.
 
+**Registration page** carries headline, value props, speaker bios, agenda, and CTA. **Event content plan** covers structure, key points, transitions, audience interaction moments, plus slides, handouts, worksheets, and resource lists.
+
 **Output** goes to `workspace/` as `webinar-[topic-slug]-YYYY-MM-DD.md`: strategy brief, registration page copy, promotion emails, social calendar, event content outline, post-event sequence, dated promotion timeline, and the gate pass/fail summary.
 
 ## Escalate when

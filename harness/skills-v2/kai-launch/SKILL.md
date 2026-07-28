@@ -31,6 +31,7 @@ Each child asset carries its own floor. A paid ad in this launch is still `paid-
 - **Ad copy never gets written before its platform policy reference is loaded.** The per-platform table is in `.claude/rules/architecture-and-memory.md`.
 - Quantitative claims in launch assets — customer counts, performance numbers, funding, market size — follow the Kai Data Provenance Rule (`harness/references/audit-data-provenance.md`). Missing data is a data gap, never a rounded guess.
 - Nothing publishes, sends, or spends without human approval. Producing ad copy is not authorization to activate a campaign; drafting a sequence is not authorization to send it.
+- **Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
 
 **Know these before producing anything** (from `MARKETING.md` first; ask only for what it cannot answer): what is launching (new product, feature, major update, rebrand) · the go-live date · which channels exist and at what size (list size, ad budget, social following, press contacts) · the launch offer or hook (launch pricing, early access, beta invite) · whether a landing page exists or must be built.
 

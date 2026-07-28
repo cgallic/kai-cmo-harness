@@ -5,9 +5,7 @@ description: Generate, rank, and gate a reusable hook bank — sourced pains × 
 
 ## Objective
 
-A ranked, provenance-tagged hook bank that downstream skills can pull from without re-checking the claims: sourced pains crossed with named formula families, hooks matching a known loser pattern killed before they reach ranking, survivors scored and gated, and the top set delivered in three lengths with a source behind every claim.
-
-**Scope boundaries:** this skill produces the hook bank only. `/kai-social` batches full social posts, `/kai-ad-campaign` builds full ad campaigns, `/kai-write` writes single finished pieces, `/kai-repurpose` fans a pillar into derivatives — they *consume* this bank. Concept-level portfolio strategy (Persona × Desire × Angle bench, budgets, kill rules) belongs to `knowledge/playbooks/combinatorial-creative-bench.md` via `/kai-ad-campaign`; this skill fills the `hook` field of those bench rows.
+A ranked, provenance-tagged hook bank that downstream skills can pull from without re-checking the claims: sourced pains crossed with named formula families, hooks matching a known loser pattern killed before they reach ranking, survivors scored and gated, and the top set delivered in three lengths with a source behind every claim. This skill produces the hook bank only. `/kai-social` batches full social posts, `/kai-ad-campaign` builds full ad campaigns, `/kai-write` writes single finished pieces, `/kai-repurpose` fans a pillar into derivatives — they *consume* this bank. Concept-level portfolio strategy (Persona × Desire × Angle bench, budgets, kill rules) belongs to `knowledge/playbooks/combinatorial-creative-bench.md` via `/kai-ad-campaign`; this skill fills the `hook` field of those bench rows.
 
 ## Done when
 
@@ -31,8 +29,7 @@ Work type `internal-research` — floor **E2/C2/O0** (`harness/eco-floors.yaml`)
   - **Rejection rules** — `memory/what-doesnt-work.md` + `memory/lessons.md`, one row per banned pattern with the memory line that banned it, written to `workspace/hook-bench/rejection-rules.md`. Seed rules currently in memory: the binary-contrast construction ("It's not X, it's Y" — reads as LinkedIn slop) and study percentages reframed as promises. Also load the voice-pattern regexes carried in `/kai-gate`.
   - **Proof inventory** — `workspace/hook-bench/_proof-inventory.md` with claim, source path/URL, and permission status. Sources in order: `workspace/proof-library/` if present (owned by `/kai-proof-builder` — hand off there rather than rebuilding it), case studies already in `workspace/` (new ones via `/kai-case-study`), `data/content_log.json` 30-day winners, collector output.
 - **No source, no row.** Never invent "top pains from Reddit", review counts, or frequency percentages. Unsourceable pains go in `workspace/hook-bench/_data-gaps.md`. An empty proof inventory is a finding logged there, never a license to fabricate testimonials or numbers. Log every source in `workspace/hook-bench/_sources.md` (URL/path, method, retrieval date).
-- **Reject at birth.** Every candidate runs against `rejection-rules.md` and the kai-gate voice regexes before it enters the matrix. Kills are logged to `workspace/hook-bench/rejects.md` with the rule that killed them; they never reach ranking.
-- **Quantitative claims** ("booked 40 calls", "took 6 weeks") come only from `_proof-inventory.md` or sourced pain data. Otherwise rewrite qualitative or drop.
+- **Reject at birth.** Every candidate runs against `rejection-rules.md` and the kai-gate voice regexes before it enters the matrix. Kills are logged to `workspace/hook-bench/rejects.md` with the rule that killed them; they never reach ranking. Quantitative claims ("booked 40 calls", "took 6 weeks") come only from `_proof-inventory.md` or sourced pain data — otherwise rewrite qualitative or drop.
 - **A `proof-led` hook with proof-backing 0** is cut or rewritten into another family; it may not ship as proof-led.
 - **Platform ceilings** — respect the tightest ceiling across a hook's target platforms:
 
@@ -77,9 +74,7 @@ Work type `internal-research` — floor **E2/C2/O0** (`harness/eco-floors.yaml`)
 
 Known degenerations to name per family: `common-mistake` collapses into the banned binary-contrast cliché; `curiosity-gap` into clickbait the body cannot reward; `speed-effort` into unsubstantiated timeframe claims that fail the compliance pass.
 
-**Generation matrix.** `N` hooks per pain × family cell (default N=2; top 5 pains by frequency signal gives up to 70 candidates). Each candidate records `hook_id` (`HB-{pain#}-{family}-{nn}`), pain row ref, persona, family, draft text, proof ref (or `none`), and target platforms.
-
-**Ranking rubric** — 0-2 per dimension (0 = fails, 1 = weak, 2 = strong), ranked by total /8, ties broken by winner-adjacency. Justify each score in a phrase citing the pain row or proof ref:
+**Generation matrix.** `N` hooks per pain × family cell (default N=2; top 5 pains by frequency signal gives up to 70 candidates). Each candidate records `hook_id` (`HB-{pain#}-{family}-{nn}`), pain row ref, persona, family, draft text, proof ref (or `none`), and target platforms. **Ranking rubric:** 0-2 per dimension (0 = fails, 1 = weak, 2 = strong), ranked by total /8, ties broken by winner-adjacency, each score justified in a phrase citing the pain row or proof ref:
 
 | Dimension | 2 means |
 |-----------|---------|
@@ -105,6 +100,5 @@ Known degenerations to name per family: `common-mistake` collapses into the bann
 ## Escalate when
 
 - No pain can be sourced — the bank would be invention rather than generation.
-- The proof inventory is empty but the request is specifically for proof-led hooks.
-- A hook the user wants makes a claim no source supports, or a timeframe/results claim that would fail platform policy or advertising law.
+- The proof inventory is empty but the request is specifically for proof-led hooks, or a hook the user wants makes a claim no source supports or a timeframe/results claim that would fail platform policy or advertising law.
 - Two gate retries failed on the same dimension, or every candidate in a family dies to the rejection rules (the angle itself is a known loser).

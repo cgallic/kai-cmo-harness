@@ -27,6 +27,7 @@ Work type `email-lifecycle` — floor **E5/C3/O3** (`harness/eco-floors.yaml`, c
 - Match persona language. No corporate filler, no AI slop ("In conclusion", "It's important to note", "In today's rapidly evolving").
 - Any statistic, benchmark, or performance number in the edition needs a real source. Missing data is a gap, not a rounded claim.
 - Kai drafts and schedules recommendations. Sending is a human action against an approved segment.
+- **Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
 
 **Know these before writing** (from `MARKETING.md` first; ask only for what it cannot answer): the edition's goal (nurture, educate, drive traffic, retain) · the persona(s) receiving it · cadence · which existing content is available to feature · brand voice · past performance (open, click, unsubscribe trends) · which list segment gets this edition.
 

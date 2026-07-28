@@ -20,7 +20,7 @@ One piece of content in the requested format, written against the framework and 
 | TikTok script | `social-post` | E5/C2/O3 | `harness/skill-contracts/social-post.yaml` | 10/16 | skipped |
 | Email (lifecycle) | `email-lifecycle` | E5/C3/O3 | `harness/skill-contracts/email-lifecycle.yaml` | 10/16 | skipped |
 | Email (cold outreach) | `cold-email` | E5/C4/O3 | `harness/skill-contracts/cold-email.yaml` | 10/16 | skipped |
-| Meta / Google ad copy | `paid-ad-campaign` | E5/C4/O4 | `harness/skill-contracts/meta-ads.yaml` · `google-ads.yaml` | 10/16 | skipped |
+| Meta / Google ad copy | `paid-ad-campaign` | E5/C4/O4 | `harness/skill-contracts/meta-ads.yaml` · `harness/skill-contracts/google-ads.yaml` | 10/16 | skipped |
 | Press release | `press-release` | E5/C3/O3 | `harness/skill-contracts/press-release.yaml` | 12/16 | skipped |
 
 - **E** — a file in `workspace/` is E1. E3 is a named human approving the exact bytes; E5 is a non-actor reading the live artifact back and matching it to the approved copy.

@@ -99,9 +99,21 @@ Load `knowledge/playbooks/paid-media-launch-playbook.md` and apply its defaults 
 | Format selection by platform, stage, assets, risk | `kai/paid_media/creative_formats.py` (`select_creative_formats`) |
 | On-site behavior behind ad traffic | `harness/references/posthog-marketing-queries.md` (UTM pageviews #2, ad visitor journeys #5, campaign attribution #8) |
 
-**Platform copy constraints worth carrying inline:** Meta headline 27 chars, primary text 125 chars visible. Google RSA 15 headlines at 30 chars, 4 descriptions at 90 chars. LinkedIn requires professional context and B2B claim substantiation. TikTok bans political ads and requires AI-content disclosure. Microsoft mirrors Google's RSA format. Pinterest bans all weight loss and enforces strict body-image rules. Snapchat carries young-audience protections. Amazon enforces the 18-month claim evidence rule. X access depends on verification tier.
+**Platform constraints worth carrying inline** — the policy reference still loads before writing:
 
-**Funnel structure** — adapt to the product; not every product needs every stage:
+| Platform | Key constraints |
+|---|---|
+| Meta | Headline 27 chars, primary text 125 chars visible. Special Ad Categories, no before/after imagery, personal-attributes ban |
+| Google | 15 headlines at 30 chars, 4 descriptions at 90 chars. No superlatives without proof |
+| LinkedIn | Professional context required, B2B claim substantiation |
+| TikTok | No political ads, weight-management restrictions, AI-content disclosure required |
+| Microsoft | Mirrors Google's RSA format; country-level gambling bans, clinical trials ban |
+| Pinterest | All weight-loss ads banned, strict body-image rules |
+| Snapchat | Young-audience protections, EU political ad ban |
+| Amazon | 18-month claim evidence rule, no competitor disparagement |
+| X/Twitter | Verification tier affects ad access; political ad certification by country |
+
+**Funnel structure** — adapt to the product; not every product needs every stage. Three variants per stage per platform is the default:
 
 | Stage | Objective | Audience | Typical platforms |
 |---|---|---|---|

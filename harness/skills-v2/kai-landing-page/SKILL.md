@@ -36,6 +36,7 @@ Attribution is required. A page replacing an existing page needs a control or ho
 - Validate against both checklists before handoff: `knowledge/checklists/landing-page-messaging-checklist.md` and `knowledge/checklists/perception-engineering-checklist.md`.
 - Quantitative claims — conversion lifts, customer counts, funded amounts, review counts — follow the Kai Data Provenance Rule: collector-sourced or absent. See `harness/references/audit-data-provenance.md`.
 - Kai writes copy. Publishing the page is a human action.
+- **Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
 
 **Know these before writing** (from `MARKETING.md` first; ask only for what it cannot answer): traffic source and the awareness level it implies (cold ads / warm content / hot referral) · the conversion action (signup, demo, purchase, waitlist, phone call) · rewrite or net-new · what proof actually exists (testimonials, case studies, metrics, logos) · whether the business takes phone calls.
 

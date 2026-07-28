@@ -36,6 +36,7 @@ Work type `campaign` — floor **E5/C3/O4** (`harness/eco-floors.yaml`, contract
 - Brief clarity bar: a creator must be able to execute it without a follow-up call.
 - Kai does not sign contracts, release payment, or send outreach. Human approval precedes every live action and every dollar.
 - Paying for undisclosed endorsements, bought followers, or astroturfed comment activity is a stop, not an escalation.
+- **Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
 
 **Know these before producing anything** (from `MARKETING.md` first; ask only for what it cannot answer): campaign goal (awareness, conversions, content generation, social proof) · product, price point, differentiator · target persona(s) · platforms · total budget and per-creator range · timeline and milestones · what past partnerships did · required content usage rights and their duration.
 
@@ -66,7 +67,9 @@ Work type `campaign` — floor **E5/C3/O4** (`harness/eco-floors.yaml`, contract
 
 **Measurement plan must cover:** reach and impressions · engagement (likes, comments, shares, saves) · UTM-tracked clicks · conversions from promo codes and affiliate links · cost per engagement and cost per acquisition · content quality score (is it reusable as paid creative?). Tracking is set up per creator before launch, not reconstructed after.
 
-**Package contents:** campaign strategy document · creator brief template ready to customize per creator · outreach templates per tier · tracking and measurement plan · contract checklist · gate results. **Output** goes to `workspace/` with the filename pattern `influencer-campaign-YYYY-MM-DD.md`.
+**Package contents:** campaign strategy document · creator brief template · outreach templates per tier · tracking and measurement plan · contract checklist (deliverables, timeline, payment terms, usage rights, exclusivity) · content approval workflow (draft review, revision rounds, final sign-off) · gate results. **Output** goes to `workspace/` with the filename pattern `influencer-campaign-YYYY-MM-DD.md`.
+
+**The creator brief carries:** campaign overview (what, why, who) · key messages · do's and don'ts (brand guidelines, competitor mentions) · content specs (format, length, hashtags, mentions) · deliverables and deadlines · FTC disclosure requirements · usage rights and the approval process.
 
 ## Escalate when
 

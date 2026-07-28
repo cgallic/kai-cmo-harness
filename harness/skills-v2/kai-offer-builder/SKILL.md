@@ -53,6 +53,8 @@ python scripts/quality_gates/banned_word_check.py --file workspace/offer-builder
 
 Max 2 retry cycles, fixing only the named failing dimension. After 2 failures, escalate to a human with the diagnosis and log the lesson in `memory/lessons.md`. Kai does not change live prices, publish offers, or mutate a checkout, pricing page, or ad account — pricing output is an approval-ready recommendation.
 
+**Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
+
 ## Context
 
 | Need | Load |
