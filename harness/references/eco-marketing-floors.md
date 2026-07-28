@@ -45,7 +45,7 @@ Full definitions in `harness/eco-floors.yaml`. Summary:
 | Internal research | E2 / C2 / O0 | File exists and matches structure | none |
 | Harness change | E3 / C3 / O1 | Tests + doctor + golden corpus pass | 30d |
 
-Two floors deserve their reasoning stated:
+Three floors deserve their reasoning stated:
 
 - **Cold email is C4, not C3.** The residue is legal, not editorial. Sender identity, opt-out mechanics, and consent basis are field-standard obligations under CAN-SPAM/GDPR/CASL. A good reviewer who is not checking those is not clearing C4.
 - **Product UI is C4, not C3.** The residue is accessibility and design-system integrity — WCAG AA contrast, focus order, token compliance, and every loading/empty/error state. A reviewer who likes how it looks but has not checked those has not cleared C4.
