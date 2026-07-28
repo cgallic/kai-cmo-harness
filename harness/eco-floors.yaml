@@ -297,6 +297,29 @@ work_types:
       note: No outcome obligation. Internal research is SHIPPED-terminal by design.
     shipped_is_terminal: true
 
+  product-ui:
+    also_covers: [design-system, component-work, kaicalls-design]
+    external_effect: true
+    client_facing: true
+    floor: {E: 5, C: 4, O: 3}
+    craft_gates: [project_tests, accessibility_check]
+    execution_target: >
+      The change is live in the product and a non-actor loaded the real screen at the
+      real breakpoints, confirming it renders and behaves as approved — not that the
+      build succeeded or the deploy was marked ready.
+    craft_note: >
+      C4 is the design field standard, not a lint: hierarchy, WCAG AA contrast and focus
+      order, design-token compliance rather than hardcoded values, responsive behavior at
+      the actual viewing sizes, loading/empty/error states, and review at the size users
+      see it. Deviations need an explicit expiring waiver.
+    outcome:
+      metrics: [task_completion_rate, time_to_first_action, support_tickets, drop_off_rate]
+      source: analytics_connector
+      window_days: 30
+      note: >
+        A UI change that shipped and moved nothing is SHIPPED, not CLOSED. Name the user
+        behavior it was supposed to change before building it.
+
   harness-change:
     external_effect: false
     floor: {E: 3, C: 3, O: 1}

@@ -280,8 +280,8 @@ Run before shipping any user-facing AI feature:
 ## Source Material
 
 For the full 40,000-word theoretical foundation, see:
-- `taste/taste.md` — Foundation taxonomy, North Star metric, 5-step Refiner
-- `taste/chatgpt_taste.md` — Engineering framework, 10-step Refiner, proxy metrics
-- `taste/deep-research-report.md` — Neuroscience, cognitive load, agency, RLDF spec
-- `taste/AI Design Taste_ A Systems Approach.md` — Information theory, SDEs, style weights
-- `taste/Engineering AI Design Taste Framework.md` — Operationalization, failure modes, synthesis
+- `docs/research/taste/taste.md` — Foundation taxonomy, North Star metric, 5-step Refiner
+- `docs/research/taste/chatgpt_taste.md` — Engineering framework, 10-step Refiner, proxy metrics
+- `docs/research/taste/deep-research-report.md` — Neuroscience, cognitive load, agency, RLDF spec
+- `docs/research/taste/AI Design Taste_ A Systems Approach.md` — Information theory, SDEs, style weights
+- `docs/research/taste/Engineering AI Design Taste Framework.md` — Operationalization, failure modes, synthesis

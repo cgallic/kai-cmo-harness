@@ -15,7 +15,10 @@ Two rules pull against each other and both hold: **every interactive element giv
 
 ## Done when
 
-Work type `harness-change` — floor **E3/C3/O1** (`harness/eco-floors.yaml`), the closest fit for an internal build with no external marketing effect. E3 is a named human approving the exact change; C3 is a named non-author reviewing it against the checklist below; O1 names the metric the change targets (task completion, support tickets on that surface, time-to-first-action) with a threshold and an owner. The craft gates listed for that work type are harness-specific — the real C bar here is the project's own tests plus this checklist:
+Work type `product-ui` — floor **E5/C4/O3** (`harness/eco-floors.yaml`).
+
+- **E5** — the change is live in the product and a non-actor loaded the real screen at the real breakpoints. A green build and a deploy marked ready are E1 and E4; neither proves the screen renders.
+- **C4** — the design field standard, verified before ship: hierarchy, WCAG AA contrast and focus order, token compliance over hardcoded values, responsive behavior at actual viewing sizes, and every loading, empty, and error state. Deviations need an explicit expiring waiver. The project's own tests plus this checklist are the C bar:
 
 - Every button has emotional feedback: hover, active, and success states
 - Feedback is subtle — no flashing, strobing, or harsh contrast
@@ -30,6 +33,8 @@ Work type `harness-change` — floor **E3/C3/O1** (`harness/eco-floors.yaml`), t
 - Dark-mode compatible — no light-only colors
 - Mobile responsive down to 375px
 - shadcn/ui components used wherever one exists
+
+- **O3** — name the user behavior the change was supposed to move (task completion rate, time to first action, support tickets on that surface, drop-off) with a baseline, threshold, owner, and a 30-day window, recorded *before* building. A UI change that shipped and moved nothing is SHIPPED, not CLOSED.
 
 ## Constraints
 

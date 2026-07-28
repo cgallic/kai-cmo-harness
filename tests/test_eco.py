@@ -92,6 +92,15 @@ def test_cold_email_requires_field_standard_craft(floors: EcoFloors):
     assert floors.work_type("cold-email").floor["C"] == 4
 
 
+def test_product_ui_requires_field_standard_craft_and_live_readback(floors: EcoFloors):
+    """A green build is not a rendered screen, and 'looks fine' is not C4."""
+    ui = floors.work_type("product-ui")
+    assert ui.floor == {"E": 5, "C": 4, "O": 3}
+    assert ui.external_effect is True
+    # kaicalls-design routes here rather than borrowing the harness-change floor.
+    assert floors.work_type("kaicalls-design").name == "product-ui"
+
+
 def test_paid_media_requires_attribution(floors: EcoFloors):
     paid = floors.work_type("paid-ad-campaign")
     assert paid.attribution_required is True

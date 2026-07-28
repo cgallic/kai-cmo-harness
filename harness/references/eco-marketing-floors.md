@@ -41,12 +41,14 @@ Full definitions in `harness/eco-floors.yaml`. Summary:
 | Audit / report / deck | E3 / **C4** / O1 | Approved hash-pinned file, every number sourced | 60d |
 | Strategy plan | E3 / C3 / O1 | Human approved the exact document | 30d |
 | Campaign (composite) | E5 / C3 / O4 | Every child item CLOSED | 45d |
+| Product UI / design system | E5 / **C4** / O3 | Live screen loaded by a non-actor at real breakpoints | 30d |
 | Internal research | E2 / C2 / O0 | File exists and matches structure | none |
 | Harness change | E3 / C3 / O1 | Tests + doctor + golden corpus pass | 30d |
 
 Two floors deserve their reasoning stated:
 
 - **Cold email is C4, not C3.** The residue is legal, not editorial. Sender identity, opt-out mechanics, and consent basis are field-standard obligations under CAN-SPAM/GDPR/CASL. A good reviewer who is not checking those is not clearing C4.
+- **Product UI is C4, not C3.** The residue is accessibility and design-system integrity — WCAG AA contrast, focus order, token compliance, and every loading/empty/error state. A reviewer who likes how it looks but has not checked those has not cleared C4.
 - **Audits are E3, not E5.** An audit has no external publishing target — the deliverable is the file. E tops out at approval of the exact bytes. All the weight moves to C4 provenance.
 
 ---

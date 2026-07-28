@@ -45,6 +45,7 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`). Des
 | Information theory, neuroscience, cognitive load — the "why" | `references/theory-foundations.md` |
 | Auditing a live URL | Browse daemon: `$B goto <url>` · `$B snapshot -i -a` · `$B screenshot` |
 | Auditing code or mockups | Read the source and rendered output directly, score against the rubrics |
+| The full theoretical foundation, when a score needs defending | `docs/research/taste/taste.md` (taxonomy, North Star, 5-step Refiner) · `docs/research/taste/chatgpt_taste.md` (engineering framework, proxy metrics) · `docs/research/taste/deep-research-report.md` (neuroscience, cognitive load, agency) · `docs/research/taste/AI Design Taste_ A Systems Approach.md` (information theory, style weights) · `docs/research/taste/Engineering AI Design Taste Framework.md` (operationalization, failure modes) |
 
 **The three pillars.** Every generative AI product sits somewhere in this space; the pillars form a feedback system, so moving one shifts the feasible region of the others.
 
