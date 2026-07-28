@@ -119,9 +119,31 @@ Do not present a persona pain, budget authority, buying trigger, or objection as
 
 ---
 
+## Outcome Declaration (ECO O1 — required before writing)
+
+A baseline recorded after the piece ships is not a baseline, and a threshold chosen after seeing the result is not a threshold. Capture both here, before the first draft.
+
+```yaml
+outcome:
+  metric: organic_clicks           # what this piece is supposed to move
+  source: google_search_console    # the authoritative system, not a dashboard screenshot
+  baseline: 0                      # the pre-state, measured now
+  threshold: 120                   # the number that counts as success
+  window_days: 30                  # when it gets read
+  owner: Connor                    # who reads it
+  attribution: observational       # observational | control | holdout | geo_split | switchback
+```
+
+This block becomes the `outcome_baseline` evidence entry on the piece's ECO record. Without it the work can reach SHIPPED but never CLOSED.
+
+Floors per format: `harness/eco-floors.yaml` · Doctrine: `docs/system/eco-completion-standard.md`
+
+---
+
 ## Brief Validation
 
 Before write agent starts, validate:
+- `outcome` block is complete (metric, source, baseline, threshold, window, owner) and recorded before drafting
 - All required fields present and non-empty
 - `hook_options` has exactly 3 variants
 - `competitor_weakness` is specific (≥20 words), not generic

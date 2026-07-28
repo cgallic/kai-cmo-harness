@@ -40,12 +40,30 @@ Three complete worked examples — brief, draft, and scorecard — live in [`dem
 
 ## What You Get
 
-- **48 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
-- **53 `kai-*` skills** with triggers, inputs, outputs, gates, provenance, and failure modes.
-- **A real knowledge base**: 67 playbooks, 36 checklists, 33 frameworks, 26 channel guides, 8 personas, platform policy references, and 33 skill contracts.
+- **49 public `/kai` commands** for strategy, distribution, content, ads, SEO, CRO, lifecycle, SDR, launches, and analytics.
+- **54 `kai-*` skills** with triggers, inputs, outputs, gates, provenance, and failure modes.
+- **A real knowledge base**: 67 playbooks, 37 checklists, 38 frameworks, 31 channel guides, 8 personas, platform policy references, and 33 skill contracts.
 - **Guardrails built in**: Four U's scoring, banned-word checks, SEO lint, policy references, provenance lint, privacy scanning, and mutation-risk lint.
 - **Local-first by default**: use it inside Claude Code from your repo before wiring live channels.
 - **Approval-led automation**: dry-run first, review the artifact, then approve external actions.
+- **Goals, not just tasks**: `/kai-goal` takes a business outcome, decomposes it into work items, and keeps going across sessions until a gate says the floor was met.
+
+## `done` Is Not A Verdict
+
+Most agent harnesses call work finished when a file exists. Kai splits that into three claims and lets a gate — not the agent that did the work — decide:
+
+- **E — Execution.** Did the effect happen at the real target? A draft on disk is E1. A live URL that returns 200 with the approved body is E5.
+- **C — Craft.** Does it clear the gates, the platform policy, and the provenance rule, plus a read by someone who didn't write it?
+- **O — Outcome.** Did the number move, measured against a threshold declared *before* ship?
+
+Two verdicts: **SHIPPED** (E and C met, outcome still owed) and **CLOSED** (all three). The rule that makes it work: *the actor may submit evidence, the actor may not issue its own verdict.* Evidence whose verifier is the producer gets discarded, and a baseline written after ship is rejected outright.
+
+```bash
+python -m scripts.quality_gates.eco_gate floors   # the floor for each kind of work
+python -m scripts.quality_gates.eco_gate debt     # what shipped but never got measured
+```
+
+Full standard: [`docs/system/eco-completion-standard.md`](docs/system/eco-completion-standard.md) · Marketing floors: [`harness/references/eco-marketing-floors.md`](harness/references/eco-marketing-floors.md)
 
 ## Quick Start: From Install To Growth Plan
 
@@ -130,7 +148,15 @@ Research -> Brief -> Write -> Quality Gate -> Approval -> Publish -> Log -> 30-d
 
 ## Install Options
 
-**Plugin (recommended — Claude Code CLI or desktop):** two lines inside Claude Code. Auto-updating, includes the knowledge base, nothing touches your shell.
+**Cowork (no terminal needed):** Kai installs as a plugin from this repo, no clone and no shell.
+
+1. Open **Customize → Plugins** in the sidebar.
+2. Select **Add marketplace** and enter `cgallic/kai-cmo-harness`.
+3. Install **Kai Marketing OS**, then open it to see its skills and agents.
+
+You get 49 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want Kai chasing an outcome rather than producing one asset.
+
+**Plugin (Claude Code CLI or desktop):** two lines inside Claude Code. Auto-updating, includes the knowledge base, nothing touches your shell.
 
 ```text
 /plugin marketplace add cgallic/kai-cmo-harness
@@ -153,9 +179,9 @@ Verify any install from a clone:
 python scripts/doctor.py   # confirms referenced files exist, gates run, golden corpus passes
 ```
 
-## The 48 Public `/kai` Commands
+## The 49 Public `/kai` Commands
 
-The tables below list the 48 public router commands plus `/kai-start`, the onboarding skill that bootstraps every project. These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. Type `/kai` for the router and help menu. The [public skill manifest](docs/skill-manifest/README.md) documents 46 canonical `kai-*` skill pages with the same schema: triggers, inputs, outputs, gates, provenance, and failure modes.
+The tables below list the 49 public router commands plus `/kai-start`, the onboarding skill that bootstraps every project. These commands work through Claude Code's skill system. They load knowledge files and framework instructions for the LLM. Type `/kai` for the router and help menu. The [public skill manifest](docs/skill-manifest/README.md) documents 46 canonical `kai-*` skill pages with the same schema: triggers, inputs, outputs, gates, provenance, and failure modes.
 
 ### Produce marketing assets
 
@@ -392,7 +418,7 @@ This is the operator's own dashboard, not a client deliverable. To stand up a wh
 
 | Layer | Status | Notes |
 |-------|--------|-------|
-| Claude Code skill surface | Working | 48 public `/kai` router commands and 53 `kai-*` skills load repo context, frameworks, contracts, and policy references |
+| Claude Code skill surface | Working | 49 public `/kai` router commands and 54 `kai-*` skills load repo context, frameworks, contracts, and policy references |
 | Runtime models + persistence | Built | Atomic writes, thread-safe records, audit log |
 | Business profiling + audit engines | Built | Archetype detection, overlay inference, 8 audit categories, severity-weighted scoring, and multi-location support |
 | Proposal ranking + bundling | Built | 5-factor weighted, dependency-aware |

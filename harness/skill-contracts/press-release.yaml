@@ -225,3 +225,18 @@ constraints:
   - No bracketed placeholders.
   - Do not publish without approved quotes and a complete media contact.
   - Do not present a routine update as news unless the event is clear and dated.
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: press-release
+  floor: {E: 5, C: 3, O: 3}
+  execution_target: >
+    The release is live at the wire/newsroom URL and returns 200.
+  outcome_metrics: [pickups, referring_domains, branded_search_volume]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

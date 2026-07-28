@@ -321,6 +321,102 @@ def check_learning_layer(report: Report) -> None:
         report.warn(f"data/learning/ not writable ({exc}) — gate logging disabled, mining won't work")
 
 
+# Cowork plugin package limits (docs/cowork/guide/plugins).
+COWORK_MAX_FILES = 5000
+COWORK_MAX_BYTES = 200 * 1024 * 1024
+
+
+def check_eco(report: Report) -> None:
+    """The ECO gate must load its floors and refuse a self-issued verdict."""
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    try:
+        from scripts.quality_gates.eco_core import EcoFloors, grade
+    except Exception as exc:  # pragma: no cover - import failure is the finding
+        report.fail(f"ECO core failed to import: {exc}")
+        return
+
+    try:
+        floors = EcoFloors.load()
+    except Exception as exc:
+        report.fail(f"harness/eco-floors.yaml failed to load: {exc}")
+        return
+
+    if not floors.work_types or not floors.evidence_kinds:
+        report.fail("harness/eco-floors.yaml declares no work types or evidence kinds")
+        return
+
+    # The load-bearing invariant: evidence verified by the actor is discarded.
+    result = grade(
+        [{"kind": "provider_receipt", "locator": "x", "verifier": "actor", "observed_at": "2026-01-01T00:00:00Z"}],
+        work_type=floors.work_type("blog-post"),
+        claimed_by="actor",
+        floors=floors,
+    )
+    if result.grade["E"] != 0:
+        report.fail("ECO honest-quorum rule is not enforced — actor-verified evidence was accepted")
+        return
+
+    report.ok(
+        f"ECO gate live ({len(floors.work_types)} work types, "
+        f"{len(floors.evidence_kinds)} evidence kinds, self-verdict refused)"
+    )
+
+
+def check_plugin_package(report: Report) -> None:
+    """The plugin must be self-contained and inside Cowork's package limits."""
+    plugin_root = REPO_ROOT / "plugins" / "kai-marketing-os"
+    if not plugin_root.exists():
+        report.fail("plugins/kai-marketing-os is missing — nothing to install in Cowork")
+        return
+
+    manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    if not manifest.exists():
+        report.fail("plugins/kai-marketing-os/.claude-plugin/plugin.json is missing")
+        return
+
+    # followlinks: the plugin symlinks knowledge/, skills/, and gates back into
+    # the repo, and Cowork installs the materialized tree — so measure what the
+    # user actually receives, not the symlinks.
+    broken = []
+    file_count = 0
+    total_bytes = 0
+    for dirpath, _dirnames, filenames in os.walk(plugin_root, followlinks=True):
+        for name in filenames:
+            path = Path(dirpath) / name
+            if path.is_symlink() and not path.exists():
+                broken.append(str(path.relative_to(REPO_ROOT)))
+                continue
+            file_count += 1
+            try:
+                total_bytes += path.stat().st_size
+            except OSError:
+                pass
+
+    if broken:
+        for path in broken:
+            report.fail(f"plugin symlink does not resolve: {path}")
+        return
+
+    for required in ("skills", "knowledge", "harness/eco-floors.yaml", "scripts/quality_gates", "agents"):
+        if not (plugin_root / required).exists():
+            report.fail(f"plugin is missing {required} — install would be incomplete")
+            return
+
+    if file_count > COWORK_MAX_FILES:
+        report.fail(f"plugin has {file_count} files, over Cowork's {COWORK_MAX_FILES} limit")
+        return
+    if total_bytes > COWORK_MAX_BYTES:
+        report.fail(f"plugin is {total_bytes / 1e6:.0f} MB, over Cowork's 200 MB limit")
+        return
+
+    agents = len(list((plugin_root / "agents").glob("*.md")))
+    report.ok(
+        f"plugin package installable ({file_count} files, {total_bytes / 1e6:.1f} MB, "
+        f"{agents} agents — within Cowork limits)"
+    )
+
+
 def check_optional(report: Report) -> None:
     for module, unlocks in OPTIONAL_DEPS:
         if importlib.util.find_spec(module.split(".")[0]) is None:
@@ -362,6 +458,8 @@ def main() -> int:
     check_compiles(report)
     check_capability_manifest(report)
     check_golden_corpus(report)
+    check_eco(report)
+    check_plugin_package(report)
     if not args.ci:
         check_learning_layer(report)
         check_optional(report)

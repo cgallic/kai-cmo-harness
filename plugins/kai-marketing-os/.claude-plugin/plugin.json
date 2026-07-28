@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "kai",
   "displayName": "Kai Marketing OS",
-  "description": "A marketing team in your terminal: 45+ /kai skills for growth plans, landing pages, emails, ads, SEO/AEO, audits, and content — backed by a real knowledge base (54 playbooks, 36 checklists, 27 frameworks, 26 channel guides) and quality gates that block slop before it ships.",
+  "description": "A marketing team in Cowork or your terminal: 49 /kai skills for growth plans, landing pages, emails, ads, SEO/AEO, audits, and content — backed by a real knowledge base (67 playbooks, 37 checklists, 38 frameworks, 31 channel guides) and quality gates that block slop before it ships. Run /kai-goal to pursue a business outcome across sessions until an independent gate says it is finished.",
   "author": {
     "name": "Connor Gallic",
     "email": "me@connorgallic.com",
@@ -21,6 +21,9 @@
     "landing-pages",
     "email",
     "content",
-    "cmo"
+    "cmo",
+    "goals",
+    "long-running",
+    "autonomous"
   ]
 }

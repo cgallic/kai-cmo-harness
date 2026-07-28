@@ -1,13 +1,21 @@
 ---
 name: kai
-description: Kai Marketing OS router - shows all 48 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
+description: Kai Marketing OS router - shows all 49 marketing skills organized by workflow, business stage, and frequency. Use when "kai help", "what marketing skills are available", "how do I use the harness", "marketing help", or any general marketing question where the right skill isn't obvious.
 ---
 
-# Kai Marketing OS - 48 Marketing Skills
+# Kai Marketing OS - 49 Marketing Skills
 
 > **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
 **First time?** Run `/kai-start` — it reads your codebase, creates MARKETING.md, and recommends your first command.
+
+**Want an outcome, not an asset?** Run `/kai-goal`. Every skill below produces a deliverable; `/kai-goal` pursues a number and keeps working across sessions until an independent gate says the floor was met. Use it when the ask is "get us to X" rather than "write me a Y".
+
+## PURSUE (run an objective to completion)
+
+| Skill | What It Does |
+|-------|-------------|
+| `/kai-goal` | Take a business outcome, decompose it into work items with ECO floors, execute across context windows, and stop only on a gate verdict — SHIPPED or CLOSED |
 
 ## Instruction Contract
 
@@ -30,6 +38,19 @@ Use `kai-data.json` for general Kai workflows. Audit/deck workflows also get the
 Label recommendations as required compliance actions, high-confidence operating guidance, experiments, product recommendations, Kai-owned product recommendations, or missing-data caveats. Kai-owned products require disclosure and fit logic.
 
 For KaiCalls, evaluate phone-based lead capture when a business appears phone-led. Recommend it only when the facts show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives such as staffed reception, answering services, VoIP/IVR, CRM routing, call tracking plus process changes, chat, forms, SMS, or no-change. Do not recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
+
+## Completion Standard (ECO)
+
+`done` is not a verdict in this harness. Work is judged on three axes — **E**xecution (did the effect happen at the real target), **C**raft (does it clear the discipline's bar), **O**utcome (did the number it promised to move actually move). Two verdicts exist: **SHIPPED** (E and C floors met, outcome still owed) and **CLOSED** (all three met).
+
+The actor submits evidence. The actor never issues its own verdict.
+
+```bash
+python -m scripts.quality_gates.eco_gate floors    # the floor for each work type
+python -m scripts.quality_gates.eco_gate debt      # SHIPPED but not CLOSED
+```
+
+Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness/references/eco-marketing-floors.md`
 
 ## PRODUCE (make assets)
 
