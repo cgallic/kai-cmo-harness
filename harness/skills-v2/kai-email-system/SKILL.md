@@ -1,0 +1,86 @@
+---
+name: kai-email-system
+description: Plan and batch-produce an entire email system for a product. Maps every lifecycle touchpoint (onboarding, activation, conversion, retention, transactional, win-back), generates all emails with quality gates, outputs Loops-ready copy. Use when "create all emails", "email system", "build email sequences", "lifecycle emails", "onboarding sequence", "set up transactional emails", "plan all the emails for [product]", or any request to systematically produce a complete set of emails for a platform.
+---
+
+## Objective
+
+A complete, gated email system for a product: an approved lifecycle map covering every touchpoint the product actually has, plus produced copy for each email in priority order, plus the Loops implementation notes an operator needs to wire the triggers. All emails target Loops (lifecycle + transactional). The map is the contract — the emails are what the map spawns.
+
+## Done when
+
+Work type `email-lifecycle` — floor **E5/C3/O3** (`harness/eco-floors.yaml`). Any cold outreach email inside the system is graded under `cold-email` instead (floor **E5/C4/O3**).
+
+- **E5** — the ESP reports the send completed with a recipient count reconciled to the approved segment. This skill's local output reaches E3 at best: a named human approved the lifecycle map and the exact copy. The floor closes when the sends go out through Loops, which happens outside this skill.
+- **C3** — every email passes its declared gates (below), and a named non-producer read the set end to end. Unsubscribe and sender-identity compliance is a C4 field-standard item rather than a lint — check it against `harness/references/advertising-compliance.md`.
+- **O3** — open rate, click rate, reply rate, unsubscribe rate, and revenue per recipient read from the ESP connector at 14 days. Record the baseline and threshold before the first send, never after.
+
+## Constraints
+
+- **`MARKETING.md` in the project root is the product bible.** Read it before asking the user anything. If it does not exist, build it from the codebase and confirm the draft before saving — never open with "what is the product?". Discovery material: CLAUDE.md, README.md, PROJECT.md, package.json and any project description files in the project root and additional working directories; existing email templates, Loops config, or email code (grep for "loops", "resend", "email", "transactional"); landing pages and marketing copy for the value prop; user flows, auth systems, billing integrations, database schemas, API routes; existing content, social profiles, marketing materials.
+- **`MARKETING.md` required sections** (this file is the canonical template other `/kai` skills point to; unknowns stay `[unknown — ask user]`):
+  - **Product** — name, one-liner, category, URL.
+  - **ICP** — primary and secondary: title/role, company size, industry, budget authority, trigger event, current solution, pain severity 1-10. Plus an **Anti-ICP**: who to avoid and why.
+  - **Personas** — mapped to the closest harness personas from `knowledge/personas/_persona-index.md` then customized: who they are, core frustration, actual language they use (from reviews, forums, support tickets), top 3 objections, decision trigger, channels they trust. Plus product-level user segments.
+  - **Value Prop** — core transformation (before vs after), 3-5 key actions, activation moment, aha moment.
+  - **Business Model** — monetization and upgrade trigger, pricing, stage + MRR if known.
+  - **Current Marketing** — active channels, email platform, ad platforms, social handles, content surfaces.
+  - **Brand Voice** — tone, banned patterns, 1-2 example sentences in the right voice.
+  - **Competitive Landscape** — top 3 competitors, differentiation.
+  - **Key Metrics** — traffic, conversion rate, list size, MRR/ARR.
+- **The lifecycle map is approved before any email is written.** Present it and know three things before producing: what is missing, which emails are definitely not needed, and which priority tier to produce first. Map output: `workspace/email-system-map.md`.
+- **Every email in the map specifies** email name (becomes the Loops template name), trigger (Loops event name, e.g. `user.signed_up`, `trial.expiring_3d`), stage, priority (P0 = launch blocker, P1 = week 1, P2 = month 1), and segment.
+- **Load before writing:** `knowledge/channels/email-lifecycle.md`, `harness/skill-contracts/email-lifecycle.yaml`, `harness/skill-contracts/email.yaml`. For cold outreach emails also `harness/skill-contracts/cold-email.yaml` and `harness/references/cold-email-rules.md`.
+- **Per-email format contract** — each email carries trigger, segment, stage, send timing, a primary subject plus two variants, preview text, body, one CTA, and its gate results:
+  1. Four U's >= 10/16, scored 1-4 per U.
+  2. Zero banned words (Tier 1: leverage, utilize, synergy, innovative, deep dive, circle back, touch base, moving forward, at the end of the day).
+  3. Zero AI slop ("In conclusion", "It's important to note", "In today's rapidly evolving", "This comprehensive guide", "Without further ado", "It's worth noting that").
+  4. Subject line <= 50 chars (mobile truncation).
+  5. Preview text 40-90 chars.
+  6. Body <= 500 words (200-500 target).
+  7. Single primary CTA — one action per email.
+  8. First line not generic (no "I hope this email finds you well").
+- **Retry discipline:** max 2 retries per email, fixing only the named failing dimension. After 2 failures, flag the email in the quality report and move on.
+- **Produce in priority order**, P0 first. Emails inside one sequence are written in order because tone has to flow; emails in different stages are independent and can be produced in parallel.
+- **Persona application:** if `MARKETING.md` names a persona, load the full profile from `knowledge/personas/` and match tone to that persona's language patterns and pain points. Otherwise use the brand voice from `MARKETING.md`.
+- **Nothing sends.** This skill produces copy and setup notes; the send happens in Loops after human approval.
+
+## Context
+
+| Need | Load |
+|---|---|
+| Lifecycle patterns, subject-line formulas, anti-patterns | `knowledge/channels/email-lifecycle.md` |
+| Gate thresholds and output format for lifecycle email | `harness/skill-contracts/email-lifecycle.yaml` |
+| General email contract | `harness/skill-contracts/email.yaml` |
+| Cold outreach contract and law | `harness/skill-contracts/cold-email.yaml` + `harness/references/cold-email-rules.md` |
+| Unsubscribe, sender identity, CAN-SPAM/GDPR | `harness/references/advertising-compliance.md` |
+| Persona profiles and language patterns | `knowledge/personas/_persona-index.md` + the matching file in `knowledge/personas/` |
+| Product, ICP, voice, current channels | `MARKETING.md` (project root) |
+
+**Standard B2B SaaS stage map** — adapt to the actual product, removing irrelevant stages and adding product-specific ones:
+
+| Stage | Trigger type | Emails |
+|-------|-------------|--------|
+| **Welcome** | Transactional | Welcome + getting started |
+| **Onboarding** | Behavioral | Setup incomplete, first value moment, invite team |
+| **Activation** | Behavioral | Feature discovery, usage milestone |
+| **Conversion** | Time + behavioral | Trial expiring (T-3, T-1, T-0), upgrade prompt |
+| **Engagement** | Behavioral + scheduled | Weekly digest, new feature announcement |
+| **Retention** | Behavioral | Usage drop, re-engagement, churn risk |
+| **Win-back** | Time-based | Churned user sequence (D+7, D+14, D+30) |
+| **Transactional** | Event-driven | Password reset, invoice, plan change, security alert |
+| **Referral** | Milestone | Referral ask after value moment |
+
+**Output.** Emails go to `workspace/emails/[stage]/[email-name].md` — e.g. `workspace/emails/onboarding/setup-incomplete.md`. Alongside them:
+
+- `workspace/emails/_email-system-map.md` — the full lifecycle map.
+- `workspace/emails/_quality-report.md` — totals (emails produced, passed, flagged, average Four U's), a per-email row with each gate result, and every email that failed after 2 retries with its specific failure reason.
+- `workspace/emails/_loops-setup.md` — every trigger event to create in Loops; segments/groups needed; sequence flows and the delays between chained emails (onboarding, trial expiration, win-back); and which emails are transactional (no unsubscribe) versus marketing (unsubscribe required).
+
+## Escalate when
+
+- The product's activation moment or monetization trigger cannot be determined from the codebase, so behavioral triggers would be guesses.
+- An email would make a quantitative or compliance-bearing claim (pricing, guarantees, results) that `MARKETING.md` does not support.
+- The transactional/marketing split is ambiguous for an email — misclassifying it is an unsubscribe compliance failure.
+- Two retries failed on the same email for the same reason.
+- The user wants sends scheduled or triggers activated in Loops from here.

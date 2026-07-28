@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "kai-v2",
+  "displayName": "Kai Marketing OS v2 (goal-oriented)",
+  "description": "The same 49 /kai marketing skills, rewritten for current frontier models: each one states an objective, a completion floor, and constraints, then leaves the route to the agent. Same knowledge base, same quality gates, same governance as v1 — no phase lists. Install this on Claude Opus 5 or Sonnet 5 class models; install `kai` instead for smaller or older models.",
+  "author": {
+    "name": "Connor Gallic",
+    "email": "me@connorgallic.com",
+    "url": "https://github.com/cgallic"
+  },
+  "homepage": "https://meetkai.xyz",
+  "repository": "https://github.com/cgallic/kai-cmo-harness",
+  "license": "MIT",
+  "keywords": [
+    "marketing",
+    "growth",
+    "seo",
+    "aeo",
+    "ads",
+    "copywriting",
+    "landing-pages",
+    "email",
+    "content",
+    "cmo",
+    "goals",
+    "goal-oriented",
+    "long-running",
+    "autonomous"
+  ]
+}

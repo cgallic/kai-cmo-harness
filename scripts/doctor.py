@@ -377,16 +377,85 @@ def check_eco(report: Report) -> None:
     )
 
 
+# A v2 skill states an objective and a floor. A numbered phase list means the
+# procedural scaffolding survived the rewrite, which is the thing v2 removes.
+_PHASE_RE = re.compile(r"^#{1,4}\s+(phase|step)\s*\d", re.IGNORECASE | re.MULTILINE)
+V2_REQUIRED_SECTIONS = ("## Objective", "## Done when", "## Constraints", "## Context", "## Escalate when")
+
+
+def _frontmatter_block(text: str) -> str | None:
+    """Return the raw YAML frontmatter, or None when the file has none."""
+    if not text.startswith("---"):
+        return None
+    end = text.find("\n---", 3)
+    return text[: end + 4] if end != -1 else None
+
+
+def check_skill_versions(report: Report) -> None:
+    """v1 and v2 must stay in lockstep on routing, and v2 must stay goal-shaped."""
+    v1_root = REPO_ROOT / "harness" / "skills"
+    v2_root = REPO_ROOT / "harness" / "skills-v2"
+    if not v2_root.exists():
+        report.fail("harness/skills-v2 is missing — the v2 skill set is not installed")
+        return
+
+    v1 = {p.name for p in v1_root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
+    v2 = {p.name for p in v2_root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
+
+    missing = sorted(v1 - v2)
+    orphans = sorted(v2 - v1)
+    if missing:
+        report.fail(f"{len(missing)} skill(s) have no v2 counterpart: {', '.join(missing[:6])}")
+    if orphans:
+        report.fail(f"{len(orphans)} v2 skill(s) have no v1 counterpart: {', '.join(orphans[:6])}")
+    if missing or orphans:
+        return
+
+    drift: list[str] = []
+    shape: list[str] = []
+    for name in sorted(v1):
+        v1_text = (v1_root / name / "SKILL.md").read_text(encoding="utf-8")
+        v2_text = (v2_root / name / "SKILL.md").read_text(encoding="utf-8")
+
+        # Routing must be identical, or the same request reaches different skills.
+        if _frontmatter_block(v1_text) != _frontmatter_block(v2_text):
+            drift.append(name)
+
+        # The router is an index, and kai-goal was authored goal-native.
+        if name in {"kai", "kai-goal"}:
+            continue
+        if _PHASE_RE.search(v2_text):
+            shape.append(f"{name} (phase list)")
+        else:
+            absent = [s for s in V2_REQUIRED_SECTIONS if s not in v2_text]
+            if absent:
+                shape.append(f"{name} (missing {absent[0]})")
+
+    for name in drift[:6]:
+        report.fail(f"v1/v2 frontmatter drift in {name} — routing would differ between plugins")
+    for item in shape[:6]:
+        report.fail(f"v2 skill is not goal-shaped: {item}")
+    if drift or shape:
+        return
+
+    report.ok(f"skill versions in parity ({len(v1)} skills, v1 procedural + v2 goal-oriented)")
+
+
 def check_plugin_package(report: Report) -> None:
-    """The plugin must be self-contained and inside Cowork's package limits."""
-    plugin_root = REPO_ROOT / "plugins" / "kai-marketing-os"
+    """Both plugin packages must be self-contained and inside Cowork's limits."""
+    for package in ("kai-marketing-os", "kai-marketing-os-v2"):
+        _check_one_plugin(report, package)
+
+
+def _check_one_plugin(report: Report, package: str) -> None:
+    plugin_root = REPO_ROOT / "plugins" / package
     if not plugin_root.exists():
-        report.fail("plugins/kai-marketing-os is missing — nothing to install in Cowork")
+        report.fail(f"plugins/{package} is missing — nothing to install in Cowork")
         return
 
     manifest = plugin_root / ".claude-plugin" / "plugin.json"
     if not manifest.exists():
-        report.fail("plugins/kai-marketing-os/.claude-plugin/plugin.json is missing")
+        report.fail(f"plugins/{package}/.claude-plugin/plugin.json is missing")
         return
 
     # followlinks: the plugin symlinks knowledge/, skills/, and gates back into
@@ -409,24 +478,24 @@ def check_plugin_package(report: Report) -> None:
 
     if broken:
         for path in broken:
-            report.fail(f"plugin symlink does not resolve: {path}")
+            report.fail(f"{package} symlink does not resolve: {path}")
         return
 
     for required in ("skills", "knowledge", "harness/eco-floors.yaml", "scripts/quality_gates", "agents"):
         if not (plugin_root / required).exists():
-            report.fail(f"plugin is missing {required} — install would be incomplete")
+            report.fail(f"{package} is missing {required} — install would be incomplete")
             return
 
     if file_count > COWORK_MAX_FILES:
-        report.fail(f"plugin has {file_count} files, over Cowork's {COWORK_MAX_FILES} limit")
+        report.fail(f"{package} has {file_count} files, over Cowork's {COWORK_MAX_FILES} limit")
         return
     if total_bytes > COWORK_MAX_BYTES:
-        report.fail(f"plugin is {total_bytes / 1e6:.0f} MB, over Cowork's 200 MB limit")
+        report.fail(f"{package} is {total_bytes / 1e6:.0f} MB, over Cowork's 200 MB limit")
         return
 
     agents = len(list((plugin_root / "agents").glob("*.md")))
     report.ok(
-        f"plugin package installable ({file_count} files, {total_bytes / 1e6:.1f} MB, "
+        f"{package} installable ({file_count} files, {total_bytes / 1e6:.1f} MB, "
         f"{agents} agents — within Cowork limits)"
     )
 
@@ -473,6 +542,7 @@ def main() -> int:
     check_capability_manifest(report)
     check_golden_corpus(report)
     check_eco(report)
+    check_skill_versions(report)
     check_plugin_package(report)
     if not args.ci:
         check_learning_layer(report)

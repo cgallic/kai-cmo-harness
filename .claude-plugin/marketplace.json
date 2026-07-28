@@ -12,6 +12,13 @@
       "description": "A marketing team in Cowork or your terminal: 49 /kai skills, 3 marketing subagents, a full knowledge base, and quality gates that block slop before it ships. Type /kai:kai-start after install, or /kai:kai-goal to run an objective to completion.",
       "category": "marketing",
       "keywords": ["marketing", "growth", "seo", "ads", "copywriting", "cmo", "goals", "autonomous"]
+    },
+    {
+      "name": "kai-v2",
+      "source": "./plugins/kai-marketing-os-v2",
+      "description": "Kai for current frontier models: the same 49 skills stated as objectives, completion floors, and constraints instead of phase lists. Same knowledge base and gates as `kai`. Install this on Opus 5 / Sonnet 5 class models; install `kai` for smaller or older ones.",
+      "category": "marketing",
+      "keywords": ["marketing", "growth", "seo", "ads", "copywriting", "cmo", "goals", "goal-oriented", "autonomous"]
     }
   ]
 }

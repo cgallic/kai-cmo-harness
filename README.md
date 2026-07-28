@@ -148,11 +148,20 @@ Research -> Brief -> Write -> Quality Gate -> Approval -> Publish -> Log -> 30-d
 
 ## Install Options
 
+**Pick your version first.** Kai ships the same 49 skills two ways, and neither is deprecated:
+
+| | `kai` (v1) | `kai-v2` |
+|---|---|---|
+| Shape | Numbered phases and explicit steps | Objective, completion floor, constraints — route is yours |
+| Install on | Smaller or older models; work that must produce an identical shape every run | Claude Opus 5 / Sonnet 5 class models |
+
+Same knowledge base, same gates, same governance, same output paths. Both can be installed together — Claude Code namespaces them as `/kai:*` and `/kai-v2:*`. Details: [`docs/system/skill-versions.md`](docs/system/skill-versions.md).
+
 **Cowork (no terminal needed):** Kai installs as a plugin from this repo, no clone and no shell.
 
 1. Open **Customize → Plugins** in the sidebar.
 2. Select **Add marketplace** and enter `cgallic/kai-cmo-harness`.
-3. Install **Kai Marketing OS**, then open it to see its skills and agents.
+3. Install **Kai Marketing OS** (or **Kai Marketing OS v2**), then open it to see its skills and agents.
 
 You get 49 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want Kai chasing an outcome rather than producing one asset.
 

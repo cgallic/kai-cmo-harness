@@ -42,6 +42,8 @@ Two corollaries: **do not instruct self-verification** (it causes over-verificat
 
 Long-running and background work: `docs/system/long-horizon-operating-contract.md`. Entry point: `/kai-goal`.
 
+**Every skill ships in two forms, and both are supported.** `harness/skills/` (v1) states the objective as numbered phases, which smaller and older models need. `harness/skills-v2/` (v2) states objective, floor, and constraints and leaves the route to the agent, which is what current frontier models want. Frontmatter, knowledge base, gates, governance, and output paths are identical between them — only the route differs, and **v2 is never more permissive than v1**. Packaged as the `kai` and `kai-v2` plugins. Parity is enforced by `scripts/doctor.py` and `tests/test_skill_versions.py`. Doctrine: `docs/system/skill-versions.md`.
+
 ## Runtime primitives
 
 First-class Kai product concepts: **Goals** (objectives with ECO floors, pursued to a verdict), **Skills** (user-facing workflows), **Subagents** (specialist workers), **Hooks** (automatic gate/approval/logging), **Memory** (persistent workspace + brand state), **MCP / integrations** (live data + publishing), **Plugins** (packaging/install), **Remote tasks** (scheduled/background execution).
@@ -219,3 +221,4 @@ Key files: `knowledge/frameworks/aeo-ai-search/patent-information-gain-US1201388
 - **ECO completion standard (E/C/O grades, verdicts, failure records, independent verdict authority)** → `docs/system/eco-completion-standard.md`
 - **Running across context windows, background operation, resume protocol, autonomy tiers** → `docs/system/long-horizon-operating-contract.md`
 - **ECO applied to marketing (floors per work type, what counts as evidence, outcome debt)** → `harness/references/eco-marketing-floors.md`
+- **v1 vs v2 skills (which to install, what v2 removes and keeps, parity rules)** → `docs/system/skill-versions.md`
