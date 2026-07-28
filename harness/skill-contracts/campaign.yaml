@@ -59,3 +59,18 @@ hooks:
   # No longer prose-only: campaign_planner --save auto-runs
   # campaign_tracker.create_campaign with the minted campaign_id.
   on_publish: create_campaign_tracker
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: campaign
+  floor: {E: 5, C: 3, O: 4}
+  execution_target: >
+    Every child work item reached its own floor; the campaign is open while any asset is unshipped.
+  outcome_metrics: [pipeline_generated, cac, campaign_roi]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

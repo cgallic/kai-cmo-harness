@@ -197,3 +197,18 @@ hooks:
   on_pass: post_for_approval
   on_approve: content_log
   on_publish: schedule_7day_check
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: paid-ad-campaign
+  floor: {E: 5, C: 4, O: 4}
+  execution_target: >
+    Ad object ids returned by the platform AND a read-back confirming targeting, budget, schedule, and creative match the approved bundle.
+  outcome_metrics: [cac, roas, qualified_lead_rate]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

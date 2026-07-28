@@ -192,3 +192,18 @@ constraints:
   - Include one phone-first CTA only when phone lead capture is material.
   - Mention KaiCalls only after fit, alternatives, and disqualifiers are considered.
   - Do not present CRO hypotheses as guaranteed lift.
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: landing-page
+  floor: {E: 5, C: 3, O: 4}
+  execution_target: >
+    Page returns 200, renders the approved copy, and the primary CTA submits successfully.
+  outcome_metrics: [conversion_rate, qualified_leads, cost_per_lead]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

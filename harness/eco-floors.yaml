@@ -1,0 +1,361 @@
+
+# ECO floors for marketing work — machine-readable registry.
+#
+# Doctrine: docs/system/eco-completion-standard.md
+# Narrative: harness/references/eco-marketing-floors.md
+# Verifier:  python -m scripts.quality_gates.eco_gate
+#
+# A floor is the minimum grade on each axis a work type must reach before the
+# gate may issue a verdict:
+#   E floor + C floor met                -> SHIPPED (outcome debt remains open)
+#   E floor + C floor + O floor met      -> CLOSED
+#
+# The actor submits evidence. The gate computes grades and the verdict.
+# Nothing in this file may be interpreted as permission to self-certify.
+
+schema_version: kai.eco-floors.v1
+updated: 2026-07-28
+
+# ---------------------------------------------------------------------------
+# Evidence kinds — what an actor may submit, and which grade it can support.
+# `independence_required: true` means the evidence is discarded when its
+# verifier is the same identity as the claiming actor (honest quorum).
+# ---------------------------------------------------------------------------
+
+evidence_kinds:
+  # --- Execution ---
+  artifact_exists:
+    axis: E
+    grade: 1
+    independence_required: false
+    description: A draft, file, render, or record exists on disk or in the runtime store.
+  contract_spec_pass:
+    axis: E
+    grade: 2
+    independence_required: true
+    description: The artifact satisfies its skill contract output_schema or declared spec.
+  approval_review:
+    axis: E
+    grade: 3
+    independence_required: true
+    requires_fields: [sha256]
+    description: A named human approved the exact bytes, hash-pinned.
+  provider_receipt:
+    axis: E
+    grade: 4
+    independence_required: true
+    description: The publishing target accepted the action and returned a durable id (post URN, message id, CMS post id, ad object id).
+  independent_verification:
+    axis: E
+    grade: 5
+    independence_required: true
+    requires_fields: [expected, observed]
+    description: A non-actor retrieved the postcondition from the authoritative target (public URL, provider API, mailbox).
+  reconciliation:
+    axis: E
+    grade: 5
+    independence_required: true
+    description: Published state was reconciled field-by-field against the approved intent.
+
+  # --- Craft ---
+  craft_self_check:
+    axis: C
+    grade: 1
+    independence_required: false
+    description: The producer ran the discipline's basic automated checks.
+  craft_gate_pass:
+    axis: C
+    grade: 2
+    independence_required: true
+    description: Every declared machine check passed at its stated threshold (Four U's, banned words, SEO lint, policy lint, provenance lint).
+  craft_independent_review:
+    axis: C
+    grade: 3
+    independence_required: true
+    description: A named non-producer read the artifact end to end and signed off on the human residue.
+  craft_field_standard:
+    axis: C
+    grade: 4
+    independence_required: true
+    description: The work meets the named professional/legal standard; deviations carry explicit expiring waivers.
+
+  # --- Outcome ---
+  outcome_baseline:
+    axis: O
+    grade: 1
+    independence_required: false
+    requires_fields: [metric, source, baseline, threshold, window, owner]
+    description: Metric, authoritative source, pre-state, success threshold, observation window, and owner recorded BEFORE ship.
+  outcome_instrumentation:
+    axis: O
+    grade: 2
+    independence_required: true
+    description: A test event traversed the full measurement path end to end.
+  outcome_observation:
+    axis: O
+    grade: 3
+    independence_required: true
+    requires_fields: [observed]
+    description: The metric was read from its authoritative source at the declared window.
+  outcome_threshold_met:
+    axis: O
+    grade: 4
+    independence_required: true
+    requires_fields: [observed, threshold]
+    description: The observed result cleared the predeclared threshold.
+  outcome_attribution:
+    axis: O
+    grade: 5
+    independence_required: true
+    requires_fields: [design]
+    description: Holdout, control, geo-split, switchback, or other credible counterfactual supports attribution.
+
+# ---------------------------------------------------------------------------
+# Defaults — applied when a work type omits a key.
+# ---------------------------------------------------------------------------
+
+defaults:
+  floor: {E: 2, C: 2, O: 0}
+  outcome_window_days: 30
+  attribution_required: false
+  craft_gates: [four_us_score, banned_word_check]
+
+# ---------------------------------------------------------------------------
+# Work types.
+#
+# `external_effect: false` means nothing leaves the workspace, so E tops out at
+# E3 (approval of exact bytes) and no provider read-back is possible or required.
+# ---------------------------------------------------------------------------
+
+work_types:
+
+  # ---- Published content -------------------------------------------------
+
+  blog-post:
+    contract: harness/skill-contracts/blog-post.yaml
+    external_effect: true
+    floor: {E: 5, C: 3, O: 3}
+    craft_gates: [four_us_score, banned_word_check, seo_lint]
+    execution_target: The live post URL returns 200 and matches the approved body.
+    outcome:
+      metrics: [organic_clicks, organic_impressions, indexed, assisted_conversions]
+      source: google_search_console
+      window_days: 30
+      note: Registered automatically as a 30-day pending check when the entry gains a real URL.
+    close_path: /kai-retro grades the 30-day check; winners go to what-works.md, losers to what-doesnt-work.md.
+
+  landing-page:
+    contract: harness/skill-contracts/landing-page.yaml
+    external_effect: true
+    floor: {E: 5, C: 3, O: 4}
+    craft_gates: [four_us_score, banned_word_check, seo_lint]
+    execution_target: The live page returns 200, renders the approved copy, and its primary CTA submits successfully.
+    outcome:
+      metrics: [conversion_rate, qualified_leads, cost_per_lead]
+      source: analytics_connector
+      window_days: 30
+      minimum_sample: "Do not read the metric before the declared minimum sample is reached; an underpowered read is not O3."
+    attribution_required: true
+    attribution_note: A page that replaces an existing page needs a control or holdout before O5. See knowledge/frameworks/marketing-science/experiment-rigor.md.
+
+  social-post:
+    contract: harness/skill-contracts/social-post.yaml
+    external_effect: true
+    floor: {E: 5, C: 2, O: 3}
+    craft_gates: [four_us_score, banned_word_check]
+    execution_target: Provider returns a post id AND the public permalink read-back matches the approved text.
+    outcome:
+      metrics: [reach, engagement_rate, profile_clicks, link_clicks]
+      source: platform_insights
+      window_days: 7
+    policy_refs: harness/references/*-organic-posting-rules.md, harness/references/social-automation-rules.md
+
+  email-lifecycle:
+    contract: harness/skill-contracts/email-lifecycle.yaml
+    external_effect: true
+    floor: {E: 5, C: 3, O: 3}
+    craft_gates: [four_us_score, banned_word_check]
+    execution_target: ESP reports the send completed with a recipient count reconciled to the approved segment.
+    outcome:
+      metrics: [open_rate, click_rate, reply_rate, unsubscribe_rate, revenue_per_recipient]
+      source: esp_connector
+      window_days: 14
+    craft_note: Unsubscribe and sender identity compliance is a C4 field-standard item, not a C2 lint. See harness/references/advertising-compliance.md.
+
+  cold-email:
+    contract: harness/skill-contracts/cold-email.yaml
+    external_effect: true
+    floor: {E: 5, C: 4, O: 3}
+    craft_gates: [four_us_score, banned_word_check]
+    execution_target: Provider send receipt plus suppression-list reconciliation for every recipient.
+    outcome:
+      metrics: [reply_rate, positive_reply_rate, meetings_booked, complaint_rate]
+      source: esp_connector
+      window_days: 14
+    craft_note: >
+      C4 is mandatory. CAN-SPAM/GDPR/CASL identity, opt-out, and consent basis must be
+      verified against harness/references/cold-email-rules.md and
+      harness/references/advertising-compliance.md before send. A complaint-rate ceiling
+      is a hard stop, not an outcome metric.
+
+  press-release:
+    contract: harness/skill-contracts/press-release.yaml
+    external_effect: true
+    floor: {E: 5, C: 3, O: 3}
+    outcome:
+      metrics: [pickups, referring_domains, branded_search_volume]
+      source: manual_or_intel_connector
+      window_days: 30
+
+  # ---- Paid media --------------------------------------------------------
+
+  paid-ad-campaign:
+    contract: harness/skill-contracts/meta-ads.yaml
+    also_covers: [google-ads, tiktok, linkedin-ads, microsoft-ads, pinterest-ads, snapchat-ads, amazon-ads, x-ads]
+    external_effect: true
+    spend_authority: true
+    floor: {E: 5, C: 4, O: 4}
+    craft_gates: [four_us_score, banned_word_check, mutation_risk_lint]
+    execution_target: >
+      Ad object ids returned by the platform AND a read-back of the live entity confirming
+      targeting, budget, schedule, and creative match the approved bundle field-for-field.
+    outcome:
+      metrics: [cac, roas, cpl, qualified_lead_rate]
+      source: ads_connector
+      window_days: 14
+      minimum_sample: "Read no earlier than the declared conversion window plus learning phase."
+    attribution_required: true
+    attribution_note: >
+      Platform-reported ROAS is not O5. O5 needs a holdout, geo-split, or incrementality
+      design per knowledge/frameworks/marketing-science/attribution-and-incrementality.md.
+    craft_note: >
+      C4 requires the platform policy reference to have been loaded and the ad checked
+      against it before submission. See .claude/rules/architecture-and-memory.md.
+    hard_stop: Live-account mutation without recorded human approval is never SHIPPED regardless of evidence.
+
+  # ---- Client-facing analysis -------------------------------------------
+
+  audit-report:
+    also_covers: [seo-audit, cro-audit, funnel-audit, monthly-audit, weekly-audit, competitor-teardown, agent-readiness-audit]
+    external_effect: true
+    client_facing: true
+    floor: {E: 3, C: 4, O: 1}
+    craft_gates: [banned_word_check, audit_provenance_lint]
+    execution_target: >
+      The delivered file is the approved, hash-pinned version and every quantitative claim
+      resolves to a collector source in the audit data folder.
+    craft_note: >
+      C4 is the Kai Data Provenance Rule. Run
+      `python -m scripts.audit.collect --url <url> --mode <mode> --workflow <workflow> --out <folder>`
+      before writing, declare sales_external / onboarding_connected / internal_demo, and cite a
+      collector source for every number. Missing data goes to _data-gaps.md, never to a guess.
+      Then `python scripts/quality_gates/audit_provenance_lint.py <folder> --audit-dir`.
+    outcome:
+      metrics: [recommendations_accepted, recommendations_implemented]
+      source: manual
+      window_days: 60
+      note: >
+        An audit's outcome is whether its recommendations were adopted and moved the metric
+        they claimed to move. O1 at minimum: name the metric each P0 recommendation targets.
+
+  strategy-plan:
+    also_covers: [growth-plan, campaign-plan, topical-map, content-calendar, offer-builder]
+    external_effect: false
+    floor: {E: 3, C: 3, O: 1}
+    craft_gates: [banned_word_check]
+    execution_target: A named human approved the exact plan document.
+    outcome:
+      metrics: [plan_adopted, first_action_shipped]
+      source: manual
+      window_days: 30
+      note: A plan nobody executed is not CLOSED. Its O1 must name the first work item it spawns.
+
+  # ---- Multi-asset -------------------------------------------------------
+
+  campaign:
+    contract: harness/skill-contracts/campaign.yaml
+    external_effect: true
+    floor: {E: 5, C: 3, O: 4}
+    composite: true
+    composite_rule: >
+      A campaign is CLOSED only when every child work item is CLOSED and the campaign-level
+      outcome threshold is met. One unshipped asset keeps the campaign open.
+    outcome:
+      metrics: [pipeline_generated, cac, campaign_roi]
+      source: analytics_connector
+      window_days: 45
+    attribution_required: true
+
+  # ---- Internal ----------------------------------------------------------
+
+  internal-research:
+    external_effect: false
+    floor: {E: 2, C: 2, O: 0}
+    craft_gates: [banned_word_check]
+    execution_target: The research file exists and satisfies its declared structure.
+    outcome:
+      note: No outcome obligation. Internal research is SHIPPED-terminal by design.
+    shipped_is_terminal: true
+
+  product-ui:
+    also_covers: [design-system, component-work, kaicalls-design]
+    external_effect: true
+    client_facing: true
+    floor: {E: 5, C: 4, O: 3}
+    craft_gates: [project_tests, accessibility_check]
+    execution_target: >
+      The change is live in the product and a non-actor loaded the real screen at the
+      real breakpoints, confirming it renders and behaves as approved — not that the
+      build succeeded or the deploy was marked ready.
+    craft_note: >
+      C4 is the design field standard, not a lint: hierarchy, WCAG AA contrast and focus
+      order, design-token compliance rather than hardcoded values, responsive behavior at
+      the actual viewing sizes, loading/empty/error states, and review at the size users
+      see it. Deviations need an explicit expiring waiver.
+    outcome:
+      metrics: [task_completion_rate, time_to_first_action, support_tickets, drop_off_rate]
+      source: analytics_connector
+      window_days: 30
+      note: >
+        A UI change that shipped and moved nothing is SHIPPED, not CLOSED. Name the user
+        behavior it was supposed to change before building it.
+
+  harness-change:
+    external_effect: false
+    floor: {E: 3, C: 3, O: 1}
+    craft_gates: [doctor, golden_check, pytest]
+    execution_target: Tests, doctor, and the golden corpus pass on the changed tree.
+    craft_note: >
+      Any edit to a gate script, banned-word tier, or overclaim pattern must keep the golden
+      corpus passing, and a new check must add a golden case proving it.
+    outcome:
+      metrics: [lesson_recurrence_stopped]
+      source: data/learning/gate_runs.jsonl
+      window_days: 30
+
+# ---------------------------------------------------------------------------
+# Rules the gate enforces regardless of work type.
+# ---------------------------------------------------------------------------
+
+invariants:
+  - id: no_self_verdict
+    rule: The gate rejects any record whose actor-submitted payload contains a `computed` block.
+  - id: honest_quorum
+    rule: >
+      Evidence whose `verifier` equals the record's `claimed_by` is discarded for any kind
+      marked independence_required. Same model, same source, different agent name is not
+      independent.
+  - id: outcome_predeclared
+    rule: >
+      An outcome_baseline observed_at later than the earliest E4/E5 evidence is rejected.
+      A baseline written after ship is not a baseline.
+  - id: append_only
+    rule: Evidence entries are never edited or removed. Superseding means appending.
+  - id: failure_is_recorded
+    rule: >
+      Every ended attempt that does not reach SHIPPED or CLOSED writes a failure record
+      naming the failed axis. Zero output is a result to explain, not a healthy heartbeat.
+  - id: spend_and_live_channels
+    rule: >
+      Work types with spend_authority or external_effect true may not reach SHIPPED without
+      E3 approval evidence, whatever the rest of the evidence shows.

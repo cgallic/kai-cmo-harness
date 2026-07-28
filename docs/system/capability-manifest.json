@@ -2,6 +2,7 @@
   "schema_version": 1,
   "sources": {
     "skills": "harness/skills/*/SKILL.md",
+    "v2_skills": "harness/skills-v2/*/SKILL.md",
     "public_router_commands": "harness/skills/kai/SKILL.md",
     "public_manifest_pages": "docs/skill-manifest/kai-*.md",
     "knowledge": "repository filesystem counts using counting_rules"
@@ -9,7 +10,8 @@
   "counting_rules": {
     "skill_directories": "Immediate directories under harness/skills.",
     "canonical_kai_skills": "Immediate kai-* directories under harness/skills with their SKILL.md as source.",
-    "public_router_commands": "Unique /kai-* rows in the PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
+    "v2_goal_oriented_skills": "Immediate directories under harness/skills-v2 with a SKILL.md; the goal-oriented rewrite of the same skill set.",
+    "public_router_commands": "Unique /kai-* rows in the PURSUE, PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
     "public_manifest_pages": "kai-*.md files under docs/skill-manifest.",
     "knowledge_markdown": "Markdown files under the named surface; recursive only for frameworks; AGENTS.md and CLAUDE.md excluded.",
     "audience_persona_profiles": "Non-underscore Markdown files under knowledge/personas; AGENTS.md and CLAUDE.md excluded.",
@@ -17,17 +19,18 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 55,
-    "canonical_kai_skills": 53,
-    "public_router_commands": 48,
-    "public_manifest_pages": 46,
+    "skill_directories": 56,
+    "canonical_kai_skills": 54,
+    "v2_goal_oriented_skills": 56,
+    "public_router_commands": 49,
+    "public_manifest_pages": 47,
     "undocumented_canonical_skills": 7,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
-    "harness_references": 36,
+    "harness_references": 37,
     "skill_contracts": 33
   },
   "coverage": {
@@ -44,6 +47,11 @@
     "unresolved_router_commands": []
   },
   "router_commands": [
+    {
+      "name": "kai-goal",
+      "category": "pursue",
+      "description": "Take a business outcome, decompose it into work items with ECO floors, execute across context windows, and stop only on a gate verdict — SHIPPED or CLOSED"
+    },
     {
       "name": "kai-write",
       "category": "produce",
@@ -445,6 +453,14 @@
       "public_router_command": true,
       "router_category": "audit",
       "manifest_doc": "docs/skill-manifest/kai-gate.md"
+    },
+    {
+      "name": "kai-goal",
+      "description": "Run a marketing objective to completion over hours, days, or weeks — not a single deliverable. Takes a business outcome (\"40 qualified demos a month from organic by Q4\", \"cut blended CAC below $90\", \"launch the product in September\"), decomposes it into work items with declared ECO floors, executes them across context windows with resumable state, and stops only when an independent gate returns SHIPPED or CLOSED. Use when the request is an outcome rather than an artifact, when work must continue in the background or across sessions, or when the user says \"goal\", \"run this until\", \"keep working on\", \"autonomous\", \"long-running\", \"over the next month\", or \"get us to <number>\".",
+      "source": "harness/skills/kai-goal/SKILL.md",
+      "public_router_command": true,
+      "router_category": "pursue",
+      "manifest_doc": "docs/skill-manifest/kai-goal.md"
     },
     {
       "name": "kai-growth-hacker",

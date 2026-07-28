@@ -244,3 +244,18 @@ hooks:
   on_fail: revise_with_failure_report
   on_pass: post_for_approval
   on_approve: load_into_instantly + content_log
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: cold-email
+  floor: {E: 5, C: 4, O: 3}
+  execution_target: >
+    Provider send receipt plus suppression-list reconciliation for every recipient.
+  outcome_metrics: [reply_rate, positive_reply_rate, meetings_booked, complaint_rate]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

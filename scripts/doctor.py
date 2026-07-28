@@ -321,6 +321,185 @@ def check_learning_layer(report: Report) -> None:
         report.warn(f"data/learning/ not writable ({exc}) — gate logging disabled, mining won't work")
 
 
+# Cowork plugin package limits (docs/cowork/guide/plugins).
+COWORK_MAX_FILES = 5000
+COWORK_MAX_BYTES = 200 * 1024 * 1024
+
+
+def check_eco(report: Report) -> None:
+    """The ECO gate must load its floors and refuse a self-issued verdict.
+
+    Doctor itself is stdlib-only, so the semantic half of this check runs only
+    when PyYAML is available (it is an optional dep).  `tests/test_eco.py`
+    enforces the same invariants where dependencies are installed.
+    """
+    floors_path = REPO_ROOT / "harness" / "eco-floors.yaml"
+    if not floors_path.exists():
+        report.fail("harness/eco-floors.yaml is missing — no work type has a declared floor")
+        return
+
+    if importlib.util.find_spec("yaml") is None:
+        report.warn("pyyaml not installed — ECO floor/verdict checks skipped (tests/test_eco.py covers them)")
+        return
+
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    try:
+        from scripts.quality_gates.eco_core import EcoFloors, grade
+    except Exception as exc:  # pragma: no cover - import failure is the finding
+        report.fail(f"ECO core failed to import: {exc}")
+        return
+
+    try:
+        floors = EcoFloors.load()
+    except Exception as exc:
+        report.fail(f"harness/eco-floors.yaml failed to load: {exc}")
+        return
+
+    if not floors.work_types or not floors.evidence_kinds:
+        report.fail("harness/eco-floors.yaml declares no work types or evidence kinds")
+        return
+
+    # The load-bearing invariant: evidence verified by the actor is discarded.
+    result = grade(
+        [{"kind": "provider_receipt", "locator": "x", "verifier": "actor", "observed_at": "2026-01-01T00:00:00Z"}],
+        work_type=floors.work_type("blog-post"),
+        claimed_by="actor",
+        floors=floors,
+    )
+    if result.grade["E"] != 0:
+        report.fail("ECO honest-quorum rule is not enforced — actor-verified evidence was accepted")
+        return
+
+    report.ok(
+        f"ECO gate live ({len(floors.work_types)} work types, "
+        f"{len(floors.evidence_kinds)} evidence kinds, self-verdict refused)"
+    )
+
+
+# A v2 skill states an objective and a floor. A numbered phase list means the
+# procedural scaffolding survived the rewrite, which is the thing v2 removes.
+_PHASE_RE = re.compile(r"^#{1,4}\s+(phase|step)\s*\d", re.IGNORECASE | re.MULTILINE)
+V2_REQUIRED_SECTIONS = ("## Objective", "## Done when", "## Constraints", "## Context", "## Escalate when")
+
+
+def _frontmatter_block(text: str) -> str | None:
+    """Return the raw YAML frontmatter, or None when the file has none."""
+    if not text.startswith("---"):
+        return None
+    end = text.find("\n---", 3)
+    return text[: end + 4] if end != -1 else None
+
+
+def check_skill_versions(report: Report) -> None:
+    """v1 and v2 must stay in lockstep on routing, and v2 must stay goal-shaped."""
+    v1_root = REPO_ROOT / "harness" / "skills"
+    v2_root = REPO_ROOT / "harness" / "skills-v2"
+    if not v2_root.exists():
+        report.fail("harness/skills-v2 is missing — the v2 skill set is not installed")
+        return
+
+    v1 = {p.name for p in v1_root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
+    v2 = {p.name for p in v2_root.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()}
+
+    missing = sorted(v1 - v2)
+    orphans = sorted(v2 - v1)
+    if missing:
+        report.fail(f"{len(missing)} skill(s) have no v2 counterpart: {', '.join(missing[:6])}")
+    if orphans:
+        report.fail(f"{len(orphans)} v2 skill(s) have no v1 counterpart: {', '.join(orphans[:6])}")
+    if missing or orphans:
+        return
+
+    drift: list[str] = []
+    shape: list[str] = []
+    for name in sorted(v1):
+        v1_text = (v1_root / name / "SKILL.md").read_text(encoding="utf-8")
+        v2_text = (v2_root / name / "SKILL.md").read_text(encoding="utf-8")
+
+        # Routing must be identical, or the same request reaches different skills.
+        if _frontmatter_block(v1_text) != _frontmatter_block(v2_text):
+            drift.append(name)
+
+        # The router is an index, and kai-goal was authored goal-native.
+        if name in {"kai", "kai-goal"}:
+            continue
+        if _PHASE_RE.search(v2_text):
+            shape.append(f"{name} (phase list)")
+        else:
+            absent = [s for s in V2_REQUIRED_SECTIONS if s not in v2_text]
+            if absent:
+                shape.append(f"{name} (missing {absent[0]})")
+
+    for name in drift[:6]:
+        report.fail(f"v1/v2 frontmatter drift in {name} — routing would differ between plugins")
+    for item in shape[:6]:
+        report.fail(f"v2 skill is not goal-shaped: {item}")
+    if drift or shape:
+        return
+
+    report.ok(f"skill versions in parity ({len(v1)} skills, v1 procedural + v2 goal-oriented)")
+
+
+def check_plugin_package(report: Report) -> None:
+    """Both plugin packages must be self-contained and inside Cowork's limits."""
+    for package in ("kai-marketing-os", "kai-marketing-os-v2"):
+        _check_one_plugin(report, package)
+
+
+def _check_one_plugin(report: Report, package: str) -> None:
+    plugin_root = REPO_ROOT / "plugins" / package
+    if not plugin_root.exists():
+        report.fail(f"plugins/{package} is missing — nothing to install in Cowork")
+        return
+
+    manifest = plugin_root / ".claude-plugin" / "plugin.json"
+    if not manifest.exists():
+        report.fail(f"plugins/{package}/.claude-plugin/plugin.json is missing")
+        return
+
+    # followlinks: the plugin symlinks knowledge/, skills/, and gates back into
+    # the repo, and Cowork installs the materialized tree — so measure what the
+    # user actually receives, not the symlinks.
+    broken = []
+    file_count = 0
+    total_bytes = 0
+    for dirpath, _dirnames, filenames in os.walk(plugin_root, followlinks=True):
+        for name in filenames:
+            path = Path(dirpath) / name
+            if path.is_symlink() and not path.exists():
+                broken.append(str(path.relative_to(REPO_ROOT)))
+                continue
+            file_count += 1
+            try:
+                total_bytes += path.stat().st_size
+            except OSError:
+                pass
+
+    if broken:
+        for path in broken:
+            report.fail(f"{package} symlink does not resolve: {path}")
+        return
+
+    for required in ("skills", "knowledge", "harness/eco-floors.yaml", "scripts/quality_gates", "agents"):
+        if not (plugin_root / required).exists():
+            report.fail(f"{package} is missing {required} — install would be incomplete")
+            return
+
+    if file_count > COWORK_MAX_FILES:
+        report.fail(f"{package} has {file_count} files, over Cowork's {COWORK_MAX_FILES} limit")
+        return
+    if total_bytes > COWORK_MAX_BYTES:
+        report.fail(f"{package} is {total_bytes / 1e6:.0f} MB, over Cowork's 200 MB limit")
+        return
+
+    agents = len(list((plugin_root / "agents").glob("*.md")))
+    report.ok(
+        f"{package} installable ({file_count} files, {total_bytes / 1e6:.1f} MB, "
+        f"{agents} agents — within Cowork limits)"
+    )
+
+
 def check_optional(report: Report) -> None:
     for module, unlocks in OPTIONAL_DEPS:
         if importlib.util.find_spec(module.split(".")[0]) is None:
@@ -362,6 +541,9 @@ def main() -> int:
     check_compiles(report)
     check_capability_manifest(report)
     check_golden_corpus(report)
+    check_eco(report)
+    check_skill_versions(report)
+    check_plugin_package(report)
     if not args.ci:
         check_learning_layer(report)
         check_optional(report)

@@ -47,6 +47,12 @@ def _frontmatter(path: Path) -> dict[str, str]:
     return values
 
 
+# Router table headings that hold public /kai commands. "pursue" is the
+# goal-oriented surface (/kai-goal): it runs an objective to a verdict rather
+# than producing a single asset.
+ROUTER_CATEGORIES = {"pursue", "produce", "audit", "plan", "analyze", "learn"}
+
+
 def parse_router_commands(router_path: Path) -> list[dict[str, str]]:
     """Parse public commands only from categorized router table rows."""
     commands: list[dict[str, str]] = []
@@ -56,7 +62,7 @@ def parse_router_commands(router_path: Path) -> list[dict[str, str]]:
         heading = _HEADING_RE.match(line)
         if heading:
             candidate = heading.group("name").strip().lower().replace(" ", "-")
-            category = candidate if candidate in {"produce", "audit", "plan", "analyze", "learn"} else None
+            category = candidate if candidate in ROUTER_CATEGORIES else None
             continue
         row = _ROUTER_ROW_RE.match(line)
         if not row or category is None:
@@ -124,9 +130,17 @@ def discover_inventory(root: Path = REPO_ROOT) -> dict[str, Any]:
         if path.is_file() and not path.name.startswith("_") and path.name not in {"AGENTS.md", "CLAUDE.md"}
     ]
 
+    v2_root = root / "harness" / "skills-v2"
+    v2_dirs = (
+        sorted(path for path in v2_root.iterdir() if path.is_dir() and (path / "SKILL.md").is_file())
+        if v2_root.is_dir()
+        else []
+    )
+
     counts = {
         "skill_directories": len(skill_dirs),
         "canonical_kai_skills": len(skills),
+        "v2_goal_oriented_skills": len(v2_dirs),
         "public_router_commands": len(router_commands),
         "public_manifest_pages": len(manifest_pages),
         "undocumented_canonical_skills": len(undocumented_skills),
@@ -143,6 +157,7 @@ def discover_inventory(root: Path = REPO_ROOT) -> dict[str, Any]:
         "schema_version": 1,
         "sources": {
             "skills": "harness/skills/*/SKILL.md",
+            "v2_skills": "harness/skills-v2/*/SKILL.md",
             "public_router_commands": ROUTER_PATH.as_posix(),
             "public_manifest_pages": "docs/skill-manifest/kai-*.md",
             "knowledge": "repository filesystem counts using counting_rules",
@@ -150,7 +165,8 @@ def discover_inventory(root: Path = REPO_ROOT) -> dict[str, Any]:
         "counting_rules": {
             "skill_directories": "Immediate directories under harness/skills.",
             "canonical_kai_skills": "Immediate kai-* directories under harness/skills with their SKILL.md as source.",
-            "public_router_commands": "Unique /kai-* rows in the PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
+            "v2_goal_oriented_skills": "Immediate directories under harness/skills-v2 with a SKILL.md; the goal-oriented rewrite of the same skill set.",
+            "public_router_commands": "Unique /kai-* rows in the PURSUE, PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
             "public_manifest_pages": "kai-*.md files under docs/skill-manifest.",
             "knowledge_markdown": "Markdown files under the named surface; recursive only for frameworks; AGENTS.md and CLAUDE.md excluded.",
             "audience_persona_profiles": "Non-underscore Markdown files under knowledge/personas; AGENTS.md and CLAUDE.md excluded.",
@@ -178,6 +194,7 @@ def render_markdown(manifest: dict[str, Any]) -> str:
     labels = {
         "skill_directories": "Skill directories",
         "canonical_kai_skills": "Canonical `kai-*` skills",
+        "v2_goal_oriented_skills": "Goal-oriented v2 skills",
         "public_router_commands": "Public `/kai` router commands",
         "public_manifest_pages": "Public skill manifest pages",
         "undocumented_canonical_skills": "Canonical skills missing manifest pages",
@@ -198,7 +215,8 @@ def generated_doc_blocks(manifest: dict[str, Any]) -> dict[Path, str]:
     counts = manifest["counts"]
     agent_summary = (
         f"Inventory reachable from here: {counts['skill_directories']} skill directories, "
-        f"{counts['canonical_kai_skills']} canonical `kai-*` skills, "
+        f"{counts['canonical_kai_skills']} canonical `kai-*` skills "
+        f"(each with a goal-oriented v2 counterpart), "
         f"{counts['public_router_commands']} public `/kai` router commands, "
         f"{counts['playbook_docs']} playbook docs, {counts['checklists']} checklists, "
         f"{counts['framework_docs']} framework docs, {counts['channel_guides']} channel guides, "
