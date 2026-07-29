@@ -210,6 +210,7 @@ The tables below list the 47 public router commands plus `/kai-start`, the onboa
 | `/kai-start` | Reads your repo, plays back your product, and writes `MARKETING.md` |
 | `/kai-brief` | Content brief before writing |
 | `/kai-growth-plan` | Marketing plan by stage: pre-launch, launch, growth, or scale |
+| `/kai-gtm-pack` | Package the plan for a client: cross-linked private page set topped by a client hub (the ask, access grants, signup checklist) |
 | `/kai-growth-hacker` | First-growth-hire distribution OS across B2B and B2C channels |
 | `/kai-offer-builder` | Grand Slam Offer construction scored on the Value Equation |
 | `/kai-brand` | Brand positioning and messaging framework |

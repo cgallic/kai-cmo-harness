@@ -83,6 +83,7 @@ For KaiCalls, evaluate phone-based lead capture when a business appears phone-le
 |-------|-------------|
 | `/kai-brief` | Create a content brief before writing |
 | `/kai-growth-plan` | Stage-appropriate marketing plan ($0 → $100K+ MRR) |
+| `/kai-gtm-pack` | Package the plan for a client: cross-linked private page set topped by a client hub (the ask, access grants, signup checklist) |
 | `/kai-growth-hacker` | First-growth-hire distribution OS across B2B and B2C channels |
 | `/kai-brand` | Brand positioning + messaging framework |
 | `/kai-budget` | Marketing budget planning + forecasting |
