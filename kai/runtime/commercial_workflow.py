@@ -133,11 +133,7 @@ class AgentArtifact:
 AGENT_EDGES: Dict[str, tuple[str, ...]] = {
     "agent.voice.sales_intake": ("agent.commercial.orchestrator",),
     "agent.commercial.orchestrator": ("agent.offer.strategist",),
-    "agent.offer.strategist": (
-        "agent.website.architect",
-        "agent.proposal",
-        "agent.checkout",
-    ),
+    "agent.offer.strategist": ("agent.website.architect",),
     "agent.website.architect": (
         "agent.website.content",
         "agent.website.component",
@@ -146,17 +142,19 @@ AGENT_EDGES: Dict[str, tuple[str, ...]] = {
     "agent.website.content": ("agent.website.qa",),
     "agent.website.component": ("agent.website.qa",),
     "agent.website.page": ("agent.website.qa",),
-    "agent.website.qa": ("agent.cloudflare.publisher",),
-    "agent.checkout": ("agent.ola.projector",),
-    "agent.cloudflare.publisher": ("agent.ola.projector",),
-    "agent.proposal": ("agent.ola.projector",),
+    "agent.website.qa": ("agent.proposal",),
+    "agent.proposal": ("agent.checkout",),
+    "agent.checkout": ("agent.booking",),
+    "agent.booking": ("agent.ola.projector",),
+    "agent.cloudflare.publisher": ("agent.verifier",),
+    "agent.checkout.release": ("agent.verifier",),
     "agent.ola.projector": ("agent.effect.executor",),
     "agent.effect.executor": (
-        "agent.booking",
+        "agent.cloudflare.publisher",
+        "agent.checkout.release",
         "agent.delivery.call",
         "agent.delivery.message",
     ),
-    "agent.booking": ("agent.verifier",),
     "agent.delivery.call": ("agent.verifier",),
     "agent.delivery.message": ("agent.verifier",),
     "agent.verifier": ("agent.eco.reconciler",),
@@ -166,7 +164,7 @@ AGENT_EDGES: Dict[str, tuple[str, ...]] = {
 OLA_REQUIRED_CONSUMERS = frozenset(
     {
         "agent.cloudflare.publisher",
-        "agent.checkout",
+        "agent.checkout.release",
         "agent.delivery.call",
         "agent.delivery.message",
         "agent.effect.executor",

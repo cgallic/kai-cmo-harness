@@ -15,7 +15,7 @@ from kai.runtime.website_builder_tools import (
 )
 from kai.runtime.cloudflare_tools import _tree_sha256, deploy_pages
 from kai.runtime.stripe_tools import create_test_payment_link
-from kai.runtime.commercial_workflow import CommercialWorkflow, website_to_checkout
+from kai.runtime.commercial_workflow import AGENT_EDGES, CommercialWorkflow, website_to_checkout
 
 
 def test_website_to_checkout_is_registered_as_high_risk_manual_workflow():
@@ -349,14 +349,22 @@ def test_workflow_advances_named_agents_and_holds_effect_edges_for_ola(tmp_path)
         if item["consumer_agent_id"] == "agent.offer.strategist"
     )
     advanced_offer = asyncio.run(workflow.advance(offer["work_id"]))
-    checkout = next(
+    website = next(
         item for item in advanced_offer["next_handoffs"]
-        if item["consumer_agent_id"] == "agent.checkout"
+        if item["consumer_agent_id"] == "agent.website.architect"
     )
-    assert checkout["approval_state"] == "pending"
-    held = asyncio.run(workflow.advance(checkout["work_id"]))
-    assert held["status"] == "awaiting_ola"
+    assert website["approval_state"] == "not_required"
+    assert all(item["consumer_agent_id"] != "agent.checkout" for item in advanced_offer["next_handoffs"])
     assert [agent_id for agent_id, _ in calls] == [
         "agent.commercial.orchestrator",
         "agent.offer.strategist",
     ]
+
+
+def test_build_and_release_order_keeps_outbound_effects_after_ola():
+    assert AGENT_EDGES["agent.website.qa"] == ("agent.proposal",)
+    assert AGENT_EDGES["agent.proposal"] == ("agent.checkout",)
+    assert AGENT_EDGES["agent.checkout"] == ("agent.booking",)
+    assert AGENT_EDGES["agent.booking"] == ("agent.ola.projector",)
+    assert "agent.checkout.release" in AGENT_EDGES["agent.effect.executor"]
+    assert "agent.cloudflare.publisher" in AGENT_EDGES["agent.effect.executor"]
