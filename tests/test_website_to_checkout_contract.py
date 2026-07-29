@@ -15,6 +15,7 @@ from kai.runtime.website_builder_tools import (
 )
 from kai.runtime.cloudflare_tools import _tree_sha256, deploy_pages
 from kai.runtime.stripe_tools import create_test_payment_link
+from kai.runtime.commercial_workflow import CommercialWorkflow, website_to_checkout
 
 
 def test_website_to_checkout_is_registered_as_high_risk_manual_workflow():
@@ -295,3 +296,67 @@ def test_stripe_tool_is_test_only_and_reads_back_hosted_payment_link(tmp_path, m
         assert "sk_test_" in str(error)
     else:
         raise AssertionError("live Stripe key was accepted")
+
+
+def test_workflow_handler_requires_a_real_agent_executor(tmp_path):
+    request = {
+        "brand_id": "demo-brand",
+        "source_ref": "kaicalls:call:demo-002",
+        "source_artifact_uri": "artifact://calls/demo-002.json",
+        "source_artifact_sha256": "d" * 64,
+    }
+
+    try:
+        import asyncio
+
+        asyncio.run(website_to_checkout(request, store=RuntimeStore(base_dir=tmp_path / "runtime")))
+    except RuntimeError as error:
+        assert "configured agent executor" in str(error)
+    else:
+        raise AssertionError("workflow accepted a missing agent executor")
+
+
+def test_workflow_advances_named_agents_and_holds_effect_edges_for_ola(tmp_path):
+    calls = []
+
+    def executor(*, agent_id, run, handoff):
+        calls.append((agent_id, handoff["work_id"]))
+        return {
+            "artifact_uri": f"artifact://{run['run_id']}/{agent_id}.json",
+            "artifact_sha256": "e" * 64,
+            "metadata": {"agent_turn": agent_id},
+        }
+
+    store = RuntimeStore(base_dir=tmp_path / "runtime")
+    workflow = CommercialWorkflow(store, executor)
+    first = workflow.start_from_voice(
+        {
+            "brand_id": "demo-brand",
+            "source_ref": "kaicalls:call:demo-003",
+            "source_artifact_uri": "artifact://calls/demo-003.json",
+            "source_artifact_sha256": "f" * 64,
+        }
+    )
+
+    import asyncio
+
+    advanced = asyncio.run(workflow.advance(first["work_id"]))
+    assert calls == [("agent.commercial.orchestrator", first["work_id"])]
+    assert advanced["status"] == "advanced"
+
+    offer = next(
+        item for item in advanced["next_handoffs"]
+        if item["consumer_agent_id"] == "agent.offer.strategist"
+    )
+    advanced_offer = asyncio.run(workflow.advance(offer["work_id"]))
+    checkout = next(
+        item for item in advanced_offer["next_handoffs"]
+        if item["consumer_agent_id"] == "agent.checkout"
+    )
+    assert checkout["approval_state"] == "pending"
+    held = asyncio.run(workflow.advance(checkout["work_id"]))
+    assert held["status"] == "awaiting_ola"
+    assert [agent_id for agent_id, _ in calls] == [
+        "agent.commercial.orchestrator",
+        "agent.offer.strategist",
+    ]

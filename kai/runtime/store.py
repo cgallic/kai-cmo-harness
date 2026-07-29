@@ -302,6 +302,11 @@ class RuntimeStore:
         handoffs.sort(key=lambda item: item.get("updated_at", ""), reverse=True)
         return handoffs[:limit]
 
+    def get_commercial_handoff(self, work_id: str) -> dict:
+        """Return one durable commercial handoff by work ID."""
+        with self._lock:
+            return dict(self._require_commercial_handoff(work_id))
+
     def get_commercial_bundle(self, run_id: str) -> Optional[dict]:
         """Return a run, all handoffs, and append-only provenance events."""
         run = self.get_run(run_id)
