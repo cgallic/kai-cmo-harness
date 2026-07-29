@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — 2026-07-29
+
+**New skill: `/kai-gtm-pack`** — package a client GTM engagement as a cross-linked set of private HTML pages topped by a client hub (the arrangement/ask, tool install for the client's setup, access grants as click-paths, and the ordered signup checklist with verified URLs). Encodes the verify-numbers-before-reuse rule (re-pull keyword figures fresh before planning), the hub-last build order, and the guest-facing vs internal linking boundary. Registered in the `/kai` router (PLAN) and the README strategy table.
+
 ## Unreleased — 2026-07-27
 
 ### New skill: `/kai-client-dashboard`

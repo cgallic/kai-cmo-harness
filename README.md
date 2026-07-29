@@ -148,7 +148,7 @@ Research -> Brief -> Write -> Quality Gate -> Approval -> Publish -> Log -> 30-d
 
 ## Install Options
 
-**Pick your version first.** Kai ships the same 49 skills two ways, and neither is deprecated:
+**Pick your version first.** Kai ships the same 50 skills two ways, and neither is deprecated:
 
 | | `kai` (v1) | `kai-v2` |
 |---|---|---|
@@ -163,7 +163,7 @@ Same knowledge base, same gates, same governance, same output paths. Both can be
 2. Select **Add marketplace** and enter `cgallic/kai-cmo-harness`.
 3. Install **Kai Marketing OS** (or **Kai Marketing OS v2**), then open it to see its skills and agents.
 
-You get 49 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want Kai chasing an outcome rather than producing one asset.
+You get 50 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want Kai chasing an outcome rather than producing one asset.
 
 **Plugin (Claude Code CLI or desktop):** two lines inside Claude Code. Auto-updating, includes the knowledge base, nothing touches your shell.
 
@@ -246,6 +246,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 | `/kai-start` | Reads your repo, plays back your product, and writes `MARKETING.md` |
 | `/kai-brief` | Content brief before writing |
 | `/kai-growth-plan` | Marketing plan by stage: pre-launch, launch, growth, or scale |
+| `/kai-gtm-pack` | Package the plan for a client: cross-linked private page set topped by a client hub (the ask, access grants, signup checklist) |
 | `/kai-growth-hacker` | First-growth-hire distribution OS across B2B and B2C channels |
 | `/kai-offer-builder` | Grand Slam Offer construction scored on the Value Equation |
 | `/kai-brand` | Brand positioning and messaging framework |
