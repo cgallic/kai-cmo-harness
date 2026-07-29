@@ -16,6 +16,9 @@ from kai.runtime.website_builder_tools import (
 from kai.runtime.cloudflare_tools import _tree_sha256, deploy_pages
 from kai.runtime.stripe_tools import create_test_payment_link
 from kai.runtime.commercial_workflow import AGENT_EDGES, CommercialWorkflow, website_to_checkout
+from kai.runtime.commercial_packet import build_commercial_packet
+from kai.runtime.commercial_preflight import preflight
+from kai.runtime.commercial_release import authorize_release, reconcile_release
 
 
 def test_website_to_checkout_is_registered_as_high_risk_manual_workflow():
@@ -368,3 +371,90 @@ def test_build_and_release_order_keeps_outbound_effects_after_ola():
     assert AGENT_EDGES["agent.booking"] == ("agent.ola.projector",)
     assert "agent.checkout.release" in AGENT_EDGES["agent.effect.executor"]
     assert "agent.cloudflare.publisher" in AGENT_EDGES["agent.effect.executor"]
+
+
+def test_preapproval_packet_binds_all_held_artifacts_and_effects():
+    packet = build_commercial_packet(
+        run_id="sale-demo-001",
+        offer={"artifact_sha256": "a" * 64},
+        website={"artifact_sha256": "b" * 64},
+        proposal={"artifact_sha256": "c" * 64},
+        checkout={"id": "plink_test_001", "livemode": False, "state": "held"},
+        booking={"id": "booking_test_001", "state": "held"},
+        recipient={"address": "demo@example.test", "channel": "email"},
+        effects=[
+            {"effect_id": "cloudflare.publish", "state": "held"},
+            {"effect_id": "proposal.send", "state": "held"},
+            {"effect_id": "checkout.release", "state": "held"},
+            {"effect_id": "booking.deliver", "state": "held"},
+        ],
+        expires_at="2026-07-30T00:00:00+00:00",
+    )
+
+    assert packet["schema"] == "kai.commercial.packet.v1"
+    assert packet["approval_state"] == "pending"
+    assert packet["checkout"] == {"id": "plink_test_001", "livemode": False, "state": "held"}
+    assert packet["approval"]["packet_sha256"] == packet["packet_sha256"]
+
+
+def test_preapproval_packet_rejects_live_or_unheld_checkout():
+    try:
+        build_commercial_packet(
+            run_id="sale-demo-002",
+            offer={"artifact_sha256": "a" * 64},
+            website={"artifact_sha256": "b" * 64},
+            proposal={"artifact_sha256": "c" * 64},
+            checkout={"id": "plink_live", "livemode": True, "state": "held"},
+            booking={"id": "booking_test_002", "state": "held"},
+            recipient={"address": "demo@example.test", "channel": "email"},
+            effects=[{"effect_id": "proposal.send", "state": "held"}],
+            expires_at="2026-07-30T00:00:00+00:00",
+        )
+    except ValueError as error:
+        assert "test-mode" in str(error)
+    else:
+        raise AssertionError("live checkout was accepted into a preapproval packet")
+
+
+def test_preflight_covers_every_pre_call_phase_and_agent():
+    profiles = {profile.agent_id: profile.model_dump() for profile in default_agent_profiles()}
+    packet = build_commercial_packet(
+        run_id="sale-demo-003",
+        offer={"artifact_sha256": "a" * 64},
+        website={"artifact_sha256": "b" * 64},
+        proposal={"artifact_sha256": "c" * 64},
+        checkout={"id": "plink_test_003", "livemode": False, "state": "held"},
+        booking={"id": "booking_test_003", "state": "held"},
+        recipient={"address": "demo@example.test", "channel": "email"},
+        effects=[{"effect_id": "proposal.send", "state": "held"}],
+        expires_at="2026-07-30T00:00:00+00:00",
+    )
+    result = preflight(profiles=profiles, packet=packet)
+    assert result["ready"] is True
+    assert result["errors"] == []
+    assert "website_qa" in result["phases"]
+    assert "ola_pending" in result["phases"]
+
+
+def test_after_call_release_requires_exact_approval_and_reconciles_every_effect():
+    packet = {"packet_sha256": "d" * 64, "effects": [{"effect_id": "site.publish"}, {"effect_id": "checkout.release"}]}
+    authorization = authorize_release(packet=packet, approval={"decision": "APPROVE", "packet_sha256": "d" * 64})
+    result = reconcile_release(
+        authorization=authorization,
+        receipts=[{"effect_id": "site.publish"}, {"effect_id": "checkout.release"}],
+        readbacks=[{"effect_id": "site.publish"}, {"effect_id": "checkout.release"}],
+    )
+    assert result["state"] == "shipped"
+
+
+def test_after_call_release_rejects_stale_approval_and_missing_readback():
+    packet = {"packet_sha256": "e" * 64, "effects": [{"effect_id": "site.publish"}]}
+    try:
+        authorize_release(packet=packet, approval={"decision": "APPROVE", "packet_sha256": "f" * 64})
+    except PermissionError:
+        pass
+    else:
+        raise AssertionError("stale approval was accepted")
+    authorization = authorize_release(packet=packet, approval={"decision": "APPROVE", "packet_sha256": "e" * 64})
+    result = reconcile_release(authorization=authorization, receipts=[], readbacks=[])
+    assert result["state"] == "blocked"
