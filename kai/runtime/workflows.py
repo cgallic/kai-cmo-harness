@@ -226,6 +226,26 @@ _WORKFLOWS: Tuple[WorkflowDefinition, ...] = (
         local_service_asset="review_request_sequence",
         risk_tier="medium",
     ),
+    WorkflowDefinition(
+        workflow_id="website-to-checkout",
+        handler="kai.runtime.commercial.website_to_checkout",
+        input_schema="harness/skill-contracts/website-to-checkout.yaml",
+        output_artifacts=(
+            "sales_request",
+            "offer",
+            "website_build",
+            "checkout",
+            "proposal",
+            "booking",
+            "approval_packet",
+            "provider_receipts",
+            "reconciliation",
+        ),
+        quality_policy="website-to-checkout",
+        supported_surfaces=("remote", "dashboard"),
+        risk_tier="high",
+        auto_run_allowed=False,
+    ),
 )
 
 _BY_ID: Dict[str, WorkflowDefinition] = {w.workflow_id: w for w in _WORKFLOWS}

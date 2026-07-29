@@ -14,6 +14,7 @@ from typing import Any, Dict, List, Optional
 from scripts.harness_config import get_config
 
 from .models import KaiAgentProfile
+from .commercial import commercial_agent_profiles
 
 
 def _utc_now() -> str:
@@ -265,7 +266,7 @@ def default_agent_profiles(workspace_id: str = "kai-marketing-os") -> List[KaiAg
             assurance_level="standard",
             status="active",
         ),
-    ]
+    ] + commercial_agent_profiles(workspace_id)
 
 
 _DEFAULT_AGENT_REGISTRY: Optional[AgentRegistry] = None
