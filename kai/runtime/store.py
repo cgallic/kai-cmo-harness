@@ -20,6 +20,11 @@ from .models import (
     KaiRunRequest,
     KaiRuntimeState,
 )
+from .commercial import (
+    COMMERCIAL_HANDOFF_SCHEMA,
+    WEBSITE_TO_CHECKOUT_WORKFLOW_ID,
+    CommercialHandoff,
+)
 
 
 def _utc_now() -> str:
@@ -76,6 +81,9 @@ class RuntimeStore:
         self.base_dir = base_dir
         self.runs_dir = _ensure_dir(self.base_dir / "runs")
         self.artifacts_dir = _ensure_dir(self.base_dir / "artifacts")
+        self.commercial_dir = _ensure_dir(self.base_dir / "commercial")
+        self.commercial_handoffs_dir = _ensure_dir(self.commercial_dir / "handoffs")
+        self.commercial_events_file = self.commercial_dir / "events.jsonl"
         self.state_file = self.base_dir / "state.json"
         self._lock = threading.RLock()
 
@@ -125,6 +133,194 @@ class RuntimeStore:
             self._write_run_record(record)
             self._refresh_state_locked()
         return record
+
+    def start_commercial_run(
+        self,
+        run: KaiRunRequest | dict,
+        *,
+        parent_run_id: Optional[str] = None,
+        run_id: Optional[str] = None,
+    ) -> dict:
+        """Start the website-to-checkout run in the canonical runtime store."""
+        request = self._coerce_run_request(run)
+        if request.workflow != WEBSITE_TO_CHECKOUT_WORKFLOW_ID:
+            raise ValueError(
+                "start_commercial_run requires workflow "
+                f"'{WEBSITE_TO_CHECKOUT_WORKFLOW_ID}'"
+            )
+        record = self.start_run(
+            request,
+            parent_run_id=parent_run_id,
+            run_id=run_id,
+        )
+        with self._lock:
+            record = self._require_run(record["run_id"])
+            record.setdefault("metadata", {})["commercial_schema"] = COMMERCIAL_HANDOFF_SCHEMA
+            record["metadata"]["commercial_state"] = "running"
+            record["metadata"]["commercial_handoff_ids"] = []
+            self._write_run_record(record)
+            self._append_commercial_event_locked(
+                record["run_id"],
+                "run.started",
+                "agent.commercial.orchestrator",
+                {"workflow": WEBSITE_TO_CHECKOUT_WORKFLOW_ID},
+            )
+            return record
+
+    def append_commercial_handoff(
+        self,
+        handoff: CommercialHandoff | dict,
+    ) -> dict:
+        """Persist one typed agent-to-agent handoff and its provenance event."""
+        envelope = self._coerce_commercial_handoff(handoff)
+        errors = envelope.validate()
+        if errors:
+            raise ValueError("Invalid commercial handoff: " + "; ".join(errors))
+
+        with self._lock:
+            run = self._require_run(envelope.run_id)
+            if run.get("workflow") != WEBSITE_TO_CHECKOUT_WORKFLOW_ID:
+                raise ValueError("commercial handoff run is not website-to-checkout")
+            path = self.commercial_handoffs_dir / f"{envelope.work_id}.json"
+            previous = _json_load(path) if path.exists() else None
+            if previous:
+                immutable_fields = (
+                    "run_id",
+                    "work_id",
+                    "source_ref",
+                    "producer_agent_id",
+                    "consumer_agent_id",
+                    "artifact_uri",
+                    "artifact_sha256",
+                    "expires_at",
+                )
+                for field_name in immutable_fields:
+                    if previous.get(field_name) != getattr(envelope, field_name):
+                        raise ValueError(f"commercial handoff field is immutable: {field_name}")
+                self._assert_commercial_transition(previous["status"], envelope.status)
+
+            persisted = envelope.model_dump()
+            persisted["updated_at"] = _utc_now()
+            if not previous:
+                persisted["created_at"] = persisted["updated_at"]
+            else:
+                persisted["created_at"] = previous.get("created_at", persisted["updated_at"])
+            _write_json_atomic(path, persisted)
+
+            handoff_ids = run.setdefault("metadata", {}).setdefault("commercial_handoff_ids", [])
+            if envelope.work_id not in handoff_ids:
+                handoff_ids.append(envelope.work_id)
+            run["metadata"]["commercial_state"] = self._commercial_run_state(run["run_id"])
+            run["updated_at"] = persisted["updated_at"]
+            self._write_run_record(run)
+            self._append_commercial_event_locked(
+                envelope.run_id,
+                f"handoff.{envelope.status}",
+                envelope.producer_agent_id,
+                {
+                    "work_id": envelope.work_id,
+                    "consumer_agent_id": envelope.consumer_agent_id,
+                    "artifact_uri": envelope.artifact_uri,
+                    "artifact_sha256": envelope.artifact_sha256,
+                    "approval_state": envelope.approval_state,
+                },
+            )
+            return persisted
+
+    def claim_commercial_handoff(self, work_id: str, consumer_agent_id: str) -> dict:
+        """Claim a ready handoff for its named consumer agent."""
+        with self._lock:
+            handoff = self._require_commercial_handoff(work_id)
+            if handoff["consumer_agent_id"] != consumer_agent_id:
+                raise PermissionError("handoff consumer does not match claimant")
+            if handoff["status"] != "ready":
+                raise ValueError(f"handoff is not ready: {handoff['status']}")
+            if handoff["approval_state"] in {"pending", "declined"}:
+                raise PermissionError("handoff is not approved for execution")
+            handoff["status"] = "claimed"
+            return self._write_commercial_transition_locked(handoff, consumer_agent_id)
+
+    def complete_commercial_handoff(
+        self,
+        work_id: str,
+        consumer_agent_id: str,
+        *,
+        result: Optional[dict] = None,
+    ) -> dict:
+        """Complete a claimed handoff without changing its immutable artifact binding."""
+        with self._lock:
+            handoff = self._require_commercial_handoff(work_id)
+            if handoff["consumer_agent_id"] != consumer_agent_id:
+                raise PermissionError("handoff consumer does not match completer")
+            if handoff["status"] != "claimed":
+                raise ValueError(f"handoff is not claimed: {handoff['status']}")
+            handoff["status"] = "completed"
+            if result:
+                handoff.setdefault("metadata", {})["consumer_result"] = dict(result)
+            return self._write_commercial_transition_locked(handoff, consumer_agent_id)
+
+    def set_commercial_approval(
+        self,
+        work_id: str,
+        approval_state: str,
+        *,
+        approval_ref: Optional[str] = None,
+        approved_by: Optional[str] = None,
+    ) -> dict:
+        """Bind an OLA decision to the exact handoff before an effect can run."""
+        if approval_state not in {"not_required", "pending", "approved", "declined"}:
+            raise ValueError(f"invalid approval state: {approval_state}")
+        if approval_state == "approved" and not approval_ref:
+            raise ValueError("approved commercial handoff requires approval_ref")
+        with self._lock:
+            handoff = self._require_commercial_handoff(work_id)
+            handoff["approval_state"] = approval_state
+            handoff.setdefault("metadata", {})["approval_ref"] = approval_ref
+            handoff["metadata"]["approved_by"] = approved_by
+            return self._write_commercial_transition_locked(
+                handoff,
+                "agent.ola.projector",
+                event_type="approval." + approval_state,
+            )
+
+    def list_commercial_handoffs(
+        self,
+        *,
+        run_id: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 200,
+    ) -> List[dict]:
+        """List durable handoffs, newest transitions first."""
+        handoffs = []
+        for path in self.commercial_handoffs_dir.glob("*.json"):
+            item = _json_load(path)
+            if run_id and item.get("run_id") != run_id:
+                continue
+            if status and item.get("status") != status:
+                continue
+            handoffs.append(item)
+        handoffs.sort(key=lambda item: item.get("updated_at", ""), reverse=True)
+        return handoffs[:limit]
+
+    def get_commercial_bundle(self, run_id: str) -> Optional[dict]:
+        """Return a run, all handoffs, and append-only provenance events."""
+        run = self.get_run(run_id)
+        if not run:
+            return None
+        events = []
+        if self.commercial_events_file.exists():
+            for line in self.commercial_events_file.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                event = json.loads(line)
+                if event.get("run_id") == run_id:
+                    events.append(event)
+        return {
+            "schema": COMMERCIAL_HANDOFF_SCHEMA,
+            "run": run,
+            "handoffs": self.list_commercial_handoffs(run_id=run_id),
+            "events": events,
+        }
 
     def update_run(self, run_id: str, **changes) -> dict:
         """Patch a run record and persist the change."""
@@ -644,6 +840,92 @@ class RuntimeStore:
             "observability": state.get("observability", {}),
             "approvals": state.get("approvals", {}),
         }
+
+    def _coerce_commercial_handoff(self, handoff: CommercialHandoff | dict) -> CommercialHandoff:
+        if isinstance(handoff, CommercialHandoff):
+            return handoff
+        if not isinstance(handoff, dict):
+            raise TypeError(f"Unsupported commercial handoff type: {type(handoff)!r}")
+        payload = dict(handoff)
+        payload.pop("schema", None)
+        return CommercialHandoff(**payload)
+
+    def _require_commercial_handoff(self, work_id: str) -> dict:
+        path = self.commercial_handoffs_dir / f"{work_id}.json"
+        if not path.exists():
+            raise KeyError(f"Commercial handoff not found: {work_id}")
+        return _json_load(path)
+
+    def _assert_commercial_transition(self, previous: str, current: str) -> None:
+        allowed = {
+            "ready": {"ready", "claimed", "blocked", "failed"},
+            "claimed": {"claimed", "completed", "blocked", "failed"},
+            "completed": {"completed"},
+            "blocked": {"blocked", "ready", "failed"},
+            "failed": {"failed"},
+        }
+        if current not in allowed.get(previous, set()):
+            raise ValueError(f"invalid commercial handoff transition: {previous} -> {current}")
+
+    def _write_commercial_transition_locked(
+        self,
+        handoff: dict,
+        actor_agent_id: str,
+        *,
+        event_type: Optional[str] = None,
+    ) -> dict:
+        path = self.commercial_handoffs_dir / f"{handoff['work_id']}.json"
+        previous = _json_load(path) if path.exists() else None
+        if previous:
+            self._assert_commercial_transition(previous["status"], handoff["status"])
+            handoff["created_at"] = previous.get("created_at", _utc_now())
+        handoff["updated_at"] = _utc_now()
+        _write_json_atomic(path, handoff)
+        run = self._require_run(handoff["run_id"])
+        run.setdefault("metadata", {})["commercial_state"] = self._commercial_run_state(run["run_id"])
+        run["updated_at"] = handoff["updated_at"]
+        self._write_run_record(run)
+        self._append_commercial_event_locked(
+            handoff["run_id"],
+            event_type or f"handoff.{handoff['status']}",
+            actor_agent_id,
+            {
+                "work_id": handoff["work_id"],
+                "consumer_agent_id": handoff["consumer_agent_id"],
+                "approval_state": handoff["approval_state"],
+            },
+        )
+        return handoff
+
+    def _commercial_run_state(self, run_id: str) -> str:
+        handoffs = self.list_commercial_handoffs(run_id=run_id, limit=10_000)
+        if any(item.get("status") in {"blocked", "failed"} for item in handoffs):
+            return "blocked"
+        if handoffs and all(item.get("status") == "completed" for item in handoffs):
+            return "completed"
+        return "running"
+
+    def _append_commercial_event_locked(
+        self,
+        run_id: str,
+        event_type: str,
+        actor_agent_id: str,
+        data: dict,
+    ) -> dict:
+        event = {
+            "event_id": self._new_id("evt"),
+            "schema": COMMERCIAL_HANDOFF_SCHEMA,
+            "run_id": run_id,
+            "event_type": event_type,
+            "actor_agent_id": actor_agent_id,
+            "at": _utc_now(),
+            "data": dict(data),
+        }
+        with self.commercial_events_file.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(event, sort_keys=True) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        return event
 
     def _write_run_record(self, record: dict) -> None:
         _write_json_atomic(self.runs_dir / f"{record['run_id']}.json", record)
