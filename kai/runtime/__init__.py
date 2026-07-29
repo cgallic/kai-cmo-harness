@@ -87,7 +87,7 @@ from .policy_bootstrap import (
 )
 from .store import RuntimeStore, get_default_runtime_store
 from .cloudflare_tools import CloudflareDeploymentReceipt, deploy_pages
-from .stripe_tools import StripePaymentLinkReceipt, create_test_payment_link
+from .stripe_tools import StripePaymentLinkReceipt, create_test_payment_link, release_test_payment_link
 from .website_builder_tools import (
     WebsiteBuilderToolResult,
     execute_codegen,
@@ -205,6 +205,7 @@ __all__ = [
     "write_back_memory",
     "deploy_pages",
     "create_test_payment_link",
+    "release_test_payment_link",
     "execute_codegen",
     "result_to_handoff",
     "write_brand_policy",

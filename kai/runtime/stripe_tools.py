@@ -147,3 +147,34 @@ def create_test_payment_link(
         receipt_uri=f"artifact://commercial/provider-receipts/{work_id}.stripe.json",
         receipt_sha256=receipt_sha256,
     )
+
+
+def release_test_payment_link(
+    *, api_key: Optional[str], payment_link_id: str, run_id: str, work_id: str
+) -> dict[str, Any]:
+    """Activate one held Stripe test link and independently retrieve it."""
+    key = api_key or os.environ.get("STRIPE_SECRET_KEY") or ""
+    if not key.startswith("sk_test_"):
+        raise RuntimeError("Stripe commercial release requires an sk_test_ secret")
+    if not payment_link_id:
+        raise ValueError("payment_link_id is required")
+    activated = _stripe_request(
+        "POST", f"/payment_links/{payment_link_id}", api_key=key,
+        form={"active": "true"}, idempotency_key=f"kai-commercial-release-{run_id}-{work_id}",
+    )
+    readback = _stripe_request("GET", f"/payment_links/{payment_link_id}", api_key=key)
+    if activated.get("livemode") is not False or readback.get("livemode") is not False:
+        raise RuntimeError("Stripe release read-back was not test mode")
+    if readback.get("active") is not True:
+        raise RuntimeError("Stripe release read-back was not active")
+    return {
+        "schema": "kai.stripe.test-payment-link-release.v1",
+        "run_id": run_id,
+        "work_id": work_id,
+        "payment_link_id": payment_link_id,
+        "provider_object": activated,
+        "readback": readback,
+        "provider_response_sha256": hashlib.sha256(
+            json.dumps({"activated": activated, "readback": readback}, sort_keys=True).encode()
+        ).hexdigest(),
+    }
