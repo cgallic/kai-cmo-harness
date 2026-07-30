@@ -45,6 +45,13 @@ def build_commercial_packet(
     offer_hash = _require_hash(offer.get("artifact_sha256"), "offer artifact_sha256")
     website_hash = _require_hash(website.get("artifact_sha256"), "website artifact_sha256")
     proposal_hash = _require_hash(proposal.get("artifact_sha256"), "proposal artifact_sha256")
+    proposal_url = str(proposal.get("artifact_url") or "")
+    proposal_mime_type = str(proposal.get("mime_type") or "")
+    proposal_title = str(proposal.get("title") or "")
+    if not proposal_url or not proposal_mime_type or not proposal_title:
+        raise ValueError("proposal must include artifact_url, mime_type, and title")
+    if proposal_mime_type not in {"text/markdown", "text/html", "application/pdf"}:
+        raise ValueError("proposal mime_type must be human-readable Markdown, HTML, or PDF")
     checkout_id = str(checkout.get("id") or "")
     if not checkout_id or checkout.get("livemode") is not False or checkout.get("state") != "held":
         raise ValueError("checkout must be a held Stripe test-mode object")
@@ -62,6 +69,12 @@ def build_commercial_packet(
         "offer_sha256": offer_hash,
         "website_build_sha256": website_hash,
         "proposal_sha256": proposal_hash,
+        "proposal_artifact": {
+            "url": proposal_url,
+            "mime_type": proposal_mime_type,
+            "title": proposal_title,
+            "sha256": proposal_hash,
+        },
         "checkout": {"id": checkout_id, "livemode": False, "state": "held"},
         "booking": {"id": booking_id, "state": "held"},
         "recipient": dict(recipient),
