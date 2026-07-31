@@ -149,6 +149,29 @@ export interface AgentRun {
   created_at: string;
 }
 
+export type RuntimeStatus = "online" | "offline" | "draining";
+
+export interface AgentRuntime {
+  id: string;
+  daemon_id: string;
+  brand_id: string | null;
+  name: string;
+  status: RuntimeStatus;
+  last_heartbeat: string | null;
+  updated_at: string;
+}
+
+export interface ActionTaskLineage {
+  id: string;
+  brand_id: string;
+  action_id: string | null;
+  agent_run_id: string | null;
+  task_id: string | null;
+  event_type: string;
+  payload: Record<string, unknown>;
+  created_at: string;
+}
+
 export interface ChatMessage {
   id: string;
   brand_id: string;

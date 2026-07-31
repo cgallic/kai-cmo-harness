@@ -239,12 +239,55 @@ class ActionStore:
                     "must be approved or auto_approved"
                 )
             prev = record["execution_state"]
+            if prev == "executing":
+                return record
             record["execution_state"] = "executing"
             record["updated_at"] = _utc_now()
             record["metadata"]["operating_state"] = "approved"
             self._write_action(record)
             self._append_log(action_id, prev, "executing", "execution_state", actor="system")
             return record
+
+    def claim_ready_actions(
+        self,
+        *,
+        brand_id: Optional[str] = None,
+        limit: int = 50,
+        worker_id: Optional[str] = None,
+    ) -> List[dict]:
+        """Atomically claim approved actions for one worker.
+
+        The claim happens under the store lock and persists the executing
+        state before returning. This prevents two in-process workers from
+        selecting the same approved action between list and execute.
+        """
+        worker_id = worker_id or f"worker_{os.getpid()}"
+        claimed: List[dict] = []
+        with self._lock:
+            ready = self.list_actions(
+                brand_id=brand_id,
+                execution_state="pending",
+                limit=max(limit, 1),
+            )
+            ready = [
+                record for record in ready
+                if record.get("approval_state") in ("approved", "auto_approved")
+            ]
+            for record in ready[:limit]:
+                action_id = record["action_id"]
+                current = self._require_action(action_id)
+                if current.get("execution_state") != "pending":
+                    continue
+                previous = current.get("execution_state")
+                current["execution_state"] = "executing"
+                current["updated_at"] = _utc_now()
+                current["metadata"]["operating_state"] = "approved"
+                current["metadata"]["claimed_by"] = worker_id
+                current["metadata"]["claimed_at"] = current["updated_at"]
+                self._write_action(current)
+                self._append_log(action_id, previous, "executing", "execution_state", actor=worker_id)
+                claimed.append(current)
+        return claimed
 
     def mark_completed(self, action_id: str, result_summary: dict) -> dict:
         """Mark an executing action as completed."""

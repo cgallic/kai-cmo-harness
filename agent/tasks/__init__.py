@@ -27,6 +27,7 @@ from .harness_review import HarnessReviewTask
 from .watchers_tick import WatchersTickTask
 from .editorial_calendar import EditorialCalendarTickTask
 from .cmo_review import CMOReviewTask
+from .execute_approved import ExecuteApprovedActionsTask
 from .self_improvement import (
     HarnessDefaultsUpdateTask,
     PatternExtractWeeklyTask,
@@ -63,6 +64,7 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "editorial_calendar_tick": EditorialCalendarTickTask,
     # Weekly CMO review — goal loop: measure KPIs, check pace, (re)plan
     "cmo_review": CMOReviewTask,
+    "execute_approved_actions": ExecuteApprovedActionsTask,
 }
 
 
@@ -112,6 +114,7 @@ __all__ = [
     "HarnessDefaultsUpdateTask",
     "EditorialCalendarTickTask",
     "CMOReviewTask",
+    "ExecuteApprovedActionsTask",
     "register_task",
     "get_task_handler",
 ]

@@ -57,10 +57,17 @@ class ExecuteApprovedActionsTask(BaseTask):
                 dry_run=False,
             )
 
-            # Find ready actions
-            approved = store.list_actions(approval_state="approved", execution_state="pending")
-            auto_approved = store.list_actions(approval_state="auto_approved", execution_state="pending")
-            ready = approved + auto_approved
+            # Claim before executing so multiple long-running workers cannot
+            # select the same action between listing and dispatch.
+            if store.__class__.__name__ == "ActionStore" and hasattr(store, "claim_ready_actions"):
+                ready = store.claim_ready_actions(
+                    limit=50,
+                    worker_id=f"execute-approved:{getattr(task, 'id', 'unknown')}",
+                )
+            else:
+                # Compatibility for older stores used by downstream products.
+                ready = store.list_actions(approval_state="approved", execution_state="pending")
+                ready += store.list_actions(approval_state="auto_approved", execution_state="pending")
 
             if not ready:
                 return {"success": True, "processed": 0, "summary": "No actions pending"}
@@ -71,7 +78,11 @@ class ExecuteApprovedActionsTask(BaseTask):
 
             for action in ready:
                 action_id = action.get("action_id", "")
-                result = executor.execute(action_id)
+                try:
+                    result = executor.execute(action_id)
+                except Exception as exc:
+                    store.mark_failed(action_id, str(exc))
+                    raise
                 if result.success:
                     succeeded += 1
                 else:
