@@ -24,6 +24,7 @@ from kai.execution.credentials import CredentialStore
 from kai.execution.connector_factory import ConnectorFactory
 from kai.execution.executor import ActionExecutor
 from kai.execution.result import ExecutionResult
+from agent.tasks.execute_approved import _read_back_outstand
 
 
 # ---------------------------------------------------------------------------
@@ -567,3 +568,59 @@ class TestExecutionResult:
         assert d["action_id"] == "act_123"
         assert d["success"] is True
         assert "timestamp" in d
+
+
+class TestOutstandReadBack:
+    def test_verifies_successful_outstand_post(self):
+        action = {"channel": "social", "action_type": "publish_social_post", "brand_id": "brand"}
+        result = ExecutionResult(
+            success=True,
+            connector_type="outstand",
+            method_called="create_post",
+            response_data={"response": {"id": "post_123"}},
+        )
+        connector = MagicMock()
+        connector.get_post.return_value = {"id": "post_123", "status": "published"}
+        registry = MagicMock()
+        registry.list_for_brand.return_value = [{"provider": "outstand"}]
+        factory = MagicMock()
+        factory.create_read_only.return_value = connector
+
+        read_back = _read_back_outstand(
+            action=action, result=result, registry=registry, factory=factory
+        )
+
+        assert read_back["status"] == "verified"
+        assert read_back["post_id"] == "post_123"
+        connector.get_post.assert_called_once_with("post_123")
+
+    def test_skips_non_social_actions(self):
+        result = ExecutionResult(success=True, connector_type="wordpress", method_called="update_page")
+        assert _read_back_outstand(
+            action={"channel": "website", "action_type": "update_page"},
+            result=result,
+            registry=MagicMock(),
+            factory=MagicMock(),
+        ) == {"status": "skipped"}
+
+    def test_times_out_without_blocking_indefinitely(self, monkeypatch):
+        action = {"channel": "social", "action_type": "publish_social_post", "brand_id": "brand"}
+        result = ExecutionResult(
+            success=True,
+            connector_type="outstand",
+            method_called="create_post",
+            response_data={"response": {"id": "post_123"}},
+        )
+        connector = MagicMock()
+        connector.get_post.side_effect = lambda post_id: __import__("time").sleep(0.1)
+        registry = MagicMock()
+        registry.list_for_brand.return_value = [{"provider": "outstand"}]
+        factory = MagicMock()
+        factory.create_read_only.return_value = connector
+        monkeypatch.setattr("agent.tasks.execute_approved._SOCIAL_READ_BACK_TIMEOUT_SECONDS", 0.01)
+
+        read_back = _read_back_outstand(
+            action=action, result=result, registry=registry, factory=factory
+        )
+
+        assert read_back["status"] == "timeout"

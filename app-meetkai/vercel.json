@@ -4,6 +4,7 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build",
   "crons": [
-    { "path": "/api/cron/sync-all", "schedule": "0 6 * * *" }
+    { "path": "/api/cron/sync-all", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/social-reconcile", "schedule": "*/5 * * * *" }
   ]
 }

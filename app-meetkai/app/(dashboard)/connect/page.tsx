@@ -315,6 +315,7 @@ const SYNC_ENDPOINTS: Record<string, string> = {
   shopify: "/api/sync/shopify",
   webflow: "/api/sync/webflow",
   squarespace: "/api/sync/squarespace",
+  outstand: "/api/integrations/outstand/accounts",
   slack: "/api/sync/slack",
   gbp: "/api/sync/gbp",
   google_business_profile: "/api/sync/gbp",

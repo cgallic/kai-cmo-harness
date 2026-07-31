@@ -8,11 +8,64 @@ then dispatches each through the ActionExecutor.
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from typing import Any, Dict, List, Optional
 
 from .base import BaseTask
 
 logger = logging.getLogger(__name__)
+
+_SOCIAL_READ_BACK_TIMEOUT_SECONDS = 5
+
+
+def _read_back_outstand(
+    *, action: Dict[str, Any], result: Any, registry: Any, factory: Any
+) -> Dict[str, Any]:
+    """Read back a successfully-created Outstand post within a hard timeout."""
+    if (
+        action.get("channel") != "social"
+        or action.get("action_type") not in {
+            "publish_social_post",
+            "schedule_social_post",
+            "schedule_approved_post",
+        }
+        or getattr(result, "connector_type", "") != "outstand"
+        or getattr(result, "method_called", "") != "create_post"
+        or not getattr(result, "success", False)
+        or getattr(result, "dry_run", False)
+    ):
+        return {"status": "skipped"}
+
+    response = getattr(result, "response_data", {}) or {}
+    provider_response = response.get("response", response)
+    if not isinstance(provider_response, dict):
+        return {"status": "unavailable", "reason": "provider response is not an object"}
+    post_id = provider_response.get("id") or provider_response.get("post_id")
+    if not post_id and isinstance(provider_response.get("data"), dict):
+        post_id = provider_response["data"].get("id")
+    if not post_id:
+        return {"status": "unavailable", "reason": "provider post id missing"}
+
+    integrations = registry.list_for_brand(action.get("brand_id", ""), channel="social")
+    integration = next(
+        (item for item in integrations if item.get("provider") == "outstand"), None
+    )
+    if integration is None:
+        return {"status": "unavailable", "reason": "outstand integration missing"}
+
+    connector = factory.create_read_only(integration)
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        future = pool.submit(connector.get_post, str(post_id))
+        try:
+            read_back = future.result(timeout=_SOCIAL_READ_BACK_TIMEOUT_SECONDS)
+        except FutureTimeoutError:
+            future.cancel()
+            return {"status": "timeout", "post_id": str(post_id)}
+        except Exception as exc:
+            return {"status": "failed", "post_id": str(post_id), "reason": str(exc)}
+
+    receipt = read_back.model_dump() if hasattr(read_back, "model_dump") else read_back
+    return {"status": "verified", "post_id": str(post_id), "receipt": receipt}
 
 
 class ExecuteApprovedActionsTask(BaseTask):
@@ -84,6 +137,19 @@ class ExecuteApprovedActionsTask(BaseTask):
                     store.mark_failed(action_id, str(exc))
                     raise
                 if result.success:
+                    if action.get("channel") == "social" and action.get("action_type") in {
+                        "publish_social_post",
+                        "schedule_social_post",
+                        "schedule_approved_post",
+                    }:
+                        read_back = _read_back_outstand(
+                            action=action, result=result, registry=registry, factory=factory
+                        )
+                        if read_back.get("status") == "verified":
+                            store.mark_verified(action_id, read_back)
+                            logger.info("Action %s provider read-back verified", action_id)
+                        else:
+                            logger.warning("Action %s provider read-back: %s", action_id, read_back)
                     succeeded += 1
                 else:
                     failed += 1
