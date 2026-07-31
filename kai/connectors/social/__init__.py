@@ -18,6 +18,7 @@ from .instagram import InstagramConnector
 from .linkedin import LinkedInConnector
 from .tiktok import TikTokConnector
 from .youtube import YouTubeConnector
+from .outstand import OutstandConnector
 
 # ---------------------------------------------------------------------------
 # Platform Registry
@@ -29,6 +30,7 @@ PLATFORM_REGISTRY: Dict[str, Type[SocialConnector]] = {
     "linkedin": LinkedInConnector,
     "tiktok": TikTokConnector,
     "youtube": YouTubeConnector,
+    "outstand": OutstandConnector,
 }
 
 
@@ -82,6 +84,7 @@ __all__ = [
     "LinkedInConnector",
     "TikTokConnector",
     "YouTubeConnector",
+    "OutstandConnector",
     # Registry & factory
     "PLATFORM_REGISTRY",
     "get_connector",

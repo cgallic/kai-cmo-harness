@@ -44,6 +44,7 @@ _CONNECTOR_REGISTRY: Dict[Tuple[str, str], Tuple[str, str]] = {
     ("social", "tiktok"): ("kai.connectors.social.tiktok", "TikTokConnector"),
     ("social", "linkedin"): ("kai.connectors.social.linkedin", "LinkedInConnector"),
     ("social", "youtube"): ("kai.connectors.social.youtube", "YouTubeConnector"),
+    ("social", "outstand"): ("kai.connectors.social.outstand", "OutstandConnector"),
 }
 
 

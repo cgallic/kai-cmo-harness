@@ -224,6 +224,7 @@ export const PROVIDERS: ProviderConfig[] = [
   { channel: "social", provider: "youtube", name: "YouTube", icon: "Youtube", appSlug: "youtube_data_api" },
   { channel: "social", provider: "twitter", name: "X / Twitter", icon: "Twitter", appSlug: "", comingSoon: true },
   { channel: "social", provider: "pinterest", name: "Pinterest", icon: "Pin", appSlug: "pinterest" },
+  { channel: "social", provider: "outstand", name: "Outstand Social Publishing", icon: "Send", appSlug: "" },
   // Email
   { channel: "email", provider: "mailchimp", name: "Mailchimp", icon: "Mail", appSlug: "mailchimp" },
   { channel: "email", provider: "sendgrid", name: "SendGrid", icon: "Send", appSlug: "sendgrid" },
