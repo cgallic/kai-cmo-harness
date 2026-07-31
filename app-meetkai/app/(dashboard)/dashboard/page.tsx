@@ -167,6 +167,14 @@ export default function DashboardPage() {
 
       <QuickStats audit={displayAudit} integrations={integrations} actions={actions} snapshots={snapshots} />
 
+      <a href="/content" className="card flex items-center justify-between gap-4 hover:border-amber/40 transition-colors">
+        <div>
+          <p className="text-sm font-semibold">Social publishing queue</p>
+          <p className="text-xs text-text-secondary mt-1">Review publishing states, failures, and live provider links.</p>
+        </div>
+        <span className="text-amber text-sm">Open queue →</span>
+      </a>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AttentionItems actions={actions} integrations={integrations} />
         <AIActivity runs={runs} loading={runsLoading} />

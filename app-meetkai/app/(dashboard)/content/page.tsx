@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useBrand, useActions, useContent } from "@/lib/hooks";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -10,13 +10,44 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import { cn, timeAgo } from "@/lib/utils";
 import type { Action, Content } from "@/lib/types";
-import { Check, X, ChevronDown, ChevronUp, FileText, Play, Eye } from "lucide-react";
+import { Check, X, ChevronDown, ChevronUp, FileText, Play, Eye, Share2, ExternalLink } from "lucide-react";
+
+type SocialStatusPost = {
+  id: string;
+  caption: string | null;
+  status: string;
+  created_at: string;
+  social_provider_receipts?: Array<{
+    provider: string;
+    status: string;
+    provider_post_url: string | null;
+    error: string | null;
+  }>;
+};
 
 export default function ContentPage() {
   const { brand, loading: brandLoading } = useBrand();
   const { actions, loading: actionsLoading, refresh: refreshActions } = useActions(brand?.id);
   const { content, loading: contentLoading, refresh: refreshContent } = useContent(brand?.id);
+  const [socialPosts, setSocialPosts] = useState<SocialStatusPost[]>([]);
+  const [socialLoading, setSocialLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("pending");
+
+  const loadSocialStatus = useCallback(async () => {
+    if (!brand?.id) return;
+    setSocialLoading(true);
+    try {
+      const response = await fetch(`/api/social/status?brand_id=${brand.id}&limit=5`);
+      if (response.ok) {
+        const data = await response.json();
+        setSocialPosts(data.posts ?? []);
+      }
+    } finally {
+      setSocialLoading(false);
+    }
+  }, [brand?.id]);
+
+  useEffect(() => { void loadSocialStatus(); }, [loadSocialStatus]);
 
   const pending = actions.filter((a) => a.approval_state === "pending");
   const inProgress = actions.filter((a) => a.execution_state === "executing");
@@ -55,6 +86,8 @@ export default function ContentPage() {
         </p>
       </div>
 
+      <SocialStatus posts={socialPosts} loading={socialLoading} />
+
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
       {activeTab === "library" ? (
@@ -77,6 +110,45 @@ export default function ContentPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function SocialStatus({ posts, loading }: { posts: SocialStatusPost[]; loading: boolean }) {
+  return (
+    <Card>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2">
+          <Share2 className="w-4 h-4 text-amber" />
+          <h2 className="text-sm font-semibold">Social publishing</h2>
+        </div>
+        <a href="/dashboard" className="text-xs text-amber hover:text-amber-light">View on dashboard</a>
+      </div>
+      {loading ? <p className="text-xs text-text-tertiary">Loading publishing status…</p> : posts.length === 0 ? (
+        <p className="text-xs text-text-tertiary">No social posts yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {posts.map((post) => {
+            const receipt = post.social_provider_receipts?.[0];
+            const failed = post.status === "failed" || receipt?.status === "failed";
+            return (
+              <div key={post.id} className="flex items-start justify-between gap-3 rounded-lg bg-bg-elevated px-3 py-2">
+                <div className="min-w-0">
+                  <p className="truncate text-xs text-text-secondary">{post.caption || "Untitled post"}</p>
+                  <p className={cn("text-xs capitalize", failed ? "text-error" : "text-text-tertiary")}>
+                    {failed ? receipt?.error || "Publishing failed" : receipt?.status || post.status}
+                  </p>
+                </div>
+                {receipt?.provider_post_url && (
+                  <a href={receipt.provider_post_url} target="_blank" rel="noreferrer" className="flex-shrink-0 text-amber hover:text-amber-light" aria-label="Open published post">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
   );
 }
 
