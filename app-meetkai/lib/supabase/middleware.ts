@@ -9,7 +9,8 @@ export async function updateSession(request: NextRequest) {
     pathname === "/llms.txt" ||
     pathname === "/robots.txt" ||
     pathname.startsWith("/images/") ||
-    pathname.startsWith("/auth/");
+    pathname.startsWith("/auth/") ||
+    pathname.startsWith("/api/cron/");
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
