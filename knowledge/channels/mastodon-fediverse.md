@@ -10,7 +10,7 @@ Primary references:
 - Statuses API: https://docs.joinmastodon.org/methods/statuses/
 - Mastodon releases: https://github.com/mastodon/mastodon/releases
 
-Last researched: 2026-06-29
+Last researched: 2026-08-03
 
 ## Channel Role
 
@@ -22,7 +22,7 @@ Use Mastodon/fediverse surfaces for community-specific public conversation, open
 - Hashtags matter more than on many centralized platforms because they drive discovery.
 - Content warnings, alt text, and instance norms are trust signals.
 - Quote posts now add another interaction layer, but authors can restrict who may quote them and followers-only/direct posts are not open quoting surfaces.
-- Instance version matters. Recent Mastodon 4.6.x releases changed quote-post handling and added new API metadata fields, so automation assumptions should be verified against the target server version before rollout. Source: https://github.com/mastodon/mastodon/releases (accessed 2026-06-29).
+- Instance version matters. Recent Mastodon 4.6.x releases changed quote-post handling and added new API metadata fields, so automation assumptions should be verified against the target server version before rollout. Source: https://github.com/mastodon/mastodon/releases (accessed 2026-08-03).
 - Server rules can be stricter than Mastodon defaults.
 
 ## Guardrails

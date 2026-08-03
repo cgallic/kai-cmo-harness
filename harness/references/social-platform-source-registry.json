@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_researched": "2026-07-27",
+  "last_researched": "2026-08-03",
   "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
   "sources": [
     {
@@ -34,6 +34,41 @@
       "url": "https://docs.x.com/developer-terms/policy",
       "owner_file": "harness/references/x-organic-posting-rules.md",
       "notes": "Acceptable API use, privacy, content usage, automation, and restricted behavior."
+    },
+    {
+      "id": "x_authenticity",
+      "platform": "x",
+      "category": "policy",
+      "title": "X Authenticity Policy",
+      "url": "https://help.x.com/en/rules-and-policies/authenticity",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Official spam, platform manipulation, impersonation, and synthetic coordination policy. Fall back to the X Rules page because direct help pages can intermittently 403 in unattended runs."
+    },
+    {
+      "id": "x_rate_limits",
+      "platform": "x",
+      "category": "automation",
+      "title": "X API Rate Limits",
+      "url": "https://docs.x.com/fundamentals/rate-limits",
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Canonical request and write-limit guidance for X API automation."
+    },
+    {
+      "id": "x_copyright_policy",
+      "platform": "x",
+      "category": "policy",
+      "title": "X Copyright Policy",
+      "url": "https://help.x.com/en/rules-and-policies/copyright-policy",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Official copyright/IP enforcement guidance for media, reposting, and rights complaints. Fall back to the X Rules page because direct help pages can intermittently 403 in unattended runs."
     },
     {
       "id": "x_api_changelog",
@@ -85,6 +120,15 @@
       "notes": "API, app review, privacy, platform behavior, and automation constraints."
     },
     {
+      "id": "graph_api_rate_limits",
+      "platform": "meta",
+      "category": "automation",
+      "title": "Graph API Rate Limits",
+      "url": "https://developers.facebook.com/docs/graph-api/overview/rate-limiting/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Canonical Graph API rate-limit guidance for scheduled publishing, moderation, and insights jobs."
+    },
+    {
       "id": "instagram_ranking",
       "platform": "instagram",
       "category": "recommendation",
@@ -103,6 +147,24 @@
       "notes": "Monitor for originality, aggregator, recommendation, and smaller-creator distribution guidance."
     },
     {
+      "id": "instagram_terms",
+      "platform": "instagram",
+      "category": "terms",
+      "title": "Instagram Terms of Use",
+      "url": "https://help.instagram.com/581066165581870/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Canonical Instagram terms coverage for account use, content rights, and surface-specific restrictions."
+    },
+    {
+      "id": "instagram_branded_content",
+      "platform": "instagram",
+      "category": "commercial_policy",
+      "title": "About Branded Content on Instagram",
+      "url": "https://help.instagram.com/128845584325492/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Instagram branded-content and paid-partnership tool guidance."
+    },
+    {
       "id": "threads_api",
       "platform": "threads",
       "category": "developer",
@@ -110,6 +172,18 @@
       "url": "https://developers.facebook.com/docs/threads/",
       "owner_file": "harness/references/meta-organic-posting-rules.md",
       "notes": "Posting, insights, moderation, and brand management surface for Threads."
+    },
+    {
+      "id": "threads_terms",
+      "platform": "threads",
+      "category": "terms",
+      "title": "Threads Terms of Use",
+      "url": "https://help.instagram.com/769983657850450",
+      "fallback_urls": [
+        "https://about.fb.com/news/2023/07/introducing-threads-new-app-text-sharing/"
+      ],
+      "owner_file": "knowledge/channels/threads-organic.md",
+      "notes": "Canonical Threads terms page. The direct help page is browser-visible but automation-hostile, so fall back to the first-party launch post for unattended monitoring and confirm the live terms page manually when it changes."
     },
     {
       "id": "tiktok_community_guidelines",
@@ -146,6 +220,15 @@
       "url": "https://developers.tiktok.com/doc/content-posting-api-get-started",
       "owner_file": "harness/references/tiktok-organic-posting-rules.md",
       "notes": "Direct posting and upload prerequisites, scopes, UX, and domain verification."
+    },
+    {
+      "id": "tiktok_developer_guidelines",
+      "platform": "tiktok",
+      "category": "developer",
+      "title": "TikTok Developer Guidelines",
+      "url": "https://developers.tiktok.com/doc/our-guidelines-developer-guidelines",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Official umbrella developer-policy guidance for compliance, review, and platform-safe integrations."
     },
     {
       "id": "tiktok_content_sharing_guidelines",
@@ -191,6 +274,15 @@
       "url": "https://support.google.com/youtube/answer/3399767?hl=en",
       "owner_file": "harness/references/youtube-organic-posting-rules.md",
       "notes": "Blocks artificial views, likes, comments, metrics, and engagement incentives."
+    },
+    {
+      "id": "youtube_copyright",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "Copyright on YouTube",
+      "url": "https://support.google.com/youtube/answer/2797466?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Canonical music, copyright, permissions, fair-use, and Content ID guidance."
     },
     {
       "id": "youtube_genai_disclosure",
@@ -303,6 +395,15 @@
       "notes": "Official GenAI safety, deception, privacy, IP, and anti-scraping rules."
     },
     {
+      "id": "pinterest_changelog",
+      "platform": "pinterest",
+      "category": "changelog",
+      "title": "Pinterest Developers Changelog",
+      "url": "https://developers.pinterest.com/docs/changelog/changelog/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Canonical developer and ads/platform changelog for Pinterest surfaces."
+    },
+    {
       "id": "pinterest_developer_guidelines",
       "platform": "pinterest",
       "category": "developer",
@@ -337,6 +438,15 @@
       "url": "https://values.snap.com/policy/policy-community-guidelines",
       "owner_file": "harness/references/snapchat-organic-posting-rules.md",
       "notes": "Organic content, commercial content, monetization, and developer policy pointers."
+    },
+    {
+      "id": "snap_copyright",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "About Copyright Infringement on Snapchat",
+      "url": "https://help.snapchat.com/hc/en-us/articles/7012315652500-About-Copyright-Infringement-on-Snapchat",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Official Snap copyright/IP guidance for media reuse, music, and infringement complaints."
     },
     {
       "id": "snap_recommendation_eligibility",
@@ -450,6 +560,15 @@
       "notes": "Publishing behavior and content quality guidelines."
     },
     {
+      "id": "linkedin_spam",
+      "platform": "linkedin",
+      "category": "policy",
+      "title": "LinkedIn Spam",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a1338787",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Official spam and distribution-limiting engagement-manipulation guidance."
+    },
+    {
       "id": "linkedin_prohibited_software",
       "platform": "linkedin",
       "category": "automation",
@@ -495,6 +614,15 @@
       "notes": "Gateway to branded content and Pages/Groups/Events policies that affect organic publishing."
     },
     {
+      "id": "meta_community_notes",
+      "platform": "meta",
+      "category": "policy",
+      "title": "Meta Community Notes",
+      "url": "https://transparency.meta.com/features/community-notes/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Meta explainer for Community Notes and how public factual context can appear across surfaces."
+    },
+    {
       "id": "facebook_feed_ai_system",
       "platform": "meta",
       "category": "recommendation",
@@ -529,15 +657,6 @@
       "url": "https://developers.facebook.com/docs/threads/changelog/",
       "owner_file": "knowledge/channels/threads-organic.md",
       "notes": "Monthly monitor source for Threads API changes."
-    },
-    {
-      "id": "threads_terms",
-      "platform": "threads",
-      "category": "terms",
-      "title": "Introducing Threads: A New Way to Share With Text",
-      "url": "https://about.fb.com/news/2023/07/introducing-threads-new-app-text-sharing/",
-      "owner_file": "knowledge/channels/threads-organic.md",
-      "notes": "Fetchable first-party Meta announcement and product baseline for Threads. Use the browser-visible Threads Terms help article for exact legal text when guidance changes, but monitor this page to avoid unattended-run 400s on about/help surfaces."
     },
     {
       "id": "threads_feed_ai_system",
@@ -796,6 +915,24 @@
       "notes": "Official approval, commercial-use, monetized publishing, and AI-training restrictions for Reddit developer services."
     },
     {
+      "id": "reddit_manipulated_content",
+      "platform": "reddit",
+      "category": "policy",
+      "title": "Manipulated Content and Misleading Behavior",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/41180423371156-Manipulated-Content-and-Misleading-Behavior",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Official Reddit policy covering manipulated, deceptive, and misleading content, including AI-adjacent misuse."
+    },
+    {
+      "id": "reddit_app_labels",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Apps on Reddit and how to get a label for your app",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/45376380316052-Apps-on-Reddit-and-how-to-get-a-label-for-your-app",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Official app-label guidance for user-facing Reddit automation and bot disclosure."
+    },
+    {
       "id": "bluesky_community_guidelines",
       "platform": "bluesky",
       "category": "policy",
@@ -805,6 +942,15 @@
       "notes": "Core Bluesky content and behavior rules."
     },
     {
+      "id": "bluesky_terms",
+      "platform": "bluesky",
+      "category": "terms",
+      "title": "Bluesky Terms of Service",
+      "url": "https://bsky.social/about/support/tos",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Canonical Bluesky terms coverage for account use, content rights, and service restrictions."
+    },
+    {
       "id": "bluesky_rate_limits",
       "platform": "bluesky",
       "category": "automation",
@@ -812,6 +958,15 @@
       "url": "https://docs.bsky.app/docs/advanced-guides/rate-limits",
       "owner_file": "knowledge/channels/bluesky-organic.md",
       "notes": "Write/read limits for AT Protocol clients."
+    },
+    {
+      "id": "bluesky_moderation",
+      "platform": "bluesky",
+      "category": "policy",
+      "title": "Labels and moderation",
+      "url": "https://docs.bsky.app/docs/advanced-guides/moderation",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Official Bluesky labels, self-labeling, moderation, and filter behavior guidance."
     },
     {
       "id": "bluesky_api_blog",

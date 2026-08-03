@@ -117,7 +117,7 @@ BAD:
 
 ## YouTube SEO
 
-Use official YouTube help pages for policy or ranking claims. The factor ordering below is an operating heuristic, not a published weight table. YouTube's current search help says search prioritizes relevance, engagement, and quality, while its recommendation and search/discovery docs emphasize audience fit, viewer satisfaction, content performance, topic interest, competition, and seasonality over any single CTR hack. Sources: https://support.google.com/youtube/answer/16090438?hl=en, https://support.google.com/youtube/answer/16533387?hl=en, and https://support.google.com/youtube/answer/11914225?co=YOUTUBE._YTVideoType%3Dvideo&hl=en (accessed 2026-07-27).
+Use official YouTube help pages for policy or ranking claims. The factor ordering below is an operating heuristic, not a published weight table. YouTube's current search help says search prioritizes relevance, engagement, and quality, while its recommendation and search/discovery docs emphasize audience fit, viewer satisfaction, content performance, topic interest, competition, and seasonality over any single CTR hack. Sources: https://support.google.com/youtube/answer/16090438?hl=en, https://support.google.com/youtube/answer/16533387?hl=en, and https://support.google.com/youtube/answer/11914225?co=YOUTUBE._YTVideoType%3Dvideo&hl=en (accessed 2026-08-03).
 
 ### Ranking Factors (by importance)
 
@@ -172,6 +172,7 @@ Before publishing or scheduling YouTube content:
 
 - Load `harness/references/youtube-organic-posting-rules.md`.
 - Check Community Guidelines, spam/fake engagement, external links, and advertiser-friendly guidance.
+- Clear music, clip, image, and footage rights before upload or reuse. YouTube's copyright help still points creators to permission, copyright exceptions, Creative Commons, Audio Library, and Creator Music rather than assuming a short clip or soundtrack swap is safe. Source: https://support.google.com/youtube/answer/2797466?hl=en (accessed 2026-08-03).
 - Set paid promotion, made-for-kids, age restriction, AI/altered content, license, captions, and remix fields intentionally.
 - If using the API, set the altered/synthetic-media and brand-partner fields intentionally and track quota by method. YouTube's July 2026 revision history adds `brandPartner` for creator-initiated paid partnerships and splits `videos.insert`, `search.list`, and `videos.batchGetStats` into distinct quota buckets. Source: https://developers.google.com/youtube/v3/revision_history (accessed 2026-07-13).
 - Do not use artificial views, engagement incentives, repetitive AI batches, or scraped reposting.

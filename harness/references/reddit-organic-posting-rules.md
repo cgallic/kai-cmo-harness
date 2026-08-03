@@ -1,6 +1,6 @@
 # Reddit Organic Posting Rules
 
-Last researched: 2026-07-27
+Last researched: 2026-08-03
 
 Primary sources:
 - User Agreement: https://redditinc.com/policies/user-agreement
@@ -9,6 +9,8 @@ Primary sources:
 - Data API Terms: https://redditinc.com/policies/data-api-terms
 - Public Content Policy: https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy
 - Spam policy: https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam
+- Manipulated Content and Misleading Behavior: https://support.reddithelp.com/hc/en-us/articles/41180423371156-Manipulated-Content-and-Misleading-Behavior
+- Apps on Reddit and how to get a label for your app: https://support.reddithelp.com/hc/en-us/articles/45376380316052-Apps-on-Reddit-and-how-to-get-a-label-for-your-app
 - Responsible Builder Policy announcement: https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/
 - Responsible Builder Policy help article: https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy
 
@@ -21,8 +23,10 @@ Primary sources:
 - Do not display Reddit content inside an ads-backed, paywalled, or otherwise monetized product surface without Reddit's permission and contract path. Reddit's current developer-access help says you cannot display Reddit content and run advertisements in your app, website, or service, and it treats monetized publishing of Reddit content as a commercial use that requires permission. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data (accessed 2026-07-27).
 - Treat ads-backed tools, subscription products, monetized publishing of Reddit content, paid services, and model training as permission-gated commercial uses until Reddit approves the exact use case or contract path. Source: https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data and https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy (accessed 2026-07-13).
 - Do not use the Data APIs to spam, incentivize, or harass users, and do not train AI on Reddit user content without the applicable rightsholder permission. Source: https://redditinc.com/policies/data-api-terms (accessed 2026-07-20).
+- Do not publish AI-generated, edited, or otherwise manipulated Reddit content in ways that materially mislead, impersonate, or falsify context. Treat deceptive synthetic media as a policy issue, not just a quality issue. Source: https://support.reddithelp.com/hc/en-us/articles/41180423371156-Manipulated-Content-and-Misleading-Behavior (accessed 2026-08-03).
 - Do not use undisclosed brand accounts, fake users, bought accounts, coordinated voting, vote manipulation, astroturfing, or scraped personal data.
 - Get approval for any new OAuth/API access path if Reddit requires it.
+- Label user-facing Reddit apps or bots when the product surface requires it. Do not ship automation that appears to be an ordinary human account when Reddit expects an app label or comparable disclosure. Source: https://support.reddithelp.com/hc/en-us/articles/45376380316052-Apps-on-Reddit-and-how-to-get-a-label-for-your-app (accessed 2026-08-03).
 - Check reputation, account age, karma, flair, moderation queue, and community-specific self-promotion tolerance before posting.
 - Reddit's spam page currently describes mass-posting repetitive content for exposure or financial gain, mass-tagging or unsolicited chats/DMs, and tooling that breaks Reddit or facilitates spam as enforcement risk. Keep this as a browser-verified source when the help-center URL is bot-blocked in automation. Source: https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam (accessed 2026-07-20 in browser/search).
 - If Reddit Help policy pages fail in automation, use the official Reddit news Public Content Policy post and the old.reddit `redditdev` Responsible Builder announcement as monitor fallbacks, then verify the live help-center pages manually in a browser before changing guidance. Sources: https://redditinc.com/news/publishing-our-public-content-policy-and-introducing-a-new-community-for-researchers and https://old.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/ (accessed 2026-06-29).

@@ -1,6 +1,6 @@
 # Meta, Instagram, Facebook, and Threads Organic Posting Rules
 
-Last researched: 2026-07-27
+Last researched: 2026-08-03
 
 Primary sources:
 - Meta Community Standards: https://transparency.meta.com/policies/community-standards/
@@ -9,13 +9,16 @@ Primary sources:
 - Instagram originality guidance: https://creators.instagram.com/blog/recommendations-and-originality
 - Threads API docs: https://developers.facebook.com/docs/threads/
 - Threads API changelog: https://developers.facebook.com/docs/threads/changelog/
+- Threads Terms of Use: https://help.instagram.com/769983657850450
 - Instagram Content Publishing API: https://developers.facebook.com/docs/instagram-platform/content-publishing/
 - Instagram media publish reference: https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media_publish/
+- Graph API rate limits: https://developers.facebook.com/docs/graph-api/overview/rate-limiting/
 - Meta ranking explainers: https://transparency.meta.com/features/explaining-ranking/
 - Meta other policies hub: https://transparency.meta.com/policies/other-policies/
+- About branded content on Instagram: https://help.instagram.com/128845584325492/
 - Facebook Feed AI system: https://transparency.meta.com/features/explaining-ranking/fb-feed/
 - Threads Feed AI system: https://transparency.meta.com/features/explaining-ranking/ig-threads-feed/
-- Label AI content on Threads: https://help.instagram.com/407718162047721/
+- Meta AI labeling on Facebook, Instagram, and Threads: https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/
 - Meta Community Notes: https://transparency.meta.com/features/community-notes/
 - Meta Advertising Standards: https://transparency.meta.com/policies/ad-standards/
 
@@ -26,13 +29,15 @@ Primary sources:
 - Treat AI-generated content, synthetic media, affiliate content, contests, testimonials, and regulated goods as policy-sensitive.
 - Check Meta Advertising Standards before boosting any organic post.
 - Check Meta's other-policies hub before branded content, affiliate, partner, Page-admin, or group/community publishing workflows.
-- Treat Threads Terms as supplemental to Instagram Terms for Threads workflows. Do not assume Instagram-only product help covers Threads publishing, identity, or federation-specific obligations. Source: https://help.instagram.com/769983657850450 (accessed 2026-07-27 in browser/search).
+- Treat Threads Terms as supplemental to Instagram Terms for Threads workflows. Do not assume Instagram-only product help covers Threads publishing, identity, or federation-specific obligations. Source: https://help.instagram.com/769983657850450 (accessed 2026-08-03).
+- Check Graph API rate limits before burst publishing, moderation, or insights jobs. Meta's official rate-limit docs remain the canonical source for how app, user, and business-use-case limits can throttle otherwise-valid automation. Source: https://developers.facebook.com/docs/graph-api/overview/rate-limiting/ (accessed 2026-08-03).
 - Use only approved APIs and permission scopes for posting, moderation, messaging, insights, or Threads management.
 - Keep user consent, token scope, and account ownership records for any scheduled/published content.
 - Check live Instagram/Threads API docs before scheduling. Current Meta publishing-limit language can differ by guide and endpoint.
 - If Instagram content is AI-generated or meaningfully AI-altered, set the API self-disclosure field at publish time. The Instagram Platform changelog says `is_ai_generated=true` now applies the AI Info label on media or carousel containers. Source: https://developers.facebook.com/docs/instagram-platform/changelog/ (accessed 2026-06-29).
 - Review Community Notes exposure for factual, political, health, finance, public-interest, or brand-claim posts.
-- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing. Threads' current help article says content may be auto-labeled when Meta detects AI signals, but creators still need to label AI-generated or AI-modified content when required. Source: https://help.instagram.com/407718162047721/ (accessed 2026-07-27 in browser/search).
+- Use the branded-content tool path when a post has a business partner, sponsorship, or other paid-partnership context. Instagram's current branded-content help still ties partner tagging to Partner Monetization Policies and the official business-partner tag flow. Source: https://help.instagram.com/128845584325492/ (accessed 2026-08-03).
+- Review AI-generated/manipulated media labeling and branded-content disclosure before publishing. Meta's current AI-labeling post says content may be auto-labeled when Meta detects AI signals, but creators still need to label AI-generated or AI-modified content when required. Source: https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/ (accessed 2026-08-03).
 
 ## Organic Distribution Guidance
 

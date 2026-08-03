@@ -1,6 +1,6 @@
 # TikTok Organic Posting Rules
 
-Last researched: 2026-07-20
+Last researched: 2026-08-03
 
 Primary sources:
 - Community Guidelines: https://www.tiktok.com/community-guidelines/en/
@@ -14,6 +14,7 @@ Primary sources:
 - AI-generated content: https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/
 - Commercial music: https://ads.tiktok.com/help/article/commercial-music-library
 - Content sharing guidelines: https://developers.tiktok.com/doc/content-sharing-guidelines
+- TikTok Developer Guidelines: https://developers.tiktok.com/doc/our-guidelines-developer-guidelines
 - TikTok ad policy change log: https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026
 
 ## Required Checks
@@ -21,6 +22,7 @@ Primary sources:
 - Confirm the content is allowed by TikTok Community Guidelines before scripting or scheduling.
 - Check recommendation eligibility rules for content intended for For You distribution.
 - Use the Content Posting API only with the required scopes, user authorization, verified domains/URL prefixes, required export-page UX, and current audit status.
+- Keep app-review and compliance status current before expanding a TikTok posting integration. TikTok's current Developer Guidelines remain the umbrella source for review expectations and platform-safe developer behavior beyond the endpoint docs. Source: https://developers.tiktok.com/doc/our-guidelines-developer-guidelines (accessed 2026-08-03).
 - Use `video.publish` for direct posting and `video.upload` for inbox/review upload flows, based on the current TikTok Content Posting API guide.
 - Disclose realistic AI-generated or altered content when required by platform tools or local law. TikTok's AI guidance says realistic AI-generated or meaningfully altered content must be labeled, can be auto-labeled from TikTok effects or C2PA credentials, and can still be removed if it misleads or uses prohibited likenesses. Source: https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/ (accessed 2026-07-13).
 - Use Content Disclosure settings for own-brand, third-party branded, affiliate, or incentivized posts. TikTok's July 2026 help flow says branded or promotional posts must turn on the disclosure setting and may be removed or restricted if the proper disclosure is missing. Source: https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers (accessed 2026-07-13).

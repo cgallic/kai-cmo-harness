@@ -2,7 +2,7 @@
 
 > **Use when**: Writing X posts, planning threads, building reply strategy, deciding cadence, reviewing automation, or preparing an organic post that may later be promoted.
 
-Last updated: 2026-07-20
+Last updated: 2026-08-03
 
 Primary references:
 - X For You recommendations: https://help.x.com/en/resources/recommender-systems/for-you-home-timeline-recommendations
@@ -48,7 +48,7 @@ High-confidence signal families from X's recommendation docs:
 - **Author diversity**: repeated author exposure can be attenuated, so many similar posts in a short window can compete with each other.
 - **Content understanding**: X's public algorithm materials describe classifiers and embedders for spam, post category, policy, media, language, quote expansion, and brand-safety signals.
 - **Search-specific ranking**: X's search recommendations doc separates Top, Latest, People, Media, and Lists. Top search weighs engagement, health, and relevance, while Latest is reverse-chronological with visibility filtering.
-- **Search-specific enforcement**: X's July 2026 search rules page says duplicate or near-duplicate posts, automated posts/replies, keyword-triggered bot messages, aggressive follow churn, and similar posts across multiple accounts can be filtered out of search even when followers can still see the post. Source: https://help.x.com/en/resources/recommender-systems/search-recommendations and https://help.x.com/en/rules-and-policies/x-search-policies (accessed 2026-07-13 in browser).
+- **Search-specific enforcement**: X's current search rules page still says duplicate or near-duplicate posts, automated posts/replies, keyword-triggered bot messages, aggressive follow churn, and similar posts across multiple accounts can be filtered out of search even when followers can still see the post. Source: https://help.x.com/en/resources/recommender-systems/search-recommendations and https://help.x.com/en/rules-and-policies/x-search-policies (accessed 2026-08-03 in browser).
 - **Automation caveat**: X Help Center rule pages are intermittently returning `403` to unattended fetches even when the pages remain browser-visible. Re-open the live page in a browser before treating a monitor fetch failure as a policy change.
 
 Practical implications:

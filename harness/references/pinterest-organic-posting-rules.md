@@ -1,6 +1,6 @@
 # Pinterest Organic Posting Rules
 
-Last researched: 2026-07-27
+Last researched: 2026-08-03
 
 Primary sources:
 - Community Guidelines: https://policy.pinterest.com/en/community-guidelines
@@ -13,6 +13,7 @@ Primary sources:
 ## Required Checks
 
 - Check Community Guidelines for content, destination links, deceptive practices, regulated goods, and spam risk.
+- Treat Pinterest's harmful/deceptive-products section as a hard block for growth-hack offers involving bought social accounts, account credentials, safety-bypass tools, or services built around deception/privacy violation. Source: https://policy.pinterest.com/en/community-guidelines (accessed 2026-08-03).
 - Use Pinterest API only under the current Developer and API Terms.
 - Follow Pinterest's developer-data constraints. Pinterest's current Developer Guidelines say you generally may not store information accessed through Pinterest Materials except campaign analytics about your own account, should call the API each time you need Pinterest account data, and cannot offer platform insights or competitor benchmarking without explicit written authorization. Source: https://policy.pinterest.com/en/developer-guidelines (accessed 2026-07-27).
 - Follow Business Terms for commercial accounts, catalogs, shops, affiliates, and promoted content. Pinterest's current Terms of Service say commercial use should run through a business account and that sponsored/branded posts are subject to the Commercial and Branded Content Guidelines. Source: https://policy.pinterest.com/en/terms-of-service and https://policy.pinterest.com/en/commercial-and-branded-content-guidelines (accessed 2026-07-20).
