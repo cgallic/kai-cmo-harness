@@ -80,6 +80,18 @@ class ThresholdConfig:
 
 
 @dataclass
+class RedditIntelligenceConfig:
+    """Local, read-only Reddit opportunity workflow settings."""
+    enabled: bool = False
+    profile: Path = field(default_factory=lambda: Path("scripts/reddit_monitor/intelligence/profiles/example.json"))
+    data_dir: Path = field(default_factory=lambda: Path("data/reddit-intelligence"))
+    dashboard_host: str = "127.0.0.1"
+    dashboard_port: int = 8765
+    sheets_enabled: bool = False
+    email_enabled: bool = False
+
+
+@dataclass
 class HarnessConfig:
     """Top-level harness configuration.
 
@@ -108,6 +120,7 @@ class HarnessConfig:
     discord: DiscordConfig = field(default_factory=DiscordConfig)
     sites: SiteConfig = field(default_factory=SiteConfig)
     thresholds: ThresholdConfig = field(default_factory=ThresholdConfig)
+    reddit_intelligence: RedditIntelligenceConfig = field(default_factory=RedditIntelligenceConfig)
 
     # Agency overrides (loaded from harness.yaml)
     quality_overrides: dict = field(default_factory=dict)
@@ -250,6 +263,19 @@ def load_config() -> HarnessConfig:
         social=social_thresh,
     )
 
+    reddit_raw = raw.get("reddit_intelligence") or {}
+    if not isinstance(reddit_raw, dict):
+        reddit_raw = {}
+    reddit_intelligence = RedditIntelligenceConfig(
+        enabled=_env_bool("KAI_REDDIT_INTELLIGENCE_ENABLED", reddit_raw.get("enabled", False)),
+        profile=Path(os.environ.get("KAI_REDDIT_PROFILE", reddit_raw.get("profile", "scripts/reddit_monitor/intelligence/profiles/example.json"))),
+        data_dir=Path(os.environ.get("KAI_REDDIT_DATA_DIR", reddit_raw.get("data_dir", "data/reddit-intelligence"))),
+        dashboard_host=os.environ.get("KAI_REDDIT_DASHBOARD_HOST", reddit_raw.get("dashboard_host", "127.0.0.1")),
+        dashboard_port=int(os.environ.get("KAI_REDDIT_DASHBOARD_PORT", reddit_raw.get("dashboard_port", 8765))),
+        sheets_enabled=_env_bool("KAI_REDDIT_SHEETS_ENABLED", reddit_raw.get("sheets_enabled", False)),
+        email_enabled=_env_bool("KAI_REDDIT_EMAIL_ENABLED", reddit_raw.get("email_enabled", False)),
+    )
+
     # Build paths — env vars override YAML
     paths_raw = raw.get("paths") or {}
 
@@ -268,6 +294,7 @@ def load_config() -> HarnessConfig:
         discord=discord,
         sites=sites,
         thresholds=thresholds,
+        reddit_intelligence=reddit_intelligence,
         quality_overrides=harness_raw.get("quality", {}),
         content_overrides=harness_raw.get("content", {}),
         site_persona_defaults=raw.get("site_persona_defaults", {}),
@@ -287,6 +314,24 @@ def get_config() -> HarnessConfig:
     if _config is None:
         _config = load_config()
     return _config
+
+
+def _env_bool(name: str, default: object = False) -> bool:
+    """Read a boolean environment override without treating ``"false"`` as true."""
+    value = os.environ.get(name)
+    if value is None:
+        return bool(default)
+    normalized = value.strip().lower()
+    if normalized in ("1", "true", "yes", "on"):
+        return True
+    if normalized in ("0", "false", "no", "off", ""):
+        return False
+    raise ValueError(f"{name} must be one of: 1/0, true/false, yes/no, on/off")
+
+
+def get_reddit_intelligence_config() -> RedditIntelligenceConfig:
+    """Return the validated Reddit Intelligence configuration."""
+    return load_config().reddit_intelligence
 
 
 # ── Publishing + calendar path accessors ────────────────────────────────────

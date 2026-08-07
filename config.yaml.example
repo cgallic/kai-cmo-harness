@@ -70,6 +70,18 @@ gemini_model: "gemini-2.0-flash"
 api_timeout: 30       # seconds — applied to all LLM API calls
 api_max_retries: 3    # circuit breaker: fail after N consecutive errors
 
+# Reddit Intelligence — reusable listening, scoring, dashboard, and handoff module.
+# It is read-only by default: no Reddit posting, voting, messaging, Sheet writes,
+# or email sends. Copy the example profile and customize it for each business.
+reddit_intelligence:
+  enabled: false
+  profile: "scripts/reddit_monitor/intelligence/profiles/example.json"
+  data_dir: "data/reddit-intelligence"
+  dashboard_host: "127.0.0.1"
+  dashboard_port: 8765
+  sheets_enabled: false   # requires an approved provider adapter; fails closed otherwise
+  email_enabled: false    # requires an approved provider adapter; fails closed otherwise
+
 # Paths (override with env vars: CMO_BASE_DIR, WORKSPACE_DIR, CMO_DATA_DIR, etc.)
 paths:
   # cmo_base_dir: "/opt/cmo-analytics"   # uncomment on server

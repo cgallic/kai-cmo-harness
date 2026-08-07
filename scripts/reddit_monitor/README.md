@@ -1,5 +1,20 @@
 # Community Opportunity Monitor (profile-driven)
 
+## Reddit Intelligence workflow
+
+The complete brand-neutral workflow now lives in `intelligence/`. It adds
+group-local qualifiers, 1–10 opportunity scoring, exact evidence quotes, a
+persistent opportunity bank, stable Sheet-row previews, urgent-alert previews,
+weekly digests, content briefs, and a dependency-free setup/review dashboard.
+It accepts an approved JSON/JSONL import or collects the public submission RSS
+sources declared in its profile. It does not provide Reddit posting, messaging,
+voting, or account automation, and Sheet/email adapters fail closed until an
+approved adapter is installed and explicitly activated.
+
+Start with `intelligence/README.md` and
+`intelligence/profiles/example.json`. The older listener and scored digest below
+remain supported for existing profiles.
+
 Monitors subreddits via RSS, keyword-filters posts, runs an LLM eval against
 a profile-specific prompt, and posts drafted replies to Discord. Originally
 built for KaiCalls (`hermes:/opt/cmo-analytics/reddit-monitor/`) and
