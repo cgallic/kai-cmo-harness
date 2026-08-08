@@ -6,6 +6,7 @@ for real-time dashboard visibility, and handles completion/failure.
 
 import json
 import logging
+import os
 from typing import Any, Dict, List, Optional
 
 from .config import DaemonConfig
@@ -38,6 +39,45 @@ TOOL_SETS: dict[str, list[str]] = {
 }
 
 DEFAULT_TOOLS = ["Read", "Glob", "Grep", "WebFetch"]
+
+# Fallback when risk_tier is missing or unrecognised. Must stay the least
+# capable entry in PERMISSION_MODES.
+LEAST_PERMISSIVE_MODE = "acceptEdits"
+
+# The only variables the agent subprocess is allowed to see. Everything else --
+# every API key, every service-role credential -- is withheld. Add to this list
+# deliberately, and never add a secret that the agent could exfiltrate by
+# printing it.
+SUBPROCESS_ENV_ALLOWLIST = (
+    "PATH",
+    "HOME",
+    "USER",
+    "LOGNAME",
+    "SHELL",
+    "LANG",
+    "LC_ALL",
+    "TZ",
+    "TMPDIR",
+    "TEMP",
+    "TMP",
+    "SYSTEMROOT",
+    "COMSPEC",
+    "PATHEXT",
+    "NUMBER_OF_PROCESSORS",
+    "PROCESSOR_ARCHITECTURE",
+    # Claude Code needs its own credential to run at all.
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+)
+
+
+def _subprocess_env() -> dict[str, str]:
+    """Build the minimal environment for the agent subprocess."""
+    return {
+        name: os.environ[name]
+        for name in SUBPROCESS_ENV_ALLOWLIST
+        if name in os.environ
+    }
 
 
 async def execute_task(
@@ -77,8 +117,27 @@ async def execute_task(
     prompt = _build_prompt(task)
 
     # 3. Determine permissions and tools
+    #
+    # Both of these are selected by columns on agent_runs, which are written by
+    # callers rather than by this process. Unknown values must therefore fail
+    # toward *less* capability, not more. DEFAULT_TOOLS already does the right
+    # thing (no Bash); risk_tier did not -- an unrecognised value fell through
+    # to "dontAsk", the most permissive mode of the three, so a typo or a
+    # hostile row bought more permission than "high" was ever meant to grant.
     tools = TOOL_SETS.get(task.task_type, DEFAULT_TOOLS)
-    perm_mode = PERMISSION_MODES.get(task.risk_tier, "dontAsk")
+    if task.task_type not in TOOL_SETS:
+        logger.warning(
+            "Unknown task_type %r for run %s; using restricted default tool set",
+            task.task_type, task.id,
+        )
+
+    perm_mode = PERMISSION_MODES.get(task.risk_tier)
+    if perm_mode is None:
+        perm_mode = LEAST_PERMISSIVE_MODE
+        logger.warning(
+            "Unknown risk_tier %r for run %s; using least permissive mode %r",
+            task.risk_tier, task.id, perm_mode,
+        )
 
     # 4. Build SDK options
     options = ClaudeAgentOptions(
@@ -89,6 +148,12 @@ async def execute_task(
         cwd=str(workdir),
         model=config.claude_model,
         persist_session=True,
+        # Without this the subprocess inherits the daemon's entire environment,
+        # which holds SUPABASE_SERVICE_ROLE_KEY (RLS-bypassing), ANTHROPIC_API_KEY,
+        # META_ACCESS_TOKEN and every other product credential. Several task types
+        # grant Bash, and the task's `input` is attacker-influenced text that lands
+        # in the prompt -- so `env` printed one variable away from a full breach.
+        env=_subprocess_env(),
     )
 
     # Resume prior session if this is a continuation

@@ -24,6 +24,14 @@ class DaemonConfig:
     daemon_name: str = ""
     runtime_id: Optional[str] = None  # Assigned after registration
 
+    # Tenant scope. When set, this runtime registers against that brand and
+    # claim_agent_task (migration 009) hands it only that brand's tasks -- the
+    # restriction is enforced in SQL, not here. Left unset, the runtime is
+    # unscoped and may claim any brand, which is only safe while exactly one
+    # tenant exists. Set require_brand_scope to make an unscoped start fatal.
+    brand_id: Optional[str] = None
+    require_brand_scope: bool = False
+
     # Polling
     poll_interval: int = 3       # seconds between task checks
     heartbeat_interval: int = 15  # seconds between heartbeats
@@ -54,6 +62,10 @@ class DaemonConfig:
             supabase_service_key=os.getenv("SUPABASE_SERVICE_ROLE_KEY", ""),
             daemon_id=os.getenv("MEETKAI_DAEMON_ID", socket.gethostname()),
             daemon_name=os.getenv("MEETKAI_DAEMON_NAME", f"Claude-Code-{socket.gethostname()}"),
+            brand_id=os.getenv("MEETKAI_BRAND_ID") or None,
+            require_brand_scope=os.getenv(
+                "MEETKAI_REQUIRE_BRAND_SCOPE", "false"
+            ).lower() == "true",
             poll_interval=int(os.getenv("MEETKAI_POLL_INTERVAL", "3")),
             heartbeat_interval=int(os.getenv("MEETKAI_HEARTBEAT_INTERVAL", "15")),
             max_concurrent=int(os.getenv("MEETKAI_MAX_CONCURRENT", "4")),

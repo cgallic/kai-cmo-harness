@@ -8,12 +8,33 @@ Before spawning Claude Code, we create a workdir with:
 """
 
 import json
+import logging
+import re
 import shutil
 from pathlib import Path
 from typing import List
 
 from .config import DaemonConfig
 from .models import AgentTask
+
+logger = logging.getLogger(__name__)
+
+# A skill directory name: letters, digits, dash, underscore, dot -- but never a
+# path separator, and never a bare/leading dot sequence that could climb.
+_SAFE_SKILL_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def _is_safe_skill_name(name: str) -> bool:
+    """True if `name` is a single, non-climbing path segment."""
+    if not name or len(name) > 128:
+        return False
+    if not _SAFE_SKILL_NAME.match(name):
+        return False
+    # Belt and braces: reject anything the regex might let through that still
+    # resolves to a parent, and anything with a separator on either platform.
+    if name in {".", ".."} or "/" in name or "\\" in name:
+        return False
+    return True
 
 
 # Map task_type → skills to inject
@@ -125,10 +146,28 @@ def _inject_skills(workdir: Path, task: AgentTask, config: DaemonConfig):
 
     # Determine which skills to inject
     skill_names = _get_skills_for_task(task)
-    skills_src = Path(config.skills_path)
+    skills_src = Path(config.skills_path).resolve()
 
     for skill_name in skill_names:
-        src = skills_src / skill_name
+        # agent_runs.skill is a free-text column written by callers, and it
+        # reaches copytree() below. A value like "../../.ssh" would have copied
+        # an arbitrary directory into the run's .claude/skills/, where the agent
+        # reads it. Names must be a single plain path segment, and the resolved
+        # source must still sit inside skills_path.
+        if not _is_safe_skill_name(skill_name):
+            logger.warning(
+                "Refusing unsafe skill name %r for run %s", skill_name, task.id
+            )
+            continue
+
+        src = (skills_src / skill_name).resolve()
+        if not src.is_relative_to(skills_src):
+            logger.warning(
+                "Skill %r for run %s resolves outside %s; refusing",
+                skill_name, task.id, skills_src,
+            )
+            continue
+
         dest = skills_dest / skill_name
         if src.exists() and not dest.exists():
             shutil.copytree(src, dest)

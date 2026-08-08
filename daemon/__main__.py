@@ -71,6 +71,14 @@ async def register_runtime(config: DaemonConfig, runtime: Runtime, supabase):
         "last_heartbeat": datetime.now(timezone.utc).isoformat(),
     }
 
+    # runtimes.brand_id has existed since migration 006 and the dashboard's
+    # status route already filters on it -- but nothing ever wrote it, so it was
+    # always NULL and claim_agent_task had nothing to scope by. Writing it here
+    # is what actually binds this daemon to one tenant; migration 009 enforces
+    # the binding in SQL.
+    if config.brand_id:
+        data["brand_id"] = config.brand_id
+
     # Upsert — if daemon_id already exists, update it
     result = supabase.table("runtimes").upsert(
         data, on_conflict="daemon_id"
@@ -79,7 +87,18 @@ async def register_runtime(config: DaemonConfig, runtime: Runtime, supabase):
     if result.data:
         runtime_id = result.data[0]["id"]
         config.runtime_id = runtime_id
-        logger.info("Registered runtime: %s (id=%s)", config.daemon_name, runtime_id)
+        if config.brand_id:
+            logger.info(
+                "Registered runtime: %s (id=%s, brand=%s)",
+                config.daemon_name, runtime_id, config.brand_id,
+            )
+        else:
+            logger.warning(
+                "Registered runtime: %s (id=%s) UNSCOPED — it may claim tasks "
+                "for any brand. Set MEETKAI_BRAND_ID before serving more than "
+                "one tenant.",
+                config.daemon_name, runtime_id,
+            )
         return runtime_id
 
     raise RuntimeError("Failed to register runtime")
@@ -210,6 +229,16 @@ async def run_daemon():
     # 2. Connect to Supabase
     if not config.supabase_url or not config.supabase_service_key:
         logger.error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY required")
+        sys.exit(1)
+
+    # An unscoped runtime can claim any tenant's task. That is acceptable with
+    # one tenant and unacceptable with two, so the operator can make it fatal
+    # rather than relying on noticing a warning in the log.
+    if config.require_brand_scope and not config.brand_id:
+        logger.error(
+            "MEETKAI_REQUIRE_BRAND_SCOPE=true but MEETKAI_BRAND_ID is unset. "
+            "Refusing to start unscoped."
+        )
         sys.exit(1)
 
     supabase = get_supabase_client(config)
