@@ -79,7 +79,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 | `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
 | `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
 | `/kai-sales-meeting-prep` | Meeting briefs, discovery plans, follow-up drafts, and sales handoff notes |
-| `/kai-reddit-listen` | Monitor subreddits + draft replies to Discord (profile-driven) |
+| `/kai-reddit-listen` | Run a complete Reddit intelligence bank: monitoring, scoring, dashboard, alerts, digests, and content briefs |
 | `/kai-newsletter` | Newsletter editions — content, subject lines, scheduling |
 | `/kai-case-study` | Customer case studies from interview/data |
 | `/kai-client-dashboard` | White-labeled, client-facing intelligence dashboard — brand shell, page set, retention plays |

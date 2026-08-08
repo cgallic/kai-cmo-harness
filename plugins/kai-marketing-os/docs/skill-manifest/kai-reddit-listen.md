@@ -1,6 +1,6 @@
 ---
 name: kai-reddit-listen
-version: 1.0.0
+version: 2.0.0
 category: measurement
 last_updated: 2026-05-18
 ---
@@ -8,7 +8,7 @@ last_updated: 2026-05-18
 # Kai Reddit Listen
 
 ### One-line claim
-Monitor Reddit for conversation-fit opportunities - watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord.
+Build and operate a brand-neutral Reddit intelligence system from approved read-only monitoring through scoring, dashboard review, alerts, weekly digests, and content briefs.
 
 ### Triggers
 - reddit monitor
@@ -18,6 +18,8 @@ Monitor Reddit for conversation-fit opportunities - watches a list of subreddits
 - find reddit opportunities
 - listen on reddit
 - community listening
+- reddit intelligence
+- content ideas from reddit
 
 ### Inputs
 - `product_context` (file, required) - `MARKETING.md` or equivalent product context loaded before execution.
@@ -26,7 +28,7 @@ Monitor Reddit for conversation-fit opportunities - watches a list of subreddits
 - `source_evidence` (files or URLs, optional) - proof, analytics, transcripts, examples, policies, exports, or screenshots used by the skill.
 
 ### Outputs
-- Artifact -> Reddit monitor configuration, identity guardrails, accept/reject rules, and Discord-bound reply drafts.
+- Artifact -> validated profile, normalized opportunity bank, dashboard, Sheet-row preview, urgent-alert preview, weekly digest, content briefs, and human-only response drafts.
 - Quality report -> pass/fail status for relevant gates, blockers, and retry notes.
 - Sidecar fields -> `skill`, `version`, `frameworks_loaded`, `rule_ids_evaluated`, `persona_or_audience`, `gates`, `scores`, `provenance`, and `data_gaps`.
 
@@ -44,6 +46,14 @@ This skill applies manifest-level rule IDs from [rule-registry.md](./rule-regist
 - [kai-gate](./kai-gate.md)
 - [kai-start](./kai-start.md)
 - [kai-write](./kai-write.md)
+
+### Runtime and contracts
+
+- Engine and dashboard: `scripts/reddit_monitor/intelligence/`
+- Artifact contract: `harness/skill-contracts/reddit-intelligence.yaml`
+- Harness configuration: `config.yaml` under `reddit_intelligence`
+- Installed with both `kai-marketing-os` plugin variants and `install.sh`
+- External effects default OFF; the module exposes no Reddit write operation
 
 ### Called by
 - No other `kai-*` manifest page declares this skill as a dependency.
@@ -71,8 +81,10 @@ This skill applies manifest-level rule IDs from [rule-registry.md](./rule-regist
 - No committed example artifact found.
 
 ### Failure modes
-- Missing product context causes the skill to infer too much from repository files.
+- Missing product context or approved subreddit coverage blocks activation instead of causing brand inference.
 - Unavailable source access limits the workflow to public or user-provided evidence.
+- Submission RSS does not provide complete Reddit or comment coverage and must not be described that way.
+- Sheet and email activation fails closed until an approved provider adapter, destination, and explicit activation are present.
 - Gate failures after two retries require human review instead of silent publication.
 - Platform policy, regulated-industry, or consent constraints can block copy or activation.
 - Quantitative claims are blocked when collector data, analytics access, or source citations are missing.

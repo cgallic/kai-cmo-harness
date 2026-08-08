@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaicmo.dev/contracts/reddit-intelligence-opportunity.v1.json",
+  "title": "Reddit Intelligence opportunity",
+  "type": "object",
+  "required": ["id", "source", "source_mode", "captured_at", "subreddit", "title", "url", "matched_groups", "commercial_intent", "content_value", "reputation_risk", "suggested_action", "evidence_quote", "status"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "source": {"const": "reddit"},
+    "source_mode": {"const": "read_only"},
+    "commercial_intent": {"type": "integer", "minimum": 1, "maximum": 10},
+    "content_value": {"type": "integer", "minimum": 1, "maximum": 10},
+    "reputation_risk": {"type": "integer", "minimum": 1, "maximum": 10},
+    "evidence_quote": {"type": "string", "minLength": 1},
+    "matched_groups": {"type": "array", "minItems": 1}
+  },
+  "additionalProperties": true
+}

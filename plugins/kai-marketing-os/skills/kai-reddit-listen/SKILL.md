@@ -1,189 +1,102 @@
 ---
 name: kai-reddit-listen
-description: Monitor Reddit for conversation-fit opportunities — watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord. Use when "reddit monitor", "reddit listener", "reddit outreach", "watch subreddits", "find reddit opportunities", "listen on reddit", "community listening", or any request to automate finding posts you should reply to on Reddit.
+description: Build and operate a complete, brand-neutral Reddit intelligence system with approved read-only monitoring, grouped keyword rules, evidence-backed AI scoring, a persistent opportunity bank, dashboard review, urgent-alert and weekly-digest previews, content briefs, and human-only response drafts. Use for "reddit intelligence", "reddit monitor", "reddit listener", "watch subreddits", "find reddit opportunities", "content ideas from reddit", "community listening", or setting up this workflow for a client or brand.
 ---
 
-> **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
+# /kai-reddit-listen — Reddit intelligence from source to action
 
-Build and run a profile-driven Reddit listener. Engine lives at `scripts/reddit_monitor/`; each brand/client is a **profile** (subreddits + trigger keywords + LLM prompt + Discord webhook).
+> **Kai root note:** Resolve `knowledge/`, `harness/`, and `scripts/` against the first ancestor of this file containing `knowledge/`. Brand context and runtime output belong to the current project. The installed Kai package includes `scripts/reddit_monitor`; do not invent a parallel listener.
 
-## When to use
+Turn approved read-only Reddit discussions into a ranked research and content bank. Do not automate Reddit participation.
 
-- Founder/operator wants inbound leads from subreddit conversations
-- Product has a specific technical wedge (useful insights → honest replies)
-- You already tried manually scanning Reddit and it doesn't scale
-- Brand voice + identity rules matter (don't fake experience you don't have)
+## Phase 0: Load the contract and business context
 
-## When NOT to use
+Read:
 
-- Post volume in target subs is low (<5/day total) — keyword filter will starve
-- Brand has no distinctive angle — generic replies get auto-removed by Reddit
-- You need engagement metrics (this only drafts replies, doesn't track results)
+- `harness/skill-contracts/reddit-intelligence.yaml`
+- `harness/references/reddit-organic-posting-rules.md`
+- `harness/references/social-automation-rules.md`
+- The current project's `MARKETING.md`, if present
+- `scripts/reddit_monitor/intelligence/README.md`
 
----
+Collect or discover the business name, domains, products/services, geography, competitors, audience problems, approved subreddits, owners, and alert/digest recipients. Record unknown required values as setup gaps. Never substitute a client example for missing business context.
 
-## Phase 0: Load Product Context
+## Phase 1: Create a profile
 
-Check if `MARKETING.md` exists in the **project root**. If present, read it for ICP, voice, pain points, and product positioning — these drive subreddit/keyword/prompt choices. If absent, run `/kai-start` first or ask the user for: product, ICP, voice rules, what they can/can't honestly claim as expertise.
+Copy `scripts/reddit_monitor/intelligence/profiles/example.json`. Give the profile a stable brand-neutral ID and configure:
 
----
+1. Approved read-only Reddit sources and subreddits.
+2. Brand terms.
+3. Independent keyword groups for brand, category/service, high-intent, customer problems, and competitors.
+4. Group-local qualifiers for broad terms. A broad term never inherits qualifiers from another group.
+5. Geography terms, alert thresholds, content-brief threshold, workflow owners, and allowed statuses.
+6. Environment-variable references for destinations. Never place credentials, Sheet IDs, or recipient addresses in a committed profile.
 
-## Phase 1: Profile Discovery
+Validate the profile before collecting data. Scores use integers from 1–10. Every accepted opportunity requires a verbatim quote present in the source material.
 
-A "profile" = one JSON config + one prompt file at `scripts/reddit_monitor/profiles/<name>.{json,prompt.md}`.
+## Phase 2: Collect without participating
 
-1. **Does a profile exist for this brand/client?**
-   - List `scripts/reddit_monitor/profiles/*.json`
-   - If yes → `--dry-run` it (Phase 5) before changing anything
-   - If no → go to Phase 2
+Use the module's approved read-only RSS collector or import JSON/JSONL containing `id`, `title`, `body`, `url`, `subreddit`, `author`, and optional `published_at`.
 
-2. **What's the goal?**
-   - (a) Find posts where we can honestly add technical value → builder identity
-   - (b) Find pain-point posts in vertical subs → client-learning identity
-   - (c) Find comparison/recommendation threads → share stack
+Do not log in to evade access rules. Do not scrape private communities. Do not post comments, send messages, vote, create accounts, or retain unnecessary personal data. This module intentionally exposes no Reddit write command.
 
----
+Run the pipeline in dry-run mode first. Dry runs may write only local preview/output artifacts named by the user. They must report an empty `external_effects` list.
 
-## Phase 2: Configure Subreddits
+## Phase 3: Match, classify, and persist
 
-Pick subs in three tiers. Aim for 15-30 total — more than 30 and RSS pulls get slow.
+For each new item:
 
-| Tier | Purpose | Examples |
-|------|---------|----------|
-| **Primary** | Direct category matches | r/AIReceptionists for voice AI; r/RemoteWork for remote tools |
-| **Adjacent** | Where ICP hangs out | r/SaaS, r/startups, r/gtmengineering |
-| **Vertical** | Target customer verticals | r/LawFirm, r/HVAC, r/smallbusiness |
+1. Match grouped terms and enforce that group's qualifier rule.
+2. Reject irrelevant items before expensive classification.
+3. Classify topic, geography, recommended action, and one-sentence summary.
+4. Score commercial intent, content value, and reputation risk from 1–10.
+5. Preserve the URL, matched groups, observed time, and exact evidence quote.
+6. Upsert by stable opportunity ID so reruns do not duplicate rows.
 
-Rules:
-- Use exact sub name, no `r/` prefix
-- Test each in a browser first — some subs are private or dead
-- Vertical subs often have stricter anti-promo rules → identity guardrails in the prompt matter more here
+Persist the normalized opportunity bank and adapter previews defined by the contract. Keep the source record immutable; status, ownership, and downstream URLs are workflow metadata.
 
----
+## Phase 4: Produce the operating views
 
-## Phase 3: Configure Trigger Keywords
+Generate all of these from the same persisted opportunities:
 
-Keywords are the **pre-filter** before the LLM eval (cheap string match on title+body). Design them to cast a wide net; the LLM rejects the garbage.
+- Dashboard with profile setup, activation state, filters, scores, evidence, owners, and allowed status transitions.
+- Sheet-row preview using the normalized column contract.
+- Immediate alert preview for direct brand mentions, risk at/above the profile threshold, high-intent local requests, and configured competitor opportunities.
+- Weekly digest preview containing ranked questions, content opportunities, competitor complaints, local provider requests, brand mentions, and recommended assets.
+- Content briefs for opportunities meeting the content-value threshold: title, intent, outline, FAQs, social/video angle, local post angle, newsletter angle, and expert sound bite.
+- Optional educational response draft under the profile's word limit. It remains a draft.
 
-Four buckets:
+Launch the bundled local dashboard with the command documented in `scripts/reddit_monitor/intelligence/README.md`. Bind it to localhost unless an authenticated upstream proxy is configured.
 
-1. **Category terms** — exact product category ("voice ai", "ai receptionist")
-2. **Competitor names** — ("vapi", "twilio", "retell")
-3. **Technical jargon** — things only buyers/builders say ("latency", "transcription", "vad")
-4. **Pain-point phrases** — how the problem is described ("missed calls", "after hours", "speed to lead")
+## Phase 5: Activate adapters deliberately
 
-Rules:
-- Lowercase (match is case-insensitive)
-- Multi-word phrases OK and preferred ("voice ai" > "voice")
-- Avoid single generic words ("marketing", "sales") — too noisy
-- 20-40 keywords is the sweet spot
+The default is preview-only. Sheet writes and email sends require all of:
 
----
+1. An approved adapter installed in the target runtime.
+2. Destination values resolved from environment variables.
+3. A named human approving the profile, destinations, and schedule.
+4. The explicit activation flag for that adapter.
+5. Provider read-back proving the exact row or message created.
 
-## Phase 4: Write the LLM Prompt
+An activation flag without an approved adapter fails closed. Reddit write actions remain forbidden regardless of flags.
 
-This is where brand voice and identity guardrails live. The prompt file uses Python `.format()` placeholders — `{subreddit}`, `{title}`, `{content}` — and must instruct the model to return JSON with `pass` (bool), `reason` (str), `angle` (str|null), `draft_response` (str|null).
+## Phase 6: Schedule and operate
 
-**Copy `profiles/example.prompt.md` as the starting point.** Then fill in:
+Schedule source collection at the approved cadence and the digest on the configured weekday/time. Register an outcome tripwire covering last successful source read, last opportunity-bank update, permitted zero-result windows, and adapter failures. Deduplicate across runs and retain only the approved source fields.
 
-### Identity section (critical)
-- "You ARE X (honestly claim)"
-- "You are NOT Y (don't fake)"
-- "You have LEARNED Z from building for clients" (bridge claim)
+During the first week, a human reviews every accepted/rejected decision and every response draft. Tighten groups, qualifiers, and scoring instructions when false positives or unsupported claims appear.
 
-### Reject/Accept rules
-- REJECT triggers that would require fabricating experience
-- REJECT off-topic, job posts, career advice
-- ACCEPT posts where genuine technical value is addable
+## Completion
 
-### Voice rules
-- Tone (casual/formal), case (lowercase/sentence case), openers, forbidden words
-- Example of good reply, example of bad reply (generic, cheerleader-y, faked experience)
+Apply the `harness-change` floor in `harness/eco-floors.yaml`. Return:
 
-### Insight bank
-- 3-8 specific, repeatable insights the model can draw from
-- One-liner per insight (latency numbers, % stats, architectural tips)
+- Profile path and validation result
+- Source mode and coverage limits
+- Dry-run manifest with no external effects
+- Opportunity, Sheet preview, urgent-alert, digest, and content-brief paths
+- Dashboard URL or local launch command
+- Activation state for every adapter
+- Remaining setup gaps
+- Provider read-back for any explicitly activated external effect
 
-### Closing
-- Literal `JSON only:` instruction with the 4-key schema
-
-Keep the JSON example at the bottom `{{` `}}`-escaped so `.format()` doesn't try to substitute it.
-
----
-
-## Phase 5: Test Dry-Run
-
-Set the profile's webhook env var is not required in dry-run mode.
-
-```bash
-cd scripts/reddit_monitor
-python reddit_listener.py --profile <name> --dry-run
-```
-
-Expect:
-- "found N keyword matches" (N > 0 unless you just ran it — seen-posts dedup)
-- Per-post pass/reject decisions
-- Drafts printed to stdout for each pass
-
-**Red flags:**
-- Every post rejects → identity rules too strict, or keywords too narrow (pulling off-topic)
-- Every post passes → identity rules too loose, not rejecting job posts/off-topic
-- Drafts sound generic → insight bank too thin or voice rules too weak
-- Drafts fake experience → identity section wasn't explicit enough
-
-Iterate prompt → re-run dry-run. Don't ship until drafts would plausibly pass in the actual sub.
-
----
-
-## Phase 6: Go Live + Automate
-
-1. **Set the Discord webhook env var** named by the profile (e.g. `REDDIT_MONITOR_DISCORD_WEBHOOK_KAICALLS`). Create a dedicated channel with a channel-specific webhook — don't reuse a shared one.
-
-2. **Local cron (Windows Task Scheduler / macOS launchd / Linux cron):**
-
-   ```bash
-   # daily at 12:00
-   0 12 * * * cd /path/to/scripts/reddit_monitor && python reddit_listener.py --profile <name> >> /var/log/reddit-<name>.log 2>&1
-   ```
-
-3. **Hermes cron** (original KaiCalls setup): same pattern at `/opt/cmo-analytics/reddit-monitor/` — the original env relied on `OPENAI_API_KEY` which is **not in hermes env today** (last-successful-run evidence: `seen_posts.json` stopped updating 2026-02-21). Fix by adding `OPENAI_API_KEY` to hermes env, or swap `OpenAI()` → OpenRouter via `OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])`.
-
-4. **First-week monitoring:** eyeball every Discord alert. Kill the cron and go back to Phase 4 if drafts are off. Don't let bad drafts run unsupervised.
-
----
-
-## Profile Schema
-
-| Key | Required | Default | Purpose |
-|-----|----------|---------|---------|
-| `subreddits` | yes | — | list of sub names (without `r/`) |
-| `trigger_keywords` | yes | — | case-insensitive substrings for pre-filter |
-| `prompt_file` | yes | — | filename in `profiles/`; `.format()`'d with `{subreddit}`, `{title}`, `{content}` |
-| `discord_webhook_env` | yes | — | env var name holding the Discord webhook URL |
-| `name` | no | filename stem | used for state filename and logging |
-| `alert_title` | no | `Reddit Opportunity` | shown in Discord alert header |
-| `model` | no | `gpt-4o-mini` | OpenAI model id |
-| `seen_limit` | no | 2000 | ring-buffer size for seen post IDs |
-| `posts_per_sub` | no | 25 | max posts pulled per sub per run |
-| `content_max_chars` | no | 1200 | post body truncation before LLM |
-
----
-
-## Engine Location
-
-- Script: `scripts/reddit_monitor/reddit_listener.py`
-- Runner (cron wrapper, emits `ALERTS_JSON:` line): `scripts/reddit_monitor/run_listener.sh <profile>`
-- Profiles: `scripts/reddit_monitor/profiles/`
-- State (per-profile, gitignored): `scripts/reddit_monitor/.seen/<name>.json`
-- Docs: `scripts/reddit_monitor/README.md`
-
-## Required env
-
-- `OPENAI_API_KEY` — LLM eval (reads from repo-root `.env`, parent, or sibling)
-- `<discord_webhook_env>` — per profile
-
-## When to compose with other skills
-
-- After drafts arrive in Discord and you want to polish before posting → `/kai-write` or `/kai-gate` (check against banned words, Four U's)
-- To identify subs + keywords you didn't know about → `/kai-competitors` (reverse-engineer where competitors are active)
-- If drafts are generic → `/kai-brand` to tighten voice rules before rewriting the prompt
+Never claim complete Reddit coverage from submission RSS alone. Never call a generated preview sent, published, or synced.

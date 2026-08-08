@@ -88,6 +88,7 @@ cp    "$SRC/harness/brief-schema.md" "$KAI_ROOT/harness/brief-schema.md"
 # which silently breaks /kai-goal on install.sh installs.
 cp    "$SRC/harness/eco-floors.yaml" "$KAI_ROOT/harness/eco-floors.yaml"
 cp -r "$SRC/scripts/quality_gates"   "$KAI_ROOT/scripts/quality_gates"
+cp -r "$SRC/scripts/reddit_monitor"  "$KAI_ROOT/scripts/reddit_monitor"
 
 info "Knowledge base installed (${KAI_ROOT})"
 info "$(find "$KAI_ROOT/knowledge" -name '*.md' | wc -l | tr -d ' ') knowledge docs, $(ls "$KAI_ROOT/harness/skill-contracts" | wc -l | tr -d ' ') skill contracts, $(ls "$KAI_ROOT/harness/references" | wc -l | tr -d ' ') policy references"
@@ -141,6 +142,10 @@ printf "\n${BOLD}  Verifying installation...${RESET}\n"
 [[ -f "${KAI_ROOT}/scripts/quality_gates/banned_word_check.py" ]] \
     && info "quality gates ready" \
     || fail "Verification failed — quality gates missing"
+
+[[ -f "${KAI_ROOT}/scripts/reddit_monitor/intelligence/cli.py" ]] \
+    && info "Reddit Intelligence module ready" \
+    || fail "Verification failed — Reddit Intelligence module missing"
 
 # Optional extras: warn, never block the install.
 [[ -f "${SKILLS_DIR}/kaicalls-design/SKILL.md" ]] \

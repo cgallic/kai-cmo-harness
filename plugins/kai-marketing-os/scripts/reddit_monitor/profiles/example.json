@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "alert_title": "Reddit Opportunity (Example)",
+  "model": "gpt-4o-mini",
+  "discord_webhook_env": "REDDIT_MONITOR_DISCORD_WEBHOOK_EXAMPLE",
+  "prompt_file": "example.prompt.md",
+  "seen_limit": 2000,
+  "posts_per_sub": 25,
+  "content_max_chars": 1200,
+  "subreddits": [
+    "Entrepreneur",
+    "smallbusiness"
+  ],
+  "trigger_keywords": [
+    "marketing",
+    "seo",
+    "content strategy"
+  ]
+}

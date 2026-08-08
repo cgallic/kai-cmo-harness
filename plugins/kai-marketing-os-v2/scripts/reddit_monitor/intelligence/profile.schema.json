@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaicmo.dev/contracts/reddit-intelligence-profile.v1.json",
+  "title": "Reddit Intelligence profile",
+  "type": "object",
+  "required": ["schema_version", "id", "brand", "sources", "keyword_groups", "scoring", "alerts", "statuses"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "brand": {"type": "object", "required": ["name", "terms"]},
+    "sources": {"type": "object", "required": ["reddit_rss"]},
+    "keyword_groups": {"type": "array", "minItems": 1},
+    "scoring": {"type": "object", "required": ["fields", "range"]},
+    "alerts": {"type": "object"},
+    "statuses": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

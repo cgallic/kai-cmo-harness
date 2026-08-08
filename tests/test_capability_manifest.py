@@ -50,20 +50,24 @@ def _minimal_tree(root: Path) -> None:
 
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
+    # Re-baselined 2026-08-08: kai-gtm-pack and two skill contracts had been
+    # added without updating this fixture, which left the harness self-check
+    # red on main from 2026-07-31. Bump these numbers deliberately when a
+    # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 56,
-        "canonical_kai_skills": 54,
-        "v2_goal_oriented_skills": 56,
-        "public_router_commands": 49,
+        "skill_directories": 57,
+        "canonical_kai_skills": 55,
+        "v2_goal_oriented_skills": 57,
+        "public_router_commands": 50,
         "public_manifest_pages": 47,
-        "undocumented_canonical_skills": 7,
+        "undocumented_canonical_skills": 8,
         "playbook_docs": 67,
         "checklists": 37,
         "framework_docs": 38,
         "channel_guides": 31,
         "audience_persona_profiles": 8,
         "harness_references": 37,
-        "skill_contracts": 33,
+        "skill_contracts": 35,
     }
     assert inventory["coverage"]["unresolved_router_commands"] == []
     assert inventory["coverage"]["orphan_manifest_pages"] == []
@@ -75,6 +79,7 @@ def test_current_manifest_doc_gaps_are_explicit():
         "kai-brand-pulse",
         "kai-content-batching",
         "kai-funnel-audit",
+        "kai-gtm-pack",
         "kai-hook-bench",
         "kai-offer-builder",
         "kai-proof-builder",

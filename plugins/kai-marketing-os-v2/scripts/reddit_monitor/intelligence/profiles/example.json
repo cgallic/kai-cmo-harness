@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "example-local-service",
+  "brand": {"name": "Example Company", "terms": ["Example Company", "example.com"]},
+  "sources": {"reddit_rss": {"enabled": false, "subreddits": ["smallbusiness"], "posts_per_sub": 25, "coverage": "public submissions only; no comments or private communities"}},
+  "geography_terms": ["my city", "downtown"],
+  "keyword_groups": [
+    {"name": "Brand monitoring", "terms": ["Example Company", "example.com"]},
+    {"name": "Service questions", "terms": ["example service", "service alternative"]},
+    {"name": "High-intent local", "terms": ["best provider", "provider near me"]},
+    {"name": "Broad category", "terms": ["consultant"], "qualifier_mode": "required", "qualifiers": ["recommend", "price", "worth it", "my city"]},
+    {"name": "Competitors", "terms": ["Competitor One", "Competitor Two"]}
+  ],
+  "scoring": {"fields": ["commercial_intent", "content_value", "reputation_risk"], "range": [1, 10]},
+  "alerts": {"brand_group": "Brand monitoring", "risk_at_least": 6, "intent_at_least": 8},
+  "content_brief_threshold": 8,
+  "statuses": ["New", "Approved", "Blog assigned", "Social assigned", "Answered", "Rejected", "Published"]
+}

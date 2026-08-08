@@ -31,7 +31,7 @@
     "channel_guides": 31,
     "audience_persona_profiles": 8,
     "harness_references": 37,
-    "skill_contracts": 34
+    "skill_contracts": 35
   },
   "coverage": {
     "undocumented_canonical_skills": [
@@ -111,7 +111,7 @@
     {
       "name": "kai-reddit-listen",
       "category": "produce",
-      "description": "Monitor subreddits + draft replies to Discord (profile-driven)"
+      "description": "Run a complete Reddit intelligence bank: monitoring, scoring, dashboard, alerts, digests, and content briefs"
     },
     {
       "name": "kai-newsletter",
@@ -590,7 +590,7 @@
     },
     {
       "name": "kai-reddit-listen",
-      "description": "Monitor Reddit for conversation-fit opportunities — watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord. Use when \"reddit monitor\", \"reddit listener\", \"reddit outreach\", \"watch subreddits\", \"find reddit opportunities\", \"listen on reddit\", \"community listening\", or any request to automate finding posts you should reply to on Reddit.",
+      "description": "Build and operate a complete, brand-neutral Reddit intelligence system with approved read-only monitoring, grouped keyword rules, evidence-backed AI scoring, a persistent opportunity bank, dashboard review, urgent-alert and weekly-digest previews, content briefs, and human-only response drafts. Use for \"reddit intelligence\", \"reddit monitor\", \"reddit listener\", \"watch subreddits\", \"find reddit opportunities\", \"content ideas from reddit\", \"community listening\", or setting up this workflow for a client or brand.",
       "source": "harness/skills/kai-reddit-listen/SKILL.md",
       "public_router_command": true,
       "router_category": "produce",

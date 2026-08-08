@@ -19,25 +19,26 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 56,
-    "canonical_kai_skills": 54,
-    "v2_goal_oriented_skills": 56,
-    "public_router_commands": 49,
+    "skill_directories": 57,
+    "canonical_kai_skills": 55,
+    "v2_goal_oriented_skills": 57,
+    "public_router_commands": 50,
     "public_manifest_pages": 47,
-    "undocumented_canonical_skills": 7,
+    "undocumented_canonical_skills": 8,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
     "harness_references": 37,
-    "skill_contracts": 33
+    "skill_contracts": 35
   },
   "coverage": {
     "undocumented_canonical_skills": [
       "kai-brand-pulse",
       "kai-content-batching",
       "kai-funnel-audit",
+      "kai-gtm-pack",
       "kai-hook-bench",
       "kai-offer-builder",
       "kai-proof-builder",
@@ -110,7 +111,7 @@
     {
       "name": "kai-reddit-listen",
       "category": "produce",
-      "description": "Monitor subreddits + draft replies to Discord (profile-driven)"
+      "description": "Run a complete Reddit intelligence bank: monitoring, scoring, dashboard, alerts, digests, and content briefs"
     },
     {
       "name": "kai-newsletter",
@@ -246,6 +247,11 @@
       "name": "kai-growth-plan",
       "category": "plan",
       "description": "Stage-appropriate marketing plan ($0 → $100K+ MRR)"
+    },
+    {
+      "name": "kai-gtm-pack",
+      "category": "plan",
+      "description": "Package the plan for a client: cross-linked private page set topped by a client hub (the ask, access grants, signup checklist)"
     },
     {
       "name": "kai-growth-hacker",
@@ -479,6 +485,14 @@
       "manifest_doc": "docs/skill-manifest/kai-growth-plan.md"
     },
     {
+      "name": "kai-gtm-pack",
+      "description": "Ship a complete go-to-market deliverable pack for a client as a cross-linked set of private HTML pages topped by a client hub (the ask, tool install, access grants, ordered signup checklist). Use when \"GTM plan for [client]\", \"put together a GTM\", \"go to market plan\", \"build the client hub\", \"attach everything for the client\", \"package this for the client\", or when an engagement's plan/audit/emails must be delivered as linked pages rather than loose files.",
+      "source": "harness/skills/kai-gtm-pack/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": null
+    },
+    {
       "name": "kai-hook-bench",
       "description": "Generate, rank, and gate a reusable hook bank — sourced pains × named hook formula families, scored on clarity/specificity/curiosity/proof-backing, gated at the 10/16 ad threshold, delivered in 3 lengths with per-hook provenance and downstream routing. Use when \"hook bank\", \"generate hooks\", \"hook generator\", \"write hooks for\", \"ad hooks\", \"scroll stoppers\", \"opening lines\", \"hook ideas\", \"first 3 seconds\", \"hook matrix\", \"I need 50 hooks\", or any request to batch-produce attention-openers for ads, social, or video.",
       "source": "harness/skills/kai-hook-bench/SKILL.md",
@@ -576,7 +590,7 @@
     },
     {
       "name": "kai-reddit-listen",
-      "description": "Monitor Reddit for conversation-fit opportunities — watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord. Use when \"reddit monitor\", \"reddit listener\", \"reddit outreach\", \"watch subreddits\", \"find reddit opportunities\", \"listen on reddit\", \"community listening\", or any request to automate finding posts you should reply to on Reddit.",
+      "description": "Build and operate a complete, brand-neutral Reddit intelligence system with approved read-only monitoring, grouped keyword rules, evidence-backed AI scoring, a persistent opportunity bank, dashboard review, urgent-alert and weekly-digest previews, content briefs, and human-only response drafts. Use for \"reddit intelligence\", \"reddit monitor\", \"reddit listener\", \"watch subreddits\", \"find reddit opportunities\", \"content ideas from reddit\", \"community listening\", or setting up this workflow for a client or brand.",
       "source": "harness/skills/kai-reddit-listen/SKILL.md",
       "public_router_command": true,
       "router_category": "produce",

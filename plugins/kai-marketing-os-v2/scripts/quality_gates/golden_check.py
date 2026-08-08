@@ -91,6 +91,16 @@ def run_golden() -> tuple[bool, list[dict]]:
 
 
 def main() -> int:
+    # A Windows console defaults to cp1252, which cannot encode the status
+    # glyphs below — the gate would die with UnicodeEncodeError before printing
+    # its own result. Force UTF-8 where the stream supports being reconfigured.
+    reconfigure = getattr(sys.stdout, "reconfigure", None)
+    if reconfigure is not None:
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):
+            pass
+
     parser = argparse.ArgumentParser(description="Run the quality-gate golden corpus")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     args = parser.parse_args()

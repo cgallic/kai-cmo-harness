@@ -14,7 +14,14 @@ our hosted service, it's Elastic License 2.0.**
 | `docs/` | MIT | Documentation shipped alongside the plugin |
 | `plugins/` | MIT | Plugin manifests, subagents, and the materialized plugin payloads |
 | `scripts/quality_gates/` | MIT | Four U's scoring, banned-word checks, SEO lint, provenance lint, ECO gate |
+| `scripts/reddit_monitor/` | MIT | Reddit Intelligence module — installed by `install.sh` and shipped in the plugin |
 | **everything else** | **Elastic License 2.0** | `app-meetkai/`, `daemon/`, `agent/`, `gateway/`, `kai/`, `lib/`, `tools/`, `bin/`, `deploy/`, `evals/`, `site/`, `prod-static/`, and the rest of `scripts/` |
+
+The rule that generates this table: **anything the plugin or `install.sh` copies
+onto a user's machine must be MIT.** If a new payload is added to
+`scripts/sync_plugin_assets.py` or to `install.sh`, its canonical directory
+needs an MIT `LICENSE` and a row here — otherwise the same file ends up ELv2 at
+its canonical path and MIT inside the plugin.
 
 Each MIT subtree carries its own `LICENSE` file. The root `LICENSE` carries the
 Elastic License 2.0 in full and governs everything not listed above.

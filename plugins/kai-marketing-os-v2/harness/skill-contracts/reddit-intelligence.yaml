@@ -1,0 +1,79 @@
+skill: reddit-intelligence
+version: 1.0
+harness: kai-harness
+
+description: >
+  Brand-neutral Reddit research and content-intelligence workflow. Collects
+  approved read-only sources, matches grouped terms and qualifiers, scores
+  evidenced opportunities, and produces a review bank, urgent-alert previews,
+  weekly digests, content briefs, and human-only response drafts.
+
+inputs:
+  required:
+    - profile: object
+    - approved_sources: list
+    - keyword_groups: list
+  optional:
+    - imported_items: list
+    - scoring_provider: string
+    - sheet_destination_env: string
+    - alert_recipient_env: string
+    - digest_recipient_env: string
+
+outputs:
+  profile: json
+  opportunities: jsonl
+  sheet_rows_preview: json
+  urgent_alerts_preview: json
+  weekly_digest_preview: json
+  content_briefs_preview: json
+  run_manifest: json
+
+required_opportunity_fields:
+  - id
+  - observed_at
+  - subreddit
+  - question
+  - treatment_or_topic
+  - geographic_relevance
+  - commercial_intent
+  - content_value
+  - reputation_risk
+  - recommended_action
+  - url
+  - status
+  - evidence_quote
+  - matched_groups
+
+constraints:
+  score_range: [1, 10]
+  external_effects_default: false
+  reddit_write_capability: forbidden
+  human_review_required: true
+  source_quote_required: true
+  allowed_statuses:
+    - New
+    - Approved
+    - Blog assigned
+    - Social assigned
+    - Answered
+    - Rejected
+    - Published
+
+activation:
+  reddit_read: approved_profile_source
+  sheet_write: explicit_flag_and_approved_adapter
+  email_send: explicit_flag_and_approved_adapter
+  reddit_post: never
+  reddit_message: never
+  reddit_vote: never
+
+eco:
+  work_type: harness-change
+  floor: {E: 3, C: 3, O: 1}
+  execution_target: >
+    The packaged module loads from an installed Kai harness, validates a generic
+    profile, processes a real or fixture read-only source, and renders the same
+    stored opportunities through its dashboard without external effects.
+  outcome_metrics: [qualified_opportunities_per_week, approved_content_actions_per_week]
+  verdict_by: scripts/quality_gates/eco_gate.py

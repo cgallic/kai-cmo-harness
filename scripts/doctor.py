@@ -69,6 +69,15 @@ REQUIRED_PATHS = [
     "scripts/audit/collect.py",
     "scripts/capability_manifest.py",
     "scripts/intel/brand_pulse.py",
+    "scripts/reddit_monitor/intelligence/__init__.py",
+    "scripts/reddit_monitor/intelligence/cli.py",
+    "scripts/reddit_monitor/intelligence/dashboard.py",
+    "scripts/reddit_monitor/intelligence/pipeline.py",
+    "scripts/reddit_monitor/intelligence/profiles.py",
+    "scripts/reddit_monitor/intelligence/sources.py",
+    "scripts/reddit_monitor/intelligence/profiles/example.json",
+    "scripts/reddit_monitor/intelligence/profile.schema.json",
+    "scripts/reddit_monitor/intelligence/opportunity.schema.json",
     "memory/MEMORY.md",
     "memory/lessons.md",
     "memory/edge-cases.md",
@@ -124,6 +133,12 @@ COMPILE_PATHS = [
     "scripts/self_improvement/lesson_capture.py",
     "scripts/intel/brand_pulse.py",
     "scripts/capability_manifest.py",
+    "scripts/harness_config.py",
+    "scripts/reddit_monitor/intelligence/cli.py",
+    "scripts/reddit_monitor/intelligence/dashboard.py",
+    "scripts/reddit_monitor/intelligence/pipeline.py",
+    "scripts/reddit_monitor/intelligence/profiles.py",
+    "scripts/reddit_monitor/intelligence/sources.py",
     "scripts/doctor.py",
 ]
 
@@ -481,7 +496,14 @@ def _check_one_plugin(report: Report, package: str) -> None:
             report.fail(f"{package} symlink does not resolve: {path}")
         return
 
-    for required in ("skills", "knowledge", "harness/eco-floors.yaml", "scripts/quality_gates", "agents"):
+    for required in (
+        "skills",
+        "knowledge",
+        "harness/eco-floors.yaml",
+        "scripts/quality_gates",
+        "scripts/reddit_monitor",
+        "agents",
+    ):
         if not (plugin_root / required).exists():
             report.fail(f"{package} is missing {required} — install would be incomplete")
             return

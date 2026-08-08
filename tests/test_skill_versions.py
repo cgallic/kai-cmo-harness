@@ -104,4 +104,14 @@ def test_v2_plugin_package_is_wired():
     assert (plugin / ".claude-plugin" / "plugin.json").is_file()
     for required in ("skills", "knowledge", "agents", "harness/eco-floors.yaml", "scripts/quality_gates"):
         assert (plugin / required).exists(), f"v2 plugin is missing {required}"
-    assert (plugin / "skills").resolve() == V2_ROOT.resolve(), "v2 plugin does not point at harness/skills-v2"
+
+    # The payload is a real copy of harness/skills-v2, not a symlink to it --
+    # symlinks break Windows checkouts and are skipped by the plugin cache.
+    # Equivalence is asserted by content, and enforced in CI by
+    # `python scripts/sync_plugin_assets.py --check`.
+    shipped = plugin / "skills"
+    assert not shipped.is_symlink(), "v2 plugin skills must be real files, not a symlink"
+
+    expected = {p.name for p in V2_ROOT.iterdir() if p.is_dir()}
+    actual = {p.name for p in shipped.iterdir() if p.is_dir()}
+    assert actual == expected, "v2 plugin skills do not match harness/skills-v2"

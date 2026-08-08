@@ -210,7 +210,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 | `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
 | `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
 | `/kai-sales-meeting-prep` | Meeting briefs, discovery plans, follow-up drafts, and sales handoff notes |
-| `/kai-reddit-listen` | Monitor subreddits and draft profile-driven replies to Discord |
+| `/kai-reddit-listen` | Configure and run a Reddit intelligence bank with scoring, dashboard review, alerts, digests, and content briefs |
 | `/kai-newsletter` | Newsletter editions, subject lines, and structure |
 | `/kai-case-study` | Customer case study from interview notes or product data |
 | `/kai-client-dashboard` | White-labeled, client-facing intelligence dashboard with brand shell, page set, and retention plays |
