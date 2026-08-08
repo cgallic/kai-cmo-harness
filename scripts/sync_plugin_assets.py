@@ -28,10 +28,55 @@ from __future__ import annotations
 import argparse
 import filecmp
 import shutil
+import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+@lru_cache(maxsize=1)
+def _tracked_paths() -> frozenset[str] | None:
+    """Repo-relative POSIX paths of every git-tracked file, or None if unknown.
+
+    Payloads must contain only committed content. Copying an untracked
+    work-in-progress file into a plugin would commit it by the back door, and
+    would make --check fail locally while passing in CI (where the canonical
+    file does not exist). Returning None disables the filter entirely when git
+    is unavailable, so the script still works from a source tarball.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "-z"],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return frozenset(p for p in result.stdout.split("\0") if p)
+
+
+def _is_untracked(path: Path) -> bool:
+    """True if nothing at or under ``path`` is tracked by git.
+
+    Directories never appear in ``git ls-files``, so a directory is judged by
+    whether any tracked path starts with it. Checking membership alone would
+    treat every subdirectory as untracked and skip the whole tree.
+    """
+    tracked = _tracked_paths()
+    if tracked is None:
+        return False
+    try:
+        rel = path.resolve().relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return False
+    if path.is_dir():
+        prefix = f"{rel}/"
+        return not any(p.startswith(prefix) for p in tracked)
+    return rel not in tracked
 
 # Top-level entries inside a canonical directory that must never reach a plugin
 # payload, keyed by canonical source. ``docs/superpowers/`` is internal build
@@ -79,6 +124,9 @@ def _diff_tree(src: Path, dst: Path, excludes: set[str]) -> list[str]:
 
     def walk(cmp_result: filecmp.dircmp, prefix: str) -> None:
         for name in cmp_result.left_only:
+            # Untracked working-tree files are never part of a payload.
+            if _is_untracked(Path(cmp_result.left) / name):
+                continue
             problems.append(f"missing from plugin: {prefix}{name}")
         for name in cmp_result.right_only:
             problems.append(f"stale in plugin (not in canonical): {prefix}{name}")
@@ -90,6 +138,8 @@ def _diff_tree(src: Path, dst: Path, excludes: set[str]) -> list[str]:
     # Excludes only apply at the top level of the copied tree.
     top = filecmp.dircmp(src, dst, ignore=ignore)
     for name in top.left_only:
+        if _is_untracked(src / name):
+            continue
         problems.append(f"missing from plugin: {name}")
     for name in top.right_only:
         problems.append(f"stale in plugin (not in canonical): {name}")
@@ -153,12 +203,19 @@ def sync() -> int:
             print(f"  {dest_rel} <- {src_rel}")
         else:
             excludes = PAYLOAD_EXCLUDES.get(src_rel, set())
-            shutil.copytree(
-                src,
-                dest,
-                ignore=lambda d, names: set(IGNORE(d, names))
-                | (excludes if Path(d) == src else set()),
-            )
+
+            def _ignore(directory: str, names: list[str]) -> set[str]:
+                skip = set(IGNORE(directory, names))
+                if Path(directory) == src:
+                    skip |= excludes
+                skip |= {
+                    n
+                    for n in names
+                    if n not in skip and _is_untracked(Path(directory) / n)
+                }
+                return skip
+
+            shutil.copytree(src, dest, ignore=_ignore)
             note = f"  (excluding {', '.join(sorted(excludes))})" if excludes else ""
             print(f"  {dest_rel} <- {src_rel}{note}")
 
