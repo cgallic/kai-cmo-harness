@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness Deep-Dive | Meet Kai</title>
+<meta name="description" content="Technical deep-dive into the Kai Harness — a CI/CD pipeline for marketing content with a 28-rule unified quality scorer, 8 YAML gate policies, and self-improving feedback loop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+/* ========== HARNESS PAGE-SPECIFIC STYLES ========== */
+.page-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+}
+
+.hero {
+  padding: 100px 0 64px;
+  text-align: center;
+}
+
+.hero .label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--amber);
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 20px;
+  background: linear-gradient(180deg, #ffffff 40%, #888888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.hero-meta span {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hero-meta strong {
+  color: var(--amber);
+}
+
+/* ========== DOCS ========== */
+.doc {
+  margin-bottom: 72px;
+}
+
+.doc h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.doc .doc-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 720px;
+}
+
+.doc h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--amber);
+  margin: 36px 0 14px;
+}
+
+.doc p {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 72px 0;
+}
+
+/* ========== STATS ROW ========== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 64px;
+}
+
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.stat-box .val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--amber);
+}
+
+.stat-box .lbl {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ========== LAWS ========== */
+.laws {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.law {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.law-n {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+
+.law-t {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 620px) {
+  .laws {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== CODE BLOCKS ========== */
+pre {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 10px;
+  padding: 20px 22px;
+  overflow-x: auto;
+  margin: 18px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.tok-comment { color: #6e7681; }
+.tok-kw { color: #ff7b72; }
+.tok-str { color: #a5d6ff; }
+.tok-fn { color: #d2a8ff; }
+.tok-var { color: #79c0ff; }
+.tok-num { color: #f2cc60; }
+.tok-key { color: #7ee787; }
+.tok-punct { color: #c9d1d9; }
+.tok-class { color: #ffa657; }
+
+/* ========== FILE LABEL ========== */
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--amber);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 8px;
+}
+
+/* ========== PIPELINE ========== */
+.pipeline {
+  position: relative;
+}
+
+.pipe-step {
+  display: flex;
+  gap: 24px;
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.pipe-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 42px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.pipe-n {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--amber);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.pipe-body h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.pipe-body > p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 10px;
+  line-height: 1.65;
+}
+
+.pipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tag {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 9px;
+  border-radius: 5px;
+}
+
+.tag-in {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--amber);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.tag-out {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--purple);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* ========== GATE CARDS ========== */
+.gates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.gate-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.gate-card h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.gate-file {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.gate-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gate-card ul li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  line-height: 1.5;
+}
+
+.gate-card ul li:last-child {
+  border: none;
+}
+
+.gate-card ul li strong {
+  color: var(--text);
+}
+
+.gate-card .research-note {
+  font-size: 11px;
+  color: var(--amber);
+  font-style: italic;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+@media (max-width: 700px) {
+  .gates {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== COMPARE ========== */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.compare-col h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .compare {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== DATA TABLE ========== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.data-table td:first-child {
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.pass { color: #22c55e; font-weight: 600; }
+.skip { color: #6b7280; }
+.block { color: #ef4444; font-weight: 600; }
+
+/* ========== LOOP ========== */
+.loop-steps {
+  display: grid;
+  gap: 2px;
+}
+
+.loop-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.loop-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+.loop-content h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.loop-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.loop-arrow {
+  text-align: center;
+  color: var(--border);
+  font-size: 18px;
+  padding: 4px 0;
+}
+
+/* ========== NOT-SCOPE ========== */
+.not-scope {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ns-item {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ns-item strong {
+  display: block;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 600px) {
+  .not-scope {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="grid-bg"></div>
+
+<!-- ==================== NAV ==================== -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">K</div>
+      <span class="nav-title">Meet Kai</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="/blog">Blog</a></li>
+      <li class="nav-dropdown">
+        <a href="/architecture" class="nav-dropdown-trigger">Architecture
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <div class="nav-dropdown-menu-inner">
+            <a href="/architecture">Overview</a>
+            <a href="/harness" class="active">Harness</a>
+            <a href="/data">Data Layer</a>
+            <a href="/skills">Skills</a>
+          </div>
+        </div>
+      </li>
+      <li><a href="/pricing">Pricing</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="/#get-started" class="nav-cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Get Started
+      </a>
+      <button class="nav-menu-btn" aria-label="Toggle menu">
+        <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav">
+  <a href="/blog">Blog</a>
+  <div class="mobile-nav-section">
+    <span class="mobile-nav-label">Architecture</span>
+    <a href="/architecture" class="mobile-nav-sub">Overview</a>
+    <a href="/harness" class="mobile-nav-sub active">Harness</a>
+    <a href="/data" class="mobile-nav-sub">Data Layer</a>
+    <a href="/skills" class="mobile-nav-sub">Skills</a>
+  </div>
+  <a href="/pricing">Pricing</a>
+  <a href="/#get-started">Get Started</a>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<div class="page-wrap">
+
+  <div class="hero">
+    <div class="label">Technical Deep-Dive</div>
+    <h1>Kai Harness</h1>
+    <p>A CI/CD pipeline for marketing content built in Python. Brief &rarr; Write &rarr; Gate &rarr; Approve &rarr; Log &rarr; Learn. Here's how it actually works.</p>
+    <div class="hero-meta">
+      <span><strong>~960</strong> lines of Python</span>
+      <span><strong>9</strong> content formats</span>
+      <span><strong>28-rule</strong> unified quality scorer</span>
+      <span><strong>8</strong> YAML gate policies</span>
+    </div>
+  </div>
+
+  <!-- ==================== STATS ==================== -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="val">&lt;6s</div>
+      <div class="lbl">Brief generation</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">28</div>
+      <div class="lbl">Quality rules</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">85+</div>
+      <div class="lbl">Auto-approve score</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">2</div>
+      <div class="lbl">Auto-retry limit</div>
+    </div>
+  </div>
+
+  <!-- ==================== THREE LAWS ==================== -->
+  <div class="laws">
+    <div class="law">
+      <div class="law-n">Law 1</div>
+      <div class="law-t">No brief, no write</div>
+    </div>
+    <div class="law">
+      <div class="law-n">Law 2</div>
+      <div class="law-t">No gate pass, no publish</div>
+    </div>
+    <div class="law">
+      <div class="law-n">Law 3</div>
+      <div class="law-t">No publish without logging</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== MARKETING.MD ==================== -->
+  <div class="doc">
+    <h2>MARKETING.md as Runtime Config</h2>
+    <p class="doc-sub">Every Claude Code project has a <code>CLAUDE.md</code> &mdash; the agent reads it on startup to learn what tools exist, what the codebase conventions are, what good output looks like. Without it the agent guesses. The harness applies the same pattern to marketing: <code>MARKETING.md</code> is parsed on every run into a live config object.</p>
+
+    <h3>The CLAUDE.md parallel</h3>
+
+    <div class="compare">
+      <div class="compare-col">
+        <h4>CLAUDE.md (code agent)</h4>
+<pre><span class="tok-comment"># Project conventions</span>
+<span class="tok-key">Language:</span> <span class="tok-str">TypeScript</span>
+<span class="tok-key">Test runner:</span> <span class="tok-str">vitest</span>
+<span class="tok-key">Lint:</span> <span class="tok-str">eslint + prettier</span>
+
+<span class="tok-comment"># What good code looks like</span>
+<span class="tok-comment"># Agent reads this before writing</span></pre>
+      </div>
+      <div class="compare-col">
+        <h4>MARKETING.md (content agent)</h4>
+<pre><span class="tok-comment"># Brand voice</span>
+<span class="tok-key">Tone:</span> <span class="tok-str">direct, data-backed</span>
+<span class="tok-key">Four U's min:</span> <span class="tok-num">12</span><span class="tok-str">/16</span>
+<span class="tok-key">Frameworks:</span> <span class="tok-str">Algorithmic Authorship</span>
+
+<span class="tok-comment"># Agent reads this before writing</span></pre>
+      </div>
+    </div>
+
+    <h3>What gets parsed</h3>
+
+<pre><span class="tok-comment"># MarketingConfig parses MARKETING.md on every run</span>
+
+<span class="tok-var">MARKETING</span><span class="tok-punct">.</span><span class="tok-fn">channels</span><span class="tok-punct">[</span><span class="tok-str">"kaicalls"</span><span class="tok-punct">]</span>        <span class="tok-comment"># &rarr; { discord_id, ga4_id, gsc_url }</span>
+<span class="tok-var">MARKETING</span><span class="tok-punct">.</span><span class="tok-fn">formats</span>                  <span class="tok-comment"># &rarr; ["blog", "linkedin", "cold-email", ...]</span>
+<span class="tok-var">MARKETING</span><span class="tok-punct">.</span><span class="tok-fn">framework_map</span><span class="tok-punct">[</span><span class="tok-str">"blog"</span><span class="tok-punct">]</span>  <span class="tok-comment"># &rarr; ["algorithmic-authorship.md", "four-us.md"]</span>
+<span class="tok-var">MARKETING</span><span class="tok-punct">.</span><span class="tok-fn">learned_defaults</span>       <span class="tok-comment"># &rarr; { avg_word_count: 1200, hook_type: "question" }</span>
+
+<span class="tok-var">MARKETING</span><span class="tok-punct">.</span><span class="tok-fn">skill_contract</span><span class="tok-punct">(</span><span class="tok-str">"blog"</span><span class="tok-punct">)</span>  <span class="tok-comment"># &rarr; harness/skill-contracts/blog-post.yaml</span>
+<span class="tok-comment"># Now routes to gate policy: blog-publish</span>
+<span class="tok-comment"># Quality scorer runs 28 rules, applies blog-publish.yaml thresholds</span></pre>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== PIPELINE STAGES ==================== -->
+  <div class="doc">
+    <h2>Pipeline Stages</h2>
+    <p class="doc-sub">One command. Seven stages. Each enforced.</p>
+
+<pre>kai-harness run --task blog --site kaicalls --keyword "law firm answering service"</pre>
+
+    <div class="pipeline">
+
+      <div class="pipe-step">
+        <div class="pipe-n">1</div>
+        <div class="pipe-body">
+          <h4>Brief Generator</h4>
+          <p>Pulls live GSC data for the keyword &mdash; position, CTR, impressions, competing URLs. GA4 session depth. Identifies intent gap between what's ranking and what searchers actually want. Outputs structured JSON.</p>
+          <div class="pipe-tags">
+            <span class="tag tag-in">GSC queries + opportunities</span>
+            <span class="tag tag-in">GA4 session data</span>
+            <span class="tag tag-in">SITE_FACTS[site]</span>
+            <span class="tag tag-out">brief.json</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">2</div>
+        <div class="pipe-body">
+          <h4>Content Writer</h4>
+          <p>Reads the brief, reloads MARKETING.md, resolves framework file paths from the Framework Map table, loads winning patterns from <code>what-works.md</code>. Everything feeds a structured prompt.</p>
+          <div class="pipe-tags">
+            <span class="tag tag-in">brief.json</span>
+            <span class="tag tag-in">MARKETING.md config</span>
+            <span class="tag tag-in">framework files</span>
+            <span class="tag tag-in">what-works.md</span>
+            <span class="tag tag-out">draft.md (~1,100 words)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">3</div>
+        <div class="pipe-body">
+          <h4>Quality Gate &mdash; Unified Scorer</h4>
+          <p>The unified quality scorer runs 28 rules across 4 categories (Algorithmic Authorship, GEO/AEO Signals, Content Structure, Four U's). Format maps to a YAML gate policy that sets auto-approve/hold/reject thresholds. Returns proposal_id, score, grade, and per-line violations with fix suggestions. All proposals stored in SQLite for audit.</p>
+          <div class="pipe-tags">
+            <span class="tag tag-in">draft content</span>
+            <span class="tag tag-in">gate policy YAML</span>
+            <span class="tag tag-out">proposal {id, score, grade, violations, status}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">4</div>
+        <div class="pipe-body">
+          <h4>Surgical Revision Loop</h4>
+          <p>On gate rejection, the revision prompt contains exact violations from the quality scorer &mdash; rule ID, line number, violation text, and fix suggestion. No vague &ldquo;improve quality&rdquo; instructions. Each violation is actionable.</p>
+
+          <div class="file-label">What the revision agent receives on failure</div>
+<pre><span class="tok-comment"># What the revision agent receives on failure (from quality scorer):</span>
+<span class="tok-str">"""
+Current quality score: 58/100. Fix ONLY the listed issues.
+
+ISSUES TO FIX (from quality scorer &mdash; each has rule ID, line number, and exact fix):
+- [AA-01] Condition Before Clause (line 14, 6 occurrences):
+  "If you want better results, do X" &rarr; Fix: Move condition after main clause
+- [GEO-01] Citation Density (line 1, 1 occurrence):
+  "3 citations per 1K words" &rarr; Fix: Add 2+ more citations with source attribution
+- [CS-07] AI Cliche Detected (line 42, 1 occurrence):
+  "it's important to note" &rarr; Fix: Remove or replace with specific claim
+
+HARD CONSTRAINTS:
+- Keep at least 1,091 words &mdash; do NOT shorten
+- Do NOT remove numbers, data points, or named examples
+- Fix every listed issue. Change nothing else.
+"""</span></pre>
+
+          <div class="pipe-tags">
+            <span class="tag tag-in">failing dims + exact context</span>
+            <span class="tag tag-in">passing dims (locked)</span>
+            <span class="tag tag-out">revised draft.md</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">5</div>
+        <div class="pipe-body">
+          <h4>Discord Approval</h4>
+          <p>Gated draft posts to the site's Discord channel with score, grade, proposal ID, and approve command. Proposal can be approved via CLI: <code>python -m scripts.quality gate --approve &lt;proposal_id&gt;</code></p>
+
+          <div class="file-label">Discord approval message</div>
+<pre><span class="tok-str">&#x1F4DD; Content ready for approval
+Site: kaicalls | Format: blog | Keyword: law firm answering service
+Score: 78/100 (grade C) | Violations: 5 | Policy: blog-publish
+Proposal: gp-k4m7n2x8
+
+Approve: python -m scripts.quality gate --approve gp-k4m7n2x8
+React &#x2705; to approve &middot; &#x274C; to reject with reason</span></pre>
+
+          <div class="pipe-tags">
+            <span class="tag tag-in">gated draft</span>
+            <span class="tag tag-in">gate scores</span>
+            <span class="tag tag-out">human approval signal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">6</div>
+        <div class="pipe-body">
+          <h4>Publish + Log</h4>
+          <p>On publish: appends to <code>content_log.json</code> and creates a <code>pending_checks/[id].json</code> file that schedules the 30-day performance pull.</p>
+          <div class="pipe-tags">
+            <span class="tag tag-out">content_log.json entry</span>
+            <span class="tag tag-out">pending_checks/[id].json</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-n">7</div>
+        <div class="pipe-body">
+          <h4>30-Day Performance Check</h4>
+          <p>Cron fires at <code>0 2 * * *</code>. Reads all pending check files. For each URL past <code>check_after</code>: pulls GSC position + CTR, GA4 session duration. Grades winner / average / underperformer.</p>
+          <div class="pipe-tags">
+            <span class="tag tag-in">GSC per URL (30d)</span>
+            <span class="tag tag-in">GA4 per URL (30d)</span>
+            <span class="tag tag-out">performance grade</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== UNIFIED QUALITY SCORER ==================== -->
+  <div class="doc">
+    <h2>Unified Quality Scorer</h2>
+    <p class="doc-sub">28 rules across 4 weighted categories. Replaces the old three-script gate (<code>four_us_score.py</code>, <code>banned_word_check.py</code>, <code>seo_lint.py</code>) with a single scored pipeline. Per-line violations. Exact fix suggestions. SQLite audit trail.</p>
+
+    <div class="gates">
+
+      <div class="gate-card">
+        <h4>Algorithmic Authorship (35%)</h4>
+        <div class="gate-file">quality/rules/algorithmic_authorship.py</div>
+        <ul>
+          <li><strong>AA-01:</strong> Conditions after main clause</li>
+          <li><strong>AA-02:</strong> Instructions start with verbs</li>
+          <li><strong>AA-03:</strong> Sentence length (&le;20 words)</li>
+          <li><strong>AA-08:</strong> Anchor words between sentences</li>
+          <li><strong>AA-13:</strong> No vague quantifiers</li>
+          <li><strong>AA-22:</strong> Filler word detection</li>
+          <li><strong>AA-23:</strong> No back-references</li>
+          <li><strong>&hellip;</strong> 15 rules total</li>
+        </ul>
+      </div>
+
+      <div class="gate-card">
+        <h4>GEO/AEO Signals (20%)</h4>
+        <div class="gate-file">quality/rules/geo_signals.py</div>
+        <ul>
+          <li><strong>GEO-01:</strong> Citation density (5 per 1K words)</li>
+          <li><strong>GEO-02:</strong> Quotation density (3 per 1K)</li>
+          <li><strong>GEO-03:</strong> Statistics density (5 per 1K)</li>
+          <li><strong>GEO-04:</strong> Technical term frequency</li>
+        </ul>
+        <div class="research-note">Research basis: citations +115%, quotes +40%, stats +37%</div>
+      </div>
+
+      <div class="gate-card">
+        <h4>Content Structure (25%)</h4>
+        <div class="gate-file">quality/rules/content_structure.py</div>
+        <ul>
+          <li><strong>CS-01:</strong> Hook in first paragraph</li>
+          <li><strong>CS-02:</strong> Heading distribution balance</li>
+          <li><strong>CS-03:</strong> Paragraph length (2&ndash;4 sentences)</li>
+          <li><strong>CS-04:</strong> Sentence length consistency</li>
+          <li><strong>CS-05:</strong> Reading level (Flesch-Kincaid grade 6&ndash;8)</li>
+          <li><strong>CS-06:</strong> Active voice &ge;90%</li>
+          <li><strong>CS-07:</strong> AI cliche detection (~18 patterns)</li>
+        </ul>
+      </div>
+
+      <div class="gate-card">
+        <h4>Four U's (20%)</h4>
+        <div class="gate-file">quality/rules/four_us.py</div>
+        <ul>
+          <li><strong>Method:</strong> LLM-scored via OpenRouter (Qwen)</li>
+          <li><strong>Dimensions:</strong> Unique, Useful, Ultra-specific, Urgent (1&ndash;4 each)</li>
+          <li><strong>Pass:</strong> 12/16 total, each &ge;2</li>
+          <li><strong>Grader &ne; writer:</strong> separate model call</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <h3>Scorer output</h3>
+
+    <div class="file-label">python -m scripts.quality score article.md --format json</div>
+<pre><span class="tok-punct">{</span>
+  <span class="tok-key">"file_path"</span><span class="tok-punct">:</span> <span class="tok-str">"article.md"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"overall_score"</span><span class="tok-punct">:</span> <span class="tok-num">78.3</span><span class="tok-punct">,</span>
+  <span class="tok-key">"overall_grade"</span><span class="tok-punct">:</span> <span class="tok-str">"C"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"categories"</span><span class="tok-punct">:</span> <span class="tok-punct">[</span>
+    <span class="tok-punct">{</span><span class="tok-key">"category"</span><span class="tok-punct">:</span> <span class="tok-str">"Algorithmic Authorship"</span><span class="tok-punct">,</span> <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">82.1</span><span class="tok-punct">,</span> <span class="tok-key">"weight"</span><span class="tok-punct">:</span> <span class="tok-num">0.35</span><span class="tok-punct">,</span> <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">8</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">{</span><span class="tok-key">"category"</span><span class="tok-punct">:</span> <span class="tok-str">"GEO/AEO Signals"</span><span class="tok-punct">,</span>       <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">65.0</span><span class="tok-punct">,</span> <span class="tok-key">"weight"</span><span class="tok-punct">:</span> <span class="tok-num">0.20</span><span class="tok-punct">,</span> <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">3</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">{</span><span class="tok-key">"category"</span><span class="tok-punct">:</span> <span class="tok-str">"Content Structure"</span><span class="tok-punct">,</span>      <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">89.4</span><span class="tok-punct">,</span> <span class="tok-key">"weight"</span><span class="tok-punct">:</span> <span class="tok-num">0.25</span><span class="tok-punct">,</span> <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">2</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">{</span><span class="tok-key">"category"</span><span class="tok-punct">:</span> <span class="tok-str">"Four U's"</span><span class="tok-punct">,</span>              <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">71.0</span><span class="tok-punct">,</span> <span class="tok-key">"weight"</span><span class="tok-punct">:</span> <span class="tok-num">0.20</span><span class="tok-punct">,</span> <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">0</span><span class="tok-punct">}</span>
+  <span class="tok-punct">],</span>
+  <span class="tok-key">"top_fixes"</span><span class="tok-punct">:</span> <span class="tok-punct">[</span>
+    <span class="tok-punct">{</span><span class="tok-key">"rule_id"</span><span class="tok-punct">:</span> <span class="tok-str">"AA-01"</span><span class="tok-punct">,</span> <span class="tok-key">"rule_name"</span><span class="tok-punct">:</span> <span class="tok-str">"Condition Before Clause"</span><span class="tok-punct">,</span> <span class="tok-key">"impact"</span><span class="tok-punct">:</span> <span class="tok-num">4.2</span><span class="tok-punct">,</span>
+     <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">6</span><span class="tok-punct">,</span> <span class="tok-key">"suggestion"</span><span class="tok-punct">:</span> <span class="tok-str">"Move conditions after the main clause"</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">{</span><span class="tok-key">"rule_id"</span><span class="tok-punct">:</span> <span class="tok-str">"GEO-01"</span><span class="tok-punct">,</span> <span class="tok-key">"rule_name"</span><span class="tok-punct">:</span> <span class="tok-str">"Citation Density"</span><span class="tok-punct">,</span> <span class="tok-key">"impact"</span><span class="tok-punct">:</span> <span class="tok-num">3.1</span><span class="tok-punct">,</span>
+     <span class="tok-key">"suggestion"</span><span class="tok-punct">:</span> <span class="tok-str">"Add 2+ citations with source attribution per 1K words"</span><span class="tok-punct">}</span><span class="tok-punct">,</span>
+    <span class="tok-punct">{</span><span class="tok-key">"rule_id"</span><span class="tok-punct">:</span> <span class="tok-str">"CS-07"</span><span class="tok-punct">,</span> <span class="tok-key">"rule_name"</span><span class="tok-punct">:</span> <span class="tok-str">"AI Cliche Detected"</span><span class="tok-punct">,</span> <span class="tok-key">"impact"</span><span class="tok-punct">:</span> <span class="tok-num">2.8</span><span class="tok-punct">,</span>
+     <span class="tok-key">"suggestion"</span><span class="tok-punct">:</span> <span class="tok-str">"Remove 'it's important to note' &mdash; replace with specific claim"</span><span class="tok-punct">}</span>
+  <span class="tok-punct">],</span>
+  <span class="tok-key">"metadata"</span><span class="tok-punct">:</span> <span class="tok-punct">{</span><span class="tok-key">"word_count"</span><span class="tok-punct">:</span> <span class="tok-num">1423</span><span class="tok-punct">,</span> <span class="tok-key">"sentence_count"</span><span class="tok-punct">:</span> <span class="tok-num">89</span><span class="tok-punct">,</span> <span class="tok-key">"reading_level"</span><span class="tok-punct">:</span> <span class="tok-num">7.2</span><span class="tok-punct">}</span>
+<span class="tok-punct">}</span></pre>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== GATE THRESHOLDS ==================== -->
+  <div class="doc">
+    <h2>Gate Policies (8 YAML Configs)</h2>
+    <p class="doc-sub">Each format maps to a YAML gate policy. Policies define auto-approve, hold, and reject score thresholds &mdash; plus required rules that must pass and blocked terms that trigger instant rejection.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Policy</th>
+          <th>Formats</th>
+          <th>Auto-approve</th>
+          <th>Hold</th>
+          <th>Reject</th>
+          <th>Required Rules</th>
+          <th>Blocked Terms</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>blog-publish</td>
+          <td>blog, seo</td>
+          <td><span class="pass">&ge;85</span></td>
+          <td>60&ndash;85</td>
+          <td><span class="block">&lt;60</span></td>
+          <td>CS-07, AA-23</td>
+          <td>&ldquo;in conclusion&rdquo;, &ldquo;harness the power&rdquo;&hellip;</td>
+        </tr>
+        <tr>
+          <td>linkedin-article</td>
+          <td>linkedin</td>
+          <td><span class="pass">&ge;80</span></td>
+          <td>55&ndash;80</td>
+          <td><span class="block">&lt;55</span></td>
+          <td>CS-07, CS-01</td>
+          <td>&ldquo;it's important to note&rdquo;&hellip;</td>
+        </tr>
+        <tr>
+          <td>cold-email</td>
+          <td>cold-email, email-lifecycle</td>
+          <td><span class="pass">&ge;75</span></td>
+          <td>50&ndash;75</td>
+          <td><span class="block">&lt;50</span></td>
+          <td>CS-07</td>
+          <td>&ldquo;guaranteed&rdquo;, &ldquo;act now&rdquo;&hellip;</td>
+        </tr>
+        <tr>
+          <td>press-release</td>
+          <td>press</td>
+          <td><span class="pass">&ge;80</span></td>
+          <td>55&ndash;80</td>
+          <td><span class="block">&lt;55</span></td>
+          <td>CS-07</td>
+          <td>&ldquo;excited to announce&rdquo;, &ldquo;industry-leading&rdquo;&hellip;</td>
+        </tr>
+        <tr>
+          <td>tiktok-script</td>
+          <td>tiktok</td>
+          <td><span class="pass">&ge;70</span></td>
+          <td>45&ndash;70</td>
+          <td><span class="block">&lt;45</span></td>
+          <td>CS-07</td>
+          <td>&ldquo;link in bio&rdquo;, &ldquo;mind-blowing&rdquo;</td>
+        </tr>
+        <tr>
+          <td>meta-ad</td>
+          <td>meta-ads</td>
+          <td><span class="pass">&ge;70</span></td>
+          <td>45&ndash;70</td>
+          <td><span class="block">&lt;45</span></td>
+          <td>CS-07</td>
+          <td>&ldquo;click here&rdquo;, &ldquo;don't miss out&rdquo;&hellip;</td>
+        </tr>
+        <tr>
+          <td>google-ad</td>
+          <td>google-ads</td>
+          <td><span class="pass">&ge;65</span></td>
+          <td>40&ndash;65</td>
+          <td><span class="block">&lt;40</span></td>
+          <td>CS-07</td>
+          <td>&mdash;</td>
+        </tr>
+        <tr>
+          <td>default</td>
+          <td>everything else</td>
+          <td><span class="pass">&ge;85</span></td>
+          <td>60&ndash;85</td>
+          <td><span class="block">&lt;60</span></td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Policy YAML format</h3>
+
+    <div class="file-label">quality/policies/blog-publish.yaml</div>
+<pre><span class="tok-key">id</span><span class="tok-punct">:</span> <span class="tok-str">blog-publish</span>
+<span class="tok-key">auto_approve_above</span><span class="tok-punct">:</span> <span class="tok-num">85</span>
+<span class="tok-key">hold_between</span><span class="tok-punct">:</span> <span class="tok-punct">[</span><span class="tok-num">60</span><span class="tok-punct">,</span> <span class="tok-num">85</span><span class="tok-punct">]</span>
+<span class="tok-key">reject_below</span><span class="tok-punct">:</span> <span class="tok-num">60</span>
+<span class="tok-key">require_rules_pass</span><span class="tok-punct">:</span>
+  <span class="tok-punct">-</span> <span class="tok-str">CS-07</span>    <span class="tok-comment"># no AI cliches (mandatory)</span>
+  <span class="tok-punct">-</span> <span class="tok-str">AA-23</span>    <span class="tok-comment"># no back-references</span>
+<span class="tok-key">block_if_terms</span><span class="tok-punct">:</span>
+  <span class="tok-punct">-</span> <span class="tok-str">"it's important to note"</span>
+  <span class="tok-punct">-</span> <span class="tok-str">"in conclusion"</span>
+  <span class="tok-punct">-</span> <span class="tok-str">"in today's fast-paced"</span>
+  <span class="tok-punct">-</span> <span class="tok-str">"harness the power"</span>
+  <span class="tok-punct">-</span> <span class="tok-str">"without further ado"</span></pre>
+
+    <h3>Gate propose flow</h3>
+
+    <div class="file-label">quality/gate.py &rarr; propose()</div>
+<pre><span class="tok-comment"># Score content &rarr; apply policy &rarr; auto-approve / hold / reject</span>
+<span class="tok-comment"># All proposals stored in SQLite for audit</span>
+
+<span class="tok-var">proposal</span> <span class="tok-punct">=</span> <span class="tok-kw">await</span> <span class="tok-var">gate</span><span class="tok-punct">.</span><span class="tok-fn">propose</span><span class="tok-punct">(</span>
+    <span class="tok-var">content</span><span class="tok-punct">=</span><span class="tok-var">draft</span><span class="tok-punct">,</span>
+    <span class="tok-var">file_path</span><span class="tok-punct">=</span><span class="tok-str">"&lt;harness-draft&gt;"</span><span class="tok-punct">,</span>
+    <span class="tok-var">policy_name</span><span class="tok-punct">=</span><span class="tok-str">"blog-publish"</span><span class="tok-punct">,</span>
+<span class="tok-punct">)</span>
+<span class="tok-comment"># Returns:</span>
+<span class="tok-punct">{</span>
+  <span class="tok-key">"proposal_id"</span><span class="tok-punct">:</span> <span class="tok-str">"gp-k4m7n2x8"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"status"</span><span class="tok-punct">:</span> <span class="tok-str">"pending"</span><span class="tok-punct">,</span>        <span class="tok-comment"># approved | pending | rejected</span>
+  <span class="tok-key">"score"</span><span class="tok-punct">:</span> <span class="tok-num">78.3</span><span class="tok-punct">,</span>
+  <span class="tok-key">"grade"</span><span class="tok-punct">:</span> <span class="tok-str">"C"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"reason"</span><span class="tok-punct">:</span> <span class="tok-str">"Score 78 in hold range (60-85)"</span><span class="tok-punct">,</span>
+  <span class="tok-key">"violation_count"</span><span class="tok-punct">:</span> <span class="tok-num">13</span><span class="tok-punct">,</span>
+  <span class="tok-key">"top_fixes"</span><span class="tok-punct">:</span> <span class="tok-punct">[</span><span class="tok-str">...</span><span class="tok-punct">],</span>
+  <span class="tok-key">"policy"</span><span class="tok-punct">:</span> <span class="tok-str">"blog-publish"</span>
+<span class="tok-punct">}</span>
+
+<span class="tok-comment"># Human approval:</span>
+<span class="tok-comment"># python -m scripts.quality gate --approve gp-k4m7n2x8</span></pre>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== SELF-IMPROVEMENT LOOP ==================== -->
+  <div class="doc">
+    <h2>Self-Improvement Loop</h2>
+    <p class="doc-sub">Every piece of content feeds data back into the system. Quality compounds over time &mdash; the harness learns what works and adjusts both writing prompts and gate thresholds.</p>
+
+    <div class="loop-steps">
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x1F4CA;</div>
+        <div class="loop-content">
+          <h4>Cron: <code>0 2 * * *</code> &mdash; performance_check.py</h4>
+          <p>Reads all <code>pending_checks/*.json</code> files past <code>check_after</code> date. Pulls GSC + GA4 per URL. Writes grade back to <code>content_log.json</code>. Winners trigger pattern extraction.</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x1F4D0;</div>
+        <div class="loop-content">
+          <h4>Retro Quality Score &mdash; performance_check.py --batch-score</h4>
+          <p>Fetches published URL, strips HTML, runs the 28-rule quality scorer. Stores per-rule scores in <code>content_log.json</code> alongside GSC/GA4 data. Enables rule-level correlation with search performance.</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x1F50D;</div>
+        <div class="loop-content">
+          <h4>Cron: <code>0 14 * * 1</code> (Monday) &mdash; pattern_extract.py</h4>
+          <p>Analyzes all winners. Finds shared traits: hook type, format, word count range, publish day, persona. Appends findings to <code>knowledge/playbooks/what-works.md</code>. Every subsequent write step reads this file before drafting.</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x1F517;</div>
+        <div class="loop-content">
+          <h4>Rule Correlation &mdash; pattern_extract.py --correlate</h4>
+          <p>Compares per-rule quality scores between winners (position &le;5, CTR &ge;5%, session &ge;90s) and losers. Surfaces which specific rules predict search success. Example: &ldquo;AA-01 winners avg 0.92 vs losers 0.61 (+51%, n=7+12)&rdquo;</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x2699;&#xFE0F;</div>
+        <div class="loop-content">
+          <h4>Cron: <code>30 14 * * 1</code> (Monday +30min) &mdash; harness_defaults_update.py</h4>
+          <p>When n&ge;5 data points share a pattern with &ge;15% lift: rewrites the <code>## Learned Defaults</code> section of MARKETING.md. Also auto-updates YAML policy thresholds (<code>auto_approve_above</code>, <code>reject_below</code>) based on winner/loser score distributions. The next <code>kai-harness run</code> calls <code>MARKETING.reload()</code> and picks up the new defaults &mdash; no restart, no code change.</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x270D;&#xFE0F;</div>
+        <div class="loop-content">
+          <h4>Next run &mdash; write_content() reads updated config</h4>
+          <p>The write prompt now contains the learned defaults in <code>MARKETING.learned_defaults</code>. The agent starts from what's been statistically proven, not from theory.</p>
+        </div>
+      </div>
+      <div class="loop-arrow">&darr;</div>
+
+      <div class="loop-step">
+        <div class="loop-icon">&#x1F4E2;</div>
+        <div class="loop-content">
+          <h4>Weekly Discord Summary &mdash; pattern_extract.py --weekly-summary</h4>
+          <p>Posts avg quality score trend + top correlated rules to Discord. &ldquo;Avg score: 74/100 across 23 pieces. Trend: 68 &rarr; 74 (&uarr;6 pts). Rules that correlate with winners: AA-01 +51%, GEO-01 +38%, CS-05 +22%&rdquo;</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== FILE LAYOUT ==================== -->
+  <div class="doc">
+    <h2>File Layout</h2>
+    <p class="doc-sub">Everything lives under <code>/opt/cmo-analytics/</code>. The quality scorer is a self-contained module. Gate policies are YAML files &mdash; add a new format by dropping a new YAML.</p>
+
+<pre>/opt/cmo-analytics/
+<span class="tok-key">&#x251C;&#x2500;&#x2500;</span> quality/                          <span class="tok-comment"># Unified quality scorer module</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> engine.py                     <span class="tok-comment"># QualityEngine.score_content() orchestrator</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> gate.py                       <span class="tok-comment"># propose(), approve(), reject() &mdash; SQLite audit</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> gate.db                       <span class="tok-comment"># SQLite proposals table</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> parser.py                     <span class="tok-comment"># Markdown parser &rarr; Document object</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> types.py                      <span class="tok-comment"># QualityReport, CategoryScore, RuleResult, Violation</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> config.py                     <span class="tok-comment"># Category weights, grade boundaries, targets</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> rules/
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> algorithmic_authorship.py  <span class="tok-comment"># 15 AA rules</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> geo_signals.py            <span class="tok-comment"># 4 GEO rules</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> content_structure.py      <span class="tok-comment"># 7 CS rules</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2514;&#x2500;&#x2500;</span> four_us.py                <span class="tok-comment"># LLM-scored Four U's (2 rules)</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2514;&#x2500;&#x2500;</span> policies/
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> blog-publish.yaml         <span class="tok-comment"># blog, seo formats</span>
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> linkedin-article.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> cold-email.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> press-release.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> tiktok-script.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> meta-ad.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> google-ad.yaml
+<span class="tok-key">&#x2502;</span>       <span class="tok-key">&#x2514;&#x2500;&#x2500;</span> default.yaml
+<span class="tok-key">&#x251C;&#x2500;&#x2500;</span> scripts/
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> kai_harness.py                <span class="tok-comment"># CLI &mdash; calls quality.gate.propose() for gating</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> performance_check.py          <span class="tok-comment"># 30d check + retro quality scoring + batch-score</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> pattern_extract.py            <span class="tok-comment"># Winner analysis + rule correlation + weekly summary</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> harness_defaults_update.py    <span class="tok-comment"># n&ge;5 patterns &rarr; MARKETING.md + policy YAML updates</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> content_log.py                <span class="tok-comment"># Publish logger + pending_checks scheduler</span>
+<span class="tok-key">&#x2502;</span>   <span class="tok-key">&#x2514;&#x2500;&#x2500;</span> harness_discord.py            <span class="tok-comment"># !harness Discord command router</span>
+<span class="tok-key">&#x2514;&#x2500;&#x2500;</span> data/
+    <span class="tok-key">&#x251C;&#x2500;&#x2500;</span> content_log.json              <span class="tok-comment"># All published content + performance + quality_retro</span>
+    <span class="tok-key">&#x2514;&#x2500;&#x2500;</span> pending_checks/               <span class="tok-comment"># 30-day check schedulers</span></pre>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== NOT-SCOPE ==================== -->
+  <div class="doc">
+    <h2>Not in Scope</h2>
+    <p class="doc-sub">The harness is a content pipeline. It doesn't try to be a CMS, scheduler, or distribution tool.</p>
+
+    <div class="not-scope">
+      <div class="ns-item">
+        <strong>Auto-publish</strong>
+        Every draft requires human approval via Discord. The pipeline stops at the approval stage. Gate proposals provide the approval mechanism.
+      </div>
+      <div class="ns-item">
+        <strong>CMS management</strong>
+        Publishes to <code>/tmp/harness_draft.md</code>. Pushing to WordPress, Webflow, or blog directory requires manual action.
+      </div>
+      <div class="ns-item">
+        <strong>Image generation</strong>
+        Handled via separate <code>ocx image generate</code> tool. Not integrated into gate pipeline.
+      </div>
+      <div class="ns-item">
+        <strong>Social scheduling</strong>
+        LinkedIn, TikTok output remains in markdown format. Distribution to social platforms is manual post-approval.
+      </div>
+      <div class="ns-item">
+        <strong>Live CRM pull</strong>
+        <code>SITE_FACTS</code> constants are manually maintained. No automated CRM-to-brief data syncing exists currently.
+      </div>
+      <div class="ns-item">
+        <strong>Policy learning</strong>
+        Threshold auto-update is conservative (n&ge;5, &ge;15% lift). No aggressive optimization without statistical backing.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ==================== STATUS ==================== -->
+  <div class="doc">
+    <h2>Status Output</h2>
+    <p class="doc-sub">What you see when you run <code>!harness status</code> in Discord or <code>kai-harness status</code> on the CLI.</p>
+
+<pre><span class="tok-comment">&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;</span>
+<span class="tok-str">  Kai Harness &mdash; Status</span>
+<span class="tok-comment">&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;&#x2550;</span>
+
+  <span class="tok-key">Tracked pieces:</span>      <span class="tok-num">0</span>
+  <span class="tok-key">Winners:</span>             <span class="tok-num">0</span>
+  <span class="tok-key">Pending 30d checks:</span>  <span class="tok-num">0</span>
+  <span class="tok-key">Knowledge base:</span>      <span class="tok-str">&#x2705;</span>
+  <span class="tok-key">MARKETING.md:</span>        <span class="tok-str">&#x2705;</span>
+  <span class="tok-key">Quality scorer:</span>      <span class="tok-str">&#x2705; (unified gate)</span>
+  <span class="tok-key">Policies:</span>            <span class="tok-var">blog-publish, linkedin-article, cold-email,</span>
+                       <span class="tok-var">press-release, tiktok-script, meta-ad,</span>
+                       <span class="tok-var">google-ad, default</span>
+
+  <span class="tok-key">Formats:</span>  <span class="tok-var">blog, linkedin, email-lifecycle, cold-email,</span>
+            <span class="tok-var">tiktok, meta-ads, google-ads, press, seo</span>
+  <span class="tok-key">Sites:</span>    <span class="tok-var">kaicalls, buildwithkai, abp, meetkai,</span>
+            <span class="tok-var">connorgallic, vocalscribe</span></pre>
+  </div>
+
+</div>
+<!-- end .page-wrap -->
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">
+          <span class="footer-brand-dot"></span>
+          Meet Kai
+        </div>
+        <p class="footer-tagline">The AI CMO that never sleeps.</p>
+        <p class="footer-powered">Powered by <a href="https://github.com/openclaw/openclaw">OpenClaw</a> + <a href="https://anthropic.com">Claude</a></p>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-heading">Products</div>
+        <a href="https://kaicalls.com" class="footer-link">KaiCalls</a>
+        <a href="https://buildwithkai.com" class="footer-link">BuildWithKai</a>
+        <a href="https://awesomebackyardparties.com" class="footer-link">Awesome Backyard Parties</a>
+        <a href="https://vocalscribe.xyz" class="footer-link">VocalScribe</a>
+        <a href="https://zehrava.com" class="footer-link">Zehrava</a>
+        <a href="https://cro.meetkai.xyz" class="footer-link">CRO Agent</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-heading">Architecture</div>
+        <a href="/architecture" class="footer-link">Overview</a>
+        <a href="/harness" class="footer-link">Harness</a>
+        <a href="/data" class="footer-link">Data Layer</a>
+        <a href="/skills" class="footer-link">Skills</a>
+        <a href="/credentials" class="footer-link">Credentials</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-heading">MeetKai</div>
+        <a href="/blog" class="footer-link">Blog</a>
+        <a href="/pricing" class="footer-link">Pricing</a>
+        <a href="/features" class="footer-link">Features</a>
+        <a href="/pressure-chamber" class="footer-link">Pressure Chamber</a>
+        <a href="/tools" class="footer-link">Free Tools</a>
+        <a href="/build-log" class="footer-link">Build Log</a>
+        <a href="/learnings" class="footer-link">Learnings</a>
+        <a href="/changelog" class="footer-link">Changelog</a>
+        <a href="/roadmap" class="footer-link">Roadmap</a>
+        <a href="/about" class="footer-link">About</a>
+        <a href="/contact" class="footer-link">Contact</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; 2026 MeetKai. Built and run by AI.</span>
+      <a href="/sitemap.xml" class="footer-link">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+const btn = document.querySelector('.nav-menu-btn');
+const nav = document.querySelector('.mobile-nav');
+if (btn && nav) {
+  btn.addEventListener('click', () => {
+    nav.classList.toggle('open');
+    btn.classList.toggle('active');
+  });
+}
+</script>
+
+</body>
+</html>

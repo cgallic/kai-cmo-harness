@@ -1,0 +1,50 @@
+skill: suppression-check
+version: 1.0
+harness: kai-harness
+format: suppression-check
+risk_tier: high
+seo_lint: false
+
+description: >
+  Checks whether a contact, account, or audience can be considered for outbound,
+  CRM, or ad-list action. This is a prerequisite gate, not permission to send.
+
+required_sources:
+  - target_records
+  - suppression_lists
+  - consent_or_lawful_basis
+  - crm_status
+source_policy:
+  load_before_writing: true
+  suppression_list_required: true
+  consent_basis_required: true
+  missing_sources_action: block_mutation
+
+inputs:
+  required:
+    - target_records: list[object]
+    - intended_action: string
+    - suppression_sources: list[string]
+  optional:
+    - crm_export: object
+    - bounced_or_unsubscribed_export: object
+    - account_cooldown_days: int
+
+outputs:
+  allowed_records: list[object]
+  blocked_records: list[object]
+  reasons: list[object]
+  approval_needed: bool
+
+quality_gates:
+  - all_records_checked == true
+  - blocked_records_not_exported_for_send == true
+  - consent_basis_present == true
+  - approval_needed == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - suppression_source_missing
+    - consent_basis_missing
+    - live_mutation_without_approval

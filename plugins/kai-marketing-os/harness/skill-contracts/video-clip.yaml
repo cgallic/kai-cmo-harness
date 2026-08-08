@@ -1,0 +1,72 @@
+skill: video-clip
+version: 1.0
+harness: kai-harness
+format: short-form-video-clip
+risk_tier: medium
+seo_lint: false
+
+description: >
+  Score-first short-form or long-form clip selection from transcripts, captions,
+  or uploaded video. Produces candidate clips, rationale, captions, and a
+  production queue without publishing unless approved.
+
+required_sources:
+  - source_video_or_transcript
+  - rights_or_usage_status
+  - brand_voice_profile
+source_policy:
+  load_before_writing: true
+  required_reference: harness/references/transcript-video-research-rules.md
+  transcript_claims_require_timestamp: true
+  usage_rights_required: true
+  no_private_paywalled_or_login_gated_sources: true
+  no_unofficial_transcript_extractors_without_rights_review: true
+  missing_sources_action: block_publishable_output
+
+inputs:
+  required:
+    - source_asset: string
+    - platform: string
+    - target_audience: string
+  optional:
+    - transcript: string
+    - clip_length_seconds: int
+    - captions_style: string
+    - exclusion_history: list[object]
+
+outputs:
+  clip_candidates: list[object]
+  caption_files: list[string]
+  production_notes: list[string]
+  publish_queue: list[object]
+
+quality_gates:
+  - rights_status_known == true
+  - each_candidate_has_timestamp == true
+  - transcript_source_allowed == true
+  - no_full_transcript_or_long_excerpt == true
+  - clip_score >= threshold
+  - duplicate_history_checked == true
+  - publish_requires_approval == true
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 18
+  criteria:
+    - name: hook_strength
+      question: "Does the clip create clear curiosity in the first seconds?"
+    - name: standalone_clarity
+      question: "Can the clip make sense without the full source?"
+    - name: proof_or_specificity
+      question: "Does the clip include concrete detail, proof, or a sharp example?"
+    - name: platform_fit
+      question: "Does the clip fit the target platform's viewing pattern?"
+    - name: compliance_risk
+      question: "Are claims, endorsements, and rights risks handled?"
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - rights_missing
+    - live_publish_without_approval
+    - claim_without_timestamp

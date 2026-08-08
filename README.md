@@ -469,4 +469,18 @@ AI marketing agent, AI CMO, Claude Code skills, Claude Code slash commands, Clau
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+**The plugin is MIT. The hosted service is not.**
+
+Everything `/plugin install` puts on your machine — all the skills, the whole
+knowledge base, the subagents, and the quality gates — is MIT. Use it
+commercially, fork it, ship it inside your own paid product. No strings.
+
+The rest of the repository (`app-meetkai/`, `daemon/`, `agent/`, `gateway/`,
+`kai/`, and the remaining `scripts/`) is under the Elastic License 2.0: read it,
+self-host it, run it for your own company, but don't resell it as a hosted
+service.
+
+Commits published before 2026-08-08 were MIT in their entirety, and stay MIT —
+relicensing isn't retroactive.
+
+See [`LICENSING.md`](LICENSING.md) for the path-by-path map.

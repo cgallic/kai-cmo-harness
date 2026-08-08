@@ -1,0 +1,139 @@
+skill: website-to-checkout
+version: 1.0
+harness: kai-harness
+format: commercial-workflow
+risk_tier: high
+auto_run_allowed: false
+
+description: >
+  Agent-owned commercial workflow that turns a sourced voice request into a
+  bounded offer, generated website, test checkout, proposal, booking, OLA
+  approval, delivery, independent provider verification, and ECO reconciliation.
+
+required_agents:
+  - agent.voice.sales_intake
+  - agent.commercial.orchestrator
+  - agent.offer.strategist
+  - agent.website.architect
+  - agent.website.content
+  - agent.website.component
+  - agent.website.page
+  - agent.website.qa
+  - agent.cloudflare.publisher
+  - agent.checkout
+  - agent.booking
+  - agent.proposal
+  - agent.ola.projector
+  - agent.effect.executor
+  - agent.delivery.call
+  - agent.delivery.message
+  - agent.verifier
+  - agent.eco.reconciler
+
+required_tools:
+  - kaicalls.voice_call
+  - brain.source_event
+  - website_builder.gen_content
+  - website_builder.gen_component
+  - website_builder.gen_page
+  - website_builder.qa
+  - cloudflare.deploy
+  - stripe.test_checkout
+  - calendar.booking
+  - proposal.render
+  - ola.authorize
+  - action_gateway.claim
+  - gmail.send_exact
+  - kaicalls.outbound_call
+  - provider.readback
+  - eco.reconcile
+
+inputs:
+  required:
+    - source_ref: string
+    - transcript_or_request: object
+    - customer: object
+    - offer_request: object
+    - website_request: object
+    - delivery_request: object
+  constraints:
+    - source_ref_must_be_durable: true
+    - recipient_must_be_explicit: true
+    - test_mode_required_for_demo: true
+
+outputs:
+  required:
+    - sales_request
+    - offer
+    - website_build
+    - checkout
+    - proposal
+    - booking
+    - approval_packet
+    - provider_receipts
+    - verification_bundle
+    - reconciliation
+
+handoff:
+  schema: kai.commercial.handoff.v1
+  required_fields:
+    - run_id
+    - work_id
+    - parent_work_id
+    - source_ref
+    - producer_agent_id
+    - consumer_agent_id
+    - artifact_uri
+    - artifact_sha256
+    - status
+    - approval_state
+    - expires_at
+  producer_consumer_must_differ: true
+  unknown_artifact_hash_blocks: true
+
+approval:
+  required_before:
+    - cloudflare_public_deploy
+    - proposal_send
+    - outbound_call
+    - booking_create
+  card_schema: a2h:authorize
+  exact_binding:
+    - offer_sha256
+    - website_build_sha256
+    - checkout_id
+    - proposal_sha256
+    - booking_details
+    - recipient
+    - effects
+    - expires_at
+
+provider_policy:
+  stripe:
+    mode: test_only_for_demo
+    live_keys_forbidden: true
+    independent_readback_required: true
+  cloudflare:
+    target_must_be_bound: true
+    artifact_hash_must_match: true
+    deployment_receipt_required: true
+  communication:
+    exact_approved_bytes_required: true
+    provider_receipt_required: true
+
+quality_gates:
+  - offer_terms_complete
+  - website_artifacts_hashed
+  - website_qa_passed
+  - checkout_bound_to_offer
+  - proposal_bound_to_site_and_checkout
+  - ola_packet_exact
+  - provider_receipts_present
+  - independent_readback_passed
+  - eco_reconciled
+
+failure_policy:
+  ambiguous_provider_outcome: hold_and_alert
+  artifact_hash_drift: reject_and_request_new_approval
+  missing_provider_target: blocked
+  missing_independent_verification: not_done

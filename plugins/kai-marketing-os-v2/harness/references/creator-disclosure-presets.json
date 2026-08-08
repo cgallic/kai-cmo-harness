@@ -1,0 +1,41 @@
+{
+  "version": "2026-05-16",
+  "presets": {
+    "us_ftc": {
+      "label_examples": [
+        "Ad",
+        "Sponsored",
+        "Paid partnership with {{brand}}"
+      ],
+      "requirements": [
+        "Disclose material connection clearly in-post",
+        "Use affiliate disclosure when affiliate links or codes are present",
+        "Do not hide disclosures behind truncation or profile-only placement"
+      ]
+    },
+    "uk_asa": {
+      "label_examples": [
+        "#ad",
+        "Ad",
+        "Advertisement"
+      ],
+      "requirements": [
+        "Ensure ad identification is immediately obvious",
+        "Place label upfront in visible post area",
+        "Keep disclosure clear in stories, reels, videos, and livestreams"
+      ]
+    },
+    "eu_ucpd": {
+      "label_examples": [
+        "Sponsored",
+        "Paid partnership",
+        "Advertisement"
+      ],
+      "requirements": [
+        "Make commercial intent transparent",
+        "Avoid hidden or ambiguous promotional framing",
+        "Align creator copy and landing claims with disclosure context"
+      ]
+    }
+  }
+}

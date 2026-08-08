@@ -1,0 +1,76 @@
+skill: campaign
+version: 2.1
+harness: kai-harness
+
+description: >
+  Multi-channel marketing campaign with coordinated assets across landing page,
+  email sequence, social posts, and ads. Ensures cross-channel message consistency.
+
+# Campaign identity — the join key across every campaign store.
+# campaign_planner mints "cmp-YYYYMMDD-<slug>" and writes it into
+# manifest.json; with --save it also auto-creates the campaign_tracker row
+# and records a campaign_plan artifact in the RuntimeStore. Thread the same
+# id into engine.generate(campaign_id=...) so content_log entries and 30-day
+# pending checks roll up per campaign; editorial calendar items carry it too.
+identity:
+  campaign_id: cmp-YYYYMMDD-<slug>  # minted by scripts/campaigns/campaign_planner.py (mint_campaign_id)
+  stores:
+    - campaigns/<dir>/manifest.json            # planner output
+    - data/campaigns/campaigns.db              # campaign_tracker (campaign_id column)
+    - data/runtime/artifacts/                  # campaign_plan artifact (data.campaign_id)
+    - data/calendar/editorial.jsonl            # editorial calendar items (campaign_id field)
+    - data/content_log.json                    # content_log entries + data/pending_checks/*.json
+
+inputs:
+  required:
+    - brief: object
+    - campaign_type: string  # launch | promotion | webinar | seasonal | awareness
+    - channels: list  # landing_page, email, social, ads, press
+  optional:
+    - budget: number
+    - timeline_weeks: int
+    - product_id: string
+    - campaign_id: string  # reuse an existing id; minted when omitted
+
+outputs:
+  campaign_id: string  # cmp-YYYYMMDD-<slug> (also in manifest.json)
+  landing_page_copy: markdown
+  email_sequence: list  # 5 emails
+  social_variants: list  # 3 per platform
+  ad_variants: list  # 3 per ad platform
+  content_calendar: markdown
+  press_release: markdown  # launch campaigns only
+
+quality_gates:
+  - four_us_total >= 12  # per individual asset
+  - cross_channel_consistency == true
+  - all_assets_complete == true
+  - banned_words_tier1 == 0
+
+word_count: varies by asset
+hooks:
+  pre_write: load_brief + load_campaign_orchestration + load_perception_engineering + load_email_lifecycle
+  post_write: run_quality_gate_per_asset
+  on_fail: revise_failing_assets
+  on_pass: post_campaign_for_approval
+  # content_log.log_entry(campaign_id=<campaign_id>) — url=None until a human
+  # actually publishes; mark_published() backfills the real URL.
+  on_approve: save_campaign_bundle + content_log
+  # No longer prose-only: campaign_planner --save auto-runs
+  # campaign_tracker.create_campaign with the minted campaign_id.
+  on_publish: create_campaign_tracker
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: campaign
+  floor: {E: 5, C: 3, O: 4}
+  execution_target: >
+    Every child work item reached its own floor; the campaign is open while any asset is unshipped.
+  outcome_metrics: [pipeline_generated, cac, campaign_roi]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

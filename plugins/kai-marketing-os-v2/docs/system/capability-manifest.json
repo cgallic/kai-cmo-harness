@@ -1,0 +1,730 @@
+{
+  "schema_version": 1,
+  "sources": {
+    "skills": "harness/skills/*/SKILL.md",
+    "v2_skills": "harness/skills-v2/*/SKILL.md",
+    "public_router_commands": "harness/skills/kai/SKILL.md",
+    "public_manifest_pages": "docs/skill-manifest/kai-*.md",
+    "knowledge": "repository filesystem counts using counting_rules"
+  },
+  "counting_rules": {
+    "skill_directories": "Immediate directories under harness/skills.",
+    "canonical_kai_skills": "Immediate kai-* directories under harness/skills with their SKILL.md as source.",
+    "v2_goal_oriented_skills": "Immediate directories under harness/skills-v2 with a SKILL.md; the goal-oriented rewrite of the same skill set.",
+    "public_router_commands": "Unique /kai-* rows in the PURSUE, PRODUCE, AUDIT, PLAN, ANALYZE, and LEARN tables.",
+    "public_manifest_pages": "kai-*.md files under docs/skill-manifest.",
+    "knowledge_markdown": "Markdown files under the named surface; recursive only for frameworks; AGENTS.md and CLAUDE.md excluded.",
+    "audience_persona_profiles": "Non-underscore Markdown files under knowledge/personas; AGENTS.md and CLAUDE.md excluded.",
+    "harness_references": "Immediate files under harness/references.",
+    "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
+  },
+  "counts": {
+    "skill_directories": 56,
+    "canonical_kai_skills": 54,
+    "v2_goal_oriented_skills": 56,
+    "public_router_commands": 49,
+    "public_manifest_pages": 47,
+    "undocumented_canonical_skills": 7,
+    "playbook_docs": 67,
+    "checklists": 37,
+    "framework_docs": 38,
+    "channel_guides": 31,
+    "audience_persona_profiles": 8,
+    "harness_references": 37,
+    "skill_contracts": 33
+  },
+  "coverage": {
+    "undocumented_canonical_skills": [
+      "kai-brand-pulse",
+      "kai-content-batching",
+      "kai-funnel-audit",
+      "kai-hook-bench",
+      "kai-offer-builder",
+      "kai-proof-builder",
+      "kai-retro"
+    ],
+    "orphan_manifest_pages": [],
+    "unresolved_router_commands": []
+  },
+  "router_commands": [
+    {
+      "name": "kai-goal",
+      "category": "pursue",
+      "description": "Take a business outcome, decompose it into work items with ECO floors, execute across context windows, and stop only on a gate verdict — SHIPPED or CLOSED"
+    },
+    {
+      "name": "kai-write",
+      "category": "produce",
+      "description": "Write one piece of content (any format)"
+    },
+    {
+      "name": "kai-landing-page",
+      "category": "produce",
+      "description": "Complete landing page with perception engineering"
+    },
+    {
+      "name": "kai-email-system",
+      "category": "produce",
+      "description": "All lifecycle + transactional emails (Loops-ready)"
+    },
+    {
+      "name": "kai-ad-campaign",
+      "category": "produce",
+      "description": "Full paid campaign across platforms + funnel stages"
+    },
+    {
+      "name": "kai-content-calendar",
+      "category": "produce",
+      "description": "Month/quarter of blog + SEO content"
+    },
+    {
+      "name": "kai-social",
+      "category": "produce",
+      "description": "Batch social posts across IG, X, TikTok, LinkedIn, YouTube"
+    },
+    {
+      "name": "kai-video",
+      "category": "produce",
+      "description": "Video scripts + clipping plans for short/long-form"
+    },
+    {
+      "name": "kai-cold-outreach",
+      "category": "produce",
+      "description": "Cold email outreach sequences"
+    },
+    {
+      "name": "kai-sdr-operator",
+      "category": "produce",
+      "description": "SDR operator package for lead sources, scoring, outreach handoff, and reply triage"
+    },
+    {
+      "name": "kai-sdr-reply-triage",
+      "category": "produce",
+      "description": "Reply classification, suppression handling, CRM handoff, and next actions"
+    },
+    {
+      "name": "kai-sales-meeting-prep",
+      "category": "produce",
+      "description": "Meeting briefs, discovery plans, follow-up drafts, and sales handoff notes"
+    },
+    {
+      "name": "kai-reddit-listen",
+      "category": "produce",
+      "description": "Monitor subreddits + draft replies to Discord (profile-driven)"
+    },
+    {
+      "name": "kai-newsletter",
+      "category": "produce",
+      "description": "Newsletter editions — content, subject lines, scheduling"
+    },
+    {
+      "name": "kai-case-study",
+      "category": "produce",
+      "description": "Customer case studies from interview/data"
+    },
+    {
+      "name": "kai-client-dashboard",
+      "category": "produce",
+      "description": "White-labeled, client-facing intelligence dashboard — brand shell, page set, retention plays"
+    },
+    {
+      "name": "kai-product-maker",
+      "category": "produce",
+      "description": "Ship a Gumroad-ready digital product — ebook, card deck, flipbook"
+    },
+    {
+      "name": "kai-repurpose",
+      "category": "produce",
+      "description": "1 pillar → 15-25 assets across all channels"
+    },
+    {
+      "name": "kai-content-batching",
+      "category": "produce",
+      "description": "Pillars → gated 30-day multi-platform content batch"
+    },
+    {
+      "name": "kai-offer-builder",
+      "category": "produce",
+      "description": "Grand Slam Offer construction scored on the Value Equation"
+    },
+    {
+      "name": "kai-hook-bench",
+      "category": "produce",
+      "description": "Ranked, provenance-tagged hook bank per persona and channel"
+    },
+    {
+      "name": "kai-proof-builder",
+      "category": "produce",
+      "description": "Provenance-clean proof library — testimonials, stats, case proof"
+    },
+    {
+      "name": "kai-launch",
+      "category": "produce",
+      "description": "Full product launch (orchestrates everything above)"
+    },
+    {
+      "name": "kai-retarget",
+      "category": "produce",
+      "description": "Retargeting/remarketing campaigns"
+    },
+    {
+      "name": "kai-influencer",
+      "category": "produce",
+      "description": "Influencer/creator marketing campaigns"
+    },
+    {
+      "name": "kai-webinar",
+      "category": "produce",
+      "description": "Webinar/event marketing + follow-up"
+    },
+    {
+      "name": "kai-podcast",
+      "category": "produce",
+      "description": "Podcast launch or guest strategy"
+    },
+    {
+      "name": "kai-abm",
+      "category": "produce",
+      "description": "Account-based marketing for enterprise"
+    },
+    {
+      "name": "kai-partnership",
+      "category": "produce",
+      "description": "Co-marketing / partnership campaigns"
+    },
+    {
+      "name": "kai-gate",
+      "category": "audit",
+      "description": "Quality gate — Four U's, banned words, SEO lint"
+    },
+    {
+      "name": "kai-audit",
+      "category": "audit",
+      "description": "Full marketing audit — all checklists at once"
+    },
+    {
+      "name": "kai-weekly-audit",
+      "category": "audit",
+      "description": "Weekly marketing audit - 7-day scorecard, urgent flags, and actions"
+    },
+    {
+      "name": "kai-monthly-audit",
+      "category": "audit",
+      "description": "Monthly marketing audit - 30-day executive review and next-month plan"
+    },
+    {
+      "name": "kai-seo-audit",
+      "category": "audit",
+      "description": "Technical SEO audit with prioritized fixes"
+    },
+    {
+      "name": "kai-cro",
+      "category": "audit",
+      "description": "Conversion rate audit — 5-layer optimization stack"
+    },
+    {
+      "name": "kai-funnel-audit",
+      "category": "audit",
+      "description": "Full-funnel awareness + lead-capture audit on collected data"
+    },
+    {
+      "name": "kai-html-presentation",
+      "category": "audit",
+      "description": "HTML presentation builder for audit and report delivery"
+    },
+    {
+      "name": "kai-data-dashboard",
+      "category": "audit",
+      "description": "Dashboard-ready specs or static dashboards from sourced Kai data"
+    },
+    {
+      "name": "kai-brief",
+      "category": "plan",
+      "description": "Create a content brief before writing"
+    },
+    {
+      "name": "kai-growth-plan",
+      "category": "plan",
+      "description": "Stage-appropriate marketing plan ($0 → $100K+ MRR)"
+    },
+    {
+      "name": "kai-growth-hacker",
+      "category": "plan",
+      "description": "First-growth-hire distribution OS across B2B and B2C channels"
+    },
+    {
+      "name": "kai-brand",
+      "category": "plan",
+      "description": "Brand positioning + messaging framework"
+    },
+    {
+      "name": "kai-budget",
+      "category": "plan",
+      "description": "Marketing budget planning + forecasting"
+    },
+    {
+      "name": "kai-retention",
+      "category": "plan",
+      "description": "Customer retention system design"
+    },
+    {
+      "name": "kai-competitors",
+      "category": "analyze",
+      "description": "Competitive teardown + sales battlecards"
+    },
+    {
+      "name": "kai-brand-pulse",
+      "category": "analyze",
+      "description": "Cited public brand intelligence across web, news, social, Reddit, and review sites"
+    },
+    {
+      "name": "kai-surround-sound",
+      "category": "analyze",
+      "description": "AI-search visibility, source-quality, and agent-readiness strategy"
+    },
+    {
+      "name": "kai-analytics",
+      "category": "analyze",
+      "description": "Analytics + attribution setup"
+    },
+    {
+      "name": "kai-retro",
+      "category": "learn",
+      "description": "Learning retrospective — mine gate failures, diagnose losers, promote lessons into enforced checks"
+    }
+  ],
+  "skills": [
+    {
+      "name": "kai-abm",
+      "description": "Plan and execute account-based marketing campaigns for enterprise targets — account selection, personalized outreach, multi-channel touch sequences, and deal acceleration. Use when \"ABM\", \"account-based marketing\", \"enterprise marketing\", \"target accounts\", \"named accounts\", \"enterprise outreach\", \"key accounts\", or any request to build personalized campaigns for specific companies.",
+      "source": "harness/skills/kai-abm/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-abm.md"
+    },
+    {
+      "name": "kai-ad-campaign",
+      "description": "Plan, evaluate, and produce paid ad campaigns across platforms (Meta, Google, LinkedIn, TikTok, Microsoft, Pinterest, Snapchat, Amazon, X). Evaluate existing ads, map funnel stages (TOF/MOF/BOF), produce ad variants per platform with policy compliance, output ready-to-upload copy. Use when \"ad campaign\", \"create ads\", \"run ads for\", \"paid campaign\", \"media plan\", \"launch ads\", \"Meta campaign\", \"Google Ads campaign\", \"multi-platform ads\", \"evaluate my ads\", \"how are my ads doing\", \"audit my ads\", \"ad performance\", \"analyze ads\", or any request to evaluate existing or create new advertising.",
+      "source": "harness/skills/kai-ad-campaign/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-ad-campaign.md"
+    },
+    {
+      "name": "kai-analytics",
+      "description": "Analytics and attribution setup — tracking plan, UTM conventions, dashboard design, and attribution model selection. Use when \"analytics setup\", \"attribution\", \"tracking plan\", \"UTM\", \"marketing analytics\", \"dashboard setup\", \"measurement strategy\", \"how do I track\", \"which metrics\", or any request to set up or improve marketing measurement and attribution.",
+      "source": "harness/skills/kai-analytics/SKILL.md",
+      "public_router_command": true,
+      "router_category": "analyze",
+      "manifest_doc": "docs/skill-manifest/kai-analytics.md"
+    },
+    {
+      "name": "kai-audit",
+      "description": "Full marketing audit — runs all relevant checklists against your product, site, and marketing in one go. Covers SEO, content, email, ads, social media, CRO, landing pages, technical SEO, and creative production. Produces a \"state of your marketing\" report with health scores per area and a prioritized fix list. Use when \"marketing audit\", \"full audit\", \"audit everything\", \"marketing health check\", \"what's broken\", \"state of marketing\", or any request to comprehensively assess marketing across all channels.",
+      "source": "harness/skills/kai-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-audit.md"
+    },
+    {
+      "name": "kai-brand",
+      "description": "Brand positioning workshop — define messaging framework, voice/tone, differentiation strategy, and taglines. Use when \"brand positioning\", \"messaging framework\", \"brand voice\", \"how should we position ourselves\", \"differentiation\", \"tagline\", or any request to define or refine brand identity and messaging.",
+      "source": "harness/skills/kai-brand/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-brand.md"
+    },
+    {
+      "name": "kai-brand-pulse",
+      "description": "Multi-platform brand intelligence pulse - collect cited public reputation evidence across web, news, YouTube, X, LinkedIn, Reddit, and review sites, then turn it into objection mining, content angles, competitor positioning, and surround-sound actions. Use when \"brand monitor\", \"brand pulse\", \"what are people saying about us\", \"multi-platform reputation\", \"brand intelligence\", \"weekly brand monitoring\", \"objection mining\", or \"public reputation scan\".",
+      "source": "harness/skills/kai-brand-pulse/SKILL.md",
+      "public_router_command": true,
+      "router_category": "analyze",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-brief",
+      "description": "Create a structured content brief using the Kai CMO Harness brief schema. Selects persona, defines angle, sets quality targets. Use when \"create a brief\", \"content brief\", \"plan this content\", \"brief for [topic]\", \"what persona should I use\", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.",
+      "source": "harness/skills/kai-brief/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-brief.md"
+    },
+    {
+      "name": "kai-budget",
+      "description": "Marketing budget planning and forecasting — channel allocation, CAC targets, ROI projections, and spend optimization. Use when \"marketing budget\", \"budget planning\", \"channel allocation\", \"marketing spend\", \"CAC forecast\", \"budget forecast\", \"how much should I spend\", \"allocate budget\", or any request to plan, forecast, or optimize marketing spend.",
+      "source": "harness/skills/kai-budget/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-budget.md"
+    },
+    {
+      "name": "kai-case-study",
+      "description": "Produce customer case studies from interviews or data — Problem, Solution, Results structure with perception engineering and quality gates. Use when \"case study\", \"customer story\", \"testimonial\", \"success story\", \"client results\", or any request to document a customer win.",
+      "source": "harness/skills/kai-case-study/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-case-study.md"
+    },
+    {
+      "name": "kai-client-dashboard",
+      "description": "Build a white-labeled, client-facing intelligence dashboard — a live, branded reporting surface an agency stands up per client instead of sending static reports. Covers brand auto-extraction from the client's URL, a three-tier build (Basic/Standard/Advanced), an onboarding feature wizard, a 10-page inventory, public-access tradeoffs, and the retention plays that make the dashboard sticky. Use when \"client dashboard\", \"client intelligence dashboard\", \"white label dashboard\", \"client portal\", \"branded dashboard for my client\", \"agency dashboard\", \"build my client a dashboard\", \"give the client a live view instead of a report\", or any request to stand up a durable, client-facing reporting surface.",
+      "source": "harness/skills/kai-client-dashboard/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-client-dashboard.md"
+    },
+    {
+      "name": "kai-cold-outreach",
+      "description": "Build a complete cold email outreach system — ICP definition, sequence architecture, personalization strategy, and batch-produced email sequences with CAN-SPAM/deliverability compliance. Use when \"cold outreach\", \"cold email sequence\", \"outbound campaign\", \"prospecting emails\", \"sales outreach\", \"build outreach sequence\", or any request to create systematic cold email campaigns for lead generation.",
+      "source": "harness/skills/kai-cold-outreach/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-cold-outreach.md"
+    },
+    {
+      "name": "kai-competitors",
+      "description": "Competitive intelligence teardown — 5-layer analysis (signals, product, marketing, positioning, strategy) plus sales battlecard. Use when \"competitor analysis\", \"competitive teardown\", \"who are our competitors\", \"battlecard\", \"competitive intel\", \"compare us to X\", \"what is X doing\", or any request to research, analyze, or position against competitors.",
+      "source": "harness/skills/kai-competitors/SKILL.md",
+      "public_router_command": true,
+      "router_category": "analyze",
+      "manifest_doc": "docs/skill-manifest/kai-competitors.md"
+    },
+    {
+      "name": "kai-content-batching",
+      "description": "Turn a brand's positioning into a 30-day, multi-platform content batch — 3-7 pillars, subtopic matrix mapped to funnel stage and persona, pillar pieces plus derivative fan-out, proof elements in at least half the slots, all registered in the editorial calendar store and quality-gated. Use when \"content batch\", \"batch my content\", \"30 days of content\", \"month of content\", \"content batching machine\", \"content pillars\", \"fill the content calendar\", \"plan a month of posts\", or any request to produce a full month of multi-platform content in one run.",
+      "source": "harness/skills/kai-content-batching/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-content-calendar",
+      "description": "Plan and produce a content calendar — a month (or quarter) of blog posts, LinkedIn articles, and SEO content mapped to business goals, personas, and keywords. Generates briefs for each piece, optionally batch-produces all content with quality gates. Use when \"content calendar\", \"plan blog content\", \"monthly content\", \"quarterly content plan\", \"what should we publish\", \"content strategy\", \"editorial calendar\", or any request to plan multiple pieces of content over time.",
+      "source": "harness/skills/kai-content-calendar/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-content-calendar.md"
+    },
+    {
+      "name": "kai-cro",
+      "description": "Conversion rate optimization audit — analyze a landing page, signup flow, or checkout funnel using the 5-layer CRO stack (technical performance, traffic quality, offer/pricing, design/layout, copy/messaging). Produces prioritized fix list with expected impact. Use when \"CRO audit\", \"conversion audit\", \"why isn't this converting\", \"improve conversion rate\", \"landing page not converting\", \"optimize funnel\", \"signup flow audit\", or any request to diagnose and fix conversion problems.",
+      "source": "harness/skills/kai-cro/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-cro.md"
+    },
+    {
+      "name": "kai-daily-ad-review",
+      "description": "Daily ad performance check-in across platforms. Pulls live metrics from Meta, Google, and LinkedIn via deterministic scripts, compares against benchmarks and previous period, flags overspend/underperformers/policy issues, and outputs a quick daily summary with action items. Use when \"daily ad review\", \"how are my ads doing today\", \"ad check-in\", \"morning ad report\", \"daily ad summary\", \"check ad performance\", \"ad dashboard\", \"daily ads\", or any request for a recurring or quick-glance ad performance review.",
+      "source": "harness/skills/kai-daily-ad-review/SKILL.md",
+      "public_router_command": false,
+      "router_category": null,
+      "manifest_doc": "docs/skill-manifest/kai-daily-ad-review.md"
+    },
+    {
+      "name": "kai-data-dashboard",
+      "description": "Convert Kai workflow data, CSV exports, audit folders, SDR package outputs, and marketing reports into dashboard-ready specs or lightweight static dashboards. Use when \"data dashboard\", \"operator dashboard\", \"operator room\", \"HTML operators room\", \"sales dashboard\", \"SDR dashboard\", \"turn this data into a dashboard\", \"dashboard handoff\", \"visualize Kai data\", or any request to package sourced marketing, sales, audit, or SDR data for a dashboard or presentation surface.",
+      "source": "harness/skills/kai-data-dashboard/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-data-dashboard.md"
+    },
+    {
+      "name": "kai-email-system",
+      "description": "Plan and batch-produce an entire email system for a product. Maps every lifecycle touchpoint (onboarding, activation, conversion, retention, transactional, win-back), generates all emails with quality gates, outputs Loops-ready copy. Use when \"create all emails\", \"email system\", \"build email sequences\", \"lifecycle emails\", \"onboarding sequence\", \"set up transactional emails\", \"plan all the emails for [product]\", or any request to systematically produce a complete set of emails for a platform.",
+      "source": "harness/skills/kai-email-system/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-email-system.md"
+    },
+    {
+      "name": "kai-funnel-audit",
+      "description": "Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the KaiCalls Fit Rule. Use when \"funnel audit\", \"audit my funnel\", \"why is my funnel leaking\", \"top of funnel isn't converting\", \"audit our lead magnets\", \"opt-in audit\", \"awareness to lead audit\", \"where are we losing people\", \"lead capture audit\", or any request to diagnose the full awareness-to-lead flow rather than one page.",
+      "source": "harness/skills/kai-funnel-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-gate",
+      "description": "Run Kai CMO Harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when \"score this\", \"quality check\", \"run quality gates\", \"check this content\", \"four u's score\", \"banned word check\", \"SEO lint\", or any request to validate content quality before publishing.",
+      "source": "harness/skills/kai-gate/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-gate.md"
+    },
+    {
+      "name": "kai-goal",
+      "description": "Run a marketing objective to completion over hours, days, or weeks — not a single deliverable. Takes a business outcome (\"40 qualified demos a month from organic by Q4\", \"cut blended CAC below $90\", \"launch the product in September\"), decomposes it into work items with declared ECO floors, executes them across context windows with resumable state, and stops only when an independent gate returns SHIPPED or CLOSED. Use when the request is an outcome rather than an artifact, when work must continue in the background or across sessions, or when the user says \"goal\", \"run this until\", \"keep working on\", \"autonomous\", \"long-running\", \"over the next month\", or \"get us to <number>\".",
+      "source": "harness/skills/kai-goal/SKILL.md",
+      "public_router_command": true,
+      "router_category": "pursue",
+      "manifest_doc": "docs/skill-manifest/kai-goal.md"
+    },
+    {
+      "name": "kai-growth-hacker",
+      "description": "Build an exhaustive first-growth-hire distribution operating system across B2B and B2C channels: LinkedIn, events, AI outbound, AEO, blogs, long-form writing, YouTube, webinars, X, influencers, AI UGC, organic TikTok, paid social, sponsorships, partnerships, lifecycle, referral, and community. Use when \"growth hacker\", \"first growth hire\", \"distribution hire\", \"cover every channel\", \"channel hacking\", \"0 to ARR growth system\", \"growth operator\", \"growth hacker OS\", or any request to fan out channel operators and plug the result into Kai workflows.",
+      "source": "harness/skills/kai-growth-hacker/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-growth-hacker.md"
+    },
+    {
+      "name": "kai-growth-plan",
+      "description": "Generate a stage-appropriate marketing plan based on your company's MRR/stage. Uses the marketing-by-stage playbook to tell you exactly what to do (and what NOT to do) at pre-launch, early ($0-10K MRR), growth ($10-100K MRR), or scale ($100K+ MRR). Use when \"what should I do for marketing\", \"growth plan\", \"marketing plan\", \"I just raised a round\", \"marketing strategy\", \"what's the right marketing for my stage\", \"GTM strategy\", or any request for a stage-appropriate marketing roadmap.",
+      "source": "harness/skills/kai-growth-plan/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-growth-plan.md"
+    },
+    {
+      "name": "kai-hook-bench",
+      "description": "Generate, rank, and gate a reusable hook bank — sourced pains × named hook formula families, scored on clarity/specificity/curiosity/proof-backing, gated at the 10/16 ad threshold, delivered in 3 lengths with per-hook provenance and downstream routing. Use when \"hook bank\", \"generate hooks\", \"hook generator\", \"write hooks for\", \"ad hooks\", \"scroll stoppers\", \"opening lines\", \"hook ideas\", \"first 3 seconds\", \"hook matrix\", \"I need 50 hooks\", or any request to batch-produce attention-openers for ads, social, or video.",
+      "source": "harness/skills/kai-hook-bench/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-html-presentation",
+      "description": "Client-ready HTML presentation builder for Kai audit and report folders. Converts weekly audits, monthly audits, marketing reports, scorecards, findings, data-source notes, and action plans into a polished single-file HTML deck with sourced metrics, executive slides, speaker notes, and delivery-ready styling. Use when \"HTML presentation\", \"HTML deck\", \"client-ready audit deck\", \"turn this audit into slides\", \"present the weekly audit\", \"present the monthly audit\", or any request to deliver Kai reports as HTML slides.",
+      "source": "harness/skills/kai-html-presentation/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-html-presentation.md"
+    },
+    {
+      "name": "kai-influencer",
+      "description": "Plan influencer marketing campaigns — find creators, write briefs, manage partnerships, and measure ROI. Use when \"influencer\", \"influencer marketing\", \"creator campaign\", \"UGC campaign\", \"brand ambassador\", \"creator partnership\", or any request to work with influencers or content creators.",
+      "source": "harness/skills/kai-influencer/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-influencer.md"
+    },
+    {
+      "name": "kai-landing-page",
+      "description": "Produce complete landing page copy using perception engineering and conversion frameworks. Generates hero section, value props, social proof blocks, objection handlers, and CTA — all scored against quality gates. Use when \"landing page\", \"sales page\", \"LP copy\", \"write a landing page\", \"hero section\", \"conversion page\", \"signup page\", or any request to produce persuasive page copy that converts visitors.",
+      "source": "harness/skills/kai-landing-page/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-landing-page.md"
+    },
+    {
+      "name": "kai-launch",
+      "description": "Plan and produce a complete product launch marketing package — landing page copy, email sequences, ad campaigns, press release, social posts, and launch timeline. Orchestrates all other kai skills into a coordinated launch. Use when \"product launch\", \"launch campaign\", \"go-to-market\", \"GTM plan\", \"launch marketing\", \"we're launching\", \"prepare launch materials\", or any request to coordinate marketing for a new product, feature, or major update.",
+      "source": "harness/skills/kai-launch/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-launch.md"
+    },
+    {
+      "name": "kai-monthly-audit",
+      "description": "Monthly marketing audit and executive review. Pulls the last 30 days of source-backed marketing, analytics, SEO, CRO, content, paid media, lifecycle, reputation, and pipeline data; compares it to the previous period; summarizes strategic learning; and produces an executive report plus next-month plan. Use when \"monthly audit\", \"monthly marketing review\", \"monthly report\", \"executive marketing review\", \"board-ready marketing report\", \"month-end audit\", or any request for a 30-day marketing audit.",
+      "source": "harness/skills/kai-monthly-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-monthly-audit.md"
+    },
+    {
+      "name": "kai-newsletter",
+      "description": "Plan and produce newsletter editions — content selection, subject lines, scheduling, and production with quality gates. Use when \"newsletter\", \"plan newsletter\", \"newsletter content\", \"email newsletter\", \"weekly digest\", or any request to create or manage a newsletter.",
+      "source": "harness/skills/kai-newsletter/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-newsletter.md"
+    },
+    {
+      "name": "kai-offer-builder",
+      "description": "Construct and score Grand Slam Offers using the Value Equation — sourced pain mining, dream outcome articulation, problems→solutions→trim-and-stack offer construction, guarantee/scarcity/bonus design, 1-10 scoring on the four Value Equation variables, pricing sanity pass, and compliance check. Use when \"build an offer\", \"grand slam offer\", \"value equation\", \"offer stack\", \"make this offer irresistible\", \"design a guarantee\", \"hormozi offer\", \"why isn't my offer selling\", \"pricing and packaging for my offer\", or any request to design, score, or rework a commercial offer.",
+      "source": "harness/skills/kai-offer-builder/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-partnership",
+      "description": "Partnership and co-marketing campaign planner — partner selection criteria, joint content strategy, cross-promotion plans, and co-branded assets. Use when \"partnership\", \"co-marketing\", \"partner program\", \"cross-promotion\", \"joint venture\", \"co-branded\", \"partner campaign\", or any request to plan or execute a marketing partnership.",
+      "source": "harness/skills/kai-partnership/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-partnership.md"
+    },
+    {
+      "name": "kai-podcast",
+      "description": "Launch a podcast or plan podcast guest strategy — format, content planning, episode production, guest outreach, and distribution. Use when \"podcast\", \"start a podcast\", \"podcast marketing\", \"podcast guest\", \"podcast strategy\", \"be a podcast guest\", \"launch a show\", or any request related to podcast creation or guest appearances.",
+      "source": "harness/skills/kai-podcast/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-podcast.md"
+    },
+    {
+      "name": "kai-product-maker",
+      "description": "Build a Gumroad-ready digital product from scratch — ebook, card deck, playbook, Notion template, or flipbook. Walks from concept → content outline → design brief → per-item markdown → images → multi-format build (PDF, HTML flipbook, Notion, card deck) → Gumroad sales page + email blast + launch assets. Use when \"make a digital product\", \"build an ebook\", \"create a playbook\", \"card deck\", \"notion template product\", \"gumroad product\", \"make a pdf to sell\", or any request to ship a sellable information product.",
+      "source": "harness/skills/kai-product-maker/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-product-maker.md"
+    },
+    {
+      "name": "kai-proof-builder",
+      "description": "Build and maintain a provenance-clean proof library — inventory every real proof asset (analytics, reviews, permitted testimonials, case studies, press, certifications), categorize it, rewrite each cleared item in 3 lengths, fuse top assets with narrative, and gate everything through FTC testimonial rules before it can ship. Use when \"proof library\", \"gather our proof\", \"authority builder\", \"collect testimonials\", \"social proof assets\", \"proof points for the sales page\", \"what results can we claim\", or any request to assemble evidence for marketing claims. NEVER invents proof — missing proof is reported as a gap.",
+      "source": "harness/skills/kai-proof-builder/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-reddit-listen",
+      "description": "Monitor Reddit for conversation-fit opportunities — watches a list of subreddits, keyword-filters new posts, runs an LLM eval in your voice (with identity guardrails), and drops drafted replies into Discord. Use when \"reddit monitor\", \"reddit listener\", \"reddit outreach\", \"watch subreddits\", \"find reddit opportunities\", \"listen on reddit\", \"community listening\", or any request to automate finding posts you should reply to on Reddit.",
+      "source": "harness/skills/kai-reddit-listen/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-reddit-listen.md"
+    },
+    {
+      "name": "kai-repurpose",
+      "description": "Take one pillar content piece and produce 15-25 derivative assets across platforms — social posts, email, LinkedIn article, video scripts, newsletter section, infographic brief, and more. The ultimate content multiplier. Use when \"repurpose this\", \"turn this into\", \"make social posts from this blog\", \"content repurposing\", \"1 to many\", \"atomize this content\", \"extract posts from\", or any request to derive multiple pieces from one source.",
+      "source": "harness/skills/kai-repurpose/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-repurpose.md"
+    },
+    {
+      "name": "kai-retarget",
+      "description": "Design retargeting and remarketing campaign architecture across platforms — audience segmentation, creative strategy, frequency caps, and platform-specific setup with ad policy compliance. Use when \"retargeting\", \"remarketing\", \"retarget\", \"re-engage visitors\", \"abandoned cart\", \"pixel setup\", or any request to bring back visitors who didn't convert.",
+      "source": "harness/skills/kai-retarget/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-retarget.md"
+    },
+    {
+      "name": "kai-retention",
+      "description": "Customer retention system — churn analysis, retention tactics, loyalty programs, and engagement scoring. Use when \"retention\", \"reduce churn\", \"keep customers\", \"loyalty program\", \"customer retention\", \"churn prevention\", \"churn analysis\", \"engagement scoring\", \"win-back\", \"customer lifetime value\", or any request to analyze, prevent, or reduce customer churn.",
+      "source": "harness/skills/kai-retention/SKILL.md",
+      "public_router_command": true,
+      "router_category": "plan",
+      "manifest_doc": "docs/skill-manifest/kai-retention.md"
+    },
+    {
+      "name": "kai-retro",
+      "description": "Run a learning retrospective on the Kai harness. Mines gate-failure logs and 30-day performance results into lessons, triages candidate lessons (promote/keep/retire), and graduates repeated lessons into enforced gate checks with golden corpus cases. Use when \"retro\", \"what have we learned\", \"triage lessons\", \"promote lessons\", \"why does this keep failing\", \"harness retrospective\", or monthly / after any heavy content sprint.",
+      "source": "harness/skills/kai-retro/SKILL.md",
+      "public_router_command": true,
+      "router_category": "learn",
+      "manifest_doc": null
+    },
+    {
+      "name": "kai-sales-meeting-prep",
+      "description": ">",
+      "source": "harness/skills/kai-sales-meeting-prep/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-sales-meeting-prep.md"
+    },
+    {
+      "name": "kai-sdr-operator",
+      "description": ">",
+      "source": "harness/skills/kai-sdr-operator/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-sdr-operator.md"
+    },
+    {
+      "name": "kai-sdr-reply-triage",
+      "description": ">",
+      "source": "harness/skills/kai-sdr-reply-triage/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-sdr-reply-triage.md"
+    },
+    {
+      "name": "kai-seo-audit",
+      "description": "One-click technical SEO audit of a website. Runs the full technical SEO audit SOP — crawlability, indexation, Core Web Vitals, schema markup, internal linking, mobile UX, and content quality. Outputs a prioritized fix list. Use when \"SEO audit\", \"technical SEO\", \"site audit\", \"crawl issues\", \"indexation problems\", \"why aren't we ranking\", \"SEO health check\", or any request to diagnose SEO issues on a website.",
+      "source": "harness/skills/kai-seo-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-seo-audit.md"
+    },
+    {
+      "name": "kai-social",
+      "description": "Plan and batch-produce social media content across platforms (Instagram, X/Twitter, TikTok, LinkedIn, YouTube). Generates a week or month of posts with platform-specific formatting, hashtags, hooks, and posting schedule. Use when \"social media posts\", \"social calendar\", \"plan social content\", \"Instagram posts\", \"tweets\", \"LinkedIn posts\", \"TikTok ideas\", \"social media strategy\", \"batch social\", or any request to systematically produce social media content.",
+      "source": "harness/skills/kai-social/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-social.md"
+    },
+    {
+      "name": "kai-start",
+      "description": "First-run onboarding for Kai CMO Harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, \"get started with Kai\", \"set up Kai\", \"first time using Kai\", or when MARKETING.md doesn't exist yet.",
+      "source": "harness/skills/kai-start/SKILL.md",
+      "public_router_command": false,
+      "router_category": null,
+      "manifest_doc": "docs/skill-manifest/kai-start.md"
+    },
+    {
+      "name": "kai-surround-sound",
+      "description": "LLM brand manipulation — build a consensus web so ChatGPT, Claude, Perplexity, and Google AI Overviews mention your brand when people ask about your category. Uses surround sound methodology, entity SEO, and LLM citation science. Use when \"get mentioned in AI\", \"LLM brand presence\", \"surround sound\", \"AI search visibility\", \"Perplexity ranking\", \"ChatGPT mentions\", \"AI Overview inclusion\", \"entity authority\", \"brand mentions in AI\", or any request to influence how AI systems perceive and recommend your brand.",
+      "source": "harness/skills/kai-surround-sound/SKILL.md",
+      "public_router_command": true,
+      "router_category": "analyze",
+      "manifest_doc": "docs/skill-manifest/kai-surround-sound.md"
+    },
+    {
+      "name": "kai-taste",
+      "description": "Audit or design generative AI interfaces against three diagnostic pillars (deterministic-stochastic balance, interaction density, visual cohesion). Treats taste as a measurable control system, not subjective preference. Use when: 'taste audit', 'score this UI', 'design quality', 'interaction density', 'visual cohesion', 'refiner layer', 'correction cost', 'why does this feel off', 'polish this', 'design review', or building any user-facing AI product.",
+      "source": "harness/skills/kai-taste/SKILL.md",
+      "public_router_command": false,
+      "router_category": null,
+      "manifest_doc": "docs/skill-manifest/kai-taste.md"
+    },
+    {
+      "name": "kai-topical-map",
+      "description": "Build an AEO-first topical map optimized for AI search citation — entity clusters, query fan-out coverage, information gain scoring, and multi-platform distribution. Produces entity map, content node architecture, schema blueprint, and 90-day publishing calendar. Use when \"topical map\", \"content architecture\", \"site structure\", \"topic clusters\", \"pillar content plan\", \"AEO map\", \"AI search architecture\", \"entity map\", \"what content should we build\", or any request to plan a site's topical structure for AI search visibility.",
+      "source": "harness/skills/kai-topical-map/SKILL.md",
+      "public_router_command": false,
+      "router_category": null,
+      "manifest_doc": "docs/skill-manifest/kai-topical-map.md"
+    },
+    {
+      "name": "kai-video",
+      "description": "Produce video scripts and clipping plans for TikTok, YouTube Shorts, Instagram Reels, and long-form YouTube. Generates hook-first scripts optimized for each platform's algorithm, plus a clipping plan to extract short-form from long-form content. Use when \"video script\", \"TikTok script\", \"YouTube script\", \"Reels script\", \"Shorts script\", \"video content\", \"clipping plan\", \"video ideas\", or any request to create video content for social platforms.",
+      "source": "harness/skills/kai-video/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-video.md"
+    },
+    {
+      "name": "kai-video-production",
+      "description": "Full-stack video production from script to rendered video. Combines script generation (optimized for TikTok/YouTube/Reels) with AI-powered video rendering using Remotion, AI voiceovers (Qwen3-TTS/ElevenLabs), music generation (ACE-Step), and browser-based demo recording. Multi-session project tracking with automatic intent reconciliation. Use when \"create video\", \"produce video\", \"demo video\", \"product video\", or any request to generate AND render video content.",
+      "source": "harness/skills/kai-video-production/SKILL.md",
+      "public_router_command": false,
+      "router_category": null,
+      "manifest_doc": "docs/skill-manifest/kai-video-production.md"
+    },
+    {
+      "name": "kai-webinar",
+      "description": "Plan webinar and event marketing — topic selection, promotion strategy, content production, registration flow, and post-event follow-up sequences. Use when \"webinar\", \"event marketing\", \"virtual event\", \"live event\", \"workshop\", \"online event\", or any request to plan, promote, or produce a webinar or marketing event.",
+      "source": "harness/skills/kai-webinar/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-webinar.md"
+    },
+    {
+      "name": "kai-weekly-audit",
+      "description": "Weekly marketing audit and operating review. Pulls the last 7 days of source-backed marketing, analytics, content, paid media, lead, watcher, and audit data; compares it to the prior 7 days; flags urgent issues; and produces a weekly scorecard plus action list. Use when \"weekly audit\", \"weekly marketing review\", \"weekly check-in\", \"weekly scorecard\", \"what changed this week\", \"Friday marketing review\", or any request for a recurring 7-day marketing audit.",
+      "source": "harness/skills/kai-weekly-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-weekly-audit.md"
+    },
+    {
+      "name": "kai-write",
+      "description": "Write a single piece of marketing content using Kai CMO Harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when \"write a blog post\", \"draft an email\", \"LinkedIn article\", \"cold outreach\", \"write ad copy\", \"press release\", \"TikTok script\", or any single content creation request. For building a complete email system, use /kai-email-system instead.",
+      "source": "harness/skills/kai-write/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-write.md"
+    }
+  ]
+}

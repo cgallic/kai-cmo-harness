@@ -1,0 +1,307 @@
+skill: sdr-package
+version: 1.0
+harness: kai-harness
+risk_tier: high
+min_four_us: 12
+seo_lint: false
+
+description: >
+  Compliance-aware SDR operating package for outbound sales development. Produces
+  lead-source plan, ICP scorecard, research workflow, lead ledger, scoring model,
+  outreach brief, approval plan, reply triage, meeting prep, CRM handoff,
+  memory ledger, data handoff, and quality report.
+
+required_sources:
+  - product_context
+  - lead_source_plan
+  - sender_identity
+  - suppression_list
+  - claim_evidence_log
+  - connector_plan
+  - approval_plan
+  - operating_loop
+  - harness/references/cold-email-rules.md
+  - harness/skill-contracts/cold-email.yaml
+  - harness/skill-contracts/sdr-reply-triage.yaml
+  - harness/skill-contracts/sales-meeting-prep.yaml
+source_policy:
+  load_before_production: true
+  prospect_source_must_be_named: true
+  connector_terms_must_be_checked: true
+  suppression_list_must_be_checked: true
+  personalization_requires_source_field: true
+  claims_must_trace_to_evidence: true
+  approvals_required_for_live_actions: true
+  outcome_memory_requires_real_result: true
+  no_live_channel_mutation_without_approval: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - product_context: object
+    - package_mode: string
+    - offer: string
+    - icp_filters: object
+    - lead_sources: list[object]
+    - sender_identity: object
+    - suppression_list_id: string
+  optional:
+    - crm: string
+    - sequencer: string
+    - connectors: list[object]
+    - daily_send_volume: int
+    - target_accounts: list[string]
+    - regulated_industry: bool
+    - vertical_pack: string
+    - approval_owner: string
+    - meeting_owner: string
+
+outputs:
+  package_folder: string
+  lead_source_plan: object
+  icp_scorecard: object
+  account_scoring_model: object
+  lead_ledger_template: object
+  connector_plan: object
+  approval_plan: object
+  loop_state_model: object
+  daily_briefing_template: object
+  test_cohort_plan: object
+  sequence_brief: object
+  reply_triage: object
+  meeting_prep: object
+  crm_handoff: object
+  data_handoff: object
+  sales_role_handoff: object
+  memory_ledger: object
+  quality_report: object
+
+output_schema:
+  type: object
+  required:
+    - package_mode
+    - lead_source_plan
+    - icp_scorecard
+    - lead_ledger_schema
+    - scoring_model
+    - compliance_notes
+    - data_sources
+    - data_gaps
+    - approval_status
+    - loop_state_model
+    - memory_ledger
+  properties:
+    package_mode: string
+    lead_source_plan:
+      type: object
+      properties:
+        approved_sources: list[object]
+        blocked_sources: list[object]
+        connector_notes: list[object]
+        suppression_path: string
+        lawful_basis: string
+    icp_scorecard:
+      type: object
+      properties:
+        fit_dimensions: list[object]
+        disqualifiers: list[string]
+        example_accounts: list[object]
+    lead_ledger_schema: list[string]
+    connector_plan:
+      type: object
+      properties:
+        connectors: list[object]
+        dry_run_required: bool
+        live_actions_blocked_until_approved: bool
+    approval_plan:
+      type: object
+      properties:
+        approvers: list[string]
+        approval_records: list[object]
+        stop_conditions: list[string]
+    scoring_model:
+      type: object
+      properties:
+        total_points: int
+        dimensions: list[object]
+        blockers: list[string]
+    sequence_brief:
+      type: object
+      properties:
+        offer: string
+        persona: string
+        cta: string
+        proof_points: list[object]
+        personalization_tokens: list[string]
+    reply_triage:
+      type: object
+      properties:
+        categories: list[string]
+        routing_rules: list[object]
+    meeting_prep:
+      type: object
+      properties:
+        brief_template: object
+        follow_up_rules: list[object]
+    memory_ledger:
+      type: object
+      properties:
+        learning_types: list[string]
+        promotion_rules: list[object]
+    compliance_notes: list[string]
+    data_sources: list[object]
+    data_gaps: list[object]
+    approval_status: string
+
+quality_gates:
+  - has_product_context == true
+  - approved_sources_count >= 1
+  - blocked_sources_have_reason == true
+  - connector_terms_checked == true
+  - suppression_list_id != ""
+  - sender_identity_complete == true
+  - lead_ledger_schema_complete == true
+  - scoring_model_total == 100
+  - no_sensitive_personal_data == true
+  - no_live_channel_mutation_without_approval == true
+  - all_claims_have_evidence == true
+  - connector_plan_present == true
+  - approval_plan_present == true
+  - loop_state_model_present == true
+  - memory_ledger_present == true
+  - reply_triage_present == true
+  - meeting_prep_present == true
+
+deterministic_checks:
+  - id: required_files
+    evaluator: filesystem
+    pass_when: "all required SDR package files exist, including connector-plan.md, approval-plan.md, loop-state-model.md, memory-ledger.md, daily-briefing-template.md, test-cohort-plan.md, reply-triage.md, meeting-prep.md, crm-handoff.md, sales-role-handoff.md, and _evaluation-report.md"
+  - id: scoring_model_total
+    evaluator: schema
+    pass_when: "fit + timing + pain_evidence + reachability + compliance_confidence == 100"
+  - id: lead_ledger_columns
+    evaluator: schema
+    pass_when: "required lead ledger columns are present"
+  - id: suppression_checked
+    evaluator: static
+    pass_when: "suppression_list_id is non_empty and suppression_checked == true"
+  - id: source_named
+    evaluator: static
+    pass_when: "each lead source has source_name, owner, access_method, and retrieved_at or planned_retrieval"
+  - id: no_live_mutation
+    evaluator: static
+    pass_when: "live_mutation_performed == false or approval_status == approved"
+  - id: connector_dry_run
+    evaluator: static
+    pass_when: "each connector live action has dry_run_path and approval_id"
+  - id: reply_triage_contract
+    evaluator: schema
+    pass_when: "reply categories include interested, objection, referral, not_now, opt_out, bounce, complaint, wrong_person, and unsubscribe_confirmed"
+  - id: memory_promotion
+    evaluator: static
+    pass_when: "promoted learnings cite real outcome evidence and sample size"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 16
+  criteria:
+    - name: operational_clarity
+      question: "Can a human or agent run the SDR package without guessing the next step?"
+    - name: source_integrity
+      question: "Are lead sources named, lawful, and separated from blocked sources?"
+    - name: conversion_focus
+      question: "Does the package connect ICP, trigger evidence, offer, outreach, and meeting handoff?"
+    - name: compliance
+      question: "Are suppression, sender identity, opt-out, approval, and sensitive-data risks handled?"
+    - name: dashboard_readiness
+      question: "Can the package data feed an operator surface without redefining metrics?"
+    - name: loop_learning
+      question: "Does the package define how replies, meetings, CRM outcomes, and wins update memory?"
+
+human_review_required_when:
+  - live_connector_run == true
+  - crm_export_or_import == true
+  - email_or_dm_send == true
+  - daily_send_volume > 250
+  - new_sending_domain == true
+  - regulated_industry == true
+  - sensitive_personal_data_used == true
+  - list_source_confidence != high
+  - connector_terms_unclear == true
+  - reply_indicates_complaint_or_legal_concern == true
+  - opt_out_or_do_not_contact_reply == true
+  - meeting_follow_up_contains_new_claims == true
+
+claim_policy:
+  allowed:
+    - sourced fit observations
+    - sourced trigger events
+    - truthful product capabilities
+    - user-provided goals labeled as goals
+  requires_evidence:
+    - ROI, revenue, conversion, meeting, reply, cost, time, or pipeline claims
+    - customer names, logos, or outcomes
+    - competitor comparisons
+    - market size or account counts
+  forbidden:
+    - fabricated familiarity
+    - false urgency
+    - hidden commercial intent
+    - claims based on sensitive personal attributes
+    - guaranteed outcomes
+
+disallowed_tactics:
+  - buying or using lists without a named lawful source
+  - bypassing platform access controls, CAPTCHAs, login walls, paywalls, robots restrictions, or rate limits
+  - emailing suppressed, unsubscribed, bounced, or do-not-contact records
+  - using personal emails or consumer data without a valid basis
+  - automating social DMs where platform terms or approval are missing
+  - hiding sender identity
+  - creating fake urgency or fake prior relationship
+  - mutating CRM, sequencer, ad, email, phone, or SMS systems without approval
+  - promoting guesses as outcome memory
+  - ignoring opt-outs, bounces, complaints, or wrong-person replies
+
+approval_gate:
+  required_before_live_use: true
+  approvers:
+    - lifecycle_owner
+    - sales_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - missing_source_plan
+    - missing_suppression_check
+    - missing_sender_identity
+    - unsupported_claim
+    - disallowed_source
+    - live_mutation_without_approval
+    - missing_reply_triage_rules
+    - missing_meeting_prep_rules
+    - memory_learning_without_outcome
+
+trace_fields:
+  - workflow_id
+  - package_id
+  - package_mode
+  - source_ids
+  - suppression_list_id
+  - sender_identity_id
+  - connector_ids
+  - evidence_ids
+  - dashboard_handoff_id
+  - loop_state_id
+  - memory_ledger_id
+  - reply_triage_id
+  - meeting_prep_id
+  - reviewer
+  - approval_status
+
+hooks:
+  pre_production: load_product_context + load_sdr_contract + load_connector_recipes + load_vertical_pack + load_approval_gates + load_cold_email_rules
+  post_production: run_quality_gate + write_loop_state + write_memory_ledger + write_eval_report
+  on_fail: revise_with_failure_report
+  on_pass: request_human_approval_for_live_use

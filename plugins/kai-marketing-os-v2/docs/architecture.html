@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture — Meet Kai</title>
+<meta name="description" content="How the AI CMO works: unified quality scorer with 28 rules, 8 YAML gate policies, self-improving content pipeline, and 15+ data integrations.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://meetkai.xyz/architecture">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Architecture — Meet Kai">
+<meta property="og:description" content="How the AI CMO works: unified quality scorer with 28 rules, 8 YAML gate policies, self-improving content pipeline, and 15+ data integrations.">
+<meta property="og:url" content="https://meetkai.xyz/architecture">
+<meta property="og:site_name" content="Meet Kai">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Architecture — Meet Kai">
+<meta name="twitter:description" content="How the AI CMO works: unified quality scorer with 28 rules, 8 YAML gate policies, self-improving content pipeline, and 15+ data integrations.">
+
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Architecture — Meet Kai",
+  "description": "How the AI CMO works: unified quality scorer with 28 rules, 8 YAML gate policies, self-improving content pipeline, and 15+ data integrations.",
+  "datePublished": "2026-01-15",
+  "dateModified": "2026-03-16",
+  "author": { "@type": "Organization", "name": "MeetKai" },
+  "publisher": { "@type": "Organization", "name": "MeetKai" },
+  "mainEntityOfPage": "https://meetkai.xyz/architecture"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://meetkai.xyz/" },
+    { "@type": "ListItem", "position": 2, "name": "Architecture", "item": "https://meetkai.xyz/architecture" }
+  ]
+}
+</script>
+
+<script src="/js/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+
+<style>
+/* ========== Content Harness Pipeline ========== */
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.pipeline-card {
+  background: var(--card-bg, #141414);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  position: relative;
+  transition: border-color 0.25s, transform 0.2s;
+}
+
+.pipeline-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.pipeline-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0a0a0a;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.pipeline-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.pipeline-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ========== Tier Stack ========== */
+.tier-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 860px;
+  margin: 48px auto 0;
+}
+
+.tier-block {
+  padding: 28px 32px;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tier-block:hover {
+  transform: scale(1.01);
+  z-index: 2;
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.06);
+}
+
+.tier-block:first-child { border-radius: 12px 12px 0 0; }
+.tier-block:last-child { border-radius: 0 0 12px 12px; }
+.tier-block + .tier-block { border-top: none; }
+
+.tier-1 { background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 100%); }
+.tier-2 { background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 100%); }
+.tier-3 { background: linear-gradient(135deg, rgba(34,197,94,0.06) 0%, transparent 100%); }
+
+.tier-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.tier-1 .tier-label { color: var(--amber); }
+.tier-2 .tier-label { color: #818cf8; }
+.tier-3 .tier-label { color: var(--green); }
+
+.tier-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.tier-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.tier-connector {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: var(--card-bg, #141414);
+}
+
+/* ========== Domain Agents ========== */
+.domain-agents {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.domain-agent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: border-color 0.2s;
+}
+
+.domain-agent:hover { border-color: var(--accent); }
+
+.da-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.domain-agent strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ========== Skills Row ========== */
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.skill-tag {
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.skill-tag:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* ========== Gate Policies Table ========== */
+.gate-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.gate-approve { background: rgba(34,197,94,0.12); color: var(--green); }
+.gate-hold { background: rgba(245,158,11,0.12); color: var(--amber); }
+.gate-reject { background: rgba(239,68,68,0.12); color: var(--red); }
+
+/* ========== Self-Improvement Cards ========== */
+.loop-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.loop-card {
+  background: var(--card-bg, #141414);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  transition: border-color 0.25s, transform 0.2s;
+}
+
+.loop-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.loop-card h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.loop-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ========== Heartbeat Flow ========== */
+.heartbeat-flow {
+  margin-top: 32px;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .pipeline-grid { grid-template-columns: 1fr; }
+  .domain-agents { grid-template-columns: 1fr; }
+  .loop-cards { grid-template-columns: 1fr; }
+  .tier-block { padding: 20px; }
+}
+</style>
+</head>
+
+<body>
+<div class="grid-bg"></div>
+
+<!-- ==================== NAV ==================== -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">K</div>
+      <span class="nav-title">Meet Kai</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/blog">Blog</a></li>
+      <li class="nav-dropdown">
+        <a href="/architecture" class="nav-dropdown-trigger active">Architecture <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="nav-dropdown-menu"><div class="nav-dropdown-menu-inner">
+          <a href="/architecture" class="active">Overview</a>
+          <a href="/harness">Harness</a>
+          <a href="/data">Data Layer</a>
+          <a href="/skills">Skills</a>
+        </div></div>
+      </li>
+      <li><a href="/pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/#get-started" class="nav-cta">Get Started <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <button class="nav-menu-btn" aria-label="Toggle menu">
+        <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-nav">
+  <a href="/blog">Blog</a>
+  <div class="mobile-nav-section">
+    <div class="mobile-nav-label">Architecture</div>
+    <a href="/architecture" class="mobile-nav-sub active">Overview</a>
+    <a href="/harness" class="mobile-nav-sub">Harness</a>
+    <a href="/data" class="mobile-nav-sub">Data Layer</a>
+    <a href="/skills" class="mobile-nav-sub">Skills</a>
+  </div>
+  <a href="/pricing">Pricing</a>
+  <a href="/#get-started">Get Started</a>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<div class="page-hero">
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="section-label fade-up">Deep Dive</div>
+    <h1 class="fade-up stagger-1">How Kai Works</h1>
+    <p class="fade-up stagger-2">Harness engineering for marketing. 28 quality rules score every piece. 8 YAML policies gate publishing. A self-improvement loop makes the 50th piece better than the 1st.</p>
+  </div>
+</div>
+
+<!-- ==================== STATS BANNER ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="stats-grid fade-up">
+      <div class="stat-card">
+        <div class="stat-value">28</div>
+        <div class="stat-label">Quality Rules</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Gate Policies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">14</div>
+        <div class="stat-label">Marketing Skills</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">15+</div>
+        <div class="stat-label">API Integrations</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTENT HARNESS PIPELINE ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">The Core Loop</div>
+    <h2 class="section-title fade-up stagger-1">Content Harness</h2>
+    <p class="section-desc fade-up stagger-2">A CI/CD pipeline for marketing content. Brief &rarr; Write &rarr; Score &rarr; Gate &rarr; Publish &rarr; Check &rarr; Learn. Each stage enforced.</p>
+
+    <div class="pipeline-grid">
+      <div class="pipeline-card fade-up stagger-1">
+        <div class="pipeline-number">1</div>
+        <h4>Brief Generator</h4>
+        <p>Pulls live GSC + GA4 data. Identifies competitor weakness. Outputs structured JSON brief.</p>
+      </div>
+      <div class="pipeline-card fade-up stagger-2">
+        <div class="pipeline-number">2</div>
+        <h4>Content Writer</h4>
+        <p>Loads knowledge frameworks, winning patterns, and MARKETING.md config. No free choices about structure.</p>
+      </div>
+      <div class="pipeline-card fade-up stagger-3">
+        <div class="pipeline-number">3</div>
+        <h4>Quality Scorer</h4>
+        <p>28 rules across 4 categories score 0&ndash;100. Per-line violations with exact fix suggestions.</p>
+      </div>
+      <div class="pipeline-card fade-up stagger-4">
+        <div class="pipeline-number">4</div>
+        <h4>Gate</h4>
+        <p>YAML policy decides: auto-approve (score &ge;85), hold for review (60&ndash;85), or reject (&lt;60). SQLite audit trail.</p>
+      </div>
+      <div class="pipeline-card fade-up stagger-5">
+        <div class="pipeline-number">5</div>
+        <h4>Surgical Revision</h4>
+        <p>On rejection, feeds exact violations back to the writer. Rule ID, line number, fix suggestion. Max 2 retries.</p>
+      </div>
+      <div class="pipeline-card fade-up stagger-6">
+        <div class="pipeline-number">6</div>
+        <h4>Discord Approval</h4>
+        <p>Posts draft + score + proposal ID. Human approves or rejects. <code>python -m scripts.quality gate --approve &lt;id&gt;</code></p>
+      </div>
+      <div class="pipeline-card fade-up stagger-1">
+        <div class="pipeline-number">7</div>
+        <h4>30-Day Check</h4>
+        <p>Cron pulls GSC position + CTR, GA4 session duration. Grades winner / avg / underperformer.</p>
+      </div>
+    </div>
+
+    <p class="fade-up" style="margin-top: 32px; text-align: center;">
+      <a href="/harness" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px;">Deep dive into each stage <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </p>
+  </div>
+</section>
+
+<!-- ==================== QUALITY SCORER ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Research-as-Automated-Tooling</div>
+    <h2 class="section-title fade-up stagger-1">Unified Quality Scorer</h2>
+    <p class="section-desc fade-up stagger-2">28 rules encoding marketing research into automated checks. Algorithmic Authorship, GEO/AEO citation science, content structure, and Four U's &mdash; all scored per-line with fix suggestions.</p>
+
+    <div class="arch-details fade-up stagger-3">
+      <div class="arch-detail-card">
+        <h4>Algorithmic Authorship (35%)</h4>
+        <p>Conditions after clauses, verb-first instructions, sentence length, anchor words, entity naming, back-references, filler detection. 15 rules from SEO research.</p>
+      </div>
+      <div class="arch-detail-card">
+        <h4>GEO/AEO Signals (20%)</h4>
+        <p>Citation density, quotation marks, statistics per 1K words, technical term frequency. Based on academic research: citations +115%, quotes +40%, stats +37%.</p>
+      </div>
+      <div class="arch-detail-card">
+        <h4>Content Structure (25%)</h4>
+        <p>Reading level (grade 6&ndash;8), active voice &ge;90%, heading balance, paragraph length, you/your ratio, AI cliche detection.</p>
+      </div>
+      <div class="arch-detail-card">
+        <h4>Four U's (20%)</h4>
+        <p>LLM-scored uniqueness, usefulness, specificity, urgency. Each 1&ndash;4, minimum 12/16. Separate model call &mdash; grader &ne; writer.</p>
+      </div>
+    </div>
+
+    <div class="code-block fade-up stagger-4">
+<pre>$ python -m scripts.quality score article.md
+
+Score: 78.3/100 (grade C)
+
+Algorithmic Authorship:  82.1  (weight 0.35)
+GEO/AEO Signals:        65.0  (weight 0.20)
+Content Structure:       89.4  (weight 0.25)
+Four U's:               71.0  (weight 0.20)
+
+Top fixes:
+1. [AA-01] Condition before clause (line 14, 6 violations)
+   "If you want better results, do X" → "Do X to get better results"
+2. [GEO-01] Citation density low (3 per 1K words, target: 5)
+3. [CS-07] AI cliche detected (line 42): "it's important to note"</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== GATE POLICIES ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">YAML-Driven Quality Gates</div>
+    <h2 class="section-title fade-up stagger-1">8 Gate Policies</h2>
+    <p class="section-desc fade-up stagger-2">Each content format has a YAML policy. Auto-approve, hold, or reject based on score. Required rules and blocked terms per format. Change the YAML, change the behavior.</p>
+
+    <div class="table-wrapper fade-up stagger-3">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Policy</th>
+            <th>Format</th>
+            <th>Auto-approve</th>
+            <th>Hold</th>
+            <th>Reject</th>
+            <th>Blocked terms</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>blog-publish</code></td>
+            <td>Blog, SEO</td>
+            <td><span class="gate-status gate-approve">&ge;85</span></td>
+            <td><span class="gate-status gate-hold">60&ndash;85</span></td>
+            <td><span class="gate-status gate-reject">&lt;60</span></td>
+            <td>"in conclusion", "harness the power"...</td>
+          </tr>
+          <tr>
+            <td><code>linkedin-article</code></td>
+            <td>LinkedIn</td>
+            <td><span class="gate-status gate-approve">&ge;80</span></td>
+            <td><span class="gate-status gate-hold">55&ndash;80</span></td>
+            <td><span class="gate-status gate-reject">&lt;55</span></td>
+            <td>"it's important to note"...</td>
+          </tr>
+          <tr>
+            <td><code>cold-email</code></td>
+            <td>Cold email</td>
+            <td><span class="gate-status gate-approve">&ge;75</span></td>
+            <td><span class="gate-status gate-hold">50&ndash;75</span></td>
+            <td><span class="gate-status gate-reject">&lt;50</span></td>
+            <td>"guaranteed", "act now"...</td>
+          </tr>
+          <tr>
+            <td><code>press-release</code></td>
+            <td>PR</td>
+            <td><span class="gate-status gate-approve">&ge;80</span></td>
+            <td><span class="gate-status gate-hold">55&ndash;80</span></td>
+            <td><span class="gate-status gate-reject">&lt;55</span></td>
+            <td>"excited to announce", "industry-leading"...</td>
+          </tr>
+          <tr>
+            <td><code>tiktok-script</code></td>
+            <td>TikTok</td>
+            <td><span class="gate-status gate-approve">&ge;70</span></td>
+            <td><span class="gate-status gate-hold">45&ndash;70</span></td>
+            <td><span class="gate-status gate-reject">&lt;45</span></td>
+            <td>"link in bio", "mind-blowing"</td>
+          </tr>
+          <tr>
+            <td><code>meta-ad</code></td>
+            <td>Meta ads</td>
+            <td><span class="gate-status gate-approve">&ge;70</span></td>
+            <td><span class="gate-status gate-hold">45&ndash;70</span></td>
+            <td><span class="gate-status gate-reject">&lt;45</span></td>
+            <td>"click here", "don't miss out"...</td>
+          </tr>
+          <tr>
+            <td><code>google-ad</code></td>
+            <td>Google ads</td>
+            <td><span class="gate-status gate-approve">&ge;65</span></td>
+            <td><span class="gate-status gate-hold">40&ndash;65</span></td>
+            <td><span class="gate-status gate-reject">&lt;40</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>default</code></td>
+            <td>Everything else</td>
+            <td><span class="gate-status gate-approve">&ge;85</span></td>
+            <td><span class="gate-status gate-hold">60&ndash;85</span></td>
+            <td><span class="gate-status gate-reject">&lt;60</span></td>
+            <td>&mdash;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SELF-IMPROVEMENT LOOP ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Compound Learning</div>
+    <h2 class="section-title fade-up stagger-1">The System Gets Smarter</h2>
+    <p class="section-desc fade-up stagger-2">Every published piece feeds data back. Quality scores correlate with search performance. Policy thresholds auto-adjust. The 100th piece has 99 data points behind it.</p>
+
+    <div class="loop-cards">
+      <div class="loop-card fade-up stagger-1">
+        <h4>Nightly: Retro Score</h4>
+        <p>Batch quality-scores all published content. Stores per-rule scores alongside GSC/GA4 performance data.</p>
+      </div>
+      <div class="loop-card fade-up stagger-2">
+        <h4>Weekly: Rule Correlation</h4>
+        <p>Correlates quality rule scores with winner/loser classification. Finds which rules actually predict search success.</p>
+      </div>
+      <div class="loop-card fade-up stagger-3">
+        <h4>Weekly: Pattern Extract</h4>
+        <p>Surfaces statistical patterns: best persona per site, best hook type, best publish day. Only states patterns with n&ge;5 and &ge;15% lift.</p>
+      </div>
+      <div class="loop-card fade-up stagger-4">
+        <h4>Auto-Update: Policy Thresholds</h4>
+        <p>When winner patterns emerge, adjusts YAML policy approve/reject thresholds. Updates MARKETING.md learned defaults. Next run picks up changes without restart.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AGENT HIERARCHY ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">How It's Structured</div>
+    <h2 class="section-title fade-up stagger-1">3-Tier Agent Hierarchy</h2>
+    <p class="section-desc fade-up stagger-2">One orchestrator. Seven domain specialists. Each agent gets only the context it needs.</p>
+
+    <div class="tier-stack fade-up stagger-3">
+      <!-- Tier 1 -->
+      <div class="tier-block tier-1">
+        <div class="tier-label">Tier 1 &mdash; Orchestrator</div>
+        <div class="tier-name">Kai-CMO (this session)</div>
+        <div class="tier-desc">Receives all Discord messages. Routes to domain agents or handles inline. Aggregates results. Posts cross-product summaries to #updates. Never does domain work itself.</div>
+      </div>
+
+      <div class="tier-connector">spawns &darr;</div>
+
+      <!-- Tier 2 -->
+      <div class="tier-block tier-2">
+        <div class="tier-label">Tier 2 &mdash; Domain Agents</div>
+        <div class="tier-name">7 Specialists</div>
+        <div class="tier-desc">Each agent owns a product or function. Runs in its own session. Posts directly to its Discord channel.</div>
+
+        <div class="domain-agents">
+          <div class="domain-agent"><span class="da-icon">&#x1F4DE;</span> <strong>KaiCalls</strong> &mdash; leads, outreach</div>
+          <div class="domain-agent"><span class="da-icon">&#x1F389;</span> <strong>ABP</strong> &mdash; vendor matching</div>
+          <div class="domain-agent"><span class="da-icon">&#x1F4B0;</span> <strong>Finance</strong> &mdash; Stripe, MRR</div>
+          <div class="domain-agent"><span class="da-icon">&#x26E9;&#xFE0F;</span> <strong>Gate</strong> &mdash; approvals, health</div>
+          <div class="domain-agent"><span class="da-icon">&#x1F3D7;&#xFE0F;</span> <strong>BWK</strong> &mdash; signups, activity</div>
+          <div class="domain-agent"><span class="da-icon">&#x1F3E5;</span> <strong>Infra</strong> &mdash; VPS, cron</div>
+          <div class="domain-agent"><span class="da-icon">&#x1F4DA;</span> <strong>Research</strong> &mdash; papers, patents</div>
+        </div>
+      </div>
+
+      <div class="tier-connector">loads &darr;</div>
+
+      <!-- Tier 3 -->
+      <div class="tier-block tier-3">
+        <div class="tier-label">Tier 3 &mdash; Skills</div>
+        <div class="tier-name">Procedural Guides</div>
+        <div class="tier-desc">Skills are procedural guides loaded into the orchestrator's context when needed. They describe <em>how</em> to do something. Agents do the actual <em>work</em>.</div>
+
+        <div class="skills-row">
+          <span class="skill-tag">seo-content</span>
+          <span class="skill-tag">linkedin-writing</span>
+          <span class="skill-tag">cold-email</span>
+          <span class="skill-tag">meta-advertising</span>
+          <span class="skill-tag">tiktok-marketing</span>
+          <span class="skill-tag">press-releases</span>
+          <span class="skill-tag">algorithmic-authorship</span>
+          <span class="skill-tag">perception-engineering</span>
+          <span class="skill-tag">landing-pages</span>
+          <span class="skill-tag">technical-seo</span>
+          <span class="skill-tag">dev-workflow</span>
+          <span class="skill-tag">kaicalls-outbound</span>
+          <span class="skill-tag">abp-vendor-match</span>
+          <span class="skill-tag">coding-agent</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="heartbeat-flow fade-up stagger-4">
+      <div class="code-block">
+<pre>heartbeat fires (every 30 min)
+  ├── sessions_spawn(kaicalls-agent)  → #kai-calls
+  ├── sessions_spawn(abp-agent)       → #awesomebackyard
+  ├── sessions_spawn(finance-agent)   → #finance
+  ├── sessions_spawn(gate-agent)      → #zehrava
+  ├── sessions_spawn(bwk-agent)       → #build-with-kai
+  ├── sessions_spawn(infra-agent)     → #health
+  └── sessions_spawn(research-agent)  → #research
+  sessions_yield()
+  → each agent returns NOTHING or posts directly to its channel
+  → 7 checks in parallel ~30s vs. serial ~3.5min</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ZEHRAVA GATE ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Write-Path Control</div>
+    <h2 class="section-title fade-up stagger-1">Zehrava Gate</h2>
+    <p class="section-desc fade-up stagger-2">Every write action &mdash; emails sent, calls made, vendor outreach &mdash; goes through Gate before execution. Human approval, then automation.</p>
+
+    <div class="arch-details fade-up stagger-3">
+      <div class="arch-detail-card">
+        <h4>Intent Proposal</h4>
+        <p>Agent proposes an action (e.g. <code>gmail.send</code>, <code>kaicalls.outbound</code>). Gate holds it pending approval. Nothing executes until a human approves at the dashboard.</p>
+      </div>
+      <div class="arch-detail-card">
+        <h4>Policy Enforcement</h4>
+        <p>Each intent type has a policy. <code>abp-followup-call</code> enforces TCPA hours. <code>outbound-email</code> checks for duplicates. Rules run before approval is even requested.</p>
+      </div>
+      <div class="arch-detail-card">
+        <h4>Approval Dashboard</h4>
+        <p>All pending, approved, and blocked proposals visible at zehrava.com/dashboard. One click to approve or block. PII scrubbed from the public log.</p>
+      </div>
+    </div>
+
+    <div class="code-block fade-up stagger-4">
+<pre>ABP lead arrives → abp-agent runs
+  ├── ZIP → NJ → Ken Rent match
+  ├── OpenAI draft vendor email
+  ├── gate.propose({ policy: "outbound-email", payload: {...} })
+  │     → returns proposalId
+  ├── Post to #awesomebackyard: "Approve at zehrava.com/dashboard"
+  └── Human approves → email sends automatically
+      No code. No re-run. Gate handles execution on approval.</pre>
+    </div>
+
+    <p class="fade-up stagger-5" style="margin-top: 24px; display: flex; gap: 16px; flex-wrap: wrap;">
+      <a href="https://zehrava.com" class="btn-secondary" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px;">Visit Zehrava <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="/data" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px;">Data Layer <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </p>
+  </div>
+</section>
+
+<!-- ==================== CMO ANALYTICS CLI ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Custom Tooling</div>
+    <h2 class="section-title fade-up stagger-1">CMO Analytics CLI</h2>
+    <p class="section-desc fade-up stagger-2">~5,800 lines of Python. One command for any metric across 10+ data sources.</p>
+
+    <div class="code-block fade-up stagger-3">
+<pre>$ cmo kaicalls leads --days=7
+# 57 leads this week. 34 with emails. Houston HVAC top source.
+
+$ cmo ga4 all --days=7
+# Traffic overview for ALL 10 sites in one table
+
+$ cmo stripe_report mrr
+# MRR: $67.91 | 11 active subs | 0 at-risk
+
+$ cmo gsc opportunities --site=kaicalls
+# SEO opportunities: 12 keywords ranking 4-10 (low-hanging fruit)
+
+$ cmo daily_report executive
+# Cross-product status in 30 seconds</pre>
+    </div>
+
+    <div class="table-wrapper fade-up stagger-4">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Commands</th>
+            <th>Data Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>kaicalls</code></td>
+            <td>leads, calls, agents, transcripts, dashboard, funnel, weekly</td>
+            <td>Supabase</td>
+          </tr>
+          <tr>
+            <td><code>bwk</code></td>
+            <td>counts, businesses, plans, generations, invocations</td>
+            <td>Supabase</td>
+          </tr>
+          <tr>
+            <td><code>abp</code></td>
+            <td>counts, leads, vendors, blog, dashboard</td>
+            <td>Supabase</td>
+          </tr>
+          <tr>
+            <td><code>ga4</code></td>
+            <td>sites, overview, pages, sources, channels, daily, all</td>
+            <td>Google Analytics</td>
+          </tr>
+          <tr>
+            <td><code>gsc</code></td>
+            <td>sites, queries, pages, opportunities, devices, gaps</td>
+            <td>Search Console</td>
+          </tr>
+          <tr>
+            <td><code>stripe_report</code></td>
+            <td>mrr, revenue, subs, customers, overview, at-risk</td>
+            <td>Stripe API</td>
+          </tr>
+          <tr>
+            <td><code>instantly</code></td>
+            <td>campaigns, leads, stats, upload</td>
+            <td>Instantly API</td>
+          </tr>
+          <tr>
+            <td><code>daily_report</code></td>
+            <td>executive, daily, weekly</td>
+            <td>All sources</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== KNOWLEDGE BASE ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Knowledge RAG</div>
+    <h2 class="section-title fade-up stagger-1">Marketing Knowledge Base</h2>
+    <p class="section-desc fade-up stagger-2">100+ markdown files. 1000+ indexed chunks. Semantic search via ChromaDB.</p>
+
+    <div class="stats-grid fade-up stagger-3">
+      <div class="stat-card">
+        <div class="stat-value">100+</div>
+        <div class="stat-label">Markdown Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1000+</div>
+        <div class="stat-label">Indexed Chunks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">11</div>
+        <div class="stat-label">AEO Frameworks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">16</div>
+        <div class="stat-label">Checklists</div>
+      </div>
+    </div>
+
+    <div class="file-tree fade-up stagger-4">
+<pre><span class="folder">/knowledge/</span>
+├── <span class="folder">frameworks/</span>
+│   ├── <span class="folder">content-copywriting/</span>    <span class="comment"># Algorithmic Authorship, Four U's, QDP</span>
+│   ├── <span class="folder">aeo-ai-search/</span>          <span class="comment"># Perplexity ranking, Entity SEO, AEO</span>
+│   └── <span class="folder">meta-advertising/</span>       <span class="comment"># Andromeda, GEM, Lattice</span>
+├── <span class="folder">channels/</span>                   <span class="comment"># LinkedIn, SEO, email, PR, TikTok (10)</span>
+├── <span class="folder">checklists/</span>                 <span class="comment"># Content, SEO, technical audits (16)</span>
+├── <span class="folder">personas/</span>                   <span class="comment"># 8 audience archetypes + pain points</span>
+├── <span class="folder">playbooks/</span>                  <span class="comment"># Local SEO, content velocity, TAM (8)</span>
+├── <span class="folder">design/</span>                     <span class="comment"># B2B SaaS, B2C fintech guides</span>
+└── <span class="folder">examples/</span>                   <span class="comment"># LinkedIn articles scoring 14-16/16</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== API INTEGRATIONS ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label fade-up">Connected</div>
+    <h2 class="section-title fade-up stagger-1">15+ API Integrations</h2>
+    <p class="section-desc fade-up stagger-2">Everything connected. Everything automated.</p>
+
+    <div class="arch-nodes fade-up stagger-3">
+      <div class="arch-node">Google Analytics</div>
+      <div class="arch-node">Search Console</div>
+      <div class="arch-node">Stripe</div>
+      <div class="arch-node">Supabase</div>
+      <div class="arch-node">Gmail</div>
+      <div class="arch-node">Calendar</div>
+      <div class="arch-node">Discord</div>
+      <div class="arch-node">Apollo</div>
+      <div class="arch-node">Instantly</div>
+      <div class="arch-node">ElevenLabs</div>
+      <div class="arch-node">OpenAI</div>
+      <div class="arch-node">Perplexity</div>
+      <div class="arch-node">Reddit</div>
+      <div class="arch-node">Apify</div>
+      <div class="arch-node">Firecrawl</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section style="border-top: 1px solid var(--border);">
+  <div class="container" style="text-align: center;">
+    <div class="section-label fade-up">Go Deeper</div>
+    <h2 class="section-title fade-up stagger-1">Want to see the code?</h2>
+    <p class="section-desc fade-up stagger-2">The harness page walks through every stage of the content pipeline with implementation details, config examples, and real output.</p>
+    <p class="fade-up stagger-3" style="margin-top: 24px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a href="/harness" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px;">Read the Harness Deep-Dive <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="/pricing" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px;">View Pricing <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </p>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <div class="nav-logo">K</div>
+          <span>Meet Kai</span>
+        </a>
+        <p class="footer-tagline">The AI CMO that never sleeps.</p>
+        <p class="footer-powered">Powered by <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">OpenClaw</a> + <a href="https://anthropic.com" target="_blank" rel="noopener">Claude</a></p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="https://kaicalls.com" target="_blank" rel="noopener">KaiCalls</a></li>
+            <li><a href="https://buildwithkai.com" target="_blank" rel="noopener">BuildWithKai</a></li>
+            <li><a href="https://awesomebackyardparties.com" target="_blank" rel="noopener">Awesome Backyard Parties</a></li>
+            <li><a href="https://vocalscribe.xyz" target="_blank" rel="noopener">VocalScribe</a></li>
+            <li><a href="https://zehrava.com" target="_blank" rel="noopener">Zehrava</a></li>
+            <li><a href="https://cro.meetkai.xyz" target="_blank" rel="noopener">CRO Agent</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Architecture</h4>
+          <ul>
+            <li><a href="/architecture">Overview</a></li>
+            <li><a href="/harness">Harness</a></li>
+            <li><a href="/data">Data Layer</a></li>
+            <li><a href="/skills">Skills</a></li>
+            <li><a href="/credentials">Credentials</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>MeetKai</h4>
+          <ul>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pressure-chamber">Pressure Chamber</a></li>
+            <li><a href="/tools">Free Tools</a></li>
+            <li><a href="/build-log">Build Log</a></li>
+            <li><a href="/learnings">Learnings</a></li>
+            <li><a href="/changelog">Changelog</a></li>
+            <li><a href="/roadmap">Roadmap</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/#contact-email">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MeetKai. Built and run by AI.</p>
+      <a href="/sitemap.xml">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

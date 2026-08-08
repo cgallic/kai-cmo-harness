@@ -3,7 +3,7 @@
 **Date:** 2026-04-05  
 **Audited by:** 3 parallel subagents covering all 10 audit areas  
 **Codebase:** `app-meetkai/` — Next.js 14 + Supabase + Pipedream + MiKai  
-**Live:** `app.meetkai.xyz` (Vercel) → Supabase project `qfuejhbzncvexmkqnqok`
+**Live:** `app.meetkai.xyz` (Vercel) → Supabase project `YOUR_PROJECT_REF`
 
 ---
 

@@ -1,0 +1,209 @@
+skill: landing-page
+version: 3.0
+harness: kai-harness
+format: landing-page
+risk_tier: high
+word_count: 700-1200
+min_four_us: 12
+seo_lint: false
+
+description: >
+  Conversion-focused landing page copy using perception engineering, sourced
+  proof, customer-language discipline, phone lead-capture fit logic, and CRO
+  hypotheses instead of unsupported benchmark promises.
+
+required_sources:
+  - brief
+  - knowledge/frameworks/content-copywriting/perception-engineering.md
+  - knowledge/checklists/perception-engineering-checklist.md
+  - knowledge/playbooks/conversion-rate-optimization.md
+  - customer_research_or_hypothesis_log
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  proof_claims_require_evidence: true
+  customer_language_requires_source_or_hypothesis_label: true
+  cro_benchmarks_require_source_and_caveat: true
+  kaicalls_recommendation_requires_phone_lead_fit: true
+  missing_sources_action: block_or_label_as_hypothesis
+
+inputs:
+  required:
+    - brief: object
+    - offer: string
+    - audience: string
+  optional:
+    - customer_research: list[object]
+    - claim_evidence_log: list[object]
+    - phone_lead_capture_state: object
+    - landing_page_goal: string
+
+required_sections:
+  - hero
+  - proof_block
+  - conversion_section
+  - call_capture
+  - faq
+
+outputs:
+  page_copy: markdown
+  sections: object
+  claim_table: list[object]
+  cro_hypotheses: list[object]
+  phone_lead_capture_fit: object
+
+output_schema:
+  type: object
+  required:
+    - hero
+    - proof_block
+    - conversion_section
+    - call_capture
+    - faq
+    - claim_table
+    - phone_lead_capture_fit
+  properties:
+    hero: markdown
+    proof_block: markdown
+    conversion_section: markdown
+    call_capture: markdown
+    faq: markdown
+    claim_table: list[object]
+    cro_hypotheses: list[object]
+    phone_lead_capture_fit: object
+
+quality_gates:
+  - "four_us_total >= 12"
+  - "banned_words_tier1 == 0"
+  - "required_sections_present == true"
+  - "no_bracketed_placeholders == true"
+  - "claim_table_complete == true"
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "700 <= word_count <= 1200"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "hero, proof_block, conversion_section, call_capture, and faq are non_empty"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+  - id: claims_have_evidence
+    evaluator: static
+    pass_when: "proof, benchmark, and outcome claims have evidence_id or hypothesis label"
+  - id: phone_fit_logic_present
+    evaluator: schema
+    pass_when: "call_capture includes phone_lead_capture_fit before KaiCalls recommendation"
+  - id: no_cro_lift_promise
+    evaluator: regex
+    pass_when: "no conversion lift or benchmark is promised without source and experiment evidence"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: conversion_logic
+      question: "Does the page move from problem, proof, offer, objection handling, and CTA coherently?"
+    - name: evidence_discipline
+      question: "Are proof, customer language, and benchmarks sourced or labeled as hypotheses?"
+    - name: phone_capture_fit
+      question: "Does KaiCalls or phone CTA logic appear only when phone lead capture is material?"
+    - name: clarity_and_specificity
+      question: "Is the copy specific, concrete, and free of vague hype?"
+
+human_review_required_when:
+  - regulated_industry == true
+  - customer_research_missing == true
+  - client_facing_quantitative_claims_present == true
+  - kaicalls_recommendation_present == true
+  - claim_risk_level == high
+
+golden_situations:
+  - name: source_backed_offer_page
+    expectation: "Includes all required sections, sourced proof, and phone fit logic without unsupported lift promises."
+  - name: cro_unsupported_benchmark
+    eval_id: kai.situations.cro_unsupported_benchmark.checkout_conversion_rate_promise
+    expectation: "Rejects unsupported benchmark and conversion lift claims."
+  - name: brand_positioning_without_research
+    eval_id: kai.situations.brand_positioning_without_research.category_narrative_from_vibes
+    expectation: "Labels customer-language and positioning claims as hypotheses when research is missing."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_missing_required_sections: 0
+  max_unsourced_material_claims: 0
+  max_unsupported_cro_benchmarks: 0
+
+claim_policy:
+  allowed:
+    - sourced product capabilities
+    - sourced proof points
+    - hypothesis-labeled CRO ideas
+  requires_evidence:
+    - customer quotes
+    - conversion rates or lift
+    - revenue, ROI, or time savings
+    - category leadership
+  forbidden:
+    - fabricated proof
+    - unsupported benchmark targets
+    - guaranteed conversion lift
+    - Kai-owned product recommendation without fit logic
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - customer_research_id
+    - hypothesis_id
+    - phone_fit_assessment_id
+    - confidence_label
+  unresolved_claim_action: remove_or_label_hypothesis
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - content_owner
+    - conversion_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - unsubstantiated_claim
+    - unsupported_cro_benchmark
+    - phone_fit_logic_missing
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - landing_page_id
+  - audience
+  - offer
+  - evidence_ids
+  - customer_research_ids
+  - hypothesis_ids
+  - phone_fit_assessment_id
+  - reviewer
+  - approval_status
+
+constraints:
+  - Final copy only; no bracketed placeholders.
+  - Include one phone-first CTA only when phone lead capture is material.
+  - Mention KaiCalls only after fit, alternatives, and disqualifiers are considered.
+  - Do not present CRO hypotheses as guaranteed lift.
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: landing-page
+  floor: {E: 5, C: 3, O: 4}
+  execution_target: >
+    Page returns 200, renders the approved copy, and the primary CTA submits successfully.
+  outcome_metrics: [conversion_rate, qualified_leads, cost_per_lead]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

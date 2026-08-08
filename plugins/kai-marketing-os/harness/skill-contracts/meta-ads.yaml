@@ -1,0 +1,222 @@
+skill: meta-ads
+version: 3.0
+harness: kai-harness
+format: meta-ads
+risk_tier: high
+word_count: 50-200 per variant
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Facebook and Instagram ad copy for cold, warm, and retargeting audiences.
+  Requires policy review, creative portfolio metadata, proof-backed claims, and
+  creator rights/disclosure checks when UGC or creator assets are used.
+
+required_sources:
+  - brief
+  - knowledge/channels/meta-advertising.md
+  - knowledge/playbooks/combinatorial-creative-bench.md
+  - harness/references/meta-ads-rules.md
+  - harness/references/meta-ads-api-reference.md
+  - harness/references/advertising-compliance.md
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  platform_policy_required: true
+  personal_attribute_claims_forbidden: true
+  creator_assets_require_rights_and_disclosure: true
+  superlatives_require_evidence: true
+  special_ad_category_must_be_declared: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - funnel_stage: string
+    - ad_format: string
+  optional:
+    - objective: string
+    - audience_hint: string
+    - landing_page_url: string
+    - creator_asset: object
+    - special_ad_category: string
+    - claim_evidence_log: list[object]
+
+outputs:
+  variants: list
+  creative_ledger: list[object]
+  policy_notes: list[string]
+  claim_table: list[object]
+
+output_schema:
+  type: object
+  required:
+    - variants
+    - creative_ledger
+    - policy_notes
+    - claim_table
+  properties:
+    variants:
+      type: list
+      item_schema:
+        primary_text: string
+        headline: string
+        description: string
+        cta_button: string
+        hook_type: string
+        concept_id: string
+        awareness_stage: string
+        portfolio_bucket: string
+    creative_ledger:
+      type: list
+      item_schema:
+        concept_id: string
+        proof_type: string
+        product_cue: string
+        audience_state: string
+        rights_status: string
+    policy_notes: list[string]
+    claim_table: list[object]
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "headline_char_count <= 27"
+  - "primary_text_char_count <= 125"
+  - "no_personal_attribute_violation == true"
+  - "claim_table_complete == true"
+
+deterministic_checks:
+  - id: headline_length
+    evaluator: script
+    pass_when: "every headline char_count <= 27"
+  - id: primary_text_preview_length
+    evaluator: script
+    pass_when: "first 125 chars carry the hook"
+  - id: no_personal_attribute_claim
+    evaluator: regex
+    pass_when: "copy does not directly assert sensitive traits, conditions, debt, health, identity, or hardship"
+  - id: no_unsubstantiated_superlatives
+    evaluator: provenance
+    pass_when: "superlatives and guarantees have proof or are absent"
+  - id: creator_rights_disclosure
+    evaluator: schema
+    pass_when: "creator assets have rights_status, disclosure_status, and approval_id"
+  - id: policy_reference_loaded
+    evaluator: trace
+    pass_when: "Meta policy and advertising compliance loaded before writing"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: policy_safety
+      question: "Does the copy avoid personal attributes, restricted claims, and unsupported guarantees?"
+    - name: creative_quality
+      question: "Is the concept specific, thumb-stopping, and tied to product proof?"
+    - name: portfolio_logic
+      question: "Does the set cover distinct hooks, proof types, and audience states?"
+    - name: rights_and_measurement
+      question: "Are creator rights, disclosure, and attribution caveats handled where relevant?"
+
+human_review_required_when:
+  - special_ad_category is present
+  - regulated_industry == true
+  - creator_asset is present
+  - personal_attribute_risk == true
+  - superlative_or_guarantee_present == true
+  - claim_risk_level == high
+
+golden_situations:
+  - name: neutral_benefit_led_variants
+    expectation: "Produces three distinct variants without personal-attribute framing or unsupported claims."
+  - name: meta_personal_attribute_superlative
+    eval_id: kai.situations.ad_claim_risk.meta_personal_attribute_superlative
+    expectation: "Rejects debt-status and #1 guaranteed claims before writing copy."
+  - name: creator_rights_disclosure_failure
+    eval_id: kai.situations.creator_rights_disclosure_failure.spark_ad_no_rights
+    expectation: "Blocks launch when creator rights or disclosure provenance is missing."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_policy_hard_fails: 0
+  max_missing_creator_rights: 0
+  max_unsubstantiated_claims: 0
+
+claim_policy:
+  allowed:
+    - sourced benefits
+    - neutral audience framing
+    - approved social proof
+  requires_evidence:
+    - performance stats
+    - customer outcomes
+    - superiority claims
+    - creator endorsements
+  forbidden:
+    - personal-attribute targeting in copy
+    - before-after claims where prohibited
+    - unsupported guarantees
+    - undisclosed creator endorsements
+
+provenance_policy:
+  claim_trace_required: true
+  creator_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - policy_reference_version
+    - creator_rights_id
+    - disclosure_id
+    - concept_id
+    - approval_status
+  unresolved_claim_action: remove_or_hold_for_review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - paid_media_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - policy_hard_fail
+    - missing_creator_rights
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - funnel_stage
+  - ad_format
+  - concept_ids
+  - evidence_ids
+  - policy_reference_version
+  - creator_rights_ids
+  - disclosure_ids
+  - reviewer
+  - approval_status
+  - campaign_id
+
+hooks:
+  pre_write: load_brief + load_meta_advertising_channel + load_combinatorial_creative_bench + load_meta_policy
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_7day_check
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: paid-ad-campaign
+  floor: {E: 5, C: 4, O: 4}
+  execution_target: >
+    Ad object ids returned by the platform AND a read-back confirming targeting, budget, schedule, and creative match the approved bundle.
+  outcome_metrics: [cac, roas, qualified_lead_rate]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

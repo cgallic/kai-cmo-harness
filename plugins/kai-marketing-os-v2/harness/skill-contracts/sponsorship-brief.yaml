@@ -1,0 +1,248 @@
+skill: sponsorship-brief
+version: 3.0
+harness: kai-harness
+format: sponsorship-brief
+risk_tier: medium-high
+word_count: 150-600
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Buyer-side sponsorship placement brief — the brand commissioning a newsletter,
+  podcast, YouTube, creator, community, or event placement. Produces the creative
+  brief handed to the publisher/creator plus the deal and attribution spec.
+  Requires FTC paid-partnership disclosure in the placement, a unique tracking
+  mechanism for measurability, an audience-fit/vetting record before spend, and
+  evidence-traced claims. No fake "organic" framing.
+
+required_sources:
+  - brief
+  - knowledge/channels/sponsorships.md
+  - harness/references/creator-disclosure.md
+  - audience_vetting_record
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  ftc_disclosure_required_in_placement: true
+  unique_tracking_mechanism_required: true
+  audience_vetting_required_before_spend: true
+  creator_claims_require_evidence: true
+  no_fake_organic_framing: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - channel_type: string
+    - placement_type: string
+    - audience_vetting_record: object
+    - budget: number
+    - tracking_token: string
+    - disclosure_text: string
+    - offer: object
+  optional:
+    - landing_url: string
+    - exclusivity: boolean
+    - commitment_length: string
+    - claim_evidence_log: list[object]
+
+outputs:
+  creative_brief: string
+  talking_points: list[string]
+  disclosure_text: string
+  tracking_token: string
+  landing_url: string
+  claim_list: list[object]
+  audience_fit_score: object
+  deal_terms: object
+
+output_schema:
+  type: object
+  required:
+    - creative_brief
+    - talking_points
+    - disclosure_text
+    - tracking_token
+    - landing_url
+    - claim_list
+    - audience_fit_score
+    - deal_terms
+    - compliance_notes
+  properties:
+    creative_brief: string
+    talking_points: list[string]
+    disclosure_text: string
+    tracking_token: string
+    landing_url: string
+    claim_list:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        risk_level: string
+    audience_fit_score:
+      type: object
+      properties:
+        score: number
+        confidence: string
+        vetting_record_id: string
+        rationale: string
+    deal_terms:
+      type: object
+      properties:
+        channel_type: string
+        placement_type: string
+        budget: number
+        exclusivity: boolean
+        commitment_length: string
+        paid_partnership_label: string
+    compliance_notes: list[string]
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "disclosure_present == true"
+  - "paid_partnership_label_specified == true"
+  - "tracking_token_present == true"
+  - "audience_vetting_present == true"
+  - "claim_list_complete == true"
+  - "no_fake_organic_framing == true"
+
+deterministic_checks:
+  - id: disclosure_present
+    evaluator: static
+    pass_when: "disclosure_text is non_empty and deal_terms.paid_partnership_label is non_empty"
+  - id: tracking_mechanism_present
+    evaluator: static
+    pass_when: "tracking_token is non_empty (promo code or dedicated UTM/landing URL)"
+  - id: audience_vetting_present
+    evaluator: static
+    pass_when: "audience_vetting_record is non_empty and audience_fit_score.vetting_record_id is non_empty"
+  - id: word_count_range
+    evaluator: script
+    pass_when: "150 <= word_count <= 600"
+  - id: no_fake_organic_framing
+    evaluator: regex
+    pass_when: "talking_points and creative_brief do not instruct the creator to present a paid placement as unpaid or organic"
+  - id: claim_evidence_ids_present
+    evaluator: static
+    pass_when: "every claim_list item has evidence_id"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: audience_fit
+      question: "Does the placement match a vetted audience the offer actually serves?"
+    - name: offer_and_hook_strength
+      question: "Is the offer and talking-point hook compelling without exaggeration or pressure?"
+    - name: disclosure_correctness
+      question: "Is FTC paid-partnership disclosure present, correctly labeled, and not framed as organic?"
+    - name: measurability
+      question: "Can the placement be measured via a unique promo code or dedicated UTM/landing URL?"
+
+human_review_required_when:
+  - budget > 5000
+  - regulated_claim == true
+  - audience_fit_confidence != high
+  - exclusivity == true
+  - commitment_length_long_term == true
+  - claim_risk_level == high
+  - audience_vetting_record is missing
+
+golden_situations:
+  - name: vetted_newsletter_placement
+    expectation: "Includes paid-partnership disclosure, unique promo code or UTM, vetted audience record, and evidence-traced claims."
+  - name: undisclosed_placement_attempt
+    expectation: "Blocks when disclosure_text or paid_partnership_label is missing — undisclosed paid placement is a hard fail."
+  - name: no_tracking_mechanism
+    expectation: "Fails deterministic check when no promo code or dedicated UTM/landing URL is supplied."
+  - name: fake_organic_framing
+    expectation: "Blocks when the brief instructs the creator to present the placement as unpaid or organic."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_undisclosed_placements: 0
+  max_missing_tracking_mechanisms: 0
+  max_missing_audience_vetting: 0
+  max_unsubstantiated_claims: 0
+
+claim_policy:
+  allowed:
+    - sourced product capabilities the creator can truthfully state
+    - approved social proof with evidence
+    - vetted audience-fit observations
+  requires_evidence:
+    - performance stats
+    - customer outcomes
+    - superiority or comparison claims
+    - savings, revenue, time, health, legal, or financial claims
+  forbidden:
+    - undisclosed paid placement
+    - fake organic framing
+    - fabricated audience or reach figures
+    - unsupported guarantees
+    - claims the creator cannot substantiate
+
+provenance_policy:
+  claim_trace_required: true
+  audience_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - vetting_record_id
+    - disclosure_id
+    - tracking_token
+    - source_name
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - undisclosed paid placement or omitting the FTC paid-partnership label
+  - presenting a paid placement as unpaid or organic
+  - running a placement without a unique promo code or dedicated UTM/landing URL
+  - spending before an audience-fit/vetting record exists
+  - fabricated audience, reach, or engagement figures
+  - directing the creator to make claims that cannot be substantiated
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - partnerships_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_disclosure
+    - missing_tracking_mechanism
+    - missing_audience_vetting
+    - unsubstantiated_claim
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - channel_type
+  - placement_type
+  - vetting_record_id
+  - tracking_token
+  - landing_url
+  - evidence_ids
+  - disclosure_id
+  - budget
+  - reviewer
+  - approval_status
+  - placement_id
+
+hooks:
+  pre_write: load_brief + load_sponsorships_channel + load_creator_disclosure + load_audience_vetting
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_30day_check

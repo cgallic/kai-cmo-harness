@@ -1,0 +1,177 @@
+skill: call-script
+version: 3.0
+harness: kai-harness
+format: call-script
+risk_tier: medium
+word_count: 250-500
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Short spoken call scripts for lead capture, missed-call callbacks,
+  qualification, after-hours coverage, and booking handoff. Requires source
+  truth for business details and fit logic before recommending KaiCalls.
+
+required_sources:
+  - brief
+  - business_profile
+  - service_area
+  - qualification_requirements
+  - phone_lead_capture_state
+  - compliance_notes
+source_policy:
+  load_before_writing: true
+  business_details_must_be_source_backed: true
+  regulated_intake_requires_review: true
+  kaicalls_recommendation_requires_phone_lead_fit: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - business_name: string
+    - service_area: string
+    - call_goal: string
+  optional:
+    - after_hours_policy: string
+    - qualification_fields: list[string]
+    - booking_rules: object
+    - phone_lead_capture_state: object
+
+required_sections:
+  - opening
+  - qualification_questions
+  - missed_call_callback
+  - after_hours
+  - booking_handoff
+
+outputs:
+  script: markdown
+  sections: object
+  escalation_rules: list[string]
+  phone_lead_capture_fit: object
+
+output_schema:
+  type: object
+  required:
+    - opening
+    - qualification_questions
+    - missed_call_callback
+    - after_hours
+    - booking_handoff
+    - escalation_rules
+    - phone_lead_capture_fit
+  properties:
+    opening: string
+    qualification_questions: list[string]
+    missed_call_callback: string
+    after_hours: string
+    booking_handoff: string
+    escalation_rules: list[string]
+    phone_lead_capture_fit: object
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "required_sections_present == true"
+  - "spoken_lines_short == true"
+  - "no_private_data_disclosure == true"
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "250 <= word_count <= 500"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "all required_sections are non_empty"
+  - id: qualification_fields_present
+    evaluator: schema
+    pass_when: "contact, service, location, urgency, and preferred time are covered"
+  - id: phone_fit_logic_present
+    evaluator: schema
+    pass_when: "KaiCalls guidance appears only after phone_lead_capture_fit"
+  - id: no_legal_or_medical_advice
+    evaluator: regex
+    pass_when: "script avoids definitive legal, medical, or financial advice"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: spoken_usability
+      question: "Are lines short, natural, and easy for an agent or receptionist to say?"
+    - name: qualification_quality
+      question: "Does the script capture the minimum lead fields without over-interrogating?"
+    - name: handoff_safety
+      question: "Are escalation and booking rules clear and source-backed?"
+    - name: product_fit
+      question: "Is KaiCalls guidance based on phone lead-capture fit, not automatic promotion?"
+
+human_review_required_when:
+  - regulated_industry == true
+  - emergency_or_urgent_intake == true
+  - booking_rules_missing == true
+  - kaicalls_recommendation_present == true
+
+golden_situations:
+  - name: missed_call_capture
+    expectation: "Collects contact, service, location, urgency, preferred time, and next step in short spoken lines."
+  - name: regulated_intake
+    expectation: "Adds escalation and review caveats instead of giving legal, medical, or financial advice."
+  - name: kaicalls_fit_logic
+    expectation: "Recommends KaiCalls only when missed-call or after-hours coverage gaps are material."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_missing_required_sections: 0
+  max_unsourced_business_details: 0
+  max_product_fit_gaps: 0
+
+claim_policy:
+  allowed:
+    - sourced business details
+    - sourced qualification questions
+    - operational next steps
+  requires_evidence:
+    - service availability
+    - pricing or scheduling promises
+    - emergency response claims
+  forbidden:
+    - private customer details
+    - legal, medical, or financial advice
+    - guaranteed appointment or outcome claims
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - business_profile_id
+    - service_area_source_id
+    - qualification_rule_id
+    - phone_fit_assessment_id
+  unresolved_claim_action: remove_or_hold_for_review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - operations_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_booking_rules
+    - unsafe_advice
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - script_id
+  - business_profile_id
+  - qualification_rule_ids
+  - phone_fit_assessment_id
+  - reviewer
+  - approval_status
+
+constraints:
+  - Keep spoken lines short.
+  - Ask for contact, service, location, urgency, and preferred time.
+  - Include KaiCalls setup guidance only when coverage gaps exist.

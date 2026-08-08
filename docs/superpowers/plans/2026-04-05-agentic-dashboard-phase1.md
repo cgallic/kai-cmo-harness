@@ -159,7 +159,7 @@ Append to `.env.local.example`:
 ANTHROPIC_API_KEY=
 
 # Gateway
-GATEWAY_URL=http://89.167.60.171:10002
+GATEWAY_URL=http://YOUR_GATEWAY_HOST:10002
 GATEWAY_API_KEY=
 ```
 
@@ -413,7 +413,7 @@ git commit -m "feat: add Content, AgentRun, ChatMessage types and risk tier help
 Create `lib/gateway/client.ts`:
 
 ```typescript
-const GATEWAY_URL = process.env.GATEWAY_URL || "http://89.167.60.171:10002";
+const GATEWAY_URL = process.env.GATEWAY_URL || "http://YOUR_GATEWAY_HOST:10002";
 const GATEWAY_API_KEY = process.env.GATEWAY_API_KEY || "";
 
 export class GatewayError extends Error {

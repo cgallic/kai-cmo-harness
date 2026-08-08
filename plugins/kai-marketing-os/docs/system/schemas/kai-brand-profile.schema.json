@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-brand-profile.schema.json",
+  "title": "KaiBrandProfile",
+  "description": "A brand or business target that runs inside the Kai runtime.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "primary_archetype": {
+      "type": ["string", "null"]
+    },
+    "archetype_overlays": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "module_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "active_channels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "proof_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "persona_defaults": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "default": {}
+    },
+    "ga_property": {
+      "type": ["string", "null"]
+    },
+    "gsc_site": {
+      "type": ["string", "null"]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
+

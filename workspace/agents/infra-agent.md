@@ -8,14 +8,14 @@ Post results to Discord channel #health (ID: 1469310837469610216).
 
 | Server | Path | Notes |
 |--------|------|-------|
-| 89.167.60.171 | /var/www/meetkai | This VPS — monitor only |
+| KAI_VPS_HOST | /var/www/meetkai | This VPS — monitor only |
 
-Do NOT health check 77.42.43.0.
+Do NOT health check PROD_HOST.
 
 ## Step 1 — VPS Resources
 
 ```bash
-ssh -o StrictHostKeyChecking=no root@89.167.60.171 "df -h / && free -h && uptime" 2>/dev/null
+ssh -o StrictHostKeyChecking=no root@KAI_VPS_HOST "df -h / && free -h && uptime" 2>/dev/null
 ```
 
 Flag: disk > 80%, memory > 85%, load > 8.
@@ -50,5 +50,5 @@ If all clear but worth noting: post brief ✅ health summary once per day (skip 
 
 - SSH failures are not necessarily outages — retry once before alerting
 - Never `git reset --hard`, `git push --force`, or `rm -rf` on production
-- Auto-rollback on failed health checks: `ssh root@77.42.43.0 "cd /var/www/<path> && git revert HEAD --no-edit && pm2 restart <name>"`
+- Auto-rollback on failed health checks: `ssh root@PROD_HOST "cd /var/www/<path> && git revert HEAD --no-edit && pm2 restart <name>"`
 - One deploy at a time across all products

@@ -1,0 +1,345 @@
+{
+  "schema": "kai.marketing_platform_source_registry.v1",
+  "last_researched": "2026-06-17",
+  "purpose": "Official source registry for paid ads, search/AEO, analytics, legal, transcript/video, and cross-platform compliance workflows. Use alongside social-platform-source-registry.json.",
+  "sources": [
+    {
+      "id": "google_ads_policies",
+      "platform": "google_ads",
+      "category": "ads_policy",
+      "title": "Google Ads Policies",
+      "url": "https://support.google.com/google-ads/answer/6316",
+      "owner_file": "harness/references/google-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "google_ads_api_quotas",
+      "platform": "google_ads",
+      "category": "api_rate_limits",
+      "title": "Google Ads API Limits and Quotas",
+      "url": "https://developers.google.com/google-ads/api/docs/best-practices/quotas",
+      "owner_file": "harness/references/google-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "google_ads_api_rate_limits",
+      "platform": "google_ads",
+      "category": "api_rate_limits",
+      "title": "Google Ads API Rate Limits",
+      "url": "https://developers.google.com/google-ads/api/docs/productionize/rate-limits",
+      "owner_file": "harness/references/google-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "meta_ad_standards",
+      "platform": "meta",
+      "category": "ads_policy",
+      "title": "Meta Advertising Standards",
+      "url": "https://transparency.meta.com/policies/ad-standards/",
+      "owner_file": "harness/references/meta-ads-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "meta_marketing_api_rate_limits",
+      "platform": "meta",
+      "category": "api_rate_limits",
+      "title": "Meta Marketing API Rate Limiting",
+      "url": "https://developers.facebook.com/documentation/ads-commerce/marketing-api/overview/rate-limiting",
+      "owner_file": "harness/references/meta-ads-api-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "tiktok_ad_policies",
+      "platform": "tiktok",
+      "category": "ads_policy",
+      "title": "TikTok Advertising Policies",
+      "url": "https://ads.tiktok.com/help/article/tiktok-advertising-policies",
+      "owner_file": "harness/references/tiktok-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "tiktok_api_rate_limits",
+      "platform": "tiktok",
+      "category": "api_rate_limits",
+      "title": "TikTok API Rate Limits",
+      "url": "https://developers.tiktok.com/doc/tiktok-api-v2-rate-limit",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "linkedin_ads_policy",
+      "platform": "linkedin",
+      "category": "ads_policy",
+      "title": "LinkedIn Advertising Policies",
+      "url": "https://www.linkedin.com/legal/ads-policy",
+      "owner_file": "harness/references/linkedin-ads-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "linkedin_api_rate_limits",
+      "platform": "linkedin",
+      "category": "api_rate_limits",
+      "title": "LinkedIn API Rate Limiting",
+      "url": "https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts/rate-limits",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "microsoft_ad_docs",
+      "platform": "microsoft_ads",
+      "category": "developer",
+      "title": "Microsoft Advertising Documentation",
+      "url": "https://learn.microsoft.com/en-us/advertising/",
+      "owner_file": "harness/references/microsoft-ads-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "microsoft_ads_content_api_limits",
+      "platform": "microsoft_ads",
+      "category": "api_rate_limits",
+      "title": "Microsoft Advertising Request and Method Limits",
+      "url": "https://learn.microsoft.com/en-us/advertising/shopping-content/request-method-limits",
+      "owner_file": "harness/references/microsoft-ads-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "pinterest_ads_guidelines",
+      "platform": "pinterest",
+      "category": "ads_policy",
+      "title": "Pinterest Advertising Guidelines",
+      "url": "https://policy.pinterest.com/en/advertising-guidelines",
+      "owner_file": "harness/references/pinterest-ads-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "pinterest_api_rate_limits",
+      "platform": "pinterest",
+      "category": "api_rate_limits",
+      "title": "Pinterest API Rate Limits",
+      "url": "https://developers.pinterest.com/docs/reference/rate-limits/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "snap_ad_policies",
+      "platform": "snapchat",
+      "category": "ads_policy",
+      "title": "Snap Advertising Policies",
+      "url": "https://values.snap.com/policy/policy-advertising-policies",
+      "owner_file": "harness/references/snapchat-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "snap_marketing_api",
+      "platform": "snapchat",
+      "category": "developer",
+      "title": "Snap Marketing API",
+      "url": "https://developers.snap.com/api/marketing-api/",
+      "owner_file": "harness/references/snapchat-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "amazon_ads_policy",
+      "platform": "amazon_ads",
+      "category": "ads_policy",
+      "title": "Amazon Ads Guidelines and Acceptance Policies",
+      "url": "https://advertising.amazon.com/resources/ad-policy",
+      "owner_file": "harness/references/amazon-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "amazon_ads_api_rate_limits",
+      "platform": "amazon_ads",
+      "category": "api_rate_limits",
+      "title": "Amazon Ads API Rate Limiting",
+      "url": "https://advertising.amazon.com/API/docs/en-us/reference/concepts/rate-limiting",
+      "owner_file": "harness/references/amazon-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "x_ads_api_rate_limits",
+      "platform": "x",
+      "category": "api_rate_limits",
+      "title": "X Ads API Rate Limiting",
+      "url": "https://docs.x.com/x-ads-api/fundamentals/rate-limiting",
+      "owner_file": "harness/references/x-ads-policy-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "x_api_rate_limits",
+      "platform": "x",
+      "category": "api_rate_limits",
+      "title": "X API Rate Limits",
+      "url": "https://docs.x.com/x-api/fundamentals/rate-limits",
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "openai_ads_docs",
+      "platform": "openai_ads",
+      "category": "developer",
+      "title": "OpenAI Ads Developer Docs",
+      "url": "https://developers.openai.com/ads",
+      "owner_file": "harness/references/openai-ads-measurement-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "openai_ads_pixel",
+      "platform": "openai_ads",
+      "category": "measurement",
+      "title": "OpenAI Ads JavaScript Pixel",
+      "url": "https://developers.openai.com/ads/measurement-pixel",
+      "owner_file": "harness/references/openai-ads-measurement-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "openai_ads_capi",
+      "platform": "openai_ads",
+      "category": "measurement",
+      "title": "OpenAI Ads Conversions API",
+      "url": "https://developers.openai.com/ads/conversions-api",
+      "owner_file": "harness/references/openai-ads-measurement-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "google_ai_features",
+      "platform": "google_search",
+      "category": "search_aeo",
+      "title": "AI Features and Your Website",
+      "url": "https://developers.google.com/search/docs/appearance/ai-features",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "google_ai_optimization",
+      "platform": "google_search",
+      "category": "search_aeo",
+      "title": "Optimizing Your Website for Generative AI Features on Google Search",
+      "url": "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "bing_webmaster_guidelines",
+      "platform": "bing_copilot",
+      "category": "search_aeo",
+      "title": "Bing Webmaster Guidelines",
+      "url": "https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "bing_webmaster_api",
+      "platform": "bing_copilot",
+      "category": "developer",
+      "title": "Bing Webmaster API",
+      "url": "https://learn.microsoft.com/en-us/bingwebmaster/",
+      "owner_file": "harness/references/google-indexation-monitoring.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "openai_crawlers",
+      "platform": "chatgpt_openai",
+      "category": "crawler",
+      "title": "Overview of OpenAI Crawlers",
+      "url": "https://developers.openai.com/api/docs/bots",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "anthropic_crawlers",
+      "platform": "claude_anthropic",
+      "category": "crawler",
+      "title": "Anthropic Web Crawling and Blocking",
+      "url": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "perplexity_crawlers",
+      "platform": "perplexity",
+      "category": "crawler",
+      "title": "Perplexity Crawlers",
+      "url": "https://docs.perplexity.ai/docs/resources/perplexity-crawlers",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/perplexity-ranking-reverse-engineered.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "youtube_transcript_help",
+      "platform": "youtube",
+      "category": "transcript",
+      "title": "YouTube Visible Transcripts",
+      "url": "https://support.google.com/youtube/answer/15930243",
+      "owner_file": "harness/references/transcript-video-research-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "youtube_api_captions",
+      "platform": "youtube",
+      "category": "developer",
+      "title": "YouTube Data API Captions",
+      "url": "https://developers.google.com/youtube/v3/docs/captions",
+      "owner_file": "harness/references/transcript-video-research-rules.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "ftc_endorsements",
+      "platform": "cross_platform",
+      "category": "disclosure",
+      "title": "FTC Endorsements, Influencers, and Reviews",
+      "url": "https://www.ftc.gov/business-guidance/advertising-marketing/endorsements-influencers-reviews",
+      "owner_file": "harness/references/creator-disclosure.md",
+      "evidence_tier": "official_regulator"
+    },
+    {
+      "id": "copyright_fair_use",
+      "platform": "cross_platform",
+      "category": "copyright",
+      "title": "U.S. Copyright Office Fair Use FAQ",
+      "url": "https://www.copyright.gov/help/faq/faq-fairuse.html",
+      "owner_file": "harness/references/transcript-video-research-rules.md",
+      "evidence_tier": "official_regulator"
+    },
+    {
+      "id": "ga4_data_api",
+      "platform": "google_analytics",
+      "category": "analytics_api",
+      "title": "Google Analytics Data API",
+      "url": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+      "owner_file": "knowledge/playbooks/analytics-attribution.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "ga4_attribution",
+      "platform": "google_analytics",
+      "category": "analytics",
+      "title": "Google Analytics Attribution",
+      "url": "https://support.google.com/analytics/answer/10596866",
+      "owner_file": "knowledge/playbooks/analytics-attribution.md",
+      "evidence_tier": "official"
+    },
+    {
+      "id": "ftc_can_spam",
+      "platform": "email",
+      "category": "legal",
+      "title": "CAN-SPAM Compliance Guide",
+      "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+      "owner_file": "harness/references/cold-email-rules.md",
+      "evidence_tier": "official_regulator"
+    }
+  ],
+  "known_source_gaps": [
+    {
+      "platform": "grok_xai",
+      "gap": "No official Grok crawler or robots.txt documentation was found in live public search during this fan-out.",
+      "owner_file": "knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md",
+      "handling": "Treat Grok/X crawler behavior as an unverified gap. Use X API and xAI public docs only for API/product claims."
+    },
+    {
+      "platform": "openai_ads",
+      "gap": "OpenAI Ads docs are live and current, but the harness has measurement docs only; creative/ad policy routing needs a dedicated owner reference when OpenAI publishes full ad policy detail.",
+      "owner_file": "harness/references/openai-ads-measurement-reference.md",
+      "handling": "Use OpenAI Ads docs, advertising-compliance.md, landing-page policy refs, and human review until a dedicated OpenAI Ads policy reference exists."
+    }
+  ]
+}

@@ -292,7 +292,7 @@ OpenClaw is the ops layer of the dev pipeline. Claude Code handles PRD/design/bu
 - **Monitoring**: Check PM2 status and health endpoints on demand or during heartbeat
 - **Reporting**: Post deploy results (success/failure/rollback) to Discord
 
-### Production Servers (77.42.43.0)
+### Production Servers (PROD_HOST)
 
 | Product | Path | Port | PM2 | Health | Branch |
 |---------|------|------|-----|--------|--------|
@@ -301,7 +301,7 @@ OpenClaw is the ops layer of the dev pipeline. Claude Code handles PRD/design/bu
 | ClawdFlix | /var/www/clawdflix | 3885 | clawdflix-api | /health | master |
 | Clawdtery | /var/www/clawdtery | 3867 | clawdtery | /health | master |
 
-All products have `deploy.sh` installed. Run: `ssh root@77.42.43.0 "cd /var/www/<path> && bash deploy.sh"`
+All products have `deploy.sh` installed. Run: `ssh root@PROD_HOST "cd /var/www/<path> && bash deploy.sh"`
 
 ### Discord Commands
 - `!deploy <product>` — Run deploy.sh (git pull + restart + health check + auto-rollback)
@@ -330,7 +330,7 @@ When asked to create a new product/project:
 See `skills/dev-workflow/SKILL.md` for full deploy scripts and response formats.
 
 ## Server Access
-- This VPS: 89.167.60.171 (Hetzner, Ubuntu 24.04, 16GB RAM)
+- This VPS: KAI_VPS_HOST (Hetzner, Ubuntu 24.04, 16GB RAM)
 - Caddy reverse proxy: meetkai.xyz, cg.meetkai.xyz, dash.meetkai.xyz
 
 ## Marketing Knowledge Base

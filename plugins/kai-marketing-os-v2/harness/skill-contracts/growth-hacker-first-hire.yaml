@@ -1,0 +1,169 @@
+skill: growth-hacker-first-hire
+version: 1.0
+harness: kai-harness
+format: growth-hacker-os
+risk_tier: high
+seo_lint: conditional
+
+description: >
+  First-growth-hire distribution operating package covering B2B and B2C
+  channel selection, specialist fan-out, test cards, asset backlog, approval
+  gates, and measurement. Blocks live-channel action until approval.
+
+required_sources:
+  - product_context
+  - channel_map
+  - source_evidence
+  - policy_references
+  - approval_rules
+
+source_policy:
+  load_before_writing: true
+  quantitative_results_require_source: true
+  missing_sources_action: list_in_data_gaps
+  hypotheses_must_be_labeled: true
+
+inputs:
+  required:
+    - product_context: object
+    - business_type: string
+    - stage: string
+    - primary_conversion: string
+  optional:
+    - budget: number
+    - existing_channels: list[string]
+    - proof_assets: list[object]
+    - analytics_exports: list[object]
+    - crm_exports: list[object]
+    - regulated_categories: list[string]
+    - approval_rules: object
+
+outputs:
+  brief: markdown
+  channel_map: markdown
+  prioritization_scorecard: markdown
+  ninety_day_sprint: markdown
+  agent_fanout_plan: markdown
+  b2b_channel_tests: markdown
+  b2c_channel_tests: markdown
+  asset_backlog: markdown
+  creative_ledger: markdown
+  outbound_approval_plan: markdown
+  creator_partner_shortlist: markdown
+  metrics_dashboard: markdown
+  decision_log: markdown
+  data_sources: markdown
+  data_gaps: markdown
+  quality_report: markdown
+
+required_output_files:
+  - _brief.md
+  - _channel-map.md
+  - _prioritization-scorecard.md
+  - _90-day-sprint.md
+  - _agent-fanout-plan.md
+  - _b2b-channel-tests.md
+  - _b2c-channel-tests.md
+  - _asset-backlog.md
+  - _creative-ledger.md
+  - _outbound-approval-plan.md
+  - _creator-partner-shortlist.md
+  - _metrics-dashboard.md
+  - _decision-log.md
+  - _data-sources.md
+  - _data-gaps.md
+  - _quality-report.md
+
+channel_coverage:
+  b2b_required:
+    - linkedin_organic
+    - linkedin_articles_newsletters
+    - events_webinars
+    - ai_outbound_sdr
+    - abm
+    - aeo_ai_search
+    - blogs_seo
+    - long_form_writing
+    - youtube
+    - x_founder_media
+    - influencers_creators
+    - partnerships_comarketing
+    - newsletter_lifecycle
+    - podcast
+    - community_reddit
+    - pr_digital_publications
+    - paid_media_retargeting
+  b2c_required:
+    - ai_ugc
+    - organic_tiktok
+    - paid_social
+    - influencers_creator_commerce
+    - events_popups_field_marketing
+    - sponsorships
+    - email_sms_retention
+    - referral_affiliate_community
+    - instagram_reels
+    - youtube_shorts
+    - pinterest
+    - snapchat
+    - ecommerce_search_and_offer_testing
+
+quality_gates:
+  - product_context_present == true
+  - channel_map_complete == true
+  - prioritization_scorecard_complete == true
+  - primary_secondary_exploratory_channels_selected == true
+  - blocked_channels_have_reasons == true
+  - test_cards_include_kill_and_graduation_rules == true
+  - live_actions_blocked_without_approval == true
+  - source_trace_complete_for_quantitative_claims == true
+  - data_gaps_recorded == true
+  - banned_words_tier1 == 0
+  - four_us_total >= 12
+
+conditional_gates:
+  seo_or_aeo:
+    - seo_lint_passes == true
+    - agent_readiness_lint_complete == true
+  ads_or_paid_social:
+    - platform_policy_loaded == true
+    - advertising_compliance_loaded == true
+    - consent_tracking_ready_or_gap_recorded == true
+  outbound:
+    - cold_email_rules_loaded == true
+    - suppression_plan_complete == true
+    - sender_setup_ready_or_gap_recorded == true
+  creator_or_sponsorship:
+    - disclosure_plan_complete == true
+    - usage_rights_defined == true
+    - ai_synthetic_media_status_defined == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - live_mutation_without_approval
+    - outbound_send_without_approval
+    - ad_spend_without_approval
+    - social_publish_without_approval
+    - crm_mutation_without_approval
+    - creator_contract_without_approval
+    - unsupported_winner_claim
+    - missing_policy_reference
+    - missing_claim_source
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - source
+    - retrieved_at
+    - evidence_tier
+    - confidence_label
+    - data_mode
+  unresolved_claim_action: hold_for_review
+
+hooks:
+  pre_write: load_product_context + load_growth_hacker_playbook + load_growth_loops + load_channel_policy_refs
+  post_write: run_quality_gate_per_customer_facing_asset + validate_channel_coverage
+  on_fail: revise_failing_sections_or_mark_blocked
+  on_pass: save_growth_hacker_package_for_approval
+  on_approve: route_to_specialist_kai_skills

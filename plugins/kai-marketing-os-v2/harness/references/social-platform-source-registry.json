@@ -1,0 +1,1017 @@
+{
+  "version": 1,
+  "last_researched": "2026-08-03",
+  "purpose": "Canonical source list for monthly monitoring of social platform terms, policy, developer/API, recommendation, and organic posting guidance.",
+  "sources": [
+    {
+      "id": "x_rules",
+      "platform": "x",
+      "category": "policy",
+      "title": "X Rules and Best Practices",
+      "url": "https://help.x.com/en/rules-and-policies/x-rules-and-best-practices",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
+      "owner_file": "knowledge/channels/twitter-x.md",
+      "notes": "Fetchable official summary page that points to the full X Rules. Keep the direct X Rules page as fallback because help.x bot gating is intermittent in unattended runs."
+    },
+    {
+      "id": "x_automation",
+      "platform": "x",
+      "category": "automation",
+      "title": "X Automation Rules",
+      "url": "https://help.x.com/en/rules-and-policies/x-automation",
+      "retries": 3,
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Required before scheduling, replies, follows, reposts, likes, DMs, or other write actions. help.x bot gating is intermittent in unattended runs, so retry before treating a 403 as a real blocker."
+    },
+    {
+      "id": "x_developer_policy",
+      "platform": "x",
+      "category": "developer",
+      "title": "X Developer Policy",
+      "url": "https://docs.x.com/developer-terms/policy",
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Acceptable API use, privacy, content usage, automation, and restricted behavior."
+    },
+    {
+      "id": "x_authenticity",
+      "platform": "x",
+      "category": "policy",
+      "title": "X Authenticity Policy",
+      "url": "https://help.x.com/en/rules-and-policies/authenticity",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Official spam, platform manipulation, impersonation, and synthetic coordination policy. Fall back to the X Rules page because direct help pages can intermittently 403 in unattended runs."
+    },
+    {
+      "id": "x_rate_limits",
+      "platform": "x",
+      "category": "automation",
+      "title": "X API Rate Limits",
+      "url": "https://docs.x.com/fundamentals/rate-limits",
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Canonical request and write-limit guidance for X API automation."
+    },
+    {
+      "id": "x_copyright_policy",
+      "platform": "x",
+      "category": "policy",
+      "title": "X Copyright Policy",
+      "url": "https://help.x.com/en/rules-and-policies/copyright-policy",
+      "fallback_urls": [
+        "https://help.x.com/en/rules-and-policies/x-rules"
+      ],
+      "retries": 3,
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "Official copyright/IP enforcement guidance for media, reposting, and rights complaints. Fall back to the X Rules page because direct help pages can intermittently 403 in unattended runs."
+    },
+    {
+      "id": "x_api_changelog",
+      "platform": "x",
+      "category": "changelog",
+      "title": "X API Changelog",
+      "url": "https://docs.x.com/changelog",
+      "owner_file": "harness/references/x-organic-posting-rules.md",
+      "notes": "API release notes; monitor for post, article, activity, DM, and search changes."
+    },
+    {
+      "id": "x_search_recommendations",
+      "platform": "x",
+      "category": "recommendation",
+      "title": "X Search Recommendations",
+      "url": "https://help.x.com/en/resources/recommender-systems/search-recommendations",
+      "fallback_urls": [
+        "https://help.x.com/en/resources/recommender-systems"
+      ],
+      "retries": 3,
+      "owner_file": "knowledge/channels/twitter-x.md",
+      "notes": "Search ranking and quality filtering signals. Fall back to the official recommender-systems hub because direct help pages can return intermittent 403s in unattended runs."
+    },
+    {
+      "id": "meta_community_standards",
+      "platform": "meta",
+      "category": "policy",
+      "title": "Meta Community Standards",
+      "url": "https://transparency.meta.com/policies/community-standards/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Applies across Facebook, Instagram, Messenger, and Threads."
+    },
+    {
+      "id": "meta_ad_standards",
+      "platform": "meta",
+      "category": "ads_policy",
+      "title": "Meta Advertising Standards",
+      "url": "https://transparency.meta.com/policies/ad-standards/",
+      "owner_file": "harness/references/meta-ads-rules.md",
+      "notes": "Monitor because organic posts can become promoted posts."
+    },
+    {
+      "id": "meta_developer_policies",
+      "platform": "meta",
+      "category": "developer",
+      "title": "Meta Developer Policies",
+      "url": "https://developers.facebook.com/devpolicy/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "API, app review, privacy, platform behavior, and automation constraints."
+    },
+    {
+      "id": "graph_api_rate_limits",
+      "platform": "meta",
+      "category": "automation",
+      "title": "Graph API Rate Limits",
+      "url": "https://developers.facebook.com/docs/graph-api/overview/rate-limiting/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Canonical Graph API rate-limit guidance for scheduled publishing, moderation, and insights jobs."
+    },
+    {
+      "id": "instagram_ranking",
+      "platform": "instagram",
+      "category": "recommendation",
+      "title": "Instagram Algorithms and Ranking",
+      "url": "https://creators.instagram.com/grow/algorithms-and-ranking",
+      "owner_file": "knowledge/channels/instagram.md",
+      "notes": "Official creator ranking guidance across Feed, Stories, Explore, and Reels."
+    },
+    {
+      "id": "instagram_originality",
+      "platform": "instagram",
+      "category": "recommendation",
+      "title": "Instagram Recommendations and Originality",
+      "url": "https://creators.instagram.com/blog/recommendations-and-originality",
+      "owner_file": "knowledge/channels/instagram.md",
+      "notes": "Monitor for originality, aggregator, recommendation, and smaller-creator distribution guidance."
+    },
+    {
+      "id": "instagram_terms",
+      "platform": "instagram",
+      "category": "terms",
+      "title": "Instagram Terms of Use",
+      "url": "https://help.instagram.com/581066165581870/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Canonical Instagram terms coverage for account use, content rights, and surface-specific restrictions."
+    },
+    {
+      "id": "instagram_branded_content",
+      "platform": "instagram",
+      "category": "commercial_policy",
+      "title": "About Branded Content on Instagram",
+      "url": "https://help.instagram.com/128845584325492/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Instagram branded-content and paid-partnership tool guidance."
+    },
+    {
+      "id": "threads_api",
+      "platform": "threads",
+      "category": "developer",
+      "title": "Threads API Documentation",
+      "url": "https://developers.facebook.com/docs/threads/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Posting, insights, moderation, and brand management surface for Threads."
+    },
+    {
+      "id": "threads_terms",
+      "platform": "threads",
+      "category": "terms",
+      "title": "Threads Terms of Use",
+      "url": "https://help.instagram.com/769983657850450",
+      "fallback_urls": [
+        "https://about.fb.com/news/2023/07/introducing-threads-new-app-text-sharing/"
+      ],
+      "owner_file": "knowledge/channels/threads-organic.md",
+      "notes": "Canonical Threads terms page. The direct help page is browser-visible but automation-hostile, so fall back to the first-party launch post for unattended monitoring and confirm the live terms page manually when it changes."
+    },
+    {
+      "id": "tiktok_community_guidelines",
+      "platform": "tiktok",
+      "category": "policy",
+      "title": "TikTok Community Guidelines",
+      "url": "https://www.tiktok.com/community-guidelines/en/",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Core organic content rules. Switched from the support-center stub to the public guidelines page because the support URL was returning a machine-unusable shell in monitor runs."
+    },
+    {
+      "id": "tiktok_recommends_content",
+      "platform": "tiktok",
+      "category": "recommendation",
+      "title": "How TikTok Recommends Content",
+      "url": "https://support.tiktok.com/en/using-tiktok/exploring-videos/how-tiktok-recommends-content",
+      "owner_file": "knowledge/channels/tiktok-algorithm.md",
+      "notes": "Official recommender-system explanation."
+    },
+    {
+      "id": "tiktok_not_recommended",
+      "platform": "tiktok",
+      "category": "recommendation",
+      "title": "Why Is My Account Not Being Recommended?",
+      "url": "https://www.tiktok.com/community-guidelines/en/for-you-feed-and-search/",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Account and content recommendation-eligibility checks. Switched from the support-center article to the public For You Feed and Search guideline page because the support URL was returning a machine-unusable shell in monitor runs."
+    },
+    {
+      "id": "tiktok_content_posting_api",
+      "platform": "tiktok",
+      "category": "developer",
+      "title": "TikTok Content Posting API",
+      "url": "https://developers.tiktok.com/doc/content-posting-api-get-started",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Direct posting and upload prerequisites, scopes, UX, and domain verification."
+    },
+    {
+      "id": "tiktok_developer_guidelines",
+      "platform": "tiktok",
+      "category": "developer",
+      "title": "TikTok Developer Guidelines",
+      "url": "https://developers.tiktok.com/doc/our-guidelines-developer-guidelines",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Official umbrella developer-policy guidance for compliance, review, and platform-safe integrations."
+    },
+    {
+      "id": "tiktok_content_sharing_guidelines",
+      "platform": "tiktok",
+      "category": "developer",
+      "title": "TikTok Content Sharing Guidelines",
+      "url": "https://developers.tiktok.com/doc/content-sharing-guidelines",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Share/direct-post UX, watermark, and developer behavior requirements."
+    },
+    {
+      "id": "tiktok_ads_changelog_2026",
+      "platform": "tiktok",
+      "category": "ads_policy",
+      "title": "TikTok Ad Policy Change Log 2026",
+      "url": "https://ads.tiktok.com/help/article/tiktok-ad-policy-change-log-2026",
+      "owner_file": "harness/references/tiktok-ads-policy-reference.md",
+      "notes": "Monitor for policy changes before promoting or boosting organic content."
+    },
+    {
+      "id": "youtube_community_guidelines",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "YouTube Community Guidelines",
+      "url": "https://support.google.com/youtube/answer/9288567?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Core creator/content policy."
+    },
+    {
+      "id": "youtube_recommendations",
+      "platform": "youtube",
+      "category": "recommendation",
+      "title": "Recommendations on YouTube",
+      "url": "https://www.youtube.com/howyoutubeworks/recommendations/",
+      "owner_file": "knowledge/channels/youtube.md",
+      "notes": "Official recommendation, search, and Watch Next overview."
+    },
+    {
+      "id": "youtube_fake_engagement",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "YouTube Fake Engagement Policy",
+      "url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Blocks artificial views, likes, comments, metrics, and engagement incentives."
+    },
+    {
+      "id": "youtube_copyright",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "Copyright on YouTube",
+      "url": "https://support.google.com/youtube/answer/2797466?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Canonical music, copyright, permissions, fair-use, and Content ID guidance."
+    },
+    {
+      "id": "youtube_genai_disclosure",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "YouTube GenAI Disclosure",
+      "url": "https://support.google.com/youtube/answer/14328491?hl=en",
+      "timeout": 20,
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Disclosure for realistic AI-generated or altered content."
+    },
+    {
+      "id": "youtube_api_terms",
+      "platform": "youtube",
+      "category": "developer",
+      "title": "YouTube API Services Terms of Service",
+      "url": "https://developers.google.com/youtube/terms/api-services-terms-of-service",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "API ToS; includes revision history/RSS notice guidance."
+    },
+    {
+      "id": "youtube_developer_policies",
+      "platform": "youtube",
+      "category": "developer",
+      "title": "YouTube API Services Developer Policies",
+      "url": "https://developers.google.com/youtube/terms/developer-policies",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "API client UX, privacy, data use, and compliance rules."
+    },
+    {
+      "id": "youtube_ad_guideline_updates",
+      "platform": "youtube",
+      "category": "ads_policy",
+      "title": "YouTube Advertiser-Friendly Guideline Updates",
+      "url": "https://support.google.com/youtube/answer/9725604?hl=en",
+      "timeout": 20,
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Monitor because organic videos may monetize or become paid media."
+    },
+    {
+      "id": "linkedin_user_agreement",
+      "platform": "linkedin",
+      "category": "terms",
+      "title": "LinkedIn User Agreement",
+      "url": "https://www.linkedin.com/legal/user-agreement",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Core member terms."
+    },
+    {
+      "id": "linkedin_api_terms",
+      "platform": "linkedin",
+      "category": "developer",
+      "title": "LinkedIn API Terms of Use",
+      "url": "https://www.linkedin.com/legal/l/api-terms-of-use",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "API and data-use restrictions."
+    },
+    {
+      "id": "linkedin_marketing_api_terms",
+      "platform": "linkedin",
+      "category": "developer",
+      "title": "LinkedIn Marketing API Terms",
+      "url": "https://www.linkedin.com/legal/l/marketing-api-terms",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Marketing and community management API access."
+    },
+    {
+      "id": "linkedin_developer_ai_policy",
+      "platform": "linkedin",
+      "category": "developer",
+      "title": "LinkedIn Developer AI Policy",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/developer-ai-policy?view=li-lms-2026-07",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "AI use with LinkedIn organic/API data."
+    },
+    {
+      "id": "pinterest_community_guidelines",
+      "platform": "pinterest",
+      "category": "policy",
+      "title": "Pinterest Community Guidelines",
+      "url": "https://policy.pinterest.com/en/community-guidelines",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Core content, spam, deceptive practice, and safety rules."
+    },
+    {
+      "id": "pinterest_terms",
+      "platform": "pinterest",
+      "category": "terms",
+      "title": "Pinterest Terms of Service",
+      "url": "https://policy.pinterest.com/en/terms-of-service",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "User and service terms."
+    },
+    {
+      "id": "pinterest_business_terms",
+      "platform": "pinterest",
+      "category": "terms",
+      "title": "Pinterest Business Terms",
+      "url": "https://business.pinterest.com/business-terms-of-service/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Business account and commercial use terms."
+    },
+    {
+      "id": "pinterest_genai_guidelines",
+      "platform": "pinterest",
+      "category": "ai_policy",
+      "title": "Pinterest GenAI Acceptable Use Guidelines",
+      "url": "https://policy.pinterest.com/en/genai-acceptable-use-guidelines",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Official GenAI safety, deception, privacy, IP, and anti-scraping rules."
+    },
+    {
+      "id": "pinterest_changelog",
+      "platform": "pinterest",
+      "category": "changelog",
+      "title": "Pinterest Developers Changelog",
+      "url": "https://developers.pinterest.com/docs/changelog/changelog/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Canonical developer and ads/platform changelog for Pinterest surfaces."
+    },
+    {
+      "id": "pinterest_developer_guidelines",
+      "platform": "pinterest",
+      "category": "developer",
+      "title": "Pinterest Developer Guidelines",
+      "url": "https://policy.pinterest.com/en/developer-guidelines",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Developer behavior, Pinterest Materials, and app compliance."
+    },
+    {
+      "id": "pinterest_developer_terms",
+      "platform": "pinterest",
+      "category": "developer",
+      "title": "Pinterest Developer and API Terms",
+      "url": "https://developers.pinterest.com/terms/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "API terms and access constraints."
+    },
+    {
+      "id": "snap_terms",
+      "platform": "snapchat",
+      "category": "terms",
+      "title": "Snap Terms of Service",
+      "url": "https://www.snap.com/terms",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Core user terms."
+    },
+    {
+      "id": "snap_community_guidelines",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "Snapchat Community Guidelines",
+      "url": "https://values.snap.com/policy/policy-community-guidelines",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Organic content, commercial content, monetization, and developer policy pointers."
+    },
+    {
+      "id": "snap_copyright",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "About Copyright Infringement on Snapchat",
+      "url": "https://help.snapchat.com/hc/en-us/articles/7012315652500-About-Copyright-Infringement-on-Snapchat",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Official Snap copyright/IP guidance for media reuse, music, and infringement complaints."
+    },
+    {
+      "id": "snap_recommendation_eligibility",
+      "platform": "snapchat",
+      "category": "recommendation",
+      "title": "Snap Content Guidelines for Recommendation Eligibility",
+      "url": "https://values.snap.com/policy/content-guidelines-recommendation-eligibility",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Eligibility for recommendation beyond friends/followers."
+    },
+    {
+      "id": "snap_commercial_content",
+      "platform": "snapchat",
+      "category": "commercial_policy",
+      "title": "Snap Commercial Content Policy",
+      "url": "https://values.snap.com/policy/content-guidelines-recommendation-eligibility/recommendation-eligibility/commercial-content",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Sponsored/brand/commercial organic content requirements."
+    },
+    {
+      "id": "snap_creator_monetization",
+      "platform": "snapchat",
+      "category": "monetization",
+      "title": "Snap Creator Monetization Policy",
+      "url": "https://values.snap.com/policy/creator-monetization-policy",
+      "owner_file": "harness/references/snapchat-organic-posting-rules.md",
+      "notes": "Authenticity and quality standards for monetized public content."
+    },
+    {
+      "id": "reddit_user_agreement",
+      "platform": "reddit",
+      "category": "terms",
+      "title": "Reddit User Agreement",
+      "url": "https://redditinc.com/policies/user-agreement",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Core user terms."
+    },
+    {
+      "id": "reddit_content_policy",
+      "platform": "reddit",
+      "category": "policy",
+      "title": "Reddit Content Policy",
+      "url": "https://redditinc.com/policies/content-policy",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Site-wide content rules."
+    },
+    {
+      "id": "reddit_developer_terms",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Developer Terms",
+      "url": "https://redditinc.com/policies/developer-terms",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "API and licensed materials use rules."
+    },
+    {
+      "id": "reddit_data_api_terms",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Data API Terms",
+      "url": "https://redditinc.com/policies/data-api-terms",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Canonical Data API license, content-use, identity, rate-limit, commercial-use, and monetization restrictions."
+    },
+    {
+      "id": "reddit_public_content_policy",
+      "platform": "reddit",
+      "category": "data_policy",
+      "title": "Reddit Public Content Policy",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/26410290525844-Public-Content-Policy",
+      "fallback_urls": [
+        "https://redditinc.com/news/publishing-our-public-content-policy-and-introducing-a-new-community-for-researchers"
+      ],
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Public Reddit content/data access and commercial use policy. Primary help-center page can be bot-blocked, so the official Reddit news post is the monitoring fallback."
+    },
+    {
+      "id": "reddit_responsible_builder_policy",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Responsible Builder Policy Announcement",
+      "url": "https://www.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Monitor API approval and OAuth access requirements."
+    },
+    {
+      "id": "linkedin_professional_community_policies",
+      "platform": "linkedin",
+      "category": "policy",
+      "title": "LinkedIn Professional Community Policies",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a403270/linkedin-professional-community-policies",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Member-facing content and behavior rules."
+    },
+    {
+      "id": "linkedin_feed_ranking",
+      "platform": "linkedin",
+      "category": "recommendation",
+      "title": "How LinkedIn Feed Ranks Content",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a9554004",
+      "owner_file": "knowledge/channels/linkedin-organic.md",
+      "notes": "Official feed ranking guidance; prefer over third-party algorithm claims."
+    },
+    {
+      "id": "linkedin_publishing_guidelines",
+      "platform": "linkedin",
+      "category": "policy",
+      "title": "LinkedIn Publishing Platform Guidelines",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a519782",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Publishing behavior and content quality guidelines."
+    },
+    {
+      "id": "linkedin_spam",
+      "platform": "linkedin",
+      "category": "policy",
+      "title": "LinkedIn Spam",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a1338787",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Official spam and distribution-limiting engagement-manipulation guidance."
+    },
+    {
+      "id": "linkedin_prohibited_software",
+      "platform": "linkedin",
+      "category": "automation",
+      "title": "LinkedIn Prohibited Software and Extensions",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a1341387",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Automation, scraping, and browser extension restrictions."
+    },
+    {
+      "id": "linkedin_posts_api",
+      "platform": "linkedin",
+      "category": "developer",
+      "title": "LinkedIn Posts API",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api?view=li-lms-2026-07",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Approved publishing surface and versioned API behavior."
+    },
+    {
+      "id": "linkedin_marketing_api_recent_changes",
+      "platform": "linkedin",
+      "category": "changelog",
+      "title": "LinkedIn Marketing API Recent Changes",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/recent-changes?view=li-lms-2026-07",
+      "owner_file": "harness/references/linkedin-organic-posting-rules.md",
+      "notes": "Monthly monitor source for LinkedIn API changes."
+    },
+    {
+      "id": "meta_ranking_hub",
+      "platform": "meta",
+      "category": "recommendation",
+      "title": "Meta Ranking Explainer Hub",
+      "url": "https://transparency.meta.com/features/explaining-ranking/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Meta-wide feed/recommendation AI system explainers."
+    },
+    {
+      "id": "meta_other_policies",
+      "platform": "meta",
+      "category": "commercial_policy",
+      "title": "Meta Other Policies Hub",
+      "url": "https://transparency.meta.com/policies/other-policies/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Gateway to branded content and Pages/Groups/Events policies that affect organic publishing."
+    },
+    {
+      "id": "meta_community_notes",
+      "platform": "meta",
+      "category": "policy",
+      "title": "Meta Community Notes",
+      "url": "https://transparency.meta.com/features/community-notes/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Meta explainer for Community Notes and how public factual context can appear across surfaces."
+    },
+    {
+      "id": "facebook_feed_ai_system",
+      "platform": "meta",
+      "category": "recommendation",
+      "title": "Facebook Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/fb-feed/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Facebook Feed ranking explainer."
+    },
+    {
+      "id": "instagram_feed_ai_system",
+      "platform": "instagram",
+      "category": "recommendation",
+      "title": "Instagram Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/ig-feed/",
+      "owner_file": "knowledge/channels/instagram.md",
+      "notes": "Official Instagram Feed AI ranking explainer."
+    },
+    {
+      "id": "instagram_reels_chaining",
+      "platform": "instagram",
+      "category": "recommendation",
+      "title": "Instagram Reels Chaining",
+      "url": "https://transparency.meta.com/features/explaining-ranking/ig-reels-chaining/",
+      "owner_file": "knowledge/channels/instagram.md",
+      "notes": "Official Reels recommendation explainer."
+    },
+    {
+      "id": "threads_changelog",
+      "platform": "threads",
+      "category": "changelog",
+      "title": "Threads API Changelog",
+      "url": "https://developers.facebook.com/docs/threads/changelog/",
+      "owner_file": "knowledge/channels/threads-organic.md",
+      "notes": "Monthly monitor source for Threads API changes."
+    },
+    {
+      "id": "threads_feed_ai_system",
+      "platform": "threads",
+      "category": "recommendation",
+      "title": "Threads Feed AI System",
+      "url": "https://transparency.meta.com/features/explaining-ranking/ig-threads-feed/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Threads feed ranking explainer."
+    },
+    {
+      "id": "threads_ai_labeling",
+      "platform": "threads",
+      "category": "ai_policy",
+      "title": "Meta AI labeling on Facebook, Instagram, and Threads",
+      "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Official Meta policy/news post covering AI labeling, auto-detection, and disclosure expectations across Facebook, Instagram, and Threads."
+    },
+    {
+      "id": "instagram_content_publishing_api",
+      "platform": "instagram",
+      "category": "developer",
+      "title": "Instagram Content Publishing API",
+      "url": "https://developers.facebook.com/docs/instagram-platform/content-publishing/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Posting limits and publishing requirements; monitor alongside media_publish reference."
+    },
+    {
+      "id": "instagram_media_publish_reference",
+      "platform": "instagram",
+      "category": "developer",
+      "title": "Instagram Media Publish Reference",
+      "url": "https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media_publish/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Endpoint-specific publish limits and behavior."
+    },
+    {
+      "id": "instagram_platform_changelog",
+      "platform": "instagram",
+      "category": "changelog",
+      "title": "Instagram Platform Changelog",
+      "url": "https://developers.facebook.com/docs/instagram-platform/changelog/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Monthly monitor source for Instagram API changes."
+    },
+    {
+      "id": "graph_api_changelog",
+      "platform": "meta",
+      "category": "changelog",
+      "title": "Graph API Changelog",
+      "url": "https://developers.facebook.com/docs/graph-api/changelog/version25.0/",
+      "owner_file": "harness/references/meta-organic-posting-rules.md",
+      "notes": "Current Graph API version changelog. The previous changelog index URL returned 404 in monitor runs, so this source now tracks the latest version-specific changelog until Meta restores a stable index."
+    },
+    {
+      "id": "tiktok_brand_promotion_disclosure",
+      "platform": "tiktok",
+      "category": "commercial_policy",
+      "title": "TikTok Promoting a Brand, Product, or Service",
+      "url": "https://ads.tiktok.com/help/article/about-the-commercial-content-disclosure-setting-for-advertisers",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Own-brand and third-party branded-content disclosure requirements. Switched to the official Business Help Center page because the support-center URL was returning a machine-unusable shell in monitor runs."
+    },
+    {
+      "id": "tiktok_aigc",
+      "platform": "tiktok",
+      "category": "ai_policy",
+      "title": "TikTok AI-Generated Content",
+      "url": "https://www.tiktok.com/community-guidelines/en/integrity-authenticity/edited-media-and-ai-generated-content/",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Realistic AIGC labeling and likeness restrictions. Switched from the support-center article to the public community-guidelines page because the support URL was returning a machine-unusable shell in monitor runs."
+    },
+    {
+      "id": "tiktok_commercial_music",
+      "platform": "tiktok",
+      "category": "commercial_policy",
+      "title": "Commercial Use of Music on TikTok",
+      "url": "https://ads.tiktok.com/help/article/commercial-music-library",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Commercial Music Library and rights checks. Switched to the official Business Help Center page because the support-center URL was returning a machine-unusable shell in monitor runs."
+    },
+    {
+      "id": "tiktok_developer_changelog",
+      "platform": "tiktok",
+      "category": "changelog",
+      "title": "TikTok Developer Changelog",
+      "url": "https://developers.tiktok.com/doc/changelog",
+      "owner_file": "harness/references/tiktok-organic-posting-rules.md",
+      "notes": "Monthly monitor source for TikTok API changes."
+    },
+    {
+      "id": "youtube_recommendation_system_help",
+      "platform": "youtube",
+      "category": "recommendation",
+      "title": "YouTube Recommendation System",
+      "url": "https://support.google.com/youtube/answer/16533387?hl=en",
+      "timeout": 35,
+      "owner_file": "knowledge/channels/youtube.md",
+      "notes": "Creator-facing recommendation system guidance."
+    },
+    {
+      "id": "youtube_search_how_it_works",
+      "platform": "youtube",
+      "category": "recommendation",
+      "title": "How YouTube Search Works",
+      "url": "https://support.google.com/youtube/answer/16090438?hl=en",
+      "owner_file": "knowledge/channels/youtube.md",
+      "notes": "Official search ranking explainer for relevance, engagement, quality, and safe-search filtering."
+    },
+    {
+      "id": "youtube_search_discovery_tips",
+      "platform": "youtube",
+      "category": "recommendation",
+      "title": "YouTube Search and Discovery Tips",
+      "url": "https://support.google.com/youtube/answer/11914225?hl=en",
+      "timeout": 20,
+      "owner_file": "knowledge/channels/youtube.md",
+      "notes": "Official creator guidance for search/discovery."
+    },
+    {
+      "id": "youtube_paid_promotion",
+      "platform": "youtube",
+      "category": "commercial_policy",
+      "title": "YouTube Paid Promotion Declarations",
+      "url": "https://support.google.com/youtube/answer/154235?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Paid placement, sponsorship, and endorsement upload declarations."
+    },
+    {
+      "id": "youtube_spam_policy",
+      "platform": "youtube",
+      "category": "policy",
+      "title": "YouTube Spam Policy",
+      "url": "https://support.google.com/youtube/answer/2801973?hl=en",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Mass production, misleading metadata, and spam behavior."
+    },
+    {
+      "id": "youtube_data_api_revision_history",
+      "platform": "youtube",
+      "category": "changelog",
+      "title": "YouTube Data API Revision History",
+      "url": "https://developers.google.com/youtube/v3/revision_history",
+      "owner_file": "harness/references/youtube-organic-posting-rules.md",
+      "notes": "Monthly monitor source for YouTube Data API changes."
+    },
+    {
+      "id": "pinterest_branded_content",
+      "platform": "pinterest",
+      "category": "commercial_policy",
+      "title": "Pinterest Commercial and Branded Content Guidelines",
+      "url": "https://policy.pinterest.com/en/commercial-and-branded-content-guidelines",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Commercial, affiliate, paid partnership, and branded content disclosures."
+    },
+    {
+      "id": "pinterest_api_v5",
+      "platform": "pinterest",
+      "category": "developer",
+      "title": "Pinterest API v5",
+      "url": "https://developers.pinterest.com/docs/api/v5/",
+      "owner_file": "harness/references/pinterest-organic-posting-rules.md",
+      "notes": "Monthly monitor source for Pinterest API changes."
+    },
+    {
+      "id": "snap_spotlight_ranking",
+      "platform": "snapchat",
+      "category": "recommendation",
+      "title": "How Snap Ranks Content on Spotlight",
+      "url": "https://help.snapchat.com/hc/en-us/articles/8961653169940-How-We-Rank-Content-on-Spotlight",
+      "owner_file": "knowledge/channels/snapchat-organic.md",
+      "notes": "Spotlight distribution and ranking guidance."
+    },
+    {
+      "id": "snap_discover_ranking",
+      "platform": "snapchat",
+      "category": "recommendation",
+      "title": "How Snap Ranks Content on Discover",
+      "url": "https://help.snapchat.com/hc/en-us/articles/8961631424020-How-We-Rank-Content-on-Discover",
+      "owner_file": "knowledge/channels/snapchat-organic.md",
+      "notes": "Discover distribution and ranking guidance."
+    },
+    {
+      "id": "snap_developers",
+      "platform": "snapchat",
+      "category": "developer",
+      "title": "Snap for Developers",
+      "url": "https://developers.snap.com/",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Monthly monitor source for Snap developer surfaces."
+    },
+    {
+      "id": "snap_public_content_moderation",
+      "platform": "snapchat",
+      "category": "policy",
+      "title": "Is Stories content on Snapchat moderated?",
+      "url": "https://help.snapchat.com/hc/en-us/articles/7012263915412-Is-Stories-content-on-Snapchat-moderated",
+      "owner_file": "knowledge/channels/snapchat-organic.md",
+      "notes": "Official moderation and limited-distribution guidance for public Stories and Spotlight content."
+    },
+    {
+      "id": "reddit_rules",
+      "platform": "reddit",
+      "category": "policy",
+      "title": "Reddit Rules",
+      "url": "https://redditinc.com/policies/reddit-rules",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Site-wide behavior rules."
+    },
+    {
+      "id": "reddit_spam_policy",
+      "platform": "reddit",
+      "category": "policy",
+      "title": "Reddit Spam Policy",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam",
+      "fallback_urls": [
+        "https://redditinc.com/policies/reddit-rules"
+      ],
+      "retries": 3,
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Spam and self-promotion risk. The help-center page can return intermittent 403s in unattended fetches, so fall back to Reddit Rules Rule 2 if needed."
+    },
+    {
+      "id": "reddit_responsible_builder_help",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Responsible Builder Policy",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy",
+      "fallback_urls": [
+        "https://old.reddit.com/r/redditdev/comments/1oug31u/introducing_the_responsible_builder_policy_new/"
+      ],
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Official help-center source for API/app approval expectations. old.reddit announcement is the monitoring fallback when the help-center page returns 403."
+    },
+    {
+      "id": "reddit_developers_docs",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Reddit Developers Docs",
+      "url": "https://developers.reddit.com/docs",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Developer platform documentation."
+    },
+    {
+      "id": "reddit_developer_platform_accessing_data",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Developer Platform & Accessing Reddit Data",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/14945211791892-Developer-Platform-Accessing-Reddit-Data",
+      "fallback_urls": [
+        "https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki",
+        "https://redditinc.com/policies/data-api-terms"
+      ],
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Official approval, commercial-use, monetized publishing, and AI-training restrictions for Reddit developer services."
+    },
+    {
+      "id": "reddit_manipulated_content",
+      "platform": "reddit",
+      "category": "policy",
+      "title": "Manipulated Content and Misleading Behavior",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/41180423371156-Manipulated-Content-and-Misleading-Behavior",
+      "owner_file": "harness/references/reddit-organic-posting-rules.md",
+      "notes": "Official Reddit policy covering manipulated, deceptive, and misleading content, including AI-adjacent misuse."
+    },
+    {
+      "id": "reddit_app_labels",
+      "platform": "reddit",
+      "category": "developer",
+      "title": "Apps on Reddit and how to get a label for your app",
+      "url": "https://support.reddithelp.com/hc/en-us/articles/45376380316052-Apps-on-Reddit-and-how-to-get-a-label-for-your-app",
+      "owner_file": "harness/references/social-automation-rules.md",
+      "notes": "Official app-label guidance for user-facing Reddit automation and bot disclosure."
+    },
+    {
+      "id": "bluesky_community_guidelines",
+      "platform": "bluesky",
+      "category": "policy",
+      "title": "Bluesky Community Guidelines",
+      "url": "https://bsky.social/about/support/community-guidelines",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Core Bluesky content and behavior rules."
+    },
+    {
+      "id": "bluesky_terms",
+      "platform": "bluesky",
+      "category": "terms",
+      "title": "Bluesky Terms of Service",
+      "url": "https://bsky.social/about/support/tos",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Canonical Bluesky terms coverage for account use, content rights, and service restrictions."
+    },
+    {
+      "id": "bluesky_rate_limits",
+      "platform": "bluesky",
+      "category": "automation",
+      "title": "Bluesky Rate Limits",
+      "url": "https://docs.bsky.app/docs/advanced-guides/rate-limits",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Write/read limits for AT Protocol clients."
+    },
+    {
+      "id": "bluesky_moderation",
+      "platform": "bluesky",
+      "category": "policy",
+      "title": "Labels and moderation",
+      "url": "https://docs.bsky.app/docs/advanced-guides/moderation",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Official Bluesky labels, self-labeling, moderation, and filter behavior guidance."
+    },
+    {
+      "id": "bluesky_api_blog",
+      "platform": "bluesky",
+      "category": "changelog",
+      "title": "Bluesky API Blog",
+      "url": "https://docs.bsky.app/blog",
+      "owner_file": "knowledge/channels/bluesky-organic.md",
+      "notes": "Monthly monitor source for Bluesky API/product changes."
+    },
+    {
+      "id": "mastodon_posting",
+      "platform": "mastodon",
+      "category": "policy",
+      "title": "Mastodon Posting Guide",
+      "url": "https://docs.joinmastodon.org/user/posting/",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "notes": "Posting behavior and feature guidance."
+    },
+    {
+      "id": "mastodon_quote_posts",
+      "platform": "mastodon",
+      "category": "policy",
+      "title": "Mastodon Quote Posts Guide",
+      "url": "https://docs.joinmastodon.org/user/quote-posts/",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "notes": "Official quote-post permissions, visibility, and author controls."
+    },
+    {
+      "id": "mastodon_api_guidelines",
+      "platform": "mastodon",
+      "category": "developer",
+      "title": "Mastodon API Guidelines",
+      "url": "https://docs.joinmastodon.org/api/guidelines/",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "notes": "Client and automation API expectations."
+    },
+    {
+      "id": "mastodon_releases",
+      "platform": "mastodon",
+      "category": "changelog",
+      "title": "Mastodon GitHub Releases",
+      "url": "https://github.com/mastodon/mastodon/releases",
+      "owner_file": "knowledge/channels/mastodon-fediverse.md",
+      "notes": "Monthly monitor source for Mastodon platform releases."
+    }
+  ]
+}

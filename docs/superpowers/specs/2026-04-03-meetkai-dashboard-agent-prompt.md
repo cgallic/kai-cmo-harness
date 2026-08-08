@@ -57,7 +57,7 @@ Running on the Hetzner VPS. These endpoints are live and tested:
 All endpoints require `X-API-Key` header.
 
 ### Pipedream Connect (live, tested)
-- Project ID: `proj_jBs2MK1`
+- Project ID: `proj_YOUR_PROJECT_ID`
 - Python SDK installed, credentials configured
 - OAuth flows working — we've connected Google Analytics and pulled real data
 - Supported providers: GA4, GSC, GitHub, WordPress, Shopify, Facebook, Instagram, LinkedIn, TikTok, YouTube, Mailchimp, Loops, SendGrid, Google Ads, Meta Ads
@@ -78,7 +78,7 @@ All endpoints require `X-API-Key` header.
 
 | Component | Detail |
 |-----------|--------|
-| Server | 89.167.60.171 (Hetzner, Ubuntu 24.04, 16GB RAM) |
+| Server | YOUR_GATEWAY_HOST (Hetzner, Ubuntu 24.04, 16GB RAM) |
 | Domain | `app.meetkai.xyz` (new subdomain — add block to `/etc/caddy/Caddyfile` and reload) |
 | Reverse proxy | Caddy |
 | Auth | **Supabase Auth** — magic links built-in, no custom JWT needed |
@@ -428,7 +428,7 @@ GATEWAY_URL=http://localhost:8088
 GATEWAY_API_KEY=<the CMO_GATEWAY_API_KEY>
 
 # Pipedream
-NEXT_PUBLIC_PIPEDREAM_PROJECT_ID=proj_jBs2MK1
+NEXT_PUBLIC_PIPEDREAM_PROJECT_ID=proj_YOUR_PROJECT_ID
 
 # App
 NEXT_PUBLIC_APP_URL=https://app.meetkai.xyz

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/action-proposal.schema.json",
+  "title": "ActionProposal",
+  "description": "A proposed real-world marketing mutation against a live channel.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["brand_id", "channel", "action_type", "intent"],
+  "properties": {
+    "action_id": {
+      "type": "string",
+      "default": ""
+    },
+    "brand_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "type": "string",
+      "description": "Marketing channel such as website, social, paid_media, email, analytics, or calls."
+    },
+    "action_type": {
+      "type": "string",
+      "description": "Provider-neutral action type such as update_page_copy or create_paused_campaign."
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proposed_changes": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "source_run_id": {
+      "type": ["string", "null"]
+    },
+    "risk_tier": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "default": "low"
+    },
+    "policy_result": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {
+        "passed": true,
+        "checks": [],
+        "violations": []
+      }
+    },
+    "preview_artifact": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "approval_state": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected", "auto_approved", "held"],
+      "default": "pending"
+    },
+    "execution_state": {
+      "type": "string",
+      "enum": ["pending", "executing", "completed", "failed", "rolled_back"],
+      "default": "pending"
+    },
+    "verification_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "verification_result": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "rollback_reference": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "result_summary": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "memory_writeback_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "created_at": {
+      "type": "string",
+      "default": ""
+    },
+    "updated_at": {
+      "type": "string",
+      "default": ""
+    },
+    "executed_at": {
+      "type": ["string", "null"]
+    }
+  }
+}
+

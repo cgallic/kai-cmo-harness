@@ -1,0 +1,377 @@
+{
+  "schema": "kai.research_fanout.vertical_registry.v1",
+  "updated_at": "2026-06-17",
+  "description": "Machine-readable routing for cross-vertical research fan-out and condensation. Use with harness/references/research-fanout-best-practices.md.",
+  "global_outputs": [
+    "edge",
+    "best_practice",
+    "structure",
+    "sop",
+    "pattern_library",
+    "claims_ledger",
+    "source_gaps"
+  ],
+  "source_registries": [
+    "harness/references/marketing-platform-source-registry.json",
+    "harness/references/social-platform-source-registry.json"
+  ],
+  "required_artifacts": [
+    "_research-plan.md",
+    "_source-ledger.md",
+    "_policy-notes.md",
+    "_pattern-ledger.md",
+    "_synthesis.md",
+    "_source-gaps.md",
+    "_research-qa.md"
+  ],
+  "transcript_artifacts": [
+    "_transcript-ledger.md",
+    "_quote-bank.md",
+    "_rights-notes.md"
+  ],
+  "quantitative_artifacts": [
+    "_data-sources.md",
+    "_data-gaps.md",
+    "kai-data.json",
+    "audit-data.json"
+  ],
+  "edge_types": [
+    "provenance_edge",
+    "mechanism_edge",
+    "format_edge",
+    "timing_edge",
+    "constraint_edge",
+    "audience_language_edge",
+    "proof_edge",
+    "distribution_edge",
+    "measurement_edge",
+    "rejection_edge"
+  ],
+  "provenance_rules": [
+    "Every claim needs a source ID, source owner, retrieved date, evidence tier, confidence, and risk note.",
+    "Official docs are required for platform, API, legal, policy, privacy, ad, search, or compliance claims.",
+    "YouTube Data API caption downloads are for owned or otherwise authorized caption workflows; do not treat captions.download as a general public-transcript extractor.",
+    "Transcript and video insights need URL, title, publisher/channel, timestamp or time range where available, transcript source, quote count, and rights notes.",
+    "Competitor examples are pattern evidence, not copy to reuse.",
+    "Quantitative/client-facing claims must follow audit-data-provenance.md and list gaps instead of guesses."
+  ],
+  "packs": [
+    {
+      "id": "ads_paid",
+      "label": "Ads and Paid Acquisition",
+      "source_targets": [
+        "official ad policies",
+        "creative specs",
+        "campaign objective docs",
+        "API field docs",
+        "ad libraries",
+        "competitor offers",
+        "landing pages",
+        "public webinars",
+        "case studies"
+      ],
+      "condensed_outputs": [
+        "campaign architecture",
+        "offer matrix",
+        "angle bank",
+        "creative testing plan",
+        "policy risk register",
+        "measurement checklist",
+        "launch SOP"
+      ],
+      "local_references": [
+        "harness/references/advertising-compliance.md",
+        "harness/references/ad-write-guardrails.md",
+        "knowledge/playbooks/paid-media-launch-playbook.md",
+        "knowledge/playbooks/combinatorial-creative-bench.md",
+        "knowledge/playbooks/ad-creative-best-practices.md"
+      ]
+    },
+    {
+      "id": "organic_social",
+      "label": "Organic Social",
+      "source_targets": [
+        "community standards",
+        "recommendation guidelines",
+        "API and automation rules",
+        "branded content rules",
+        "public posts",
+        "creator interviews",
+        "competitor cadence",
+        "comments and reply patterns"
+      ],
+      "condensed_outputs": [
+        "posting SOP",
+        "content pillar map",
+        "hook library",
+        "reply rules",
+        "automation guardrails",
+        "repurposing matrix"
+      ],
+      "local_references": [
+        "harness/references/social-automation-rules.md",
+        "knowledge/playbooks/social-media-strategy.md",
+        "harness/skill-contracts/social-post.yaml"
+      ]
+    },
+    {
+      "id": "seo_aeo",
+      "label": "SEO and AEO",
+      "source_targets": [
+        "Google Search docs",
+        "spam policies",
+        "structured data docs",
+        "SERP observations",
+        "crawler access",
+        "AI-search behavior",
+        "entity footprints",
+        "academic papers",
+        "patents"
+      ],
+      "condensed_outputs": [
+        "entity map",
+        "search intent map",
+        "AEO answer blocks",
+        "topical architecture",
+        "citation plan",
+        "agent-readiness fixes",
+        "content brief"
+      ],
+      "local_references": [
+        "knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md",
+        "knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md",
+        "knowledge/frameworks/content-copywriting/algorithmic-authorship.md",
+        "knowledge/checklists/seo-checklist.md",
+        "knowledge/checklists/agent-readiness-checklist.md",
+        "harness/references/google-indexation-monitoring.md"
+      ]
+    },
+    {
+      "id": "cro_landing_pages",
+      "label": "CRO and Landing Pages",
+      "source_targets": [
+        "competitor landing pages",
+        "pricing pages",
+        "onboarding flows",
+        "checkout flows",
+        "reviews",
+        "sales objections",
+        "support docs",
+        "trust proof",
+        "page speed",
+        "teardown videos"
+      ],
+      "condensed_outputs": [
+        "page section structure",
+        "objection map",
+        "proof hierarchy",
+        "CTA plan",
+        "experiment backlog",
+        "form-friction audit",
+        "copy brief"
+      ],
+      "local_references": [
+        "knowledge/frameworks/content-copywriting/perception-engineering.md",
+        "knowledge/frameworks/cro-landing-pages.md",
+        "knowledge/playbooks/conversion-rate-optimization.md",
+        "knowledge/checklists/cro-audit-checklist.md",
+        "knowledge/checklists/perception-engineering-checklist.md"
+      ]
+    },
+    {
+      "id": "email_lifecycle",
+      "label": "Email and Lifecycle",
+      "source_targets": [
+        "email compliance",
+        "unsubscribe rules",
+        "consent rules",
+        "sending platform docs",
+        "mailbox provider guidance",
+        "competitor flows",
+        "welcome sequences",
+        "winback flows",
+        "CRM exports"
+      ],
+      "condensed_outputs": [
+        "lifecycle map",
+        "sequence architecture",
+        "trigger logic",
+        "segmentation rules",
+        "subject-line bank",
+        "deliverability SOP",
+        "experiment backlog"
+      ],
+      "local_references": [
+        "knowledge/channels/email-lifecycle.md",
+        "harness/references/cold-email-rules.md",
+        "knowledge/checklists/email-checklist.md",
+        "knowledge/playbooks/marketing-automation.md",
+        "knowledge/playbooks/customer-retention.md"
+      ]
+    },
+    {
+      "id": "content_repurposing",
+      "label": "Content and Repurposing",
+      "source_targets": [
+        "audience questions",
+        "search results",
+        "competitor content libraries",
+        "newsletters",
+        "podcasts",
+        "webinars",
+        "social posts",
+        "communities",
+        "reviews",
+        "support docs"
+      ],
+      "condensed_outputs": [
+        "pillar content map",
+        "source-backed brief",
+        "angle bank",
+        "repurposing matrix",
+        "channel adaptations",
+        "internal-link plan",
+        "publishing SOP"
+      ],
+      "local_references": [
+        "knowledge/frameworks/content-copywriting/algorithmic-authorship.md",
+        "knowledge/playbooks/content-repurposing.md",
+        "knowledge/playbooks/content-publication-velocity.md",
+        "knowledge/channels/content-writing.md",
+        "knowledge/checklists/content-checklist.md"
+      ]
+    },
+    {
+      "id": "video_youtube_podcast",
+      "label": "Video, YouTube, and Podcast",
+      "source_targets": [
+        "YouTube creator docs",
+        "channel policies",
+        "analytics docs",
+        "public transcripts",
+        "YouTube Data API captions only for owned or authorized videos",
+        "podcast RSS pages",
+        "episode notes",
+        "creator interviews",
+        "competitor channels",
+        "comments"
+      ],
+      "condensed_outputs": [
+        "episode structure",
+        "video structure",
+        "hook patterns",
+        "title hypotheses",
+        "thumbnail hypotheses",
+        "clip map",
+        "transcript insight ledger",
+        "rights notes"
+      ],
+      "local_references": [
+        "knowledge/channels/youtube.md",
+        "knowledge/channels/podcast.md",
+        "knowledge/playbooks/video-content-creation.md",
+        "knowledge/playbooks/video-clipping-automation-workflow.md",
+        "harness/references/transcript-video-research-rules.md",
+        "harness/references/research-fanout-best-practices.md"
+      ]
+    },
+    {
+      "id": "partnerships_influencer_community",
+      "label": "Partnerships, Influencer, and Community",
+      "source_targets": [
+        "FTC endorsement guidance",
+        "branded-content rules",
+        "affiliate rules",
+        "community rules",
+        "competitor partner pages",
+        "ambassador pages",
+        "creator portfolios",
+        "UGC briefs",
+        "community norms"
+      ],
+      "condensed_outputs": [
+        "partner target list",
+        "fit criteria",
+        "offer structure",
+        "disclosure checklist",
+        "creator brief",
+        "community participation SOP",
+        "outreach angles"
+      ],
+      "local_references": [
+        "knowledge/playbooks/influencer-marketing.md",
+        "knowledge/playbooks/partnership-comarketing.md",
+        "knowledge/playbooks/community-building.md",
+        "knowledge/channels/affiliate-referral.md",
+        "harness/references/creator-disclosure.md",
+        "harness/references/creator-disclosure-presets.json"
+      ]
+    },
+    {
+      "id": "analytics_attribution",
+      "label": "Analytics and Attribution",
+      "source_targets": [
+        "GA4 docs",
+        "ad platform docs",
+        "CRM exports",
+        "call tracking",
+        "server-side events",
+        "pixel and CAPI docs",
+        "consent mode",
+        "UTM standards",
+        "dashboard docs",
+        "benchmark sources"
+      ],
+      "condensed_outputs": [
+        "measurement plan",
+        "event taxonomy",
+        "UTM SOP",
+        "attribution caveats",
+        "dashboard requirements",
+        "data-quality checks",
+        "source-of-truth map"
+      ],
+      "local_references": [
+        "knowledge/playbooks/analytics-attribution.md",
+        "knowledge/playbooks/technical-marketing-tracking.md",
+        "harness/references/posthog-marketing-queries.md",
+        "harness/references/openai-ads-measurement-reference.md",
+        "harness/references/audit-data-provenance.md"
+      ]
+    },
+    {
+      "id": "launch_product",
+      "label": "Launch and Product",
+      "source_targets": [
+        "public launches",
+        "Product Hunt pages",
+        "app-store pages",
+        "changelogs",
+        "release notes",
+        "customer reviews",
+        "competitor onboarding",
+        "docs",
+        "pricing",
+        "waitlists",
+        "launch retrospectives"
+      ],
+      "condensed_outputs": [
+        "launch narrative",
+        "timeline",
+        "channel plan",
+        "positioning matrix",
+        "proof plan",
+        "launch assets checklist",
+        "risk register",
+        "feedback-loop SOP"
+      ],
+      "local_references": [
+        "knowledge/playbooks/launch-playbook.md",
+        "knowledge/playbooks/brand-positioning.md",
+        "knowledge/playbooks/customer-journey-mapping.md",
+        "knowledge/playbooks/growth-loops-applied.md",
+        "knowledge/playbooks/business-model-marketing.md"
+      ]
+    }
+  ]
+}

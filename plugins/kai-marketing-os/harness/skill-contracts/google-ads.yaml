@@ -1,0 +1,214 @@
+skill: google-ads
+version: 3.0
+harness: kai-harness
+format: google-ads
+risk_tier: high
+word_count: 1-90 per asset
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Google Search Ads, Performance Max assets, Demand Gen, and Display copy.
+  Requires policy review, account-state decision logic for automation, proof for
+  claims, and measurement caveats.
+
+required_sources:
+  - brief
+  - knowledge/channels/paid-acquisition.md
+  - harness/references/google-ads-policy-reference.md
+  - landing_page_url
+  - claim_evidence_log
+  - account_state
+source_policy:
+  load_before_writing: true
+  platform_policy_required: true
+  landing_page_required_for_claim_review: true
+  pmax_requires_account_state_decision: true
+  superlatives_require_evidence: true
+  regulated_verticals_require_review: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - ad_type: string
+    - target_keywords: list[string]
+  optional:
+    - competitor_urls: list[string]
+    - landing_page_url: string
+    - budget_tier: string
+    - account_state: object
+    - claim_evidence_log: list[object]
+
+outputs:
+  headlines: list[string]
+  descriptions: list[string]
+  long_headlines: list[string]
+  display_path: string
+  bidding_recommendation: string
+  policy_notes: list[string]
+  account_state_decision: object
+
+output_schema:
+  type: object
+  required:
+    - headlines
+    - descriptions
+    - display_path
+    - policy_notes
+    - account_state_decision
+    - claim_table
+  properties:
+    headlines: list[string]
+    descriptions: list[string]
+    long_headlines: list[string]
+    display_path: string
+    bidding_recommendation: string
+    policy_notes: list[string]
+    account_state_decision:
+      type: object
+      properties:
+        automation_ready: string
+        prerequisites: list[string]
+        measurement_guardrails: list[string]
+    claim_table: list[object]
+
+quality_gates:
+  - "all_headlines_char_count <= 30"
+  - "all_descriptions_char_count <= 90"
+  - "keyword_in_min_2_headlines == true"
+  - "banned_words_tier1 == 0"
+  - "no_superlatives_without_proof == true"
+  - "policy_review_complete == true"
+
+deterministic_checks:
+  - id: rsa_headline_length
+    evaluator: script
+    pass_when: "every RSA headline char_count <= 30"
+  - id: rsa_description_length
+    evaluator: script
+    pass_when: "every RSA description char_count <= 90"
+  - id: pmax_account_state
+    evaluator: schema
+    pass_when: "PMax or AI automation outputs include account_state_decision"
+  - id: no_unsubstantiated_superlatives
+    evaluator: provenance
+    pass_when: "best, #1, guaranteed, fastest, safest, and similar claims have proof or are absent"
+  - id: policy_reference_loaded
+    evaluator: trace
+    pass_when: "google ads policy reference loaded before writing"
+  - id: no_incrementality_overclaim
+    evaluator: regex
+    pass_when: "platform or forecast metrics are not described as incremental profit without method"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: intent_match
+      question: "Do assets map tightly to keyword and landing-page intent?"
+    - name: policy_safety
+      question: "Does the set avoid unsubstantiated, regulated, or misleading claims?"
+    - name: automation_judgment
+      question: "Are PMax or automation recommendations conditional on account state?"
+    - name: measurement_discipline
+      question: "Are attribution and scaling claims properly caveated?"
+
+human_review_required_when:
+  - ad_type in ["pmax", "demand_gen"]
+  - regulated_industry == true
+  - competitor_comparison_present == true
+  - superlative_or_guarantee_present == true
+  - account_state_missing == true
+  - claim_risk_level == high
+
+golden_situations:
+  - name: compliant_rsa_set
+    expectation: "Produces character-safe RSA assets with sourced claims and policy notes."
+  - name: pmax_account_state_decision
+    eval_id: kai.situations.pmax_account_state_decision.low_data_pmax_launch
+    expectation: "Does not recommend PMax universally when account state is immature or missing."
+  - name: attribution_overclaim
+    eval_id: kai.situations.attribution_overclaim.ga4_assisted_revenue_equals_roi
+    expectation: "Does not turn attributed metrics into exact ROI or causal lift."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_policy_hard_fails: 0
+  max_unsubstantiated_superlatives: 0
+  max_missing_account_state_decisions: 0
+
+claim_policy:
+  allowed:
+    - landing-page-supported product claims
+    - keyword-matched benefits
+    - sourced offers
+  requires_evidence:
+    - best, first, fastest, safest, guaranteed, or #1 claims
+    - competitor comparisons
+    - regulated vertical claims
+    - savings or revenue claims
+  forbidden:
+    - misleading display paths
+    - unsupported guarantees
+    - false urgency
+    - causal profit claims from platform attribution
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - policy_reference_version
+    - landing_page_url
+    - account_state_id
+    - approval_status
+  unresolved_claim_action: remove_or_hold_for_review
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - paid_media_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - policy_hard_fail
+    - unsubstantiated_claim
+    - pmax_account_state_missing
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - ad_type
+  - target_keywords
+  - landing_page_url
+  - account_state_id
+  - evidence_ids
+  - policy_reference_version
+  - reviewer
+  - approval_status
+  - campaign_id
+
+hooks:
+  pre_write: load_brief + load_paid_acquisition_channel + load_google_ads_policy
+  post_write: run_quality_gate
+  on_fail: revise_with_failure_report
+  on_pass: post_for_approval
+  on_approve: content_log
+  on_publish: schedule_7day_check
+
+eco:
+  # Completion standard: docs/system/eco-completion-standard.md
+  # Floors are owned by harness/eco-floors.yaml — this block records which work
+  # type applies and what Execution actually has to prove for this format.
+  work_type: paid-ad-campaign
+  floor: {E: 5, C: 4, O: 4}
+  execution_target: >
+    Ad object ids returned by the platform AND a read-back confirming targeting, budget, schedule, and creative match the approved bundle.
+  outcome_metrics: [cac, roas, qualified_lead_rate]
+  verdict_by: scripts/quality_gates/eco_gate.py
+  note: >
+    quality_gates above are the C2 rung. approval_gate is the E3 rung. Neither
+    issues a completion verdict on its own, and neither may be graded by the
+    producer.

@@ -1,0 +1,183 @@
+skill: voice-gate
+version: 3.0
+harness: kai-harness
+format: quality-gate
+risk_tier: medium
+word_count: n/a
+min_four_us: n/a
+seo_lint: false
+
+description: >
+  Subjective voice-consistency review. Complements the rule-based content-gate
+  by catching cadence, signature-move over-use, receipt gaps, voice drift, FAQ
+  atomicity breaks, and Algorithmic Authorship misses that cannot be scored
+  mechanically. Executes inline inside Claude Code with no external API.
+
+required_sources:
+  - draft_path
+  - voice_guide_path
+  - content_gate_report
+  - persona_path_when_available
+source_policy:
+  load_before_writing: false
+  load_before_judging: true
+  voice_guide_required: true
+  draft_must_be_local_file: true
+  content_gate_should_precede_voice_gate: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - draft_path: string
+  required_or_autodiscovered:
+    - voice_guide_path: string
+  optional:
+    - persona_path: string
+    - content_gate_report_path: string
+    - max_issues: int
+
+outputs:
+  report_path: string
+  verdict: string
+  severity_breakdown:
+    high: int
+    medium: int
+    low: int
+  total_issues: int
+  trace_summary: object
+
+output_schema:
+  type: object
+  required:
+    - report_path
+    - verdict
+    - severity_breakdown
+    - total_issues
+    - trace_summary
+  properties:
+    report_path: string
+    verdict: string
+    severity_breakdown: object
+    total_issues: int
+    trace_summary: object
+
+quality_gates: []
+
+verdict_policy:
+  PASS: "high == 0 AND medium <= 3"
+  HOLD: "(high == 0 AND medium > 3) OR (1 <= high <= 2)"
+  FAIL: "high >= 3 OR voice_guide_hard_rule_violated"
+
+deterministic_checks:
+  - id: draft_path_exists
+    evaluator: filesystem
+    pass_when: "draft_path exists and is readable"
+  - id: voice_guide_exists
+    evaluator: filesystem
+    pass_when: "voice_guide_path exists and is readable"
+  - id: verdict_schema
+    evaluator: schema
+    pass_when: "verdict is PASS, HOLD, or FAIL"
+  - id: severity_counts_present
+    evaluator: schema
+    pass_when: "high, medium, low, and total_issues are integers"
+  - id: hard_rule_fail_policy
+    evaluator: static
+    pass_when: "any voice-guide hard-rule violation maps to FAIL"
+  - id: report_written
+    evaluator: filesystem
+    pass_when: "report_path is written alongside draft"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 15
+  criteria:
+    - name: voice_fidelity
+      question: "Does the review identify real voice drift against the loaded guide?"
+    - name: issue_specificity
+      question: "Are findings concrete, line-locatable, and actionable?"
+    - name: severity_calibration
+      question: "Are high, medium, and low issues assigned consistently with the verdict policy?"
+    - name: non_duplication
+      question: "Does the gate avoid re-litigating mechanical checks already handled by content-gate?"
+
+human_review_required_when:
+  - verdict in ["HOLD", "FAIL"]
+  - voice_guide_hard_rule_violated == true
+  - persona_path_missing == true
+  - draft_is_client_facing == true
+
+golden_situations:
+  - name: clean_voice_pass
+    expectation: "Returns PASS with no high issues and no duplicate mechanical gate findings."
+  - name: hard_rule_violation
+    expectation: "Returns FAIL when a voice-guide hard rule is violated once."
+  - name: persona_source_gap
+    eval_id: kai.situations.persona_invented_from_vibes.founder_vibes_persona
+    expectation: "Flags persona evidence gaps when draft voice depends on unsourced persona assumptions."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 15
+  max_schema_failures: 0
+  max_missed_hard_rule_violations: 0
+  max_report_write_failures: 0
+
+claim_policy:
+  allowed:
+    - voice consistency observations
+    - line-specific editorial issues
+    - source-bound persona caveats
+  requires_evidence:
+    - claim that a draft violates a voice-guide rule
+    - persona or audience voice assumptions
+  forbidden:
+    - rewriting the whole draft unless requested
+    - approving hard-rule violations
+    - inventing persona evidence
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - draft_path
+    - voice_guide_path
+    - voice_guide_version
+    - persona_path
+    - content_gate_report_path
+    - report_path
+  unresolved_claim_action: mark_issue_or_hold
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - human_reviewer
+  blocks:
+    - deterministic_check_failed
+    - verdict_FAIL
+    - voice_guide_missing
+    - report_write_failed
+
+trace_fields:
+  - workflow_id
+  - draft_path
+  - voice_guide_path
+  - voice_guide_version
+  - persona_path
+  - content_gate_report_path
+  - verdict
+  - severity_breakdown
+  - report_path
+  - reviewer
+
+hooks:
+  pre_run: resolve_and_validate_paths
+  execute: run_judge_prompt_inline
+  post_run: write_report_and_log
+  on_fail: surface_to_user
+  on_hold: surface_top_issues
+  on_pass: chain_next_station
+
+notes:
+  - Pure skill. No Python. No Anthropic SDK. No env vars. No CLI wrapper.
+  - Voice guide is required per invocation, either explicit or auto-discovered.
+  - Run after content-gate clears rule-based checks.

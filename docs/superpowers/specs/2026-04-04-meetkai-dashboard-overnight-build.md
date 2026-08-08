@@ -4,7 +4,7 @@
 **Author:** Connor (CEO)
 **Status:** DISPATCH READY — 12 parallel work packages
 **Repo:** `E:\Dev2\kai-cmo-harness-work\app-meetkai\`
-**Live:** `app.meetkai.xyz` (Vercel) → Supabase project `qfuejhbzncvexmkqnqok`
+**Live:** `app.meetkai.xyz` (Vercel) → Supabase project `YOUR_PROJECT_REF`
 
 ---
 
@@ -430,7 +430,7 @@ import { handle } from "hono/vercel";
 import { A2AAgent } from "@ag-ui/a2a";
 import { A2AClient } from "@a2a-js/sdk/client";
 
-const a2aClient = new A2AClient(process.env.KAI_AGENT_URL || "http://89.167.60.171:10002");
+const a2aClient = new A2AClient(process.env.KAI_AGENT_URL || "http://YOUR_GATEWAY_HOST:10002");
 const agent = new A2AAgent({ a2aClient });
 const runtime = new CopilotRuntime({
   agents: { default: agent },
@@ -623,21 +623,21 @@ jobs:
 **Update `.env.local.example`** with ALL required vars:
 ```env
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://qfuejhbzncvexmkqnqok.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
 # Pipedream Connect
 PIPEDREAM_CLIENT_ID=
 PIPEDREAM_CLIENT_SECRET=
-PIPEDREAM_PROJECT_ID=proj_jBs2MK1
+PIPEDREAM_PROJECT_ID=proj_YOUR_PROJECT_ID
 PIPEDREAM_ENVIRONMENT=development
 
 # App
 NEXT_PUBLIC_APP_URL=https://app.meetkai.xyz
 
 # Future: Agent
-KAI_AGENT_URL=http://89.167.60.171:10002
+KAI_AGENT_URL=http://YOUR_GATEWAY_HOST:10002
 ```
 
 ---

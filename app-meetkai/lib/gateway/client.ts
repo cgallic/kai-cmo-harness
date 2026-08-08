@@ -1,4 +1,7 @@
-const GATEWAY_URL = process.env.GATEWAY_URL || "http://89.167.60.171:10002";
+// No default. A hardcoded fallback here previously sent requests to a bare IP
+// over plain HTTP whenever the env var was missing — including from a public
+// repo. An unset gateway must fail loudly, not quietly pick a host.
+const GATEWAY_URL = process.env.GATEWAY_URL || "";
 const GATEWAY_API_KEY = process.env.GATEWAY_API_KEY || "";
 
 export class GatewayError extends Error {
@@ -24,6 +27,14 @@ export async function gateway<T = unknown>(
   options: RequestOptions = {},
 ): Promise<T> {
   const { method = "GET", body, params, timeout = 30000 } = options;
+
+  if (!GATEWAY_URL) {
+    throw new GatewayError(
+      500,
+      null,
+      "GATEWAY_URL is not set. Configure it in .env.local — there is no default host.",
+    );
+  }
 
   const url = new URL(path, GATEWAY_URL);
   if (params) {

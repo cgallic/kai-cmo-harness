@@ -1,0 +1,170 @@
+skill: review-request-sequence
+version: 3.0
+harness: kai-harness
+format: review-request-sequence
+risk_tier: medium
+word_count: 250-450
+min_four_us: 10
+seo_lint: false
+
+description: >
+  SMS and email review request sequences for verified satisfied customers.
+  Requires customer eligibility, no incentives, no gating by sentiment unless
+  policy-approved, and clear opt-out handling.
+
+required_sources:
+  - brief
+  - customer_eligibility_source
+  - review_platform_policy
+  - sender_identity
+  - suppression_list
+source_policy:
+  load_before_writing: true
+  customer_must_be_verified: true
+  incentive_policy_must_be_checked: true
+  opt_out_required_for_sms: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - review_platform: string
+    - customer_segment: string
+  optional:
+    - sender_identity: object
+    - suppression_list_id: string
+    - review_link: string
+
+required_sections:
+  - sms_1
+  - email_1
+  - sms_follow_up
+  - email_follow_up
+
+outputs:
+  sequence: object
+  compliance_notes: list[string]
+  eligibility_notes: list[string]
+
+output_schema:
+  type: object
+  required:
+    - sms_1
+    - email_1
+    - sms_follow_up
+    - email_follow_up
+    - compliance_notes
+    - eligibility_notes
+  properties:
+    sms_1: string
+    email_1: string
+    sms_follow_up: string
+    email_follow_up: string
+    compliance_notes: list[string]
+    eligibility_notes: list[string]
+
+quality_gates:
+  - "four_us_total >= 10"
+  - "banned_words_tier1 == 0"
+  - "sms_char_count <= 300"
+  - "no_review_incentive == true"
+  - "verified_customer_only == true"
+
+deterministic_checks:
+  - id: sms_length
+    evaluator: script
+    pass_when: "each SMS char_count <= 300"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "all required_sections are non_empty"
+  - id: no_incentive_language
+    evaluator: regex
+    pass_when: "no discount, gift, reward, or compensation offered for review"
+  - id: verified_customer_source
+    evaluator: provenance
+    pass_when: "customer eligibility source is present"
+  - id: opt_out_present_for_sms
+    evaluator: regex
+    pass_when: "SMS touches include opt-out language when required"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: trust_and_tone
+      question: "Does the request feel simple, respectful, and non-coercive?"
+    - name: policy_safety
+      question: "Does it avoid incentives, manipulation, and private details?"
+    - name: channel_fit
+      question: "Are SMS and email versions appropriately concise?"
+    - name: eligibility
+      question: "Is the sequence limited to verified eligible customers?"
+
+human_review_required_when:
+  - review_platform_policy_missing == true
+  - incentive_requested == true
+  - healthcare_legal_or_financial_client == true
+  - sms_opt_out_missing == true
+
+golden_situations:
+  - name: satisfied_customer_review_request
+    expectation: "Asks verified customers plainly without incentive or pressure."
+  - name: incentive_request
+    expectation: "Rejects reward or discount language for reviews."
+  - name: missing_customer_eligibility
+    expectation: "Blocks sequence until verified customer source is available."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_incentive_violations: 0
+  max_sms_length_violations: 0
+  max_eligibility_gaps: 0
+
+claim_policy:
+  allowed:
+    - neutral request for honest review
+    - source-backed service context
+  requires_evidence:
+    - customer eligibility
+    - review platform policy
+  forbidden:
+    - incentives for reviews
+    - threats or pressure
+    - private customer details
+    - fake review requests
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - customer_segment_id
+    - eligibility_source_id
+    - review_platform_policy_id
+    - suppression_list_id
+  unresolved_claim_action: block_sequence
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - reputation_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - incentive_language
+    - eligibility_source_missing
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - sequence_id
+  - review_platform
+  - customer_segment_id
+  - eligibility_source_id
+  - suppression_list_id
+  - reviewer
+  - approval_status
+
+constraints:
+  - Ask only verified satisfied customers where policy allows.
+  - Do not offer incentives for reviews.
+  - Keep SMS messages under 300 characters.

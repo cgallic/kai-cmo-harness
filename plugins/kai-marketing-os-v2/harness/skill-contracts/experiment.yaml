@@ -1,0 +1,66 @@
+skill: experiment
+version: 1.0
+harness: kai-harness
+format: experiment-ledger
+risk_tier: medium
+seo_lint: false
+
+description: >
+  A source-backed experiment plan and result ledger for marketing variants.
+  Supports preflight scoring, live-test tracking, winner decisions, and memory
+  promotion only when sample, source, and confidence requirements are met.
+
+required_sources:
+  - brief
+  - metric_source
+  - baseline_snapshot
+  - variant_artifacts
+source_policy:
+  load_before_writing: true
+  quantitative_results_require_source: true
+  sample_size_required_for_winner: true
+  missing_sources_action: label_as_hypothesis_or_block_winner
+
+inputs:
+  required:
+    - hypothesis: string
+    - primary_metric: string
+    - variants: list[object]
+    - baseline_snapshot: object
+  optional:
+    - minimum_sample_size: int
+    - practical_lift_threshold: number
+    - guardrail_metrics: list[string]
+    - channel: string
+
+outputs:
+  experiment_record: object
+  variant_scores: list[object]
+  decision: string
+  memory_candidates: list[object]
+  data_gaps: list[string]
+
+quality_gates:
+  - hypothesis_present == true
+  - primary_metric_present == true
+  - variant_count >= 2
+  - source_trace_complete == true
+  - winner_not_promoted_without_sample == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - live_mutation_without_approval
+    - unsupported_winner_claim
+    - missing_metric_source
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - source
+    - retrieved_at
+    - evidence_tier
+    - sample_size
+    - confidence_label
+    - decision_date
+  unresolved_claim_action: hold_for_review

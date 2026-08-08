@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-runtime-state.schema.json",
+  "title": "KaiRuntimeState",
+  "description": "Mutable workspace state snapshot derived from runs and artifacts.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["workspace_id", "updated_at"],
+  "properties": {
+    "workspace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "latest_run_ids_by_brand": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "default": {}
+    },
+    "latest_run_ids_by_brand_workflow": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "default": {}
+    },
+    "latest_artifact_ids_by_brand": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "default": {}
+    },
+    "latest_artifact_ids_by_brand_workflow": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "default": {}
+    },
+    "active_run_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    }
+  }
+}
+

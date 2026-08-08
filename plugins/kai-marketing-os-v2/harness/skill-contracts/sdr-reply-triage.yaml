@@ -1,0 +1,95 @@
+skill: sdr-reply-triage
+version: 1.0
+harness: kai-harness
+risk_tier: high
+min_four_us: 10
+seo_lint: false
+
+description: >
+  Classifies SDR replies and produces safe next actions, draft responses,
+  suppression updates, CRM handoff notes, meeting-prep triggers, and memory candidates.
+
+required_sources:
+  - sdr_package
+  - original_message
+  - reply
+  - sender_identity
+  - suppression_list
+  - claim_evidence_log
+source_policy:
+  load_before_triage: true
+  opt_out_blocks_follow_up: true
+  complaint_requires_human_review: true
+  new_claims_require_evidence: true
+  crm_mutation_requires_approval: true
+  missing_sources_action: hold_and_request_sources
+
+inputs:
+  required:
+    - reply: object
+    - original_message: object
+    - contact: object
+    - account: object
+    - suppression_status: string
+  optional:
+    - crm_context: object
+    - meeting_link: string
+    - claim_evidence_log: list[object]
+
+outputs:
+  classification: object
+  next_action: object
+  draft_response: string
+  suppression_update: object
+  crm_handoff: object
+  meeting_prep_trigger: object
+  memory_candidate: object
+
+quality_gates:
+  - category_in_allowed_set == true
+  - opt_out_has_no_follow_up == true
+  - bounce_has_no_response == true
+  - complaint_routes_to_human == true
+  - single_cta_if_response == true
+  - new_claims_have_evidence == true
+  - crm_mutation_not_performed == true
+
+allowed_categories:
+  - interested
+  - objection
+  - referral
+  - not_now
+  - wrong_person
+  - opt_out
+  - bounce
+  - complaint
+  - unsubscribe_confirmed
+  - needs_human_review
+
+human_review_required_when:
+  - category == complaint
+  - category == needs_human_review
+  - reply_mentions_legal_or_regulated_issue == true
+  - reply_contains_sensitive_personal_data == true
+  - draft_response_requires_new_claim == true
+  - proposed_crm_mutation == true
+
+approval_gate:
+  required_before_live_use: true
+  blocks:
+    - opt_out_follow_up
+    - bounce_response
+    - complaint_auto_response
+    - unsupported_claim
+    - crm_mutation_without_approval
+
+trace_fields:
+  - reply_id
+  - message_id
+  - contact_id
+  - account_id
+  - category
+  - suppression_action
+  - crm_handoff_id
+  - meeting_id
+  - memory_candidate_id

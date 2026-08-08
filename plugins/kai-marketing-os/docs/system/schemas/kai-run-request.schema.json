@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-run-request.schema.json",
+  "title": "KaiRunRequest",
+  "description": "Canonical run contract shared by local and remote surfaces.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intent", "workflow", "brand_id"],
+  "properties": {
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "brand_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "surface": {
+      "type": "string",
+      "enum": ["local", "remote"],
+      "default": "local"
+    },
+    "module_set": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
+

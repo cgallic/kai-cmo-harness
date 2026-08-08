@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-module-manifest.schema.json",
+  "title": "KaiModuleManifest",
+  "description": "Opinionated module manifest for a business archetype.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "description"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable module id, for example local-service."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "trigger_keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "prompt_hints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "required_memory_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "default_workflows": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "checklist_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "default_kpis": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "subagents": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "remote_automations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    }
+  }
+}
+

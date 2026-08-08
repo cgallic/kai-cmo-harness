@@ -1,0 +1,391 @@
+# Marketing Knowledge Base Index
+
+> **Agent Entry Point:** This file lists all available marketing frameworks with "use when" triggers for quick navigation.
+
+---
+
+## Quick Start
+
+1. Find relevant framework using the table below
+2. Load specific file as context
+3. Apply framework to deliverable
+4. Use checklist to validate output
+
+For one-page summary of all frameworks: `_quick-reference.md`
+
+---
+
+## Core Frameworks
+
+### Marketing Science (`frameworks/marketing-science/`)
+
+| File | Use When |
+|------|----------|
+| `../_arbitration.md` | **Doctrine conflicts** - which framework governs, by stage/vertical/evidence state; load before any planning skill |
+| `diagnosis-first-operating-order.md` | Before strategy or tactics - the diagnosis checklist, evidence bars, failure-mode taxonomy |
+| `brand-growth-laws.md` | Targeting breadth decisions - mental/physical availability, distinctive assets, category entry points, light-buyer math |
+| `brand-activation-budget.md` | Budget splits - long/short evidence, ESOV, allocation worksheet by stage and category |
+| `experiment-rigor.md` | Before reading any test - sample floors, peeking, Twyman's law, low-traffic alternatives |
+| `attribution-and-incrementality.md` | Before crediting any channel - platform ROAS bias, MMM vs MTA vs incrementality, holdout design |
+| `growth-metrics-and-pmf.md` | Metrics architecture - AARRR instrumentation, North Star selection, PMF survey, cohort reading |
+
+### Content & Copywriting (`frameworks/content-copywriting/`)
+
+| File | Use When |
+|------|----------|
+| `algorithmic-authorship.md` | Writing SEO content, Featured Snippets, AI Overviews |
+| `SEO Expert-writing-rules.md` | **SEO Expert's algorithmic authorship rules** - C4/Wikipedia derived, hypernym/hyponym, 60% uniqueness |
+| `perception-engineering.md` | Writing persuasive copy, handling objections, sales pages |
+| `perception-engineering-advanced.md` | Deep persuasion strategy, cognitive mechanisms |
+| `headline-formulas.md` | Creating headlines for any content type |
+| `four-us-framework.md` | Evaluating content quality (Unique, Useful, Ultra-specific, Urgent) |
+| `qdp-qdh-qds-content-architecture.md` | URL structure decisions, page vs heading vs sentence |
+| `copywriting-formulas.md` | **50 copywriting formulas** — PAS, AIDA, BAB, 4Ps, FAB, future pacing, objection preempt, risk reversal, 15 headline formulas, 10 CTA formulas, 5 subject line formulas |
+
+### SEO Expert SEO Methodology (`frameworks/`)
+
+| File | Use When |
+|------|----------|
+| `dynamic-header-footer-design.md` | **VMAT anchor text**, semantic HTML structure, PageRank flow optimization |
+| `trending-nodes-news-pages.md` | **Hash URLs**, RSS syndication, news rotation, N8N automation |
+| `image-optimization-indexation.md` | **AVIF vs JPEG indexation**, featured image composition, Open Graph |
+| `../harness/references/google-indexation-monitoring.md` | **Google indexation monitoring** - Search Console checks, noindex/canonical decisions, sitemap/internal-link signals, patent-history caveats |
+| `dynamic-rendering-cloaking.md` | Showing different content to Googlebot (legally), CSS overlays |
+| `ctr-behavioral-signals.md` | Proxy testing, unicorn clicks, Gmail aging, crawl delay measurement |
+
+### AEO & AI Search (`frameworks/aeo-ai-search/`)
+
+| File | Use When |
+|------|----------|
+| `aeo-ai-search-strategies-2026.md` | AEO overview, patents, key ranking factors |
+| `aeo-ai-search-playbook-2026.md` | Complete AEO tactical playbook |
+| `llm-citation-tracking.md` | **WriteSonic AI Rank Tracker**, Reddit/Quora mentions, ChatGPT/Claude/Perplexity/Bing-Copilot/Grok citations |
+| `patent-information-gain-US12013887B2.md` | Understanding Google's novelty scoring |
+| `geo-academic-research-synthesis.md` | GEO experimental citation, quotation, and statistics signals |
+| `perplexity-ranking-reverse-engineered.md` | Perplexity L3 Reranker, Trust Pool |
+| `entity-seo-knowledge-graph-deep-dive.md` | Entity Home, Wikidata, Schema.org |
+| `quality-rater-guidelines-deep-analysis.md` | QRG, E-E-A-T, Experience signals |
+| `ai-crawlers-technical-reference.md` | Multi-engine crawler policy, optional llms.txt, search/user/training bot split |
+| `linkedin-ai-systems-deep-dive.md` | **LinkedIn AI/feed systems research** — Feed-SR vs 360Brew, retrieval-ranking cascade, anti-slop detection, saves/dwell implications |
+| `google-ai-mode-agentic-features.md` | **Google AI Mode agentic plans/Canvas/booking + "Let Google call"** — partner-network distribution, conversational intent, local-services SERP shift |
+| `query-fan-out-guide.md` | Google AI Mode sub-query optimization |
+| `hidden-aeo-edges.md` | Advanced AEO tactics |
+
+### Meta Advertising (`frameworks/meta-advertising/`)
+
+| File | Use When |
+|------|----------|
+| `meta-andromeda-deep-dive.md` | Understanding Meta's retrieval system |
+| `meta-gem-deep-dive.md` | Understanding generative ads model |
+| `meta-lattice-deep-dive.md` | Understanding prediction/ranking system |
+| `meta-breakdown-effect-deep-dive.md` | Understanding budget allocation mechanics |
+| `playbooks/meta-creative-testing-decision-framework.md` | Deciding how many Meta creatives to activate, pause, or stage when budget and learning volume matter |
+
+---
+
+## Channel Guides
+
+| File | Use When |
+|------|----------|
+| `channels/content-writing.md` | Writing blog posts or articles |
+| `channels/linkedin-articles.md` | Publishing long-form LinkedIn articles for thought leadership |
+| `channels/press-releases.md` | Drafting PR announcements |
+| `channels/meta-advertising.md` | Meta/Facebook/Instagram ads (Andromeda, GEM, Lattice algorithms) |
+| `channels/tiktok-shop.md` | Creating shoppable TikTok content (6-step script) |
+| `channels/tiktok-algorithm.md` | Understanding TikTok FYP distribution and optimization |
+| `channels/seo-content.md` | Optimizing content for search rankings |
+| `channels/email-lifecycle.md` | Email sequences, automation, deliverability, lifecycle marketing |
+| `channels/paid-acquisition.md` | Paid media strategy, CAC optimization, platform playbooks |
+| `channels/youtube.md` | **YouTube** — channel strategy, SEO, script structure, retention tactics, Shorts, YouTube Ads, analytics |
+| `channels/instagram.md` | **Instagram** — Reels, carousels, stories, SEO, DM sales, growth tactics, ad placements, metrics |
+| `channels/twitter-x.md` | **X/Twitter** - organic posting strategy, recommendation signals, reply growth, threads, media, links, automation guardrails |
+| `channels/facebook-organic.md` | **Facebook organic** - Page, Group, Reels, public posts, Meta recommendation and Community Notes guardrails |
+| `channels/threads-organic.md` | **Threads organic** - public conversation, Threads API, fediverse settings, Meta policy checks |
+| `channels/reddit-organic.md` | **Reddit organic** - subreddit fit, transparent brand participation, listening, comments, AMAs |
+| `channels/pinterest-organic.md` | **Pinterest organic** - visual search, Pins, boards, affiliate/commercial disclosures, destination quality |
+| `channels/snapchat-organic.md` | **Snapchat organic** - Stories, Spotlight, recommendation eligibility, commercial content |
+| `channels/bluesky-organic.md` | **Bluesky organic** - custom feeds, AT Protocol, labels, rate limits |
+| `channels/mastodon-fediverse.md` | **Mastodon/Fediverse** - instance rules, hashtags, content warnings, federated distribution |
+| `channels/affiliate-referral.md` | **Affiliate & referral** — program structure, tiers, recruitment, tracking, fraud prevention, referral loops |
+| `channels/community-building.md` | **Community** — Discord/Slack/FB Groups, growth stages, engagement rituals, community-led growth, moderation |
+| `channels/newsletter-strategy.md` | **Newsletter** — Platform selection (beehiiv vs Substack vs Ghost), growth tactics by phase, content formats, monetization (sponsors, paid, affiliate, boosts), retention |
+| `channels/podcast.md` | Setting up podcast equipment, studio setup, recording workflow |
+| `channels/linkedin-founder-led.md` | **LinkedIn organic (founder-led B2B distribution)** — 2026 feed algorithm (Feed-SR), founder vs company page, hooks/formats, comments-as-distribution, profile-as-landing-page, organic→pipeline. Distribution motion; pairs with `linkedin-organic.md` (general algorithm/strategy) and `linkedin-articles.md` (long-form) |
+| `channels/ai-outbound.md` | **AI outbound (B2B)** — 2026 stack (Clay/Apollo/signals/AI research/Smartlead), deliverability engineering, signal/trigger plays, relevance-over-volume personalization, multichannel sequences, cold-start→scale runbooks |
+| `channels/ai-ugc.md` | **AI UGC (B2C)** — AI avatar/UGC tools (Arcads, Creatify, HeyGen, Captions, Veo), 1-script→30-variant batch pipeline, hook frameworks, testing-engine integration, FTC/AI-disclosure compliance |
+| `channels/sponsorships.md` | **Sponsorships (audience buying)** — newsletter/podcast/YouTube/creator/community/event placements, sourcing + marketplaces, audience vetting, CPM benchmarks, attribution, portfolio scaling, FTC disclosure |
+| `channels/events-experiential.md` | **Events & experiential (IRL)** — B2B field marketing (dinners/roadshows/booths) + B2C experiential/activations, the content flywheel, pre/at/post-event runbooks, ROI math |
+
+---
+
+## People (Cloned Experts)
+
+22+ expert knowledge distillations live in `knowledge/people/` — offers (Hormozi, Abraham, Kennedy, Schwartz), positioning/pricing (Dunford, Ramanujam, Campbell, Gurley), growth (Balfour, Verna, Walker), paid creative (Denney, Hott), local/phone-led (Mello, Hawkins, Shaw), sales (Gordon), media models (Ramsey, Wardrop, Farley), and more. Full index with load-when triggers: `knowledge/people/_people-index.md`.
+
+## Personas
+
+| File | Use When |
+|------|----------|
+| `personas/_persona-index.md` | Quick lookup of all 8 personas |
+| `personas/competent-cog.md` | Targeting corporate/office workers |
+| `personas/shock-absorber.md` | Targeting middle managers |
+| `personas/ghosted-applicant.md` | Targeting job seekers |
+| `personas/subscription-serf.md` | Targeting overcharged consumers |
+| `personas/system-manager.md` | Targeting parents |
+| `personas/admin-martyr.md` | Targeting people with life admin overload |
+| `personas/obsolescence-anxious.md` | Targeting AI-displaced workers |
+| `personas/credibility-fighter.md` | Targeting women in institutions |
+
+---
+
+## Design
+
+| File | Use When |
+|------|----------|
+| `frameworks/design/frontend-design.md` | General frontend UI methodology, app surfaces, responsive interaction states, Remotion scene polish |
+| `design/b2b-saas-design.md` | Designing B2B software interfaces |
+| `design/b2c-fintech-design.md` | Designing consumer fintech, payment apps, neobanks |
+
+---
+
+## Playbooks
+
+| File | Use When |
+|------|----------|
+| `playbooks/SEO Expert-semantic-seo-methodology.md` | **SEO Expert's full SEO system** - Quality/Trending nodes, Topical Maps, Author sections, Topical Entry Grid |
+| `playbooks/local-seo-gbp-optimization.md` | **Local SEO/GBP** - City center proximity, naming conventions, virtual offices, multi-location |
+| `playbooks/surround-sound-llm-manipulation.md` | **LLM manipulation** - EMD strategy, multi-domain consensus, podcasts, e-books, Reddit/Quora |
+| `playbooks/content-publication-velocity.md` | **Publication workflow** - Content briefs, velocity monitoring, segment completion, cross-linking |
+| `playbooks/landing-page-messaging-workflow.md` | **Creating/optimizing landing pages** - 7-phase workflow with AI persona research, Perception Engineering copy, and Facebook Ads testing |
+| `playbooks/2026-marketing-playbook.md` | FY2026 strategic planning, AI/privacy shifts, board-level risk assessment |
+| `playbooks/business-model-marketing.md` | Marketing strategy by business model (B2B SaaS, DTC, Fintech, Crypto, Marketplace) |
+| `playbooks/video-clipping-automation-workflow.md` | Automated video clipping and multi-platform posting with OpusClip + Repurpose.io |
+| `playbooks/ad-creative-best-practices.md` | **Ad creatives** - Copy formulas (PAS, AIDA, BAB), testing framework (3x3 matrix), platform format specs, budget/bidding, creative fatigue signals |
+| `playbooks/combinatorial-creative-bench.md` | **Combinatorial creative bench** - P.D.A. concept math, 60/30/10 portfolio allocation, named kill / graduate / iterate rules |
+| `playbooks/creative-test-resolution-protocol.md` | **Creative test resolution** - Controls, data floors, read windows, and kill / iterate / graduate decisions |
+| `playbooks/creative-intelligence-ledger.md` | **Creative intelligence ledger** - Durable memory for hooks, angles, awareness stages, mechanics, results, and next actions |
+| `playbooks/hormozi-100m-funnel.md` | **Hormozi $100M funnel sequence** - Value Equation, Grand Slam Offer, client-financed acquisition, Core Four; runs `/kai-offer-builder` → `/kai-proof-builder` → `/kai-hook-bench` → `/kai-content-batching` → `/kai-funnel-audit` |
+| `playbooks/demand-side-research.md` | **Switch interviews / JTBD** - timeline reconstruction, four forces, VoC mining; feeds offer construction and messaging |
+| `playbooks/messaging-architecture.md` | **The messaging stack** - category frame → strategic narrative → positioning → homepage hierarchy, with agreement audit and testing methods |
+| `playbooks/referral-and-word-of-mouth.md` | **Referral engineering** - sharing drivers, program design, k-factor math, incentive rules |
+| `playbooks/retention-habit-loops.md` | **Behavioral retention** - habit-loop design, activation moments, ethics guardrails |
+| `playbooks/community-as-channel.md` | **Community-led growth** - when community fits, member journey, programming, measurement |
+| `playbooks/services-value-pricing.md` | **Service-business pricing** - value pricing, productized services, expertise positioning, retainer design |
+| `playbooks/product-led-seo.md` | **Programmatic SEO** - when template pages work, quality bars, data requirements, build order |
+| `playbooks/newsletter-growth-economics.md` | **Newsletter growth** - acquisition channels ranked, unit economics, list hygiene |
+| `playbooks/ad-campaign-management.md` | **Ad campaign ops** - STAG structure, audience funnels, optimization cadence (daily/weekly/monthly), scaling framework, reporting template |
+| `playbooks/meta-creative-testing-decision-framework.md` | **Meta creative testing** - Batch launch decisions, active-vs-paused staging, budget reality checks, winner protection |
+| `playbooks/paid-media-launch-playbook.md` | **Paid media launch** - Measurement-first Meta and Google launch flow, target CPA x 50 budget rule, creative matrix, first 14-day checks |
+| `playbooks/local-business-claymation-ads.md` | **Local claymation ad wedge** - Discover local leads, score weak creative, generate sample AI video concepts, pitch retainers |
+| `playbooks/social-media-strategy.md` | **Organic social** - LinkedIn, Instagram, X/Twitter, TikTok, YouTube best practices, content pillars, calendar template, platform benchmarks |
+| `playbooks/video-content-creation.md` | **Video production** - Short-form scripts (15/30/60s), long-form structure, testimonials, production tiers, editing rules, repurposing framework |
+| `playbooks/launch-playbook.md` | **Product launches** - Pre-launch (4 weeks), launch day hour-by-hour, post-launch optimization, crisis playbook |
+| `playbooks/influencer-marketing.md` | **Influencer/UGC** - Tiers (nano→mega), campaign types, creator briefs, contracts, FTC compliance, ROI measurement |
+| `playbooks/pr-comms-strategy.md` | **PR & comms** - PESO model, pitch framework, media list building, thought leadership calendar, crisis communications |
+| `playbooks/conversion-rate-optimization.md` | **CRO** - 5-layer optimization stack, form optimization, A/B testing methodology, CTA best practices, quick-win checklist |
+| `playbooks/funnel-hack-offer-architecture.md` | **Funnel hack / offer architecture** - Competitor funnel evidence, offer/pricing matrix, conversion mechanics extraction, and A/B test hypotheses for ecommerce/CRO |
+| `playbooks/analytics-attribution.md` | **Analytics** - UTM standards, attribution models, GA4 setup, dashboard templates, blended CAC, reporting cadence |
+| `playbooks/retargeting-remarketing.md` | **Retargeting** - Funnel segmentation, Meta/Google/email setup, creative strategy by segment, budget allocation, incrementality testing |
+| `playbooks/marketing-automation.md` | **Marketing automation** - 6 essential workflows (welcome, nurture, abandoned, re-engagement, post-purchase, event), lead scoring, segmentation, tool selection |
+| `playbooks/growth-loops-applied.md` | **Growth loops** - 6 loop archetypes (viral, invitation, content/SEO, paid, PLG hybrid, community), loop design methodology, K-factor measurement, false loop detection |
+| `playbooks/brand-positioning.md` | **Brand positioning** - Positioning statement formula, JTBD framework, value proposition canvas, messaging matrix, competitive differentiation, voice definition |
+| `playbooks/pricing-strategy.md` | **Pricing** - 9 pricing psychology principles, 3-tier packaging model, feature gating, value metrics, pricing page best practices, competitive pricing |
+| `playbooks/customer-journey-mapping.md` | **Customer journey** - 6-stage journey map, content-to-stage mapping, funnel diagnostics, stage transition signals, journey optimization checklist |
+| `playbooks/marketing-by-stage.md` | **Marketing by stage** - Pre-launch, early ($0-10K), growth ($10K-100K), scale ($100K+) playbooks with channel selection, budgets, team structure, common mistakes |
+| `playbooks/seo-link-building.md` | **Link building** - 7 ethical tactics (data/PR, guest posts, broken links, HARO, resource pages), monthly calendar, quality metrics, what to avoid |
+| `playbooks/technical-marketing-tracking.md` | **Technical marketing** - Tracking stack (data layer, GTM, pixels), platform setup (Meta/Google/LinkedIn/TikTok), consent management, UTMs, debugging guide |
+| `playbooks/content-repurposing.md` | **Content repurposing** - Pillar-to-platform system, extraction matrix (1 pillar → 20-25 assets), platform adaptation rules, weekly workflow, automation tools |
+| `playbooks/competitive-intelligence.md` | **Competitive intelligence** - 5 intelligence layers, signal monitoring, product/pricing/positioning analysis, sales battlecard template, CI calendar |
+| `playbooks/saas-metrics-guide.md` | **SaaS metrics** - MRR waterfall, NRR, churn benchmarks by segment, cohort analysis, CAC/LTV, Rule of 40, Magic Number, diagnostic framework |
+| `playbooks/demand-generation.md` | **Demand generation** - Create vs capture demand, multi-touch campaign framework, lead scoring, channel playbooks, MQL→SQL pipeline metrics |
+| `playbooks/growth-hacker-first-hire-os.md` | **Growth hacker first hire** - Exhaustive B2B/B2C distribution OS, channel scoring, specialist fan-out, test cards, approval gates, and Kai skill routing |
+| `playbooks/account-based-marketing.md` | **ABM** - 3 tiers (one-to-one/few/many), account dossier template, multi-channel orchestration, engagement scoring, sales alignment SLA |
+| `playbooks/partnership-comarketing.md` | **Partnerships** - Partner types, fit matrix, co-marketing campaigns, integration levels, outreach templates, ROI measurement |
+| `playbooks/customer-retention.md` | **Customer retention** - 8-layer retention stack, dunning/payment recovery, onboarding, health scoring, churn analysis, expansion levers, cancellation flow |
+| `playbooks/event-webinar-marketing.md` | **Events & webinars** - Webinar production (4-week timeline), promotion, day-of execution, post-event follow-up, virtual summit playbook, platform selection |
+| `playbooks/ecommerce-marketing.md` | **E-commerce** - Acquisition channels, product page CRO, cart recovery, email flows (7 automated), AOV growth, seasonal calendar, BFCM prep |
+| `playbooks/marketing-budget-forecasting.md` | **Budgeting** - Benchmarks by stage, 70/20/10 allocation, revenue forecasting, pipeline math, ROI by channel, budget defense framework |
+| `playbooks/seo-internal-linking.md` | **Internal linking** - Hub-and-spoke model, anchor text rules, link placement priority, orphan page detection, link equity flow, monthly audit |
+| `playbooks/podcast-marketing.md` | **Podcast marketing** - Strategy, guest acquisition, production workflow, distribution, growth tactics by phase, monetization, repurposing (1 episode → 20-30 pieces) |
+| `playbooks/growth-distribution-engine.md` | **Growth distribution engine (0→$5M ARR channel hacking)** — the distribution hire's OS: Bullseye/channel-market fit, scored B2B+B2C channel matrices, the Rule-of-3 testing system, kill/double-down criteria, stage sequencing by ACV/motion, unit-economics gates, first-90-days plan. **Hub that routes to every channel guide.** |
+| `playbooks/b2b-distribution-playbook.md` | **B2B distribution playbook** — sequences the full B2B channel stack (LinkedIn organic, events, AI outbound, AEO, SEO/blogs, long-form, YouTube, webinars, X, B2B influencers) into a build order with ACV/motion selection, weekly cadence, and pipeline/CAC measurement |
+| `playbooks/b2c-distribution-playbook.md` | **B2C distribution playbook** — the creative-volume + paid↔organic↔influencer↔UGC flywheel (AI UGC, organic TikTok/Reels/Shorts, paid social, events, influencer, sponsorships) with margin/AOV selection, build order, and blended CAC/MER measurement |
+
+---
+
+## Harness References
+
+| File | Use When |
+|------|----------|
+| `../harness/references/research-fanout-best-practices.md` + `../harness/references/research-fanout-vertical-registry.json` + `../harness/references/marketing-platform-source-registry.json` | **Research fan-out and condensation** - Cross-vertical source discovery, transcript/video mining, official-doc checks, competitor examples, provenance, edges, best practices, structures, and SOPs |
+| `../harness/references/research-fanout-vertical-registry.json` | **Vertical research registry** - Source packs, edge questions, SOP extracts, and gates across Kai marketing verticals |
+| `../harness/references/transcript-video-research-rules.md` | **Transcript/video research safety** - Allowed transcript sources, quote limits, rights notes, timestamp ledgers, and blocked private/paywalled extraction |
+| `../harness/references/openai-ads-measurement-reference.md` | **OpenAI Ads measurement** - JavaScript Pixel, server-side Conversions API, supported events, SHA-256 identifiers, minor-unit values, event ID deduplication, consent and QA gates |
+
+---
+
+## Checklists
+
+| File | Use When |
+|------|----------|
+| `checklists/SEO Expert-technical-seo-checklist.md` | **Security hardening** - htaccess, CSP, query parameters, hack recovery |
+| `checklists/content-brief-checklist.md` | **Content brief creation** - Components, anchor strategy, PDF guidelines |
+| `checklists/patent-research-checklist.md` | **Google patent research** - Key engineers, SEO Patent Reader GPT, methodology |
+| `checklists/content-checklist.md` | Final review before publishing content |
+| `checklists/pr-checklist.md` | Final review before distributing press release |
+| `checklists/seo-checklist.md` | Validating SEO optimization |
+| `checklists/technical-seo-audit-sop.md` | Screaming Frog crawl SOP, dev ticket templates |
+| `checklists/tiktok-checklist.md` | Validating TikTok Shop content |
+| `checklists/email-checklist.md` | Email program setup and campaign validation |
+| `checklists/paid-acquisition-checklist.md` | Paid campaign launch and optimization validation |
+| `checklists/meta-advertising-checklist.md` | Meta/FB/IG ads launch, learning phase, and optimization |
+| `checklists/perception-engineering-checklist.md` | Persuasive messaging and decision installation |
+| `checklists/fintech-design-checklist.md` | B2C fintech app design validation |
+| `checklists/2026-readiness-checklist.md` | FY2026 infrastructure and strategy readiness |
+| `checklists/business-model-checklist.md` | Business model-specific marketing validation |
+| `checklists/landing-page-messaging-checklist.md` | Landing page messaging workflow validation (companion to playbook) |
+| `checklists/ad-launch-checklist.md` | **Ad launch** - Strategy, creative, compliance, tracking, landing page, optimization cadence, kill criteria |
+| `checklists/creative-production-checklist.md` | **Creative production** - Image, video, carousel checklists with platform specs and quality gates |
+| `checklists/website-launch-checklist.md` | **Website launch** - Pre-launch (content, SEO, technical, conversion, security), launch day, post-launch, migration-specific |
+| `checklists/social-media-audit-checklist.md` | **Social media audit** - Profile, content, audience audit per platform + competitive analysis + strategy gaps |
+| `checklists/cro-audit-checklist.md` | **CRO audit** - Technical, above-fold, trust, forms, content, navigation scoring (1-5 per section, /30 total) |
+| `checklists/google-ads-launch-checklist.md` | **Google Ads** - Account setup, Search/PMax/Display/YouTube config, keywords, ad copy, extensions, landing page, post-launch |
+| `checklists/linkedin-ads-launch-checklist.md` | **LinkedIn Ads** - Account setup, audience targeting, lead gen forms, ad formats, compliance, B2B benchmarks |
+| `checklists/linkedin-ai-content-detection-and-feed-checklist.md` | **LinkedIn pre-publish QA** — semantic feed fit, AI-slop avoidance, confidence hygiene |
+| `checklists/agent-readiness-checklist.md` | **Agent-readiness audit** - multi-engine robots.txt / optional llms.txt / JS-gating / capability signaling / schema scoring. Run before surround-sound or AEO work |
+| `checklists/channel-distribution-checklist.md` | **Channel distribution scorecard** - channel-market fit pre-screen, Bullseye selection matrix, test design, mid-flight health, kill/iterate/double-down thresholds, scale-readiness unit-economics gate, per-channel leading indicators, compliance gate |
+
+---
+
+## Archive
+
+Original source files preserved in `archive/` for reference.
+
+---
+
+## Framework Selection Guide
+
+### By Task Type
+
+| Task | Primary Framework | Secondary |
+|------|-------------------|-----------|
+| **Blog post** | `channels/content-writing.md` | `frameworks/content-copywriting/four-us-framework.md` |
+| **LinkedIn article** | `channels/linkedin-articles.md` | `frameworks/content-copywriting/algorithmic-authorship.md` |
+| **SEO article** | `channels/seo-content.md` | `frameworks/content-copywriting/algorithmic-authorship.md` |
+| **Site architecture** | `frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `channels/seo-content.md` |
+| **Local SEO pages** | `frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `frameworks/content-copywriting/algorithmic-authorship.md` |
+| **Press release** | `channels/press-releases.md` | `frameworks/content-copywriting/headline-formulas.md` |
+| **Sales page** | `frameworks/content-copywriting/perception-engineering.md` | `frameworks/content-copywriting/headline-formulas.md` |
+| **Landing page** | `playbooks/landing-page-messaging-workflow.md` | `frameworks/content-copywriting/perception-engineering.md` |
+| **High-stakes persuasion** | `frameworks/content-copywriting/perception-engineering-advanced.md` | `frameworks/content-copywriting/perception-engineering.md` |
+| **TikTok Shop** | `channels/tiktok-shop.md` | `channels/tiktok-algorithm.md` |
+| **TikTok optimization** | `channels/tiktok-algorithm.md` | `channels/tiktok-shop.md` |
+| **B2B UI/UX design** | `design/b2b-saas-design.md` | - |
+| **B2C fintech design** | `design/b2c-fintech-design.md` | `design/b2b-saas-design.md` |
+| **Payment flow design** | `design/b2c-fintech-design.md` | - |
+| **Persona research** | `personas/_persona-index.md` | individual persona file |
+| **Email campaigns** | `channels/email-lifecycle.md` | `frameworks/content-copywriting/perception-engineering.md` |
+| **Research fan-out / edge synthesis** | `../harness/references/research-fanout-best-practices.md` + `../harness/references/research-fanout-vertical-registry.json` + `../harness/references/marketing-platform-source-registry.json` | `../harness/references/audit-data-provenance.md` |
+| **Paid ads** | `channels/paid-acquisition.md` | `frameworks/content-copywriting/headline-formulas.md` |
+| **Paid media launch** | `playbooks/paid-media-launch-playbook.md` | `playbooks/ad-campaign-management.md` |
+| **OpenAI Ads measurement / CAPI** | `../harness/references/openai-ads-measurement-reference.md` | `../harness/references/advertising-compliance.md` + `checklists/paid-acquisition-checklist.md` |
+| **Local business sample ad outreach** | `playbooks/local-business-claymation-ads.md` | `playbooks/ad-creative-best-practices.md` |
+| **Ecommerce CRO / offer architecture** | `playbooks/funnel-hack-offer-architecture.md` | `playbooks/ecommerce-marketing.md` + `playbooks/conversion-rate-optimization.md` |
+| **Meta/Facebook ads** | `channels/meta-advertising.md` + `playbooks/meta-creative-testing-decision-framework.md` | `frameworks/meta-advertising/` |
+| **AEO/AI Search** | `frameworks/aeo-ai-search/` | `channels/seo-content.md` |
+| **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` | `checklists/seo-checklist.md` |
+| **Indexation troubleshooting** | `../harness/references/google-indexation-monitoring.md` | `checklists/technical-seo-audit-sop.md` + `checklists/seo-checklist.md` |
+| **Technical SEO security** | `checklists/SEO Expert-technical-seo-checklist.md` | - |
+| **Local SEO/GBP** | `playbooks/local-seo-gbp-optimization.md` | - |
+| **Topical map creation** | `playbooks/SEO Expert-semantic-seo-methodology.md` | - |
+| **LLM/AI-search visibility** | `playbooks/surround-sound-llm-manipulation.md` | `frameworks/aeo-ai-search/llm-citation-tracking.md` |
+| **Content brief creation** | `checklists/content-brief-checklist.md` | `playbooks/content-publication-velocity.md` |
+| **Patent research** | `checklists/patent-research-checklist.md` | - |
+| **Header/footer design** | `frameworks/dynamic-header-footer-design.md` | - |
+| **News/trending pages** | `frameworks/trending-nodes-news-pages.md` | - |
+| **Image optimization** | `frameworks/image-optimization-indexation.md` | - |
+| **Ad creative production** | `playbooks/ad-creative-best-practices.md` | `checklists/creative-production-checklist.md` |
+| **Ad campaign setup** | `playbooks/ad-campaign-management.md` | `checklists/ad-launch-checklist.md` |
+| **Ad concept bench / creative testing** | `playbooks/combinatorial-creative-bench.md` | `playbooks/ad-creative-best-practices.md` + `playbooks/ad-campaign-management.md` |
+| **Creative test readout** | `playbooks/creative-test-resolution-protocol.md` | `playbooks/creative-intelligence-ledger.md` |
+| **Creative learning memory** | `playbooks/creative-intelligence-ledger.md` | `playbooks/combinatorial-creative-bench.md` |
+| **Meta creative batch launch** | `playbooks/meta-creative-testing-decision-framework.md` | `checklists/meta-advertising-checklist.md` |
+| **Competitor ad analysis** | Use `/ad-research` skill | `playbooks/ad-creative-best-practices.md` |
+| **Social media strategy** | `playbooks/social-media-strategy.md` | platform-specific channel guide |
+| **Video content** | `playbooks/video-content-creation.md` | `playbooks/video-clipping-automation-workflow.md` |
+| **Product launch** | `playbooks/launch-playbook.md` | `playbooks/ad-campaign-management.md` |
+| **Influencer marketing** | `playbooks/influencer-marketing.md` | `playbooks/social-media-strategy.md` |
+| **PR / media outreach** | `playbooks/pr-comms-strategy.md` | `channels/press-releases.md` |
+| **Crisis communications** | `playbooks/pr-comms-strategy.md` (crisis section) | - |
+| **Growth loops / viral mechanics** | `playbooks/growth-loops-applied.md` | `frameworks/content-copywriting/loop-mechanics.md` |
+| **First growth hire / distribution OS** | `playbooks/growth-hacker-first-hire-os.md` | `playbooks/growth-loops-applied.md` + `playbooks/demand-generation.md` + `checklists/growth-hacker-first-hire-checklist.md` |
+| **Brand positioning** | `playbooks/brand-positioning.md` | `playbooks/business-model-marketing.md` |
+| **Pricing strategy** | `playbooks/pricing-strategy.md` | `playbooks/conversion-rate-optimization.md` |
+| **Customer journey mapping** | `playbooks/customer-journey-mapping.md` | `playbooks/analytics-attribution.md` |
+| **CRO / conversion optimization** | `playbooks/conversion-rate-optimization.md` | `checklists/cro-audit-checklist.md` |
+| **Marketing by company stage** | `playbooks/marketing-by-stage.md` | `playbooks/launch-playbook.md` |
+| **SEO link building** | `playbooks/seo-link-building.md` | `playbooks/pr-comms-strategy.md` |
+| **Technical marketing / tracking** | `playbooks/technical-marketing-tracking.md` | `playbooks/analytics-attribution.md` |
+| **Retargeting / remarketing** | `playbooks/retargeting-remarketing.md` | `playbooks/ad-campaign-management.md` |
+| **Marketing automation** | `playbooks/marketing-automation.md` | `channels/email-lifecycle.md` |
+| **Content repurposing** | `playbooks/content-repurposing.md` | `playbooks/video-content-creation.md` |
+| **Newsletter / Substack** | `channels/newsletter-strategy.md` | `channels/email-lifecycle.md` |
+| **Competitive intelligence** | `playbooks/competitive-intelligence.md` | Use `/ad-research` for ad-specific CI |
+| **SaaS metrics / unit economics** | `playbooks/saas-metrics-guide.md` | `playbooks/analytics-attribution.md` |
+| **Demand generation (B2B)** | `playbooks/demand-generation.md` | `playbooks/marketing-automation.md` |
+| **Account-based marketing (ABM)** | `playbooks/account-based-marketing.md` | `playbooks/demand-generation.md` |
+| **Partnerships / co-marketing** | `playbooks/partnership-comarketing.md` | `channels/affiliate-referral.md` |
+| **2026 strategic planning** | `playbooks/2026-marketing-playbook.md` | - |
+| **B2B SaaS marketing** | `playbooks/business-model-marketing.md` | `channels/paid-acquisition.md` |
+| **DTC marketing** | `playbooks/business-model-marketing.md` | `channels/email-lifecycle.md` |
+| **Fintech marketing** | `playbooks/business-model-marketing.md` | `design/b2c-fintech-design.md` |
+| **Crypto/Web3 marketing** | `playbooks/business-model-marketing.md` | - |
+| **Marketplace marketing** | `playbooks/business-model-marketing.md` | - |
+| **Podcast setup (equipment)** | `channels/podcast.md` | - |
+| **Podcast marketing strategy** | `playbooks/podcast-marketing.md` | `playbooks/content-repurposing.md` |
+| **Customer retention / churn** | `playbooks/customer-retention.md` | `playbooks/saas-metrics-guide.md` |
+| **Webinar / event marketing** | `playbooks/event-webinar-marketing.md` | `playbooks/demand-generation.md` |
+| **E-commerce marketing** | `playbooks/ecommerce-marketing.md` | `playbooks/ad-campaign-management.md` |
+| **Marketing budget / forecasting** | `playbooks/marketing-budget-forecasting.md` | `playbooks/analytics-attribution.md` |
+| **SEO internal linking** | `playbooks/seo-internal-linking.md` | `playbooks/seo-link-building.md` |
+| **Pick channels / 0→$5M distribution** | `playbooks/growth-distribution-engine.md` | `checklists/channel-distribution-checklist.md` |
+| **B2B distribution strategy** | `playbooks/b2b-distribution-playbook.md` | `playbooks/growth-distribution-engine.md` |
+| **B2C distribution strategy** | `playbooks/b2c-distribution-playbook.md` | `playbooks/growth-distribution-engine.md` |
+| **AI outbound / cold (B2B)** | `channels/ai-outbound.md` | `harness/references/cold-email-rules.md` |
+| **AI UGC / creative volume (B2C)** | `channels/ai-ugc.md` | `channels/meta-advertising.md` |
+| **LinkedIn organic (founder-led)** | `channels/linkedin-founder-led.md` | `channels/linkedin-articles.md` |
+| **Sponsorships (audience buying)** | `channels/sponsorships.md` | `playbooks/influencer-marketing.md` |
+| **Events & experiential (IRL)** | `channels/events-experiential.md` | `playbooks/event-webinar-marketing.md` |
+
+### By Goal
+
+| Goal | Frameworks |
+|------|-----------|
+| **Increase conversions** | `frameworks/content-copywriting/perception-engineering.md`, `frameworks/content-copywriting/headline-formulas.md` |
+| **Deep persuasion/influence** | `frameworks/content-copywriting/perception-engineering-advanced.md` |
+| **Find edge from research** | `../harness/references/research-fanout-best-practices.md`, `../harness/references/research-fanout-vertical-registry.json`, `../harness/references/marketing-platform-source-registry.json` |
+| **Improve SEO rankings** | `frameworks/content-copywriting/algorithmic-authorship.md`, `channels/seo-content.md` |
+| **Technical SEO audit** | `checklists/technical-seo-audit-sop.md` |
+| **Fix indexation** | `../harness/references/google-indexation-monitoring.md`, `checklists/technical-seo-audit-sop.md` |
+| **AEO/AI Search** | `frameworks/aeo-ai-search/` |
+| **URL/page architecture** | `frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` |
+| **Build brand voice** | `channels/content-writing.md`, `frameworks/content-copywriting/four-us-framework.md` |
+| **LinkedIn thought leadership** | `channels/linkedin-articles.md` |
+| **Understand audience** | `personas/` |
+| **Design B2B products** | `design/b2b-saas-design.md` |
+| **Design consumer fintech** | `design/b2c-fintech-design.md` |
+| **TikTok virality** | `channels/tiktok-algorithm.md`, `channels/tiktok-shop.md` |
+| **Nurture & retain users** | `channels/email-lifecycle.md` |
+| **Scale acquisition** | `channels/paid-acquisition.md`, `playbooks/combinatorial-creative-bench.md` |
+| **Find distribution channels** | `playbooks/growth-hacker-first-hire-os.md`, `playbooks/growth-loops-applied.md`, `playbooks/demand-generation.md` |
+| **Meta ad optimization** | `channels/meta-advertising.md`, `frameworks/meta-advertising/` |
+| **2026 readiness** | `playbooks/2026-marketing-playbook.md` |
+| **Business model strategy** | `playbooks/business-model-marketing.md` |
+
+---
+
+## Deep Research Prompts
+
+For frameworks not yet created, use the prompts in `_deep-research-prompts.md`:
+- Analytics/measurement frameworks
+- Social media strategy (beyond TikTok)

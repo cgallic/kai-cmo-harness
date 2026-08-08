@@ -29,6 +29,12 @@ jobs:
       - name: Golden corpus
         run: python scripts/quality_gates/golden_check.py
 
+      # Plugin payloads under plugins/ are real committed files, not symlinks:
+      # symlinks break Windows checkouts and get skipped by the plugin cache.
+      # Fail the build if a canonical edit never reached the plugin copies.
+      - name: Plugin assets in sync
+        run: python scripts/sync_plugin_assets.py --check
+
       - name: Install dependencies
         run: |
           pip install -r scripts/requirements.txt

@@ -1,0 +1,55 @@
+skill: podcast-repurpose
+version: 1.0
+harness: kai-harness
+format: podcast-repurpose-package
+risk_tier: medium
+seo_lint: false
+
+description: >
+  Turns a podcast episode, RSS item, or transcript into sourced content atoms,
+  clips, quotes, social posts, newsletter sections, and a calendar.
+
+required_sources:
+  - episode_url_or_transcript
+  - speaker_permission_status
+  - brand_voice_profile
+source_policy:
+  load_before_writing: true
+  required_reference: harness/references/transcript-video-research-rules.md
+  quotes_require_timestamp_or_transcript_line: true
+  guest_claims_require_source_or_hypothesis_label: true
+  direct_quotes_require_rights_review: true
+  no_private_paywalled_or_login_gated_sources: true
+  missing_sources_action: block_or_label_draft_only
+
+inputs:
+  required:
+    - episode_source: string
+    - target_channels: list[string]
+  optional:
+    - transcript: string
+    - existing_content_history: list[object]
+    - content_pillars: list[string]
+
+outputs:
+  content_atoms: list[object]
+  quote_bank: list[object]
+  clip_candidates: list[object]
+  repurpose_matrix: list[object]
+  calendar: list[object]
+  data_gaps: list[string]
+
+quality_gates:
+  - duplicate_history_checked == true
+  - quotes_have_source_location == true
+  - transcript_rights_status_known == true
+  - no_full_transcript_or_long_excerpt == true
+  - channel_fit_score_present == true
+  - publish_requires_approval == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - transcript_missing_for_direct_quotes
+    - speaker_permission_unknown
+    - live_publish_without_approval

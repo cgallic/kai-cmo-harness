@@ -1,0 +1,46 @@
+skill: finance-briefing
+version: 1.0
+harness: kai-harness
+format: finance-operator-briefing
+risk_tier: high
+seo_lint: false
+
+description: >
+  Summarizes user-provided financial exports into an operator briefing with
+  caveats. This is business analysis, not financial advice.
+
+required_sources:
+  - user_provided_financial_export
+  - reporting_period
+source_policy:
+  load_before_writing: true
+  numbers_require_export_reference: true
+  missing_sources_action: block_quantitative_claim
+
+inputs:
+  required:
+    - financial_exports: list[string]
+    - reporting_period: string
+  optional:
+    - prior_period_exports: list[string]
+    - scenario_assumptions: list[object]
+
+outputs:
+  executive_briefing: markdown
+  kpi_table: list[object]
+  anomaly_notes: list[object]
+  assumptions: list[string]
+  data_gaps: list[string]
+
+quality_gates:
+  - every_number_has_source == true
+  - advice_caveat_present == true
+  - assumptions_listed == true
+  - no_tax_legal_investment_advice == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - number_without_source
+    - missing_financial_export
+    - regulated_advice_language

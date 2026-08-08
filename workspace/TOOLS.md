@@ -87,8 +87,8 @@ All business data is accessible via the `cmo` command:
 Dashboard: https://cg.meetkai.xyz/leads.html
 
 ## SSH Hosts
-- kai-cmo VPS: 89.167.60.171 (this server)
-- MDI server: 77.42.43.0
+- kai-cmo VPS: KAI_VPS_HOST (this server)
+- MDI server: PROD_HOST
 
 ## Domains
 - meetkai.xyz / www.meetkai.xyz -> landing page (/var/www/meetkai/)

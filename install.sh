@@ -83,6 +83,10 @@ cp -r "$SRC/knowledge"               "$KAI_ROOT/knowledge"
 cp -r "$SRC/harness/references"      "$KAI_ROOT/harness/references"
 cp -r "$SRC/harness/skill-contracts" "$KAI_ROOT/harness/skill-contracts"
 cp    "$SRC/harness/brief-schema.md" "$KAI_ROOT/harness/brief-schema.md"
+# eco_core.py finds its install root by walking up for harness/eco-floors.yaml.
+# Omitting it makes every eco_gate call raise "ECO floor registry not found",
+# which silently breaks /kai-goal on install.sh installs.
+cp    "$SRC/harness/eco-floors.yaml" "$KAI_ROOT/harness/eco-floors.yaml"
 cp -r "$SRC/scripts/quality_gates"   "$KAI_ROOT/scripts/quality_gates"
 
 info "Knowledge base installed (${KAI_ROOT})"

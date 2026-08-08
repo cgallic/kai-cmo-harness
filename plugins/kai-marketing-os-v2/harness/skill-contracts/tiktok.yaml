@@ -1,0 +1,236 @@
+skill: tiktok
+version: 3.0
+harness: kai-harness
+format: tiktok
+risk_tier: high
+word_count: 250-450
+min_four_us: 10
+seo_lint: false
+
+description: >
+  TikTok organic, Spark Ads, and paid short-form video scripts. Built for
+  mute-first viewing, creator-safe execution, platform disclosure, and
+  evidence-backed claims.
+
+required_sources:
+  - brief
+  - knowledge/channels/tiktok-algorithm.md
+  - knowledge/checklists/tiktok-checklist.md
+  - harness/references/tiktok-ads-policy-reference.md
+  - asset_rights_log
+  - claim_evidence_log
+source_policy:
+  load_before_writing: true
+  paid_or_sponsored_requires_policy_reference: true
+  creator_content_requires_signed_permission: true
+  music_or_trend_usage_requires_commercial_rights_check: true
+  claims_must_trace_to_evidence: true
+  missing_sources_action: block_and_request_sources
+
+inputs:
+  required:
+    - brief: object
+    - objective: string
+    - audience_segment: string
+    - placement: string
+  optional:
+    - is_paid: boolean
+    - is_sponsored: boolean
+    - creator_handle: string
+    - product: string
+    - claim_evidence_log: list[object]
+    - asset_rights_log: list[object]
+    - landing_page_url: string
+
+required_sections:
+  - hook
+  - soft_cta
+  - problem
+  - demo
+  - fomo
+  - hard_cta
+
+output_schema:
+  type: object
+  required:
+    - concept_name
+    - disclosure_plan
+    - scenes
+    - captions
+    - on_screen_text
+    - voiceover
+    - cta
+    - claims
+    - rights_clearance
+    - compliance_notes
+  properties:
+    concept_name: string
+    disclosure_plan:
+      type: object
+      required:
+        - required
+        - placement
+        - exact_text
+      properties:
+        required: boolean
+        placement: string
+        exact_text: string
+    scenes:
+      type: list
+      item_schema:
+        scene_number: int
+        duration_seconds: number
+        visual_direction: string
+        on_screen_text: string
+        voiceover: string
+        caption: string
+    captions: list[string]
+    on_screen_text: list[string]
+    voiceover: string
+    cta:
+      type: object
+      properties:
+        soft: string
+        hard: string
+        button_or_link: string
+    claims:
+      type: list
+      item_schema:
+        claim: string
+        evidence_id: string
+        risk_level: string
+    rights_clearance:
+      type: object
+      properties:
+        creator_permission_id: string
+        music_license_status: string
+        asset_ids: list[string]
+    compliance_notes: list[string]
+
+deterministic_checks:
+  - id: word_count_range
+    evaluator: script
+    pass_when: "250 <= word_count <= 450"
+  - id: required_sections_present
+    evaluator: schema
+    pass_when: "all required_sections have non_empty output values"
+  - id: mute_first
+    evaluator: static
+    pass_when: "every scene has on_screen_text or caption"
+  - id: disclosure_present_when_required
+    evaluator: static
+    pass_when: "is_paid == false and is_sponsored == false or disclosure_plan.required == true"
+  - id: creator_permission_present
+    evaluator: static
+    pass_when: "creator_handle is empty or rights_clearance.creator_permission_id is non_empty"
+  - id: claim_evidence_ids_present
+    evaluator: static
+    pass_when: "every claims item has evidence_id"
+  - id: banned_words
+    evaluator: quality_gate
+    pass_when: "banned_words_tier1 == 0"
+  - id: no_bracketed_placeholders
+    evaluator: regex
+    pass_when: "no text matches '\\[[^\\]]+\\]'"
+
+llm_judge_rubric:
+  scoring: 1-4
+  pass_threshold: 14
+  criteria:
+    - name: platform_fit
+      question: "Does the script feel native to TikTok without copying a creator or trend without permission?"
+    - name: compliance
+      question: "Are sponsorship, AI-generated, health, financial, or other regulated claims disclosed and substantiated?"
+    - name: visual_clarity
+      question: "Can the viewer understand the offer with sound off?"
+    - name: conversion_focus
+      question: "Does the CTA match the objective without exaggerated scarcity or pressure?"
+
+human_review_required_when:
+  - is_paid == true
+  - is_sponsored == true
+  - creator_handle is present
+  - health_finance_housing_employment_credit_or_political_claim == true
+  - uses_ai_generated_person_or_voice == true
+  - claim_risk_level == high
+  - asset_rights_log is missing
+
+golden_situations:
+  - name: sponsored_creator_demo
+    expectation: "Includes visible disclosure in opening scene and caption, creator permission ID, no unverified performance claim."
+  - name: organic_founder_tip
+    expectation: "No paid disclosure required, still traces product claims to evidence and works without audio."
+  - name: regulated_claim_attempt
+    expectation: "Blocks copy until legal and platform policy substantiation are supplied."
+
+regression_thresholds:
+  deterministic_pass_rate: 1.0
+  llm_judge_min_score: 14
+  max_unsubstantiated_claims: 0
+  max_missing_rights_items: 0
+  max_policy_blockers: 0
+
+claim_policy:
+  allowed:
+    - verifiable product capabilities
+    - clearly labeled customer quotes with permission
+    - demonstrable workflow outcomes with evidence IDs
+  requires_evidence:
+    - performance numbers
+    - comparison claims
+    - savings, revenue, time, health, legal, or financial claims
+  forbidden:
+    - guaranteed results
+    - personal attribute callouts
+    - before-after transformations without policy review
+    - misleading scarcity or fake urgency
+
+provenance_policy:
+  claim_trace_required: true
+  required_trace_fields:
+    - evidence_id
+    - source_name
+    - source_type
+    - collected_at
+  unresolved_claim_action: remove_or_hold_for_review
+
+disallowed_tactics:
+  - undisclosed paid partnership
+  - using creator likeness, voice, handle, or footage without permission
+  - using copyrighted music without commercial rights
+  - claiming TikTok endorsement
+  - exploiting sensitive personal attributes
+  - fake comments, fake stitches, or fabricated social proof
+  - medical, financial, legal, or income guarantees
+
+approval_gate:
+  required_before_publish: true
+  approvers:
+    - channel_owner
+    - compliance_owner
+  blocks:
+    - deterministic_check_failed
+    - llm_judge_score_below_threshold
+    - missing_asset_rights
+    - unsubstantiated_claim
+    - disclosure_required_but_absent
+
+trace_fields:
+  - workflow_id
+  - brief_id
+  - creator_permission_id
+  - asset_ids
+  - evidence_ids
+  - disclosure_required
+  - disclosure_text
+  - reviewer
+  - approval_status
+  - published_url
+  - utm_campaign
+
+constraints:
+  - Must work on mute.
+  - Include visual directions.
+  - No bracketed placeholders.
+  - Disclose sponsored, paid, affiliate, and AI-generated content when required.
+  - Do not use creator content, likeness, or music without documented rights.

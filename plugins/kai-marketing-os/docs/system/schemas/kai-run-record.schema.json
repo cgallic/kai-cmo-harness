@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kai-cmo-harness.local/schemas/kai-run-record.schema.json",
+  "title": "KaiRunRecord",
+  "description": "Persisted run record with lineage and lifecycle state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_id", "intent", "workflow", "brand_id"],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "type": "string"
+    },
+    "workflow": {
+      "type": "string"
+    },
+    "brand_id": {
+      "type": "string"
+    },
+    "surface": {
+      "type": "string",
+      "enum": ["local", "remote"],
+      "default": "local"
+    },
+    "module_set": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": ["running", "draft", "held", "approved", "completed", "failed"],
+      "default": "running"
+    },
+    "parent_run_id": {
+      "type": ["string", "null"]
+    },
+    "ancestor_run_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "artifact_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": ["string", "null"]
+    }
+  }
+}
+

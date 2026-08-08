@@ -1,0 +1,45 @@
+skill: meeting-actions
+version: 1.0
+harness: kai-harness
+format: meeting-action-extraction
+risk_tier: medium
+seo_lint: false
+
+description: >
+  Extracts owners, commitments, follow-ups, risks, and memory candidates from
+  meeting transcripts or notes. CRM/calendar/task updates are proposed only.
+
+required_sources:
+  - transcript_or_notes
+  - attendee_context
+source_policy:
+  load_before_writing: true
+  direct_quotes_require_source_location: true
+  missing_sources_action: draft_only
+
+inputs:
+  required:
+    - meeting_source: string
+    - meeting_type: string
+  optional:
+    - transcript: string
+    - attendees: list[object]
+    - crm_context: object
+
+outputs:
+  action_items: list[object]
+  commitments: list[object]
+  follow_up_draft: markdown
+  crm_update_proposals: list[object]
+  memory_candidates: list[object]
+
+quality_gates:
+  - each_action_has_owner_or_unassigned_label == true
+  - each_commitment_has_source_location == true
+  - crm_updates_are_proposals_only == true
+
+approval_gate:
+  required_before_publish: true
+  blocks:
+    - live_crm_update_without_approval
+    - unsupported_commitment
