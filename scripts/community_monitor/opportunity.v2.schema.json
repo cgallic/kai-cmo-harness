@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaicmo.dev/contracts/community-opportunity.v2.json",
+  "title": "Community opportunity",
+  "type": "object",
+  "required": ["id", "source", "source_mode", "captured_at", "title", "original_text", "original_text_is_full", "url", "evidence_quote", "commercial_intent", "content_value", "reputation_risk", "recommended_action", "status", "provenance"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "source_mode": {"enum": ["direct_api", "public_feed", "indexed_public", "authenticated_file_drop", "aeo_citation"]},
+    "captured_at": {"type": "string"},
+    "title": {"type": "string"},
+    "original_text": {"type": "string"},
+    "original_text_is_full": {"type": "boolean"},
+    "url": {"type": "string", "pattern": "^https?://"},
+    "evidence_quote": {"type": "string", "minLength": 1},
+    "commercial_intent": {"type": "integer", "minimum": 1, "maximum": 10},
+    "content_value": {"type": "integer", "minimum": 1, "maximum": 10},
+    "reputation_risk": {"type": "integer", "minimum": 1, "maximum": 10},
+    "recommended_action": {"type": "string"},
+    "status": {"type": "string"},
+    "provenance": {
+      "type": "object",
+      "required": ["collector", "observed_at"],
+      "properties": {
+        "collector": {"type": "string"},
+        "observed_at": {"type": "string"},
+        "query": {"type": "string"},
+        "provider": {"type": "string"},
+        "citation_response_excerpt": {"type": "string"}
+      }
+    }
+  },
+  "additionalProperties": true
+}

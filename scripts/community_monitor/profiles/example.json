@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "id": "example-community-opportunities",
+  "brand": {"name": "Example Brand", "terms": ["Example Brand"]},
+  "cadence_hours": 6,
+  "keywords": ["AI receptionist", "virtual receptionist", "answering service", "missed calls", "after hours calls"],
+  "sources": [
+    {"id": "reddit", "enabled": true, "access_mode": "public_feed"},
+    {"id": "hackernews", "enabled": true, "access_mode": "direct_api"},
+    {"id": "lobsters", "enabled": true, "access_mode": "direct_api"},
+    {"id": "youtube_comments", "enabled": false, "access_mode": "direct_api", "env": "YOUTUBE_API_KEY"},
+    {"id": "linkedin_public_posts", "enabled": false, "access_mode": "authenticated_file_drop", "import_dir": "runtime/community-monitor/imports/linkedin"},
+    {"id": "quora", "enabled": true, "access_mode": "indexed_public", "queries": ["site:quora.com AI receptionist"]},
+    {"id": "g2_reviews", "enabled": true, "access_mode": "indexed_public", "queries": ["site:g2.com/products AI receptionist reviews"]},
+    {"id": "capterra_reviews", "enabled": true, "access_mode": "indexed_public", "queries": ["site:capterra.com AI receptionist reviews"]},
+    {"id": "google_reviews", "enabled": true, "access_mode": "indexed_public", "queries": ["site:google.com/maps answering service reviews"]},
+    {"id": "public_forums", "enabled": true, "access_mode": "indexed_public", "queries": ["(site:community.hubspot.com OR site:community.zapier.com OR site:community.make.com) missed calls"]},
+    {"id": "competitor_support", "enabled": true, "access_mode": "indexed_public", "queries": ["(site:community.ringcentral.com OR site:help.dialpad.com OR site:support.aircall.io) missed calls"]},
+    {"id": "aeo_citations", "enabled": true, "access_mode": "aeo_citation", "import_dir": "runtime/community-monitor/imports/aeo"}
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaicmo.dev/contracts/community-opportunity-profile.v2.json",
+  "title": "Community opportunity profile",
+  "type": "object",
+  "required": ["schema_version", "id", "brand", "keywords", "sources"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "id": {"type": "string", "minLength": 1},
+    "brand": {"type": "object", "required": ["name", "terms"]},
+    "keywords": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "cadence_hours": {"type": "integer", "minimum": 1},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "enabled", "access_mode"],
+        "properties": {
+          "id": {"type": "string"},
+          "enabled": {"type": "boolean"},
+          "access_mode": {"enum": ["direct_api", "public_feed", "indexed_public", "authenticated_file_drop", "aeo_citation"]},
+          "queries": {"type": "array", "items": {"type": "string"}},
+          "domains": {"type": "array", "items": {"type": "string"}},
+          "env": {"type": "string"},
+          "import_dir": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,52 @@
+skill: community-opportunity
+version: 2.0
+harness: kai-harness
+description: Source-neutral public conversation, review, forum, and AEO-citation monitoring.
+inputs:
+  required: [profile, source_registry, keyword_groups]
+  optional: [youtube_api_key_env, dataforseo_env, linkedin_import_dir, imported_items]
+outputs:
+  profile: json
+  opportunities: jsonl
+  run_manifest: json
+  source_status: json
+  dashboard: html
+required_opportunity_fields:
+  - id
+  - source
+  - source_mode
+  - captured_at
+  - title
+  - original_text
+  - original_text_is_full
+  - url
+  - evidence_quote
+  - commercial_intent
+  - content_value
+  - reputation_risk
+  - recommended_action
+  - status
+  - provenance
+constraints:
+  external_effects_default: false
+  response_drafting: false
+  automated_posting: forbidden
+  automated_messaging: forbidden
+  human_review_required: true
+  source_quote_required: true
+  allowed_access_modes: [direct_api, public_feed, indexed_public, authenticated_file_drop, aeo_citation]
+sources:
+  reddit: public_feed
+  hackernews: direct_api
+  lobsters: direct_api
+  youtube_comments: direct_api
+  linkedin_public_posts: authenticated_file_drop
+  quora: indexed_public
+  g2_reviews: indexed_public
+  capterra_reviews: indexed_public
+  google_reviews: direct_api_or_indexed_public
+  public_forums: indexed_public
+  competitor_support: indexed_public
+eco:
+  work_type: harness-change
+  floor: {E: 3, C: 3, O: 1}
