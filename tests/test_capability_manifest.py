@@ -67,7 +67,7 @@ def test_current_inventory_is_derived_from_live_sources():
         "channel_guides": 31,
         "audience_persona_profiles": 8,
         "harness_references": 37,
-        "skill_contracts": 35,
+        "skill_contracts": 36,
     }
     assert inventory["coverage"]["unresolved_router_commands"] == []
     assert inventory["coverage"]["orphan_manifest_pages"] == []

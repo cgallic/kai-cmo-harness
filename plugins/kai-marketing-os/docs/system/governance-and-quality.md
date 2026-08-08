@@ -23,7 +23,7 @@ Generated from `docs/system/capability-manifest.json`. Regenerate with `python -
 | Channel guides | 31 |
 | Audience persona profiles | 8 |
 | Harness references | 37 |
-| Skill contracts | 35 |
+| Skill contracts | 36 |
 <!-- capability-counts:end -->
 
 ## Instruction Contract

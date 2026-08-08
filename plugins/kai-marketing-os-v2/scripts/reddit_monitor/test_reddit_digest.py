@@ -55,6 +55,17 @@ def test_fetch_google_search_normalizes_public_facebook_result(monkeypatch):
     assert cost == 0.01
 
 
+def test_source_for_url_covers_public_opportunity_surfaces():
+    expected = {
+        "https://youtube.com/watch?v=1": "youtube", "https://linkedin.com/posts/x": "linkedin",
+        "https://quora.com/What-is-x": "quora", "https://g2.com/products/x/reviews": "g2_reviews",
+        "https://capterra.com/p/1/x": "capterra_reviews", "https://google.com/maps/place/x": "google_reviews",
+        "https://community.hubspot.com/t5/x": "public_forums", "https://help.dialpad.com/docs/x": "competitor_support",
+    }
+    for url, source in expected.items():
+        assert digest.source_for_url(url)[0] == source
+
+
 def test_collect_candidates_dedupes_same_url_across_queries(tmp_path, monkeypatch):
     row = {
         "id": "search:https://www.facebook.com/groups/hvacowners/posts/123",

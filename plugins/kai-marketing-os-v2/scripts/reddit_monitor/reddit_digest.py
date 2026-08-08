@@ -159,6 +159,27 @@ def _dataforseo_auth_header() -> str:
     return f"Basic {encoded}"
 
 
+def source_for_url(url: str) -> tuple[str, str]:
+    lower = url.lower()
+    rules = (
+        ("facebook.com/groups", "facebook_group", "Facebook Group via Google"),
+        (("youtube.com/watch", "youtu.be/"), "youtube", "YouTube via Google"),
+        ("linkedin.com/posts", "linkedin", "LinkedIn public post via Google"),
+        ("quora.com/", "quora", "Quora via Google"),
+        ("g2.com/products", "g2_reviews", "G2 review via Google"),
+        ("capterra.com/", "capterra_reviews", "Capterra review via Google"),
+        ("google.com/maps", "google_reviews", "Google place surface via Google"),
+        (("community.hubspot.com", "community.zapier.com", "community.make.com", "stackoverflow.com", "serverfault.com"), "public_forums", "Public operator forum via Google"),
+        (("community.ringcentral.com", "help.dialpad.com", "support.aircall.io", "help.openphone.co"), "competitor_support", "Competitor support community via Google"),
+    )
+    for needles, source, context in rules:
+        if isinstance(needles, str):
+            needles = (needles,)
+        if any(needle in lower for needle in needles):
+            return source, context
+    return "web_search", "Google Organic"
+
+
 def fetch_google_search(
     query: str, limit: int, timeframe: str = "m"
 ) -> tuple[list[dict], float]:
@@ -208,15 +229,13 @@ def fetch_google_search(
         result_url = item.get("url", "")
         if not result_url:
             continue
-        is_facebook_group = "facebook.com/groups" in result_url.lower()
+        source, source_context = source_for_url(result_url)
         posts.append({
             "id": f"search:{result_url}",
             "title": item.get("title", ""),
             "url": result_url,
-            "source": "facebook_group" if is_facebook_group else "web_search",
-            "source_context": (
-                "Facebook Group via Google" if is_facebook_group else "Google Organic"
-            ),
+            "source": source,
+            "source_context": source_context,
             "subreddit": "",
             "content": (item.get("description") or "")[:1500],
             "published_at": item.get("timestamp") or "",
