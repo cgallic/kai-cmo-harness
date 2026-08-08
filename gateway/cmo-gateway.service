@@ -1,6 +1,19 @@
 # CMO Gateway systemd service
-# Copy to /etc/systemd/system/cmo-gateway.service
-# Then: systemctl daemon-reload && systemctl enable --now cmo-gateway
+#
+# TEMPLATE -- read before copying. Edit User, WorkingDirectory, and the paths
+# below to match your host, then:
+#   cp gateway/cmo-gateway.service /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now cmo-gateway
+#
+# This unit used to ship with User=root and --host 0.0.0.0. Anyone who followed
+# the instructions literally got a root-owned, internet-facing service whose
+# only authentication is one shared API key and which speaks plain HTTP. The
+# live deployment on prod-77 never matched it (it runs as claude-user on
+# 127.0.0.1), so the template was both dangerous and wrong.
+#
+# The gateway has no TLS and no per-caller identity. Bind it to loopback and
+# put a reverse proxy in front, or bind it to a tailnet interface. Do not
+# expose it directly.
 
 [Unit]
 Description=CMO Agent System Webhook Gateway
@@ -8,15 +21,40 @@ After=network.target
 
 [Service]
 Type=simple
-User=root
-WorkingDirectory=/opt/cmo_agent
-Environment="PATH=/opt/cmo_agent/venv/bin:/usr/local/bin:/usr/bin"
-EnvironmentFile=/opt/cmo_agent/scripts/.env
-ExecStart=/opt/cmo_agent/venv/bin/uvicorn gateway.main:app --host 0.0.0.0 --port 8088
+
+# A dedicated unprivileged account. Never root: this process runs Python that
+# shells out, and a gateway bug should not be a root compromise.
+User=claude-user
+Group=claude-user
+
+WorkingDirectory=/home/claude-user/cmo-agent-system
+Environment="PATH=/home/claude-user/cmo-agent-system/venv/bin:/usr/local/bin:/usr/bin"
+
+# Must define CMO_GATEWAY_API_KEY. The gateway now fails closed without it
+# rather than falling back to an open "debug mode".
+EnvironmentFile=/home/claude-user/cmo-agent-system/.env
+
+ExecStart=/home/claude-user/cmo-agent-system/venv/bin/uvicorn gateway.main:app --host 127.0.0.1 --port 8089
+
 Restart=always
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
+
+# ── Hardening ────────────────────────────────────────────────────────────────
+# Cheap, and they bound the blast radius of a bug in a network-facing service.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/claude-user/cmo-agent-system
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
 
 [Install]
 WantedBy=multi-user.target

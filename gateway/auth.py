@@ -27,9 +27,11 @@ async def verify_api_key(
     expected_key = config.api_key
 
     if not expected_key:
-        # No API key configured - allow all requests in development
-        if config.debug:
-            return "debug-mode"
+        # Fail closed. This previously returned "debug-mode" and allowed every
+        # request through when CMO_GATEWAY_DEBUG=true, which meant a single
+        # environment variable silently disabled authentication on every
+        # protected route. A debug flag may widen logging or docs; it must
+        # never decide whether callers are authenticated.
         raise HTTPException(
             status_code=500,
             detail="Server misconfiguration: CMO_GATEWAY_API_KEY not set"

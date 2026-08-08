@@ -36,8 +36,15 @@ class GatewayConfig:
 
     @property
     def host(self) -> str:
-        """Get the host to bind to."""
-        return os.getenv("CMO_GATEWAY_HOST", "0.0.0.0")
+        """Get the host to bind to.
+
+        Loopback by default. This gateway has no TLS and authenticates with a
+        single shared key, so it belongs behind a reverse proxy or on a tailnet
+        interface -- binding every interface by default meant one forgotten
+        firewall rule was the only thing between it and the internet. Set
+        CMO_GATEWAY_HOST explicitly to widen it.
+        """
+        return os.getenv("CMO_GATEWAY_HOST", "127.0.0.1")
 
     @property
     def port(self) -> int:
