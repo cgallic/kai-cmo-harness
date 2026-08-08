@@ -119,9 +119,16 @@ def prepare_workdir(task: AgentTask, config: DaemonConfig) -> Path:
     base = Path(config.workspaces_root) / brand_id_short / run_id_short
     workdir = base / "workdir"
 
-    # Create directory structure
+    # Create directory structure.
+    #
+    # `output` sits INSIDE workdir. It used to be a sibling, with CLAUDE.md and
+    # the prompt both instructing the agent to write to `../output/` -- so the
+    # documented, everyday workflow required escaping cwd, and every other
+    # brand's run directory was two levels up from there. Keeping deliverables
+    # inside cwd makes the working directory an actual boundary rather than a
+    # suggestion, which is what _within_workdir in executor.py enforces.
     workdir.mkdir(parents=True, exist_ok=True)
-    (base / "output").mkdir(exist_ok=True)
+    (workdir / "output").mkdir(exist_ok=True)
     (base / "logs").mkdir(exist_ok=True)
 
     # 1. Inject skills into .claude/skills/ (native discovery)
@@ -255,7 +262,8 @@ Check the `knowledge/` directory for frameworks, checklists, and guides relevant
 ## Rules
 
 1. Complete the task fully — don't ask for clarification, make reasonable decisions
-2. Write all output to the `../output/` directory
+2. Write all output to the `output/` directory. Everything you need is inside
+   this working directory — do not read or write anything outside it
 3. Apply quality gates (Four U's scoring, banned word check) to any content you produce
 4. Be concise in your reasoning — focus on delivering the result
 5. If the task involves content, apply Algorithmic Authorship rules from knowledge/

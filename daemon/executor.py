@@ -2,11 +2,28 @@
 
 Spawns Claude Code via the official SDK, streams messages to Supabase
 for real-time dashboard visibility, and handles completion/failure.
+
+Isolation, and its current limit
+--------------------------------
+Runs for different brands are sibling directories under one workspaces_root,
+owned by one OS user, with no container between them. Three things narrow that:
+the subprocess gets an allowlisted environment rather than the daemon's
+credentials (`_subprocess_env`), file tools are confined to the run directory
+(`_make_workdir_guard`), and deliverables live inside cwd so the normal workflow
+never needs to escape it.
+
+Bash is the remaining hole. Tool sets grant it for audit/seo/analytics tasks,
+and shell quoting cannot be parsed reliably enough to confine it the way file
+tools are -- a guard that can be fooled would be worse than an acknowledged gap.
+Closing it properly means running each task in its own container or under a
+per-brand OS user. Until then, a Bash-capable task type is trusted with the
+whole workspaces_root.
 """
 
 import json
 import logging
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .config import DaemonConfig
@@ -78,6 +95,62 @@ def _subprocess_env() -> dict[str, str]:
         for name in SUBPROCESS_ENV_ALLOWLIST
         if name in os.environ
     }
+
+
+# Tool inputs that name a filesystem location, by tool. Anything not listed here
+# is not path-bearing and passes through untouched.
+PATH_ARGS_BY_TOOL: dict[str, tuple[str, ...]] = {
+    "Read": ("file_path",),
+    "Write": ("file_path",),
+    "Edit": ("file_path",),
+    "NotebookEdit": ("notebook_path",),
+    "Glob": ("path",),
+    "Grep": ("path",),
+}
+
+
+def _make_workdir_guard(workdir: Path):
+    """Build a can_use_tool callback confining file tools to `workdir`.
+
+    Every brand's run lives as a sibling directory under one workspaces_root,
+    owned by one OS user, with no container between them. `cwd` alone does not
+    stop Read/Glob/Grep from walking up into another tenant's output, so the
+    boundary is enforced per tool call here.
+
+    Bash is deliberately NOT parsed -- shell quoting makes that unreliable, and
+    a guard that can be fooled is worse than an honest gap. Bash confinement
+    needs a real sandbox; see the note in the module docstring.
+    """
+    root = workdir.resolve()
+
+    async def guard(tool_name: str, tool_input: dict, context):
+        from claude_agent_sdk import PermissionResultAllow, PermissionResultDeny
+
+        for arg in PATH_ARGS_BY_TOOL.get(tool_name, ()):
+            raw = tool_input.get(arg)
+            if not raw:
+                continue
+            try:
+                candidate = (root / str(raw)).resolve()
+            except (OSError, ValueError):
+                return PermissionResultDeny(
+                    message=f"{arg!r} is not a usable path"
+                )
+            if not candidate.is_relative_to(root):
+                logger.warning(
+                    "Denied %s on %s — outside run workdir %s",
+                    tool_name, candidate, root,
+                )
+                return PermissionResultDeny(
+                    message=(
+                        f"{arg} resolves outside the run's working directory. "
+                        "Everything needed for this task is inside it."
+                    )
+                )
+
+        return PermissionResultAllow()
+
+    return guard
 
 
 async def execute_task(
@@ -154,6 +227,10 @@ async def execute_task(
         # grant Bash, and the task's `input` is attacker-influenced text that lands
         # in the prompt -- so `env` printed one variable away from a full breach.
         env=_subprocess_env(),
+        # Confines file tools to this run's directory. Brands are siblings under
+        # one workspaces_root, so without this a Read of ../../<other>/output/
+        # crosses tenants.
+        can_use_tool=_make_workdir_guard(workdir),
     )
 
     # Resume prior session if this is a continuation
@@ -263,7 +340,8 @@ Read context/task.md for full details. Your input parameters:
 {input_json}
 ```
 
-Execute this task completely. Write all deliverables to ../output/.
+Execute this task completely. Write all deliverables to output/.
+Stay inside the working directory — do not read or write paths outside it.
 Apply quality gates to any content you produce.
 """
     return prompt

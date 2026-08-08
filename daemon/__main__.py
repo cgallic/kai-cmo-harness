@@ -14,6 +14,7 @@ import signal
 import subprocess
 import sys
 from datetime import datetime, timezone
+from typing import Optional
 
 from .config import DaemonConfig
 from .executor import execute_task
@@ -53,6 +54,57 @@ def get_supabase_client(config: DaemonConfig):
     """Create a Supabase client with service_role key (bypasses RLS)."""
     from supabase import create_client
     return create_client(config.supabase_url, config.supabase_service_key)
+
+
+def _verified_prior_session(
+    supabase,
+    *,
+    session_id: Optional[str],
+    brand_id: str,
+    task_id: str,
+) -> Optional[str]:
+    """Return `session_id` only if it belongs to a run of the same brand.
+
+    Claude sessions persist under one host user (persist_session=True), so
+    `options.resume = <session_id>` replays whatever conversation carries that
+    id -- including another tenant's. agent_runs.session_id is writable by
+    callers, so an attacker-chosen value would have resumed, and then extended,
+    a transcript belonging to someone else.
+
+    Fails closed: any doubt and the run simply starts fresh, which costs a
+    little context and leaks nothing.
+    """
+    if not session_id:
+        return None
+
+    try:
+        owner = supabase.table("agent_runs").select("brand_id").eq(
+            "session_id", session_id
+        ).limit(50).execute()
+    except Exception:
+        logger.warning(
+            "Could not verify ownership of session %s for run %s; starting fresh",
+            session_id, task_id,
+        )
+        return None
+
+    rows = owner.data or []
+    if not rows:
+        logger.warning(
+            "Session %s for run %s matches no known run; starting fresh",
+            session_id, task_id,
+        )
+        return None
+
+    foreign = {r.get("brand_id") for r in rows} - {brand_id}
+    if foreign:
+        logger.error(
+            "Run %s asked to resume session %s owned by another brand; refusing",
+            task_id, session_id,
+        )
+        return None
+
+    return session_id
 
 
 async def register_runtime(config: DaemonConfig, runtime: Runtime, supabase):
@@ -142,16 +194,22 @@ async def poll_loop(config: DaemonConfig, supabase, shutdown_event: asyncio.Even
                 ).single().execute()
 
                 if task_row.data:
+                    brand_id = task_row.data["brand_id"]
                     task = AgentTask(
                         id=task_row.data["id"],
-                        brand_id=task_row.data["brand_id"],
+                        brand_id=brand_id,
                         task_type=task_row.data["task_type"],
                         skill=task_row.data.get("skill"),
                         trigger=task_row.data.get("trigger", "daemon"),
                         status="running",
                         input=task_row.data.get("input"),
                         risk_tier=task_row.data.get("risk_tier", "low"),
-                        prior_session_id=task_row.data.get("session_id"),
+                        prior_session_id=_verified_prior_session(
+                            supabase,
+                            session_id=task_row.data.get("session_id"),
+                            brand_id=brand_id,
+                            task_id=task_row.data["id"],
+                        ),
                         schedule_id=task_row.data.get("schedule_id"),
                     )
 
