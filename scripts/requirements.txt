@@ -9,7 +9,7 @@ requests>=2.31.0
 
 # LLM providers (install the one you use)
 google-genai>=1.0.0        # For Gemini (default)
-openai>=1.0.0              # OpenRouter-compatible client for agent loop + OpenAI SDK callers
+openai>=1.66.0              # OpenRouter-compatible client for agent loop + OpenAI SDK callers
 # anthropic>=0.40.0        # For Claude
 
 # Analytics

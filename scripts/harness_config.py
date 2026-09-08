@@ -112,7 +112,7 @@ class HarnessConfig:
 
     # API
     gemini_api_key: str = field(default_factory=lambda: os.environ.get("GEMINI_API_KEY", ""))
-    gemini_model: str = "gemini-2.0-flash"
+    gemini_model: str = "gemini-3.8-flash"
     api_timeout: int = 30
     api_max_retries: int = 3
 
@@ -288,7 +288,7 @@ def load_config() -> HarnessConfig:
         knowledge_base=Path(os.environ.get("CMO_KNOWLEDGE_BASE", paths_raw.get("knowledge_base", ""))),
         venv_python=os.environ.get("VENV_PYTHON", paths_raw.get("venv_python", "")),
         gemini_api_key=os.environ.get("GEMINI_API_KEY", raw.get("gemini_api_key", "")),
-        gemini_model=raw.get("gemini_model", "gemini-2.0-flash"),
+        gemini_model=raw.get("gemini_model", "gemini-3.8-flash"),
         api_timeout=raw.get("api_timeout", 30),
         api_max_retries=raw.get("api_max_retries", 3),
         discord=discord,
