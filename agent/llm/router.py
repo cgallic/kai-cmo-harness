@@ -14,6 +14,7 @@ and the router normalizes usage metadata across providers where possible.
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 import os
+import re
 from contextlib import nullcontext
 import requests
 
@@ -92,20 +93,20 @@ PROVIDER_KEY_ENV = {
 PROVIDER_PRIORITY = ("openrouter", "openai", "gemini", "anthropic")
 DEFAULT_MODELS = {
     "openrouter": {
-        ModelTier.CHEAP: "google/gemini-2.0-flash-001",
-        ModelTier.SMART: "anthropic/claude-3.5-sonnet",
+        ModelTier.CHEAP: "google/gemini-3.5-flash-lite",
+        ModelTier.SMART: "anthropic/claude-sonnet-5",
     },
     "openai": {
-        ModelTier.CHEAP: "gpt-4.1-mini",
-        ModelTier.SMART: "gpt-4.1",
+        ModelTier.CHEAP: "gpt-5.6-luna",
+        ModelTier.SMART: "gpt-5.6-terra",
     },
     "gemini": {
-        ModelTier.CHEAP: "gemini-2.0-flash-001",
-        ModelTier.SMART: "gemini-1.5-pro",
+        ModelTier.CHEAP: "gemini-3.5-flash-lite",
+        ModelTier.SMART: "gemini-3.8-flash",
     },
     "anthropic": {
-        ModelTier.CHEAP: "claude-3-5-haiku-latest",
-        ModelTier.SMART: "claude-3-5-sonnet-latest",
+        ModelTier.CHEAP: "claude-haiku-4-5-20251001",
+        ModelTier.SMART: "claude-sonnet-5",
     },
 }
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
@@ -223,12 +224,33 @@ class LLMRouter:
         temperature: float,
         messages: List[Dict[str, str]],
     ) -> tuple[str, Any, Any]:
-        response = self.client.chat.completions.create(
-            model=model,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            messages=messages,
+        # Reasoning models reject legacy sampling parameters. Direct OpenAI
+        # uses Responses; OpenRouter retains its chat-compatible transport.
+        bare_model = model.split("/")[-1]
+        reasoning = bool(re.match(r"^(gpt-[56]|o[134])", bare_model))
+        fixed_sampling = reasoning or bool(
+            re.match(r"^claude-(sonnet|opus|fable|mythos)-5", bare_model)
         )
+        if self._detect_provider() == "openai" and reasoning:
+            response = self.client.responses.create(
+                model=model, input=messages, max_output_tokens=max_tokens,
+                reasoning={"effort": os.getenv("AGENT_REASONING_EFFORT", "low")},
+            )
+            if getattr(response, "status", None) != "completed":
+                raise RuntimeError("OpenAI response did not complete; increase token budget or inspect provider status")
+            if not response.output_text:
+                raise RuntimeError("OpenAI returned no text (refusal or exhausted reasoning budget)")
+            usage = getattr(response, "usage", None)
+            return response.output_text, {
+                "prompt_tokens": getattr(usage, "input_tokens", 0),
+                "completion_tokens": getattr(usage, "output_tokens", 0),
+                "total_tokens": getattr(usage, "total_tokens", 0),
+            }, response.status
+        params = dict(model=model, messages=messages)
+        params["max_tokens"] = max_tokens
+        if not fixed_sampling:
+            params["temperature"] = temperature
+        response = self.client.chat.completions.create(**params)
         content = response.choices[0].message.content
         usage = getattr(response, "usage", None)
         finish_reason = getattr(response.choices[0], "finish_reason", None)
@@ -251,7 +273,18 @@ class LLMRouter:
         client = _google_genai.Client(api_key=os.getenv("GEMINI_API_KEY", "").strip())
         response = client.models.generate_content(
             model=model,
-            contents=self._message_text(messages),
+            contents=[
+                {"role": "model" if m["role"] == "assistant" else "user",
+                 "parts": [{"text": m["content"]}]}
+                for m in messages if m["role"] not in {"system", "developer"}
+            ],
+            config={
+                "system_instruction": "\n\n".join(
+                    m["content"] for m in messages if m["role"] in {"system", "developer"}
+                ),
+                "max_output_tokens": max_tokens,
+                "temperature": temperature,
+            },
         )
         usage_meta = getattr(response, "usage_metadata", None)
         usage = {
@@ -289,8 +322,9 @@ class LLMRouter:
             json={
                 "model": model,
                 "max_tokens": max_tokens,
-                "temperature": temperature,
-                "system": "\n\n".join(system_parts) if system_parts else None,
+                **({} if re.match(r"^claude-(sonnet|opus|fable|mythos)-5", model)
+                   else {"temperature": temperature}),
+                **({"system": "\n\n".join(system_parts)} if system_parts else {}),
                 "messages": user_messages,
             },
             timeout=120,
@@ -538,35 +572,35 @@ class LLMRouter:
         output_tokens: int,
         model: Optional[str] = None,
         task_type: Optional[str] = None
-    ) -> float:
+    ) -> Optional[float]:
         """
         Estimate cost for a request in USD.
 
         Returns:
-            Estimated cost in USD
+            Estimated cost in USD, or None when rates are unknown.
         """
         if model is None and task_type:
             model = self.get_model_for_task(task_type)
         elif model is None:
             model = self._default_model()
 
-        # OpenRouter prices per million tokens
+        # Exact published text-token rates (2026-09-08), excluding cache,
+        # batch and provider surcharges. Unknown is not zero cost.
         prices = {
-            "gemini": (0.10, 0.40),      # Very cheap
-            "openai": (0.40, 1.60),      # gpt-4.1-mini ballpark
-            "claude": (3.00, 15.00),     # Sonnet pricing
+            "gpt-6-astra": (10.0, 50.0),
+            "gpt-5.6-sol": (4.0, 20.0),
+            "gpt-5.6-terra": (2.0, 12.0),
+            "gpt-5.6-luna": (0.2, 1.2),
+            "claude-sonnet-5": (2.0, 10.0),
+            "claude-opus-5": (5.0, 25.0),
+            "claude-haiku-4-5": (1.0, 5.0),
+            "claude-haiku-4-5-20251001": (1.0, 5.0),
         }
+        rates = prices.get(model.split("/")[-1])
+        if rates is None:
+            return None
+        return round((input_tokens * rates[0] + output_tokens * rates[1]) / 1_000_000, 6)
 
-        model_lower = model.lower()
-        if "gemini" in model_lower:
-            input_price, output_price = prices["gemini"]
-        elif "gpt" in model_lower or "o4" in model_lower:
-            input_price, output_price = prices["openai"]
-        else:
-            input_price, output_price = prices["claude"]
-
-        cost = (input_tokens * input_price / 1_000_000) + (output_tokens * output_price / 1_000_000)
-        return round(cost, 6)
 
 
 # Global LLM router instance

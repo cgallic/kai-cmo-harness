@@ -424,6 +424,15 @@ Deploy it by clicking **One-Click Deploy** in the dashboard (Netlify token requi
 
 This is the operator's own dashboard, not a client deliverable. To stand up a white-labeled, client-facing dashboard for one of your own clients, use `/kai-client-dashboard`.
 
+## Current models and outcome learning
+
+The Python agent router now supports current provider defaults and reasoning
+API parameters. Goal decomposition can use a persistent contextual bandit to
+propose experiments, record selection probabilities, and learn from matured
+business outcomes. It updates action selection, not model weights. Enable it
+with a predeclared experiment and `KAI_RL_DB`; existing approvals still govern
+execution. [Configuration, collector interface and limitations](docs/system/models-and-outcome-learning.md).
+
 ## Current Status (v1.0.0, updated July 2026)
 
 | Layer | Status | Notes |
