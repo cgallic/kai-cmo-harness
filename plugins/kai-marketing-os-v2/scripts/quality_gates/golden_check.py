@@ -59,6 +59,11 @@ def run_case(case: dict) -> dict:
         result = mod.lint(content, case["keyword"])
         passed = result["passed"]
         failure_text = " ".join(result["errors"])
+    elif gate == "voice_consistency":
+        mod = _load_module("voice_phrase_check")
+        result = mod.check_content(content, case["profile"])
+        passed = result["passed"]
+        failure_text = " ".join(v["text"] for v in result["violations"])
     else:
         return {"id": case["id"], "ok": False, "detail": f"unknown gate {gate!r}"}
 

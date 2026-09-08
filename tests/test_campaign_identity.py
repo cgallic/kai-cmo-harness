@@ -323,7 +323,7 @@ class TestEngineCampaignThreading:
 
         monkeypatch.setattr(engine.brief_generator, "generate_brief", fake_brief)
 
-        async def fake_propose(content, file_path, policy_name):
+        async def fake_propose(content, file_path, policy_name, **kwargs):
             return {
                 "proposal_id": "prop-1",
                 "score": 14,
@@ -359,6 +359,29 @@ class TestEngineCampaignThreading:
         assert entries[0]["url"] is None
         assert entries[0]["status"] == "approved_unpublished"
         assert _checks(sandbox) == []
+
+    def test_voice_context_reaches_writer_gate_and_replay(self, engine_env, sandbox, monkeypatch):
+        from kai.voice import VoiceStore
+        engine = engine_env["engine"]
+        voice = VoiceStore(engine.get_config().data_dir / "customer-voice.sqlite")
+        voice.profile(brand="kaicalls", writer="connor", rules=["Use concrete examples."],
+                      source_ref="guide:connor", approved_by="customer")
+        prompts, scopes = [], []
+        def draft(prompt, client):
+            prompts.append(prompt)
+            return BODY
+        monkeypatch.setattr(engine, "write_content", draft)
+        async def propose(content, file_path, policy_name, **kwargs):
+            scopes.append(kwargs["engine_kwargs"])
+            return dict(proposal_id="prop-voice", score=90, grade="A", status="pending",
+                        top_fixes=[], violation_count=0)
+        monkeypatch.setattr("scripts.quality.gate.propose", propose)
+        result = asyncio.run(engine.generate("blog", "kaicalls", "ai receptionist", writer="connor"))
+        assert "Use concrete examples." in prompts[0]
+        assert scopes[0]["voice_profile"]["writer"] == "connor"
+        events = voice.export(brand="kaicalls", run_id=result.metadata["run_id"])
+        assert {"context", "draft", "gate", "final"} <= {e["kind"] for e in events}
+        assert voice.export(brand="other", run_id=result.metadata["run_id"]) == []
 
     def test_campaign_id_defaults_to_none(self, engine_env, sandbox):
         engine = engine_env["engine"]

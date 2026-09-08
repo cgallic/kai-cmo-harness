@@ -117,9 +117,11 @@ class LLMRouter:
     Routes LLM requests across supported providers.
     """
 
-    def __init__(self):
+    def __init__(self, *, provider=None, api_key=None, timeout=120):
+        self._api_key = api_key
+        self._timeout = timeout
         self._client: Optional[OpenAI] = None
-        self._provider: Optional[str] = None
+        self._provider: Optional[str] = provider
         self._client_provider: Optional[str] = None
 
     @property
@@ -137,11 +139,11 @@ class LLMRouter:
                     "openai package is required for OpenRouter/OpenAI agent routing. "
                     "Install scripts/requirements.txt."
                 )
-            api_key = os.getenv(PROVIDER_KEY_ENV[provider], "").strip()
+            api_key = self._api_key or os.getenv(PROVIDER_KEY_ENV[provider], "").strip()
             if not api_key:
                 raise ValueError(f"{PROVIDER_KEY_ENV[provider]} not set")
 
-            client_kwargs: Dict[str, Any] = {"api_key": api_key}
+            client_kwargs: Dict[str, Any] = {"api_key": api_key, "timeout": self._timeout}
             if provider == "openrouter":
                 client_kwargs["base_url"] = "https://openrouter.ai/api/v1"
             elif os.getenv("OPENAI_BASE_URL"):
@@ -270,7 +272,10 @@ class LLMRouter:
                 "Install scripts/requirements.txt."
             )
 
-        client = _google_genai.Client(api_key=os.getenv("GEMINI_API_KEY", "").strip())
+        client = _google_genai.Client(
+            api_key=self._api_key or os.getenv("GEMINI_API_KEY", "").strip(),
+            http_options={"timeout": self._timeout * 1000},
+        )
         response = client.models.generate_content(
             model=model,
             contents=[
@@ -292,8 +297,10 @@ class LLMRouter:
             "completion_tokens": getattr(usage_meta, "candidates_token_count", 0) if usage_meta else 0,
             "total_tokens": getattr(usage_meta, "total_token_count", None) if usage_meta else None,
         }
-        finish_reason = getattr(response, "finish_reason", None)
-        return response.text.strip(), usage, finish_reason
+        candidates = getattr(response, "candidates", None) or []
+        finish_reason = getattr(candidates[0], "finish_reason", None) if candidates else None
+        finish_reason = getattr(finish_reason, "name", finish_reason)
+        return (response.text or "").strip(), usage, finish_reason
 
     def _complete_anthropic(
         self,
@@ -315,7 +322,7 @@ class LLMRouter:
         response = requests.post(
             ANTHROPIC_URL,
             headers={
-                "x-api-key": os.getenv("ANTHROPIC_API_KEY", "").strip(),
+                "x-api-key": self._api_key or os.getenv("ANTHROPIC_API_KEY", "").strip(),
                 "anthropic-version": "2023-06-01",
                 "content-type": "application/json",
             },
@@ -327,7 +334,7 @@ class LLMRouter:
                 **({"system": "\n\n".join(system_parts)} if system_parts else {}),
                 "messages": user_messages,
             },
-            timeout=120,
+            timeout=self._timeout,
         )
         response.raise_for_status()
         body = response.json()
