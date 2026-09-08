@@ -6,6 +6,7 @@ then uses a single LLM call to fill creative fields (angle, hooks, competitor we
 """
 
 import json
+import asyncio
 import re
 import subprocess
 from datetime import datetime, timezone
@@ -224,7 +225,7 @@ async def generate_brief(
     # Step 3.5: Three-layer landscape research (gstack /office-hours pattern)
     landscape = {}
     if gemini_fn:
-        landscape = research_landscape(keyword, site, gemini_fn)
+        landscape = await asyncio.to_thread(research_landscape, keyword, site, gemini_fn)
 
     # Step 4: LLM call for creative fields
     data_sources = {
@@ -280,7 +281,7 @@ Return ONLY valid JSON:
   "competitor_url": "https://...",
   "proof_available": "specific data point or stat we can use"
 }}"""
-        raw = gemini_fn(creative_prompt)
+        raw = await asyncio.to_thread(gemini_fn, creative_prompt)
         creative = _parse_json_response(raw)
         data_sources["creative_fields"] = "llm"
     else:

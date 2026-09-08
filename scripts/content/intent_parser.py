@@ -1,3 +1,4 @@
+import asyncio
 """
 Intent Parser — NLP convenience layer for natural-language content requests.
 
@@ -66,7 +67,7 @@ Rules:
 - keyword is the topic/subject, not the format or site name
 - Set confidence based on how clear the request is"""
 
-    raw = gemini_fn(prompt)
+    raw = await asyncio.to_thread(gemini_fn, prompt)
 
     # Parse response
     try:

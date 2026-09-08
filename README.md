@@ -424,6 +424,13 @@ Deploy it by clicking **One-Click Deploy** in the dashboard (Netlify token requi
 
 This is the operator's own dashboard, not a client deliverable. To stand up a white-labeled, client-facing dashboard for one of your own clients, use `/kai-client-dashboard`.
 
+## Customer voice and editorial learning
+
+The Python content engine uses customer-scoped, versioned voice profiles and
+approved examples during briefing, drafting and revision. It captures customer
+edits, supports held-out judge calibration and replay, and keeps business rewards
+separate from editorial preferences. [Setup, commands and boundaries](docs/system/customer-voice-engine.md).
+
 ## Current models and outcome learning
 
 The Python agent router now supports current provider defaults and reasoning

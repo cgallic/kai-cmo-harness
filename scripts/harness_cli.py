@@ -868,6 +868,9 @@ def cmd_generate(args):
         site=args.site,
         keyword=args.keyword,
         persona=getattr(args, "persona", None),
+        writer=getattr(args, "writer", "company"),
+        audience=getattr(args, "audience", ""),
+        rl_decision_id=getattr(args, "rl_decision_id", None),
         dry_run=getattr(args, "dry_run", False),
         skip_gates=getattr(args, "skip_gates", False),
     ))
@@ -1163,6 +1166,9 @@ def main():
     gen.add_argument("--site",      required=True)
     gen.add_argument("--keyword",   required=True)
     gen.add_argument("--persona")
+    gen.add_argument("--writer", default="company", help="Customer-scoped writer identity")
+    gen.add_argument("--audience", default="", help="Audience segment for voice examples")
+    gen.add_argument("--rl-decision-id", help="Predeclared content experiment ID")
     gen.add_argument("--dry-run",     action="store_true", help="Generate brief only")
     gen.add_argument("--skip-gates",  action="store_true", help="Skip quality gates")
 

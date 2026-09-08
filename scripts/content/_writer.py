@@ -459,8 +459,8 @@ ISSUES TO FIX (from quality scorer — each has rule ID, line number, and exact 
 {chr(10).join(f"- {f}" for f in failures)}
 
 HARD CONSTRAINTS:
-- Keep at least {word_count} words — do NOT shorten
-- Do NOT remove numbers, data points, or specific examples
+- Preserve unaffected passages verbatim. Shorten only when a listed issue requires it.
+- Preserve sourced proof; remove or correct a claim when a listed factual issue requires it.
 - Do NOT introduce: leverage, utilize, synergy, revolutionary, game-changer, next level, in conclusion
 - For SEO title errors: rewrite the # H1 to contain "{keyword}" — keep the hook as the first body paragraph
 - Fix every listed issue. Change nothing else.

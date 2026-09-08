@@ -113,6 +113,49 @@ class OutcomePolicy:
                        (record["decision_id"], context, action, json.dumps(record)))
         return record
 
+    def reserve_run(self, *, decision_id, brand_id, run_id, action):
+        """Claim a content experiment before generation or publication starts."""
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT payload,outcome FROM decisions WHERE id=?", (decision_id,)).fetchone()
+            if not row:
+                raise ValueError("unknown decision")
+            record = json.loads(row["payload"])
+            if record["brand_id"] != brand_id or record["action"] != action or not run_id:
+                raise ValueError("run does not match decision scope")
+            if record.get("reserved_run") or record.get("execution") or row["outcome"]:
+                raise ValueError("decision already reserved, executed or settled")
+            record["reserved_run"] = run_id
+            db.execute("UPDATE decisions SET payload=? WHERE id=?", (json.dumps(record), decision_id))
+
+    def bind_execution(self, *, decision_id, brand_id, run_id, content_hash,
+                       receipt_ref, executed_at, action):
+        """Bind one decision to one exact asset and execution receipt."""
+        for key, value in locals().copy().items():
+            if key != "self" and (not isinstance(value, str) or not value.strip()):
+                raise ValueError(f"{key} is required")
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT payload,outcome FROM decisions WHERE id=?", (decision_id,)).fetchone()
+            if row is None:
+                raise ValueError("unknown decision")
+            record = json.loads(row["payload"])
+            if record["brand_id"] != brand_id or record["action"] != action:
+                raise ValueError("execution does not match decision scope")
+            if record.get("reserved_run") and record["reserved_run"] != run_id:
+                raise ValueError("execution differs from reserved run")
+            if timestamp(executed_at) < timestamp(record["created_at"]) or timestamp(executed_at) > timestamp(utcnow()):
+                raise ValueError("invalid execution time")
+            binding = dict(run_id=run_id, content_hash=content_hash,
+                           receipt_ref=receipt_ref, executed_at=executed_at, action=action)
+            if record.get("execution") == binding:
+                return binding
+            if record.get("execution") or row["outcome"]:
+                raise ValueError("decision already bound or settled")
+            record["execution"] = binding
+            db.execute("UPDATE decisions SET payload=? WHERE id=?", (json.dumps(record), decision_id))
+            return binding
+
     def observe(self, *, decision_id, value, executed_at, observed_at,
                 verifier, evidence_ref, executed_action, cost=0):
         """Accept one matured, externally attested observation per decision.
@@ -141,6 +184,9 @@ class OutcomePolicy:
                 raise ValueError("producer cannot verify its own outcome")
             if executed_action != record["action"]:
                 raise ValueError("executed action does not match selection")
+            binding = record.get("execution")
+            if binding and binding["executed_at"] != executed_at:
+                raise ValueError("feedback execution time differs from bound receipt")
             start, end = timestamp(executed_at), timestamp(observed_at)
             if start < timestamp(record["created_at"]) or end > timestamp(utcnow()):
                 raise ValueError("execution must follow selection; observation cannot be in future")
