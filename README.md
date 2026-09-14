@@ -8,6 +8,8 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 > Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
 
+**Don't want to run it yourself?** [Meet Kai](https://meetkai.xyz) is the hosted version of this system. Same skills, same approval gates, but it starts from your business brief and brings you the next move instead of waiting for a prompt. [Start with an audit](https://meetkai.xyz) if you'd rather see the gaps than go find them.
+
 ## Try Kai In 60 Seconds — No API Key
 
 Inside Claude Code:
