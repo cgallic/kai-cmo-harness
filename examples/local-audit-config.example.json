@@ -77,5 +77,11 @@
   "crawl_targets": ["www.example-roastery.com", "shop.example-roastery.com"],
   "access_urls": ["https://www.example-roastery.com/"],
   "asset_pages": ["https://www.example-roastery.com/"],
-  "email_domain": "example-roastery.com"
+  "email_domain": "example-roastery.com",
+  "matomo": {
+    "base_url": "https://analytics.example.com/index.php",
+    "id_site": 1,
+    "date_range": "2026-08-19,2026-09-17",
+    "token_env": "MATOMO_TOKEN"
+  }
 }

@@ -29,6 +29,7 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 - Run `python -m scripts.audit.collect --url "<url>" --firm-name "<name>" --mode sales_external --workflow local-audit --out workspace/local-audit/<slug>` before writing; `scripts.local_audit.pulls` and `scripts.local_audit.checks` append to the same dataset.
 - **No ranking, score or visibility claim from a personal browser session.** Rankings, map packs and AI answers come from located API pulls (coordinates, mobile, market language). Speed scores come from the DataForSEO Lighthouse pull. The reference run's two eyeballed numbers were both wrong.
 - Rankings move day to day: date every ranking claim and prefer counts across many located observations over a single position.
+- Analytics totals are never reported raw. Split them into real visits and noise (storefront pixels, automation, developer machines, other hosts), report the cleaned figure, and mark that section `onboarding_connected`. Analytics cannot see visitors the site turns away, so it never overrides the access test.
 - Share of estimated clicks is modeled (volume × positional CTR) and is labeled as modeled wherever it appears.
 - A business recommended by an AI assistant, and any competitor positioning claim, is verified on that business's own site before it is repeated.
 - Without `scripts/local_audit/` in the install: direct public checks only, every located metric in `_data-gaps.md`, and the report header says located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
@@ -57,6 +58,7 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 | Config template | `examples/local-audit-config.example.json` |
 | Located pulls | `python -m scripts.local_audit.pulls {balance,volumes,discover,serp,maps,listings,reviews,backlinks,ai,lighthouse,crawl} [--collect]` |
 | Direct checks | `python -m scripts.local_audit.checks {access,assets,dns,shopify,all}` |
+| Connected analytics (owner token) | `python -m scripts.local_audit.matomo` (Matomo) or `scripts.audit.collect --ga4` |
 | Industry checklists | `knowledge/checklists/local-service-business-checklist.md`, `restaurant-food-bev-checklist.md`, `multi-location-checklist.md`, `cro-audit-checklist.md` (Phone-Based Lead Capture) |
 | Offers | `/kai-offer-builder` |
 | Page rendering | `/kai-html-presentation` or the house strategy-page format |

@@ -64,6 +64,14 @@ Browser work (use a real browser session; read-only on any logged-in social acco
 - **Facebook About** for phone/email; **Meta Ad Library** exact-phrase search for any ads ever; **Yelp / TripAdvisor** presence; the brand-name knowledge panel (name collisions with unrelated businesses are common).
 - **Competitor claims** — fetch rivals' own pages before repeating a positioning claim ("first and only roaster" vs a rival site saying it roasts in-house; a brand named after the town but produced elsewhere).
 
+## 3b. Connected analytics, when the owner shares a token
+
+`python -m scripts.local_audit.matomo --config <cfg.json> --out <audit-dir>` reads a Matomo instance (config block `matomo`, token from the env var named in `token_env`) and, crucially, **splits the dashboard number into real visits, storefront-pixel traffic recorded under sandbox URLs, automation, developer machines and other hosts**. In the reference run the dashboard showed 139 visits for 30 days; 72 were real people, 44 were the Shopify pixel writing `/web-pixels@…/sandbox/modern/...` paths, 11 were bots and audits, 9 were `http://127.0.0.1:<port>/` test runs, and 4 came from a staging host and the origin server's bare IP. Report the cleaned number and name the noise; a client comparing months on the raw dashboard is comparing test runs.
+
+Analytics also answers questions the rest of the audit cannot: which sources actually deliver (AI assistants already appear as referrers), how many people reach the store, and whether conversions are measured at all (no goals configured means no conversion exists to report). It cannot measure people the site turns away — a browser blocked at the door never loads the tracker — so it never disproves the access test. Metrics from it are `connected` tier, so the audit mode for that section is `onboarding_connected` even when the rest stays `sales_external`.
+
+Unexpected hosts in the analytics are a finding in themselves: the reference run surfaced the origin server answering on its bare IP over plain HTTP, serving the whole site and its order form outside the CDN, with no `noindex`.
+
 ## 4. Deliverables
 
 One owner-facing page (and, where the market is bilingual, a translated sibling). Order:

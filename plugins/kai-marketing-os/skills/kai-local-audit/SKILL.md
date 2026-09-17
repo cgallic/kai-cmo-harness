@@ -60,6 +60,10 @@ Then read `local-audit/*.json` summaries. Verify every business an AI assistant 
 
 Do not log in, follow, like, message, submit forms, or place orders.
 
+## Phase 3b: Connected analytics (when a token exists)
+
+`python -m scripts.local_audit.matomo --config <cfg> --out workspace/local-audit/<slug>` (Matomo; GA4 comes from `scripts.audit.collect --ga4`). Report the cleaned real-visit count, name every noise bucket, and list any host reporting in that is not the live site. Declare `onboarding_connected` for this section. Analytics cannot see visitors the site blocks, so it never overrides the access test.
+
 ## Phase 4: Write the report
 
 Structure and section list: playbook §4. Required:

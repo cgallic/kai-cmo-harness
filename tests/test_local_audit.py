@@ -115,3 +115,38 @@ def test_serp_command_registers_metrics_without_network(tmp_path: Path, monkeypa
     summary = json.loads((tmp_path / "local-audit" / "serp.json").read_text(encoding="utf-8"))
     assert summary["local_pack_counts"] == [["Café Uno", 1]]
     assert summary["paa"] == [["Where to buy coffee?", 1]]
+
+
+def _visit(browser="Chrome", urls=(), device="Smartphone", referrer="Google"):
+    return {"browserName": browser, "deviceType": device, "referrerName": referrer,
+            "actionDetails": [{"type": "action", "url": u} for u in urls]}
+
+
+def test_matomo_classifies_noise_out_of_real_visits():
+    from scripts.local_audit import matomo
+    visits = [
+        _visit(urls=["https://www.example.com/"]),
+        _visit(urls=["https://example.com/order_forms/new", "https://example.com/"]),
+        _visit(browser="Headless Chrome", urls=["https://www.example.com/"]),
+        _visit(urls=["http://127.0.0.1:37461/order_forms/new"]),
+        _visit(urls=["https://shop.example.com/web-pixels@abc/custom/sandbox/modern/products/x"]),
+        _visit(urls=["http://203.0.113.10/"]),
+    ]
+    stats = matomo.summarize(visits, "example.com")
+    assert stats["buckets"] == {
+        "real visit": 2,
+        "automation and bots": 1,
+        "developer machine": 1,
+        "storefront pixel": 1,
+        "other host (staging or origin IP)": 1,
+    }
+    assert stats["real_visits"] == 2
+    assert stats["real_single_page_visits"] == 1
+    assert stats["unexpected_hosts"] == [("203.0.113.10", 1)]
+
+
+def test_matomo_requires_a_token_and_never_defaults_one(monkeypatch):
+    from scripts.local_audit import matomo
+    monkeypatch.delenv("MATOMO_TOKEN", raising=False)
+    with pytest.raises(matomo.MatomoError):
+        matomo.api({"base_url": "https://analytics.example.com/index.php", "id_site": 1}, "VisitsSummary.get")
