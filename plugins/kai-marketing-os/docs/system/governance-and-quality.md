@@ -11,18 +11,18 @@ Generated from `docs/system/capability-manifest.json`. Regenerate with `python -
 
 | Surface | Count |
 |---|---:|
-| Skill directories | 57 |
-| Canonical `kai-*` skills | 55 |
-| Goal-oriented v2 skills | 57 |
-| Public `/kai` router commands | 50 |
-| Public skill manifest pages | 47 |
+| Skill directories | 58 |
+| Canonical `kai-*` skills | 56 |
+| Goal-oriented v2 skills | 58 |
+| Public `/kai` router commands | 51 |
+| Public skill manifest pages | 48 |
 | Canonical skills missing manifest pages | 8 |
 | Playbook docs | 67 |
 | Checklists | 37 |
 | Framework docs | 38 |
 | Channel guides | 31 |
 | Audience persona profiles | 8 |
-| Harness references | 37 |
+| Harness references | 38 |
 | Skill contracts | 36 |
 <!-- capability-counts:end -->
 

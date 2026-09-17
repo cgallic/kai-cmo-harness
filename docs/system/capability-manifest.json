@@ -19,18 +19,18 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 57,
-    "canonical_kai_skills": 55,
-    "v2_goal_oriented_skills": 57,
-    "public_router_commands": 50,
-    "public_manifest_pages": 47,
+    "skill_directories": 58,
+    "canonical_kai_skills": 56,
+    "v2_goal_oriented_skills": 58,
+    "public_router_commands": 51,
+    "public_manifest_pages": 48,
     "undocumented_canonical_skills": 8,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
-    "harness_references": 37,
+    "harness_references": 38,
     "skill_contracts": 36
   },
   "coverage": {
@@ -202,6 +202,11 @@
       "name": "kai-audit",
       "category": "audit",
       "description": "Full marketing audit — all checklists at once"
+    },
+    {
+      "name": "kai-local-audit",
+      "category": "audit",
+      "description": "Located audit of a third-party local business — DataForSEO rankings, map packs, AI answers, direct checks, offers, changes and a 12-week plan"
     },
     {
       "name": "kai-weekly-audit",
@@ -531,6 +536,14 @@
       "public_router_command": true,
       "router_category": "produce",
       "manifest_doc": "docs/skill-manifest/kai-launch.md"
+    },
+    {
+      "name": "kai-local-audit",
+      "description": "Evidence-first marketing audit of a third-party local business (café, roaster, shop, restaurant, hotel, clinic, home service) from a Google Maps, share.google or website link — located DataForSEO rankings, map packs, search volume and seasonality, listings, reviews, backlinks, AI-assistant answers and a site crawl, plus direct checks (real-browser access, page weight, store shipping quotes, email DNS, mobile screenshots) — delivered as an owner-facing report with priced offers, an exact change list and a 12-week plan, optionally localized and bilingual. Use when \"audit this business\", \"full marketing audit of <business>\", \"prospect audit\", \"local business audit\", \"use DataForSEO for the hard SEO data\", \"go deeper\", \"rerun it for local <market>\", \"also in Spanish\", \"give me the offers, changes and 3 month plan\", or a business link arrives with \"audit\". For auditing your own product across channels use /kai-audit.",
+      "source": "harness/skills/kai-local-audit/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-local-audit.md"
     },
     {
       "name": "kai-monthly-audit",

@@ -1,0 +1,81 @@
+{
+  "business": "Example Roastery",
+  "domain": "www.example-roastery.com",
+  "shopify_domain": "shop.example-roastery.com",
+  "brand_pattern": "example roastery",
+  "mode": "sales_external",
+  "points": {
+    "Rincón": "18.3402,-67.2499",
+    "Aguada": "18.3793,-67.1882",
+    "Mayagüez": "18.2013,-67.1397",
+    "San Juan": "18.4655,-66.1057"
+  },
+  "volumes": [
+    {"location_code": 2630, "keywords": ["coffee roaster puerto rico", "café de puerto rico", "coffee near me", "café cerca de mí", "coffee shop rincon"]},
+    {"location_code": 2840, "keywords": ["puerto rican coffee", "rincon puerto rico", "gifts from puerto rico", "coffee subscription"]}
+  ],
+  "discover": {
+    "location_code": 2630,
+    "seed_batches": [["café", "café de puerto rico", "tostador de café", "café en grano", "coffee roaster"]],
+    "sites": ["competitor-one.com", "competitor-two.com"],
+    "intents": {
+      "roaster_wholesale": "tostador|roaster|al por mayor|wholesale|suplidor",
+      "gifts_subscription": "regalo|gift|suscripci|subscription|club",
+      "buy_local_product": "en grano|molido|coffee beans|cafe de puerto rico|puerto rican coffee",
+      "near_me": "near me|cerca de m"
+    }
+  },
+  "keywords": [
+    {"keyword": "coffee roaster puerto rico", "lang": "en", "group": "Roaster & wholesale", "volume": 480, "points": ["Rincón", "Mayagüez", "San Juan"]},
+    {"keyword": "café de puerto rico", "lang": "es", "group": "Buy local product", "volume": 390, "points": ["Rincón", "San Juan"]},
+    {"keyword": "café cerca de mí", "lang": "es", "group": "Local", "volume": 8100, "points": ["Rincón", "Aguada", "Mayagüez"]},
+    {"keyword": "example roastery", "lang": "es", "group": "Brand", "volume": null, "points": ["Rincón"]}
+  ],
+  "maps_queries": [
+    {"keyword": "coffee roaster", "lang": "en"},
+    {"keyword": "tostador de café", "lang": "es"},
+    {"keyword": "café en grano", "lang": "es"}
+  ],
+  "listings": {
+    "name_search_area": "18.2208,-66.5901,150",
+    "name_patterns": ["%Example%", "%EXAMPLE%", "%example%"],
+    "market_area": "18.3402,-67.2499,15",
+    "category_groups": {
+      "coffee_and_bakery": ["coffee_shop", "cafe", "espresso_bar", "bakery", "breakfast_restaurant", "brunch_restaurant"],
+      "lodging": ["hotel", "resort_hotel", "bed_and_breakfast", "guest_house", "villa", "holiday_apartment_rental"]
+    }
+  },
+  "review_targets": [
+    {"name": "Partner Restaurant", "cid": "0000000000000000000", "depth": 300, "location_code": 2630},
+    {"name": "Competitor Café", "cid": "0000000000000000001", "depth": 300, "location_code": 2630}
+  ],
+  "review_patterns": {
+    "brand": "example roastery",
+    "coffee": "coffee|caf[eé]\\b|espresso|latte|cortado|cold brew"
+  },
+  "backlinks": {
+    "compare_domains": ["competitor-one.com", "competitor-two.com"],
+    "category_leaders": ["competitor-one.com", "competitor-two.com"],
+    "media_pattern": "\\.pr$|puertorico|boricua|discoverpuertorico|plateapr|lonelyplanet|eater\\.com|afar\\.com"
+  },
+  "ai": {
+    "label": "es_pr",
+    "country_iso": "PR",
+    "prompts": [
+      "¿Dónde puedo comprar café recién tostado en el oeste de Puerto Rico?",
+      "Busco un tostador de café que venda al por mayor a restaurantes en Rincón. ¿A quién recomiendas?"
+    ],
+    "engines": [
+      {"engine": "chat_gpt", "model": "gpt-5.5"},
+      {"engine": "perplexity", "model": "sonar-pro"},
+      {"engine": "gemini", "model": "gemini-3.5-flash"},
+      {"engine": "claude", "model": "claude-sonnet-5"}
+    ],
+    "brand_patterns": {"Example Roastery": "example roastery", "Competitor One": "competitor one"}
+  },
+  "lighthouse_urls": ["https://www.example-roastery.com/", "https://shop.example-roastery.com/"],
+  "crawl_targets": ["www.example-roastery.com", "shop.example-roastery.com"],
+  "access_urls": ["https://www.example-roastery.com/"],
+  "asset_pages": ["https://www.example-roastery.com/"],
+  "email_domain": "example-roastery.com"
+}

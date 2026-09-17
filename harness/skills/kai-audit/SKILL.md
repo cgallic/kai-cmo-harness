@@ -7,6 +7,8 @@ description: Full marketing audit — runs all relevant checklists against your 
 
 One-click full marketing audit. Runs all relevant harness checklists and produces a health report.
 
+Auditing a third-party local business from a Maps, share.google or website link (prospect audits, located rankings, map packs, AI answers, offers and a 12-week plan)? Use `/kai-local-audit`.
+
 ## Non-Negotiable: Kai Data Provenance
 
 Before writing any finding, load `harness/references/audit-data-provenance.md`.

@@ -50,23 +50,25 @@ def _minimal_tree(root: Path) -> None:
 
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
+    # Re-baselined 2026-09-17: kai-local-audit added (v1 + v2 skill, router row,
+    # manifest page, harness/references/local-audit-playbook.md).
     # Re-baselined 2026-08-08: kai-gtm-pack and two skill contracts had been
     # added without updating this fixture, which left the harness self-check
     # red on main from 2026-07-31. Bump these numbers deliberately when a
     # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 57,
-        "canonical_kai_skills": 55,
-        "v2_goal_oriented_skills": 57,
-        "public_router_commands": 50,
-        "public_manifest_pages": 47,
+        "skill_directories": 58,
+        "canonical_kai_skills": 56,
+        "v2_goal_oriented_skills": 58,
+        "public_router_commands": 51,
+        "public_manifest_pages": 48,
         "undocumented_canonical_skills": 8,
         "playbook_docs": 67,
         "checklists": 37,
         "framework_docs": 38,
         "channel_guides": 31,
         "audience_persona_profiles": 8,
-        "harness_references": 37,
+        "harness_references": 38,
         "skill_contracts": 36,
     }
     assert inventory["coverage"]["unresolved_router_commands"] == []

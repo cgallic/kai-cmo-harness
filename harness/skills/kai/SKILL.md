@@ -91,6 +91,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 |-------|-------------|
 | `/kai-gate` | Quality gate — Four U's, banned words, SEO lint |
 | `/kai-audit` | Full marketing audit — all checklists at once |
+| `/kai-local-audit` | Located audit of a third-party local business — DataForSEO rankings, map packs, AI answers, direct checks, offers, changes and a 12-week plan |
 | `/kai-weekly-audit` | Weekly marketing audit - 7-day scorecard, urgent flags, and actions |
 | `/kai-monthly-audit` | Monthly marketing audit - 30-day executive review and next-month plan |
 | `/kai-seo-audit` | Technical SEO audit with prioritized fixes |
@@ -147,6 +148,7 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"I need one thing"** → `/kai-write`
 - **"I need a system"** → orchestrator skill (email-system, ad-campaign, content-calendar, launch)
 - **"What's wrong?"** → `/kai-audit` or `/kai-cro`
+- **"Audit this local business"** (a Maps/share.google/website link for someone else's business) → `/kai-local-audit`
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`

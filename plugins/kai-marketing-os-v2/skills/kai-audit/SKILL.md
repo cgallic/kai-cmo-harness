@@ -13,6 +13,8 @@ A full marketing health report for one business: every applicable harness checkl
 
 An audit's value is entirely in the sourcing. A score built on estimates is worse than no score, because it gets quoted.
 
+A third-party local business audited from a Maps, share.google or website link — located rankings, map packs, AI answers, offers and a 12-week plan — is `/kai-local-audit`.
+
 ## Done when
 
 Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `client_facing: true`.

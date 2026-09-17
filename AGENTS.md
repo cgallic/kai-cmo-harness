@@ -13,7 +13,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `gateway/` is the remote runner and connector surface
 
 <!-- capability-counts:start -->
-Inventory reachable from here: 57 skill directories, 55 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 50 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 37 harness references, and 36 skill contracts.
+Inventory reachable from here: 58 skill directories, 56 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 51 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 38 harness references, and 36 skill contracts.
 <!-- capability-counts:end -->
 
 ## Instruction Contract (critical)
@@ -104,6 +104,7 @@ Load the primary framework as context, then validate against the checklist. Full
 | Agent-readiness audit (llms.txt, AI crawlers, capability signaling) | `knowledge/frameworks/aeo-ai-search/ai-crawlers-technical-reference.md` + `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` | `knowledge/checklists/agent-readiness-checklist.md` |
 | Podcast setup | `knowledge/channels/podcast.md` + `harness/references/transcript-video-research-rules.md` | — |
 | Site architecture | `knowledge/frameworks/content-copywriting/qdp-qdh-qds-content-architecture.md` | `knowledge/checklists/seo-checklist.md` |
+| Local business audit (third-party, located data, offers + 12-week plan) | `harness/references/local-audit-playbook.md` + `harness/references/audit-data-provenance.md` | `knowledge/checklists/local-service-business-checklist.md` |
 | Competitor analysis | `knowledge/playbooks/competitive-intelligence.md` + `knowledge/frameworks/competitor-content-analysis.md` | — |
 | Campaign planning | `knowledge/playbooks/campaign-orchestration.md` | — |
 | Offer construction / full-funnel build (Hormozi sequence) | `knowledge/playbooks/hormozi-100m-funnel.md` + `knowledge/people/alex-hormozi-knowledge.md` | — |
