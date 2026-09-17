@@ -3,6 +3,7 @@ Goal Decomposer - decomposes brand goals into a validated, cycle-free Directed A
 """
 
 import json
+import os
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
@@ -94,6 +95,21 @@ class GoalDecomposer:
 
     async def decompose(self, goal: KaiGoal, rewards_filepath: Optional[str] = None) -> TaskGraph:
         """Decompose a goal discrepancy into a structured TaskGraph using LLM routing."""
+        # An explicit, predeclared experiment enables the outcome policy.
+        # The policy proposes work; normal task approval still governs execution.
+        decision = None
+        rl_contract = goal.metadata.get("rl_experiment")
+        if rl_contract and os.getenv("KAI_RL_DB"):
+            from kai.analytics.rl import OutcomePolicy
+            allowed = {"daily_analytics", "seo_optimization", "content_pipeline",
+                       "ad_management", "lead_outreach", "weekly_report", "creative_assets"}
+            candidates = rl_contract.get("actions", [])
+            if not candidates or any(a not in allowed for a in candidates):
+                raise ValueError("rl_experiment.actions must contain executable task types")
+            decision = OutcomePolicy(os.environ["KAI_RL_DB"]).choose(
+                brand_id=goal.brand_id, metric=goal.kpi_name,
+                direction=goal.target_direction, **rl_contract,
+            )
         # Load historical rewards
         avg_rewards = get_average_rewards_by_action_type(rewards_filepath)
         
@@ -112,6 +128,16 @@ class GoalDecomposer:
             rewards_context = (
                 "\nHistorical Performance Context: No historical reward records exist yet. "
                 "Propose a standard exploratory strategy using available task types to establish performance baselines.\n"
+            )
+
+        if decision:
+            rewards_context = (
+                "Predeclared outcome-learning experiment (proposal only):\n"
+                + json.dumps(decision)
+                + "\nInclude the selected action as a bounded experiment with its baseline, "
+                  "measurement window and decision_id. Preserve approvals and spending limits. "
+                  "Record actual execution before submitting measured feedback. "
+                  "Do not claim causal lift from observational rewards."
             )
 
         prompt = f"""Decompose this marketing goal:
@@ -165,6 +191,13 @@ Please generate a DAG to achieve this goal."""
                 outputs={},
             )
             
+        if decision:
+            matching = [node for node in nodes.values() if node.task_type == decision["action"]]
+            if not matching:
+                raise ValueError("planner omitted the selected RL experiment")
+            # Attach to exactly one experiment node so a DAG cannot double-credit it.
+            matching[0].inputs["rl_decision_id"] = decision["decision_id"]
+
         now = datetime.now(timezone.utc).isoformat()
         
         return TaskGraph(

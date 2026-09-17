@@ -5,6 +5,8 @@ Parses documents, runs rule sets, aggregates weighted scores.
 """
 
 import hashlib
+import json
+from copy import deepcopy
 from collections import OrderedDict
 from pathlib import Path
 from typing import List, Optional
@@ -46,7 +48,13 @@ class QualityEngine:
         rule_sets: Optional[List[str]] = None,
         llm_model: Optional[str] = None,
         use_llm: bool = True,
+        voice_profile: Optional[dict] = None,
+        brand_id: Optional[str] = None,
     ):
+        self.voice_profile = deepcopy(voice_profile or {})
+        self.brand_id = brand_id
+        if self.voice_profile and self.voice_profile.get("brand") != brand_id:
+            raise ValueError("voice profile does not belong to the requested brand")
         self.llm_model = llm_model
         self.use_llm = use_llm
 
@@ -73,32 +81,37 @@ class QualityEngine:
         """Score raw content string."""
         # Build cache key from content hash + scoring config
         rule_names = sorted(cls.__name__ for cls in self._rule_classes)
-        key_data = content + str(self.use_llm) + str(rule_names)
+        weights = get_category_weights() if self.use_llm else get_category_weights_no_llm()
+        key_data = json.dumps({
+            "content": content, "file_path": file_path, "use_llm": self.use_llm,
+            "rules": rule_names, "model": self.llm_model, "brand": self.brand_id,
+            "voice": self.voice_profile, "weights": weights,
+        }, sort_keys=True)
         cache_key = hashlib.sha256(key_data.encode("utf-8")).hexdigest()
 
-        if cache_key in _SCORE_CACHE:
+        if not self.use_llm and cache_key in _SCORE_CACHE:
             # Move to end so it's treated as most-recently-used
             _SCORE_CACHE.move_to_end(cache_key)
-            return _SCORE_CACHE[cache_key]
+            return deepcopy(_SCORE_CACHE[cache_key])
 
         doc = parse_markdown(content)
 
         # Instantiate and run rules
+        llm_events = []
         results_by_category = {}
         for rule_cls in self._rule_classes:
-            rule: BaseRule = rule_cls()
+            rule: BaseRule = (rule_cls(profile=self.voice_profile)
+                              if rule_cls.RULE_ID == "VC-01" else rule_cls())
             category = rule.CATEGORY
 
             # Use async evaluation for LLM rules
             if hasattr(rule, '_requires_llm') and rule._requires_llm and self.use_llm:
+                rule.llm_events = llm_events
                 result = await rule.evaluate_async(doc, model=self.llm_model)
             else:
                 result = rule.evaluate(doc)
 
             results_by_category.setdefault(category, []).append(result)
-
-        # Determine weights (dynamic — reads harness.yaml overrides at score time)
-        weights = get_category_weights() if self.use_llm else get_category_weights_no_llm()
 
         # Build category scores
         categories = []
@@ -130,7 +143,27 @@ class QualityEngine:
             "paragraph_count": len(doc.all_paragraphs),
             "list_count": len(doc.all_lists),
             "llm_enabled": self.use_llm,
+            "brand_id": self.brand_id,
+            "voice_version": self.voice_profile.get("version"),
+            "voice_configured": bool(self.voice_profile.get("configured")),
+            "llm_calls": llm_events,
         }
+
+        if self.voice_profile.get("configured"):
+            metadata["voice_review"] = {"verdict": "HOLD", "calibrated": False,
+                                        "reason": "semantic review not run"}
+            if self.use_llm:
+                import asyncio
+                from agent.llm.content import ContentClient
+                from kai.voice.evaluation import review_draft
+                try:
+                    metadata["voice_review"] = await asyncio.to_thread(
+                        review_draft, self.voice_profile, content,
+                        ContentClient("content_quality_review", model=self.llm_model, events=llm_events),
+                    )
+                except Exception as exc:
+                    metadata["voice_review"] = {"verdict": "HOLD", "calibrated": False,
+                                                "reason": type(exc).__name__}
 
         # Add reading level if available
         for cat in categories:
@@ -146,7 +179,8 @@ class QualityEngine:
         )
 
         # Store in cache; evict oldest entry if over capacity
-        _SCORE_CACHE[cache_key] = report
+        if not self.use_llm:
+            _SCORE_CACHE[cache_key] = deepcopy(report)
         if len(_SCORE_CACHE) > _CACHE_MAX:
             _SCORE_CACHE.popitem(last=False)
 

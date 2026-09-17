@@ -1,17 +1,10 @@
 """
-Voice Consistency Scorer — Compares draft against voice profile.
-
-Checks content against the Non-Negotiables section of MARKETING.md
-and the voice profile in ~/.kai-marketing/voice.md (if present).
-
-Detects tone drift by checking for:
-- Banned words/phrases from the voice profile
-- Tone violations (e.g., too formal when brand is casual)
-- Missing required brand elements
+Voice consistency checks using an explicitly supplied customer profile.
+No home-directory or global workspace voice is implicitly inherited.
+Mechanical constraints complement the separate semantic editorial review.
 """
 
 import re
-from pathlib import Path
 
 from scripts.quality.parser import Document
 from scripts.quality.rules.base import BaseRule
@@ -36,36 +29,8 @@ _DEFAULT_BANNED_PATTERNS = [
 
 
 def _load_voice_profile() -> dict:
-    """Load voice profile from ~/.kai-marketing/voice.md or workspace/SOUL.md."""
-    voice = {"banned_phrases": [], "required_elements": [], "tone_keywords": []}
-
-    # Try skill state path first, then workspace
-    candidates = [
-        Path.home() / ".kai-marketing" / "voice.md",
-        Path(__file__).parent.parent.parent.parent / "workspace" / "SOUL.md",
-    ]
-
-    for path in candidates:
-        if path.exists():
-            text = path.read_text(encoding="utf-8", errors="ignore")
-
-            # Extract banned words/phrases
-            in_banned = False
-            for line in text.splitlines():
-                line_lower = line.strip().lower()
-                if "banned" in line_lower or "never say" in line_lower or "avoid" in line_lower:
-                    in_banned = True
-                    continue
-                if in_banned and line.strip().startswith("- "):
-                    phrase = line.strip().lstrip("- ").strip().strip('"').strip("'")
-                    if phrase:
-                        voice["banned_phrases"].append(phrase)
-                elif in_banned and line.strip().startswith("#"):
-                    in_banned = False
-
-            break  # Use first found
-
-    return voice
+    """No ambient home-directory profile: callers must supply scoped context."""
+    return {"banned_phrases": [], "configured": False}
 
 
 @register
@@ -77,6 +42,9 @@ class VoiceConsistencyRule(BaseRule):
     CATEGORY = Category.CONTENT_STRUCTURE
     SEVERITY = Severity.WARNING
     DESCRIPTION = "Content should match the brand voice profile and avoid AI slop phrases."
+
+    def __init__(self, profile=None):
+        self.profile = profile or _load_voice_profile()
 
     def evaluate(self, doc: Document) -> RuleResult:
         violations = []
@@ -95,16 +63,14 @@ class VoiceConsistencyRule(BaseRule):
                     ))
 
         # Check voice profile banned phrases
-        voice = _load_voice_profile()
-        for phrase in voice.get("banned_phrases", []):
-            for i, line in enumerate(lines, 1):
-                if phrase.lower() in line.lower():
-                    violations.append(Violation(
-                        line=i,
-                        text=phrase,
-                        fix=f"Voice profile prohibits: '{phrase}'",
-                        context=line.strip()[:80],
-                    ))
+        voice = self.profile
+        from scripts.quality_gates.voice_phrase_check import check_content
+        for hit in check_content("\n".join(lines), voice)["violations"]:
+            violations.append(Violation(
+                line=hit["line"], text=hit["text"],
+                fix=f"Voice profile prohibits: '{hit['text']}'",
+                context=lines[hit["line"] - 1].strip()[:80],
+            ))
 
         # Score: 1.0 if no violations, decreasing with more
         total_lines = max(len(lines), 1)
@@ -115,5 +81,5 @@ class VoiceConsistencyRule(BaseRule):
             score=score,
             violations=violations,
             suggestions=["Remove AI slop phrases", "Match brand voice profile"] if violations else [],
-            metadata={"violation_count": len(violations), "voice_profile_loaded": bool(voice.get("banned_phrases"))},
+            metadata={"violation_count": len(violations), "voice_profile_loaded": bool(voice.get("configured")), "voice_version": voice.get("version"), "brand": voice.get("brand")},
         )

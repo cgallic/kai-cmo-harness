@@ -2,7 +2,7 @@
 Content Quality Scorer — Four U's LLM-based scoring.
 
 Uses LLM to evaluate Unique, Useful, Ultra-specific, Urgent dimensions.
-Gracefully skips when no API key is available.
+Unavailable judging yields an incomplete evaluation and a review hold.
 """
 
 import json
@@ -10,7 +10,6 @@ import re
 
 from scripts.quality.parser import Document
 from scripts.quality.types import Category, Severity, Violation, RuleResult
-from scripts.quality.config import OPENROUTER_API_KEY, DEFAULT_LLM_MODEL
 from scripts.quality.prompts import FOUR_US_PROMPT
 from scripts.quality.rules import register
 from scripts.quality.rules.base import BaseRule
@@ -37,15 +36,6 @@ class FourUsScore(BaseRule):
 
     async def evaluate_async(self, doc: Document, model: str = None) -> RuleResult:
         """Async evaluation using LLM."""
-        if not OPENROUTER_API_KEY:
-            return self._make_result(
-                0.0,
-                suggestions=["Skipped: OPENROUTER_API_KEY not set. Set it in .env for Four U's scoring."],
-                metadata={"skipped": True, "reason": "no_api_key"},
-            )
-
-        model = model or DEFAULT_LLM_MODEL
-
         # Pre-compute signals for context
         all_text = ' '.join(s.text for s in doc.all_sentences)
         stat_count = len(re.findall(r'\d+(?:\.\d+)?%|\$[\d,.]+|\d+x\b', all_text))
@@ -64,8 +54,11 @@ class FourUsScore(BaseRule):
         )
 
         try:
-            from scripts.knowledge_cloner.utils import call_llm
-            response_text, _, _ = await call_llm(prompt, model=model, max_tokens=1024, temperature=0.1)
+            import asyncio
+            from agent.llm.content import ContentClient
+            response_text = await asyncio.to_thread(
+                ContentClient("content_quality_review", model=model, events=getattr(self, "llm_events", None)), prompt
+            )
 
             # Parse JSON response
             scores = self._parse_response(response_text)

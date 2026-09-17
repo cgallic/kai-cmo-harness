@@ -173,6 +173,12 @@ def evaluate_proposal(report: QualityReport, policy: dict) -> Dict[str, Any]:
     required_rules = policy.get("require_rules_pass", [])
     block_terms = policy.get("block_if_terms", [])
 
+    # Explicit customer constraints cannot be averaged away by a high score.
+    for category in report.categories:
+        for rule in category.rules:
+            if rule.rule_id == "VC-01" and rule.metadata.get("voice_profile_loaded") and not rule.passed:
+                return {"status": "rejected", "reason": "Customer voice constraint failed"}
+
     # Check required rules
     failed_required = []
     for cat in report.categories:
@@ -195,6 +201,19 @@ def evaluate_proposal(report: QualityReport, policy: dict) -> Dict[str, Any]:
                     "status": "rejected",
                     "reason": f'Blocked term found: "{term}"',
                 }
+
+    voice_review = report.metadata.get("voice_review")
+    if voice_review and voice_review.get("verdict") == "FAIL":
+        return {"status": "rejected", "reason": "Customer voice review failed"}
+    if voice_review and not voice_review.get("calibrated"):
+        return {"status": "pending", "reason": "Voice judge is uncalibrated; human review required"}
+    for category in report.categories:
+        for rule in category.rules:
+            if rule.rule_id == "FU-01" and (
+                rule.metadata.get("error") or rule.metadata.get("skipped")
+                or "total" not in rule.metadata
+            ):
+                return {"status": "pending", "reason": "LLM craft evaluation unavailable"}
 
     # Score-based decision
     if score >= auto_above:
@@ -239,6 +258,13 @@ async def propose(
                     "fix": v.fix,
                 })
 
+    top_fixes = list(report.top_fixes)
+    for issue in (report.metadata.get("voice_review") or {}).get("issues", []):
+        top_fixes.append({
+            "rule_id": "VOICE-EDITOR", "rule_name": issue["rule"],
+            "suggestion": issue["direction"], "violation_count": 1,
+            "first_violation": {"text": issue["quote"], "fix": issue["direction"], "line": 0},
+        })
     proposal = {
         "id": proposal_id,
         "content_hash": _content_hash(content),
@@ -248,7 +274,7 @@ async def propose(
         "status": decision["status"],
         "policy": policy_name,
         "violations_json": json.dumps(violations[:20]),
-        "top_fixes_json": json.dumps(report.top_fixes),
+        "top_fixes_json": json.dumps(top_fixes),
         "metadata_json": json.dumps(report.metadata),
         "decision_reason": decision["reason"],
         "created_at": time.time(),
@@ -262,8 +288,10 @@ async def propose(
         "grade": report.overall_grade,
         "reason": decision["reason"],
         "violation_count": len(violations),
-        "top_fixes": report.top_fixes,
+        "top_fixes": top_fixes,
         "policy": policy_name,
+        "voice_review": report.metadata.get("voice_review"),
+        "llm_calls": report.metadata.get("llm_calls", []),
     }
 
 

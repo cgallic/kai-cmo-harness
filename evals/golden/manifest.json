@@ -1,5 +1,5 @@
 {
-  "description": "Golden corpus for the deterministic quality gates. Every case is a content sample with a known correct verdict. Any change to a gate script, banned-word list, or overclaim pattern must keep this corpus passing — and should add a case proving the change. Runner: python scripts/quality_gates/golden_check.py",
+  "description": "Golden corpus for the deterministic quality gates. Every case is a content sample with a known correct verdict. Any change to a gate script, banned-word list, or overclaim pattern must keep this corpus passing \u2014 and should add a case proving the change. Runner: python scripts/quality_gates/golden_check.py",
   "cases": [
     {
       "id": "banned-words-clean-blog",
@@ -13,7 +13,12 @@
       "gate": "banned_word_check",
       "file": "banned-words/fail-tier1-jargon.md",
       "expect": "fail",
-      "expect_failures_contain": ["leverage", "deep dive", "synergy", "in conclusion"],
+      "expect_failures_contain": [
+        "leverage",
+        "deep dive",
+        "synergy",
+        "in conclusion"
+      ],
       "why": "Dense Tier 1 jargon and AI slop must hard-block."
     },
     {
@@ -30,8 +35,37 @@
       "file": "seo/fail-ai-overclaim.md",
       "keyword": "ai receptionist",
       "expect": "fail",
-      "expect_failures_contain": ["AI search promise", "llms.txt claim"],
+      "expect_failures_contain": [
+        "AI search promise",
+        "llms.txt claim"
+      ],
       "why": "Guaranteed ChatGPT citations and llms.txt-as-ranking-factor claims must hard-error."
+    },
+    {
+      "id": "voice-customer-a",
+      "gate": "voice_consistency",
+      "file": "voice/customer-phrase.md",
+      "expect": "fail",
+      "profile": {
+        "brand": "customer-a",
+        "configured": true,
+        "banned_phrases": [
+          "enterprise-grade"
+        ]
+      },
+      "why": "The same text must use only the selected customer voice constraints."
+    },
+    {
+      "id": "voice-customer-b",
+      "gate": "voice_consistency",
+      "file": "voice/customer-phrase.md",
+      "expect": "pass",
+      "profile": {
+        "brand": "customer-b",
+        "configured": true,
+        "banned_phrases": []
+      },
+      "why": "The same text must use only the selected customer voice constraints."
     }
   ]
 }

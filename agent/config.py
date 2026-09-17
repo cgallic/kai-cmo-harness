@@ -66,17 +66,17 @@ class AgentConfig:
     @property
     def default_model(self) -> str:
         """Default model for routine tasks (cost-optimized)."""
-        return os.getenv("AGENT_DEFAULT_MODEL", "claude-3-5-haiku-20241022")
+        return os.getenv("AGENT_DEFAULT_MODEL", "").strip() or "claude-haiku-4-5-20251001"
 
     @property
     def opus_model(self) -> str:
         """Opus model for complex reasoning tasks."""
-        return os.getenv("AGENT_OPUS_MODEL", "claude-opus-4-5-20251101")
+        return os.getenv("AGENT_OPUS_MODEL", "claude-opus-5")
 
     @property
     def haiku_model(self) -> str:
         """Haiku model for simple/fast tasks."""
-        return os.getenv("AGENT_HAIKU_MODEL", "claude-3-5-haiku-20241022")
+        return os.getenv("AGENT_HAIKU_MODEL", "claude-haiku-4-5-20251001")
 
     # -------------------------------------------------------------------------
     # Agent Behavior

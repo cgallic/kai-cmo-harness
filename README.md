@@ -8,6 +8,8 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 > Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
 
+**Don't want to run it yourself?** [Meet Kai](https://meetkai.xyz) is the hosted version of this system. Same skills, same approval gates, but it starts from your business brief and brings you the next move instead of waiting for a prompt. [Start with an audit](https://meetkai.xyz) if you'd rather see the gaps than go find them.
+
 ## Try Kai In 60 Seconds — No API Key
 
 Inside Claude Code:
@@ -423,6 +425,22 @@ python -m http.server 8000
 Deploy it by clicking **One-Click Deploy** in the dashboard (Netlify token required), running `./deploy.sh` (macOS/Linux) or `deploy.bat` (Windows), or pushing the repo to Vercel/Netlify — `vercel.json` and `netlify.toml` are included.
 
 This is the operator's own dashboard, not a client deliverable. To stand up a white-labeled, client-facing dashboard for one of your own clients, use `/kai-client-dashboard`.
+
+## Customer voice and editorial learning
+
+The Python content engine uses customer-scoped, versioned voice profiles and
+approved examples during briefing, drafting and revision. It captures customer
+edits, supports held-out judge calibration and replay, and keeps business rewards
+separate from editorial preferences. [Setup, commands and boundaries](docs/system/customer-voice-engine.md).
+
+## Current models and outcome learning
+
+The Python agent router now supports current provider defaults and reasoning
+API parameters. Goal decomposition can use a persistent contextual bandit to
+propose experiments, record selection probabilities, and learn from matured
+business outcomes. It updates action selection, not model weights. Enable it
+with a predeclared experiment and `KAI_RL_DB`; existing approvals still govern
+execution. [Configuration, collector interface and limitations](docs/system/models-and-outcome-learning.md).
 
 ## Current Status (v1.0.0, updated July 2026)
 

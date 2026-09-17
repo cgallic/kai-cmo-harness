@@ -619,7 +619,7 @@ class TestPublisherSuccessWithoutUrl:
 
         monkeypatch.setattr(engine.brief_generator, "generate_brief", fake_brief)
 
-        async def fake_propose(content, file_path, policy_name):
+        async def fake_propose(content, file_path, policy_name, **kwargs):
             return {
                 "proposal_id": "prop-1",
                 "score": 14,
