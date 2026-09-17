@@ -13,7 +13,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `gateway/` is the remote runner and connector surface
 
 <!-- capability-counts:start -->
-Inventory reachable from here: 58 skill directories, 56 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 51 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 38 harness references, and 36 skill contracts.
+Inventory reachable from here: 59 skill directories, 57 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 52 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 38 harness references, and 36 skill contracts.
 <!-- capability-counts:end -->
 
 ## Instruction Contract (critical)

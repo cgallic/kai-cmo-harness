@@ -19,12 +19,12 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 58,
-    "canonical_kai_skills": 56,
-    "v2_goal_oriented_skills": 58,
-    "public_router_commands": 51,
+    "skill_directories": 59,
+    "canonical_kai_skills": 57,
+    "v2_goal_oriented_skills": 59,
+    "public_router_commands": 52,
     "public_manifest_pages": 48,
-    "undocumented_canonical_skills": 8,
+    "undocumented_canonical_skills": 9,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
@@ -36,6 +36,7 @@
   "coverage": {
     "undocumented_canonical_skills": [
       "kai-brand-pulse",
+      "kai-bulkpublish",
       "kai-content-batching",
       "kai-funnel-audit",
       "kai-gtm-pack",
@@ -82,6 +83,11 @@
       "name": "kai-social",
       "category": "produce",
       "description": "Batch social posts across IG, X, TikTok, LinkedIn, YouTube"
+    },
+    {
+      "name": "kai-bulkpublish",
+      "category": "produce",
+      "description": "Approval-gated handoff of social content to BulkPublish"
     },
     {
       "name": "kai-video",
@@ -368,6 +374,14 @@
       "public_router_command": true,
       "router_category": "plan",
       "manifest_doc": "docs/skill-manifest/kai-budget.md"
+    },
+    {
+      "name": "kai-bulkpublish",
+      "description": "Prepare an approved social content queue for BulkPublish scheduling or publication. Use when \"schedule social posts\", \"publish the calendar\", \"send posts to BulkPublish\", or \"hand off approved social content\".",
+      "source": "harness/skills/kai-bulkpublish/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": null
     },
     {
       "name": "kai-case-study",

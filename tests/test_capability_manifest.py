@@ -51,18 +51,20 @@ def _minimal_tree(root: Path) -> None:
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
     # Re-baselined 2026-09-17: kai-local-audit added (v1 + v2 skill, router row,
-    # manifest page, harness/references/local-audit-playbook.md).
+    # manifest page, harness/references/local-audit-playbook.md), and
+    # kai-bulkpublish (#65) counted -- it landed without a manifest regen or a
+    # v2 counterpart, which left the self-check red on main from 2026-09-14.
     # Re-baselined 2026-08-08: kai-gtm-pack and two skill contracts had been
     # added without updating this fixture, which left the harness self-check
     # red on main from 2026-07-31. Bump these numbers deliberately when a
     # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 58,
-        "canonical_kai_skills": 56,
-        "v2_goal_oriented_skills": 58,
-        "public_router_commands": 51,
+        "skill_directories": 59,
+        "canonical_kai_skills": 57,
+        "v2_goal_oriented_skills": 59,
+        "public_router_commands": 52,
         "public_manifest_pages": 48,
-        "undocumented_canonical_skills": 8,
+        "undocumented_canonical_skills": 9,
         "playbook_docs": 67,
         "checklists": 37,
         "framework_docs": 38,
@@ -79,6 +81,7 @@ def test_current_manifest_doc_gaps_are_explicit():
     inventory = manifest.discover_inventory(REPO_ROOT)
     assert inventory["coverage"]["undocumented_canonical_skills"] == [
         "kai-brand-pulse",
+        "kai-bulkpublish",
         "kai-content-batching",
         "kai-funnel-audit",
         "kai-gtm-pack",

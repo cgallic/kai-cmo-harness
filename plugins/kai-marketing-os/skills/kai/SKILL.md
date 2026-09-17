@@ -62,6 +62,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 | `/kai-ad-campaign` | Full paid campaign across platforms + funnel stages |
 | `/kai-content-calendar` | Month/quarter of blog + SEO content |
 | `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
+| `/kai-bulkpublish` | Approval-gated handoff of social content to BulkPublish |
 | `/kai-video` | Video scripts + clipping plans for short/long-form |
 | `/kai-cold-outreach` | Cold email outreach sequences |
 | `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
