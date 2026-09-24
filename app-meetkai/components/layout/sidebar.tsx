@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   FileText,
+  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -29,9 +30,11 @@ const navItems = [
 
 interface SidebarProps {
   userEmail?: string;
+  /** Show the Upgrade link. The server sets this only when billing is configured. */
+  showUpgrade?: boolean;
 }
 
-export function Sidebar({ userEmail }: SidebarProps) {
+export function Sidebar({ userEmail, showUpgrade = false }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -105,6 +108,19 @@ export function Sidebar({ userEmail }: SidebarProps) {
             );
           })}
         </nav>
+
+        {showUpgrade && (
+          <div className="px-3 pb-3">
+            <Link
+              href="/pricing"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-lg bg-amber px-3 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-amber-light"
+            >
+              <Sparkles className="h-4 w-4" />
+              Upgrade plan
+            </Link>
+          </div>
+        )}
 
         {/* User */}
         <div className="px-3 py-4 border-t border-border">
