@@ -1,4 +1,4 @@
-"""Daemon API router — endpoints for the MeetKai daemon process.
+"""Daemon API router — endpoints for the marketing daemon process.
 
 The daemon communicates with the gateway for:
 - Runtime registration and heartbeat

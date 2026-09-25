@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Content Gap Analysis
+Marketing Harness — Content Gap Analysis
 ========================================
 Compare your site's keywords (GSC) against competitor keywords.
 Output: "They rank for X, you don't."

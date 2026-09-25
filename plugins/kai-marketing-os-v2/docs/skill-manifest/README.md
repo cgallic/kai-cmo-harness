@@ -1,6 +1,6 @@
 # Kai Public Skill Manifest
 
-This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 46 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
+This directory is the public API reference for the canonical marketing harness skill graph. It documents the 46 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
 New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those commands show the core loop: read the repo, pick distribution, create the work, check the work, and keep the record.
 

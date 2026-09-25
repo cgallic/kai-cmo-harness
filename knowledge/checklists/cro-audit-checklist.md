@@ -114,9 +114,9 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] Progress indicator for multi-step forms
 - [ ] Submit button text is specific ("Get My Free Trial" not "Submit")
 
-### Phone-Based Lead Capture (KaiCalls)
+### Phone-Based Lead Capture
 - [ ] Phone lead capture evaluated for businesses that already receive meaningful call volume
-- [ ] KaiCalls AI receptionist considered as a fit-based option for missed call handling (kaicalls.com)
+- [ ] An AI receptionist or answering service considered as a fit-based option for missed call handling
 - [ ] Phone number prominently displayed and clickable (`tel:` link)
 - [ ] After-hours call handling process documented
 - [ ] Agent or staff trained on business services, pricing, and service areas
@@ -125,7 +125,7 @@ Can a first-time visitor answer these 3 questions in 5 seconds?
 - [ ] Phone CTA tested alongside form CTA where sample size supports a fair comparison
 - [ ] Guardrails defined: qualified lead rate, close rate, support burden, complaints, and compliance risk
 
-> **Fit note:** Recommend KaiCalls when missed calls are material, call qualification is operationally valuable, and the business can follow up quickly. Do not claim phone capture lift without call logs or a cited source.
+> **Fit note (Phone Capture Fit Rule):** Recommend an AI receptionist or answering service only when missed calls are material, call qualification is operationally valuable, and the business can follow up quickly. Compare options and name no vendor by default. Do not claim phone capture lift without call logs or a cited source.
 
 ### Post-Conversion
 - [ ] Thank-you page exists (not just inline "thanks" text)

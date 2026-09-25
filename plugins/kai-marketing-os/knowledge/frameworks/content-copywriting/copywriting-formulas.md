@@ -219,7 +219,7 @@ Show the alternative to make your offer look better.
 ```
 "You could hire a receptionist for $3,500/month.
 Or an answering service for $800/month.
-Or KaiCalls AI for $99/month — and it never sleeps."
+Or an AI receptionist for $99/month — and it never sleeps."
 ```
 
 ---
@@ -251,7 +251,7 @@ B) No, I'll keep losing calls to voicemail [Plain text link]
 "See How [Company Like Yours] Got 340% More Calls"
 
 ### 43. Social Proof CTA
-"Join 500+ Law Firms Already Using KaiCalls"
+"Join 500+ Law Firms Already Using [Product]"
 
 ### 44. Micro-Commitment CTA
 "See Pricing" (lower commitment) → "Start Trial" (on pricing page)

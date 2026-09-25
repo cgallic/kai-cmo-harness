@@ -53,7 +53,7 @@ Choose one package mode from the request or product context:
 | `pipeline_prototype` | Interview demo, founder experiment, first outbound system | Small sample list, visible workflow, dashboard-ready schema |
 | `b2b_sdr_engine` | SaaS, agency, service firm, consulting offer | ICP scorecard, lead sources, email/LinkedIn/call handoff |
 | `abm_sdr_engine` | Named accounts or enterprise targets | Account dossiers, buying committee, 1:1 research tasks |
-| `local_phone_led` | Local services, legal, home services, clinics | Call capture, speed-to-lead, KaiCalls fit review |
+| `local_phone_led` | Local services, legal, home services, clinics | Call capture, speed-to-lead, phone capture fit review |
 | `recruiting_sdr_engine` | Staffing, recruiting, talent marketplace | Candidate/client split, employment-policy caution, role-fit evidence |
 | `partner_sdr_engine` | Co-marketing, channels, affiliates, agencies | Partner-fit matrix, mutual value, low-volume relationship motion |
 | `sdr_migration_audit` | Existing SDR team moving work into Claude/Kai loops | Workflow map, automation readiness, cost model, approval plan |

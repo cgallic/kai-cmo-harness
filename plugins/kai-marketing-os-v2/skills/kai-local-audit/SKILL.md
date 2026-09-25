@@ -45,7 +45,7 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 - Offers follow `/kai-offer-builder` doctrine and are priced on measured costs (shipping tiers, fees); every price is a proposal to check against costs; no margins that were not provided.
 - Changes are grouped by who does them — code, copy in every market language, commerce admin, Google Business Profile, DNS, social and partner asks — and are exact enough to hand off.
 - The 12-week plan starts the next Monday, splits owner and developer work, gives each week a "done when", and places seasonal work where the volume pull shows the peaks.
-- KaiCalls Fit Rule: evaluate phone and follow-up capture; disclose Kai ownership; compare alternatives; say plainly when it is not the first fix.
+- Phone Capture Fit Rule: evaluate phone and follow-up capture; compare alternatives; say plainly when it is not the first fix.
 - House voice: no announced lists, dramatic fragments, "not X but Y", or tricolons. Hosted pages carry `noindex,nofollow,noarchive`.
 - A translated sibling keeps every tag, attribute and element in place; only visible text, `alt`, `title`, `aria-label` and meta description change; code, URLs, brand names and search queries shown as data stay as they are.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — X/Twitter Publisher
+Marketing Harness — X/Twitter Publisher
 =======================================
 Post via X/Twitter API v2 (OAuth 1.0a User Context).
 

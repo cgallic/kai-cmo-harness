@@ -1,6 +1,6 @@
 # Voice Gate
 
-A reusable line-editor pass. Works on any client that has a written voice guide. Complements the rule-based `/content-gate` in the Kai CMO harness.
+A reusable line-editor pass. Works on any client that has a written voice guide. Complements the rule-based `/content-gate` in the marketing harness.
 
 ## What it solves
 

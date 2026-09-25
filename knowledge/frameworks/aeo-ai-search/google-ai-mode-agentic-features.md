@@ -52,7 +52,7 @@ For retail-style queries with "near me," Google now offers to **call local busin
 - Partner reservation block (for restaurant / appointment intent)
 - Organic blue links (compressed below the fold)
 
-Local-services SEO strategy must now also include phone-readiness — see the KaiCalls competitive note in `knowledge/research/google-agentic-search/kaicalls-competitive-implications.md`.
+Local-services SEO strategy must now also include phone-readiness — see the dated competitive note on inbound call handling in `knowledge/research/google-agentic-search/kaicalls-competitive-implications.md`.
 
 ---
 

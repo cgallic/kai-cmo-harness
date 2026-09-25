@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Google Ads Integration
+Marketing Harness — Google Ads Integration
 ==========================================
 Read campaign performance, keyword data, and search terms from Google Ads API.
 

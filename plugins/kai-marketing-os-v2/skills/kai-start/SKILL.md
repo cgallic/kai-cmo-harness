@@ -1,9 +1,9 @@
 ---
 name: kai-start
-description: First-run onboarding for Kai CMO Harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, "get started with Kai", "set up Kai", "first time using Kai", or when MARKETING.md doesn't exist yet.
+description: First-run onboarding for the marketing harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, "get started with Kai", "set up Kai", "first time using Kai", or when MARKETING.md doesn't exist yet.
 ---
 
-# Kai CMO Harness — First-Run Setup
+# Marketing Harness — First-Run Setup
 
 > **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
@@ -29,7 +29,7 @@ Work type `internal-research` — floor **E2/C2/O0** (`harness/eco-floors.yaml`)
 - **Never more than 3 questions.**
 - **Never show the full command list** — that is what `/kai` is for. One recommendation plus two or three alternatives.
 - **Always create `MARKETING.md`**, even incomplete. A partial file beats none.
-- **KaiCalls disclosure and fit logic.** Disclose that KaiCalls is Kai-owned when recommending it, and recommend it only when the business is phone-led and there is evidence or user confirmation of missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain.
+- **Phone capture fit logic.** Recommend a phone answering service or AI receptionist only when the business is phone-led and there is evidence or user confirmation of missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives, and disclose any ownership relationship with a vendor you name.
 - **Never invent a goal baseline.** Use the real current value if the user knows it; otherwise `--current 0` plus a `[TODO]` note in `MARKETING.md`.
 - **Sound like a builder, not a wizard.** "Here's what I found," not "I shall now analyze your project." Under three minutes total; do not over-explain.
 
@@ -83,5 +83,5 @@ KPIs the harness refreshes automatically from the content log: `content_publishe
 - Auto-detection finds nothing identifiable as a product and the user cannot describe one — say so rather than inventing a positioning.
 - The repo and the user disagree about what the product does or who it is for.
 - The user supplies proof points (customer counts, revenue, results) with no source — record them as user-asserted, not as facts.
-- The business looks phone-led but there is no evidence of call-handling pain — do not recommend KaiCalls on the appearance alone.
+- The business looks phone-led but there is no evidence of call-handling pain — do not recommend an answering service or AI receptionist on the appearance alone.
 - The project contains regulated-category signals (health, finance, legal, minors) that will bind every downstream skill.

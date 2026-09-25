@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — LinkedIn Publisher
+Marketing Harness — LinkedIn Publisher
 ======================================
 Post updates and articles via LinkedIn API v2.
 

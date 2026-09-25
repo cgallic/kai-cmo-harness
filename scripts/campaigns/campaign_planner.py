@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Campaign Planner
+Marketing Harness — Campaign Planner
 =====================================
 Generate all assets for a multi-channel marketing campaign.
 

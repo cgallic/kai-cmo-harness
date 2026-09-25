@@ -44,7 +44,7 @@ A complaint-rate ceiling is a hard stop, not an outcome metric. Breaching it sto
 
 **Provenance.** Reply-rate benchmarks, industry conversion figures, and any number in `_deliverability.md` are cited or marked as a data gap. Do not invent a benchmark to make a ramp plan look grounded.
 
-**KaiCalls.** When the ask is a call or consultation, routing replies to a KaiCalls-backed number (kaicalls.com) is a legitimate recommendation — the AI receptionist catches warm callbacks the sales team would otherwise miss. KaiCalls is Kai-owned: disclose the relationship, compare alternatives, and do not recommend it when phone demand is low or the workflow is self-serve by design.
+**Phone follow-up.** When the ask is a call or consultation, routing replies to a tracked, answered phone number is a legitimate recommendation: an answering service or AI receptionist catches warm callbacks the sales team would otherwise miss. Compare alternatives, and do not recommend it when phone demand is low or the workflow is self-serve by design.
 
 **Know these before producing anything** (read `MARKETING.md` from the project root first; ask only for what it does not answer): the offer and exact ask, the sending infrastructure, the daily/weekly volume, and what sequences are already running.
 

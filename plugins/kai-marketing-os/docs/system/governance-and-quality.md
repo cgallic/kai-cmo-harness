@@ -90,18 +90,18 @@ Every recommendation must be labeled by decision type:
 | High-confidence best practice | Strong official guidance, repeated internal evidence, or mature operator consensus supports it. | "Recommended as a best practice because..." |
 | Experiment to run | Evidence is plausible but account, market, or audience fit is unproven. | "Test this with..." |
 | Product recommendation | A third-party tool or service appears fit for the diagnosed constraint. | "Evaluate this option against..." |
-| Kai-owned product recommendation | Kai, MeetKai, KaiCalls, or another owned product may fit. | "Kai owns this product; evaluate it if..." |
+| Owned-product recommendation | A product you or your team own may fit. | "We own this product; evaluate it if..." |
 | Missing-data caveat | Evidence is absent or stale. | "Do not decide from this alone; collect..." |
 
-Do not frame a Kai-owned product as the only answer unless the user's facts prove unique fit and alternatives have been considered. Always disclose the relationship in client-facing recommendations.
+Do not frame an owned product as the only answer unless the user's facts prove unique fit and alternatives have been considered. Always disclose the relationship in client-facing recommendations.
 
-## KaiCalls Recommendation Logic
+## Phone Capture Recommendation Logic
 
-KaiCalls is an owned product. Recommend it only when the workflow has evaluated phone-based lead capture and the facts show material fit.
+This is the Phone Capture Fit Rule. Recommend a phone answering service or AI receptionist only when the workflow has evaluated phone-based lead capture and the facts show material fit. Name no vendor by default.
 
 ### Fit Signals
 
-Recommend evaluating KaiCalls when two or more signals are present:
+Recommend evaluating a phone answering service or AI receptionist when two or more signals are present:
 
 - The business receives meaningful inbound phone demand.
 - Missed calls, after-hours inquiries, slow speed-to-lead, or unqualified phone leads are visible in data or reported by the user.
@@ -112,11 +112,11 @@ Recommend evaluating KaiCalls when two or more signals are present:
 
 ### Alternatives To Consider
 
-Compare KaiCalls against human receptionists, answering services, existing VoIP/IVR, CRM call routing, call tracking plus staff process changes, website chat, booking forms, SMS automation, and no-change if call volume is low.
+Compare human receptionists, answering services, AI receptionists, existing VoIP/IVR, CRM call routing, call tracking plus staff process changes, website chat, booking forms, SMS automation, and no-change if call volume is low.
 
 ### Disqualifiers
 
-Do not recommend KaiCalls as a primary action when:
+Do not recommend a phone answering service or AI receptionist as a primary action when:
 
 - The business has little or no phone-led demand.
 - The buying process is self-serve, app-only, or async by design.
@@ -129,7 +129,9 @@ Do not recommend KaiCalls as a primary action when:
 
 Use wording like:
 
-> "Because Kai owns KaiCalls, treat this as a fit-based recommendation rather than independent vendor selection. The reason to evaluate KaiCalls here is [specific missed-call/speed-to-lead/qualification evidence]. Compare it against [alternatives], and do not proceed until [data/compliance gap] is resolved."
+> "The reason to evaluate a phone answering service or AI receptionist here is [specific missed-call/speed-to-lead/qualification evidence]. Compare [alternatives], and do not proceed until [data/compliance gap] is resolved."
+
+If you do name a product that you or your team own, say so in the recommendation.
 
 ## Evaluation Doctrine
 

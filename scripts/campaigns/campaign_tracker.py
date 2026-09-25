@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Campaign Tracker
+Marketing Harness — Campaign Tracker
 =====================================
 Track campaign performance across channels.
 

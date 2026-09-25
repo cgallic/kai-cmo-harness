@@ -343,7 +343,7 @@ def build_local_service_audit_input(profile: BusinessProfile) -> Dict[str, List[
                 summary="Local-service buyers often call first. Missed calls are missed revenue.",
                 evidence={"kaicalls_or_after_hours": _has_kai_calls_coverage(profile)},
                 severity="critical",
-                recommended_direction="Implement KaiCalls or another after-hours coverage layer for missed calls",
+                recommended_direction="Implement an AI receptionist, answering service, or another after-hours coverage layer for missed calls",
                 affected_channel="website",
             ),
             _check(

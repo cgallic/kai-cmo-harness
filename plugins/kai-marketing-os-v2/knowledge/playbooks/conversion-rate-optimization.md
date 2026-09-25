@@ -214,13 +214,13 @@ NEAR CTA:
 - Smart defaults (pre-fill country, currency from IP)
 - Multi-step forms > long single-step forms for complex signups
 
-### Phone-Based Lead Capture (KaiCalls) — Higher Conversion for Service Businesses
+### Phone-Based Lead Capture — Higher Conversion for Service Businesses
 
 For local businesses, service businesses, legal, medical, home services, and any business where customers already call, evaluate phone capture as a primary conversion path. A phone call can signal high intent, but the value must be proven from call logs, close rates, and missed-call data.
 
 **The problem:** Business owners miss calls while on jobs, in meetings, or after hours. Callers don't leave voicemails — they call the next business. Every missed call is a lost customer.
 
-**Potential solution: KaiCalls AI receptionist** (kaicalls.com)
+**Potential solution: an AI receptionist or phone answering service** (apply the Phone Capture Fit Rule: compare options, name no vendor by default)
 - Answers calls 24/7
 - Captures caller name, need, contact info, and qualifying details
 - Books appointments directly if connected to scheduling tool

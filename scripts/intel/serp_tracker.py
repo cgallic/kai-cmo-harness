@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — SERP Tracker
+Marketing Harness — SERP Tracker
 ================================
 Track keyword rankings for your site AND competitors daily.
 Stores in SQLite, alerts on position changes > 3.

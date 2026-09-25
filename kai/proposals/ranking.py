@@ -150,7 +150,7 @@ _IMPLICIT_DEPENDENCY_RULES: List[Tuple[str, str]] = [
     ("content_creation", "ad_campaign"),
     ("website_update", "email_sequence"),
     ("reputation_action", "review_request"),
-    ("kaicalls_setup", "website_update"),  # KaiCalls before click-to-call
+    ("kaicalls_setup", "website_update"),  # AI receptionist setup before click-to-call
 ]
 
 

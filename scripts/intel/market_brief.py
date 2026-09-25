@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Weekly Market Brief
+Marketing Harness — Weekly Market Brief
 =======================================
 Synthesize competitor activity into actionable intelligence.
 

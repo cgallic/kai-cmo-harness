@@ -103,10 +103,10 @@
 - [ ] Case results, project portfolio, or representative matters section exists
 - [ ] Consultation or engagement booking flow is frictionless (2 clicks or fewer from any page)
 - [ ] Phone number is prominent in the header on every page with a clickable `tel:` link
-- [ ] KaiCalls AI receptionist (`kaicalls.com`) is configured to handle missed calls, after-hours calls, and initial consultation scheduling — professional services clients expect to reach a person when they call
-- [ ] KaiCalls is trained on the firm's practice areas, common intake questions, and scheduling process
-- [ ] After-hours calls route to KaiCalls instead of voicemail
-- [ ] Overflow calls during business hours route to KaiCalls when staff cannot answer
+- [ ] An AI receptionist or answering service is configured to handle missed calls, after-hours calls, and initial consultation scheduling — professional services clients expect to reach a person when they call
+- [ ] The phone answering service is trained on the firm's practice areas, common intake questions, and scheduling process
+- [ ] After-hours calls route to the phone answering service instead of voicemail
+- [ ] Overflow calls during business hours route to the phone answering service when staff cannot answer
 - [ ] Gated resources exist for lead capture (white papers, guides, checklists, templates)
 - [ ] Lead capture forms ask for enough qualifying information without creating friction (name, company, need — not 15 fields)
 - [ ] Contact form submissions trigger an auto-response confirming receipt and expected response time
@@ -194,7 +194,7 @@
 - [ ] LinkedIn ad creative uses thought leadership content (articles, white papers) rather than direct hard-sell
 - [ ] Retargeting campaigns exist for website visitors who did not convert
 - [ ] Google Local Services Ads (LSA) are active if the firm's category is eligible
-- [ ] LSA leads are responded to within 5 minutes (KaiCalls handles overflow)
+- [ ] LSA leads are responded to within 5 minutes (phone answering service handles overflow)
 - [ ] Budget is allocated between brand terms (defensive) and non-brand terms (acquisition)
 - [ ] Cost per lead and cost per acquired client are tracked by channel and campaign
 - [ ] Ad copy complies with platform policies and professional ethics rules (no guarantees of outcomes for legal, no misleading claims for financial)

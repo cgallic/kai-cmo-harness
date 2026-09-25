@@ -63,7 +63,7 @@ Run every candidate through all three. Two of three is a supporting metric, not 
 - **Cumulative anything** ("total registered users") — can never go down, so it cannot inform decisions; classic vanity metric (Amplitude, Cutler).
 - **Averages across mixed populations** — hide segment decay; use cohorted medians or rates.
 
-**Worked example.** A phone-led local-services client (KaiCalls fit profile): candidate NSM "calls answered" fails Test 1 (an answered spam call is not value). "Qualified calls converted to booked jobs per week" passes all three — it is the value event (Test 1), it leads revenue by weeks (Test 2), and it pairs with counter-metrics "missed-call rate" and "caller complaint rate" (Test 3). Inputs: call-answer rate, after-hours coverage, qualification accuracy.
+**Worked example.** A phone-led local-services client (Phone Capture Fit Rule profile): candidate NSM "calls answered" fails Test 1 (an answered spam call is not value). "Qualified calls converted to booked jobs per week" passes all three — it is the value event (Test 1), it leads revenue by weeks (Test 2), and it pairs with counter-metrics "missed-call rate" and "caller complaint rate" (Test 3). Inputs: call-answer rate, after-hours coverage, qualification accuracy.
 
 ---
 

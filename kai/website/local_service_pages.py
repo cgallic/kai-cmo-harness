@@ -1780,7 +1780,7 @@ def build_contact_page(profile: Dict[str, Any]) -> Dict[str, Any]:
             "map_embed_suggestion": f"Embed Google Map for {address}" if address else f"Embed Google Map centered on {city}" if city else "Embed Google Map for business location",
             "directions_note": f"We are conveniently located in {city}." if city else "",
             "after_hours_note": (
-                "After-hours calls are handled by our KaiCalls AI receptionist. "
+                "After-hours calls are handled by our AI receptionist. "
                 "Leave a message any time and we will return your call during the next business day."
             ),
         },

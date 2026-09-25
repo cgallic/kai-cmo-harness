@@ -2198,7 +2198,7 @@
 
             <div class="quick-commands">
               <span class="quick-cmd-label">Quick Actions:</span>
-              <button class="quick-cmd-btn" data-cmd="/run-audit https://meetkai.xyz">/run-audit</button>
+              <button class="quick-cmd-btn" data-cmd="/run-audit https://example.com">/run-audit</button>
               <button class="quick-cmd-btn" data-cmd="/quality-gate check">/quality-gate</button>
               <button class="quick-cmd-btn" data-cmd="/check-banned-words workspace/demo-clients/">/check-banned-words</button>
               <button class="quick-cmd-btn" data-cmd="/four-us-score workspace/demo-clients/">/four-us-score</button>
@@ -2489,7 +2489,7 @@
     // Local memory fallback if JSON block is empty
     const mockState = {
       project: { id: "kai-marketing-os", name: "Kai Marketing OS", description: "Marketing-native runtime workspace." },
-      owner: { name: "SaaS Operator", email: "operator@meetkai.xyz" },
+      owner: { name: "SaaS Operator", email: "operator@example.com" },
       autonomy_mode: "balanced",
       marketing_score: 72,
       score_breakdown: { offer: 80, trust: 65, cro: 55, seo: 75, copy: 85, channels: 60, conversion: 70, readiness: 85 },
@@ -3772,13 +3772,13 @@ owner:
 products:
   - id: "kaicalls"
     name: "KaiCalls"
-    domain: "${s.gsc_url || 'https://meetkai.xyz'}"
+    domain: "${s.gsc_url || 'https://example.com'}"
     fit_signals:
       - "phone_led_lead_capture"
       - "after_hours_calls"
   - id: "buildwithkai"
     name: "BuildWithKai"
-    domain: "${s.gsc_url || 'https://meetkai.xyz'}"
+    domain: "${s.gsc_url || 'https://example.com'}"
 
 # Active agent runner configurations
 autonomy_mode: "${s.autonomy_mode}"

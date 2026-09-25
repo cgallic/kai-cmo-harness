@@ -1,16 +1,16 @@
-# Kai Marketing OS Runtime Map
+# Marketing Harness Runtime Map
 
-> Kai Marketing OS turns a repo into a marketing workspace. It gives agents a brief, a policy surface, a quality gate, and a publishing log before marketing work ships.
+> This open-source marketing harness turns a repo into a marketing workspace. It gives agents a brief, a policy surface, a quality gate, and a publishing log before marketing work ships.
 
 ## Positioning
 
-Kai Marketing OS is a repo-native marketing runtime for Claude Code and agentic operators. It is for teams that need marketing work tied to the product source of truth, not produced from a blank chat window.
+The harness is a repo-native marketing runtime for Claude Code, Codex, and agentic operators. It is for teams that need marketing work tied to the product source of truth, not produced from a blank chat window.
 
 Primary message: **Marketing, from the repo.**
 
 ## Operating Model
 
-Kai follows one path for every marketing output:
+The harness follows one path for every marketing output:
 
 ```
 Research -> Brief -> Write -> Gate -> Approval -> Publish -> Log -> 30-day check
@@ -24,7 +24,7 @@ The canonical runtime layer is `kai/runtime/`. Local operator workflows live in 
 2. No publish without gate. Run Four U's, banned words, and any required SEO or ad policy checks.
 3. No publish without logging. Published work needs a performance entry and a 30-day check.
 4. No ad copy before platform policy. Load the platform reference under `harness/references/` first.
-5. Phone-led businesses need call capture reviewed. Evaluate KaiCalls only when missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging evidence shows fit; disclose that Kai owns KaiCalls and compare alternatives.
+5. Phone-led businesses need call capture reviewed (Phone Capture Fit Rule). Recommend a phone answering service or AI receptionist only when missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging evidence shows fit; compare options and name no vendor by default.
 
 ## Authoritative Inventory
 
@@ -114,9 +114,8 @@ Agents should start with:
 
 | Product | Site Key | Notes |
 |---------|----------|-------|
-| Kai Marketing OS | kai-cmo-harness | Open-source marketing runtime and knowledge base |
-| MeetKai Dashboard | meetkai | Web dashboard under `app-meetkai/` |
-| KaiCalls | kaicalls | Kai-owned phone lead capture option for call-driven businesses when fit signals and compliance checks support it |
+| Marketing harness (this repo) | kai-cmo-harness | Open-source marketing runtime and knowledge base |
+| Web dashboard | meetkai | Web dashboard under `app-meetkai/` |
 
 ## Learned Defaults
 

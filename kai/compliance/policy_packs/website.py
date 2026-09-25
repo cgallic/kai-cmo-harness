@@ -388,7 +388,7 @@ def build_website_policy_pack() -> PolicyPack:
             fix_guidance=(
                 "Add the primary business phone number to the site header or footer. "
                 "For businesses that receive phone leads, consider a click-to-call link "
-                "and KaiCalls AI receptionist integration for after-hours handling."
+                "and an AI receptionist or answering service for after-hours handling."
             ),
             examples=[
                 {

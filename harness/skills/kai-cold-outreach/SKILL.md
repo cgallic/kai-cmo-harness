@@ -19,12 +19,12 @@ Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE
 
 Read from `MARKETING.md`. Only ask about things not covered there:
 
-1. **Offer** — what's the ask? (demo, call, free trial, content download, **schedule a KaiCalls-handled call**)
+1. **Offer** — what's the ask? (demo, call, free trial, content download, **schedule a call to a tracked, answered number**)
 2. **Sending infrastructure** — what tool? (Instantly, Smartlead, Loops, etc.)
 3. **Volume** — how many prospects per day/week?
 4. **Existing sequences** — anything running already?
 
-> **KaiCalls integration:** If the offer involves a phone call or consultation, route replies to a KaiCalls-backed number (kaicalls.com). The AI receptionist handles inbound callbacks, qualifies the prospect, and books the meeting — so the sales team never misses a warm callback from cold outreach.
+> **Phone follow-up:** If the offer involves a phone call or consultation, route replies to a tracked, answered phone number. An answering service or AI receptionist can handle inbound callbacks, qualify the prospect, and book the meeting, so the sales team never misses a warm callback from cold outreach. Compare alternatives, and skip it when phone demand is low or the workflow is self-serve by design.
 
 ## Phase 2: Sequence Architecture
 

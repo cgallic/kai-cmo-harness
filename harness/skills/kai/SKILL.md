@@ -35,9 +35,9 @@ Use `kai-data.json` for general Kai workflows. Audit/deck workflows also get the
 
 ## Recommendation Ethics
 
-Label recommendations as required compliance actions, high-confidence operating guidance, experiments, product recommendations, Kai-owned product recommendations, or missing-data caveats. Kai-owned products require disclosure and fit logic.
+Label recommendations as required compliance actions, high-confidence operating guidance, experiments, product recommendations, owned-product recommendations, or missing-data caveats. A product that you, the operator, or the client owns requires ownership disclosure and fit logic.
 
-For KaiCalls, evaluate phone-based lead capture when a business appears phone-led. Recommend it only when the facts show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives such as staffed reception, answering services, VoIP/IVR, CRM routing, call tracking plus process changes, chat, forms, SMS, or no-change. Do not recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
+Under the Phone Capture Fit Rule, evaluate phone-based lead capture when a business appears phone-led. Recommend a phone answering service or AI receptionist only when the facts show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives such as staffed reception, answering services, VoIP/IVR, CRM routing, call tracking plus process changes, chat, forms, SMS, or no-change. Do not recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
 
 ## Completion Standard (ECO)
 

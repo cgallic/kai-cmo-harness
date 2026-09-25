@@ -41,7 +41,7 @@ Every quantitative or client-facing claim resolves to a source with a retrieval 
 - **No invented numbers.** Reply rates, meeting rates, benchmarks, TAM, revenue, and conversion figures come from real data or user-provided targets, or they are data gaps.
 - **No raw rows to the copy step.** A row reaches `/kai-cold-outreach` only with source, suppression, relevance, and sender fields filled.
 - **Specialists inherit the same limits.** Neither `/kai-sdr-reply-triage` nor `/kai-sales-meeting-prep` may mutate live CRM, sequencer, calendar, SMS, phone, or email systems without approval; both write back into this package folder and update the memory ledger.
-- **`local_phone_led` mode triggers KaiCalls fit review** — disclose the ownership relationship, compare alternatives, and do not lead with it when phone demand is low or the workflow is self-serve by design.
+- **`local_phone_led` mode triggers a phone capture fit review**: compare alternatives, and do not lead with an answering service or AI receptionist when phone demand is low or the workflow is self-serve by design.
 
 **Account scoring model (0–100):**
 
@@ -92,7 +92,7 @@ Seven things must be known before the package can be built — read them from `M
 | `pipeline_prototype` | Interview demo, founder experiment, first outbound system | Small sample list, visible workflow, dashboard-ready schema |
 | `b2b_sdr_engine` | SaaS, agency, service firm, consulting offer | ICP scorecard, lead sources, email/LinkedIn/call handoff |
 | `abm_sdr_engine` | Named accounts or enterprise targets | Account dossiers, buying committee, 1:1 research tasks |
-| `local_phone_led` | Local services, legal, home services, clinics | Call capture, speed-to-lead, KaiCalls fit review |
+| `local_phone_led` | Local services, legal, home services, clinics | Call capture, speed-to-lead, phone capture fit review |
 | `recruiting_sdr_engine` | Staffing, recruiting, talent marketplace | Candidate/client split, employment-policy caution, role-fit evidence |
 | `partner_sdr_engine` | Co-marketing, channels, affiliates, agencies | Partner-fit matrix, mutual value, low-volume relationship motion |
 | `sdr_migration_audit` | Existing SDR team moving work into Claude/Kai loops | Workflow map, automation readiness, cost model, approval plan |

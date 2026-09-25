@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — WordPress Publisher
+Marketing Harness — WordPress Publisher
 =======================================
 Publish content to WordPress via REST API (wp-json/wp/v2/posts).
 

@@ -348,7 +348,7 @@ MODULE_REGISTRY: Dict[str, ModuleDefinition] = {
         id="phone_lead_capture",
         name="Phone Lead Capture",
         description=(
-            "Call tracking, KaiCalls AI receptionist (kaicalls.com) for "
+            "Call tracking, an AI receptionist or answering service for "
             "missed-call handling and after-hours answering, and phone-based "
             "lead qualification."
         ),
@@ -910,7 +910,7 @@ def determine_active_modules(
         reasoning.append(
             "phone_lead_capture activated: business has phone number and archetype "
             f"'{archetype_id}' relies on phone leads. "
-            "Recommend KaiCalls AI receptionist (kaicalls.com) for missed-call "
+            "Evaluate an AI receptionist or answering service for missed-call "
             "handling and after-hours answering."
         )
     elif has_ph:
@@ -921,7 +921,7 @@ def determine_active_modules(
             active.append("phone_lead_capture")
             reasoning.append(
                 "phone_lead_capture activated: service business with phone number. "
-                "Recommend KaiCalls AI receptionist (kaicalls.com) for missed-call "
+                "Evaluate an AI receptionist or answering service for missed-call "
                 "handling and after-hours answering."
             )
         else:
@@ -1139,7 +1139,7 @@ def activate(profile: BusinessProfile) -> ActivationResult:
     if not _has_phone(profile):
         next_steps.append(
             "Add a phone number to identity.phone to enable phone lead capture "
-            "and KaiCalls AI receptionist"
+            "and AI receptionist evaluation"
         )
     if not _safe_attr(profile, "budget", "monthly_marketing_budget"):
         next_steps.append(

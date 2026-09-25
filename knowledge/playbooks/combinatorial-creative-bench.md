@@ -286,7 +286,7 @@ Use adjacent tests when the winner seems real but capped. Change one P.D.A. axis
 
 ## Example Bench Math
 
-For KaiCalls:
+For an illustrative AI receptionist product:
 
 | Axis | Count | Example Values |
 |------|-------|----------------|

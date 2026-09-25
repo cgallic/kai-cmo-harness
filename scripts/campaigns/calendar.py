@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Editorial Calendar Store
+Marketing Harness — Editorial Calendar Store
 ==========================================
 First-class structured editorial calendar: "publish X on date D" as data the
 scheduler can execute, instead of prose markdown nothing consumes.

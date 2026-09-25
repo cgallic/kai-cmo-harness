@@ -1,6 +1,6 @@
-# Kai Marketing OS: Claude Code Skills For Growth Work
+# Open-Source Marketing Harness For Claude Code And Codex
 
-**Kai turns a product repo into a marketing workspace.** It gives Claude Code a marketing team, a source-aware brief, channel playbooks, policy references, quality gates, approval rules, and memory so the next run starts smarter.
+**An open-source marketing harness that turns a product repo into a marketing workspace.** It gives Claude Code or Codex a marketing team, a source-aware brief, channel playbooks, policy references, quality gates, approval rules, and memory so the next run starts smarter.
 
 Use it when you want an AI operator to create growth plans, landing pages, emails, ads, SEO/AEO work, audits, content calendars, SDR handoff, or repurposed assets from the same files your product team already uses.
 
@@ -8,9 +8,9 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 > Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
 
-**Don't want to run it yourself?** [Meet Kai](https://meetkai.xyz) is the hosted version of this system. Same skills, same approval gates, but it starts from your business brief and brings you the next move instead of waiting for a prompt. [Start with an audit](https://meetkai.xyz) if you'd rather see the gaps than go find them.
+**Want this run for your business, with a person behind it?** Talk To Gina runs it as a service: [talktogina.ai](https://talktogina.ai).
 
-## Try Kai In 60 Seconds — No API Key
+## Try It In 60 Seconds, No API Key
 
 Inside Claude Code:
 
@@ -20,11 +20,11 @@ Inside Claude Code:
 /kai:kai-gate <paste or point at any draft — a landing page, an email, your README>
 ```
 
-Kai scores the draft against the Four U's rubric, the banned-word tiers, and platform rules, then returns a scorecard with a pass/fail verdict and specific fixes. Your OAuth session does the judging — nothing leaves your machine, nothing to sign up for.
+The gate scores the draft against the Four U's rubric, the banned-word tiers, and platform rules, then returns a scorecard with a pass/fail verdict and specific fixes. Your OAuth session does the judging — nothing leaves your machine, nothing to sign up for.
 
 ## What The Output Looks Like
 
-Every piece Kai writes must pass the gate before it ships. This is the actual scorecard format, from `demo/examples/saas-blog-post/`:
+Every piece the harness writes must pass the gate before it ships. This is the actual scorecard format, from `demo/examples/saas-blog-post/`:
 
 > ## Four U's Score: 13/16
 >
@@ -52,7 +52,7 @@ Three complete worked examples — brief, draft, and scorecard — live in [`dem
 
 ## `done` Is Not A Verdict
 
-Most agent harnesses call work finished when a file exists. Kai splits that into three claims and lets a gate — not the agent that did the work — decide:
+Most agent harnesses call work finished when a file exists. This harness splits that into three claims and lets a gate — not the agent that did the work — decide:
 
 - **E — Execution.** Did the effect happen at the real target? A draft on disk is E1. A live URL that returns 200 with the approved body is E5.
 - **C — Craft.** Does it clear the gates, the platform policy, and the provenance rule, plus a read by someone who didn't write it?
@@ -88,7 +88,7 @@ Want the short setup guide? Read [Quick Start](docs/QUICK_START.md). Want to wat
 
 ## Useful First Runs
 
-| Goal | Command | What Kai returns |
+| Goal | Command | What you get back |
 |---|---|---|
 | Find the next growth move | `/kai-growth-plan` | Stage, channel bets, constraints, and what to ignore |
 | Build the first growth hire OS | `/kai-growth-hacker` | B2B/B2C channel map, fan-out plan, test cards, gates, and metrics |
@@ -97,9 +97,9 @@ Want the short setup guide? Read [Quick Start](docs/QUICK_START.md). Want to wat
 | Audit the funnel | `/kai-cro` | Findings, evidence, data gaps, and test ideas |
 | Repurpose a source asset | `/kai-repurpose` | Quotes, social posts, email angles, clips, and a kill list |
 
-## What Makes Kai Different
+## What Makes It Different
 
-Most AI marketing tools are either a blank chat box, a narrow content generator, or a dashboard that cannot understand your product repo. Kai does the opposite. It runs where your product already lives — the terminal — and starts from the repo: product docs, code, routes, pricing, examples, claims, and marketing memory.
+Most AI marketing tools are either a blank chat box, a narrow content generator, or a dashboard that cannot understand your product repo. This harness does the opposite. It runs where your product already lives — the terminal — and starts from the repo: product docs, code, routes, pricing, examples, claims, and marketing memory.
 
 That means the system can:
 
@@ -110,19 +110,19 @@ That means the system can:
 - route live actions through approval
 - remember what worked after results come back
 
-Kai makes marketing behave more like engineering work: source-aware, inspectable, gated, and repeatable. It is built for founders, indie hackers, SaaS teams, agencies, and product engineers who want Claude Code to help with actual growth work instead of generic copy.
+It makes marketing behave more like engineering work: source-aware, inspectable, gated, and repeatable. It is built for founders, indie hackers, SaaS teams, agencies, and product engineers who want Claude Code to help with actual growth work instead of generic copy.
 
 ## What This Is Not
 
-Kai is not a prompt pack, a standalone chatbot, or a content spinner. It is a local operating surface for marketing work that needs source context, policy checks, quality gates, and repeatable workflows.
+This is not a prompt pack, a standalone chatbot, or a content spinner. It is a local operating surface for marketing work that needs source context, policy checks, quality gates, and repeatable workflows.
 
-Autonomous campaign management is a guarded phase, not the starting promise. Kai ships the trusted operating layer first: product context, policy constraints, evidence, approvals, memory, and connector health.
+Autonomous campaign management is a guarded phase, not the starting promise. The harness ships the trusted operating layer first: product context, policy constraints, evidence, approvals, memory, and connector health.
 
 ## Why Not A Blank Chat?
 
 Fair question — Claude is free-form and prompt packs are everywhere. Here is the honest comparison:
 
-| | Blank Claude chat | Prompt pack | Marketing script toolbox | **Kai** |
+| | Blank Claude chat | Prompt pack | Marketing script toolbox | **This harness** |
 |---|---|---|---|---|
 | Reads your product repo first | You paste context manually | No | No | Yes — `/kai-start` builds the profile once |
 | Channel playbooks + platform policy | From model memory, unverified | Static templates | Per-script docs | 67 playbooks, 26 channel guides, per-platform ad policy references, loaded per task |
@@ -131,11 +131,11 @@ Fair question — Claude is free-form and prompt packs are everywhere. Here is t
 | Approval before live actions | N/A | N/A | Env-var scripts fire directly | Dry-run first, human approval gates every mutation |
 | Remembers what worked | Per-conversation only | No | No | Git-backed memory: lessons, edge cases, measured losers, 30-day checks |
 
-The chat box is faster for a one-off caption. Kai is for marketing you have to stand behind: repeatable, source-aware, and checked before it ships.
+The chat box is faster for a one-off caption. The harness is for marketing you have to stand behind: repeatable, source-aware, and checked before it ships.
 
 ## How It Works
 
-The first time you run a `/kai` command in a project, Kai:
+The first time you run a `/kai` command in a project, the harness:
 
 1. **Reads your codebase** — `CLAUDE.md`, `README.md`, package files, routes, schemas, product docs, and existing marketing notes.
 2. **Builds a runtime profile** — workspace, brand, archetype/module defaults, proof points, channels, and operating constraints.
@@ -150,7 +150,7 @@ Research -> Brief -> Write -> Quality Gate -> Approval -> Publish -> Log -> 30-d
 
 ## Install Options
 
-**Pick your version first.** Kai ships the same 50 skills two ways, and neither is deprecated:
+**Pick your version first.** The harness ships the same 50 skills two ways, and neither is deprecated:
 
 | | `kai` (v1) | `kai-v2` |
 |---|---|---|
@@ -159,13 +159,13 @@ Research -> Brief -> Write -> Quality Gate -> Approval -> Publish -> Log -> 30-d
 
 Same knowledge base, same gates, same governance, same output paths. Both can be installed together — Claude Code namespaces them as `/kai:*` and `/kai-v2:*`. Details: [`docs/system/skill-versions.md`](docs/system/skill-versions.md).
 
-**Cowork (no terminal needed):** Kai installs as a plugin from this repo, no clone and no shell.
+**Cowork (no terminal needed):** The harness installs as a plugin from this repo, no clone and no shell.
 
 1. Open **Customize → Plugins** in the sidebar.
 2. Select **Add marketplace** and enter `cgallic/kai-cmo-harness`.
 3. Install **Kai Marketing OS** (or **Kai Marketing OS v2**), then open it to see its skills and agents.
 
-You get 50 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want Kai chasing an outcome rather than producing one asset.
+You get 50 skills, 3 marketing subagents (evidence collector, craft reviewer, research scout), the full knowledge base, and the quality gates — about 10 MB and 580 files, well inside Cowork's plugin limits. Everything runs from the plugin package: no repo checkout, no `PYTHONPATH`, no API keys. Start with `/kai-start`, or `/kai-goal` if you want it chasing an outcome rather than producing one asset.
 
 **Plugin (Claude Code CLI or desktop):** two lines inside Claude Code. Auto-updating, includes the knowledge base, nothing touches your shell.
 
@@ -182,7 +182,7 @@ Plugin skills are namespaced: type `/kai:kai-start`, `/kai:kai-growth-plan`, and
 curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash
 ```
 
-**Repo copy (Cursor, Codex, claude.ai/code web, client repos):** these surfaces don't persist `~/.claude/skills`, so put Kai in the repo itself. Clone this repo and copy `AGENTS.md`, `knowledge/`, `harness/`, `memory/`, and `scripts/quality_gates/` into your project root — the agent picks it up from `AGENTS.md` on the next session. Details in [Quick Start](docs/QUICK_START.md).
+**Repo copy (Cursor, Codex, claude.ai/code web, client repos):** these surfaces don't persist `~/.claude/skills`, so put the harness in the repo itself. Clone this repo and copy `AGENTS.md`, `knowledge/`, `harness/`, `memory/`, and `scripts/quality_gates/` into your project root — the agent picks it up from `AGENTS.md` on the next session. Details in [Quick Start](docs/QUICK_START.md).
 
 Verify any install from a clone:
 
@@ -239,7 +239,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 | `/kai-funnel-audit` | Full-funnel awareness and lead-capture audit on collected data |
 | `/kai-retro` | Learning retrospective — mine gate failures, diagnose losers, promote lessons into enforced checks |
 | `/kai-html-presentation` | Client-ready HTML deck for audit and report delivery |
-| `/kai-data-dashboard` | Dashboard specs or static dashboards from sourced Kai data |
+| `/kai-data-dashboard` | Dashboard specs or static dashboards from sourced harness data |
 
 ### Plan strategy
 
@@ -267,7 +267,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 
 ## What Is Included
 
-Kai ships with a real marketing knowledge base, more than prompts:
+The harness ships with a real marketing knowledge base, more than prompts:
 
 - **67 marketing playbook docs** — growth loops, growth hacker OS, CRO, pricing, competitive intel, content repurposing, lifecycle marketing, launches, retargeting, ABM, partnerships, and more
 - **33 frameworks** — SEO rules, AEO/GEO strategy, AI-search optimization, perception engineering, copywriting formulas, quality-rater guidance, query fan-out, and LLM citation tracking
@@ -315,7 +315,7 @@ kai-cmo-harness/
 ├── memory/                        # Git-backed learning: lessons, edge cases, losers
 ├── agent/                         # Autonomous loop (optional)
 ├── gateway/                       # FastAPI remote runner (optional)
-├── workspace/                     # CMO-agent operating workspace + dashboard
+├── workspace/                     # Marketing-agent operating workspace + dashboard
 ├── demo/                          # One-command demo + pre-generated examples
 ├── evals/golden/                  # Golden corpus (gate regression cases)
 ├── deploy/                        # VPS deployment templates
@@ -326,9 +326,9 @@ kai-cmo-harness/
 ## Core Use Cases
 
 - **SaaS founders:** go from "we need marketing" to a concrete plan — landing page, launch content, lifecycle emails, cold outreach, SEO roadmap, paid campaign angles, and AI-search visibility.
-- **Agencies:** install Kai inside a client repo and create repeatable strategy, content, campaign, and audit workflows without rebuilding your operating system for every account.
+- **Agencies:** install the harness inside a client repo and create repeatable strategy, content, campaign, and audit workflows without rebuilding your operating system for every account.
 - **Indie hackers:** use `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-cold-outreach`, and `/kai-content-calendar` to create a practical marketing system without hiring a team.
-- **Local-service businesses:** use Kai's business profiling, audits, and proposal ranking to turn a service business website into a prioritized marketing action plan.
+- **Local-service businesses:** use the harness's business profiling, audits, and proposal ranking to turn a service business website into a prioritized marketing action plan.
 - **AI-search visibility:** use `/kai-surround-sound` and the AEO/GEO knowledge base to target the questions people ask ChatGPT, Perplexity, Gemini, Claude, and Google AI Overviews when comparing products in your category.
 
 ## Where To Start
@@ -373,7 +373,7 @@ python scripts/campaigns/campaign_planner.py --goal "product launch" --product m
 
 Generates: landing page, 5-email sequence, social variants (LinkedIn/Twitter/Instagram), ad variants (Meta + Google), content calendar. `--save` mints a `campaign_id` that threads through the tracker, runtime artifacts, the content log, and 30-day performance checks.
 
-### Goals & the Weekly CMO Review
+### Goals & the Weekly Goal Review
 
 ```bash
 python scripts/harness_cli.py goals add --brand mysite --name "Q3 signups" --kpi signups --target 500 --deadline 2026-09-30
@@ -415,7 +415,7 @@ python -m scripts.knowledge_cloner pipeline alex-hormozi --max-cost 10.00
 
 ### Dashboard
 
-Kai includes a single-file HTML dashboard for active goals, tasks, and integrations.
+The harness includes a single-file HTML dashboard for active goals, tasks, and integrations.
 
 ```bash
 python -m http.server 8000
@@ -467,27 +467,25 @@ For the full assessment, see `docs/superpowers/specs/2026-04-03-system-current-s
 
 - [Claude Code](https://claude.ai/download) running. That's the whole list.
 - Cursor, Codex, and claude.ai/code work too, via the repo-copy install.
-- Optional, only for live data: analytics/ad-platform credentials if you want Kai to pull real performance numbers or publish through connectors.
+- Optional, only for live data: analytics/ad-platform credentials if you want the harness to pull real performance numbers or publish through connectors.
 
 No SaaS account, no signup, no API key for the core workflow. The harness is local files plus the agent you already run.
 
 ## Related Links
 
-- [MeetKai](https://meetkai.xyz): the operator layer behind Kai Marketing OS workflows.
-- [KaiCalls](https://kaicalls.com): a Kai-owned AI voice agent product for small-business phone answering and lead capture when the business is phone-led.
-- [How Kai markets KaiCalls](docs/HOW_KAI_MARKETS_KAICALLS.md): the dogfooding case study — every KaiCalls marketing decision runs through this repo.
-- [Connor Gallic](https://connorgallic.com): founder building Kai, KaiCalls, and AI automation systems.
-- [How Kai runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md): plain-English explanation of the paid media workflow.
+- [Connor Gallic](https://connorgallic.com): founder and builder of this harness, and co-founder of Talk To Gina.
+- [Dogfooding case study](docs/HOW_KAI_MARKETS_KAICALLS.md): how the harness ran marketing for one of Connor's own products.
+- [How the harness runs paid ads](docs/AI_POWERED_ADS_SYSTEM.md): plain-English explanation of the paid media workflow.
 - [System guide](docs/system/README.md): architecture pages, Mermaid diagrams, and runtime schemas.
 - [Public skill manifest](docs/skill-manifest/README.md): versioned API-style docs for every canonical `kai-*` skill.
 
 ## Related Search Terms
 
-AI marketing agent, AI CMO, Claude Code skills, Claude Code slash commands, Claude Code marketing skills, marketing automation agent, SaaS marketing agent, startup growth marketing AI, local service marketing OS, SEO content agent, answer engine optimization agent, generative engine optimization, GEO agent, AEO agent, LLM citation strategy, ChatGPT search optimization, Perplexity SEO, Claude search optimization, AI Overviews optimization, landing page copy agent, lifecycle email agent, paid ads agent, content calendar generator, marketing audit agent, product launch agent, AI growth marketing assistant.
+AI marketing agent, Claude Code skills, Codex skills, Claude Code slash commands, Claude Code marketing skills, marketing automation agent, SaaS marketing agent, startup growth marketing AI, local service marketing OS, SEO content agent, answer engine optimization agent, generative engine optimization, GEO agent, AEO agent, LLM citation strategy, ChatGPT search optimization, Perplexity SEO, Claude search optimization, AI Overviews optimization, landing page copy agent, lifecycle email agent, paid ads agent, content calendar generator, marketing audit agent, product launch agent, AI growth marketing assistant.
 
 ## License
 
-**The plugin is MIT. The hosted service is not.**
+**The plugin is MIT. The rest of the repo is source-available.**
 
 Everything `/plugin install` puts on your machine — all the skills, the whole
 knowledge base, the subagents, and the quality gates — is MIT. Use it

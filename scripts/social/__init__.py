@@ -1,5 +1,5 @@
 """
-Kai CMO Harness — Social Media Module
+Marketing Harness — Social Media Module
 =======================================
 Unified interface for posting to social media platforms.
 

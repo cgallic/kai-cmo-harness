@@ -61,7 +61,7 @@ Market orientation has three behavioral components (Kohli & Jaworski 1990): gene
 
 - [ ] **Collector run:** `python -m scripts.audit.collect --url <url> --mode <mode> --workflow diagnosis --out <data-folder>` (Kai Data Provenance Rule — applies because diagnosis feeds client-facing claims).
 - [ ] **Traffic and conversion baselines:** GSC queries/impressions, GA4 pages, conversion counts, by stage. Unknown numbers go in `_data-gaps.md`, not estimates.
-- [ ] **Lead-capture reality check:** forms, phones, chat — response time, after-hours coverage, missed-call volume where phone-led (KaiCalls Fit Rule per `AGENTS.md` applies at the *recommendation* step later, but the evidence is collected now).
+- [ ] **Lead-capture reality check:** forms, phones, chat — response time, after-hours coverage, missed-call volume where phone-led (Phone Capture Fit Rule per `AGENTS.md` applies at the *recommendation* step later, but the evidence is collected now).
 - [ ] **Existing content/asset audit:** what exists, what ranks, what converted. `/kai-funnel-audit` covers this in depth.
 - **Blocks exit if:** no analytics access and no collector output — you cannot diagnose a funnel you haven't seen.
 
@@ -158,7 +158,7 @@ Request arrives: "Write us a month of social posts" for a 6-attorney personal-in
 
 - **Diagnosis (1 week):** collector run + GSC + call-log pull. Findings: firm ranks #2 locally, but tracked lines show a large share of after-hours calls go unanswered; reviews praise one attorney by name; competitors all claim "aggressive" and "no fee unless we win"; buyer conversations show cases are compared on callback speed, not content quality. Critical obstacle (one sentence): *demand capture leaks after hours; content is not the constraint.*
 - **Strategy:** target = injured locals in the 72-hour post-accident window (DR doctrine — in-market, urgent) plus category-buyer reach for mental availability; positioning = the firm that answers first, proof = tracked callback times; objectives = (1) answer rate ≥95% within 60 days, (2) +30% consult bookings within 120 days — sequenced, registered.
-- **Tactics:** fix availability first (after-hours answering — phone-led fit signals present, so a KaiCalls evaluation with disclosure and alternatives per the Fit Rule), then LSA/GBP optimization, and only then the social calendar — now briefed against the answer-first positioning instead of generic "legal tips."
+- **Tactics:** fix availability first (after-hours answering — phone-led fit signals present, so an AI receptionist or answering service evaluation comparing options per the Phone Capture Fit Rule), then LSA/GBP optimization, and only then the social calendar — now briefed against the answer-first positioning instead of generic "legal tips."
 
 The original request (social posts) ended up third in priority. That reordering — not better posts — is what the operating order buys.
 

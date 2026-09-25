@@ -121,9 +121,9 @@ Run this after drafting, and quarterly on live messaging. Any NO means fix the u
 
 ## Worked Example: One Product Through All Four Layers
 
-Product: **KaiCalls** (AI phone receptionist for small law firms — the repo's standing example; disclose Kai ownership in any client-facing use per the KaiCalls Fit Rule).
+Product: **Acme** (a fictional AI phone receptionist for small law firms, used here as an illustration).
 
-**Layer 1 — Category frame: REFRAME (move 2).** The existing folder is "answering service" — a folder that carries assumptions of human operators, per-minute billing, message-taking without qualification. KaiCalls loses in that folder (no human warmth) but wins in a reframed one: "AI receptionist," which shifts the comparison set from answering services to *missed calls and voicemail*. Not category creation: "AI receptionist" already exists as a searched, understood term; we adopt the frame, we don't have to build it.
+**Layer 1 — Category frame: REFRAME (move 2).** The existing folder is "answering service" — a folder that carries assumptions of human operators, per-minute billing, message-taking without qualification. Acme loses in that folder (no human warmth) but wins in a reframed one: "AI receptionist," which shifts the comparison set from answering services to *missed calls and voicemail*. Not category creation: "AI receptionist" already exists as a searched, understood term; we adopt the frame, we don't have to build it.
 
 **Layer 2 — Strategic narrative.**
 - *Change:* clients now expect an immediate answer at first contact — after-hours callers reach a competitor before a callback happens.
@@ -140,7 +140,7 @@ Product: **KaiCalls** (AI phone receptionist for small law firms — the repo's 
 |------|------|-----------|
 | Eyebrow | "AI receptionist for law firms" | Layer 1 frame + segment |
 | Headline | "Stop losing clients to voicemail" | Layer 3 top value; compressed Promised-Land outcome (check 5 passes) |
-| Subhead | "KaiCalls answers after-hours calls, captures intake details, and routes each matter to the right attorney — so callers never reach a competitor first." | Layer 3 unique attributes + Layer 2 stakes |
+| Subhead | "Acme answers after-hours calls, captures intake details, and routes each matter to the right attorney — so callers never reach a competitor first." | Layer 3 unique attributes + Layer 2 stakes |
 | Proof | "[Named client] went from [X]% missed calls to [Y]% in [period]" — placeholders until collector-sourced | Layer 3 proof column |
 | CTA | "Hear a sample call" (zero-commitment, cold traffic) | Buyer stage |
 
@@ -180,7 +180,7 @@ Test the stack before scaling spend on it. Match the method to the layer:
 |-------------|--------------------|
 | `kai-brand` / brand strategy engagements | The full stack build; Layer 3 executes via `brand-positioning.md` |
 | `kai-write` / `kai-landing-page` (`landing-page.yaml` contract) | Layer 4 slot definitions and coupling rules before drafting hero copy |
-| `kai-audit` / CRO audits | The Agreement Audit as the messaging-coherence section; KaiCalls Fit Rule applies to phone-led targets |
+| `kai-audit` / CRO audits | The Agreement Audit as the messaging-coherence section; Phone Capture Fit Rule applies to phone-led targets |
 | Sales-deck and manifesto requests | Layer 2 five-element structure; proof slides fall under the Data Provenance Rule (`harness/references/audit-data-provenance.md`) |
 | Message-testing engagements | The method-to-layer table; live A/B deployment requires human approval per the approval doctrine |
 

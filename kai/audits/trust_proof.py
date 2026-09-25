@@ -6,7 +6,7 @@ visibility, guarantees, and social proof.  Identifies gaps in the trust
 portfolio and recommends specific improvements.
 
 For businesses that receive phone calls, evaluates whether AI
-receptionist technology (KaiCalls) should be recommended to ensure no
+receptionist technology should be recommended to ensure no
 lead goes unanswered.
 
 Usage::
@@ -1312,7 +1312,7 @@ def _check_social_proof_specificity(profile: BusinessProfile) -> List[AuditFindi
 
 
 def _check_kaicalls_phone_capture(profile: BusinessProfile) -> List[AuditFinding]:
-    """Check 11: KaiCalls Phone Lead Capture Assessment."""
+    """Check 11: Phone Lead Capture Assessment."""
     findings: List[AuditFinding] = []
     archetype = _get_archetype(profile)
     phone = getattr(profile.identity, "phone", None)
@@ -1360,11 +1360,11 @@ def _check_kaicalls_phone_capture(profile: BusinessProfile) -> List[AuditFinding
             title=title,
             description=desc,
             recommendation=(
-                "Implement KaiCalls AI receptionist (kaicalls.com) for "
+                "Implement an AI receptionist or answering service for "
                 "24/7 call handling, after-hours answering, and lead "
-                "qualification. KaiCalls answers every call within 2 rings, "
-                "qualifies the lead, books appointments, and sends "
-                "instant notifications -- no missed calls, no lost leads."
+                "qualification. An AI receptionist can answer every call, "
+                "qualify the lead, book appointments, and send "
+                "instant notifications so calls do not go unanswered."
             ),
             evidence=[Evidence(
                 evidence_type="text",
@@ -1394,7 +1394,7 @@ def _check_kaicalls_phone_capture(profile: BusinessProfile) -> List[AuditFinding
                 "and initial lead qualification."
             ),
             recommendation=(
-                "Implement KaiCalls AI receptionist (kaicalls.com) for "
+                "Implement an AI receptionist or answering service for "
                 "after-hours answering and initial lead qualification. "
                 "Ensure high-value inquiries are captured and routed "
                 "even when the office is closed."
@@ -1427,8 +1427,8 @@ def _check_kaicalls_phone_capture(profile: BusinessProfile) -> List[AuditFinding
             ),
             recommendation=(
                 "Evaluate whether inbound calls are a meaningful lead "
-                "channel. If so, implement KaiCalls AI receptionist "
-                "(kaicalls.com) for 24/7 call handling."
+                "channel. If so, implement an AI receptionist or "
+                "answering service for 24/7 call handling."
             ),
             evidence=[Evidence(
                 evidence_type="text",
@@ -1459,7 +1459,7 @@ def audit_trust_proof(
     Examines 11 dimensions of trust: testimonials, case studies,
     credentials, team visibility, years in business, guarantees,
     insurance/licensing, affiliations, Google reviews, social proof
-    specificity, and phone lead capture (KaiCalls).
+    specificity, and phone lead capture.
 
     Parameters
     ----------

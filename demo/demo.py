@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Instant Demo
+Marketing Harness — Instant Demo
 ================================
 Clone → set GEMINI_API_KEY → run this → see a scored blog post in ~60 seconds.
 
@@ -393,7 +393,7 @@ def run_demo(url: str, keyword: str, fmt: str = "blog", save_dir: str | None = N
     start_time = time.time()
 
     print(f"\n{'═'*60}")
-    print(f"  Kai CMO Harness — Demo Pipeline")
+    print(f"  Marketing Harness — Demo Pipeline")
     print(f"  URL: {url}")
     print(f"  Keyword: {keyword}")
     print(f"  Format: {fmt}")
@@ -478,7 +478,7 @@ Return ONLY valid JSON:
     framework = load_framework(fmt)
     instructions = FORMAT_INSTRUCTIONS.get(fmt, FORMAT_INSTRUCTIONS["blog"])
 
-    draft = gemini(f"""You are a marketing content writer for the Kai CMO Harness pipeline.
+    draft = gemini(f"""You are a marketing content writer for the marketing harness pipeline.
 
 ## Brief
 {json.dumps(brief, indent=2)}
@@ -631,7 +631,7 @@ Pipeline time: {elapsed:.1f}s
 def main():
     parser = argparse.ArgumentParser(
         prog="kai-harness-demo",
-        description="Kai CMO Harness — Instant Demo. One command, one API key, scored content.",
+        description="Marketing Harness — Instant Demo. One command, one API key, scored content.",
     )
     parser.add_argument("--url", required=True, help="Target website URL")
     parser.add_argument("--keyword", required=True, help="Target keyword to write about")

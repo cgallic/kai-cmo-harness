@@ -738,7 +738,7 @@ MULTI_LOCATION_ARCHETYPE = ArchetypeDefinition(
         "Best practices from top-performing locations should be systematically replicated to underperformers",
         "Local ad budgets should be weighted by location opportunity, not distributed equally",
         "Each location should have its own phone number for attribution and call tracking",
-        "KaiCalls AI receptionist (kaicalls.com) can standardize phone handling across all locations",
+        "An AI receptionist or answering service can standardize phone handling across all locations",
     ],
 )
 

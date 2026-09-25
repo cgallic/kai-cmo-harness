@@ -402,14 +402,14 @@ def _generate_recommended_actions(
         "total_leads": "Add a secondary lead capture mechanism (chat widget or phone-based CTA) to increase total lead volume.",
         "cost_per_lead": "Pause underperforming ad campaigns and reallocate budget to the top 2 lowest-CPL channels.",
         "lead_sources_diversity": "Activate at least one new lead generation channel (email, referral program, or social ads).",
-        "phone_calls": "Add click-to-call CTAs above the fold on all service pages and set up KaiCalls AI receptionist for after-hours coverage.",
+        "phone_calls": "Add click-to-call CTAs above the fold on all service pages and evaluate an AI receptionist or answering service for after-hours coverage.",
         "lead_quality_indicator": "Tighten lead qualification criteria in forms and ad targeting to improve lead quality ratio.",
         # Conversions
         "website_conversion_rate": "A/B test the primary CTA on the homepage and top 3 landing pages to improve conversion rate.",
         "landing_page_conversion_rate": "Simplify landing page forms to 3-4 fields and add social proof (reviews, logos) above the fold.",
         "form_completion_rate": "Reduce form fields, add progress indicators, and implement autofill to improve form completion.",
-        "phone_call_rate": "Make phone numbers prominent on mobile, add sticky call bars, and implement KaiCalls for instant response.",
-        "speed_to_lead": "Set up automated instant-response emails and consider KaiCalls AI receptionist for immediate phone follow-up.",
+        "phone_call_rate": "Make phone numbers prominent on mobile, add sticky call bars, and evaluate an AI receptionist or answering service for instant response.",
+        "speed_to_lead": "Set up automated instant-response emails and consider an AI receptionist or answering service for immediate phone follow-up.",
         # Repeat business
         "repeat_customer_rate": "Launch a post-service follow-up email sequence with maintenance reminders and seasonal offers.",
         "customer_retention_rate": "Implement a loyalty program or VIP tier system to incentivize repeat purchases.",

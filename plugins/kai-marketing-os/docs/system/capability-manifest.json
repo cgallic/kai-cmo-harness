@@ -361,7 +361,7 @@
     },
     {
       "name": "kai-brief",
-      "description": "Create a structured content brief using the Kai CMO Harness brief schema. Selects persona, defines angle, sets quality targets. Use when \"create a brief\", \"content brief\", \"plan this content\", \"brief for [topic]\", \"what persona should I use\", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.",
+      "description": "Create a structured content brief using the marketing harness brief schema. Selects persona, defines angle, sets quality targets. Use when \"create a brief\", \"content brief\", \"plan this content\", \"brief for [topic]\", \"what persona should I use\", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.",
       "source": "harness/skills/kai-brief/SKILL.md",
       "public_router_command": true,
       "router_category": "plan",
@@ -465,7 +465,7 @@
     },
     {
       "name": "kai-funnel-audit",
-      "description": "Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the KaiCalls Fit Rule. Use when \"funnel audit\", \"audit my funnel\", \"why is my funnel leaking\", \"top of funnel isn't converting\", \"audit our lead magnets\", \"opt-in audit\", \"awareness to lead audit\", \"where are we losing people\", \"lead capture audit\", or any request to diagnose the full awareness-to-lead flow rather than one page.",
+      "description": "Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the Phone Capture Fit Rule. Use when \"funnel audit\", \"audit my funnel\", \"why is my funnel leaking\", \"top of funnel isn't converting\", \"audit our lead magnets\", \"opt-in audit\", \"awareness to lead audit\", \"where are we losing people\", \"lead capture audit\", or any request to diagnose the full awareness-to-lead flow rather than one page.",
       "source": "harness/skills/kai-funnel-audit/SKILL.md",
       "public_router_command": true,
       "router_category": "audit",
@@ -473,7 +473,7 @@
     },
     {
       "name": "kai-gate",
-      "description": "Run Kai CMO Harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when \"score this\", \"quality check\", \"run quality gates\", \"check this content\", \"four u's score\", \"banned word check\", \"SEO lint\", or any request to validate content quality before publishing.",
+      "description": "Run the marketing harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when \"score this\", \"quality check\", \"run quality gates\", \"check this content\", \"four u's score\", \"banned word check\", \"SEO lint\", or any request to validate content quality before publishing.",
       "source": "harness/skills/kai-gate/SKILL.md",
       "public_router_command": true,
       "router_category": "audit",
@@ -697,7 +697,7 @@
     },
     {
       "name": "kai-start",
-      "description": "First-run onboarding for Kai CMO Harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, \"get started with Kai\", \"set up Kai\", \"first time using Kai\", or when MARKETING.md doesn't exist yet.",
+      "description": "First-run onboarding for the marketing harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, \"get started with Kai\", \"set up Kai\", \"first time using Kai\", or when MARKETING.md doesn't exist yet.",
       "source": "harness/skills/kai-start/SKILL.md",
       "public_router_command": false,
       "router_category": null,
@@ -761,7 +761,7 @@
     },
     {
       "name": "kai-write",
-      "description": "Write a single piece of marketing content using Kai CMO Harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when \"write a blog post\", \"draft an email\", \"LinkedIn article\", \"cold outreach\", \"write ad copy\", \"press release\", \"TikTok script\", or any single content creation request. For building a complete email system, use /kai-email-system instead.",
+      "description": "Write a single piece of marketing content using the marketing harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when \"write a blog post\", \"draft an email\", \"LinkedIn article\", \"cold outreach\", \"write ad copy\", \"press release\", \"TikTok script\", or any single content creation request. For building a complete email system, use /kai-email-system instead.",
       "source": "harness/skills/kai-write/SKILL.md",
       "public_router_command": true,
       "router_category": "produce",

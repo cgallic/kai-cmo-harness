@@ -168,7 +168,7 @@ class ContactSource(str, Enum):
     """Created via API integration."""
 
     kaicalls = "kaicalls"
-    """Captured by KaiCalls AI receptionist."""
+    """Captured by an AI receptionist."""
 
 
 class SegmentOperator(str, Enum):

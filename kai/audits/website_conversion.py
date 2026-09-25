@@ -317,7 +317,7 @@ def _check_phone_visibility(
             recommendation=(
                 "Add a business phone number to the profile and ensure it is "
                 "displayed in the website header on every page.  Consider "
-                "KaiCalls AI receptionist (kaicalls.com) to ensure every call "
+                "an AI receptionist or answering service to ensure every call "
                 "is answered, even after hours."
             ),
             estimated_impact=(
@@ -363,7 +363,7 @@ def _check_phone_visibility(
             recommendation=(
                 "Implement click-to-call (tel: link) on the phone number in "
                 "the site header.  Make it sticky on mobile.  Consider "
-                "KaiCalls AI receptionist (kaicalls.com) to handle overflow "
+                "an AI receptionist or answering service to handle overflow "
                 "and after-hours calls."
             ),
             estimated_impact=(
@@ -1145,7 +1145,7 @@ def _check_emergency_handling(
                 "competitor."
             ),
             recommendation=(
-                "KaiCalls AI receptionist (kaicalls.com) can handle "
+                "An AI receptionist or answering service can handle "
                 "after-hours emergency calls, qualify the urgency, "
                 "capture caller details, and dispatch to the on-call "
                 "technician.  Ensure the website clearly states 24/7 "
@@ -1178,8 +1178,8 @@ def _cta_recommendation_for_archetype(archetype: Optional[str]) -> str:
         "local-service": (
             "For local service businesses, the ideal primary CTA is "
             "\"Call Now\" or \"Get a Free Quote\" with a click-to-call "
-            "phone number.  Consider adding KaiCalls AI receptionist "
-            "(kaicalls.com) to ensure every call is answered."
+            "phone number.  Consider adding an AI receptionist or "
+            "answering service to ensure every call is answered."
         ),
         "ecommerce": (
             "For ecommerce, the primary CTA should be product-specific: "

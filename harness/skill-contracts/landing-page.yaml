@@ -94,7 +94,7 @@ deterministic_checks:
     pass_when: "proof, benchmark, and outcome claims have evidence_id or hypothesis label"
   - id: phone_fit_logic_present
     evaluator: schema
-    pass_when: "call_capture includes phone_lead_capture_fit before KaiCalls recommendation"
+    pass_when: "call_capture includes phone_lead_capture_fit before any answering-service or AI receptionist recommendation"
   - id: no_cro_lift_promise
     evaluator: regex
     pass_when: "no conversion lift or benchmark is promised without source and experiment evidence"
@@ -108,7 +108,7 @@ llm_judge_rubric:
     - name: evidence_discipline
       question: "Are proof, customer language, and benchmarks sourced or labeled as hypotheses?"
     - name: phone_capture_fit
-      question: "Does KaiCalls or phone CTA logic appear only when phone lead capture is material?"
+      question: "Does answering-service, AI receptionist, or phone CTA logic appear only when phone lead capture is material?"
     - name: clarity_and_specificity
       question: "Is the copy specific, concrete, and free of vague hype?"
 
@@ -150,7 +150,7 @@ claim_policy:
     - fabricated proof
     - unsupported benchmark targets
     - guaranteed conversion lift
-    - Kai-owned product recommendation without fit logic
+    - vendor or owned-product recommendation without fit logic
 
 provenance_policy:
   claim_trace_required: true
@@ -190,7 +190,7 @@ trace_fields:
 constraints:
   - Final copy only; no bracketed placeholders.
   - Include one phone-first CTA only when phone lead capture is material.
-  - Mention KaiCalls only after fit, alternatives, and disqualifiers are considered.
+  - Mention an answering service or AI receptionist only after fit, alternatives, and disqualifiers are considered.
   - Do not present CRO hypotheses as guaranteed lift.
 
 eco:

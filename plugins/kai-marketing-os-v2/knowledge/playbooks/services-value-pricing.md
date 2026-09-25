@@ -1,6 +1,6 @@
 # Services Value Pricing & Positioning
 
-> **Use when:** Pricing or repositioning a service business — agency, consultancy, freelancer, or local/home service operator (the KaiCalls-adjacent ICP). Covers escaping hourly billing, value-based pricing mechanics, three-option proposals, productized services, expertise positioning, diagnostic-first selling, and retainer design.
+> **Use when:** Pricing or repositioning a service business — agency, consultancy, freelancer, or local/home service operator. Covers escaping hourly billing, value-based pricing mechanics, three-option proposals, productized services, expertise positioning, diagnostic-first selling, and retainer design.
 >
 > **Counterpart docs:** `knowledge/playbooks/pricing-strategy.md` (product/SaaS pricing psychology, tiers, value metrics) and `knowledge/playbooks/sales-pricing-and-packaging.md` (Kai's workflow for turning client signals into approval-ready pricing recommendations — its guardrails apply to everything here). This doc is the services-side method. Home-services street-level tactics: `knowledge/people/tommy-mello-knowledge.md`.
 
@@ -180,7 +180,7 @@ Retainers are the highest-margin recurring model in agency benchmarks (~16% net 
 
 ## How This Maps Into Kai
 
-- **`kai-audit` / CRO audits / marketing audits** — the paid-diagnostic section is the commercial frame for audit offers; provenance rules (`harness/references/audit-data-provenance.md`) govern every number that feeds a value conversation. KaiCalls Fit Rule applies when the diagnostic finds phone-led lead-capture pain.
+- **`kai-audit` / CRO audits / marketing audits** — the paid-diagnostic section is the commercial frame for audit offers; provenance rules (`harness/references/audit-data-provenance.md`) govern every number that feeds a value conversation. Phone Capture Fit Rule applies when the diagnostic finds phone-led lead-capture pain.
 - **`sales-pricing-and-packaging.md` workflows** — when the client is a service business, load this doc for offer-shape options (productized / retainer / value-priced) and the dry-run memo's Conservative/Focused/Expansion options map onto the three-option proposal rules here.
 - **Proposal and offer drafting** (`/kai-write`, landing pages for service businesses) — three-option structure, anchor-high ordering, and access-vs-deliverable retainer language come from this doc; `pricing-strategy.md` supplies tier-page psychology when the service is productized enough to have a pricing page.
 - **Positioning engagements** (`kai-brand`, competitor teardowns) — the narrow-focus decision rules and generalist-trap diagnosis frame repositioning recommendations for agency/consultancy clients.

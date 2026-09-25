@@ -18,4 +18,4 @@ Distilled operator guidance lives in:
 - `knowledge/frameworks/aeo-ai-search/google-ai-mode-agentic-features.md` — what AI Mode's agentic layer changes for content/AEO strategy and partner-distribution thinking.
 - `kaicalls-competitive-implications.md` (in this folder) — direct competitive read for KaiCalls: Google going outbound from consumer → business changes the inbound call landscape; AI-on-AI conversations are now mainstream.
 
-Use the distilled files when planning content, competitive responses, or KaiCalls positioning. Use the raw articles when sourcing exact quotes or claim-checking.
+Use the distilled files when planning content, competitive responses, or phone-capture positioning. Use the raw articles when sourcing exact quotes or claim-checking.

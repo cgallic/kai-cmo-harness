@@ -39,7 +39,7 @@ These are not style choices, so they do not change with the version:
 - **Frontmatter `name` and `description`.** Routing and trigger matching must behave identically. A user typing the same thing reaches the same skill in either plugin.
 - **The knowledge base.** `knowledge/`, `harness/references/`, `harness/skill-contracts/`, and `harness/eco-floors.yaml` are shared by symlink. There is one copy of the frameworks.
 - **The quality gates.** Four U's, banned words, SEO lint, provenance lint, policy compliance.
-- **The governance rules.** Instruction contract, Data Provenance Rule, KaiCalls Fit Rule, approval doctrine, ECO floors.
+- **The governance rules.** Instruction contract, Data Provenance Rule, Phone Capture Fit Rule, approval doctrine, ECO floors.
 - **Output locations.** Both versions write to the same `workspace/` paths, so downstream tooling does not branch on version.
 
 **A v2 skill is never more permissive than its v1 counterpart.** Removing procedure never means removing a constraint. If v1 requires the collector before writing a number, v2 requires it too — stated as a constraint rather than as a step.

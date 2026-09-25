@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Webflow CMS Publisher
+Marketing Harness — Webflow CMS Publisher
 =========================================
 Publish content to Webflow CMS via API v2.
 

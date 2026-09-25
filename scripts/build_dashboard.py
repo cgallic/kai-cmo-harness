@@ -305,7 +305,7 @@ def compile_state() -> dict:
         },
         "owner": {
             "name": owner_config.get("name", "SaaS Operator"),
-            "email": owner_config.get("email", "operator@meetkai.xyz")
+            "email": owner_config.get("email", "operator@example.com")
         },
         "products": products_config,
         "autonomy_mode": "balanced",

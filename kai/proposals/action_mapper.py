@@ -13,9 +13,10 @@ dicts ready for ranking, bundling, and scheduling.
 Design principles
 -----------------
 1. **Complete registry.**  Every audit category has at least two mappings.
-2. **KaiCalls rule.**  Speed-to-lead findings and any finding that
+2. **Phone capture rule.**  Speed-to-lead findings and any finding that
    mentions missed calls, after hours, phone, or response time will
-   always produce a KaiCalls setup recommendation.
+   always produce an AI receptionist / answering service setup
+   recommendation.
 3. **Template-based.**  Titles and descriptions use ``{placeholder}``
    syntax filled from finding data and business profile data.
 4. **Pure functions.**  No file I/O, no network, no state mutation.
@@ -636,9 +637,9 @@ MAPPING_REGISTRY: List[ActionMapping] = [
         finding_category="speed_to_lead",
         action_type="kaicalls_setup",
         channel="phone",
-        title_template="Set up KaiCalls AI receptionist for {business_name}",
+        title_template="Set up an AI receptionist for {business_name}",
         description_template=(
-            "Deploy KaiCalls AI receptionist (kaicalls.com) to handle missed calls, "
+            "Deploy an AI receptionist or answering service to handle missed calls, "
             "after-hours answering, lead qualification, and appointment booking.  "
             "Businesses that respond to leads within 5 minutes are 21x more likely "
             "to convert."
@@ -648,14 +649,12 @@ MAPPING_REGISTRY: List[ActionMapping] = [
         default_effort_hours=1.0,
         default_cost=0.0,
         suggested_payload_template={
-            "provider": "kaicalls",
             "features": [
                 "missed_call_handling",
                 "after_hours_answering",
                 "lead_qualification",
                 "appointment_booking",
             ],
-            "kaicalls_url": "https://kaicalls.com",
             "setup_type": "full|after_hours_only",
         },
         archetype_tags=["local_service", "professional_service"],
@@ -949,7 +948,7 @@ MAPPING_REGISTRY: List[ActionMapping] = [
 ]
 
 
-# Keywords that trigger a KaiCalls recommendation regardless of category
+# Keywords that trigger a phone capture recommendation regardless of category
 _KAICALLS_TRIGGER_KEYWORDS = re.compile(
     r"missed\s+calls?|after\s+hours?|phone|response\s+time|"
     r"call\s+handling|unreachable|voicemail|no\s+answer",
@@ -1017,9 +1016,10 @@ def map_finding_to_actions(
     strings with available data, and computes risk tiers and priority
     scores.
 
-    **KaiCalls rule:** If the finding category is ``speed_to_lead`` or
+    **Phone capture rule:** If the finding category is ``speed_to_lead`` or
     the finding summary/title mentions missed calls, after hours, phone,
-    or response time, a KaiCalls setup action is always included.
+    or response time, an AI receptionist / answering service setup
+    action is always included.
 
     Parameters
     ----------
@@ -1090,19 +1090,19 @@ def map_finding_to_actions(
         else:
             filtered_mappings.append(mapping)
 
-    # KaiCalls rule: check if we need to force-include KaiCalls
+    # Phone capture rule: check if we need to force-include the setup action
     kaicalls_needed = category == "speed_to_lead"
     if not kaicalls_needed:
         combined_text = f"{finding_title} {finding_description}"
         if _KAICALLS_TRIGGER_KEYWORDS.search(combined_text):
             kaicalls_needed = True
 
-    # If KaiCalls is needed, ensure the kaicalls_setup mapping is present
+    # If phone capture is needed, ensure the kaicalls_setup mapping is present
     kaicalls_mapping_present = any(
         m.action_type == "kaicalls_setup" for m in filtered_mappings
     )
     if kaicalls_needed and not kaicalls_mapping_present:
-        # Pull the KaiCalls mapping from the registry
+        # Pull the phone capture setup mapping from the registry
         kaicalls_mappings = [
             m for m in MAPPING_REGISTRY if m.action_type == "kaicalls_setup"
         ]

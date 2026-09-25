@@ -188,7 +188,7 @@ Self-syndication (1996) meant Ramsey kept the ad inventory, the affiliate relati
 2. **Alignment claim as positioning.** "We don't sell financial products, so our advice is unbiased" is simultaneously a monetization constraint and a marketing message.
 3. **The vetting is the product.** Providers buy the endorsement halo, not just leads. This is why endorsement failures (the timeshare-exit lawsuit) are existential-grade risks: the halo is the asset.
 
-**Kai rule when reusing this model:** an endorsement marketplace requires real, documented vetting and disclosed commercial relationships. The Ramsey timeshare litigation is the cautionary case — cite it when a client wants to build "trusted partner" revenue without a vetting operation. (This mirrors Kai's own KaiCalls disclosure rule.)
+**Kai rule when reusing this model:** an endorsement marketplace requires real, documented vetting and disclosed commercial relationships. The Ramsey timeshare litigation is the cautionary case — cite it when a client wants to build "trusted partner" revenue without a vetting operation. (The same standard applies to any vendor the harness recommends: disclose commercial relationships and compare alternatives.)
 
 ---
 
@@ -259,7 +259,7 @@ Ramsey also appeared on Hormozi's podcast (Sept 2023, ep 664/683), which is the 
 | `/kai-podcast` + `knowledge/channels/podcast.md` | Framework 1 (call-in trust engine) and Framework 4 (one recording → all platforms; free-carriage bootstrapping) when a client wants a show that sells. Use the call-in/teardown playbook as the default format for expert-led brands. |
 | `/kai-proof-builder` | Framework 3 in full — the proof-ritual design rules (name, liturgy, costly action, aggregate number, scheduled segment) are the house standard for UGC proof mechanics. |
 | `/kai-content-batching` | Framework 4, takeaway 2: the daily-feed-as-master-asset model; Ramsey is the canonical example of one session → episode/clips/shorts/quotes. |
-| `/kai-ad-campaign` / funnel planning (`knowledge/playbooks/campaign-orchestration.md`, `knowledge/playbooks/hormozi-100m-funnel.md`) | Framework 2 (content-to-product ladder) and Framework 7 (two-sided monetization) as alternative funnel architectures — especially for audience businesses weighing affiliate/endorsement revenue. Always pair Framework 7 with disclosure + vetting requirements (KaiCalls Fit Rule analogue). |
+| `/kai-ad-campaign` / funnel planning (`knowledge/playbooks/campaign-orchestration.md`, `knowledge/playbooks/hormozi-100m-funnel.md`) | Framework 2 (content-to-product ladder) and Framework 7 (two-sided monetization) as alternative funnel architectures — especially for audience businesses weighing affiliate/endorsement revenue. Always pair Framework 7 with disclosure + vetting requirements (Phone Capture Fit Rule analogue). |
 | Brand strategy / founder-brand engagements | Framework 5 (Personalities succession) whenever a founder-fronted brand asks "what happens when I step back" — and Framework 6 when designing a proprietary framework meant to spread. |
 | Cross-reference | `knowledge/people/alex-hormozi-knowledge.md` (volume + give-away-secrets doctrine descends partly from this model); `knowledge/people/dan-kennedy-knowledge.md` (direct-response ancestry). |
 

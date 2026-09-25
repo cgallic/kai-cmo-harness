@@ -63,7 +63,7 @@ we [UNIQUE DIFFERENTIATOR].
 ```
 For small law firms
 who lose clients because calls go to voicemail after hours,
-KaiCalls is an AI receptionist
+Acme is an AI receptionist
 that answers after-hours calls and captures intake details.
 Unlike traditional answering-service workflows that can create delay and handoff gaps,
 we route intelligently and summarize each call for follow-up.
@@ -168,7 +168,7 @@ Plot yourself and competitors on two axes that matter to your customer:
                             │
           ┌─────────────────┼─────────────────┐
           │                 │                 │
-          │  Answering      │  KaiCalls ★     │
+          │  Answering      │  Acme ★         │
           │  Services       │  (AI-assisted,  │
  LOW ─────┤  (human handoff)│   fit-specific) ├───── HIGH
  TECH     │                 │                 │  TECH

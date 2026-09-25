@@ -152,8 +152,8 @@
 - [ ] Reminder sent 2-4 hours before the reservation (reduce no-shows)
 - [ ] Private event and catering inquiry form exists on the website
 - [ ] Large party booking process is clear (how many guests, deposit requirements, set menu options)
-- [ ] KaiCalls AI receptionist (kaicalls.com) configured to handle phone reservations, answer menu/hours questions, and take takeout orders when staff is busy during service
-- [ ] Phone rollover to KaiCalls is tested during peak hours to confirm no calls go to voicemail
+- [ ] An AI receptionist or answering service configured to handle phone reservations, answer menu/hours questions, and take takeout orders when staff is busy during service
+- [ ] Phone rollover to the answering service is tested during peak hours to confirm no calls go to voicemail
 - [ ] Waitlist system in place for walk-in heavy restaurants (Yelp Waitlist, Waitwhile, or in-house)
 
 ---

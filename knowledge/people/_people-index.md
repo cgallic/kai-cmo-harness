@@ -41,7 +41,7 @@ One row per expert knowledge doc. Load a doc when the task matches its "Load whe
 
 | Doc | Who | Load when |
 |-----|-----|-----------|
-| `tommy-mello-knowledge.md` | Tommy Mello (A1 Garage, Home Service Expert) | Phone-led lead capture, CSR booking rates, speed-to-lead, tech-as-salesperson — `/kai-funnel-audit` phone path, KaiCalls fit evaluation |
+| `tommy-mello-knowledge.md` | Tommy Mello (A1 Garage, Home Service Expert) | Phone-led lead capture, CSR booking rates, speed-to-lead, tech-as-salesperson — `/kai-funnel-audit` phone path, Phone Capture Fit Rule evaluation |
 | `joy-hawkins-knowledge.md` | Joy Hawkins (Sterling Sky) | GBP ranking experiments, local pack factors, review strategy — `/kai-seo-audit`, local-seo-gbp playbook |
 | `darren-shaw-knowledge.md` | Darren Shaw (Whitespark) | Local Search Ranking Factors survey findings, citations, GBP priorities — same as above |
 

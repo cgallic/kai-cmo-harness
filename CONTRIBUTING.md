@@ -1,4 +1,4 @@
-# Contributing to Kai CMO Harness
+# Contributing to the Marketing Harness
 
 Thanks for contributing. Here's how to make Kai better.
 

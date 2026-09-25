@@ -176,8 +176,8 @@ def build_local_service_messaging() -> MessagingFramework:
             angle_name="kaicalls_integration",
             description=(
                 "Use when recommending always-available phone response and "
-                "instant lead capture.  Highlights the KaiCalls AI "
-                "receptionist so the business never misses a call."
+                "instant lead capture.  Highlights an AI receptionist "
+                "so the business never misses a call."
             ),
             headline_templates=[
                 "Never Miss a Call — Our AI Receptionist Answers 24/7",
@@ -187,7 +187,7 @@ def build_local_service_messaging() -> MessagingFramework:
                 "AI-Powered Answering — Instant Quotes While You Work",
             ],
             subheadline_templates=[
-                "KaiCalls answers, qualifies, and books — even at 3 AM.",
+                "Our AI receptionist answers, qualifies, and books — even at 3 AM.",
                 "No hold music. No missed calls. Just booked jobs.",
                 "Your AI receptionist speaks like your best CSR.",
             ],

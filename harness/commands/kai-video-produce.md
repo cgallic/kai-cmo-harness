@@ -504,9 +504,9 @@ This release includes 3 major features and 12 improvements based on your feedbac
 
 ## Scene 7: CTA (5s)
 
-Try KaiCalls free for 14 days. No credit card required.
+Start your free trial today.
 
-[VISUAL: "Start Free Trial" with URL kaicalls.com]
+[VISUAL: "Start Free Trial" with the product URL]
 
 ---
 

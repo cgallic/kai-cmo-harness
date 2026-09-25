@@ -131,12 +131,12 @@
 
 ---
 
-## KaiCalls per Location
+## Phone Answering per Location
 
 > **Why it matters:** Every missed call at any location is a lost lead. Multi-location businesses need consistent call handling across all locations while capturing location-level data for performance management.
 
-- [ ] KaiCalls AI receptionist (`kaicalls.com`) configured for each location
-- [ ] Each location's KaiCalls instance trained on location-specific data: services offered, business hours, team members, physical address, and service area
+- [ ] An AI receptionist or answering service configured for each location
+- [ ] Each location's phone answering setup trained on location-specific data: services offered, business hours, team members, physical address, and service area
 - [ ] Location-specific FAQs and common questions loaded into each instance
 - [ ] Centralized notification routing configured with location tagging (every lead tagged to its originating location)
 - [ ] Call handling experience is consistent across all locations (same greeting structure, qualification flow, and professionalism)
@@ -146,7 +146,7 @@
 - [ ] Scheduling integration configured per location (connecting to each location's calendar or booking system)
 - [ ] Test calls completed at every location to verify conversation quality and data accuracy
 - [ ] Spanish language support (or other relevant languages) configured where the market requires it
-- [ ] New location onboarding includes KaiCalls setup as a standard step
+- [ ] New location onboarding includes phone answering setup as a standard step
 
 ---
 
@@ -198,7 +198,7 @@
 - [ ] Customer experience consistency measured across locations (NPS, CSAT, or equivalent by location)
 - [ ] Staff training standardized with consistent onboarding materials
 - [ ] Technology stack consistent across locations (POS, CRM, booking system, phone system)
-- [ ] New location launch marketing playbook documented (GBP setup, local pages, citations, paid media, KaiCalls, review generation kickoff)
+- [ ] New location launch marketing playbook documented (GBP setup, local pages, citations, paid media, phone answering, review generation kickoff)
 - [ ] New location launch timeline defined with marketing milestones
 - [ ] Location closure or rebrand process documented (redirect URLs, update citations, transfer reviews where possible, update schema)
 - [ ] Consistent service/product offerings with documented local exceptions
@@ -218,7 +218,7 @@ Rate each section 1-5:
 | Review Management at Scale | | 4x | /20 | Strongest trust signal at scale |
 | Location-Level Reporting | | 3x | /15 | Enables per-unit optimization |
 | Local Paid Media | | 3x | /15 | Geo-targeted demand generation |
-| KaiCalls per Location | | 3x | /15 | Missed calls = lost revenue at every location |
+| Phone Answering per Location | | 3x | /15 | Missed calls = lost revenue at every location |
 | Local SEO at Scale | | 3x | /15 | Long-term compounding visibility |
 | Social Media per Location | | 2x | /10 | Local relevance and trust |
 | Operational Consistency | | 2x | /10 | Marketing ROI depends on experience quality |

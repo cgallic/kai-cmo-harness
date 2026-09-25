@@ -873,7 +873,7 @@ class AnomalyDetector:
             "phone_calls": [
                 "Call routing or IVR system changed",
                 "Business hours or staffing changed",
-                "KaiCalls AI receptionist configuration updated",
+                "AI receptionist or answering service configuration updated",
             ],
             "email": [
                 "Email frequency or cadence changed",
@@ -917,7 +917,7 @@ class AnomalyDetector:
             "phone_calls": [
                 "Phone number disconnected or ported incorrectly",
                 "Call tracking provider outage",
-                "KaiCalls AI receptionist disconnected",
+                "AI receptionist or answering service disconnected",
                 "VoIP system failure",
             ],
             "email": [
@@ -1006,7 +1006,7 @@ class AnomalyDetector:
                 "Phone system outage or routing error",
                 "Business hours changed without updating ads",
                 "Call tracking number expired",
-                "KaiCalls AI receptionist misconfigured",
+                "AI receptionist or answering service misconfigured",
             ],
             "email": [
                 "Domain or IP blacklisted",
@@ -1073,7 +1073,7 @@ class AnomalyDetector:
             "phone_calls": [
                 "Test all published phone numbers end-to-end",
                 "Check call tracking dashboard for routing issues",
-                "Review KaiCalls AI receptionist logs for errors",
+                "Review AI receptionist or answering service logs for errors",
             ],
             "general": [
                 "Check all data source connections and API health",

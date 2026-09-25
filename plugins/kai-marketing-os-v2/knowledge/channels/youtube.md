@@ -61,7 +61,7 @@ GOOD:
 
 BAD:
   "Our Amazing New Product!"
-  "KaiCalls Overview"
+  "Acme Product Overview"
   "Weekly Update #47"
 ```
 
@@ -203,7 +203,7 @@ Before publishing or scheduling YouTube content:
         "The average law firm misses 40% of calls. That's $200K in lost revenue."
 
 [15-25s] SOLUTION
-         "KaiCalls AI answers every call in 0.4 seconds, 24/7."
+         "[Product] answers every call in 0.4 seconds, 24/7."
          (Show product in action — screen recording or demo)
 
 [25-30s] PROOF

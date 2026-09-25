@@ -84,7 +84,7 @@ Default assets:
 
 - Missed-call risk brief.
 - Speed-to-lead workflow.
-- KaiCalls fit review with ownership disclosure.
+- Phone capture fit review (no vendor named by default).
 - Alternative options comparison.
 
 ## Enterprise ABM SDR

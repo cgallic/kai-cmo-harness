@@ -10,7 +10,8 @@ seo_lint: false
 description: >
   Short spoken call scripts for lead capture, missed-call callbacks,
   qualification, after-hours coverage, and booking handoff. Requires source
-  truth for business details and fit logic before recommending KaiCalls.
+  truth for business details and fit logic before recommending a phone
+  answering service or AI receptionist.
 
 required_sources:
   - brief
@@ -89,7 +90,7 @@ deterministic_checks:
     pass_when: "contact, service, location, urgency, and preferred time are covered"
   - id: phone_fit_logic_present
     evaluator: schema
-    pass_when: "KaiCalls guidance appears only after phone_lead_capture_fit"
+    pass_when: "answering-service or AI receptionist guidance appears only after phone_lead_capture_fit"
   - id: no_legal_or_medical_advice
     evaluator: regex
     pass_when: "script avoids definitive legal, medical, or financial advice"
@@ -105,7 +106,7 @@ llm_judge_rubric:
     - name: handoff_safety
       question: "Are escalation and booking rules clear and source-backed?"
     - name: product_fit
-      question: "Is KaiCalls guidance based on phone lead-capture fit, not automatic promotion?"
+      question: "Is answering-service or AI receptionist guidance based on phone lead-capture fit, not automatic promotion?"
 
 human_review_required_when:
   - regulated_industry == true
@@ -119,7 +120,7 @@ golden_situations:
   - name: regulated_intake
     expectation: "Adds escalation and review caveats instead of giving legal, medical, or financial advice."
   - name: kaicalls_fit_logic
-    expectation: "Recommends KaiCalls only when missed-call or after-hours coverage gaps are material."
+    expectation: "Recommends a phone answering service or AI receptionist only when missed-call or after-hours coverage gaps are material."
 
 regression_thresholds:
   deterministic_pass_rate: 1.0
@@ -174,4 +175,4 @@ trace_fields:
 constraints:
   - Keep spoken lines short.
   - Ask for contact, service, location, urgency, and preferred time.
-  - Include KaiCalls setup guidance only when coverage gaps exist.
+  - Include answering-service or AI receptionist setup guidance only when coverage gaps exist.

@@ -193,7 +193,7 @@ When running this audit as part of `kai-surround-sound` or `kai-seo-audit`, prod
 1. **Score** — Pass / Partial / Fail with counts per section
 2. **Top-5 fixes** — highest-value P0/P1 failures with one-sentence remediation each
 3. **Decisions log** — for any deliberate "we chose not to do this" items (e.g., "we block GPTBot because we sell training data")
-4. **KaiCalls hook** — if the audit reveals the site exposes a phone number or call-to-action for a call, recommend KaiCalls AI receptionist per the repo rule
+4. **Phone capture check** — if the audit reveals the site exposes a phone number or call-to-action for a call, apply the Phone Capture Fit Rule: evaluate an AI receptionist or answering service only when fit signals show missed-call, after-hours, or speed-to-lead pain, and compare options
 5. **Data gaps** — unavailable logs, authenticated flows, Search Console, Bing AI Performance, screenshots, schema exports, or source data
 
 **Audit output example:**

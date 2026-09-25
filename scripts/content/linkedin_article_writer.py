@@ -49,7 +49,8 @@ Products (reference accurately):
 - Awesome Backyard Parties (awesomebackyardparties.com) — party rental lead marketplace
 - Starrs Party (starrsparty.com) — NJ tent + party rental company
 - VocalScribe (vocalscribe.xyz) — voice transcription
-- MeetKai (meetkai.xyz) — AI CMO agent system showcase
+- Meet Kai (meetkai.xyz) — the business phone company behind KaiCalls
+- Talk To Gina (talktogina.ai) — Connor co-founded it; it runs this marketing harness as a service
 
 Do NOT include MRR or specific revenue figures.
 """
@@ -149,7 +150,7 @@ Real industry pain points (grounded in research):
             "How to Know Which Tasks to Automate and Which Ones to Keep",
             "The Daily Report That Runs at 8am Whether I'm Awake or Not",
             "Why Discord Is My Ops Dashboard (And How That Setup Works)",
-            "What 'AI CMO' Actually Means in Practice — No Hype Version",
+            "What a Marketing Harness Actually Does in Practice — No Hype Version",
         ]
     },
     {

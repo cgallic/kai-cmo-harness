@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Static Site Publisher
+Marketing Harness — Static Site Publisher
 =========================================
 Write markdown files with frontmatter for Hugo, Jekyll, Astro, or any static site generator.
 

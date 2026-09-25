@@ -17,12 +17,12 @@ This template enables rapid deployment of the TAM Domination cold email system f
 # Complete all fields before starting automation
 
 company:
-  name: ""                    # e.g., "Kai Calls"
-  website: ""                 # e.g., "kaicalls.com"
+  name: ""                    # e.g., "Acme Reception"
+  website: ""                 # e.g., "acmereception.example"
   product_type: ""            # SaaS, Service, Agency, etc.
   price_point: ""             # e.g., "$300/mo"
   trial_available: true/false
-  trial_url: ""               # e.g., "https://kaicalls.com/trial"
+  trial_url: ""               # e.g., "https://acmereception.example/trial"
 
 value_proposition:
   one_liner: ""               # 10 words max
@@ -48,16 +48,16 @@ existing_assets:
   data_points: []             # Statistics you can cite
 ```
 
-### Example (Kai Calls)
+### Example (illustrative AI receptionist)
 
 ```yaml
 company:
-  name: "Kai Calls"
-  website: "kaicalls.com"
+  name: "Acme Reception"
+  website: "acmereception.example"
   product_type: "SaaS"
   price_point: "$300/mo"
   trial_available: true
-  trial_url: "https://kaicalls.com/trial"
+  trial_url: "https://acmereception.example/trial"
 
 value_proposition:
   one_liner: "AI receptionist that never misses a call"
@@ -221,7 +221,7 @@ def generate_domains(brand_name: str, count: int = 100) -> List[str]:
     Generate domain name variants for a brand.
 
     Args:
-        brand_name: Core brand name (e.g., "kaicalls")
+        brand_name: Core brand name (e.g., "acmereception")
         count: Number of domains to generate
 
     Returns:
@@ -280,7 +280,7 @@ def check_availability(domains: List[str]) -> dict:
 if __name__ == "__main__":
     import sys
 
-    brand = sys.argv[1] if len(sys.argv) > 1 else "kaicalls"
+    brand = sys.argv[1] if len(sys.argv) > 1 else "acmereception"
     count = int(sys.argv[2]) if len(sys.argv) > 2 else 50
 
     domains = generate_domains(brand, count)
@@ -472,7 +472,7 @@ def export_to_smartlead_format(variants: List[Dict]) -> str:
 if __name__ == "__main__":
     # Example usage
     intake = ClientIntake(
-        company_name="Kai Calls",
+        company_name="Acme Reception",
         one_liner="AI receptionist that never misses a call",
         problem_solved="67% of callers who hit voicemail never call back",
         proof_point="One PI firm signed 40% more cases after switching",

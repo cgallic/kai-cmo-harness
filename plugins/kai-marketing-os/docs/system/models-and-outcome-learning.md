@@ -86,7 +86,7 @@ serialize feedback, preserving one settlement per decision.
 
 Set KAI_RL_DB to the persistent SQLite file, then add rl_experiment to the goal's
 metadata. The brand, KPI and direction come from the goal. Example structure
-(values are illustrative, not KaiCalls results):
+(values are illustrative, not real results):
 
 ```json
 {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness - Brand Pulse
+Marketing Harness - Brand Pulse
 =============================
 Multi-platform brand intelligence collector for /kai-brand-pulse.
 

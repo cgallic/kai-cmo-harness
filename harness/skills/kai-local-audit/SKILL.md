@@ -74,7 +74,7 @@ Structure and section list: playbook §4. Required:
 4. **Offers** — `/kai-offer-builder` doctrine; seven slots; prices built on the measured shipping and fees; every price marked as a proposal to check against costs.
 5. **Changes** — by owner: code, copy (all languages), commerce admin, Google Business Profile, DNS, social and partner asks.
 6. **12-week plan** — starts next Monday; owner and developer columns; "done when"; seasonal peaks from the volume pull; targets table with the re-run date.
-7. **Phone and follow-up** — KaiCalls Fit Rule: disclose that KaiCalls is Kai-owned, compare alternatives, and say plainly when it is not the first fix.
+7. **Phone and follow-up** — Phone Capture Fit Rule: compare alternatives, and say plainly when it is not the first fix.
 
 Write in the house voice: no announced lists, no dramatic fragments, no "not X but Y". Render as a single self-contained HTML page (`/kai-html-presentation` or the house strategy-page format) with `noindex,nofollow,noarchive` if it will be hosted.
 

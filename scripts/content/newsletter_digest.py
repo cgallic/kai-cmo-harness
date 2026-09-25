@@ -122,7 +122,7 @@ def generate_digest(highlights, week_num=1):
 
     subjects = {
         1: "I stopped doing marketing. Here's what replaced it.",
-        2: "6 weeks of AI CMO — the actual numbers.",
+        2: "6 weeks of running a marketing harness — the actual numbers.",
         3: "Virtual headcount: what continuous per-agent learning means for small teams.",
         4: "What I'd charge an agency vs what this costs me.",
     }
@@ -161,13 +161,13 @@ The system I run now:
 - Runs cold outreach in the background while I work on product
 - Sends me a daily brief at 8am before I open my laptop
 
-It's called Kai. An AI CMO built on OpenClaw. Runs on a $20/month VPS and costs less per month than one hour with a marketing consultant.
+It's called Kai, an open-source marketing harness. Runs on a $20/month VPS and costs less per month than one hour with a marketing consultant.
 
 Last week it processed 57 leads, published 4 posts, and flagged a $493 MRR spike before I noticed it.
 
-I'm documenting how it works — the architecture, the data layer, the actual outputs — at meetkai.xyz.
+I'm documenting how it works — the architecture, the data layer, the actual outputs — at github.com/cgallic/kai-cmo-harness.
 
-If you're running multiple products and marketing is the gap, I'm opening it up to a small number of operators: meetkai.xyz/apply
+If you're running multiple products and marketing is the gap, Talk To Gina runs it as a service: talktogina.ai
 
 Next week: the actual numbers from 6 weeks of running this.
 

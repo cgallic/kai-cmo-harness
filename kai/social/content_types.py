@@ -476,7 +476,7 @@ CONTENT_TYPE_TEMPLATES[_tkey("proof_post", "facebook")] = ContentTypeTemplate(
     ],
     cta_options=[
         "Click the link below to get a free quote for your project.",
-        "Call us at {phone} — we answer 24/7 with KaiCalls.",
+        "Call us at {phone} — we answer 24/7.",
         "Share this with someone who's been putting off their {service}.",
         "Drop a comment and we'll send you a before/after gallery.",
         "Message us directly for a same-week estimate.",
@@ -787,7 +787,7 @@ CONTENT_TYPE_TEMPLATES[_tkey("local_tip_post", "facebook")] = ContentTypeTemplat
     cta_options=[
         "What's your biggest {topic} frustration? Tell us in the comments.",
         "Share this with someone who could use this tip.",
-        "Call {phone} if you need help — we answer every call with KaiCalls.",
+        "Call {phone} if you need help — we answer every call.",
         "Has this happened to you? Drop your story below.",
         "Like this page for weekly tips from a local {industry} pro.",
     ],

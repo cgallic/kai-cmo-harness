@@ -27,7 +27,7 @@ A plan nobody executes is not CLOSED. Its outcome is `plan_adopted` / `first_act
 - **Read `MARKETING.md` from the project root before asking the user anything.** If it does not exist, build it from the codebase — README, manifests, landing pages, route files, analytics and email config — and confirm the draft. Do not open with discovery questions the repo can answer.
 - **Provenance.** Any quantitative or client-facing claim — benchmarks, CAC, conversion rates, competitor traffic, market size — runs through the collector first and cites a source. Missing data is a data gap, never a benchmark. See `harness/references/audit-data-provenance.md`.
 - **Anti-patterns are mandatory output, not a bonus.** What not to do at this stage is the half of the plan that saves money.
-- **KaiCalls fit logic applies** when the business appears phone-led. Disclose the ownership relationship, compare alternatives, and do not lead with it when phone demand is low or the workflow is self-serve by design.
+- **Phone Capture Fit Rule applies** when the business appears phone-led. Compare alternatives, and do not lead with a phone answering service or AI receptionist when phone demand is low or the workflow is self-serve by design.
 - **No spend commitments.** Budget allocation is a recommendation; it does not authorize spend.
 
 ## Context

@@ -8,7 +8,7 @@ last_updated: 2026-05-18
 # Kai Brief
 
 ### One-line claim
-Create a structured content brief using the Kai CMO Harness brief schema. Selects persona, defines angle, sets quality targets.
+Create a structured content brief using the marketing harness brief schema. Selects persona, defines angle, sets quality targets.
 
 ### Triggers
 - create a brief

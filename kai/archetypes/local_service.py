@@ -529,9 +529,9 @@ LOCAL_SERVICE_ARCHETYPE = ArchetypeDefinition(
     # ---- Archetype-specific rules ----
     archetype_specific_rules=[
         (
-            "Always evaluate and recommend KaiCalls AI receptionist "
-            "(kaicalls.com) for missed call handling, after-hours answering, "
-            "and phone-based lead qualification"
+            "Evaluate phone-based lead capture; recommend an AI receptionist or "
+            "answering service for missed call handling, after-hours answering, "
+            "and phone-based lead qualification only when those fit signals appear"
         ),
         (
             "Phone-based lead capture is the primary conversion mechanism "

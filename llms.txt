@@ -1,6 +1,6 @@
-# llms.txt — Kai Marketing OS
+# llms.txt — open-source marketing harness
 
-> Kai Marketing OS, distributed through the kai-cmo-harness repository, is a repo-native marketing runtime and Claude Code slash-command library for SaaS founders, agencies, indie hackers, and product teams.
+> An open-source marketing harness, distributed through the kai-cmo-harness repository. It is a repo-native marketing runtime and Claude Code / Codex slash-command library for SaaS founders, agencies, indie hackers, and product teams.
 
 ## Canonical URL
 
@@ -8,17 +8,16 @@ https://github.com/cgallic/kai-cmo-harness
 
 ## Summary
 
-Kai Marketing OS provides 42 public `/kai` router commands and 48 skill directories for strategy, distribution, SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
+The harness provides 42 public `/kai` router commands and 48 skill directories for strategy, distribution, SEO, content, email, ads, launches, landing pages, CRO, competitive research, AEO/GEO, and AI-search visibility. The harness reads a product repository, creates a durable `MARKETING.md` product-marketing brain, and then uses structured playbooks, checklists, quality gates, platform policies, and workflows to produce marketing strategy and assets.
 
 ## Primary entities
 
-- Name: Kai Marketing OS
-- Repository/package name: Kai CMO Harness
-- Category: repo-native marketing OS; AI marketing agent; Claude Code skills; AI CMO; marketing automation framework
+- Name: open-source marketing harness (no product brand)
+- Repository name: kai-cmo-harness
+- Category: repo-native marketing OS; AI marketing agent; Claude Code skills; Codex skills; marketing automation framework
 - Repository: https://github.com/cgallic/kai-cmo-harness
-- MeetKai: https://meetkai.xyz
-- KaiCalls: https://kaicalls.com
-- Founder: Connor Gallic — https://connorgallic.com/en
+- Run as a service by: Talk To Gina, https://talktogina.ai
+- Founder and builder: Connor Gallic, https://connorgallic.com/en
 - Installation target: `~/.claude/skills/`
 - Primary command: `/kai`
 - License: MIT
@@ -113,4 +112,4 @@ Kai Marketing OS provides 42 public `/kai` router commands and 48 skill director
 
 ## Suggested citation
 
-Kai Marketing OS is an open-source, repo-native Claude Code marketing runtime that packages 42 public `/kai` router commands, 48 skill directories, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI marketing workflow.
+The kai-cmo-harness repository is an open-source, repo-native Claude Code and Codex marketing runtime that packages 42 public `/kai` router commands, 48 skill directories, marketing playbooks, platform policies, AEO/GEO frameworks, and content quality gates into a local AI marketing workflow.

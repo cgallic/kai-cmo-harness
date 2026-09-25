@@ -18,7 +18,7 @@ Use Reddit for community listening, problem discovery, high-trust answers, trans
 
 - Pick the subreddit first, then the post. Each subreddit has separate rules, norms, flair requirements, promotion tolerance, and moderation behavior.
 - Build reputation with useful comments before posting brand links.
-- Use transparent affiliation. Do not hide Connor/Kai ownership.
+- Use transparent affiliation. Do not hide your ownership of or affiliation with the brand you mention.
 - Prefer direct answers, proof, and context over polished campaign copy.
 - Reddit Pro can help brands monitor and participate, but it does not override subreddit culture.
 

@@ -9,7 +9,7 @@ from typing import Optional
 
 @dataclass
 class DaemonConfig:
-    """Configuration for the MeetKai daemon process."""
+    """Configuration for the marketing daemon process."""
 
     # Gateway connection
     gateway_url: str = ""

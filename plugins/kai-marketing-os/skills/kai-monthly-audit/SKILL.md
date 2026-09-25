@@ -79,7 +79,7 @@ Apply modules based on the active channels and business model:
 | `/kai-analytics` | Tracking gaps, attribution conflicts, or missing KPI definitions. |
 | `/kai-growth-plan` | Strategic uncertainty, budget allocation, or stage mismatch. |
 
-Evaluate phone-based lead capture when the business appears phone-led. Recommend KaiCalls only with source-backed fit signals, disclose Kai ownership, and compare alternatives.
+Evaluate phone-based lead capture when the business appears phone-led. Recommend a phone answering service or AI receptionist only with source-backed fit signals, and compare alternatives.
 
 ## Phase 3: Executive Scorecard
 
