@@ -165,6 +165,61 @@ def test_collect_candidates_claims_failed_paid_query_before_call(tmp_path, monke
     ] == 0.02
 
 
+def _retry_profile():
+    return {
+        "subreddits": [],
+        "posts_per_sub": 10,
+        "search_queries": ["one"],
+        "search_results_per_query": 10,
+        "search_daily_query_cap": 8,
+        "search_max_daily_cost_usd": 1.0,
+        "search_cost_guard_per_query_usd": 0.02,
+        "trigger_keywords": ["missed calls"],
+        "seen_limit": 100,
+    }
+
+
+def test_provider_40101_gets_exactly_one_same_day_retry(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(digest, "fetch_subreddit", lambda *args: [])
+
+    def se_error(query, *args):
+        calls.append(query)
+        raise RuntimeError("DataForSEO task error 40101: Internal SE Server Error.")
+
+    monkeypatch.setattr(digest, "fetch_google_search", se_error)
+    seen_path = tmp_path / "seen.json"
+    for _ in range(3):
+        digest.collect_candidates(_retry_profile(), seen_path)
+
+    assert calls == ["one", "one"]
+    state = json.loads(seen_path.read_text(encoding="utf-8"))
+    today = digest.date.today().isoformat()
+    assert state["search_queries_retried_on"] == {"one": today}
+    assert state["search_queries_attempted_on"] == {"one": today}
+
+
+def test_provider_40101_retry_that_succeeds_counts_as_checked(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(digest, "fetch_subreddit", lambda *args: [])
+
+    def flaky(query, *args):
+        calls.append(query)
+        if len(calls) == 1:
+            raise RuntimeError("DataForSEO task error 40101: Internal SE Server Error.")
+        return [], 0.01
+
+    monkeypatch.setattr(digest, "fetch_google_search", flaky)
+    seen_path = tmp_path / "seen.json"
+    digest.collect_candidates(_retry_profile(), seen_path)
+    digest.collect_candidates(_retry_profile(), seen_path)
+    digest.collect_candidates(_retry_profile(), seen_path)
+
+    assert calls == ["one", "one"]
+    state = json.loads(seen_path.read_text(encoding="utf-8"))
+    assert state["search_queries_checked_on"] == {"one": digest.date.today().isoformat()}
+
+
 def test_collect_candidates_stops_before_daily_budget(tmp_path, monkeypatch):
     calls = []
     monkeypatch.setattr(digest, "fetch_subreddit", lambda *args: [])

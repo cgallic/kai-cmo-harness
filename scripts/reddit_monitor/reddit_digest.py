@@ -303,10 +303,17 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
     attempted = seen.get("search_queries_attempted_on")
     if not isinstance(attempted, dict):
         attempted = {}
+    # Queries already given their one same-day retry after a provider 40101.
+    # They count as attempts: DataForSEO bills a 40101 (help-center "What does
+    # the 40101 error mean?"), so each failed call is real spend under the cap.
+    retried = seen.get("search_queries_retried_on")
+    if not isinstance(retried, dict):
+        retried = {}
     daily_cost = float((seen.get("search_cost_usd_by_date") or {}).get(day) or 0)
     max_daily_cost = float(profile.get("search_max_daily_cost_usd", 1.0))
     cost_guard = float(profile.get("search_cost_guard_per_query_usd", 0.01))
     attempts_today = sum(value == day for value in attempted.values())
+    attempts_today += sum(value == day for value in retried.values())
     queries = expanded_search_queries(profile)[:profile["search_daily_query_cap"]]
     for query in queries:
         if checked.get(query) == day or attempted.get(query) == day:
@@ -336,6 +343,21 @@ def collect_candidates(profile: dict, seen_path: Path) -> list[dict]:
             )
         except Exception as exc:
             print(f"  ! error fetching Google query {query!r}: {exc}")
+            # 40101 = "Internal SE Server Error": the search engine failed on
+            # DataForSEO's side after their own retries. On 2026-09-25 five of
+            # ten queries hit it at 08:00 and, claimed before the call, were
+            # never tried again that day, so kaicalls-google-opportunity-search-
+            # daily read 5 < 8. Release the claim ONCE so a later hourly run
+            # retries it; a second 40101 the same day stays claimed. Any other
+            # failure keeps the original no-retry rule.
+            if "40101" in str(exc) and retried.get(query) != day:
+                retried[query] = day
+                attempted.pop(query, None)
+                seen["search_queries_retried_on"] = dict(
+                    sorted(retried.items(), key=lambda item: item[1])[-200:]
+                )
+                seen["search_queries_attempted_on"] = attempted
+                write_json(seen_path, seen)
             continue
         checked[query] = day
         daily_cost += cost
