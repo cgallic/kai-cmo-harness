@@ -19,9 +19,9 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 60,
+    "skill_directories": 61,
     "canonical_kai_skills": 58,
-    "v2_goal_oriented_skills": 60,
+    "v2_goal_oriented_skills": 61,
     "public_router_commands": 53,
     "public_manifest_pages": 49,
     "undocumented_canonical_skills": 9,
@@ -30,7 +30,7 @@
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
-    "harness_references": 40,
+    "harness_references": 41,
     "skill_contracts": 36
   },
   "coverage": {

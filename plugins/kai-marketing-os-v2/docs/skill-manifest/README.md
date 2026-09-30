@@ -107,7 +107,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 | Surface | Count | Notes |
 |---|---:|---|
 | Canonical `harness/skills/kai-*` pages | 46 | One manifest page per canonical public `kai-*` skill page. |
-| Router/helper directories excluded | 2 | `harness/skills/kai` and `harness/skills/kaicalls-design`. |
+| Router/helper directories excluded | 3 | `harness/skills/kai`, `harness/skills/kaicalls-design`, and `harness/skills/design-taste-frontend` (third-party: [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), MIT, vendored unmodified; see its `UPSTREAM.md` and `LICENSE`). |
 | Public router commands listed by `/kai` | 42 | Router-visible commands remain separate from the full canonical skill inventory. |
 | Manifest rule IDs | 82 | Defined in `rule-registry.md`; derived from local methodology docs. |
 | Skills with real repo-local example artifacts | 22 | Listed in `example-artifacts.md`. |

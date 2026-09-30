@@ -50,6 +50,11 @@ def _minimal_tree(root: Path) -> None:
 
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
+    # Re-baselined 2026-09-30 (second): design-taste-frontend added, a third-party
+    # (MIT) non-kai skill dir in v1 + v2. Only skill_directories and
+    # v2_goal_oriented_skills move; no router row, no manifest page. Also counts
+    # harness/references/motion-spot-brand-audio.md (9028945), which landed
+    # without a regen and left the self-check red.
     # Re-baselined 2026-09-30: kai-motion-spot added (v1 + v2 skill, router row,
     # manifest page, harness/references/motion-spot-method.md and
     # motion-spot-service-playbook.md).
@@ -62,9 +67,9 @@ def test_current_inventory_is_derived_from_live_sources():
     # red on main from 2026-07-31. Bump these numbers deliberately when a
     # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 60,
+        "skill_directories": 61,
         "canonical_kai_skills": 58,
-        "v2_goal_oriented_skills": 60,
+        "v2_goal_oriented_skills": 61,
         "public_router_commands": 53,
         "public_manifest_pages": 49,
         "undocumented_canonical_skills": 9,
@@ -73,7 +78,7 @@ def test_current_inventory_is_derived_from_live_sources():
         "framework_docs": 38,
         "channel_guides": 31,
         "audience_persona_profiles": 8,
-        "harness_references": 40,
+        "harness_references": 41,
         "skill_contracts": 36,
     }
     assert inventory["coverage"]["unresolved_router_commands"] == []
