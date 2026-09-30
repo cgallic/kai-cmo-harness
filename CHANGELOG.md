@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — 2026-09-30
+
+**Plugin ships the DataForSEO local-audit collector.** `/kai-local-audit` in the `kai` and `kai-v2` plugins now carries its own stdlib-only collector — `scripts/local_audit/` (located SERPs, map packs, volumes, listings, reviews, backlinks, AI answers, crawl, Lighthouse, direct checks), `scripts/audit/` (provenance collector) and `examples/local-audit-config.example.json` — so plugin installs run located pulls instead of falling back to qualitative mode. Credentials come only from `DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD`. The skill now states how to run the modules from the plugin root, the every-search-in-every-market-language rule, the ~$8-per-run cost with caching, private hosting (noindex, unguessable URL, your own host), and that internal economics never appear on a customer-facing page. Also re-syncs the plugin copies of `scripts/reddit_monitor/`, which had drifted and failed the plugin-sync check on `main`.
+
 ## Unreleased — 2026-07-29
 
 **New skill: `/kai-gtm-pack`** — package a client GTM engagement as a cross-linked set of private HTML pages topped by a client hub (the arrangement/ask, tool install for the client's setup, access grants as click-paths, and the ordered signup checklist with verified URLs). Encodes the verify-numbers-before-reuse rule (re-pull keyword figures fresh before planning), the hub-last build order, and the guest-facing vs internal linking boundary. Registered in the `/kai` router (PLAN) and the README strategy table.
