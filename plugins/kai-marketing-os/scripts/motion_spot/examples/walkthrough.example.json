@@ -1,0 +1,164 @@
+{
+ "name": "walk-dashboard",
+ "format": "16x9",
+ "dur": 27.0,
+ "css": {
+  "--royal": "#2F5BEA",
+  "--font": "Inter"
+ },
+ "title": {
+  "t1": 3.95,
+  "kicker": "Your Product",
+  "text": "Everything in|*one place*",
+  "logo": "assets/logo.png"
+ },
+ "end": {
+  "t0": 24.0,
+  "text": "See it *live*",
+  "logo": "assets/lockup.png"
+ },
+ "shots": [
+  {
+   "img": "dashboard_full",
+   "t0": 4,
+   "t1": 8,
+   "cam": [
+    [
+     4,
+     784,
+     382,
+     1.03
+    ],
+    [
+     8,
+     800,
+     360,
+     1.12
+    ]
+   ],
+   "rise": true
+  },
+  {
+   "img": "dashboard_stats",
+   "t0": 8,
+   "t1": 16,
+   "cam": [
+    [
+     8,
+     455,
+     92,
+     1.52
+    ],
+    [
+     16,
+     455,
+     92,
+     1.64
+    ]
+   ],
+   "calls": [
+    [
+     8.8,
+     15.6,
+     [
+      116,
+      30
+     ],
+     0,
+     -64,
+     "Every task"
+    ],
+    [
+     9.8,
+     15.6,
+     [
+      342,
+      30
+     ],
+     0,
+     -64,
+     "Every run"
+    ]
+   ]
+  },
+  {
+   "img": "dashboard_list",
+   "t0": 16,
+   "t1": 24,
+   "cam": [
+    [
+     16,
+     568,
+     205,
+     1.42
+    ],
+    [
+     20,
+     568,
+     205,
+     1.48
+    ],
+    [
+     21.2,
+     284,
+     537,
+     1.5
+    ],
+    [
+     24,
+     284,
+     537,
+     1.56
+    ]
+   ],
+   "spots": [
+    [
+     16.3,
+     19.9,
+     [
+      8,
+      140,
+      1128,
+      282
+     ]
+    ]
+   ],
+   "calls": [
+    [
+     21.6,
+     23.9,
+     [
+      505,
+      389
+     ],
+     70,
+     0,
+     "Done, and marked done"
+    ]
+   ]
+  }
+ ],
+ "caps": [
+  [
+   4.5,
+   7.8,
+   "Everything it did,",
+   "*on one page*"
+  ],
+  [
+   8.4,
+   15.6,
+   "Your week, *in numbers*"
+  ],
+  [
+   16.4,
+   19.8,
+   "What needs you comes *first*"
+  ],
+  [
+   21.4,
+   23.8,
+   "What *got done*"
+  ]
+ ]
+}

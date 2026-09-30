@@ -19,18 +19,18 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 59,
-    "canonical_kai_skills": 57,
-    "v2_goal_oriented_skills": 59,
-    "public_router_commands": 52,
-    "public_manifest_pages": 48,
+    "skill_directories": 60,
+    "canonical_kai_skills": 58,
+    "v2_goal_oriented_skills": 60,
+    "public_router_commands": 53,
+    "public_manifest_pages": 49,
     "undocumented_canonical_skills": 9,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
-    "harness_references": 38,
+    "harness_references": 40,
     "skill_contracts": 36
   },
   "coverage": {
@@ -93,6 +93,11 @@
       "name": "kai-video",
       "category": "produce",
       "description": "Video scripts + clipping plans for short/long-form"
+    },
+    {
+      "name": "kai-motion-spot",
+      "category": "produce",
+      "description": "Code-rendered launch spots, screenshot walkthroughs and pain-point videos: hype score cut on the drop, web encodes, embed kit, service playbook"
     },
     {
       "name": "kai-cold-outreach",
@@ -566,6 +571,14 @@
       "public_router_command": true,
       "router_category": "audit",
       "manifest_doc": "docs/skill-manifest/kai-monthly-audit.md"
+    },
+    {
+      "name": "kai-motion-spot",
+      "description": "Code-rendered motion video for a product or a client, built the way a motion studio would do it. Every frame comes from an HTML seek(t) page rendered by Playwright at 1080p60 with real motion blur, using real product UI and screenshots with a privacy blur, and an ElevenLabs hype score cut on bar lines with its drop verified on the reveal. Three formats — a 20-30 s hype launch spot, a polished feature walkthrough from real screenshots, and a 19 s pain-point video with a muted site cut and burned-in text. Delivered with baked posters, H.264 + VP9 web encodes at 1280 px (1.5-3 MB), a site-embed kit (muted autoplay or click-to-play), 9:16 social re-layouts and share copy, plus a service playbook for selling it. Use when \"make a launch video\", \"make a commercial / promo / ad spot\", \"motion design video\", \"product walkthrough video from screenshots\", \"pain point videos for the site\", \"videos for the homepage\", \"sell video production\", \"price a video package\", or a polished brand spot is wanted rather than a talking-head edit or a Remotion template batch (use /kai-video-production for those).",
+      "source": "harness/skills/kai-motion-spot/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-motion-spot.md"
     },
     {
       "name": "kai-newsletter",

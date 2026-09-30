@@ -1,0 +1,70 @@
+{
+ "dur": 12,
+ "bpm": 120,
+ "cues": [
+  {
+   "at": 0.5,
+   "sfx": "tick",
+   "freq": 1800,
+   "gain": 0.55
+  },
+  {
+   "at": 1.0,
+   "sfx": "tick",
+   "freq": 2000,
+   "gain": 0.55
+  },
+  {
+   "at": 1.5,
+   "sfx": "tick",
+   "freq": 2200,
+   "gain": 0.55
+  },
+  {
+   "at": 3.0,
+   "sfx": "riser",
+   "len": 1.0,
+   "align": "start",
+   "gain": 0.55
+  },
+  {
+   "at": 4.0,
+   "sfx": "thump",
+   "gain": 0.9
+  },
+  {
+   "at": 6.0,
+   "sfx": "whoosh",
+   "len": 0.45,
+   "gain": 0.6
+  },
+  {
+   "at": 8.0,
+   "sfx": "tick",
+   "freq": 2400,
+   "gain": 0.45
+  },
+  {
+   "at": 8.25,
+   "sfx": "tick",
+   "freq": 2400,
+   "gain": 0.45
+  },
+  {
+   "at": 8.5,
+   "sfx": "tick",
+   "freq": 2400,
+   "gain": 0.45
+  },
+  {
+   "at": 10.0,
+   "sfx": "thump",
+   "gain": 0.7
+  },
+  {
+   "at": 10.02,
+   "sfx": "chime",
+   "gain": 0.35
+  }
+ ]
+}

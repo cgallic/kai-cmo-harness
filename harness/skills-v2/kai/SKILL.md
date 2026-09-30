@@ -76,6 +76,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 | `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
 | `/kai-bulkpublish` | Approval-gated handoff of social content to BulkPublish |
 | `/kai-video` | Video scripts + clipping plans for short/long-form |
+| `/kai-motion-spot` | Code-rendered launch spots, screenshot walkthroughs and pain-point videos: hype score cut on the drop, web encodes, embed kit, service playbook |
 | `/kai-cold-outreach` | Cold email outreach sequences |
 | `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
 | `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
@@ -161,6 +162,7 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"I need a system"** → orchestrator skill (email-system, ad-campaign, content-calendar, launch)
 - **"What's wrong?"** → `/kai-audit` or `/kai-cro`
 - **"Audit this local business"** (a Maps/share.google/website link for someone else's business) → `/kai-local-audit`
+- **"Make a launch video / walkthrough videos / pain-point videos for the site"** or **"sell video production"** → `/kai-motion-spot`
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`

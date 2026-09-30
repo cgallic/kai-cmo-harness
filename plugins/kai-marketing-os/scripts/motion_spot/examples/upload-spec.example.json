@@ -1,0 +1,13 @@
+{
+ "video": "out/Spot_16x9.mp4",
+ "profile": "<upload-post profile>",
+ "platforms": [
+  "youtube",
+  "linkedin"
+ ],
+ "fields": {
+  "title": "<YouTube title from out/share-copy.txt>",
+  "youtube_description": "<1-3 sentence caption>",
+  "target_linkedin_page_id": "<client LinkedIn page id>"
+ }
+}
