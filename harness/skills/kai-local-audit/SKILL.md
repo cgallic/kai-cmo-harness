@@ -87,7 +87,7 @@ Write in the house voice: no announced lists, no dramatic fragments, no "not X b
 ## Phase 5: Localize and translate (when asked)
 
 - **Localized rerun:** playbook §5. Add a market section after the headlines and patch the plan and targets.
-- **Bilingual:** playbook §6. Parallel chunk translation with one brief and glossary, tag-signature comparison, language subpath and toggle.
+- **Translated page (only when asked; the research is multilingual whenever the market is):** playbook §6. Parallel chunk translation with one brief and glossary, tag-signature comparison, language subpath and toggle.
 
 ## Phase 6: Gate and hand off
 
