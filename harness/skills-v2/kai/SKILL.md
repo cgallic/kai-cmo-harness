@@ -164,6 +164,7 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"Audit this local business"** (a Maps/share.google/website link for someone else's business) → `/kai-local-audit`
 - **"Make a launch video / walkthrough videos / pain-point videos for the site"** or **"sell video production"** → `/kai-motion-spot`
 - **"Make this page look less AI-generated / less templated"** or **"redesign the site"** (landing pages, portfolios, marketing pages) → the `design-taste-frontend` skill (third-party, MIT, audit-first on redesigns)
+- **"Fix this button / error message / empty state copy"** or **"audit the UI strings"** (microcopy, forms, onboarding, voice and tone for an interface) → the `ux-writing` skill (third-party, MIT)
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`

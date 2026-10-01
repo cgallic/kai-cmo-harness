@@ -50,6 +50,9 @@ def _minimal_tree(root: Path) -> None:
 
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
+    # Re-baselined 2026-09-30 (third): ux-writing added, a third-party (MIT)
+    # non-kai skill dir in v1 + v2. Only skill_directories and
+    # v2_goal_oriented_skills move; no router row, no manifest page.
     # Re-baselined 2026-09-30 (second): design-taste-frontend added, a third-party
     # (MIT) non-kai skill dir in v1 + v2. Only skill_directories and
     # v2_goal_oriented_skills move; no router row, no manifest page. Also counts
@@ -67,9 +70,9 @@ def test_current_inventory_is_derived_from_live_sources():
     # red on main from 2026-07-31. Bump these numbers deliberately when a
     # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 61,
+        "skill_directories": 62,
         "canonical_kai_skills": 58,
-        "v2_goal_oriented_skills": 61,
+        "v2_goal_oriented_skills": 62,
         "public_router_commands": 53,
         "public_manifest_pages": 49,
         "undocumented_canonical_skills": 9,
