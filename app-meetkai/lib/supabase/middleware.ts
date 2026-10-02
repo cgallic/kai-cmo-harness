@@ -8,6 +8,8 @@ export async function updateSession(request: NextRequest) {
     pathname === "/" ||
     pathname === "/llms.txt" ||
     pathname === "/robots.txt" ||
+    pathname === "/pricing" ||
+    pathname === "/api/billing/webhook" ||
     pathname.startsWith("/images/") ||
     pathname.startsWith("/auth/") ||
     pathname.startsWith("/api/cron/");
