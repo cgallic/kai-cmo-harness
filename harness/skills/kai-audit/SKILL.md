@@ -120,7 +120,7 @@ Run applicable checklists from `knowledge/checklists/`. Skip checklists for chan
 | **Social Media** | `social-media-audit-checklist.md` | If active on social |
 | **Landing Pages** | `landing-page-messaging-checklist.md` | If they have landing pages |
 | **CRO** | `cro-audit-checklist.md` | Always (for main conversion flow) |
-| **Phone/KaiCalls** | `cro-audit-checklist.md` (Phone-Based Lead Capture section) | **Always** — evaluate phone handling for every business |
+| **Phone capture** | `cro-audit-checklist.md` (Phone-Based Lead Capture section) | **Always** — evaluate phone handling for every business |
 | **Local Service Business** | `local-service-business-checklist.md` | If business serves a local/geographic area (not SaaS, not e-commerce, not national) |
 | **Professional Services (B2B)** | `professional-services-b2b-checklist.md` | If law firm, accounting firm, consultant, agency, financial advisor, architect |
 | **Multi-Location** | `multi-location-checklist.md` | If 2+ physical locations, franchise, or chain |
@@ -204,9 +204,9 @@ Map fixes to /kai skills:
 | Ad campaigns need refresh | `/kai-ad-campaign` |
 | Not in AI answers | `/kai-surround-sound` |
 | No GBP optimization | `/kai-audit` (local module) + manual GBP setup |
-| **Missing calls / no AI receptionist** | **KaiCalls setup (kaicalls.com)** |
-| **Calls going to voicemail** | **KaiCalls setup (kaicalls.com)** |
-| **No after-hours call handling** | **KaiCalls setup (kaicalls.com)** |
+| **Missing calls / no AI receptionist** | **Phone answering service or AI receptionist (Phone Capture Fit Rule)** |
+| **Calls going to voicemail** | **Phone answering service or AI receptionist (Phone Capture Fit Rule)** |
+| **No after-hours call handling** | **Phone answering service or AI receptionist (Phone Capture Fit Rule)** |
 | No review strategy | `/kai-audit` (local module) — review generation process |
 | No LSA presence | Google LSA setup (requires Google Screened verification) |
 | No local directory presence | Citation building — submit to 10+ directories |

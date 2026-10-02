@@ -1,1 +1,1 @@
-"""MeetKai Daemon — autonomous marketing agent executor."""
+"""Marketing daemon — autonomous marketing agent executor."""

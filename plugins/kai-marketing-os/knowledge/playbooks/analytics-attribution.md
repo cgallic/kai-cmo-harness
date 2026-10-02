@@ -69,7 +69,7 @@ EXAMPLES:
   Meta cold ads:    ?utm_source=facebook&utm_medium=cpc&utm_campaign=trial-signup-q1&utm_content=pain-hook-video
   Email newsletter: ?utm_source=newsletter&utm_medium=email&utm_campaign=weekly-digest-20260324&utm_content=top-cta
   LinkedIn organic: ?utm_source=linkedin&utm_medium=social&utm_campaign=thought-leadership&utm_content=ai-receptionist-post
-  Google Search:    ?utm_source=google&utm_medium=cpc&utm_campaign=brand-terms&utm_term=kaicalls
+  Google Search:    ?utm_source=google&utm_medium=cpc&utm_campaign=brand-terms&utm_term=acme
 ```
 
 ### UTM Tracking Spreadsheet

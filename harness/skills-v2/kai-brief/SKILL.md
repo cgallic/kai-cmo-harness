@@ -1,6 +1,6 @@
 ---
 name: kai-brief
-description: Create a structured content brief using the Kai CMO Harness brief schema. Selects persona, defines angle, sets quality targets. Use when "create a brief", "content brief", "plan this content", "brief for [topic]", "what persona should I use", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.
+description: Create a structured content brief using the marketing harness brief schema. Selects persona, defines angle, sets quality targets. Use when "create a brief", "content brief", "plan this content", "brief for [topic]", "what persona should I use", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.
 ---
 
 # /kai-brief — A Brief `/kai-write` Can Execute Without Asking Anything

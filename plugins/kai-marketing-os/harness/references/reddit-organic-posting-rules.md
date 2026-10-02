@@ -43,6 +43,6 @@ Primary sources:
 
 - Load this file for Reddit listening, posting, comments, AMAs, and outreach.
 - Require subreddit-specific rule notes in the brief before drafting.
-- Disclose Connor/Kai affiliation when recommending Kai-owned products or participating commercially.
+- Disclose any ownership or commercial affiliation (yours, the client's, or Connor Gallic's) when recommending a product or participating commercially.
 - Never stage Reddit actions that hide ownership or simulate grassroots support.
 - Prefer listening and direct answers over links. Links should be earned by context, not used as the opening move.

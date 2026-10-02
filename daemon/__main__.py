@@ -1,4 +1,4 @@
-"""MeetKai Daemon — autonomous marketing agent executor.
+"""Marketing daemon — autonomous marketing agent executor.
 
 Usage:
     python -m daemon start          # Start the daemon (foreground)
@@ -342,7 +342,7 @@ def main():
     """CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="MeetKai Daemon")
+    parser = argparse.ArgumentParser(description="Marketing agent daemon")
     parser.add_argument("command", choices=["start", "detect", "test-task"],
                         help="Command to run")
     args = parser.parse_args()

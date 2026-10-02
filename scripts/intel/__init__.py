@@ -1,5 +1,5 @@
 """
-Kai CMO Harness — Competitive Intelligence Module
+Marketing Harness — Competitive Intelligence Module
 ===================================================
 Monitor competitors, track SERPs, find content gaps, generate market briefs.
 

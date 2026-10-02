@@ -8,7 +8,7 @@ last_updated: 2026-05-18
 # Kai Start
 
 ### One-line claim
-First-run onboarding for Kai CMO Harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run.
+First-run onboarding for the marketing harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run.
 
 ### Triggers
 - get started with Kai

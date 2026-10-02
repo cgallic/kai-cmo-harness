@@ -47,6 +47,17 @@ Elastic License 2.0 in full and governs everything not listed above.
 If you want to offer a hosted service built on the Elastic-licensed portion,
 that's a conversation, not a prohibition — reach out.
 
+## Third-party material
+
+Some skills are vendored from other open-source projects. Each keeps its own
+license and copyright notice in its folder, and that notice governs it, not the
+table above.
+
+| Path | Upstream | License |
+|---|---|---|
+| `harness/skills/design-taste-frontend/`, `harness/skills-v2/design-taste-frontend/` | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) `skills/taste-skill/SKILL.md` @ `3c7017d` | MIT, Copyright (c) 2026 Leonxlnx |
+| `harness/skills/ux-writing/`, `harness/skills-v2/ux-writing/` | [content-designer/ux-writing-skill](https://github.com/content-designer/ux-writing-skill) `SKILL.md`, `docs/`, `examples/`, `references/`, `templates/` @ `98cacde` | MIT, Copyright (c) 2026 Christopher Greer |
+
 ## The prior MIT grant
 
 Every commit published to this repository before **2026-08-08** was released

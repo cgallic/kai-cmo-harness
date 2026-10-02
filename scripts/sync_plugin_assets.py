@@ -94,6 +94,13 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os/docs", "docs"),
     ("plugins/kai-marketing-os/scripts/quality_gates", "scripts/quality_gates"),
     ("plugins/kai-marketing-os/scripts/reddit_monitor", "scripts/reddit_monitor"),
+    # DataForSEO collector for /kai-local-audit and the /kai-audit provenance collector (stdlib only)
+    ("plugins/kai-marketing-os/scripts/__init__.py", "scripts/__init__.py"),
+    ("plugins/kai-marketing-os/scripts/audit", "scripts/audit"),
+    ("plugins/kai-marketing-os/scripts/local_audit", "scripts/local_audit"),
+    ("plugins/kai-marketing-os/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),
+    # Motion-spot video engine for /kai-motion-spot (Playwright + numpy/scipy/Pillow + ffmpeg)
+    ("plugins/kai-marketing-os/scripts/motion_spot", "scripts/motion_spot"),
     ("plugins/kai-marketing-os/harness/references", "harness/references"),
     ("plugins/kai-marketing-os/harness/skill-contracts", "harness/skill-contracts"),
     ("plugins/kai-marketing-os/harness/brief-schema.md", "harness/brief-schema.md"),
@@ -105,6 +112,13 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os-v2/docs", "docs"),
     ("plugins/kai-marketing-os-v2/scripts/quality_gates", "scripts/quality_gates"),
     ("plugins/kai-marketing-os-v2/scripts/reddit_monitor", "scripts/reddit_monitor"),
+    # DataForSEO collector for /kai-local-audit and the /kai-audit provenance collector (stdlib only)
+    ("plugins/kai-marketing-os-v2/scripts/__init__.py", "scripts/__init__.py"),
+    ("plugins/kai-marketing-os-v2/scripts/audit", "scripts/audit"),
+    ("plugins/kai-marketing-os-v2/scripts/local_audit", "scripts/local_audit"),
+    ("plugins/kai-marketing-os-v2/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),
+    # Motion-spot video engine for /kai-motion-spot (Playwright + numpy/scipy/Pillow + ffmpeg)
+    ("plugins/kai-marketing-os-v2/scripts/motion_spot", "scripts/motion_spot"),
     ("plugins/kai-marketing-os-v2/harness/references", "harness/references"),
     ("plugins/kai-marketing-os-v2/harness/skill-contracts", "harness/skill-contracts"),
     ("plugins/kai-marketing-os-v2/harness/brief-schema.md", "harness/brief-schema.md"),

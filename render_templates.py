@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Template Renderer
+Marketing Harness — Template Renderer
 
 Reads config.yaml and renders all .j2 templates in workspace/agents/
 plus workspace markdown files that contain Jinja2 syntax.

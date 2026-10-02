@@ -1,5 +1,5 @@
 """
-Kai CMO Harness — Reporting Module
+Marketing Harness — Reporting Module
 ====================================
 Generate marketing reports for stakeholders.
 

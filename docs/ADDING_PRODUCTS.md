@@ -1,6 +1,6 @@
 # Adding Products
 
-How to add a new product to the Kai CMO Harness. A product is anything with its own URL, analytics, and content pipeline — a SaaS app, a client site, an e-commerce store, etc.
+How to add a new product to the marketing harness. A product is anything with its own URL, analytics, and content pipeline — a SaaS app, a client site, an e-commerce store, etc.
 
 ---
 

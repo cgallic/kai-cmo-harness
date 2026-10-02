@@ -1,4 +1,4 @@
-# Kai CMO Harness — Python Dependencies
+# Marketing Harness — Python Dependencies
 # Install: pip install -r scripts/requirements.txt
 
 # Core

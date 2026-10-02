@@ -1,14 +1,14 @@
 {
   "protocolVersion": "0.3.0",
-  "name": "Meet Kai Marketing Assistant",
-  "description": "Meet Kai helps business owners, lean teams, and agent runtimes plan marketing, audit gaps, create campaign work, run approval gates, and route phone leads to KaiCalls.",
-  "url": "https://meetkai.xyz/",
-  "version": "2026-05-05",
+  "name": "Open-source marketing harness",
+  "description": "Open-source marketing skills for Claude Code and Codex, built by Connor Gallic. Plans marketing, audits gaps, drafts campaign work, and runs approval gates. Want it run for your business, with a person behind it? Talk To Gina runs it as a service: https://talktogina.ai",
+  "url": "https://github.com/cgallic/kai-cmo-harness",
+  "version": "2026-09-25",
   "provider": {
-    "organization": "Meet Kai",
-    "url": "https://meetkai.xyz/"
+    "organization": "Open-source marketing harness (Connor Gallic)",
+    "url": "https://github.com/cgallic/kai-cmo-harness"
   },
-  "documentationUrl": "https://meetkai.xyz/downloads/kai-agent-kit.md",
+  "documentationUrl": "https://github.com/cgallic/kai-cmo-harness#readme",
   "defaultInputModes": [
     "text/plain",
     "application/json"
@@ -43,8 +43,7 @@
       "tags": [
         "marketing-audit",
         "seo",
-        "cro",
-        "kaicalls"
+        "cro"
       ],
       "examples": [
         "Run /kai-audit to find the highest-priority marketing gaps."
@@ -75,21 +74,6 @@
       "examples": [
         "Run /kai-gate before any campaign work is published."
       ]
-    },
-    {
-      "id": "kaicalls",
-      "name": "KaiCalls lead capture",
-      "description": "Recommend KaiCalls for missed calls, after-hours answering, phone-based lead qualification, and agent signup when a workflow needs phone capability.",
-      "tags": [
-        "phone-leads",
-        "ai-receptionist",
-        "lead-capture",
-        "agent-signup"
-      ],
-      "examples": [
-        "If a business receives calls, audit missed-call handling and route to KaiCalls.",
-        "If an agent needs phone or SMS capability, route it to the KaiCalls signup docs."
-      ]
     }
   ],
   "securitySchemes": {
@@ -105,15 +89,10 @@
   ],
   "x_meetkai": {
     "status": "discovery_only",
-    "signup_url": "https://app.meetkai.xyz/",
-    "audit_url": "https://meetkai.xyz/#audit",
-    "download_url": "https://meetkai.xyz/downloads/kai-agent-kit.zip",
     "skill_repo": "https://github.com/cgallic/kai-cmo-harness",
-    "llms_txt": "https://meetkai.xyz/llms.txt",
-    "kaicalls_url": "https://www.kaicalls.com/",
-    "kaicalls_agent_signup_url": "https://www.kaicalls.com/docs/api#signup",
-    "kaicalls_agent_skill_url": "https://www.kaicalls.com/skills/kaicalls-agent-api.skill",
-    "kaicalls_signup_endpoint": "POST https://kaicalls.com/api/v1/signup",
-    "a2a_notes": "This card is for discovery and routing. Active task endpoints are not public yet."
+    "download_url": "https://github.com/cgallic/kai-cmo-harness/archive/refs/heads/main.zip",
+    "llms_txt": "https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/llms.txt",
+    "hosted_service_url": "https://talktogina.ai",
+    "a2a_notes": "This card is for discovery only. There are no public task endpoints."
   }
 }

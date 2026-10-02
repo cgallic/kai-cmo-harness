@@ -16,8 +16,12 @@ Load before starting: `harness/references/local-audit-playbook.md` (endpoints, g
 - Every ranking, volume, review count, rating, referring-domain count, map-pack placement, AI-answer count, Lighthouse score and page weight in the report cites its source and retrieval date. Anything not in `audit-data.json` or a dated direct check goes in `_data-gaps.md`.
 - Never report a ranking or score observed in a personal browser. The reference run's two eyeballed numbers were both wrong.
 - Modeled numbers (share of estimated clicks) are labeled as modeled with the formula.
+- **Every search runs in every language the market searches in** — volumes, discovery seeds, located SERPs, Maps queries, AI prompts, and competitor, directory and press searches. In a bilingual market (English and Spanish, for example) pair each term and show both side by side. This is a research rule; a translated page is a separate request (Phase 5).
+- Cost: a full run (two markets, crawl, reviews, AI answers) is about $8 of DataForSEO credit. Every response is cached in `raw/`, so re-runs and the dated re-measure are nearly free. Check `balance` first.
 
-**If `scripts/local_audit/` is not in this install:** run the public direct checks by hand (Phase 3), cite URLs and dates, put every located-ranking, volume, listing, review, backlink and AI-answer metric in `_data-gaps.md`, and say in the report header that located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
+**Running the collector:** the DataForSEO scripts ship in the Kai plugin (`scripts/audit/`, `scripts/local_audit/`, `examples/local-audit-config.example.json`) as well as the full harness. They are stdlib-only Python 3.10+. Run them as modules from the Kai root and point `--out` at an absolute path in the current project, e.g. `OUT="$PWD/workspace/local-audit/<slug>"; cd "<kai-root>" && python -m scripts.local_audit.pulls balance --config "$OUT/config.json" --out "$OUT"`. Credentials come only from the environment: `DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD` (or `DATAFORSEO_AUTH_B64`). Never print them or write them into the audit folder.
+
+**Without DataForSEO credentials, or if `scripts/local_audit/` is missing from this install:** run the public direct checks by hand (Phase 3), cite URLs and dates, put every located-ranking, volume, listing, review, backlink and AI-answer metric in `_data-gaps.md`, and say in the report header that located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
 
 ## Phase 0: Identify the business
 
@@ -74,14 +78,16 @@ Structure and section list: playbook §4. Required:
 4. **Offers** — `/kai-offer-builder` doctrine; seven slots; prices built on the measured shipping and fees; every price marked as a proposal to check against costs.
 5. **Changes** — by owner: code, copy (all languages), commerce admin, Google Business Profile, DNS, social and partner asks.
 6. **12-week plan** — starts next Monday; owner and developer columns; "done when"; seasonal peaks from the volume pull; targets table with the re-run date.
-7. **Phone and follow-up** — KaiCalls Fit Rule: disclose that KaiCalls is Kai-owned, compare alternatives, and say plainly when it is not the first fix.
+7. **Phone and follow-up** — Phone Capture Fit Rule: compare alternatives, and say plainly when it is not the first fix.
 
-Write in the house voice: no announced lists, no dramatic fragments, no "not X but Y". Render as a single self-contained HTML page (`/kai-html-presentation` or the house strategy-page format) with `noindex,nofollow,noarchive` if it will be hosted.
+Write in the house voice: no announced lists, no dramatic fragments, no "not X but Y". Render as a single self-contained HTML page (`/kai-html-presentation` or the house strategy-page format). If it will be hosted, publish it privately on your own host: `noindex,nofollow,noarchive`, an unguessable URL (append a short random or hashed suffix to the slug), and no links to it from any public page.
+
+**Internal economics never appear on a customer-facing page.** Your own rates, margins, costs of delivery, data spend, prospect scoring and sales notes stay in a separate internal file. The owner-facing report and its translated sibling carry only the business's own numbers and the proposed offer prices.
 
 ## Phase 5: Localize and translate (when asked)
 
 - **Localized rerun:** playbook §5. Add a market section after the headlines and patch the plan and targets.
-- **Bilingual:** playbook §6. Parallel chunk translation with one brief and glossary, tag-signature comparison, language subpath and toggle.
+- **Translated page (only when asked; the research is multilingual whenever the market is):** playbook §6. Parallel chunk translation with one brief and glossary, tag-signature comparison, language subpath and toggle.
 
 ## Phase 6: Gate and hand off
 

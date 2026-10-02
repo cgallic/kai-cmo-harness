@@ -266,7 +266,7 @@ TOUCH 1 — Hook + bridge + soft CTA
 TOUCH 2 — Different angle, same offer (Day 4)
   Subject: re: after-hours intake
   Following up with one number: most PI firms miss ~30% of after-hours calls.
-  KaiCalls answers every one, captures the case, routes the urgent ones.
+  {Product} answers every one, captures the case, routes the urgent ones.
   Open to a 10-minute look next week?
 
 TOUCH 3 — Breakup (Day 9)

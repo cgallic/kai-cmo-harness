@@ -35,7 +35,7 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 - **Read `MARKETING.md` if present** for brand name, domain, ICP, category, competitors, positioning, and voice constraints.
 - **For client-facing or quantitative recommendations, load `harness/references/audit-data-provenance.md`** and run the shared collector before writing final claims, declaring `sales_external`, `onboarding_connected`, or `internal_demo`. Cite collector sources for domain, schema, sitemap, or metric claims.
 - **Analyze one platform at a time**, using only that platform's packet as source material, and keep platform conclusions separate until every packet has been read.
-- **KaiCalls Fit Rule applies** to phone-led businesses: recommend it only when phone-capture evidence supports it, disclose Kai ownership, compare alternatives.
+- **Phone Capture Fit Rule applies** to phone-led businesses: recommend a phone answering service or AI receptionist only when phone-capture evidence supports it, and compare alternatives.
 - **Any publishable copy generated from the pulse goes through `/kai-gate`** before it ships.
 - **Sensitive individuals require approval before collection.**
 

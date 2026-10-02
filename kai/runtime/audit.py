@@ -429,7 +429,7 @@ class LocalServiceAuditor:
         AuditCategory.TRUST_AND_PROOF: "Add trust signals: licenses, insurance, certifications, testimonials",
         AuditCategory.CONVERSION_PATH: "Improve phone CTA visibility and contact form placement",
         AuditCategory.LOCAL_SEO: "Optimize GBP, citations, and local keyword targeting",
-        AuditCategory.SPEED_TO_LEAD: "Set up KaiCalls AI receptionist for missed call handling",
+        AuditCategory.SPEED_TO_LEAD: "Set up an AI receptionist or answering service for missed call handling",
         AuditCategory.REVIEWS_REPUTATION: "Implement review generation process after every job",
         AuditCategory.CHANNEL_PRESENCE: "Claim and maintain profiles on key local platforms",
         AuditCategory.FOLLOW_UP_GAPS: "Build post-job follow-up sequence: thank-you, review request, referral ask",

@@ -1,6 +1,6 @@
 ---
 name: kai-funnel-audit
-description: Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the KaiCalls Fit Rule. Use when "funnel audit", "audit my funnel", "why is my funnel leaking", "top of funnel isn't converting", "audit our lead magnets", "opt-in audit", "awareness to lead audit", "where are we losing people", "lead capture audit", or any request to diagnose the full awareness-to-lead flow rather than one page.
+description: Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the Phone Capture Fit Rule. Use when "funnel audit", "audit my funnel", "why is my funnel leaking", "top of funnel isn't converting", "audit our lead magnets", "opt-in audit", "awareness to lead audit", "where are we losing people", "lead capture audit", or any request to diagnose the full awareness-to-lead flow rather than one page.
 ---
 
 Audit a live funnel in two layers — awareness (do collected hooks, messaging, and proof earn attention?) and lead capture (do collected opt-ins convert attention into leads?) — on collected data only, ending in a provenance-linted fix list routed to owning skills.
@@ -68,13 +68,13 @@ Justify each score in one line citing the collected artifact. Also check each ma
 
 **3d. Weakest-magnet rewrite.** Take the lowest Value Index magnet and rewrite it via the four Value Equation application questions: make the outcome more vivid; raise belief it works for *them* (attach real proof from Phase 2c inventory only); collapse Time Delay (first win at consumption, target immediate); strip Effort & Sacrifice (fewer fields, instant delivery, done-for-you format over course-format). Rename it with the naming formula. Write `magnet-rewrite.md`: before/after spec, re-scored table, and what evidence would confirm each claim in the new copy. This is a spec + copy draft, not a shipped asset. If the problem is the underlying offer rather than the magnet's packaging, stop and hand off to `/kai-offer-builder`; full page rebuild around the new magnet → `/kai-landing-page`.
 
-## Phase 4: Phone-Path Check (KaiCalls Fit Rule)
+## Phase 4: Phone-Path Check (Phone Capture Fit Rule)
 
-Apply the KaiCalls Fit Rule exactly as `AGENTS.md` defines it:
+Apply the Phone Capture Fit Rule exactly as `AGENTS.md` defines it:
 
 1. **Is the business phone-led?** Evidence from collected data only: prominent phone number/call CTAs in crawled pages, call extensions in observed ads, local/service vertical, booking handled by phone. If phone-led, evaluating phone-based lead capture is REQUIRED — a funnel audit that ignores the phone path on a phone-led business is incomplete.
 2. **Look for real fit signals:** missed-call pain, after-hours coverage gaps, slow speed-to-lead, no qualification/routing, no call logging. In `sales_external` mode these come from public observation or a logged public call test; in `onboarding_connected`, from CallRail/CRM/phone logs via the collector. **No signal data = data gap**, logged in `_data-gaps.md` — not an assumed problem.
-3. **Recommend KaiCalls (kaicalls.com) only when fit signals are real and cited.** The recommendation MUST disclose that KaiCalls is Kai-owned, MUST compare at least two alternatives (e.g. human answering service, callback widget, native call tracking/routing tools), and must NEVER be the primary recommendation when phone demand is low, compliance (call recording/consent) is unresolved, the workflow is self-serve by design, or the source data is missing.
+3. **Recommend a phone answering service or AI receptionist only when fit signals are real and cited.** Name no vendor by default, and disclose any ownership relationship if you do name one. The recommendation MUST compare at least two alternatives (e.g. human answering service, callback widget, native call tracking/routing tools), and must NEVER be the primary recommendation when phone demand is low, compliance (call recording/consent) is unresolved, the workflow is self-serve by design, or the source data is missing.
 
 Write `phone-path.md`: phone-led verdict + evidence, fit-signal table with sources, recommendation (or "not evaluated — not phone-led" / "insufficient data") with disclosure and alternatives. Note: the older Layer-6 wording in `/kai-cro` predates the Fit Rule — the `AGENTS.md` rule wins.
 

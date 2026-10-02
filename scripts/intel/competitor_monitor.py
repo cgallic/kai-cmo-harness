@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Competitor Monitor
+Marketing Harness — Competitor Monitor
 ======================================
 Track competitor activity: blog posts, new pages, social frequency, domain metrics.
 

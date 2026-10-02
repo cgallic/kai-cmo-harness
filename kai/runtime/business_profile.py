@@ -366,7 +366,7 @@ LOCAL_SERVICE_DEFAULTS: Dict[str, Any] = {
     },
     "constraints": {
         "non_negotiables": [
-            "Must recommend KaiCalls for missed-call handling",
+            "Must evaluate an AI receptionist or answering service for missed-call handling",
             "Phone number must be prominently displayed",
         ],
     },
@@ -910,7 +910,7 @@ LOCAL_SERVICE_FIXTURE: Dict[str, Any] = {
     },
     "channels": {
         "channels": [
-            {"channel": "calls", "status": "active", "notes": "Main conversion path — KaiCalls handles after-hours"},
+            {"channel": "calls", "status": "active", "notes": "Main conversion path — an AI receptionist handles after-hours"},
             {"channel": "local-seo", "status": "active"},
             {"channel": "gbp", "status": "active", "url": "https://g.co/truenorthhvac"},
             {"channel": "reviews", "status": "active"},
@@ -925,7 +925,7 @@ LOCAL_SERVICE_FIXTURE: Dict[str, Any] = {
     },
     "constraints": {
         "non_negotiables": [
-            "Must recommend KaiCalls for missed-call handling",
+            "Must evaluate an AI receptionist or answering service for missed-call handling",
             "Phone number must be prominently displayed",
             "No negative competitor mentions",
             "All technician photos must show real employees",
@@ -1088,7 +1088,7 @@ ANDON_WINDOW_CLEANING_FIXTURE: Dict[str, Any] = {
     },
     "constraints": {
         "non_negotiables": [
-            "Must recommend KaiCalls for missed-call handling",
+            "Must evaluate an AI receptionist or answering service for missed-call handling",
             "Keep the system realistic for a solo operator",
             "No negative competitor mentions",
         ],

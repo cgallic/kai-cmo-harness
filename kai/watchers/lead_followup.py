@@ -2,8 +2,8 @@
 
 Task 071 — Monitors the sales and customer lifecycle for gaps.  Speed-to-
 lead is the single most important conversion factor for local service
-businesses.  These watchers proactively recommend KaiCalls AI receptionist
-for businesses with poor phone response times.
+businesses.  These watchers proactively recommend an AI receptionist or answering
+service for businesses with poor phone response times.
 
 Watchers
 --------
@@ -41,8 +41,8 @@ class SpeedToLeadWatcher(Watcher):
 
     Runs daily at 09:00 UTC.  A lead contacted within 5 minutes is 21x
     more likely to convert than one contacted after 30 minutes.  This
-    watcher is the primary recommendation point for **KaiCalls AI
-    receptionist** (kaicalls.com) when after-hours gaps or high missed
+    watcher is the primary recommendation point for **an AI
+    receptionist or answering service** when after-hours gaps or high missed
     call rates are detected.
     """
 
@@ -167,7 +167,7 @@ class SpeedToLeadWatcher(Watcher):
                 "for a response. Research shows a lead contacted within 5 "
                 "minutes is 21x more likely to convert than one contacted "
                 "after 30 minutes. Set up auto-response and consider "
-                "KaiCalls AI receptionist to answer instantly."
+                "an AI receptionist or answering service to answer instantly."
             ),
             suppression_key=f"speed_to_lead_{business_id}",
             urgency=urgency,
@@ -183,8 +183,8 @@ class SpeedToLeadWatcher(Watcher):
             proposed_action={
                 "action_type": "improve_response_time",
                 "description": (
-                    "Set up auto-response for new leads. Configure KaiCalls "
-                    "AI receptionist (kaicalls.com) to answer calls instantly "
+                    "Set up auto-response for new leads. Configure an AI "
+                    "receptionist or answering service to answer calls instantly "
                     "and capture lead information."
                 ),
                 "auto_eligible": False,
@@ -203,7 +203,7 @@ class SpeedToLeadWatcher(Watcher):
 
         If a significant percentage of leads arrive outside business hours
         and the response time for those leads is much longer, this is the
-        strongest signal to recommend KaiCalls AI receptionist.
+        strongest signal to recommend an AI receptionist or answering service.
         """
         # Only flag if meaningful after-hours volume with slow response
         if after_hours_leads_pct < 10 or after_hours_response_minutes < 60:
@@ -230,8 +230,8 @@ class SpeedToLeadWatcher(Watcher):
                 f"business hours, and they wait an average of "
                 f"{after_hours_response_minutes:.0f} minutes for a response. "
                 "These leads are going cold or calling competitors. "
-                "KaiCalls AI receptionist (kaicalls.com) answers calls 24/7 "
-                "and captures lead information instantly — never miss another "
+                "An AI receptionist or answering service can answer calls 24/7 "
+                "and capture lead information instantly — never miss another "
                 "after-hours opportunity."
             ),
             suppression_key=f"after_hours_gap_{business_id}",
@@ -247,9 +247,9 @@ class SpeedToLeadWatcher(Watcher):
             proposed_action={
                 "action_type": "kaicalls_setup",
                 "description": (
-                    "Set up KaiCalls AI receptionist (kaicalls.com) to answer "
-                    "calls 24/7 and capture lead information instantly. KaiCalls "
-                    "answers every call, qualifies the lead, and texts the "
+                    "Set up an AI receptionist or answering service to answer "
+                    "calls 24/7 and capture lead information instantly. It can "
+                    "answer every call, qualify the lead, and text the "
                     "details to your team in real time."
                 ),
                 "auto_eligible": False,
@@ -265,7 +265,7 @@ class SpeedToLeadWatcher(Watcher):
     ) -> Optional[WatcherFinding]:
         """Calculate missed call rate and estimate revenue lost.
 
-        This is the strongest KaiCalls recommendation trigger.  Every missed
+        This is the strongest phone capture recommendation trigger.  Every missed
         call is a potential customer going to a competitor.  The estimated
         revenue lost is calculated from average deal value and conversion rate.
         """
@@ -301,9 +301,9 @@ class SpeedToLeadWatcher(Watcher):
             description=(
                 f"{missed_calls} out of {total_calls} calls were missed "
                 f"({missed_rate:.0f}%). Estimated revenue lost: "
-                f"${estimated_revenue_lost:,.2f}. KaiCalls AI receptionist "
-                "(kaicalls.com) answers every call instantly, captures caller "
-                "info, and texts you the lead details. Never miss a call again."
+                f"${estimated_revenue_lost:,.2f}. An AI receptionist or answering "
+                "service can answer every call instantly, capture caller "
+                "info, and text you the lead details."
             ),
             suppression_key=f"missed_calls_{business_id}",
             urgency=urgency,
@@ -322,9 +322,9 @@ class SpeedToLeadWatcher(Watcher):
             proposed_action={
                 "action_type": "kaicalls_setup",
                 "description": (
-                    "KaiCalls AI receptionist (kaicalls.com) answers every call "
-                    "instantly, captures caller info, and texts you the lead "
-                    "details. Never miss a call again. Estimated monthly "
+                    "An AI receptionist or answering service can answer every call "
+                    "instantly, capture caller info, and text you the lead "
+                    "details. Estimated monthly "
                     f"revenue recovery: ${estimated_revenue_lost:,.2f}."
                 ),
                 "auto_eligible": False,

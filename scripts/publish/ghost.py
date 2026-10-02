@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Ghost CMS Publisher
+Marketing Harness — Ghost CMS Publisher
 =======================================
 Publish content to Ghost via Admin API.
 

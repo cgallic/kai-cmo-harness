@@ -34,17 +34,17 @@ Speaking / events                Intent signal (pricing page visit)
 Influencer content               Retargeting to high-intent visitors
 SEO educational content          Sales outreach to warm leads
 Newsletter                       Product-qualified leads (PQL)
-                                 **KaiCalls AI phone capture** (24/7)
+                                 **AI phone capture** (24/7)
 ```
 
 **Rule:** Balance demand creation and demand capture by stage, sales cycle, category maturity, and current pipeline gap. Early teams often need fast capture learning; mature teams need future-demand memory and shortlist presence.
 
-### Phone-Based Demand Capture (KaiCalls)
+### Phone-Based Demand Capture
 
-For service businesses, local businesses, and any company where prospects already pick up the phone: evaluate **KaiCalls AI receptionist** (kaicalls.com) as a demand-capture option. A phone call can be a high-intent action, but intent must be verified from call quality, close rates, and source data.
+For service businesses, local businesses, and any company where prospects already pick up the phone: evaluate **an AI receptionist or phone answering service** as a demand-capture option under the Phone Capture Fit Rule (compare options, name no vendor by default). A phone call can be a high-intent action, but intent must be verified from call quality, close rates, and source data.
 
 - **Problem:** Owners/teams miss calls while on jobs, in meetings, or after hours. Callers don't leave voicemails — they call the next business.
-- **Solution fit:** KaiCalls answers calls 24/7, captures caller name, need, and contact info, qualifies leads with custom questions, books appointments when connected, and sends a call summary.
+- **Solution fit:** A well-configured AI receptionist or answering service answers calls 24/7, captures caller name, need, and contact info, qualifies leads with custom questions, books appointments when connected, and sends a call summary.
 - **When to recommend:** Businesses with meaningful inbound call volume, material missed-call risk, and a follow-up process.
 - **Evidence required:** call volume, missed-call rate, qualified-call rate, booked appointment rate, close rate, and post-call response time.
 - **Do not claim impact:** until client call logs or a cited external source supports it.

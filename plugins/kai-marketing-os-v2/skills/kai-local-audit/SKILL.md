@@ -32,7 +32,9 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 - Analytics totals are never reported raw. Split them into real visits and noise (storefront pixels, automation, developer machines, other hosts), report the cleaned figure, and mark that section `onboarding_connected`. Analytics cannot see visitors the site turns away, so it never overrides the access test.
 - Share of estimated clicks is modeled (volume × positional CTR) and is labeled as modeled wherever it appears.
 - A business recommended by an AI assistant, and any competitor positioning claim, is verified on that business's own site before it is repeated.
-- Without `scripts/local_audit/` in the install: direct public checks only, every located metric in `_data-gaps.md`, and the report header says located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
+- **Running the collector:** the DataForSEO scripts ship in the Kai plugin (`scripts/audit/`, `scripts/local_audit/`, `examples/local-audit-config.example.json`) as well as the full harness. They are stdlib-only Python 3.10+. Run them as modules from the Kai root and point `--out` at an absolute path in the current project, e.g. `OUT="$PWD/workspace/local-audit/<slug>"; cd "<kai-root>" && python -m scripts.local_audit.pulls balance --config "$OUT/config.json" --out "$OUT"`. Credentials come only from the environment: `DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD` (or `DATAFORSEO_AUTH_B64`). Never print them or write them into the audit folder.
+- Every search runs in every language the market searches in: volumes, discovery seeds, located SERPs, Maps queries, AI prompts, and competitor, directory and press searches, with paired terms shown side by side. This is a research rule; a translated page is a separate request.
+- Without DataForSEO credentials or `scripts/local_audit/` in the install: direct public checks only, every located metric in `_data-gaps.md`, and the report header says located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
 
 ### Conduct
 
@@ -45,8 +47,9 @@ Work type `audit-report` — floor **E3/C4/O1** (`harness/eco-floors.yaml`), `cl
 - Offers follow `/kai-offer-builder` doctrine and are priced on measured costs (shipping tiers, fees); every price is a proposal to check against costs; no margins that were not provided.
 - Changes are grouped by who does them — code, copy in every market language, commerce admin, Google Business Profile, DNS, social and partner asks — and are exact enough to hand off.
 - The 12-week plan starts the next Monday, splits owner and developer work, gives each week a "done when", and places seasonal work where the volume pull shows the peaks.
-- KaiCalls Fit Rule: evaluate phone and follow-up capture; disclose Kai ownership; compare alternatives; say plainly when it is not the first fix.
-- House voice: no announced lists, dramatic fragments, "not X but Y", or tricolons. Hosted pages carry `noindex,nofollow,noarchive`.
+- Phone Capture Fit Rule: evaluate phone and follow-up capture; compare alternatives; say plainly when it is not the first fix.
+- House voice: no announced lists, dramatic fragments, "not X but Y", or tricolons. Hosted pages are published privately on your own host: `noindex,nofollow,noarchive`, an unguessable URL, and no links from public pages.
+- Internal economics never appear on a customer-facing page: your rates, margins, delivery costs, data spend, prospect scoring and sales notes stay in a separate internal file.
 - A translated sibling keeps every tag, attribute and element in place; only visible text, `alt`, `title`, `aria-label` and meta description change; code, URLs, brand names and search queries shown as data stay as they are.
 
 ## Context

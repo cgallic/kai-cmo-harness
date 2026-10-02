@@ -218,7 +218,7 @@ LOCAL_SERVICE_WELCOME = SequenceTemplate(
             cta_url_template="tel:{phone_number}",
             tone="helpful",
             goal="Provide value, demonstrate expertise, stay top of mind",
-            notes="Mention KaiCalls number if business uses AI receptionist for after-hours calls.",
+            notes="Mention the after-hours line if the business uses an AI receptionist or answering service.",
         ),
         # Email 4 -- Review Request / Follow-Up (Day 14)
         SequenceEmailTemplate(

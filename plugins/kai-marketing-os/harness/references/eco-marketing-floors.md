@@ -103,7 +103,7 @@ An O3 observation made before the declared window, or before the declared minimu
 | Email | ESP connector |
 | Paid | Ads connector, plus an incrementality design for O5 |
 | Social | Platform insights |
-| Phone-led demand | Call-tracking connector (see the KaiCalls Fit Rule in `AGENTS.md`) |
+| Phone-led demand | Call-tracking connector (see the Phone Capture Fit Rule in `AGENTS.md`) |
 | Adoption of advice | Manual, owner-attested — the weakest source, so it caps at O3 |
 
 ---

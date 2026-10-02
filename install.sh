@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ============================================================================
-# Kai CMO Harness — Installer
+# Marketing Harness — Installer
 # ============================================================================
 # Installs the Kai marketing skills AND the knowledge base they run on
 # (frameworks, checklists, channel guides, policy references, quality gates)
@@ -171,4 +171,4 @@ printf "  ${DIM}  /plugin marketplace add cgallic/kai-cmo-harness${RESET}\n"
 printf "  ${DIM}  /plugin install kai@kai-marketing-os${RESET}\n\n"
 
 printf "  ${DIM}GitHub: https://github.com/cgallic/kai-cmo-harness${RESET}\n"
-printf "  ${DIM}Docs:   https://meetkai.xyz${RESET}\n\n"
+printf "  ${DIM}Docs:   https://github.com/cgallic/kai-cmo-harness${RESET}\n\n"

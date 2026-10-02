@@ -1,6 +1,6 @@
 # Kai Public Skill Manifest
 
-This directory is the public API reference for the canonical Kai CMO Harness skill graph. It documents the 46 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
+This directory is the public API reference for the canonical marketing harness skill graph. It documents the 46 `kai-*` skill pages under `docs/skill-manifest/`. It excludes `harness/skills/kai` because that directory is the router, and it excludes `harness/skills/kaicalls-design` because it is not a `kai-*` skill.
 
 New to Kai? Start with `/kai-start`, then run `/kai-growth-plan`, `/kai-growth-hacker`, `/kai-landing-page`, `/kai-content-calendar`, `/kai-cro`, or `/kai-gate`. Those commands show the core loop: read the repo, pick distribution, create the work, check the work, and keep the record.
 
@@ -90,6 +90,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 - [Kai Data Dashboard](./kai-data-dashboard.md) - `kai-data-dashboard`
 - [Kai Gate](./kai-gate.md) - `kai-gate`
 - [Kai Local Audit](./kai-local-audit.md) - `kai-local-audit`
+- [Kai Motion Spot](./kai-motion-spot.md) - `kai-motion-spot`
 - [Kai Monthly Audit](./kai-monthly-audit.md) - `kai-monthly-audit`
 - [Kai Reddit Listen](./kai-reddit-listen.md) - `kai-reddit-listen`
 - [Kai SEO Audit](./kai-seo-audit.md) - `kai-seo-audit`
@@ -106,7 +107,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 | Surface | Count | Notes |
 |---|---:|---|
 | Canonical `harness/skills/kai-*` pages | 46 | One manifest page per canonical public `kai-*` skill page. |
-| Router/helper directories excluded | 2 | `harness/skills/kai` and `harness/skills/kaicalls-design`. |
+| Router/helper directories excluded | 4 | `harness/skills/kai`, `harness/skills/kaicalls-design`, `harness/skills/design-taste-frontend` (third-party: [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill), MIT, vendored unmodified), and `harness/skills/ux-writing` (third-party: [content-designer/ux-writing-skill](https://github.com/content-designer/ux-writing-skill), MIT, vendored unmodified). Each third-party folder carries its `UPSTREAM.md` and `LICENSE`. |
 | Public router commands listed by `/kai` | 42 | Router-visible commands remain separate from the full canonical skill inventory. |
 | Manifest rule IDs | 82 | Defined in `rule-registry.md`; derived from local methodology docs. |
 | Skills with real repo-local example artifacts | 22 | Listed in `example-artifacts.md`. |

@@ -35,7 +35,7 @@ Master equation for planning: **Growth = Reach (of all category buyers) × Menta
 |---------------------|-------------------------|
 | Shelf presence | Ranking for category and CEP queries; AI-search citation visibility (see `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md`) |
 | Number of stockists | Marketplace listings, integrations, partner directories, app stores, review platforms |
-| Hours open | Response speed — forms answered, phones answered after hours (phone-led businesses: KaiCalls Fit Rule applies, see `AGENTS.md`) |
+| Hours open | Response speed — forms answered, phones answered after hours (phone-led businesses: Phone Capture Fit Rule applies, see `AGENTS.md`) |
 | Pack range | Pricing tiers, self-serve vs sales-led paths, free trial |
 
 **Operational rule:** audit both before proposing spend. A campaign that builds mental availability for a brand buyers can't find (broken local pack, no AI-search presence, forms that go unanswered) burns budget. This is why the agent-readiness gate blocks surround-sound plans on P0 failures.

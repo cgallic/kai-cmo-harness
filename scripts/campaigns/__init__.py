@@ -1,5 +1,5 @@
 """
-Kai CMO Harness — Campaign Management
+Marketing Harness — Campaign Management
 =======================================
 Plan and track multi-channel marketing campaigns.
 

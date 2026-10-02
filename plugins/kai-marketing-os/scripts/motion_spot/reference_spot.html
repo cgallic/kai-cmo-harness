@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reference spot</title>
+<!--
+  Reference seek(t) page for the motion-spot engine. Copy it into a project as index.html and replace the content.
+  Contract the renderer relies on:
+    * window.ready  : a promise that resolves once fonts and images are decoded and seek(0) has run
+    * window.seek(t): sets EVERY style from pure functions of t. No CSS animations, no timers, no state
+                      carried between calls; seek(9.1) then seek(2.0) must give the same frame as seek(2.0) alone.
+                      It may return a promise (e.g. after img.decode()); render.py waits for it plus two rAFs.
+  One page serves both formats: V = portrait viewport (1080x1920) switches to the 9:16 re-layout.
+  Timing lives in reference_spot.meta.json (dur, hard cuts, FAST motion-blur windows) next to this file.
+  Beat grid: 120 BPM, 2 s bars, 0.5 s beats. Every cut on a downbeat, every UI hit on a beat.
+  No external images: the device and its UI are HTML, so this page renders anywhere as a smoke test.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&display=block">
+<style>
+:root{--ink:#0B0D12;--paper:#F3F4F7;--night:#07080B;--accent:#5C8CFF;--mute:#8C94A0;--white:#F7F7FA}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--night)}
+body{font-family:Geist,Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--night)}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+/* masked word: the .m clips, the .w moves. Padding keeps descenders; hide the word once it is fully out. */
+.m{display:inline-block;overflow:hidden;vertical-align:top;padding:0.06em 0.02em 0.14em;margin:-0.06em -0.02em -0.14em}
+.w{display:inline-block;will-change:transform}
+.gap{display:inline-block;width:0.26em}
+.accent{color:var(--accent)}
+
+#hook{background:var(--paper)}
+.hook{position:absolute;left:0;right:0;display:flex;justify-content:center;font-weight:640;letter-spacing:-0.055em;color:var(--ink);white-space:nowrap}
+#strike{position:absolute;height:12px;background:var(--accent);transform-origin:0 50%;border-radius:6px}
+
+#device{background:radial-gradient(ellipse 70% 80% at 65% 40%,#141821 0%,#08090D 70%)}
+#cam{position:absolute;inset:0}
+#screen{position:absolute;left:0;top:0;width:800px;height:520px;transform-origin:0 0;border-radius:22px;overflow:hidden;
+  background:#fff;box-shadow:0 0 0 10px #1B1F27,0 0 0 11px #2A303B,0 60px 120px rgba(0,0,0,.6)}
+#screen .bar{height:64px;background:#F1F3F7;display:flex;align-items:center;gap:12px;padding:0 26px;font-size:24px;font-weight:600;color:#1A1D24}
+#screen .dot{width:14px;height:14px;border-radius:50%;background:var(--accent)}
+#screen .row{display:flex;align-items:center;gap:18px;height:104px;padding:0 30px;border-bottom:1px solid #EEF0F4;font-size:30px;color:#1A1D24}
+#screen .chk{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700}
+.side{position:absolute;font-weight:650;letter-spacing:-0.055em;line-height:1.0;color:var(--white)}
+.side .row{display:block;position:relative}
+.side .row .m{position:absolute;left:0;top:0}
+
+#stats{background:var(--night)}
+.stat{position:absolute;color:var(--white)}
+.stat .n{font-weight:700;letter-spacing:-0.05em;line-height:1}
+.stat .s{color:var(--mute);font-weight:450;margin-top:12px}
+
+#end{background:var(--night);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#end .mark{font-weight:750;letter-spacing:-0.06em;color:var(--white)}
+#end .tag{margin-top:26px;font-weight:500;letter-spacing:-0.02em;color:var(--mute)}
+#end .url{margin-top:18px;font-weight:600;color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <section class="scene" id="hook">
+    <div class="hook" id="h1"></div>
+    <div class="hook" id="h2"></div>
+    <div id="strike"></div>
+  </section>
+
+  <section class="scene" id="device">
+    <div id="cam">
+      <div id="screen">
+        <div class="bar"><span class="dot"></span>Today</div>
+        <div class="row" data-at="4.5"><span class="chk">&#10003;</span>New request answered</div>
+        <div class="row" data-at="5.0"><span class="chk">&#10003;</span>Visit booked for 9:00</div>
+        <div class="row" data-at="5.5"><span class="chk">&#10003;</span>Follow-up sent</div>
+        <div class="row" data-at="6.0"><span class="chk">&#10003;</span>Summary in your inbox</div>
+      </div>
+    </div>
+    <div class="side" id="side">
+      <span class="row" id="sr1"><span class="m"><span class="w">Before</span></span></span>
+      <span class="row" id="sr2"><span class="m" id="rollA"><span class="w" style="color:var(--mute)">Slow</span></span><span class="m" id="rollB"><span class="w accent">Fast</span></span></span>
+    </div>
+  </section>
+
+  <section class="scene" id="stats">
+    <div class="stat" id="s0"><div class="n">01</div><div class="s">Answer</div></div>
+    <div class="stat" id="s1"><div class="n">02</div><div class="s">Book</div></div>
+    <div class="stat" id="s2"><div class="n">03</div><div class="s">Follow up</div></div>
+  </section>
+
+  <section class="scene" id="end">
+    <!-- Use the client's official wordmark SVG here, never retyped text. Text stands in for the smoke test. -->
+    <div class="mark"><span class="m"><span class="w">Brand</span></span></div>
+    <div class="tag"><span class="m"><span class="w">One line that says what it does</span></span></div>
+    <div class="url"><span class="m"><span class="w">example.com</span></span></div>
+  </section>
+</div>
+
+<script>
+const V = innerHeight > innerWidth;                 // 9:16 re-layout, never a pillarbox
+const W = innerWidth, H = innerHeight;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+
+// ---- time helpers: everything is a pure function of t ----
+const P = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));          // progress of t through [a, b]
+const eo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);                         // expo out (reveals)
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;     // cubic in-out (camera, exits)
+const L = (a, b, k) => a + (b - a) * k;
+
+// masked word: in over [a, a+0.55], out over [b-0.38, b]; hidden once fully out (no 1 px sliver)
+function word(el, t, a, b = 1e9) {
+  const y = 110 * (1 - eo(P(t, a, a + 0.55))) - 110 * eio(P(t, b - 0.38, b));
+  el.style.transform = `translateY(${y}%)`;
+  el.style.visibility = Math.abs(y) >= 100 ? 'hidden' : 'visible';
+}
+function words(par, text) {
+  return text.split(' ').map((w, i, all) => {
+    const m = document.createElement('span'); m.className = 'm';
+    const s = document.createElement('span'); s.className = 'w' + (w.startsWith('*') ? ' accent' : ''); s.textContent = w.replace(/\*/g, '');
+    m.appendChild(s); par.appendChild(m);
+    if (i < all.length - 1) { const g = document.createElement('span'); g.className = 'gap'; par.appendChild(g); }
+    return s;
+  });
+}
+
+// ---- homography: map an element of size (w, h) onto any 4-point quad (tl, tr, br, bl) via CSS matrix3d ----
+function quad(w, h, q) {
+  const [x0, y0] = q[0], [x1, y1] = q[1], [x2, y2] = q[2], [x3, y3] = q[3];
+  const dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2, sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3;
+  const det = dx1 * dy2 - dx2 * dy1;
+  const g = (sx * dy2 - dx2 * sy) / det, hh = (dx1 * sy - sx * dy1) / det;
+  const a = x1 - x0 + g * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + g * y1, e = y3 - y0 + hh * y3;
+  // unit square -> quad, pre-scaled by 1/w, 1/h
+  return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
+}
+
+// ---- layout, measured once ----
+const S = V ? { hook: 150, side: 150, statN: 190, statS: 44, mark: 190, tag: 52, url: 46, dev: 0.95 }
+            : { hook: 176, side: 168, statN: 210, statS: 40, mark: 220, tag: 48, url: 40, dev: 1.0 };
+const h1 = words($('#h1'), 'Still doing it'), h2 = words($('#h2'), '*by hand?*');
+['#h1', '#h2'].forEach(s => $(s).style.fontSize = S.hook + 'px');
+$('#h1').style.top = (V ? H * 0.36 : H * 0.30) + 'px';
+$('#h2').style.top = (V ? H * 0.36 + S.hook * 1.1 : H * 0.30 + S.hook * 1.05) + 'px';
+const side = $('#side'); side.style.fontSize = S.side + 'px';
+$$('.side .row').forEach(r => r.style.height = S.side * 1.02 + 'px');
+if (V) { side.style.left = '90px'; side.style.top = (H * 0.64) + 'px'; } else { side.style.left = '130px'; side.style.top = '330px'; }
+const stats = [0, 1, 2].map(i => $('#s' + i));
+stats.forEach((s, i) => {
+  s.querySelector('.n').style.fontSize = S.statN + 'px'; s.querySelector('.s').style.fontSize = S.statS + 'px';
+  if (V) { s.style.left = '120px'; s.style.top = (380 + i * 420) + 'px'; }      // stack: each lands and STAYS
+  else { s.style.left = (220 + i * 560) + 'px'; s.style.top = '380px'; }
+});
+$('#end .mark').style.fontSize = S.mark + 'px'; $('#end .tag').style.fontSize = S.tag + 'px'; $('#end .url').style.fontSize = S.url + 'px';
+if (V) $('#end .tag').style.padding = '0 70px';
+const rows = $$('#screen .row');
+let strikeBox;
+window.setupLayout = () => {
+  show('hook', true);                      // measure while visible: a display:none scene has no boxes
+  const r1 = h2[0].parentElement.getBoundingClientRect(), r2 = h2[h2.length - 1].parentElement.getBoundingClientRect();
+  strikeBox = { x: r1.left, y: (r1.top + r1.bottom) / 2 + 6, w: r2.right - r1.left };
+  show('hook', false);
+};
+
+// the screen's quad on the 16:9 / 9:16 frame at camera "rest" (a slight 3/4 turn)
+function screenQuad(k) {
+  const cx = V ? W * 0.5 : W * 0.66, cy = V ? H * 0.34 : H * 0.47, s = (V ? 1.12 : 1.18) * S.dev, turn = L(0.0, 1.0, k);
+  const hw = 400 * s, hh = 260 * s, lean = 38 * s * turn;
+  return [[cx - hw, cy - hh + lean], [cx + hw, cy - hh - lean * 0.4], [cx + hw, cy + hh + lean * 0.2], [cx - hw, cy + hh - lean * 0.6]];
+}
+
+function show(id, on) { $('#' + id).style.display = on ? (id === 'end' ? 'flex' : 'block') : 'none'; }
+
+async function seek(t) {
+  // 0-4: hook on paper. Words land on beats, settle (>= 0.3 s per word), strike on 2.0, exit into the drop.
+  show('hook', t < 4.0);
+  if (t < 4.0) {
+    h1.forEach((w, i) => word(w, t, 0.0 + i * 0.25, 3.9 + i * 0.03));
+    h2.forEach((w, i) => word(w, t, 0.75 + i * 0.25, 3.9));
+    const k = eo(P(t, 2.0, 2.4)) * (1 - eio(P(t, 3.5, 3.8)));
+    const st = $('#strike');
+    st.style.left = strikeBox.x + 'px'; st.style.top = strikeBox.y + 'px'; st.style.width = strikeBox.w + 'px';
+    st.style.transform = `scaleX(${k})`; st.style.visibility = k > 0.001 ? 'visible' : 'hidden';
+  }
+
+  // 4-8: hard cut on the drop. The screen is ALREADY on screen at 4.0 (no black frame); it turns into place.
+  show('device', t >= 4.0 && t < 8.0);
+  if (t >= 4.0 && t < 8.0) {
+    const k = eio(P(t, 4.0, 4.6));
+    const q = screenQuad(k).map(([x, y]) => [x + (1 - k) * (V ? 0 : 260), y + (1 - k) * (V ? 220 : 0)]);
+    const push = L(1.0, 1.04, P(t, 4.0, 8.0));                     // one camera language: slow push
+    $('#cam').style.transform = `scale(${push})`; $('#cam').style.transformOrigin = '50% 45%';
+    $('#screen').style.transform = quad(800, 520, q);
+    rows.forEach(r => { const a = +r.dataset.at, kk = eo(P(t, a, a + 0.35));
+      r.style.opacity = kk; r.style.transform = `translateX(${(1 - kk) * 40}px)`; });
+    // side type: "Before" in, then a true stacked roll Slow -> Fast on 6.0 (y_new = y_old + 110%)
+    word($('#sr1 .w'), t, 4.3, 7.9);
+    const roll = eio(P(t, 6.0, 6.45));
+    const ya = roll * -110, yb = 110 - roll * 110;
+    const a = $('#rollA .w'), b = $('#rollB .w');
+    const inA = 110 * (1 - eo(P(t, 4.55, 5.1)));
+    a.style.transform = `translateY(${t < 6.0 ? inA : ya}%)`; a.style.visibility = Math.abs(t < 6.0 ? inA : ya) >= 100 ? 'hidden' : 'visible';
+    const outB = -110 * eio(P(t, 7.52, 7.9));
+    b.style.transform = `translateY(${t < 7.5 ? yb : outB}%)`; b.style.visibility = Math.abs(t < 7.5 ? yb : outB) >= 100 ? 'hidden' : 'visible';
+  }
+
+  // 8-10: stats land on 8th notes and STAY (never replace each other)
+  show('stats', t >= 8.0 && t < 10.0);
+  if (t >= 8.0 && t < 10.0) stats.forEach((s, i) => {
+    const k = eo(P(t, 8.0 + i * 0.25, 8.5 + i * 0.25));
+    s.style.transform = `translateY(${(1 - k) * 60}px)`; s.style.opacity = k;
+  });
+
+  // 10-12: end card. Wordmark on the downbeat, tagline and URL follow, then hold.
+  show('end', t >= 10.0);
+  if (t >= 10.0) {
+    word($('#end .mark .w'), t, 10.0); word($('#end .tag .w'), t, 10.35); word($('#end .url .w'), t, 10.6);
+  }
+}
+
+window.seek = seek;
+window.ready = (async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+  window.setupLayout();
+  await seek(0);
+  return true;
+})();
+</script>
+</body>
+</html>

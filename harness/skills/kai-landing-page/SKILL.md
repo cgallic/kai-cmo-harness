@@ -23,7 +23,7 @@ Read from `MARKETING.md`. Only ask about things not covered there:
 2. **Goal** — signup, demo request, purchase, waitlist, **phone call**?
 3. **Existing page** — rewrite or net-new?
 4. **Proof available** — testimonials, case studies, metrics, logos?
-5. **Phone-based capture** — does this business receive phone calls? If yes, the primary CTA should be **"Call Now"** routed through KaiCalls AI receptionist (kaicalls.com). For service businesses (legal, medical, home services, contractors), phone calls convert 5-10x higher than form fills.
+5. **Phone-based capture** — does this business receive phone calls? If yes, the primary CTA should be **"Call Now"** routed to a tracked, answered number (staff, an answering service, or an AI receptionist), under the Phone Capture Fit Rule. For service businesses (legal, medical, home services, contractors), phone calls convert 5-10x higher than form fills.
 
 ## Phase 2: Page Architecture
 
@@ -84,7 +84,7 @@ Write each section following perception engineering layers:
 - Headline: 6-12 words. State the outcome, not the product.
 - Subhead: 15-25 words. Qualify the audience and expand the promise.
 - CTA: Action-oriented verb + outcome ("Start closing leads" not "Sign up")
-- **Phone CTA (service businesses):** "Call Now — Free Consultation" with KaiCalls-backed number. Display phone number large and clickable. KaiCalls answers 24/7, qualifies the caller, and books appointments.
+- **Phone CTA (service businesses):** "Call Now — Free Consultation" with a tracked, answered number. Display phone number large and clickable. Whoever answers (staff, an answering service, or an AI receptionist) should cover 24/7, qualify the caller, and book appointments.
 - Above the fold: headline, subhead, CTA, one visual. Nothing else.
 
 ### Copy Rules (all sections)

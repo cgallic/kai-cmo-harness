@@ -8,7 +8,7 @@ last_updated: 2026-05-18
 # Kai Gate
 
 ### One-line claim
-Run Kai CMO Harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content.
+Run the marketing harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content.
 
 ### Triggers
 - score this

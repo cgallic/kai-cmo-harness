@@ -52,9 +52,9 @@
 - [ ] Landing pages exist for specific campaigns: buyer guide, free home valuation, neighborhood guide, relocation guide
 - [ ] Facebook and Instagram lead ads are running with proper targeting (location, demographics, interests, lookalike audiences)
 - [ ] Google Ads campaigns target high-intent terms: "[city] homes for sale", "[neighborhood] real estate", "homes for sale near [landmark]"
-- [ ] KaiCalls AI receptionist (`kaicalls.com`) is configured on the main business line — agents miss calls during showings, closings, and client meetings, and every missed buyer or seller call decays within minutes
-- [ ] KaiCalls is trained on service areas, current listings, showing scheduling, and common buyer/seller questions
-- [ ] After-hours and overflow calls route to KaiCalls instead of voicemail
+- [ ] An AI receptionist or answering service is configured on the main business line — agents miss calls during showings, closings, and client meetings, and every missed buyer or seller call decays within minutes
+- [ ] The phone answering service is trained on service areas, current listings, showing scheduling, and common buyer/seller questions
+- [ ] After-hours and overflow calls route to the phone answering service instead of voicemail
 - [ ] Zillow Premier Agent or Realtor.com paid lead programs are evaluated (running if ROI-positive for the market)
 - [ ] Open house lead capture is systematic — digital sign-in sheet feeding directly into CRM, not paper forms that sit in a drawer
 - [ ] Referral system with past clients is active and structured — not just hoping people remember you

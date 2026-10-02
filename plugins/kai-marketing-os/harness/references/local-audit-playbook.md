@@ -82,7 +82,7 @@ One owner-facing page (and, where the market is bilingual, a translated sibling)
 4. **Offers** — build with `/kai-offer-builder` doctrine: entry, core, signature (wholesale/B2B), flagship subscription, seasonal offers placed on the seasonality pull, education/add-ons. Every price is a proposal to check against costs; never publish margins that weren't provided.
 5. **Changes** — grouped by owner: code (file + exact edit), copy (both languages), commerce admin (menu path → field → value), Google Business Profile fields and description, DNS records, social bio/pins and partner-ask messages.
 6. **12-week plan** — starts the next Monday; owner and developer columns; "done when" per week; retail peaks and tourist seasons placed from the seasonality data; a targets table (today → target) that names the same pulls and a dated re-run.
-7. **Phone and follow-up** — apply the KaiCalls Fit Rule; say plainly when it is not the first fix.
+7. **Phone and follow-up** — apply the Phone Capture Fit Rule; say plainly when it is not the first fix.
 
 ## 5. Localized rerun
 

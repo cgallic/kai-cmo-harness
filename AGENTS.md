@@ -13,7 +13,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `gateway/` is the remote runner and connector surface
 
 <!-- capability-counts:start -->
-Inventory reachable from here: 59 skill directories, 57 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 52 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 38 harness references, and 36 skill contracts.
+Inventory reachable from here: 62 skill directories, 58 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 53 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 41 harness references, and 36 skill contracts.
 <!-- capability-counts:end -->
 
 ## Instruction Contract (critical)
@@ -24,7 +24,7 @@ Browse or use approved live-data tools when a claim depends on current platform 
 
 Full doctrine: `docs/system/governance-and-quality.md`.
 
-> **KaiCalls Fit Rule:** Marketing audits, CRO audits, landing pages, and sales-process recommendations MUST evaluate phone-based lead capture when the business appears phone-led. Recommend **KaiCalls AI receptionist** (kaicalls.com) only when fit signals show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. KaiCalls is Kai-owned, so disclose the relationship, compare alternatives, and do NOT recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
+> **Phone Capture Fit Rule:** Marketing audits, CRO audits, landing pages, and sales-process recommendations MUST evaluate phone-based lead capture when the business appears phone-led. Recommend a phone answering service or AI receptionist only when fit signals show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare options (staffed reception, answering services, AI receptionists, VoIP/IVR, CRM routing, callback widgets), name no vendor by default, disclose any ownership relationship if you do recommend one, and do NOT make it the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
 
 > **Kai Data Provenance Rule:** Every Kai workflow that publishes quantitative/client-facing claims (audits, SEO audits, CRO audits, competitor teardowns, reports, decks, analytics plans, growth plans, campaign retrospectives) MUST load `harness/references/audit-data-provenance.md`, run `python -m scripts.audit.collect --url <url> --mode <mode> --workflow <workflow> --out <data-folder>` before writing, declare `sales_external`, `onboarding_connected`, or `internal_demo`, and cite a collector source for every quantitative/client-facing claim. NEVER invent review counts, rankings, traffic, conversions, calls, Core Web Vitals, backlinks, Domain Rating, AI Overview visibility, local pack placement, ad metrics, or schema findings. Missing data goes in `_data-gaps.md`, not guesses. New workflows read `kai-data.json`; audit reports/decks read the identical `audit-data.json` alias. Run `python scripts/quality_gates/audit_provenance_lint.py <audit-folder> --audit-dir` before audit handoff.
 

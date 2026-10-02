@@ -450,7 +450,7 @@ def format_text(url: str, checks: list[dict], verdict: str, summary: dict) -> st
 
 
 def main() -> int:
-    p = argparse.ArgumentParser(description="Agent-readiness linter for Kai CMO harness")
+    p = argparse.ArgumentParser(description="Agent-readiness linter for the marketing harness")
     p.add_argument("url", help="Base URL to audit (e.g., https://example.com)")
     p.add_argument("--json", action="store_true", help="Output JSON")
     p.add_argument("--strict", action="store_true", help="Fail (exit 1) on any P1 miss, not just P0")

@@ -171,7 +171,7 @@ ACTIVATION = User completes [key action] within [timeframe]
 Examples:
   Slack:    "Send 2,000 messages" (team-level)
   Dropbox:  "Upload first file"
-  KaiCalls: "First call answered by AI"
+  AI receptionist: "First call answered by AI"
   Figma:    "Invite a collaborator"
 ```
 

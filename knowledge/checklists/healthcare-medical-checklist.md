@@ -89,10 +89,10 @@
 - [ ] New patient booking flow is clear and available via phone and online
 - [ ] Online scheduling available through at least one channel (Zocdoc, website direct booking, EHR patient portal)
 - [ ] Online scheduling is prominently placed — not buried in navigation
-- [ ] KaiCalls AI receptionist (`kaicalls.com`) configured for the practice phone line to handle appointment requests, insurance questions, and after-hours calls
-- [ ] KaiCalls trained on practice services, providers, accepted insurance plans, office hours, and common patient FAQs
-- [ ] KaiCalls after-hours mode active (no patient call should ever reach voicemail)
-- [ ] KaiCalls overflow enabled for unanswered daytime calls during peak volumes
+- [ ] An AI receptionist or answering service configured for the practice phone line to handle appointment requests, insurance questions, and after-hours calls
+- [ ] The phone answering service trained on practice services, providers, accepted insurance plans, office hours, and common patient FAQs
+- [ ] After-hours answering active (no patient call should ever reach voicemail)
+- [ ] Overflow answering enabled for unanswered daytime calls during peak volumes
 - [ ] Test call completed and reviewed for conversation quality and scheduling accuracy
 - [ ] New patient intake forms available online for download or digital completion before the visit (reduce in-office friction)
 - [ ] Insurance verification process communicated clearly on website and during booking
@@ -116,7 +116,7 @@
 - [ ] Insurance accepted page is complete and current
 - [ ] New patient information page covers: what to bring, arrival time, intake process, cancellation policy
 - [ ] Phone number appears in the header on every page, is clickable (`tel:` link), and is visually prominent
-- [ ] KaiCalls backup ensures calls answered even when front desk is unavailable
+- [ ] Backup call answering ensures calls are answered even when the front desk is unavailable
 - [ ] Contact form exists with clear expectation on response time
 - [ ] Mobile-optimized (patients search and book on phones — mobile experience must be seamless)
 - [ ] Page load time under 3 seconds on mobile

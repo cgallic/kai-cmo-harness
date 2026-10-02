@@ -240,7 +240,7 @@ def _write_claude_md(workdir: Path, task: AgentTask):
     skill_names = _get_skills_for_task(task)
     skills_list = "\n".join(f"- `{s}`" for s in skill_names)
 
-    claude_md = f"""# MeetKai Agent Task
+    claude_md = f"""# Marketing Agent Task
 
 You are an autonomous marketing agent executing a task for a brand.
 

@@ -25,6 +25,6 @@ Use Facebook for community trust, local/community distribution, Groups, Reels, e
 
 - Load `meta-organic-posting-rules.md` before drafting or scheduling.
 - Use Meta-approved APIs/tools only.
-- Disclose branded content, sponsorship, affiliate incentives, and Kai ownership.
+- Disclose branded content, sponsorship, affiliate incentives, and any ownership interest in the promoted brand.
 - Check Community Notes risk for factual, political, health, finance, or public-interest claims.
 - Check ad rules before boosting.

@@ -16,7 +16,7 @@ Available engines
   targeting, and per-location scoring for multi-location businesses.
 - **trust_proof** -- Testimonials, case studies, credentials, team
   visibility, guarantees, insurance, affiliations, Google reviews, social
-  proof specificity, and KaiCalls phone lead capture assessment.
+  proof specificity, and phone lead capture assessment.
 - **review_reputation** -- Online review health: count, rating, velocity,
   recency, response rate, platform distribution, negative patterns, and
   review-generation system detection.
@@ -30,7 +30,7 @@ Available engines
 - **lifecycle_followup** -- Email capture, welcome sequences, post-service
   follow-up, review request automation, referral systems, dormant customer
   reactivation, quote/proposal follow-up, speed to lead, after-hours
-  lead capture (KaiCalls), and CAN-SPAM/TCPA compliance advisory.
+  lead capture, and CAN-SPAM/TCPA compliance advisory.
 - **paid_media_readiness** -- Conversion tracking, landing pages, ad account
   status, pixel/tag verification, audience definitions, budget allocation,
   creative assets, offer/CTA clarity, competitor landscape advisory,

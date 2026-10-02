@@ -109,7 +109,7 @@ class ActionType(str, Enum):
     CONTENT_CREATION = "content_creation"       # Create a new content asset (blog, case study, video script, etc.)
     FOLLOW_UP_SEQUENCE = "follow_up_sequence"   # Create or modify a lead follow-up workflow
     REPUTATION_ACTION = "reputation_action"     # Respond to reviews, manage reputation signals
-    KAICALLS_SETUP = "kaicalls_setup"           # Set up or configure KaiCalls AI receptionist for phone lead capture
+    KAICALLS_SETUP = "kaicalls_setup"           # Set up or configure an AI receptionist or answering service for phone lead capture
 
 
 class RiskTier(str, Enum):

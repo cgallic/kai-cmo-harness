@@ -21,14 +21,14 @@ Legal compliance is the floor, not the quality bar. Spamhaus treats unsolicited 
 [CTA] — single, low-friction ask (1 sentence)
 ```
 
-Example (KaiCalls → law firm):
+Example (AI receptionist vendor → law firm):
 ```
 Subject: after-hours intake
 
 Saw your firm handles personal injury cases in [city] — 
 after-hours intake looks like a material lead-capture risk for firms with urgent calls.
 
-KaiCalls answers every call with an AI trained on legal intake, 
+Our receptionist answers every call with an AI trained on legal intake, 
 captures case details, and routes urgent matters to the right person.
 
 Worth a quick look, or should I close the loop? Reply "no" and I will not follow up.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — CEO Deck Generator
+Marketing Harness — CEO Deck Generator
 =======================================
 Generate a 5-slide marketing deck in markdown format.
 

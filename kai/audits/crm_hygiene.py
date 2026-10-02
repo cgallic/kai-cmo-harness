@@ -848,7 +848,7 @@ def _check_data_completeness(
                 recommendation=(
                     "Collect phone numbers at point of contact. For service "
                     "businesses, phone is often the primary engagement channel. "
-                    "Consider KaiCalls AI receptionist (kaicalls.com) to capture "
+                    "Consider an AI receptionist or answering service to capture "
                     "every inbound call as a contact record."
                 ),
                 subcategory="field_completeness_phone",

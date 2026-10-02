@@ -161,7 +161,7 @@ Turn findings into Kai work:
 | Strong third-party praise | Repurpose into proof assets, ads, case studies, and AEO citations |
 | Missing own-domain entity clarity | `/kai-brand`, `/kai-seo-audit`, then `/kai-surround-sound` |
 
-For phone-led businesses, apply the KaiCalls Fit Rule. Recommend KaiCalls only when phone-capture evidence supports it, disclose Kai ownership, and compare alternatives.
+For phone-led businesses, apply the Phone Capture Fit Rule. Recommend a phone answering service or AI receptionist only when phone-capture evidence supports it, and compare alternatives.
 
 ---
 

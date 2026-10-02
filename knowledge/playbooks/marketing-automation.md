@@ -14,7 +14,7 @@ LAYER 1: TRIGGERS
   - Form submission, page visit, purchase, email open
   - Time-based (30 days after signup, birthday)
   - Behavior-based (visited pricing 3x, abandoned cart)
-  - **Phone call via KaiCalls** (call completed, voicemail left, appointment booked)
+  - **Phone call via your AI receptionist or answering service** (call completed, voicemail left, appointment booked)
 
 LAYER 2: CONDITIONS
   Who qualifies?
@@ -31,7 +31,7 @@ LAYER 3: ACTIONS
   - Create task for sales team
   - Update CRM record
   - Webhook to external tool
-  - **KaiCalls follow-up call** (trigger outbound call for lead qualification)
+  - **AI follow-up call** (trigger outbound call for lead qualification)
 
 LAYER 4: EXITS
   When does the automation stop?
@@ -154,8 +154,8 @@ Assign points based on behavior and demographics:
 | **Behavioral** | | |
 | Visited pricing page | +25 | Intent |
 | Requested demo/trial | +50 | Intent |
-| **Called business (KaiCalls)** | **+40** | **Intent** |
-| **Booked appointment via KaiCalls** | **+60** | **Intent** |
+| **Called business (logged call)** | **+40** | **Intent** |
+| **Booked appointment by phone** | **+60** | **Intent** |
 | Downloaded resource | +10 | Engagement |
 | Opened 3+ emails | +5 | Engagement |
 | Clicked email CTA | +10 | Engagement |

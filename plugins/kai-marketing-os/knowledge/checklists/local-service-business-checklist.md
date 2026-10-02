@@ -50,16 +50,16 @@
 
 ---
 
-## KaiCalls AI Receptionist
+## Phone Answering (AI Receptionist or Answering Service)
 
 > **Why it matters:** Every missed inbound call is a likely lost job. Local service demand decays fast because callers contact multiple providers and book whoever answers first.
 
-- [ ] KaiCalls (`kaicalls.com`) configured on the main business number
-- [ ] AI agent trained on services, pricing ranges, service areas, and FAQs
+- [ ] An AI receptionist or answering service configured on the main business number
+- [ ] Receptionist or agent trained on services, pricing ranges, service areas, and FAQs
 - [ ] Lead-qualification questions configured for the business model
 - [ ] Call notifications route to owner/operator via SMS and/or email
 - [ ] Scheduling tool integration configured (Jobber, Housecall Pro, Calendly, etc.)
-- [ ] After-hours calls answered by KaiCalls instead of voicemail
+- [ ] After-hours calls answered by the phone answering service instead of voicemail
 - [ ] Overflow handling enabled for unanswered daytime calls
 - [ ] Test call completed and reviewed for conversation quality and lead capture accuracy
 - [ ] Spanish language support configured if the market requires it
@@ -101,7 +101,7 @@
 - [ ] Business hours aligned with actual response coverage
 - [ ] Lead review and dispute process exists for invalid leads within 30 days
 - [ ] Callback speed target is under 5 minutes for new LSA leads
-- [ ] KaiCalls is configured to answer LSA calls so no paid lead hits voicemail
+- [ ] Phone answering covers LSA calls so no paid lead hits voicemail
 - [ ] Reviews are actively maintained because they influence LSA visibility
 - [ ] Weekly checks cover lead quality, CPL, close rate, and dispute rate
 
@@ -183,7 +183,7 @@ Rate each section 1-5:
 |---------|:-----------:|:------:|-------|
 | Google Business Profile | | 5x | Most important asset |
 | Reviews & Reputation | | 5x | Strongest trust / conversion factor |
-| KaiCalls AI Receptionist | | 4x | Missed calls = lost revenue |
+| Phone Answering | | 4x | Missed calls = lost revenue |
 | Local SEO & Citations | | 3x | Long-term local visibility |
 | Google Local Services Ads | | 3x | Highest-intent paid channel |
 | Website Essentials | | 2x | Supports other channels |

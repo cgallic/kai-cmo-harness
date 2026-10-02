@@ -41,9 +41,9 @@ Missing credentials are data gaps, never estimates.
 
 ## Recommendation Ethics
 
-Label recommendations as required compliance actions, high-confidence operating guidance, experiments, product recommendations, Kai-owned product recommendations, or missing-data caveats. Kai-owned products require disclosure and fit logic.
+Label recommendations as required compliance actions, high-confidence operating guidance, experiments, product recommendations, owned-product recommendations, or missing-data caveats. A product that you, the operator, or the client owns requires ownership disclosure and fit logic.
 
-For KaiCalls, evaluate phone-based lead capture when a business appears phone-led. Recommend it only when the facts show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives. Do not recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
+Under the Phone Capture Fit Rule, evaluate phone-based lead capture when a business appears phone-led. Recommend a phone answering service or AI receptionist only when the facts show missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging pain. Compare alternatives. Do not recommend it as the primary action when phone demand is low, compliance is unresolved, the workflow is self-serve by design, or source data is missing.
 
 ## Completion Standard (ECO)
 
@@ -76,6 +76,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 | `/kai-social` | Batch social posts across IG, X, TikTok, LinkedIn, YouTube |
 | `/kai-bulkpublish` | Approval-gated handoff of social content to BulkPublish |
 | `/kai-video` | Video scripts + clipping plans for short/long-form |
+| `/kai-motion-spot` | Code-rendered launch spots, screenshot walkthroughs and pain-point videos: hype score cut on the drop, web encodes, embed kit, service playbook |
 | `/kai-cold-outreach` | Cold email outreach sequences |
 | `/kai-sdr-operator` | SDR operator package for lead sources, scoring, outreach handoff, and reply triage |
 | `/kai-sdr-reply-triage` | Reply classification, suppression handling, CRM handoff, and next actions |
@@ -161,6 +162,9 @@ Run monthly or after any sprint with 5+ gated pieces. Memory index: `memory/MEMO
 - **"I need a system"** → orchestrator skill (email-system, ad-campaign, content-calendar, launch)
 - **"What's wrong?"** → `/kai-audit` or `/kai-cro`
 - **"Audit this local business"** (a Maps/share.google/website link for someone else's business) → `/kai-local-audit`
+- **"Make a launch video / walkthrough videos / pain-point videos for the site"** or **"sell video production"** → `/kai-motion-spot`
+- **"Make this page look less AI-generated / less templated"** or **"redesign the site"** (landing pages, portfolios, marketing pages) → the `design-taste-frontend` skill (third-party, MIT, audit-first on redesigns)
+- **"Fix this button / error message / empty state copy"** or **"audit the UI strings"** (microcopy, forms, onboarding, voice and tone for an interface) → the `ux-writing` skill (third-party, MIT)
 - **"What should I do?"** → `/kai-growth-plan`
 - **"Who should own distribution?"** → `/kai-growth-hacker`
 - **"Multiply what I have"** → `/kai-repurpose`

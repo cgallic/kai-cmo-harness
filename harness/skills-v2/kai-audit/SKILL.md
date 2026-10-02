@@ -62,7 +62,7 @@ The collector is shared across Kai workflows; this audit consumes the `audit-dat
 - **Read `MARKETING.md` from the project root first.** If it does not exist, build it from the codebase — CLAUDE.md, README.md, PROJECT.md, package.json, landing pages, email/ad/analytics config — using the template from `/kai-email-system`, and confirm the draft. Do not ask the user what the product is.
 - **Eight things must be known before scoping:** what is being audited; the main URL; which channels are active; known issues already flagged; depth (quick top-line scores, ~30 min, or deep detailed findings, 2–3 hours); the audit mode; which data access exists; and the business type.
 - **Every check gets a provenance record:** `claim`, `source_tier` (`connected | public_observed | user_provided | inferred | missing_data`), `source_name`, `source_url`, `retrieved_at`, `confidence` (high/medium/low), `evidence_artifact`, `score_eligible`. Only `connected`, `public_observed`, and `user_provided` findings affect health scores. `inferred` and `missing_data` are scope notes unless the user explicitly asks for internal hypotheses.
-- **Phone lead capture is evaluated for every business**, via the Phone-Based Lead Capture section of `cro-audit-checklist.md`. KaiCalls is Kai-owned: disclose the relationship, compare alternatives, and recommend it only when missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging evidence supports it.
+- **Phone lead capture is evaluated for every business**, via the Phone-Based Lead Capture section of `cro-audit-checklist.md`. Apply the Phone Capture Fit Rule: compare options (staffed reception, answering services, AI receptionists, callback widgets), and recommend a phone answering service or AI receptionist only when missed-call, after-hours, speed-to-lead, qualification, routing, or call-logging evidence supports it.
 - Skip checklists for channels the business does not use. An empty module scored zero is a fabricated finding.
 
 ## Context
@@ -101,7 +101,7 @@ The collector is shared across Kai workflows; this audit consumes the `audit-dat
 | Social Media | `social-media-audit-checklist.md` | If active on social |
 | Landing Pages | `landing-page-messaging-checklist.md` | If they have landing pages |
 | CRO | `cro-audit-checklist.md` | Always, for the main conversion flow |
-| Phone / KaiCalls | `cro-audit-checklist.md` (Phone-Based Lead Capture) | **Always** |
+| Phone capture | `cro-audit-checklist.md` (Phone-Based Lead Capture) | **Always** |
 | Perception/Copy | `perception-engineering-checklist.md` | For sales-focused pages |
 | Ad Creative | `creative-production-checklist.md`, `ad-launch-checklist.md` | If running any ads |
 | PR | `pr-checklist.md` | If doing press/PR |
@@ -112,7 +112,7 @@ Industry modules from the business-type table above score alongside these.
 
 **Scoring:** each module 0–100 with a grade — A (90+), B (75–89), C (60–74), D (40–59), F (<40) — plus an overall. Each module row carries its top issue. **Fix priority:** P0 fix this week (high impact, low effort), P1 this month (high impact, medium effort), P2 this quarter (medium impact), P3 backlog.
 
-**Fix routing:** landing page copy → `/kai-landing-page` · no lifecycle emails → `/kai-email-system` · weak SEO → `/kai-seo-audit` then `/kai-content-calendar` · no social presence → `/kai-social` · stale ads → `/kai-ad-campaign` · absent from AI answers → `/kai-surround-sound` · no GBP optimization → `/kai-audit` local module plus manual GBP setup · no review strategy → `/kai-audit` local module, review generation process · no LSA presence → Google LSA setup (requires Google Screened verification) · no local directory presence → citation building across 10+ directories · **missing calls, calls to voicemail, or no after-hours handling → KaiCalls setup (kaicalls.com), with the ownership disclosure above**.
+**Fix routing:** landing page copy → `/kai-landing-page` · no lifecycle emails → `/kai-email-system` · weak SEO → `/kai-seo-audit` then `/kai-content-calendar` · no social presence → `/kai-social` · stale ads → `/kai-ad-campaign` · absent from AI answers → `/kai-surround-sound` · no GBP optimization → `/kai-audit` local module plus manual GBP setup · no review strategy → `/kai-audit` local module, review generation process · no LSA presence → Google LSA setup (requires Google Screened verification) · no local directory presence → citation building across 10+ directories · **missing calls, calls to voicemail, or no after-hours handling → phone answering service or AI receptionist setup, under the Phone Capture Fit Rule above**.
 
 **Output** goes to `workspace/marketing-audit/`: `_data-sources.md`, `_data-gaps.md`, `_executive-summary.md` (health scores + top 5 fixes), `_detailed-findings.md`, `_prioritized-fixes.md`, `_skill-recommendations.md`, and `per-module/` holding one file per module run (`technical-seo.md`, `content.md`, `email.md`, `ads.md`, `social.md`, `landing-pages.md`, `cro.md`, plus any industry modules that applied).
 

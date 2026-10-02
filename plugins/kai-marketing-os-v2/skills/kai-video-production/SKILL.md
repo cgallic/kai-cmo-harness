@@ -7,6 +7,8 @@ description: Full-stack video production from script to rendered video. Combines
 
 > **Kai root note:** `knowledge/`, `harness/`, and `scripts/` paths in this skill live in the Kai install, not the user's project. Resolve them against the first ancestor directory of this SKILL.md that contains a `knowledge/` folder (the Kai plugin root, `~/.claude/kai`, or the kai-cmo-harness repo). `MARKETING.md`, `memory/`, and any output files live in the current project. If a referenced `scripts/` command is not available in this install, say so, skip it, and continue with the file-based guidance — never fabricate its output.
 
+> **Studio-grade motion spots** (a code-rendered hype launch spot, a walkthrough from real screenshots, or pain-point videos for a site, with the drop cut to the reveal) use `/kai-motion-spot`. This skill covers Remotion template production.
+
 ## Objective
 
 A finished video: an approved script, the assets it needs, synced audio, and a rendered MP4 at platform spec — with `project.json` describing the real state of the project on disk so the next session resumes without reconstruction.

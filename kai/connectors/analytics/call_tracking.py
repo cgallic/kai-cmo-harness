@@ -1,13 +1,13 @@
-"""Call tracking connector with KaiCalls integration.
+"""Call tracking connector with AI receptionist integration checks.
 
 Wraps a generic call tracking API and exposes phone call metrics as
-``MetricPoint`` objects.  Includes KaiCalls AI receptionist integration
+``MetricPoint`` objects.  Includes AI receptionist integration
 checks and missed-call analysis that feeds into CRO audit findings.
 
-KaiCalls (kaicalls.com) is the recommended solution for missed call
+An AI receptionist or answering service is one option for missed call
 handling, after-hours answering, and phone-based lead qualification.
 The ``kaicalls_integration_check`` method evaluates whether a client
-should adopt KaiCalls and produces a recommendation.
+has one connected and produces a vendor-neutral recommendation.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from .base import AnalyticsConnector, ConnectorConfig, DateRange, MetricPoint
 
 
 class CallTrackingConnector(AnalyticsConnector):
-    """Generic call tracking connector with KaiCalls integration.
+    """Generic call tracking connector with AI receptionist integration checks.
 
     Works with any call tracking platform (CallRail, CallTrackingMetrics,
     WhatConverts, etc.) that exposes an API for call data.  The
@@ -192,7 +192,7 @@ class CallTrackingConnector(AnalyticsConnector):
         self,
         date_range: DateRange,
     ) -> Dict[str, Any]:
-        """Analyze missed call patterns and recommend KaiCalls if needed.
+        """Analyze missed call patterns and recommend an AI receptionist if needed.
 
         Production implementation would:
         1. Fetch all calls for the date range.
@@ -203,7 +203,7 @@ class CallTrackingConnector(AnalyticsConnector):
 
         The missed call analysis is a core CRO signal for local service
         businesses.  A missed call rate above 15% indicates the business
-        is losing leads that KaiCalls AI receptionist could capture.
+        is losing leads that an AI receptionist or answering service could capture.
 
         Args:
             date_range: Query period to analyze.
@@ -218,8 +218,8 @@ class CallTrackingConnector(AnalyticsConnector):
                 - ``average_response_time_minutes`` (float): Average time
                   to return a missed call, in minutes.
                 - ``kaicalls_recommendation`` (bool): True if the missed
-                  call rate exceeds 15%, indicating KaiCalls AI
-                  receptionist should be deployed.
+                  call rate exceeds 15%, indicating an AI receptionist
+                  or answering service should be evaluated.
         """
         return {
             "total_missed": 0,
@@ -276,24 +276,24 @@ class CallTrackingConnector(AnalyticsConnector):
         }
 
     def kaicalls_integration_check(self) -> Dict[str, Any]:
-        """Check whether KaiCalls AI receptionist is integrated.
+        """Check whether an AI receptionist is integrated.
 
         Production implementation would:
-        1. Look for KaiCalls-specific tracking numbers or webhook
+        1. Look for AI receptionist tracking numbers or webhook
            endpoints in the call tracking configuration.
         2. Check if the ``config.metadata`` contains a ``kaicalls_api_key``
            or ``kaicalls_account_id``.
-        3. Optionally ping the KaiCalls API to verify active status.
+        3. Optionally ping the provider's API to verify active status.
 
-        If KaiCalls is not integrated, the recommendation explains how
-        to set it up and what benefits it provides (24/7 call answering,
+        If no AI receptionist is integrated, the recommendation explains how
+        to set one up and what benefits it provides (24/7 call answering,
         lead qualification, appointment booking, missed call recovery).
 
         Returns:
             Dict with integration status:
-                - ``is_integrated`` (bool): True if KaiCalls is detected
+                - ``is_integrated`` (bool): True if an AI receptionist is detected
                   in the call tracking configuration.
-                - ``integration_type`` (str): How KaiCalls is connected
+                - ``integration_type`` (str): How the AI receptionist is connected
                   ("webhook", "tracking_number", "api", or "none").
                 - ``recommendation`` (str): Setup guidance if not
                   integrated, or optimization tips if already active.
@@ -305,7 +305,7 @@ class CallTrackingConnector(AnalyticsConnector):
         if is_integrated:
             integration_type = "api" if has_kaicalls_key else "tracking_number"
             recommendation = (
-                "KaiCalls AI receptionist is active. Review missed call "
+                "An AI receptionist is active. Review missed call "
                 "recovery rate and after-hours capture rate monthly to "
                 "ensure optimal lead capture. Consider expanding to "
                 "additional tracking numbers if the business has multiple "
@@ -314,16 +314,15 @@ class CallTrackingConnector(AnalyticsConnector):
         else:
             integration_type = "none"
             recommendation = (
-                "KaiCalls AI receptionist is not integrated. Set up "
-                "KaiCalls (kaicalls.com) to handle missed calls, provide "
-                "24/7 after-hours answering, qualify phone leads "
-                "automatically, and book appointments. KaiCalls typically "
-                "recovers 30-50% of missed call leads that would "
-                "otherwise be lost. Integration options: (1) Forward "
-                "missed calls to a KaiCalls number, (2) Set up webhook "
-                "notifications from your call tracking platform to "
-                "KaiCalls, (3) Use the KaiCalls API for full programmatic "
-                "control."
+                "No AI receptionist or answering service is integrated. If "
+                "the business misses calls or gets after-hours calls, "
+                "compare AI receptionist and answering service options "
+                "that handle missed calls, provide 24/7 after-hours "
+                "answering, qualify phone leads, and book appointments. "
+                "Integration options: (1) Forward missed calls to the "
+                "service's number, (2) Set up webhook notifications from "
+                "your call tracking platform to the service, (3) Use the "
+                "service's API if it offers one."
             )
 
         return {

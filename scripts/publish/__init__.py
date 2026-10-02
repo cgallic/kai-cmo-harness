@@ -1,5 +1,5 @@
 """
-Kai CMO Harness — Publishing Module
+Marketing Harness — Publishing Module
 =====================================
 Unified interface for publishing content to any CMS.
 

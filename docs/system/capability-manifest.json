@@ -19,18 +19,18 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 59,
-    "canonical_kai_skills": 57,
-    "v2_goal_oriented_skills": 59,
-    "public_router_commands": 52,
-    "public_manifest_pages": 48,
+    "skill_directories": 62,
+    "canonical_kai_skills": 58,
+    "v2_goal_oriented_skills": 62,
+    "public_router_commands": 53,
+    "public_manifest_pages": 49,
     "undocumented_canonical_skills": 9,
     "playbook_docs": 67,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
     "audience_persona_profiles": 8,
-    "harness_references": 38,
+    "harness_references": 41,
     "skill_contracts": 36
   },
   "coverage": {
@@ -93,6 +93,11 @@
       "name": "kai-video",
       "category": "produce",
       "description": "Video scripts + clipping plans for short/long-form"
+    },
+    {
+      "name": "kai-motion-spot",
+      "category": "produce",
+      "description": "Code-rendered launch spots, screenshot walkthroughs and pain-point videos: hype score cut on the drop, web encodes, embed kit, service playbook"
     },
     {
       "name": "kai-cold-outreach",
@@ -361,7 +366,7 @@
     },
     {
       "name": "kai-brief",
-      "description": "Create a structured content brief using the Kai CMO Harness brief schema. Selects persona, defines angle, sets quality targets. Use when \"create a brief\", \"content brief\", \"plan this content\", \"brief for [topic]\", \"what persona should I use\", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.",
+      "description": "Create a structured content brief using the marketing harness brief schema. Selects persona, defines angle, sets quality targets. Use when \"create a brief\", \"content brief\", \"plan this content\", \"brief for [topic]\", \"what persona should I use\", or before any content creation to define the strategy. Outputs a brief that /kai-write and /kai-email-system consume.",
       "source": "harness/skills/kai-brief/SKILL.md",
       "public_router_command": true,
       "router_category": "plan",
@@ -465,7 +470,7 @@
     },
     {
       "name": "kai-funnel-audit",
-      "description": "Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the KaiCalls Fit Rule. Use when \"funnel audit\", \"audit my funnel\", \"why is my funnel leaking\", \"top of funnel isn't converting\", \"audit our lead magnets\", \"opt-in audit\", \"awareness to lead audit\", \"where are we losing people\", \"lead capture audit\", or any request to diagnose the full awareness-to-lead flow rather than one page.",
+      "description": "Two-layer funnel audit on collected data only — stress-test the awareness layer (hooks, messaging, proof placement, attention leaks on live pages and ads) and the lead-capture layer (opt-ins and lead magnets scored on the four Value Equation variables, friction findings, weakest-magnet rewrite), plus a phone-path check under the Phone Capture Fit Rule. Use when \"funnel audit\", \"audit my funnel\", \"why is my funnel leaking\", \"top of funnel isn't converting\", \"audit our lead magnets\", \"opt-in audit\", \"awareness to lead audit\", \"where are we losing people\", \"lead capture audit\", or any request to diagnose the full awareness-to-lead flow rather than one page.",
       "source": "harness/skills/kai-funnel-audit/SKILL.md",
       "public_router_command": true,
       "router_category": "audit",
@@ -473,7 +478,7 @@
     },
     {
       "name": "kai-gate",
-      "description": "Run Kai CMO Harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when \"score this\", \"quality check\", \"run quality gates\", \"check this content\", \"four u's score\", \"banned word check\", \"SEO lint\", or any request to validate content quality before publishing.",
+      "description": "Run the marketing harness quality gates on content. Scores Four U's (Unique/Useful/Ultra-specific/Urgent), checks for banned words and AI slop, runs SEO lint for search content. Use when \"score this\", \"quality check\", \"run quality gates\", \"check this content\", \"four u's score\", \"banned word check\", \"SEO lint\", or any request to validate content quality before publishing.",
       "source": "harness/skills/kai-gate/SKILL.md",
       "public_router_command": true,
       "router_category": "audit",
@@ -566,6 +571,14 @@
       "public_router_command": true,
       "router_category": "audit",
       "manifest_doc": "docs/skill-manifest/kai-monthly-audit.md"
+    },
+    {
+      "name": "kai-motion-spot",
+      "description": "Code-rendered motion video for a product or a client, built the way a motion studio would do it. Every frame comes from an HTML seek(t) page rendered by Playwright at 1080p60 with real motion blur, using real product UI and screenshots with a privacy blur, and an ElevenLabs hype score cut on bar lines with its drop verified on the reveal. Three formats — a 20-30 s hype launch spot, a polished feature walkthrough from real screenshots, and a 19 s pain-point video with a muted site cut and burned-in text. Delivered with baked posters, H.264 + VP9 web encodes at 1280 px (1.5-3 MB), a site-embed kit (muted autoplay or click-to-play), 9:16 social re-layouts and share copy, plus a service playbook for selling it. Use when \"make a launch video\", \"make a commercial / promo / ad spot\", \"motion design video\", \"product walkthrough video from screenshots\", \"pain point videos for the site\", \"videos for the homepage\", \"sell video production\", \"price a video package\", or a polished brand spot is wanted rather than a talking-head edit or a Remotion template batch (use /kai-video-production for those).",
+      "source": "harness/skills/kai-motion-spot/SKILL.md",
+      "public_router_command": true,
+      "router_category": "produce",
+      "manifest_doc": "docs/skill-manifest/kai-motion-spot.md"
     },
     {
       "name": "kai-newsletter",
@@ -697,7 +710,7 @@
     },
     {
       "name": "kai-start",
-      "description": "First-run onboarding for Kai CMO Harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, \"get started with Kai\", \"set up Kai\", \"first time using Kai\", or when MARKETING.md doesn't exist yet.",
+      "description": "First-run onboarding for the marketing harness. Walks new users through product discovery, generates MARKETING.md, and recommends the first command to run. Use when a user has just installed Kai and types /kai-start, \"get started with Kai\", \"set up Kai\", \"first time using Kai\", or when MARKETING.md doesn't exist yet.",
       "source": "harness/skills/kai-start/SKILL.md",
       "public_router_command": false,
       "router_category": null,
@@ -761,7 +774,7 @@
     },
     {
       "name": "kai-write",
-      "description": "Write a single piece of marketing content using Kai CMO Harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when \"write a blog post\", \"draft an email\", \"LinkedIn article\", \"cold outreach\", \"write ad copy\", \"press release\", \"TikTok script\", or any single content creation request. For building a complete email system, use /kai-email-system instead.",
+      "description": "Write a single piece of marketing content using the marketing harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona. Use when \"write a blog post\", \"draft an email\", \"LinkedIn article\", \"cold outreach\", \"write ad copy\", \"press release\", \"TikTok script\", or any single content creation request. For building a complete email system, use /kai-email-system instead.",
       "source": "harness/skills/kai-write/SKILL.md",
       "public_router_command": true,
       "router_category": "produce",

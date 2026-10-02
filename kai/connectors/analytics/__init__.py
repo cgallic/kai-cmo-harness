@@ -8,7 +8,7 @@ subsystems.
 Connectors available:
     GA4Connector          — Google Analytics 4 (Data API v1)
     GSCConnector          — Google Search Console (Search Analytics API)
-    CallTrackingConnector — Generic call tracking (with KaiCalls integration)
+    CallTrackingConnector — Generic call tracking (with AI receptionist checks)
     GBPConnector          — Google Business Profile (Performance API)
     AdMetricsAggregator   — Cross-platform ad metrics normalizer
 

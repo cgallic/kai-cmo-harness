@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Buffer Publisher
+Marketing Harness — Buffer Publisher
 =====================================
 Schedule posts via Buffer API (covers LinkedIn, Twitter, Instagram, Facebook, etc.).
 

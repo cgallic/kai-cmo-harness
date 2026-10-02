@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Kai CMO Harness — Google Ads Optimizer
+Marketing Harness — Google Ads Optimizer
 ========================================
 AI-powered optimization suggestions for Google Ads campaigns.
 

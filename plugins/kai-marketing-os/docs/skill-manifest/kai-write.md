@@ -8,7 +8,7 @@ last_updated: 2026-05-18
 # Kai Write
 
 ### One-line claim
-Write a single piece of marketing content using Kai CMO Harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona.
+Write a single piece of marketing content using the marketing harness frameworks and quality gates. Supports blog posts, LinkedIn articles, emails, cold outreach, press releases, ad copy, and TikTok scripts. Automatically loads the right framework, skill contract, and persona.
 
 ### Triggers
 - write a blog post

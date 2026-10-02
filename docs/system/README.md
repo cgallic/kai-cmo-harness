@@ -1,6 +1,6 @@
 # Kai System Guide
 
-This folder is the reader-facing map of the Kai CMO Harness. It explains how the runtime, skills, content engine, quality gates, approvals, gateway, connectors, background work, instruction contract, recommendation ethics, and evaluation doctrine fit together.
+This folder is the reader-facing map of the marketing harness. It explains how the runtime, skills, content engine, quality gates, approvals, gateway, connectors, background work, instruction contract, recommendation ethics, and evaluation doctrine fit together.
 
 Use this guide when you want to understand the product without reading every Python module first.
 
@@ -56,7 +56,7 @@ flowchart TB
 - [AutoResearch Specification](autoresearch-variants.md): Literature analysis, A/B landing page optimizer, and ad bidding experiment loop specification.
 - [Public Skill Manifest](../skill-manifest/README.md): versioned API-style docs for the canonical `kai-*` skill pages.
 - [Execution Lifecycle](execution-lifecycle.md): local generation, audit/proposal flow, run states, and action states.
-- [Governance and Quality](governance-and-quality.md): authoritative inventory, instruction contract, recommendation ethics, KaiCalls fit logic, evaluation doctrine, quality gate pipeline, audit provenance, approval policy, and memory writeback.
+- [Governance and Quality](governance-and-quality.md): authoritative inventory, instruction contract, recommendation ethics, phone capture fit logic, evaluation doctrine, quality gate pipeline, audit provenance, approval policy, and memory writeback.
 - [Remote and Connectors](remote-and-connectors.md): FastAPI gateway, job queue, connector maturity, scheduled tasks, and integration shape.
 - [Schema Catalog](schema-catalog.md): JSON Schema contracts and example payloads.
 

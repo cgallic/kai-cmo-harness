@@ -277,7 +277,7 @@ def test_local_service_defaults_applied():
     assert len(profile.goals.goals) >= 4
     assert profile.channels.primary_lead_source == "calls"
     assert any(c.channel == "calls" for c in profile.channels.channels)
-    assert any("KaiCalls" in n for n in profile.constraints.non_negotiables)
+    assert any("AI receptionist" in n for n in profile.constraints.non_negotiables)
 
 
 def test_local_service_defaults_do_not_overwrite_explicit():
@@ -475,7 +475,7 @@ def test_local_service_fixture_channels():
 
 def test_local_service_fixture_constraints():
     profile = load_local_service_fixture()
-    assert any("KaiCalls" in n for n in profile.constraints.non_negotiables)
+    assert any("AI receptionist" in n for n in profile.constraints.non_negotiables)
     assert len(profile.constraints.compliance_requirements) >= 1
     assert len(profile.constraints.brand_voice_notes) >= 1
     assert len(profile.constraints.blocked_tactics) >= 1

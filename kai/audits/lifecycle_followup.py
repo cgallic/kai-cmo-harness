@@ -1269,7 +1269,7 @@ def _check_speed_to_lead(
             recommendation = (
                 "This is a revenue emergency. Implement immediately: "
                 "(1) Automated instant text/email reply on every form submission, "
-                "(2) AI receptionist for phone calls (KaiCalls at kaicalls.com), "
+                "(2) AI receptionist or answering service for phone calls, "
                 "(3) CRM real-time alerts to the operator's phone. "
                 "Target under 5 minutes for first human response."
             )
@@ -1328,8 +1328,8 @@ def _check_speed_to_lead(
                     recommendation=(
                         "Implement automated lead response to cover gaps: "
                         "(1) Auto-reply text/email on every form submission "
-                        "(instant), (2) AI receptionist for phone calls "
-                        "(KaiCalls at kaicalls.com), (3) CRM mobile alerts "
+                        "(instant), (2) AI receptionist or answering service for "
+                        "phone calls, (3) CRM mobile alerts "
                         "for real-time lead notifications."
                     ),
                     source=FindingSource.INFERRED.value,
@@ -1404,7 +1404,7 @@ def _check_after_hours_capture(
     archetype: str,
     connected_data: Dict[str, Any],
 ) -> List[AuditFinding]:
-    """Check 9: After-hours lead capture (KaiCalls)."""
+    """Check 9: After-hours lead capture (AI receptionist or answering service)."""
     findings: List[AuditFinding] = []
 
     # Only critical for local-service and multi-location businesses.
@@ -1480,11 +1480,11 @@ def _check_after_hours_capture(
                 title="No after-hours lead capture -- losing leads when closed",
                 description=description,
                 recommendation=(
-                    "Implement KaiCalls AI receptionist (kaicalls.com) for "
+                    "Implement an AI receptionist or answering service for "
                     "24/7 call answering, lead qualification, and appointment "
                     "scheduling -- even when you're on a job or asleep. "
-                    "KaiCalls answers every call in seconds, qualifies the "
-                    "lead, and books appointments directly on your calendar."
+                    "An AI receptionist can answer every call, qualify the "
+                    "lead, and book appointments directly on your calendar."
                 ),
                 source=FindingSource.INFERRED.value,
                 effort=EffortLevel.QUICK_WIN.value,
@@ -1518,8 +1518,8 @@ def _check_after_hours_capture(
                     "captured automatically."
                 ),
                 recommendation=(
-                    "Even with extended hours, implement KaiCalls AI "
-                    "receptionist (kaicalls.com) as a safety net for "
+                    "Even with extended hours, implement an AI receptionist "
+                    "or answering service as a safety net for "
                     "overflow calls, break times, and busy periods "
                     "when staff cannot answer."
                 ),
