@@ -92,6 +92,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 - [Kai Local Audit](./kai-local-audit.md) - `kai-local-audit`
 - [Kai Motion Spot](./kai-motion-spot.md) - `kai-motion-spot`
 - [Kai Monthly Audit](./kai-monthly-audit.md) - `kai-monthly-audit`
+- [Kai Page Refresh](./kai-page-refresh.md) - `kai-page-refresh`
 - [Kai Reddit Listen](./kai-reddit-listen.md) - `kai-reddit-listen`
 - [Kai SEO Audit](./kai-seo-audit.md) - `kai-seo-audit`
 - [Kai Surround Sound](./kai-surround-sound.md) - `kai-surround-sound`

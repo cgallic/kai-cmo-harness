@@ -19,13 +19,13 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 62,
-    "canonical_kai_skills": 58,
-    "v2_goal_oriented_skills": 62,
-    "public_router_commands": 53,
-    "public_manifest_pages": 49,
+    "skill_directories": 63,
+    "canonical_kai_skills": 59,
+    "v2_goal_oriented_skills": 63,
+    "public_router_commands": 54,
+    "public_manifest_pages": 50,
     "undocumented_canonical_skills": 9,
-    "playbook_docs": 67,
+    "playbook_docs": 68,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
@@ -233,6 +233,11 @@
       "name": "kai-seo-audit",
       "category": "audit",
       "description": "Technical SEO audit with prioritized fixes"
+    },
+    {
+      "name": "kai-page-refresh",
+      "category": "audit",
+      "description": "More clicks from pages that already rank: portfolio triage, refresh queue, graded fixes"
     },
     {
       "name": "kai-cro",
@@ -595,6 +600,14 @@
       "public_router_command": true,
       "router_category": "produce",
       "manifest_doc": null
+    },
+    {
+      "name": "kai-page-refresh",
+      "description": "Grow search clicks by fixing pages that already rank instead of making new ones. Triages the portfolio (invest / maintain / freeze), builds a refresh queue from Search Console (CTR gaps at positions 1-7, striking distance at 8-20, split queries), drafts the fixes, and grades every shipped fix 28 days later against a site-level control. Use when \"striking distance\", \"page two\", \"refresh pages\", \"improve existing pages\", \"low CTR\", \"rewrite titles\", \"why is traffic flat\", \"which site should we focus on\", \"more clicks from search\", or before planning any new site or content program.",
+      "source": "harness/skills/kai-page-refresh/SKILL.md",
+      "public_router_command": true,
+      "router_category": "audit",
+      "manifest_doc": "docs/skill-manifest/kai-page-refresh.md"
     },
     {
       "name": "kai-partnership",

@@ -13,7 +13,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `gateway/` is the remote runner and connector surface
 
 <!-- capability-counts:start -->
-Inventory reachable from here: 62 skill directories, 58 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 53 public `/kai` router commands, 67 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 41 harness references, and 36 skill contracts.
+Inventory reachable from here: 63 skill directories, 59 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 54 public `/kai` router commands, 68 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 41 harness references, and 36 skill contracts.
 <!-- capability-counts:end -->
 
 ## Instruction Contract (critical)
@@ -77,6 +77,7 @@ Load the primary framework as context, then validate against the checklist. Full
 | Email (cold outreach) | `knowledge/channels/email-lifecycle.md` + `harness/references/cold-email-rules.md` | — |
 | Research fan-out / edge synthesis | `harness/references/research-fanout-best-practices.md` + `harness/references/research-fanout-vertical-registry.json` + `harness/references/marketing-platform-source-registry.json` | `harness/references/audit-data-provenance.md` (quantitative/client-facing) |
 | First growth hire / distribution OS | `knowledge/playbooks/growth-hacker-first-hire-os.md` + `knowledge/playbooks/growth-loops-applied.md` + `knowledge/playbooks/demand-generation.md` | `knowledge/checklists/growth-hacker-first-hire-checklist.md` |
+| Grow search clicks on existing pages (striking distance, low CTR, portfolio focus) | `knowledge/playbooks/page-refresh-loop.md` + `knowledge/playbooks/seo-ops-monitoring.md` | `harness/eco-floors.yaml` (`page-refresh`) |
 | SEO content | `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` + `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` | `knowledge/checklists/seo-checklist.md` |
 | Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `knowledge/playbooks/meta-creative-testing-decision-framework.md` + `harness/references/meta-ads-rules.md` + `harness/references/meta-ads-api-reference.md` | `knowledge/checklists/meta-advertising-checklist.md` |
 | Paid creative bench / concept testing | `knowledge/playbooks/combinatorial-creative-bench.md` + `knowledge/playbooks/ad-creative-best-practices.md` | `knowledge/checklists/ad-launch-checklist.md` |
