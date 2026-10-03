@@ -152,6 +152,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 
 | File | Use When |
 |------|----------|
+| `playbooks/page-refresh-loop.md` | **Existing pages first** - Portfolio triage, striking-distance and CTR-gap queue, fixes graded at 28 days against a site control |
 | `playbooks/SEO Expert-semantic-seo-methodology.md` | **SEO Expert's full SEO system** - Quality/Trending nodes, Topical Maps, Author sections, Topical Entry Grid |
 | `playbooks/local-seo-gbp-optimization.md` | **Local SEO/GBP** - City center proximity, naming conventions, virtual offices, multi-location |
 | `playbooks/surround-sound-llm-manipulation.md` | **LLM manipulation** - EMD strategy, multi-domain consensus, podcasts, e-books, Reddit/Quora |

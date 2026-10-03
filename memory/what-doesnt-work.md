@@ -20,6 +20,8 @@ Rules:
 - [2026-06-09] all/all: **Binary-contrast hooks ("It's not X, it's Y")** — read as LinkedIn slop, pass subjective scoring, get flagged by humans. Evidence: voice-pattern regex list exists because these recurred (`harness/skills/kai-gate/SKILL.md` step 3).
 - [2026-06-09] seo/all: **Reusing study percentages as promises** — "30-50% AI visibility lift" framing triggered overclaim errors and client pushback. Evidence: dedicated regex in `scripts/quality_gates/seo_lint.py`.
 
+- [2026-10-03] seo/portfolio: **Satellite sites without history** — 20+ new properties built by the factory approach earned under 2 search clicks a month each, while established local businesses with deep service-and-town pages carried 93% of portfolio clicks. Default to refreshing pages on `invest` properties (`/kai-page-refresh`). Evidence: Kai CMO evidence file (62 properties, Search Console), 2026-10-02.
+
 ## Measured losers
 
 (none yet — populated by `/kai-retro` from 30-day checks)
