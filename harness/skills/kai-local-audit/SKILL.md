@@ -23,6 +23,15 @@ Load before starting: `harness/references/local-audit-playbook.md` (endpoints, g
 
 **Without DataForSEO credentials, or if `scripts/local_audit/` is missing from this install:** run the public direct checks by hand (Phase 3), cite URLs and dates, put every located-ranking, volume, listing, review, backlink and AI-answer metric in `_data-gaps.md`, and say in the report header that located metrics need the full harness (github.com/cgallic/kai-cmo-harness).
 
+## Non-Negotiable: Revenue Lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Phase 0: Identify the business
 
 1. Resolve the link and read the business's own site.

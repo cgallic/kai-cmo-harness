@@ -30,6 +30,15 @@ A plan nobody executes is not CLOSED. Its outcome is `plan_adopted` / `first_act
 - **Phone Capture Fit Rule applies** when the business appears phone-led. Compare alternatives, and do not lead with a phone answering service or AI receptionist when phone demand is low or the workflow is self-serve by design.
 - **No spend commitments.** Budget allocation is a recommendation; it does not authorize spend.
 
+### Revenue lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Context
 
 | Need | Load |

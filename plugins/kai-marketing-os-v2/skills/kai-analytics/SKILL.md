@@ -32,6 +32,15 @@ A tracking plan nobody implements is not CLOSED. Its first work item is named in
 - **Every attribution recommendation ships with its caveats** (below). Attribution language that implies proof of causation without a counterfactual does not ship.
 - **Dashboard metrics carry definitions**, not just names.
 
+### Revenue lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Context
 
 | Need | Load |
