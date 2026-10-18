@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { Toaster } from "sonner";
+import { getBillingAccount, hasPaidPlan, isBillingEnabled } from "@/lib/billing";
 
 export const dynamic = "force-dynamic";
 
@@ -9,9 +10,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Upgrade CTA only shows when Stripe billing is configured and the user has no paid plan.
+  let showUpgrade = false;
+  if (user && isBillingEnabled()) {
+    const account = await getBillingAccount(supabase, user.id);
+    showUpgrade = !hasPaidPlan(account);
+  }
+
   return (
     <div className="min-h-screen">
-      <Sidebar userEmail={user?.email} />
+      <Sidebar userEmail={user?.email} showUpgrade={showUpgrade} />
       <main className="lg:pl-60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-16 lg:pt-8">
           {children}

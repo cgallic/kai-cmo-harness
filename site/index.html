@@ -15,6 +15,14 @@
     <meta name="twitter:title" content="Meet Kai">
     <meta name="twitter:description" content="A marketing assistant that starts with a plan, not a blank chat box.">
     <meta name="theme-color" content="#f7f1e6">
+    <!-- GA4: same property as the meetkai.xyz Next.js site -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8N7YN2SMQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-8N7YN2SMQP');
+    </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -1122,6 +1130,108 @@
                 align-items: flex-start;
             }
         }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .plan-card {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 26px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--green);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .plan-price {
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .plan-price small {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .plan-card p {
+            color: var(--muted);
+        }
+
+        .plan-card ul {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+            padding-left: 18px;
+            flex: 1;
+        }
+
+        .plan-card .btn {
+            justify-content: center;
+        }
+
+        .plan-note {
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .signup-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 560px;
+        }
+
+        .signup-form input[type="email"] {
+            flex: 1 1 240px;
+            min-height: 46px;
+            padding: 0 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--card-solid);
+            color: var(--text);
+            font: inherit;
+        }
+
+        .signup-form input[type="email"]:focus {
+            outline: 3px solid var(--focus);
+            outline-offset: 1px;
+        }
+
+        .signup-form .hp {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        .signup-thanks {
+            display: none;
+            margin-top: 12px;
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1040px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1137,6 +1247,7 @@
                 <li><a href="#app">App</a></li>
                 <li><a href="#search">SEO value</a></li>
                 <li><a href="#kaicalls">KaiCalls</a></li>
+                <li><a href="#pricing" data-cta="nav_pricing">Pricing</a></li>
             </ul>
             <div class="nav-actions">
                 <div class="theme-toggle" aria-label="Theme options">
@@ -1160,8 +1271,8 @@
                         and review it before anything goes live.
                     </p>
                     <div class="hero-actions">
-                        <a class="btn primary" href="#how">See how Kai works</a>
-                        <a class="btn ghost" href="https://app.meetkai.xyz" target="_blank" rel="noreferrer">Open the app</a>
+                        <a class="btn primary" href="https://meetkai.xyz/audit" data-cta="hero_get_audit">Get your audit</a>
+                        <a class="btn ghost" href="https://app.meetkai.xyz" target="_blank" rel="noreferrer" data-cta="hero_open_app">Open the app</a>
                     </div>
                     <div class="proof-row" aria-label="Kai product highlights">
                         <span class="pill">Plans</span>
@@ -1562,7 +1673,7 @@
                         and routes missed-call, after-hours, and qualification gaps to KaiCalls.
                     </p>
                     <div class="hero-actions">
-                        <a href="https://kaicalls.com" class="btn primary" target="_blank" rel="noreferrer">Visit KaiCalls</a>
+                        <a href="https://kaicalls.com" class="btn primary" target="_blank" rel="noreferrer" data-cta="kaicalls_visit">Visit KaiCalls</a>
                         <a href="#search" class="btn ghost">See search value</a>
                     </div>
                 </div>
@@ -1574,6 +1685,103 @@
                         <span class="pill">After-hours</span>
                         <span class="pill">Lead routing</span>
                         <span class="pill">CRM sync</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">plans</div>
+                        <h2>Pick the plan that fits where you are.</h2>
+                    </div>
+                    <p class="section-copy">
+                        Month to month. No contracts. Start with the Starter plan and move up when the leads justify it.
+                    </p>
+                </div>
+
+                <div class="pricing-grid">
+                    <article class="plan-card">
+                        <h3>Starter</h3>
+                        <div class="plan-price">$99<small>/mo</small></div>
+                        <p>Get online and start capturing leads.</p>
+                        <ul>
+                            <li>AI-built professional website</li>
+                            <li>Dedicated business phone number</li>
+                            <li>AI receptionist (up to 100 calls/mo)</li>
+                            <li>Basic CRM with lead tracking</li>
+                            <li>Email notifications for new leads</li>
+                            <li>Custom domain and SSL included</li>
+                        </ul>
+                        <a class="btn ghost" href="https://meetkai.xyz/platform#get-started" data-cta="pricing_starter">Start with Starter</a>
+                    </article>
+                    <article class="plan-card featured">
+                        <div class="eyebrow">most popular</div>
+                        <h3>Growth</h3>
+                        <div class="plan-price">$299<small>/mo</small></div>
+                        <p>Drive traffic and convert the leads you get.</p>
+                        <ul>
+                            <li>Everything in Starter, plus:</li>
+                            <li>SEO and local search optimization</li>
+                            <li>AI content engine (blog and social)</li>
+                            <li>Advanced CRM with lead scoring</li>
+                            <li>Analytics dashboard and weekly reports</li>
+                            <li>Up to 500 AI calls/month</li>
+                            <li>Automated follow-up sequences</li>
+                        </ul>
+                        <a class="btn primary" href="https://meetkai.xyz/platform#get-started" data-cta="pricing_growth">Start Growing</a>
+                    </article>
+                    <article class="plan-card">
+                        <h3>Full Stack</h3>
+                        <div class="plan-price">$599<small>/mo</small></div>
+                        <p>Your complete AI marketing department.</p>
+                        <ul>
+                            <li>Everything in Growth, plus:</li>
+                            <li>Google Ads campaign management</li>
+                            <li>Meta/Facebook Ads management</li>
+                            <li>AI cold email outreach</li>
+                            <li>Full CMO strategy and execution</li>
+                            <li>Unlimited AI calls</li>
+                            <li>Priority support and onboarding</li>
+                            <li>Competitive intelligence reports</li>
+                        </ul>
+                        <a class="btn ghost" href="https://meetkai.xyz/platform#get-started" data-cta="pricing_full_stack">Go Full Stack</a>
+                    </article>
+                </div>
+                <p class="plan-note">
+                    Ad spend is not included in plan pricing. Not sure which plan fits?
+                    <a href="https://meetkai.xyz/audit" data-cta="pricing_get_audit">Get your audit first</a>.
+                </p>
+            </div>
+        </section>
+
+        <section id="updates">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <div class="eyebrow">email updates</div>
+                        <h2>Get new Kai skills and audit checklists by email.</h2>
+                    </div>
+                    <div>
+                        <p class="section-copy">
+                            Short notes when Kai ships something you can use. Unsubscribe any time.
+                        </p>
+                        <form class="signup-form" id="signup-form" action="https://formsubmit.co/connor@kaicalls.com" method="POST" style="margin-top: 20px;">
+                            <input type="hidden" name="_subject" value="New Meet Kai email signup">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_template" value="table">
+                            <input type="hidden" name="_next" value="https://meetkai.xyz/?subscribed=true#updates">
+                            <input type="hidden" name="source" value="meetkai.xyz homepage">
+                            <label class="hp" aria-hidden="true">Leave this empty
+                                <input type="text" name="_honey" tabindex="-1" autocomplete="off">
+                            </label>
+                            <label for="signup-email" class="hp">Email address</label>
+                            <input id="signup-email" type="email" name="email" placeholder="you@business.com" required autocomplete="email">
+                            <button type="submit" class="btn primary" data-cta="email_signup_submit">Send me updates</button>
+                        </form>
+                        <p class="signup-thanks" id="signup-thanks" role="status">Thanks. You are on the list.</p>
                     </div>
                 </div>
             </div>
@@ -1628,7 +1836,9 @@
                 <p>Marketing plans, audits, drafts, approvals, connected signals, and phone lead capture.</p>
             </div>
             <div class="footer-links">
-                <a href="https://app.meetkai.xyz" target="_blank" rel="noreferrer">App</a>
+                <a href="https://meetkai.xyz/audit" data-cta="footer_get_audit">Get your audit</a>
+                <a href="#pricing">Pricing</a>
+                <a href="https://app.meetkai.xyz" target="_blank" rel="noreferrer" data-cta="footer_open_app">App</a>
                 <a href="https://github.com/cgallic/kai-cmo-harness" target="_blank" rel="noreferrer">GitHub</a>
                 <a href="llms.txt">llms.txt</a>
                 <a href="robots.txt">robots.txt</a>
@@ -1657,6 +1867,36 @@
         });
 
         setTheme(savedTheme || preferredTheme);
+
+        // GA4 CTA tracking: every element with data-cta sends a cta_click event.
+        function track(eventName, params) {
+            if (typeof window.gtag === "function") {
+                window.gtag("event", eventName, params);
+            }
+        }
+
+        document.addEventListener("click", (event) => {
+            const el = event.target.closest("[data-cta]");
+            if (!el || el.tagName === "BUTTON") return;
+            track("cta_click", {
+                cta_id: el.dataset.cta,
+                link_url: el.getAttribute("href") || "",
+                link_text: (el.textContent || "").trim().slice(0, 60),
+            });
+        });
+
+        const signupForm = document.getElementById("signup-form");
+        if (signupForm) {
+            signupForm.addEventListener("submit", () => {
+                track("generate_lead", { form_id: "email_signup", cta_id: "email_signup_submit" });
+            });
+        }
+
+        if (new URLSearchParams(window.location.search).get("subscribed") === "true") {
+            const thanks = document.getElementById("signup-thanks");
+            if (thanks) thanks.style.display = "block";
+            if (signupForm) signupForm.style.display = "none";
+        }
 
         function copyInstall() {
             const cmd = "curl -fsSL https://raw.githubusercontent.com/cgallic/kai-cmo-harness/main/install.sh | bash";
