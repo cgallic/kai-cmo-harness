@@ -101,6 +101,8 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),
     # Motion-spot video engine for /kai-motion-spot (Playwright + numpy/scipy/Pillow + ffmpeg)
     ("plugins/kai-marketing-os/scripts/motion_spot", "scripts/motion_spot"),
+    # Existing-page SEO loop for /kai-page-refresh (stdlib only; the GSC pull also needs google-api-python-client)
+    ("plugins/kai-marketing-os/scripts/seo", "scripts/seo"),
     ("plugins/kai-marketing-os/harness/references", "harness/references"),
     ("plugins/kai-marketing-os/harness/skill-contracts", "harness/skill-contracts"),
     ("plugins/kai-marketing-os/harness/brief-schema.md", "harness/brief-schema.md"),
@@ -119,6 +121,8 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os-v2/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),
     # Motion-spot video engine for /kai-motion-spot (Playwright + numpy/scipy/Pillow + ffmpeg)
     ("plugins/kai-marketing-os-v2/scripts/motion_spot", "scripts/motion_spot"),
+    # Existing-page SEO loop for /kai-page-refresh (stdlib only; the GSC pull also needs google-api-python-client)
+    ("plugins/kai-marketing-os-v2/scripts/seo", "scripts/seo"),
     ("plugins/kai-marketing-os-v2/harness/references", "harness/references"),
     ("plugins/kai-marketing-os-v2/harness/skill-contracts", "harness/skill-contracts"),
     ("plugins/kai-marketing-os-v2/harness/brief-schema.md", "harness/brief-schema.md"),

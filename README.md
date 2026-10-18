@@ -235,6 +235,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 | `/kai-weekly-audit` | 7-day marketing scorecard with urgent flags, source-backed findings, and actions |
 | `/kai-monthly-audit` | 30-day executive marketing review with strategic learning and next-month plan |
 | `/kai-seo-audit` | Technical SEO and semantic SEO audit with prioritized fixes |
+| `/kai-page-refresh` | More clicks from pages that already rank: portfolio triage, refresh queue, graded fixes |
 | `/kai-cro` | Conversion-rate audit for landing pages and funnels |
 | `/kai-funnel-audit` | Full-funnel awareness and lead-capture audit on collected data |
 | `/kai-retro` | Learning retrospective — mine gate failures, diagnose losers, promote lessons into enforced checks |

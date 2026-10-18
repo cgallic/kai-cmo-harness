@@ -207,6 +207,23 @@ work_types:
       source: manual_or_intel_connector
       window_days: 30
 
+  page-refresh:
+    also_covers: [striking-distance, title-rewrite, content-refresh, internal-linking]
+    external_effect: true
+    floor: {E: 3, C: 3, O: 3}
+    craft_gates: [banned_word_check, seo_lint]
+    execution_target: >
+      The owner approved the exact change, and a refresh_tracker record exists whose baseline
+      window ends before the ship date.
+    outcome:
+      metrics: [non_brand_clicks, tracked_query_position, ctr]
+      source: google_search_console
+      window_days: 28
+      note: >
+        Graded by `python -m scripts.seo.refresh_tracker check` against the rest of the site's
+        non-brand clicks over the same windows. O4 when the grade is `won`.
+    close_path: refresh_tracker report feeds /kai-retro; winning fix types go to what-works.md.
+
   # ---- Paid media --------------------------------------------------------
 
   paid-ad-campaign:
