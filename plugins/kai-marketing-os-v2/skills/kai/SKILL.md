@@ -109,6 +109,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 | `/kai-weekly-audit` | Weekly marketing audit - 7-day scorecard, urgent flags, and actions |
 | `/kai-monthly-audit` | Monthly marketing audit - 30-day executive review and next-month plan |
 | `/kai-seo-audit` | Technical SEO audit with prioritized fixes |
+| `/kai-page-refresh` | More clicks from pages that already rank: portfolio triage, refresh queue, graded fixes |
 | `/kai-cro` | Conversion rate audit — 5-layer optimization stack |
 | `/kai-funnel-audit` | Full-funnel awareness + lead-capture audit on collected data |
 | `/kai-html-presentation` | HTML presentation builder for audit and report delivery |
