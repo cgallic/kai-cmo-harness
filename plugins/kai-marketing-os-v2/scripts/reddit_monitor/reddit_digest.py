@@ -34,6 +34,8 @@ import requests
 from openai import OpenAI
 from dotenv import load_dotenv
 import review_prospecting
+sys.path.insert(0, str(Path.home() / "cmo-os"))
+from news_once import notify_many_once
 
 _here = Path(__file__).parent
 _env_candidates = [
@@ -621,6 +623,20 @@ def post_to_discord(webhook: str, content: str) -> bool:
         return False
 
 
+def notify_digest_once(webhook, bucket, url, day, *, agent="kaicalls-opportunities", db_path=None):
+    """Share the review page once, recording the public source URLs it contains."""
+    source_ids = [item["url"] for item in bucket if item.get("url")]
+    if not source_ids:
+        return {"sent": False, "skipped": True}
+    def deliver(fresh):
+        msg = (f"📋 **Lead-finding opportunities — {day}**\n"
+               f"{len(fresh)} new evidenced prospects or buyer conversations to review.\n{url}")
+        return post_to_discord(webhook, msg)
+    return notify_many_once(source_ids, deliver, channel="discord",
+                            mailbox="discord:kaicalls-opportunities", agent=agent,
+                            subject=f"Lead-finding opportunities — {day}", db_path=db_path)
+
+
 # --------------------------------------------------------------------------- #
 # main
 # --------------------------------------------------------------------------- #
@@ -764,9 +780,8 @@ def main() -> int:
     last_ping = read_json(ping_path, {"date": None}).get("date")
     if added and last_ping != day and webhook and not args.dry_run:
         url = f"{args.base_url}/{day}.html"
-        msg = (f"📋 **Lead-finding opportunities — {day}**\n"
-               f"{len(bucket)} evidenced prospects or buyer conversations to review.\n{url}")
-        if post_to_discord(webhook, msg):
+        result = notify_digest_once(webhook, bucket, url, day)
+        if result.get("sent") or result.get("skipped"):
             write_json(ping_path, {"date": day})
             print(f"→ pinged discord: {url}")
     elif args.dry_run:

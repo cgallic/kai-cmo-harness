@@ -37,6 +37,15 @@ Run before handoff:
 python scripts/quality_gates/audit_provenance_lint.py workspace/marketing-audit --audit-dir
 ```
 
+## Non-Negotiable: Revenue Lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Phase 0.5: Source-Backed Data Acquisition
 
 **If the collector scripts are not available in this install** (skills-only or plugin install — no `scripts/audit/` in the Kai root), run the audit in **qualitative mode**: browse the target's public pages directly, cite the URL and retrieval date for every observation, put every quantitative claim you could not measure into `_data-gaps.md`, and say plainly in the report header that collector-backed metrics require the full harness (github.com/cgallic/kai-cmo-harness). Never estimate a number the collector would have measured.

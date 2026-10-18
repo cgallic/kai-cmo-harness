@@ -35,6 +35,15 @@ python scripts/quality_gates/audit_provenance_lint.py <dashboard-source-folder> 
 
 Default to Standard. Drop to Basic when Phase 1's credential list comes back mostly empty. Only add an Advanced module when both the agency and the client want the deeper build and the extra data-sensitivity surface that comes with it (deal values, individual rep performance, scored leads).
 
+## Non-Negotiable: Revenue Lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Phase 0: Auto-Brand From The URL
 
 If the opening request already names the client and a URL ("set up a dashboard for Acme at acme.com"), don't re-ask for it. Immediately:

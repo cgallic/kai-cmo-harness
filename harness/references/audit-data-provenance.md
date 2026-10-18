@@ -64,6 +64,28 @@ Do not blend tiers. If a recommendation depends on a Tier 4 assumption, write it
 5. Do not cite a tool you did not actually run.
    If Ahrefs, DataForSEO, PageSpeed Insights, BuiltWith, Google Places, GSC, GA4, or GBP is named as a source, include the retrieved date and the exported/raw artifact path or API response summary.
 
+## Revenue Lens: Measure Revenue, Not Activity
+
+Sourcing a number correctly does not make it the right number. The failure this section prevents: a well-sourced report that reads sessions, pageviews and lead counts, where an expert operator would read revenue, buyer intent and the whole funnel.
+
+**Lead with the funnel.** Every audit, report, review, growth plan and dashboard opens with the funnel, one row per stage, before any channel or technical finding:
+
+| Stage | Expert question | Typical source |
+|-------|-----------------|----------------|
+| Traffic source | Which sources send buyers, not just visitors? | GA4 source/medium, GSC queries, ad platforms |
+| Intent | Are the visitors and queries ones that buy (pricing, comparison, "near me", "hire", "cost", competitor names), or research and noise? | GSC query mix, landing page mix, ad search terms |
+| Lead | How many qualified leads, at what rate, from which intent? | Forms, calls, chats, CRM |
+| Follow-up | How fast and how completely is each lead worked (speed to lead, touches, unanswered calls)? | CRM, call tracking, inbox, SDR logs |
+| Booked / paid | How many leads became meetings, signups, deposits or revenue, and what is each worth? | CRM stages, Stripe/payments, booking system |
+
+**Rank by dollars.** The biggest gap is the stage that loses the most revenue, usually the leak between adjacent stages (high-intent traffic with no lead path, leads with no follow-up, follow-up with no booking). Sessions and lead counts are inputs; never present them as the result. When the funnel is broken past "lead", that is the headline, whatever else is true about traffic.
+
+**Technical setup is a line, not the finding.** Schema, `llms.txt`, AI crawler access, sitemap and robots are usually already in place. Confirm them in one line (Pass / Fail with the source) and move on. They become findings only when a measured check fails (a P0 in the agent-readiness gate, a blocked crawler, a broken sitemap). Never pad a report with technical items to fill space while the funnel goes unread.
+
+**Mark unverified items `check`.** Any claim, stage value or recommendation not verified against a source in this run is labeled `check` in the client-facing text, with what would verify it (e.g. `check: lead-to-booked rate; needs CRM stage export for Sept`). `check` items are not scored and are mirrored in `_data-gaps.md`. A funnel stage with no data is shown as `check`, never skipped and never estimated: an empty stage is often the most important finding.
+
+In `sales_external` mode, the lead, follow-up and booked/paid stages are usually `check`. Say so, and use a public test (a form fill, a test call, a booking attempt) only when the workflow allows it.
+
 ## Required Output Files
 
 Audit folders must include:

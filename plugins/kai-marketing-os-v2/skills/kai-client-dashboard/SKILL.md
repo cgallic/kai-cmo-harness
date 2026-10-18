@@ -56,6 +56,15 @@ Check specifically for a global "redirect to login on any 401" handler. It is th
 
 Before enrolling a single contact in SMS or any prerecorded or ringless-voicemail channel, load `harness/skills/kai-sdr-operator/references/compliance-matrix.md` and confirm consent and an opt-out path for that channel. TCPA-type rules apply to prerecorded and autodialed voice and SMS in the US, with equivalents elsewhere. **A client's own lead did not consent to hear from the agency just because they sit in the client's CRM.** Email-only cadences do not carry this risk; SMS and voicemail drops do.
 
+### Revenue lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Context
 
 | Need | Load |
