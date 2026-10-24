@@ -17,6 +17,17 @@ const NOTICES: Record<string, { tone: "error" | "info"; text: string }> = {
   error: { tone: "error", text: "Checkout could not start. Try again, or email connor@kaicalls.com." },
 };
 
+// Shown when a plan has no Stripe price configured. meetkai.xyz is now the
+// phone-company site, so the old meetkai.xyz/platform form returns 404; email
+// reaches Connor directly and names the plan in the subject.
+const CONTACT_EMAIL = "connor@kaicalls.com";
+
+function contactHref(planName: string): string {
+  const subject = `Kai Marketing OS: ${planName} plan`;
+  const body = `Hi Connor,\n\nI'd like to start the ${planName} plan.\n\nBusiness name:\nWebsite:\nBest phone:\n`;
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export default async function PricingPage({
   searchParams,
 }: {
@@ -141,10 +152,10 @@ export default async function PricingPage({
                     </Link>
                   ) : (
                     <a
-                      href="https://meetkai.xyz/platform#get-started"
+                      href={contactHref(plan.name)}
                       className="block w-full rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold hover:bg-bg-elevated"
                     >
-                      Talk to us
+                      Email us about {plan.name}
                     </a>
                   )}
                 </div>
