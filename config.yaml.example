@@ -104,6 +104,7 @@ thresholds:
   win_position: 5       # GSC position <= N = winner
   win_ctr: 0.05         # 5% CTR minimum for winner
   win_time_on_page: 90  # seconds on page minimum for winner
+  win_leads: 1          # leads (GA4 key events or CRM-attributed) that make a page a winner on outcome
   min_n: 10             # minimum data points to declare a pattern
   min_delta: 0.15       # minimum 15% lift to be actionable
 

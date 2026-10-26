@@ -29,8 +29,10 @@ The collector writes both `kai-data.json` and the backward-compatible `audit-dat
 Collectors are opt-in beyond the public crawl:
 
 ```bash
-python -m scripts.audit.collect --url https://<domain> --mode onboarding_connected --workflow analytics --out workspace/analytics-data --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --keywords "kw1,kw2" --location "Denver, CO" --date-from 2026-04-01 --date-to 2026-05-01
+python -m scripts.audit.collect --url https://<domain> --mode onboarding_connected --workflow analytics --out workspace/analytics-data --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --revenue --keywords "kw1,kw2" --location "Denver, CO" --date-from 2026-04-01 --date-to 2026-05-01
 ```
+
+`--revenue` reads the lead → booked → paid stages of the funnel: Stripe (`STRIPE_API_KEY`, a restricted read-only key, or `STRIPE_EXPORT_PATH`), HubSpot CRM (`HUBSPOT_ACCESS_TOKEN` or `CRM_EXPORT_PATH`), Calendly bookings (`CALENDLY_API_TOKEN` or `BOOKINGS_EXPORT_PATH`) and PostHog step conversion (`POSTHOG_PERSONAL_API_KEY`, `POSTHOG_PROJECT_ID`, `POSTHOG_FUNNEL_EVENTS` in funnel order, or `POSTHOG_EXPORT_PATH`). Raw artifacts keep only the fields the metrics use; no customer emails or card data.
 
 Missing credentials must create `_data-gaps.md` entries. They must not create placeholder metrics.
 
@@ -151,6 +153,10 @@ Use this split when a user asks whether an audit belongs in sales or after signu
 | Sessions/conversions | Not available | GA4 required |
 | Calls/missed calls | Not available unless public call test is performed | CallRail/CRM/phone logs required |
 | Ad performance | Not available | Platform export required |
+| Leads, deals won, won value | Not available | CRM required (`--revenue`) |
+| Meetings booked | Not available unless a public booking test is performed | Booking system required (`--revenue`) |
+| Paid revenue, refunds, paying customers | Not available | Stripe required (`--revenue`) |
+| Step conversion (visit → lead → paid) | Not available | PostHog or GA4 key events required |
 
 ## Deck Rules
 

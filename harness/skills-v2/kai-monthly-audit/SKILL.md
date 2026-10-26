@@ -33,7 +33,7 @@ Collector before writing, connected collectors only when access is confirmed, pr
 
 ```bash
 python -m scripts.audit.collect --url "<url>" --mode <mode> --workflow kai-monthly-audit --out workspace/audits/monthly/<YYYY-MM> --pagespeed
-python -m scripts.audit.collect --url "<url>" --mode onboarding_connected --workflow kai-monthly-audit --out workspace/audits/monthly/<YYYY-MM> --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"
+python -m scripts.audit.collect --url "<url>" --mode onboarding_connected --workflow kai-monthly-audit --out workspace/audits/monthly/<YYYY-MM> --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --revenue --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"
 python scripts/quality_gates/audit_provenance_lint.py workspace/audits/monthly/<YYYY-MM> --audit-dir
 ```
 

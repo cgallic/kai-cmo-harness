@@ -72,6 +72,7 @@ class ThresholdConfig:
     win_position: int = 5
     win_ctr: float = 0.05
     win_time_on_page: int = 90
+    win_leads: int = 1
     min_n: int = 10
     min_delta: float = 0.15
     p_value_threshold: float = 0.05
@@ -256,6 +257,7 @@ def load_config() -> HarnessConfig:
         win_position=thresh_raw.get("win_position", 5),
         win_ctr=thresh_raw.get("win_ctr", 0.05),
         win_time_on_page=thresh_raw.get("win_time_on_page", 90),
+        win_leads=thresh_raw.get("win_leads", 1),
         min_n=thresh_raw.get("min_n", 10),
         min_delta=thresh_raw.get("min_delta", 0.15),
         p_value_threshold=thresh_raw.get("p_value_threshold", 0.05),
