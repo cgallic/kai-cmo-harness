@@ -108,7 +108,7 @@ Goals persist in `data/runtime/goals/` (`GoalRegistry`). The weekly `cmo_review`
 
 ### Decision log (`scripts/autonomy/decision_log.py`)
 
-Jev-typed decisions graded on revenue, with a bounded learning loop (choice lessons, lesson retirement, per-question confidence-gate tuning). Jev calls use `OPENROUTER_API_KEY` (`JEV_URL`/`JEV_MODEL` override; `TYPESAFE_API_KEY` for the direct endpoint); `--mock` runs offline. Log: `data/autonomy/decisions.jsonl` (`KAI_AUTONOMY_DIR` override). Detail: `docs/system/learning-loop.md`.
+Jev-typed decisions graded on revenue, with a bounded learning loop (choice lessons, lesson retirement, per-question confidence-gate tuning). Models: `jev-1.14` (default), `jev-1.13`, and Laya checkpoints (local package, or `LAYA_BASE_URL` for the agent-box service); questions route to the most accurate measured model, and `--shadow` grades other models on the same decisions. Jev calls use `OPENROUTER_API_KEY` (`JEV_URL`/`JEV_MODEL` override; `TYPESAFE_API_KEY` for the direct endpoint); `--mock` runs offline. Log: `data/autonomy/decisions.jsonl` (`KAI_AUTONOMY_DIR` override). Detail: `docs/system/learning-loop.md`.
 
 ---
 

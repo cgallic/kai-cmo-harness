@@ -60,7 +60,7 @@ def test_choice_must_be_an_option():
 
 def test_model_decision_pins_question_and_confidence():
     with pytest.raises(dl.DecisionLogError, match="pin question_id"):
-        make(1, "email", model="typesafe/jev-1.13")
+        make(1, "email", model="jev-1.13")
 
 
 def test_question_version_changes_with_wording():
@@ -122,8 +122,8 @@ def test_grade_and_lift():
 
 def test_decide_with_jev_records_or_escalates(log, monkeypatch):
     answers = iter([
-        {"model": "typesafe/jev-1.13", "answers": {"next_channel": {"probabilities": {"email": 0.9, "seo": 0.1}}}},
-        {"model": "typesafe/jev-1.13", "answers": {"next_channel": {"probabilities": {"email": 0.52, "seo": 0.48}}}},
+        {"model": "jev-1.14", "answers": {"next_channel": {"probabilities": {"email": 0.9, "seo": 0.1}}}},
+        {"model": "jev-1.14", "answers": {"next_channel": {"probabilities": {"email": 0.52, "seo": 0.48}}}},
     ])
     monkeypatch.setattr(dl, "ask_jev", lambda *a, **k: next(answers))
     kw = dict(kind="channel", subject="acme", state_text="brief", question=CHANNEL, prediction=PRED, actor="planner")
@@ -145,9 +145,11 @@ def test_mock_backend_is_deterministic_and_typed(log):
 
 def test_retired_question_refused(log):
     with open(log, "a", encoding="utf-8") as handle:
-        handle.write(json.dumps({"schema": dl.SCHEMA, "event": "question_retired", "question": f"next_channel@{CHANNEL.version}"}) + "\n")
+        handle.write(json.dumps({"schema": dl.SCHEMA, "event": "question_retired", "question": dl.gate_key("next_channel", CHANNEL.version, "jev-1.14")}) + "\n")
     with pytest.raises(dl.DecisionLogError, match="retired"):
-        dl.decide_with_jev(kind="channel", subject="a", state_text="s", question=CHANNEL, prediction=PRED, actor="p", backend="mock")
+        dl.decide_with_jev(kind="channel", subject="a", state_text="s", question=CHANNEL, prediction=PRED, actor="p", backend="mock", model="jev-1.14")
+    # another model is still allowed for the same question
+    dl.decide_with_jev(kind="channel", subject="a", state_text="s", question=CHANNEL, prediction=PRED, actor="p", backend="mock", model="jev-1.13")
 
 
 # -- learning ------------------------------------------------------------
@@ -177,8 +179,8 @@ def test_learn_retires_lesson_that_stops_paying(log):
 
 
 def test_gate_tightens_then_question_retires(log):
-    model = dict(model="typesafe/jev-1.13", question_id="next_channel", question_version=CHANNEL.version, confidence=0.99)
-    key = f"next_channel@{CHANNEL.version}"
+    model = dict(model="jev-1.14", question_id="next_channel", question_version=CHANNEL.version, confidence=0.99)
+    key = dl.gate_key("next_channel", CHANNEL.version, "jev-1.14")
     n = 0
     floor = dl.GATE_FLOOR
     while True:
@@ -195,8 +197,8 @@ def test_gate_tightens_then_question_retires(log):
 
 
 def test_gate_loosens_when_accurate(log):
-    model = dict(model="typesafe/jev-1.13", question_id="next_channel", question_version=CHANNEL.version, confidence=0.99)
-    key = f"next_channel@{CHANNEL.version}"
+    model = dict(model="jev-1.14", question_id="next_channel", question_version=CHANNEL.version, confidence=0.99)
+    key = dl.gate_key("next_channel", CHANNEL.version, "jev-1.14")
     dl._append("gate_tuned", {"question": key, "floor": 0.7})
     for i in range(10):
         record(i, "email", 100, label="email", gate_floor=0.7, **model)
@@ -234,3 +236,112 @@ def test_cli_status_and_ask_mock(log, tmp_path, capsys):
     assert dl.main(["status"]) == 0
     out = capsys.readouterr().out
     assert '"decisions"' in out
+
+
+# -- models and routing ----------------------------------------------------
+
+def test_canonical_model_pins_versions():
+    assert dl.canonical_model("typesafe/jev-1.13-20260917") == "jev-1.13"
+    assert dl.canonical_model("jev-1.14.0") == "jev-1.14"
+    assert dl.canonical_model("typesafe/jev-1.14") == "jev-1.14"
+    assert dl.canonical_model("laya") == "laya/english"
+    assert dl.canonical_model("laya/typed-decisions") == "laya/typed-decisions"
+    for alias in ("jev-latest", "~typesafe/jev-latest", "jev-preview"):
+        with pytest.raises(dl.DecisionLogError, match="alias"):
+            dl.canonical_model(alias)
+    with pytest.raises(dl.DecisionLogError, match="unknown"):
+        dl.canonical_model("jev-9")
+
+
+def test_decision_model_must_be_pinned():
+    with pytest.raises(dl.DecisionLogError, match="pinned"):
+        make(1, "email", model="typesafe/jev-1.13", question_id="q", question_version="v", confidence=0.9)
+
+
+def test_gates_are_per_model(log):
+    dl._append("gate_tuned", {"question": dl.gate_key("next_channel", CHANNEL.version, "jev-1.13"), "floor": 0.8})
+    state = dl.load()
+    assert state.floor(CHANNEL, "jev-1.13") == 0.8
+    assert state.floor(CHANNEL, "jev-1.14") == dl.GATE_FLOOR
+
+
+def _labeled(n0: int, count: int, model: str, right: int, shadow: tuple[tuple[str, int], ...] = ()) -> None:
+    """count decisions by model, `right` of them correct; shadows (model, right)."""
+    for i in range(count):
+        record(n0 + i, "email", 100, label="email" if i < right else "seo", gate_floor=dl.GATE_FLOOR,
+               model=model, question_id="next_channel", question_version=CHANNEL.version, confidence=0.9)
+        for other, other_right in shadow:
+            dl._append("shadowed", {"decision_id": f"d{n0 + i}", "model": other, "answer": "email" if i < other_right else "seo",
+                                    "confidence": 0.9, "floor": dl.GATE_FLOOR, "passed": True})
+
+
+def test_route_defaults_until_another_model_proves_itself(log):
+    assert dl.route_model(dl.load(), CHANNEL) == dl.canonical_model(dl.DEFAULT_MODEL)
+    # default 1.14 is 70% right; a shadowed Laya checkpoint is 95% right on the same decisions
+    _labeled(0, 20, "jev-1.14", 14, shadow=(("laya/typed-decisions", 19),))
+    state = dl.load()
+    table = state.accuracy()
+    assert len(table[dl.gate_key("next_channel", CHANNEL.version, "laya/typed-decisions")]) == 20
+    assert dl.route_model(state, CHANNEL, ("jev-1.14",)) == "laya/typed-decisions"
+
+
+def test_route_keeps_default_when_challenger_is_worse(log):
+    _labeled(0, 20, "jev-1.14", 19, shadow=(("jev-1.13", 15),))
+    assert dl.route_model(dl.load(), CHANNEL, ("jev-1.14",)) == "jev-1.14"
+
+
+def test_route_skips_retired_model(log):
+    dl._append("question_retired", {"question": dl.gate_key("next_channel", CHANNEL.version, "jev-1.14")})
+    assert dl.route_model(dl.load(), CHANNEL, ("jev-1.14", "jev-1.13")) == "jev-1.13"
+
+
+def test_shadow_answers_are_logged_but_never_decide(log, monkeypatch):
+    def fake(state, questions, *, model="", backend="jev", retries=4):
+        probs = {"email": 0.9, "seo": 0.1} if model == "jev-1.14" else {"email": 0.1, "seo": 0.9}
+        return {"model": model, "answers": {"next_channel": {"probabilities": probs}}}
+
+    monkeypatch.setattr(dl, "ask_jev", fake)
+    decision = dl.decide_with_jev(kind="channel", subject="acme", state_text="brief", question=CHANNEL, prediction=PRED,
+                                  actor="planner", model="jev-1.14", shadow=("jev-1.13", "jev-1.14"))
+    assert decision.choice == "email" and decision.model == "jev-1.14"
+    shadows = dl.load().shadows[decision.decision_id]
+    assert shadows == [{"model": "jev-1.13", "answer": "seo", "floor": dl.GATE_FLOOR, "passed": True}]
+
+
+def test_mock_answers_differ_by_model():
+    a = dl.ask_jev("same", [CHANNEL], model="jev-1.14", backend="mock")
+    b = dl.ask_jev("same", [CHANNEL], model="jev-1.13", backend="mock")
+    assert a["model"] == "jev-1.14" and b["model"] == "jev-1.13"
+    assert a["answers"] != b["answers"]
+
+
+def test_wire_model_id_per_endpoint(monkeypatch):
+    sent = []
+
+    class Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return json.dumps({"model": "typesafe/jev-1.14-20261014", "answers": {}}).encode()
+
+    def fake_urlopen(request, timeout=30):
+        sent.append((request.full_url, json.loads(request.data)["model"]))
+        return Resp()
+
+    monkeypatch.setattr(dl.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setenv("OPENROUTER_API_KEY", "x")
+    monkeypatch.setenv("TYPESAFE_API_KEY", "x")
+    assert dl.ask_jev("s", [CHANNEL], model="jev-1.14")["model"] == "jev-1.14"
+    monkeypatch.setattr(dl, "JEV_URL", "https://api.typesafe.ai/v1/systemone")
+    dl.ask_jev("s", [CHANNEL], model="jev-1.13")
+    monkeypatch.setattr(dl, "LAYA_URL", "http://agent:8767/v1/systemone")
+    dl.ask_jev("s", [CHANNEL], model="laya/typed-decisions")
+    assert sent == [
+        ("https://openrouter.ai/api/v1/systemone", "typesafe/jev-1.14"),
+        ("https://api.typesafe.ai/v1/systemone", "jev-1.13.0"),
+        ("http://agent:8767/v1/systemone", "typed-decisions"),
+    ]
