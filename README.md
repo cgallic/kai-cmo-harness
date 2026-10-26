@@ -8,7 +8,7 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 > Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
 
-**Want this run for your business, with a person behind it?** Talk To Gina runs it as a service: [talktogina.ai](https://talktogina.ai).
+**Want this run for your business, with a person behind it?** Talk To Gina runs it as a service: [talktogina.ai](https://talktogina.ai). [Email us for an audit](mailto:connor@kaicalls.com?subject=Marketing%20audit%20request) if you'd rather see the gaps than go find them.
 
 ## Try It In 60 Seconds, No API Key
 
@@ -235,6 +235,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 | `/kai-weekly-audit` | 7-day marketing scorecard with urgent flags, source-backed findings, and actions |
 | `/kai-monthly-audit` | 30-day executive marketing review with strategic learning and next-month plan |
 | `/kai-seo-audit` | Technical SEO and semantic SEO audit with prioritized fixes |
+| `/kai-page-refresh` | More clicks from pages that already rank: portfolio triage, refresh queue, graded fixes |
 | `/kai-cro` | Conversion-rate audit for landing pages and funnels |
 | `/kai-funnel-audit` | Full-funnel awareness and lead-capture audit on collected data |
 | `/kai-retro` | Learning retrospective — mine gate failures, diagnose losers, promote lessons into enforced checks |

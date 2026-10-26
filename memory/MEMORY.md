@@ -49,4 +49,5 @@ Run `/kai-retro` monthly (or after any heavy content sprint) to triage candidate
 ## Current standing lessons (index)
 
 - Platform/API gotchas are catalogued in `memory/edge-cases.md` — 18 entries. EC-06 (NL placeholders), EC-11 (defaults rewrite validation), and EC-12 (pending-check reconciliation) were promoted to code on 2026-06-10 (`tests/test_promoted_edge_cases.py`); the rest with `enforcement: none` are graduation candidates.
+- **Existing pages before new sites (2026-10-03).** Search clicks concentrate in a few established properties; new satellite sites did not pay. For any growth or SEO plan, triage with `scripts/seo/portfolio.py`, work the refresh queue (`/kai-page-refresh`), and record every fix with `scripts/seo/refresh_tracker.py` before it ships.
 - No published losers analyzed yet — `what-doesnt-work.md` is seeded with structural anti-patterns only.
