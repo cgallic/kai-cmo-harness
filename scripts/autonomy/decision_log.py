@@ -27,6 +27,12 @@ record decisions too (``model="human"``).
                question still wrong at the ceiling is retired so it must be
                reworded (a new version) before Jev may decide with it again
 
+Models: answers come from a pinned System One model (``jev-1.14`` default,
+``jev-1.13``, or a local Laya checkpoint). Gates are per question version and
+model; ``shadow`` models answer the same question without deciding and are
+graded on the same labels, and ``route_model`` moves a question to the model
+that measurably answers it best.
+
 Everything is an append-only event log (``data/autonomy/decisions.jsonl``,
 ``KAI_AUTONOMY_DIR`` override) folded on read like the approval queue. Writes
 raise; every line is re-validated into frozen dataclasses on read.
@@ -81,7 +87,7 @@ OutcomeMetric = Literal[
 Direction = Literal["increase", "decrease"]
 QuestionType = Literal["choice", "noul", "score"]
 EventType = Literal[
-    "decided", "escalated", "observed", "lesson_accepted", "lesson_retired",
+    "decided", "escalated", "shadowed", "observed", "lesson_accepted", "lesson_retired",
     "gate_tuned", "question_retired", "learn_pass",
 ]
 Grade = Literal["hit", "partial", "miss"]
@@ -99,7 +105,22 @@ GATE_STEP = 0.05
 MARGIN_MIN = 0.20
 
 JEV_URL = os.environ.get("JEV_URL", "https://openrouter.ai/api/v1/systemone")
-JEV_MODEL = os.environ.get("JEV_MODEL", "typesafe/jev-1.13")
+LAYA_URL = os.environ.get("LAYA_BASE_URL", "")  # e.g. the agent box laya.service; unset = local `laya` package
+
+# System One models. Ids are pinned versions, never ``jev-latest``: gates are
+# tuned per model, and an alias that moves on release would silently reuse a
+# floor learned on another model. Sources: docs.typesafe.ai/models.md,
+# openrouter.ai/api/v1/models (checked 2026-10-26); Laya model card.
+MODELS: dict[str, dict[str, Any]] = {
+    "jev-1.14": {"openrouter": "typesafe/jev-1.14", "direct": "jev-1.14.0", "released": "2026-10-14",
+                 "note": "current TypeSafe model; better multilingual; same price as 1.13"},
+    "jev-1.13": {"openrouter": "typesafe/jev-1.13", "direct": "jev-1.13.0", "released": "2026-09-17",
+                 "note": "first Jev; literal, weak on counts/dates, leans to the first choice option"},
+    "laya/typed-decisions": {"laya": "typed-decisions", "note": "open-source, local, fine-tuned (0.766 vs 0.362 base on its own benchmark), 512 tokens"},
+    "laya/english": {"laya": "english", "note": "open-source base checkpoint, near chance zero-shot"},
+    "laya/multilingual": {"laya": "multilingual", "note": "open-source base checkpoint, 100+ languages, 1k tokens"},
+}
+DEFAULT_MODEL = os.environ.get("JEV_MODEL", "jev-1.14")
 
 # Collector metric ids (scripts/audit/collect.py --revenue) that can settle a
 # prediction straight from kai-data.json.
@@ -248,10 +269,30 @@ def _noul_floor(floor: float) -> float:
     return round(2 * (floor + 0.10) - 1, 4)
 
 
-def ask_jev(state: str, questions: list[Question], *, backend: str = "jev", retries: int = 4) -> dict[str, Any]:
+def canonical_model(name: str) -> str:
+    """Map any spelling (typesafe/jev-1.13-20260917, jev-1.14.0, laya) to a MODELS id."""
+    raw = name.strip().lstrip("~")
+    _require("latest" not in raw and "preview" not in raw, f"{name!r} is an alias; pin a version from {sorted(MODELS)}")
+    if raw in MODELS:
+        return raw
+    if raw.startswith("laya"):
+        tail = raw.split("/", 1)[1] if "/" in raw else "english"
+        key = f"laya/{tail.removeprefix('laya-')}"
+    else:
+        tail = raw.removeprefix("typesafe/")
+        parts = tail.split("-")
+        if len(parts) > 2 and parts[-1].isdigit():  # dated OpenRouter slug
+            tail = "-".join(parts[:-1])
+        key = tail[:-2] if tail.count(".") == 2 and tail.endswith(".0") else tail
+    _require(key in MODELS, f"unknown System One model {name!r}; known: {sorted(MODELS)}")
+    return key
+
+
+def ask_jev(state: str, questions: list[Question], *, model: str = "", backend: str = "jev", retries: int = 4) -> dict[str, Any]:
     """Ask every question in one System One call. ``backend="mock"`` is offline."""
+    model = canonical_model(model or DEFAULT_MODEL)
     if backend == "mock":
-        rng = random.Random(hashlib.sha256(state.encode()).hexdigest())
+        rng = random.Random(hashlib.sha256(f"{model}|{state}".encode()).hexdigest())
         answers: dict[str, Any] = {}
         for q in questions:
             if q.type == "noul":
@@ -262,15 +303,28 @@ def ask_jev(state: str, questions: list[Question], *, backend: str = "jev", retr
                 best = max(probs, key=probs.get)
                 answers[q.question_id] = {"type": q.type, "choice": best, "score": float(best) if q.type == "score" else None,
                                           "probabilities": probs, "confidence": probs[best]}
-        return {"model": "mock", "answers": answers}
-    key = os.environ.get("TYPESAFE_API_KEY") if "typesafe.ai" in JEV_URL else os.environ.get("OPENROUTER_API_KEY")
-    _require(bool(key), "set OPENROUTER_API_KEY (or TYPESAFE_API_KEY with JEV_URL=https://api.typesafe.ai/v1/systemone)")
-    body = json.dumps({"state": state[:12000], "model": JEV_MODEL, "questions": {q.question_id: q.payload() for q in questions}}).encode()
-    request = urllib.request.Request(JEV_URL, data=body, headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+        return {"model": model, "answers": answers}
+    spec = MODELS[model]
+    payload = {q.question_id: q.payload() for q in questions}
+    if "laya" in spec:
+        if not LAYA_URL:
+            from laya import Router  # pip install laya; downloads weights once
+
+            res = Router().predict(state, payload, model=spec["laya"])
+            return {"model": model, "answers": res["answers"]}
+        url, headers = LAYA_URL, {"Content-Type": "application/json"}
+        body = json.dumps({"state": state, "model": spec["laya"], "questions": payload}).encode()
+    else:
+        direct = "typesafe.ai" in JEV_URL
+        key = os.environ.get("TYPESAFE_API_KEY") if direct else os.environ.get("OPENROUTER_API_KEY")
+        _require(bool(key), "set OPENROUTER_API_KEY (or TYPESAFE_API_KEY with JEV_URL=https://api.typesafe.ai/v1/systemone)")
+        url, headers = JEV_URL, {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        body = json.dumps({"state": state[:12000], "model": spec["direct" if direct else "openrouter"], "questions": payload}).encode()
+    request = urllib.request.Request(url, data=body, headers=headers)
     for attempt in range(retries):
         try:
             with urllib.request.urlopen(request, timeout=30) as resp:
-                return json.loads(resp.read().decode())
+                return {**json.loads(resp.read().decode()), "model": model}
         except urllib.error.HTTPError as exc:
             if exc.code in (429, 502, 503, 529) and attempt < retries - 1:
                 time.sleep(2 ** attempt + random.random())
@@ -338,6 +392,7 @@ class Decision:
         _require(self.action_class in ACTION_CLASSES, f"action_class must be one of {ACTION_CLASSES}")
         _require(isinstance(self.prediction, Prediction), "prediction must be a Prediction")
         if self.model != "human":
+            _require(canonical_model(self.model) == self.model, f"model {self.model!r} must be a pinned id from MODELS")
             _require(bool(self.question_id and self.question_version), "model decisions must pin question_id and question_version")
             _require(self.confidence is not None, "model decisions must carry confidence")
         if self.confidence is not None:
@@ -428,8 +483,9 @@ class State:
     outcomes: dict[str, Outcome] = field(default_factory=dict)
     lessons: dict[str, Lesson] = field(default_factory=dict)
     retired: set[str] = field(default_factory=set)
-    gates: dict[str, float] = field(default_factory=dict)  # "question_id@version" -> floor
-    retired_questions: set[str] = field(default_factory=set)
+    gates: dict[str, float] = field(default_factory=dict)  # "question_id@version@model" -> floor
+    retired_questions: set[str] = field(default_factory=set)  # same key: retired for that model only
+    shadows: dict[str, list[dict[str, Any]]] = field(default_factory=dict)  # decision_id -> other models' answers
     escalations: int = 0
     passes: list[dict[str, Any]] = field(default_factory=list)
 
@@ -439,8 +495,27 @@ class State:
     def graded(self) -> list[tuple[Decision, Outcome, float]]:
         return [(self.decisions[d], o, lift(self.decisions[d].prediction, o.observed)) for d, o in self.outcomes.items()]
 
-    def floor(self, question: Question) -> float:
-        return self.gates.get(f"{question.question_id}@{question.version}", GATE_FLOOR)
+    def floor(self, question: Question, model: str) -> float:
+        return self.gates.get(gate_key(question.question_id, question.version, model), GATE_FLOOR)
+
+    def accuracy(self) -> dict[str, list[bool]]:
+        """Per gate key: was each answer right, counting only answers that
+        cleared the key's current floor (the decider's own and shadow asks)."""
+        table: dict[str, list[bool]] = {}
+        for decision, outcome, _ in self.graded():
+            if not (decision.question_id and outcome.label):
+                continue
+            rows = [(decision.model, decision.choice, decision.gate_floor, True)]
+            rows += [(s["model"], s["answer"], s["floor"], s["passed"]) for s in self.shadows.get(decision.decision_id, [])]
+            for model, answer, floor, passed in rows:
+                key = gate_key(decision.question_id, decision.question_version, model)
+                if passed and (floor if floor is not None else GATE_FLOOR) == self.gates.get(key, GATE_FLOOR):
+                    table.setdefault(key, []).append(outcome.label == answer)
+        return table
+
+
+def gate_key(question_id: str, version: str, model: str) -> str:
+    return f"{question_id}@{version}@{model}"
 
 
 def load(path: Path | None = None) -> State:
@@ -463,6 +538,12 @@ def load(path: Path | None = None) -> State:
                 state.decisions[decision.decision_id] = decision
             elif kind == "escalated":
                 state.escalations += 1
+            elif kind == "shadowed":
+                _require(event["decision_id"] in state.decisions, "shadow for an unknown decision")
+                state.shadows.setdefault(event["decision_id"], []).append({
+                    "model": canonical_model(event["model"]), "answer": str(event["answer"]),
+                    "floor": _unit(event["floor"], "floor"), "passed": bool(event["passed"]),
+                })
             elif kind == "observed":
                 outcome = Outcome(**event["outcome"])
                 _check_outcome(state, outcome)
@@ -503,6 +584,36 @@ def decide(decision: Decision, path: Path | None = None) -> dict[str, Any]:
     return _append("decided", {"decision": asdict(decision)}, path)
 
 
+def route_model(
+    state: State,
+    question: Question,
+    candidates: tuple[str, ...] = (),
+    *,
+    min_n: int = 10,
+    target_accuracy: float = 0.85,
+) -> str:
+    """Pick the System One model for a question from measured accuracy.
+
+    A model that has min_n labeled answers for this exact question version is
+    ranked by accuracy at its current gate. The default model wins until
+    another model proves itself (target_accuracy or better than the default's
+    measured accuracy). Models retired for this question are skipped.
+    """
+    pool = list(dict.fromkeys(canonical_model(m) for m in (candidates or (DEFAULT_MODEL,))))
+    prefix = f"{question.question_id}@{question.version}@"
+    table = state.accuracy()
+    pool += [k[len(prefix):] for k in table if k.startswith(prefix) and k[len(prefix):] not in pool]
+    live = [m for m in pool if prefix + m not in state.retired_questions]
+    _require(bool(live), f"every model is retired for {question.question_id}@{question.version}; reword it")
+    measured = {m: sum(table[prefix + m]) / len(table[prefix + m]) for m in live if len(table.get(prefix + m, [])) >= min_n}
+    default = live[0]
+    if not measured:
+        return default
+    best = max(measured, key=lambda m: (measured[m], -live.index(m)))
+    bar = measured.get(default, target_accuracy)
+    return best if measured[best] >= bar else default
+
+
 def decide_with_jev(
     *,
     kind: str,
@@ -511,6 +622,9 @@ def decide_with_jev(
     question: Question,
     prediction: Prediction,
     actor: str,
+    model: str = "",
+    candidates: tuple[str, ...] = (),
+    shadow: tuple[str, ...] = (),
     action_class: str = "auto_pr",
     run_id: str = "",
     backend: str = "jev",
@@ -518,16 +632,22 @@ def decide_with_jev(
 ) -> Decision | None:
     """Ask Jev, gate the answer, and record a Decision (or an escalation).
 
-    Returns None when Jev is unsure; the escalation is logged so the unsure
-    rate is measurable, and the caller routes to a human or a stronger model.
-    Active lessons for this kind are cited so the next pass can test them.
+    ``model`` pins a model; otherwise ``route_model`` picks one from
+    ``candidates`` (default: DEFAULT_MODEL) by measured accuracy. ``shadow``
+    models answer the same question for comparison only: their answers never
+    decide, but once the outcome label arrives they are graded too, which is
+    how a cheaper or newer model earns the route. Returns None when the
+    deciding model is unsure; the escalation is logged and the caller routes to
+    a human or a stronger model. Active lessons for this kind are cited so the
+    next pass can test them.
     """
     state = load(path)
-    key = f"{question.question_id}@{question.version}"
-    _require(key not in state.retired_questions, f"question {key} was retired for low accuracy; reword it")
-    response = ask_jev(state_text, [question], backend=backend)
+    model = canonical_model(model) if model else route_model(state, question, candidates)
+    key = gate_key(question.question_id, question.version, model)
+    _require(key not in state.retired_questions, f"question {key} was retired for low accuracy; reword it or use another model")
+    response = ask_jev(state_text, [question], model=model, backend=backend)
     answer = JevAnswer.parse(question, (response.get("answers") or {}).get(question.question_id))
-    floor = state.floor(question)
+    floor = state.floor(question, model)
     if not answer.passes(floor):
         _append("escalated", {"kind": kind, "subject": subject, "question": key, "answer": asdict(answer), "floor": floor}, path)
         return None
@@ -538,10 +658,10 @@ def decide_with_jev(
         subject=subject,
         options=question.options,
         choice=answer.answer,
-        rationale=f"Jev {question.question_id}@{question.version}: {answer.answer} at confidence {answer.confidence}",
+        rationale=f"{model} {question.question_id}@{question.version}: {answer.answer} at confidence {answer.confidence}",
         prediction=prediction,
         actor=actor,
-        model=str(response.get("model") or JEV_MODEL),
+        model=model,
         question_id=question.question_id,
         question_version=question.version,
         probabilities=answer.probabilities,
@@ -552,6 +672,18 @@ def decide_with_jev(
         run_id=run_id,
     )
     decide(decision, path)
+    for other in dict.fromkeys(canonical_model(m) for m in shadow):
+        if other == model:
+            continue
+        try:
+            raw = ask_jev(state_text, [question], model=other, backend=backend)
+            seen = JevAnswer.parse(question, (raw.get("answers") or {}).get(question.question_id))
+        except (OSError, ImportError, DecisionLogError) as exc:  # a shadow never blocks the decision
+            print(f"shadow {other} skipped: {exc}", file=sys.stderr)
+            continue
+        other_floor = state.floor(question, other)
+        _append("shadowed", {"decision_id": decision.decision_id, "model": other, "answer": seen.answer,
+                             "confidence": seen.confidence, "floor": other_floor, "passed": seen.passes(other_floor)}, path)
     return decision
 
 
@@ -656,19 +788,11 @@ def learn(
                 _append("lesson_retired", {"lesson_id": lesson.lesson_id, "reason": "the gain did not hold for later decisions"}, path)
                 retired.append(lesson.lesson_id)
 
-    # 3. Gate tuning: was Jev right when it was confident enough to decide?
+    # 3. Gate tuning, per question version and model: was each model right
+    # when it was confident enough to decide (or would have been, for shadows)?
     gates: dict[str, float] = {}
     questions_retired: list[str] = []
-    # Only answers made at the current floor count, so a tightened gate is
-    # judged on what it let through, not on what the looser gate did.
-    labeled: dict[str, list[bool]] = {}
-    for decision, outcome, _ in graded:
-        if not (decision.question_id and outcome.label):
-            continue
-        key = f"{decision.question_id}@{decision.question_version}"
-        if (decision.gate_floor if decision.gate_floor is not None else GATE_FLOOR) != state.gates.get(key, GATE_FLOOR):
-            continue
-        labeled.setdefault(key, []).append(outcome.label == decision.choice)
+    labeled = state.accuracy()
     for key, hits in sorted(labeled.items()):
         if len(hits) < min_n or key in state.retired_questions:
             continue
@@ -709,7 +833,7 @@ def write_lessons(result: dict[str, Any], path: Path | None = None) -> list[str]
         l = state.lessons[lid]
         lines.append(format_lesson(f"When deciding {l.kind}", f"drop the rule to {l.stance} {l.choice!r}; its gain did not hold", f"decision log {lid}", status="retired"))
     for key in result.get("questions_retired", []):
-        lines.append(format_lesson(f"When Jev answers {key}", "reword the question as a visible feature; it stayed wrong at the strictest gate", "decision log gate tuning"))
+        lines.append(format_lesson(f"When Jev answers {key}", "reword the question as a visible feature or route it to another model; it stayed wrong at the strictest gate", "decision log gate tuning"))
     return append_lessons(lines)
 
 
@@ -725,6 +849,9 @@ def main(argv: list[str] | None = None) -> int:
     p_ask = sub.add_parser("ask", help="let Jev decide: JSON file with kind, subject, state, question, prediction, actor")
     p_ask.add_argument("file", type=Path)
     p_ask.add_argument("--mock", action="store_true", help="offline mock answers, no API call")
+    p_ask.add_argument("--model", default="", help=f"pin a model {sorted(MODELS)}; default: route by measured accuracy")
+    p_ask.add_argument("--candidates", default="", help="comma list of models the router may pick from (first = default)")
+    p_ask.add_argument("--shadow", default="", help="comma list of models that also answer, graded but never deciding")
     p_obs = sub.add_parser("observe", help="record the outcome of a decision")
     p_obs.add_argument("--decision-id", required=True)
     p_obs.add_argument("--verifier", required=True)
@@ -740,6 +867,7 @@ def main(argv: list[str] | None = None) -> int:
     p_learn.add_argument("--p-threshold", type=float, default=0.05)
     p_learn.add_argument("--target-accuracy", type=float, default=0.85)
     sub.add_parser("status", help="decisions, outcomes, gates and active lessons")
+    sub.add_parser("models", help="known System One models and measured accuracy per question")
     args = parser.parse_args(argv)
 
     try:
@@ -754,6 +882,9 @@ def main(argv: list[str] | None = None) -> int:
                 kind=raw["kind"], subject=raw["subject"], state_text=raw["state"],
                 question=Question.from_dict(q.pop("id"), q), prediction=Prediction(**raw["prediction"]),
                 actor=raw["actor"], action_class=raw.get("action_class", "auto_pr"),
+                model=args.model or raw.get("model", ""),
+                candidates=tuple(m for m in (args.candidates or ",".join(raw.get("candidates", []))).split(",") if m),
+                shadow=tuple(m for m in (args.shadow or ",".join(raw.get("shadow", []))).split(",") if m),
                 backend="mock" if args.mock else "jev",
             )
             print(json.dumps(asdict(decision) if decision else {"escalated": True}, indent=2))
@@ -770,6 +901,15 @@ def main(argv: list[str] | None = None) -> int:
             if args.apply and not result["stalled"]:
                 result["written"] = write_lessons(result)
             print(json.dumps(result, indent=2))
+        elif args.cmd == "models":
+            state = load()
+            print(json.dumps({
+                "default": canonical_model(DEFAULT_MODEL),
+                "models": MODELS,
+                "accuracy": {k: {"n": len(v), "accuracy": round(sum(v) / len(v), 4), "floor": state.gates.get(k, GATE_FLOOR)}
+                             for k, v in sorted(state.accuracy().items())},
+                "retired": sorted(state.retired_questions),
+            }, indent=2))
         else:
             state = load()
             print(json.dumps({
