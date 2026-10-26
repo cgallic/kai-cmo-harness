@@ -56,7 +56,7 @@ Load the Revenue Lens section of `harness/references/audit-data-provenance.md` w
 | Provenance doctrine and modes | `harness/references/audit-data-provenance.md` |
 | Brand, URL, channels, conversion events, connected sources | `MARKETING.md` (project root) |
 | Shared collector | `python -m scripts.audit.collect --url "<url>" --mode <mode> --workflow kai-weekly-audit --out workspace/audits/weekly/<YYYY-MM-DD> --pagespeed` |
-| Connected pull (access confirmed only) | same command with `--mode onboarding_connected --places --gsc --ga4 --calls --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"` |
+| Connected pull (access confirmed only) | same command with `--mode onboarding_connected --places --gsc --ga4 --calls --revenue --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"` |
 | Paid, content, analytics pulls | `python scripts/ads/pull_all.py` · `python -m scripts.content.tracker_cli report --format json` · `python -m scripts.analytics.performance_dashboard weekly` |
 | Provenance gate | `python scripts/quality_gates/audit_provenance_lint.py workspace/audits/weekly/<YYYY-MM-DD> --audit-dir` |
 

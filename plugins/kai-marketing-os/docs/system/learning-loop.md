@@ -60,6 +60,8 @@ These come from the systems that demonstrably work — Claude Code's two-tier me
 | Published pieces graded `underperformer` at 30 days | `memory/what-doesnt-work.md` | the agent during `/kai-retro` | `lesson_capture.py losers` surfaces them |
 | Published pieces graded `winner` at 30 days | `knowledge/playbooks/what-works.md` | `pattern_extract.py` (cron) | existing pipeline |
 
+**What "winner" means.** When leads or revenue are measured for a page, they decide the 30-day grade: a page credited with a sale or at least `thresholds.win_leads` leads is a winner wherever it ranks, and a page that ranks but produced no leads is `average` (`ranks_without_leads`), so it never feeds `what-works.md`. Outcomes come from `outcomes` on the content-log entry (CRM or Stripe joined to the page) or, failing that, GA4 key events and revenue from sessions that landed on the page. With neither, grading stays on rank and the leads/revenue line reads `check`.
+
 The JSONL log is machine-local (gitignored under `data/`). The markdown memory is git-backed and travels with the repo — clone the repo, inherit the lessons.
 
 ### Lesson schema

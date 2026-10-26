@@ -1291,6 +1291,303 @@ def collect_calls(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from:
     add_metric(dataset, source, "calls_date_range", "Call tracking date range", {"from": start, "to": end}, "date_range")
 
 
+def revenue_export(dataset: AuditDataset, raw_dir: Path, env_name: str, source_id: str, label: str) -> tuple[Any, str, str] | None:
+    """Load a user-supplied export named by ``env_name``; None when unset.
+
+    A set-but-missing path records a data gap and returns ``(None, "", "")``.
+    """
+    export_path = os.getenv(env_name, "")
+    if not export_path:
+        return None
+    path = Path(export_path)
+    if not path.exists():
+        add_gap(dataset, label, f"{label} metrics", "Export path missing", f"Provide a valid {label} export", env_name)
+        return None, "", ""
+    return load_artifact(path), copy_input_artifact(raw_dir, path, source_id), str(path)
+
+
+def epoch_seconds(day: str, *, end_of_day: bool = False) -> int:
+    start = date.fromisoformat(day)
+    if end_of_day:
+        start = start + timedelta(days=1)
+    return int((start - date(1970, 1, 1)).total_seconds())
+
+
+# Stripe amounts are in the smallest currency unit, except these.
+STRIPE_ZERO_DECIMAL = {"bif", "clp", "djf", "gnf", "jpy", "kmf", "krw", "mga", "pyg", "rwf", "ugx", "vnd", "vuv", "xaf", "xof", "xpf"}
+
+
+def stripe_dashboard_row(row: dict) -> dict:
+    """Map a Stripe dashboard CSV row (major units) onto the API charge shape."""
+    currency = str(row.get("Currency") or "usd").lower()
+    scale = 1 if currency in STRIPE_ZERO_DECIMAL else 100
+    status = str(row.get("Status") or "").lower()
+    return {
+        "id": row.get("id") or row.get("ID"),
+        "amount": (to_float(row.get("Amount")) or 0.0) * scale,
+        "amount_refunded": (to_float(row.get("Amount Refunded")) or 0.0) * scale,
+        "currency": currency,
+        "status": "succeeded" if status in {"paid", "succeeded"} else status,
+        "customer": row.get("Customer ID") or row.get("customer"),
+    }
+
+
+def collect_stripe(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from: str = "", date_to: str = "") -> None:
+    blocks = "Paid revenue, paying customers, refunds, and the booked/paid funnel stage"
+    if mode != AuditMode.ONBOARDING_CONNECTED.value:
+        add_gap(dataset, "Stripe payments", blocks, "Revenue is onboarding-only; mark the booked/paid stage `check`", "Run with --mode onboarding_connected after Stripe read access is granted", "onboarding_connected mode")
+        return
+    start, end = default_date_range(date_from, date_to)
+    loaded = revenue_export(dataset, raw_dir, "STRIPE_EXPORT_PATH", "stripe_export", "Stripe export")
+    if loaded is not None:
+        data, artifact, source_url = loaded
+        if data is None:
+            return
+        charges = data if isinstance(data, list) else (data.get("data") if isinstance(data, dict) else []) or []
+        charges = [stripe_dashboard_row(c) if isinstance(c, dict) and "Amount" in c else c for c in charges]
+        source_tier, source_name, access = SourceTier.USER_PROVIDED.value, "Stripe payments export", "user_export"
+    else:
+        api_key = os.getenv("STRIPE_API_KEY", "")
+        if not api_key:
+            add_gap(dataset, "Stripe payments", blocks, "Do not claim revenue or paying customers without payment data", "Set STRIPE_API_KEY (restricted, read-only charges) or provide STRIPE_EXPORT_PATH", "STRIPE_API_KEY")
+            return
+        params = {"limit": 100, "created[gte]": epoch_seconds(start), "created[lt]": epoch_seconds(end, end_of_day=True)}
+        endpoint = "https://api.stripe.com/v1/charges"
+        charges, starting_after = [], ""
+        for _ in range(20):
+            query = dict(params, **({"starting_after": starting_after} if starting_after else {}))
+            status, page, raw = fetch_json(endpoint + "?" + urllib.parse.urlencode(query), headers={"Authorization": f"Bearer {api_key}"}, timeout=45)
+            if status != 200 or not isinstance(page, dict):
+                if not charges:
+                    save_artifact(raw_dir, "stripe_charges_error", raw, "txt")
+                    add_gap(dataset, "Stripe payments", blocks, "Stripe request failed", "Fix Stripe access or provide an export", "Valid STRIPE_API_KEY")
+                    return
+                break
+            rows = page.get("data") or []
+            charges.extend(rows)
+            if not page.get("has_more") or not rows:
+                break
+            starting_after = rows[-1].get("id", "")
+        # Keep only the fields the metrics use: no emails, cards or addresses.
+        keep = ("id", "amount", "amount_refunded", "currency", "status", "paid", "refunded", "created", "customer")
+        charges = [{k: c.get(k) for k in keep} for c in charges if isinstance(c, dict)]
+        artifact = save_artifact(raw_dir, "stripe_charges", charges, "json")
+        source_tier, source_name, access, source_url = SourceTier.CONNECTED.value, "Stripe API (charges)", "api", endpoint
+
+    paid = [
+        c for c in charges
+        if isinstance(c, dict)
+        and str(c.get("status", "succeeded")).lower() == "succeeded"
+        and str(c.get("paid", "true")).lower() != "false"
+    ]
+    if not paid and not charges:
+        add_gap(dataset, "Stripe payments", blocks, "Stripe returned no charges in range; mark booked/paid `check`, not zero", "Confirm the account and date range", "Stripe charges in range")
+        return
+    source = dataset.add_source(AuditSource(source_id="stripe", name=source_name, tier=source_tier, access=access, retrieved_at=utc_now_iso(), used_for=blocks, source_url=source_url, artifact_path=artifact))
+    revenue: dict[str, float] = {}
+    refunds: dict[str, float] = {}
+    for charge in paid:
+        currency = str(charge.get("currency") or "usd").lower()
+        scale = 1 if currency in STRIPE_ZERO_DECIMAL else 100
+        revenue[currency] = revenue.get(currency, 0.0) + (to_float(charge.get("amount")) or 0.0) / scale
+        refunds[currency] = refunds.get(currency, 0.0) + (to_float(charge.get("amount_refunded")) or 0.0) / scale
+    net = {cur: round(revenue[cur] - refunds.get(cur, 0.0), 2) for cur in revenue}
+    customers = {c.get("customer") for c in paid if c.get("customer")}
+    add_metric(dataset, source, "stripe_net_revenue", "Net paid revenue (charges minus refunds)", net, "currency_map")
+    add_metric(dataset, source, "stripe_refunds", "Refunded amount", {cur: round(v, 2) for cur, v in refunds.items()}, "currency_map")
+    add_metric(dataset, source, "stripe_paid_charges", "Successful charges", len(paid), "charges")
+    add_metric(dataset, source, "stripe_paying_customers", "Distinct paying customers", len(customers) if customers else None, "customers")
+    add_metric(dataset, source, "stripe_date_range", "Stripe date range", {"from": start, "to": end}, "date_range")
+
+
+def collect_crm(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from: str = "", date_to: str = "") -> None:
+    blocks = "New leads, deals created, deals won, won revenue, and lead-to-won rate"
+    if mode != AuditMode.ONBOARDING_CONNECTED.value:
+        add_gap(dataset, "CRM (HubSpot)", blocks, "CRM data is onboarding-only; mark lead, follow-up and won stages `check`", "Run with --mode onboarding_connected after CRM access is granted", "onboarding_connected mode")
+        return
+    start, end = default_date_range(date_from, date_to)
+    loaded = revenue_export(dataset, raw_dir, "CRM_EXPORT_PATH", "crm_export", "CRM export")
+    contacts_total = None
+    if loaded is not None:
+        data, artifact, source_url = loaded
+        if data is None:
+            return
+        deals = data if isinstance(data, list) else (data.get("deals") if isinstance(data, dict) else []) or []
+        if isinstance(data, dict):
+            contacts_total = data.get("contacts_total")
+        source_tier, source_name, access = SourceTier.USER_PROVIDED.value, "CRM export", "user_export"
+    else:
+        token = os.getenv("HUBSPOT_ACCESS_TOKEN", "")
+        if not token:
+            add_gap(dataset, "CRM (HubSpot)", blocks, "Do not claim lead quality, follow-up or win rates without CRM data", "Set HUBSPOT_ACCESS_TOKEN (read-only private app) or provide CRM_EXPORT_PATH", "HUBSPOT_ACCESS_TOKEN")
+            return
+        headers = {"Authorization": f"Bearer {token}"}
+        window = [
+            {"propertyName": "createdate", "operator": "GTE", "value": str(epoch_seconds(start) * 1000)},
+            {"propertyName": "createdate", "operator": "LT", "value": str(epoch_seconds(end, end_of_day=True) * 1000)},
+        ]
+        contacts_endpoint = "https://api.hubapi.com/crm/v3/objects/contacts/search"
+        c_status, contacts, _ = fetch_json(contacts_endpoint, method="POST", headers=headers, timeout=45, payload={"filterGroups": [{"filters": window}], "limit": 1, "properties": ["createdate"]})
+        if c_status == 200 and isinstance(contacts, dict):
+            contacts_total = contacts.get("total")
+        deals_endpoint = "https://api.hubapi.com/crm/v3/objects/deals/search"
+        deals, after = [], ""
+        for _ in range(10):
+            payload = {"filterGroups": [{"filters": window}], "limit": 100, "properties": ["amount", "dealstage", "hs_is_closed_won", "hs_is_closed", "createdate", "closedate"]}
+            if after:
+                payload["after"] = after
+            status, page, raw = fetch_json(deals_endpoint, method="POST", headers=headers, timeout=45, payload=payload)
+            if status != 200 or not isinstance(page, dict):
+                if not deals and contacts_total is None:
+                    save_artifact(raw_dir, "hubspot_error", raw, "txt")
+                    add_gap(dataset, "CRM (HubSpot)", blocks, "HubSpot request failed", "Fix HubSpot access or provide an export", "Valid HUBSPOT_ACCESS_TOKEN with crm.objects.deals.read")
+                    return
+                break
+            deals.extend((row.get("properties") or {}) for row in page.get("results") or [] if isinstance(row, dict))
+            after = ((page.get("paging") or {}).get("next") or {}).get("after", "")
+            if not after:
+                break
+        artifact = save_artifact(raw_dir, "hubspot_deals", {"contacts_total": contacts_total, "deals": deals}, "json")
+        source_tier, source_name, access, source_url = SourceTier.CONNECTED.value, "HubSpot CRM API", "api", deals_endpoint
+
+    deals = [d for d in deals if isinstance(d, dict)]
+    if not deals and contacts_total is None:
+        add_gap(dataset, "CRM (HubSpot)", blocks, "CRM returned no leads or deals in range; mark lead stages `check`", "Confirm the pipeline and date range", "CRM rows in range")
+        return
+    source = dataset.add_source(AuditSource(source_id="crm", name=source_name, tier=source_tier, access=access, retrieved_at=utc_now_iso(), used_for=blocks, source_url=source_url, artifact_path=artifact))
+
+    def is_won(deal: dict) -> bool:
+        return str(deal.get("hs_is_closed_won", "")).lower() == "true" or "won" in str(deal.get("dealstage", "")).lower()
+
+    won = [d for d in deals if is_won(d)]
+    won_revenue = round(sum(to_float(d.get("amount")) or 0.0 for d in won), 2)
+    add_metric(dataset, source, "crm_new_leads", "New CRM contacts (leads)", contacts_total, "contacts")
+    add_metric(dataset, source, "crm_deals_created", "Deals created", len(deals), "deals")
+    add_metric(dataset, source, "crm_deals_won", "Deals won", len(won), "deals")
+    add_metric(dataset, source, "crm_won_revenue", "Won deal value", won_revenue if won else None, "currency")
+    leads = to_float(contacts_total)
+    add_metric(dataset, source, "crm_lead_to_won_rate", "Lead-to-won rate", round(len(won) / leads, 4) if leads else None, "ratio")
+    add_metric(dataset, source, "crm_date_range", "CRM date range", {"from": start, "to": end}, "date_range")
+
+
+def collect_bookings(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from: str = "", date_to: str = "") -> None:
+    blocks = "Booked meetings, cancellations, and the lead-to-booked funnel stage"
+    if mode != AuditMode.ONBOARDING_CONNECTED.value:
+        add_gap(dataset, "Booking system (Calendly)", blocks, "Bookings are onboarding-only unless a public booking test is run", "Run with --mode onboarding_connected after booking access is granted", "onboarding_connected mode")
+        return
+    start, end = default_date_range(date_from, date_to)
+    loaded = revenue_export(dataset, raw_dir, "BOOKINGS_EXPORT_PATH", "bookings_export", "Bookings export")
+    if loaded is not None:
+        data, artifact, source_url = loaded
+        if data is None:
+            return
+        events = data if isinstance(data, list) else (data.get("collection") if isinstance(data, dict) else []) or []
+        source_tier, source_name, access = SourceTier.USER_PROVIDED.value, "Bookings export", "user_export"
+    else:
+        token = os.getenv("CALENDLY_API_TOKEN", "")
+        if not token:
+            add_gap(dataset, "Booking system (Calendly)", blocks, "Do not claim booked meetings without booking data", "Set CALENDLY_API_TOKEN or provide BOOKINGS_EXPORT_PATH", "CALENDLY_API_TOKEN")
+            return
+        headers = {"Authorization": f"Bearer {token}"}
+        me_status, me, me_raw = fetch_json("https://api.calendly.com/users/me", headers=headers, timeout=30)
+        organization = ((me or {}).get("resource") or {}).get("current_organization", "") if me_status == 200 and isinstance(me, dict) else ""
+        if not organization:
+            save_artifact(raw_dir, "calendly_error", me_raw, "txt")
+            add_gap(dataset, "Booking system (Calendly)", blocks, "Calendly request failed", "Fix Calendly access or provide an export", "Valid CALENDLY_API_TOKEN")
+            return
+        endpoint = "https://api.calendly.com/scheduled_events"
+        url = endpoint + "?" + urllib.parse.urlencode({"organization": organization, "min_start_time": f"{start}T00:00:00Z", "max_start_time": f"{end}T23:59:59Z", "count": 100})
+        events = []
+        for _ in range(20):
+            status, page, _raw = fetch_json(url, headers=headers, timeout=45)
+            if status != 200 or not isinstance(page, dict):
+                break
+            events.extend(page.get("collection") or [])
+            url = (page.get("pagination") or {}).get("next_page") or ""
+            if not url:
+                break
+        keep = ("uri", "status", "start_time", "created_at", "event_type")
+        events = [{k: e.get(k) for k in keep} for e in events if isinstance(e, dict)]
+        artifact = save_artifact(raw_dir, "calendly_events", events, "json")
+        source_tier, source_name, access, source_url = SourceTier.CONNECTED.value, "Calendly API (scheduled events)", "api", endpoint
+
+    events = [e for e in events if isinstance(e, dict)]
+    if not events:
+        add_gap(dataset, "Booking system (Calendly)", blocks, "No bookings returned in range; mark booked stage `check`, not zero", "Confirm the organization and date range", "Scheduled events in range")
+        return
+    source = dataset.add_source(AuditSource(source_id="bookings", name=source_name, tier=source_tier, access=access, retrieved_at=utc_now_iso(), used_for=blocks, source_url=source_url, artifact_path=artifact))
+    canceled = sum(1 for e in events if str(e.get("status", "")).lower() in {"canceled", "cancelled"})
+    add_metric(dataset, source, "bookings_total", "Meetings booked", len(events), "bookings")
+    add_metric(dataset, source, "bookings_canceled", "Bookings canceled", canceled, "bookings")
+    add_metric(dataset, source, "bookings_held_or_upcoming", "Bookings not canceled", len(events) - canceled, "bookings")
+    add_metric(dataset, source, "bookings_date_range", "Bookings date range", {"from": start, "to": end}, "date_range")
+
+
+POSTHOG_EVENT_NAME = re.compile(r"^[A-Za-z0-9_$:. -]{1,100}$")
+
+
+def collect_posthog(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from: str = "", date_to: str = "") -> None:
+    blocks = "Event-level funnel steps (visit → lead → booked → paid) and step conversion"
+    if mode != AuditMode.ONBOARDING_CONNECTED.value:
+        add_gap(dataset, "PostHog product analytics", blocks, "Product analytics is onboarding-only", "Run with --mode onboarding_connected after PostHog access is granted", "onboarding_connected mode")
+        return
+    start, end = default_date_range(date_from, date_to)
+    steps = [s.strip() for s in os.getenv("POSTHOG_FUNNEL_EVENTS", "").split(",") if s.strip()]
+    loaded = revenue_export(dataset, raw_dir, "POSTHOG_EXPORT_PATH", "posthog_export", "PostHog export")
+    if loaded is not None:
+        data, artifact, source_url = loaded
+        if data is None:
+            return
+        rows = data if isinstance(data, list) else (data.get("results") if isinstance(data, dict) else []) or []
+        source_tier, source_name, access = SourceTier.USER_PROVIDED.value, "PostHog export", "user_export"
+    else:
+        api_key = os.getenv("POSTHOG_PERSONAL_API_KEY", "")
+        project_id = os.getenv("POSTHOG_PROJECT_ID", "")
+        if not api_key or not project_id or not steps:
+            add_gap(dataset, "PostHog product analytics", blocks, "Do not claim step conversion without event data", "Set POSTHOG_PERSONAL_API_KEY, POSTHOG_PROJECT_ID and POSTHOG_FUNNEL_EVENTS (ordered, comma-separated) or provide POSTHOG_EXPORT_PATH", "POSTHOG_PERSONAL_API_KEY, POSTHOG_PROJECT_ID, POSTHOG_FUNNEL_EVENTS")
+            return
+        bad = [s for s in steps if not POSTHOG_EVENT_NAME.match(s)]
+        if bad:
+            add_gap(dataset, "PostHog product analytics", blocks, "Unsafe event names in POSTHOG_FUNNEL_EVENTS", "Use plain event names", "POSTHOG_FUNNEL_EVENTS")
+            return
+        host = os.getenv("POSTHOG_HOST", "https://us.posthog.com").rstrip("/")
+        endpoint = f"{host}/api/projects/{project_id}/query/"
+        names = ", ".join("'" + s.replace("'", "") + "'" for s in steps)
+        hogql = (
+            "SELECT event, count() AS events, count(DISTINCT person_id) AS people FROM events "
+            f"WHERE event IN ({names}) AND timestamp >= toDateTime('{start} 00:00:00') "
+            f"AND timestamp < toDateTime('{end} 00:00:00') + INTERVAL 1 DAY GROUP BY event"
+        )
+        status, body, raw = fetch_json(endpoint, method="POST", headers={"Authorization": f"Bearer {api_key}"}, timeout=60, payload={"query": {"kind": "HogQLQuery", "query": hogql}})
+        if status != 200 or not isinstance(body, dict):
+            save_artifact(raw_dir, "posthog_error", raw, "txt")
+            add_gap(dataset, "PostHog product analytics", blocks, "PostHog query failed", "Fix PostHog access or provide an export", "Valid POSTHOG_PERSONAL_API_KEY with query read")
+            return
+        rows = [{"event": r[0], "events": r[1], "people": r[2]} for r in body.get("results") or [] if isinstance(r, (list, tuple)) and len(r) >= 3]
+        artifact = save_artifact(raw_dir, "posthog_funnel", {"query": hogql, "results": rows}, "json")
+        source_tier, source_name, access, source_url = SourceTier.CONNECTED.value, "PostHog HogQL API", "api", endpoint
+
+    by_event = {str(r.get("event")): r for r in rows if isinstance(r, dict) and r.get("event")}
+    if not by_event:
+        add_gap(dataset, "PostHog product analytics", blocks, "No funnel events in range; mark steps `check`", "Confirm event names and date range", "Funnel events in range")
+        return
+    order = steps or list(by_event)
+    funnel = []
+    for i, name in enumerate(order):
+        people = to_float((by_event.get(name) or {}).get("people"))
+        prev = to_float((by_event.get(order[i - 1]) or {}).get("people")) if i else None
+        funnel.append({"step": name, "people": people, "events": to_float((by_event.get(name) or {}).get("events")), "from_previous": round(people / prev, 4) if people is not None and prev else None})
+    source = dataset.add_source(AuditSource(source_id="posthog", name=source_name, tier=source_tier, access=access, retrieved_at=utc_now_iso(), used_for=blocks, source_url=source_url, artifact_path=artifact))
+    add_metric(dataset, source, "posthog_funnel_steps", "Funnel steps (people per step, step conversion)", funnel, "json_array")
+    add_metric(dataset, source, "posthog_date_range", "PostHog date range", {"from": start, "to": end}, "date_range")
+
+
+def collect_revenue(dataset: AuditDataset, raw_dir: Path, *, mode: str, date_from: str = "", date_to: str = "") -> None:
+    """Lead → follow-up → booked/paid stages: Stripe, CRM, bookings, PostHog."""
+    for collector in (collect_stripe, collect_crm, collect_bookings, collect_posthog):
+        collector(dataset, raw_dir, mode=mode, date_from=date_from, date_to=date_to)
+
+
 THIRD_PARTY_SOURCE_ORDER = [
     "serpapi",
     "brightlocal",
@@ -1864,6 +2161,7 @@ def collect_kai_data(
     gsc: bool = False,
     ga4: bool = False,
     calls: bool = False,
+    revenue: bool = False,
     third_party_sources: str = "",
     keywords: str = "",
     location: str = "",
@@ -1891,6 +2189,8 @@ def collect_kai_data(
         collect_ga4(dataset, raw_dir, mode=mode, date_from=date_from, date_to=date_to)
     if calls:
         collect_calls(dataset, raw_dir, mode=mode, date_from=date_from, date_to=date_to)
+    if revenue:
+        collect_revenue(dataset, raw_dir, mode=mode, date_from=date_from, date_to=date_to)
     if third_party_sources:
         collect_third_party_sources(
             dataset,
@@ -1944,6 +2244,7 @@ def main() -> int:
     parser.add_argument("--gsc", action="store_true", help="Collect Google Search Console onboarding data")
     parser.add_argument("--ga4", action="store_true", help="Collect Google Analytics 4 onboarding data")
     parser.add_argument("--calls", action="store_true", help="Collect call tracking onboarding data")
+    parser.add_argument("--revenue", action="store_true", help="Collect lead/booked/paid funnel data: Stripe, CRM (HubSpot), bookings (Calendly), PostHog")
     parser.add_argument("--third-party-sources", default="", help='Collect third-party sources: "all" or comma-separated ids like "serpapi,similarweb,builtwith"')
     parser.add_argument("--keywords", default="", help='Comma-separated keywords, e.g. "kw1,kw2,kw3"')
     parser.add_argument("--location", default="", help="Location for local SERP/Places queries")
@@ -1965,6 +2266,7 @@ def main() -> int:
             gsc=args.gsc,
             ga4=args.ga4,
             calls=args.calls,
+            revenue=args.revenue,
             third_party_sources=args.third_party_sources,
             keywords=args.keywords,
             location=args.location,

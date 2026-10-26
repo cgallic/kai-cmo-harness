@@ -35,6 +35,7 @@ PENDING_CHECKS_DIR = str(_CFG.pending_checks_dir)
 WIN_POSITION = _CFG.thresholds.win_position
 WIN_CTR = _CFG.thresholds.win_ctr
 WIN_TIME_ON_PAGE = _CFG.thresholds.win_time_on_page
+WIN_LEADS = _CFG.thresholds.win_leads
 
 # EC-15 baseline: publish-time site-level GSC snapshot window, and the page's
 # share of site clicks above which an absolute "underperformer" is read as a
@@ -371,16 +372,70 @@ def pull_ga4_data(url: str, site: str) -> dict:
 
         response = client.run_report(request)
         if not response.rows:
-            return {"sessions": 0, "bounce_rate": 0.0, "avg_session_duration": 0}
+            result = {"sessions": 0, "bounce_rate": 0.0, "avg_session_duration": 0}
+        else:
+            row = response.rows[0]
+            result = {
+                "sessions": int(row.metric_values[0].value),
+                "bounce_rate": round(float(row.metric_values[1].value), 4),
+                "avg_session_duration": round(float(row.metric_values[2].value), 1),
+            }
 
-        row = response.rows[0]
-        return {
-            "sessions": int(row.metric_values[0].value),
-            "bounce_rate": round(float(row.metric_values[1].value), 4),
-            "avg_session_duration": round(float(row.metric_values[2].value), 1),
-        }
+        # Outcomes: key events (leads) and revenue from sessions that LANDED
+        # on this page, so a page that starts the visit gets the credit even
+        # when the form or checkout lives elsewhere. A failure here leaves
+        # the page graded on rank only; it never becomes a zero.
+        try:
+            outcome_request = RunReportRequest(
+                property=f"properties/{property_id}",
+                dimensions=[Dimension(name="landingPage")],
+                metrics=[Metric(name="keyEvents"), Metric(name="totalRevenue")],
+                date_ranges=[DateRange(start_date="30daysAgo", end_date="today")],
+                dimension_filter=FilterExpression(
+                    filter=Filter(
+                        field_name="landingPage",
+                        string_filter=Filter.StringFilter(
+                            match_type="EXACT",
+                            value=path,
+                        ),
+                    )
+                ),
+            )
+            outcome = client.run_report(outcome_request)
+            rows = outcome.rows or []
+            result["key_events"] = sum(float(r.metric_values[0].value) for r in rows)
+            result["revenue"] = round(sum(float(r.metric_values[1].value) for r in rows), 2)
+        except Exception as e:
+            result["outcome_error"] = str(e)
+        return result
     except Exception as e:
         return {"error": str(e)}
+
+
+def resolve_outcomes(entry: dict, ga4: dict) -> dict | None:
+    """Leads and revenue credited to a page, or None when unmeasured.
+
+    Attributed outcomes on the content-log entry (``outcomes``: CRM or
+    Stripe joined to the page) win over GA4 landing-page key events and
+    revenue. None means "check": no lead or revenue source was readable, so
+    the grade stays rank-only and nothing is read as zero.
+    """
+    attributed = entry.get("outcomes") if isinstance(entry, dict) else None
+    if isinstance(attributed, dict) and (
+        attributed.get("leads") is not None or attributed.get("revenue") is not None
+    ):
+        return {
+            "leads": float(attributed.get("leads") or 0),
+            "revenue": float(attributed.get("revenue") or 0),
+            "source": attributed.get("source") or "attributed",
+        }
+    if isinstance(ga4, dict) and ga4.get("key_events") is not None:
+        return {
+            "leads": float(ga4.get("key_events") or 0),
+            "revenue": float(ga4.get("revenue") or 0),
+            "source": "ga4_landing_page",
+        }
+    return None
 
 
 def evaluate_performance(entry: dict, gsc: dict, ga4: dict, baseline: dict | None = None) -> dict:
@@ -421,6 +476,17 @@ def evaluate_performance(entry: dict, gsc: dict, ga4: dict, baseline: dict | Non
         "is_underperformer": is_underperformer,
         "grade": "winner" if is_winner else ("underperformer" if is_underperformer else "average"),
     }
+
+    # Revenue lens: when leads or revenue are measured, they decide. A page
+    # that produced a lead or a sale is a winner wherever it ranks; a page
+    # that ranks but produced nothing is average, not a pattern to repeat.
+    outcomes = resolve_outcomes(entry, ga4)
+    if outcomes is not None:
+        result["outcomes"] = outcomes
+        if outcomes["revenue"] > 0 or outcomes["leads"] >= WIN_LEADS:
+            result.update(is_winner=True, is_underperformer=False, grade="winner")
+        elif is_winner:
+            result.update(is_winner=False, grade="average", ranks_without_leads=True)
 
     baseline_relative = compute_baseline_relative(baseline, gsc)
     if baseline_relative is not None:
@@ -540,6 +606,14 @@ def format_discord_message(entry: dict, gsc: dict, ga4: dict, evaluation: dict) 
         f"{emoji} **30-Day Check: {entry.get('title') or entry['keyword']}**",
         f"URL: {entry['url']}",
         "",
+        f"**Outcomes (leads → revenue):**",
+        (
+            f"  Leads: {evaluation['outcomes']['leads']:g} | Revenue: {evaluation['outcomes']['revenue']:,.2f} "
+            f"({evaluation['outcomes']['source']})"
+            if evaluation.get("outcomes")
+            else "  check: leads/revenue unmeasured, graded on rank only"
+        ),
+        "",
         f"**GSC (Search):**",
         f"  Position: {gsc.get('position', 'N/A')} | CTR: {(gsc.get('ctr', 0) * 100):.1f}% | "
         f"Impressions: {gsc.get('impressions', 0):,} | Clicks: {gsc.get('clicks', 0):,}",
@@ -551,6 +625,8 @@ def format_discord_message(entry: dict, gsc: dict, ga4: dict, evaluation: dict) 
         "",
         f"**Grade: {evaluation['grade'].upper()}**",
     ]
+    if evaluation.get("ranks_without_leads"):
+        lines.append("Ranks but produced no leads: not a pattern to repeat.")
 
     # Include quality score if available
     entry_quality = entry.get("quality_retro")
@@ -605,7 +681,8 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
     )
     baseline = (logged_entry or {}).get("baseline")
     evaluation = evaluate_performance(
-        {"url": url, "keyword": keyword}, gsc, ga4, baseline=baseline
+        {"url": url, "keyword": keyword, "outcomes": (logged_entry or {}).get("outcomes")},
+        gsc, ga4, baseline=baseline,
     )
 
     # Retro-score with quality scorer
@@ -628,6 +705,13 @@ def run_check(check_file: Path, check: dict, dry_run: bool = False) -> dict:
             }
             if evaluation.get("baseline_relative") is not None:
                 e["performance_30d"]["baseline_relative"] = evaluation["baseline_relative"]
+            if evaluation.get("outcomes") is not None:
+                e["performance_30d"]["outcomes"] = evaluation["outcomes"]
+                e["performance_30d"]["graded_on"] = "outcome"
+            # No "outcomes" key means rank-only grading: leads/revenue are a
+            # "check" item, never zeros (the record keeps its old shape).
+            if evaluation.get("ranks_without_leads"):
+                e["performance_30d"]["ranks_without_leads"] = True
             if quality:
                 e["quality_retro"] = quality
             break

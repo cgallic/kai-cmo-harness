@@ -39,7 +39,7 @@ Then load the framework sources this skill runs on:
    ```bash
    python -m scripts.audit.collect --url <url> --mode <mode> --workflow funnel-audit --out workspace/funnel-audit/data
    ```
-   Add opt-in collectors per the provenance doc when credentials exist (`--pagespeed`, `--gsc`, `--ga4`, `--calls`, ...). Read metrics from `data/kai-data.json` (`audit-data.json` is the identical alias for the lint). If a metric is not in the collector output or a user-provided artifact, it is unavailable — it goes in `_data-gaps.md`, never into a finding.
+   Add opt-in collectors per the provenance doc when credentials exist (`--pagespeed`, `--gsc`, `--ga4`, `--calls`, `--revenue`, ...). Read metrics from `data/kai-data.json` (`audit-data.json` is the identical alias for the lint). If a metric is not in the collector output or a user-provided artifact, it is unavailable — it goes in `_data-gaps.md`, never into a finding.
 3. **Map the funnel from collected artifacts only.** Write `funnel-map.md`: one row per surface, awareness layer (ads with Ads Library URLs, organic posts, blog/SEO entries, homepage) and capture layer (each opt-in form, lead magnet, booking flow, phone path), with entry→capture edges. A surface with no collected artifact (no crawl, no archive, no user-provided export or screenshot) is OUT OF SCOPE — list it in `_data-gaps.md` with what would be needed to audit it. Never audit from memory of what pages "usually" look like.
 4. **Start the ledgers** — `_data-sources.md` (source, tier, retrieved-at, used-for, artifact path per the provenance doc's table) and `_data-gaps.md`. Every finding downstream cites a row in `_data-sources.md`.
 

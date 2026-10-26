@@ -59,7 +59,7 @@ python -m scripts.audit.collect --url "<url>" --firm-name "<firm_name>" --mode s
 Use `--mode onboarding_connected` only when the client has granted private access. Add optional collectors only when the workflow needs those facts:
 
 ```bash
-python -m scripts.audit.collect --url "<url>" --firm-name "<firm_name>" --mode onboarding_connected --workflow audit --out workspace/marketing-audit --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --keywords "<kw1>,<kw2>" --location "<city, state>" --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"
+python -m scripts.audit.collect --url "<url>" --firm-name "<firm_name>" --mode onboarding_connected --workflow audit --out workspace/marketing-audit --pagespeed --places --dataforseo --seo-provider auto --gsc --ga4 --calls --revenue --keywords "<kw1>,<kw2>" --location "<city, state>" --date-from "<YYYY-MM-DD>" --date-to "<YYYY-MM-DD>"
 ```
 
 Add `--third-party-sources all` or a comma list such as `serpapi,similarweb,builtwith,wappalyzer,brightlocal,yext,yelp,trustpilot,google-ads,meta-ads,tiktok-ads,linkedin-ads,twilio` when the audit needs licensed vendor data. Treat API vendor values as `third_party_estimate`; treat supplied exports as `user_provided`.
