@@ -47,6 +47,15 @@ python scripts/quality_gates/audit_provenance_lint.py workspace/audits/monthly/<
 
 **Know these before collecting** (read `MARKETING.md` and the latest weekly audit folders first; ask only for what blocks a sourced review): the target URL · the data mode · which sources are actually connected · current monthly budget · the primary KPI. Also establish business stage, active channels, target conversion events, the offer, budget posture, and known constraints.
 
+### Revenue lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Context
 
 | Need | Load |

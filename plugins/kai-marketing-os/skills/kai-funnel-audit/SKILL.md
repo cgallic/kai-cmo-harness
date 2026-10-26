@@ -7,6 +7,15 @@ Audit a live funnel in two layers — awareness (do collected hooks, messaging, 
 
 **Scope boundary vs `/kai-cro`:** `/kai-cro` runs the 5-layer conversion stack (technical, traffic, offer, design, copy) on ONE page or flow, in depth. This skill audits the FULL awareness-to-lead path across surfaces — ads, organic posts, entry pages, opt-ins, lead magnets, phone path — and finds where the flow breaks between them. When a single page needs deep conversion work, this skill flags it and hands off to `/kai-cro`; it never re-runs the 5-layer stack itself. `/kai-audit` (full marketing audit) and `/kai-seo-audit` are wider still; hand off there when the problem is not the funnel.
 
+## Non-Negotiable: Revenue Lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Phase 0: Load Product Context
 
 Check if `MARKETING.md` exists in the **project root** (same directory as CLAUDE.md, README.md, package.json).

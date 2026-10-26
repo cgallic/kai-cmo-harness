@@ -40,6 +40,15 @@ Work type `audit-report` (`also_covers: weekly-audit`) — floor **E3/C4/O1** (`
 - **Comparison window is fixed:** last 7 complete days against the prior 7 complete days. Partial days are excluded.
 - **This skill reads and reports. It does not change ad accounts, pages, or sends.** Recommended fixes route to the skill that owns the change, which carries its own approval gate.
 
+### Revenue lens
+
+Load the Revenue Lens section of `harness/references/audit-data-provenance.md` with the provenance rule.
+
+- **Open with the funnel, not activity.** Traffic source → intent → lead → follow-up → booked/paid, one row per stage, before any channel or technical finding. Sessions and lead counts are inputs, never the headline.
+- **Rank gaps by the dollars each stage leaks.** High-intent traffic with no lead path, leads with no follow-up, and follow-up with no booking outrank traffic volume.
+- **Technical setup is one line.** Schema, `llms.txt`, AI crawler access and sitemap get a sourced pass/fail; they become findings only when a measured check fails.
+- **Unverified means `check`.** Any claim or funnel stage not verified in this run is labeled `check` with what would verify it, is not scored, and is mirrored in `_data-gaps.md`.
+
 ## Context
 
 | Need | Load / run |
