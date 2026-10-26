@@ -24,7 +24,7 @@ export interface Plan {
   featured?: boolean;
 }
 
-// Mirrors the /platform plans on meetkai.xyz.
+// Same plans and prices as the Kai Marketing OS site pricing section.
 export const PLANS: Plan[] = [
   {
     id: "starter",

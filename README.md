@@ -8,7 +8,7 @@ Use it when you want an AI operator to create growth plans, landing pages, email
 
 > Built by [Connor Gallic](https://pr.linkedin.com/in/cgallic) — follow on LinkedIn for more agentic marketing systems.
 
-**Want this run for your business, with a person behind it?** Talk To Gina runs it as a service: [talktogina.ai](https://talktogina.ai). [Start with an audit](https://meetkai.xyz/audit) if you'd rather see the gaps than go find them.
+**Want this run for your business, with a person behind it?** Talk To Gina runs it as a service: [talktogina.ai](https://talktogina.ai). [Email us for an audit](mailto:connor@kaicalls.com?subject=Marketing%20audit%20request) if you'd rather see the gaps than go find them.
 
 ## Try It In 60 Seconds, No API Key
 
