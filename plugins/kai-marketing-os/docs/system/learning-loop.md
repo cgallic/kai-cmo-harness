@@ -103,6 +103,22 @@ python scripts/quality_gates/golden_check.py   # gate verdicts unchanged
 
 CI (`.github/workflows/quality-gates.yml`) runs both on every push and PR. If CLAUDE.md references a file that doesn't exist, or a gate edit flips a known verdict, the build fails.
 
+## Decisions: Jev picks, revenue grades, the gate tunes itself
+
+Content grading learns which *pieces* won. `scripts/autonomy/decision_log.py` learns which *choices* win and when the decider can be trusted.
+
+- **Decide.** Jev (TypeSafe's System One model) answers a typed question (`choice`, `noul` or `score`) about visible features of the state. An answer that clears the confidence gate (choice ≥ 0.60 and 0.20 ahead; noul at p ≥ 0.70 or ≤ 0.30) becomes a `Decision` with its probabilities, the pinned question version and a `Prediction` on an outcome metric (revenue, leads, bookings, paid customers, won deals). An unsure answer is logged as `escalated` for a human or a stronger model. Activity metrics are rejected by type.
+- **Observe.** Someone other than the decider records the outcome, from a number or straight from a `kai-data.json` collector metric (`--revenue`), plus the true answer when it can be seen. A missing metric is a data gap, never a zero.
+- **Learn** (`learn`, one pass, three loops): accept a lesson when a choice beats the others (n ≥ 10 a side, lift ≥ 0.15, Welch p < 0.05); retire a lesson when decisions that followed it stop beating the rest; tighten a question's gate in 0.05 steps when its gated answers are right less than 85% of the time, and retire the question at the 0.95 ceiling so it must be reworded. Gates loosen back toward 0.60 when accuracy holds above 90%.
+- **Bounds.** Lesson depth ≤ 2, ≤ 3 new lessons a pass, and `learn` stops after 3 passes with no new outcome and no change. Lessons reach `memory/lessons.md` only with `--apply`.
+
+```bash
+python scripts/autonomy/decision_log.py ask spec.json [--mock]
+python scripts/autonomy/decision_log.py observe --decision-id dec-... --verifier <not-the-decider> --kai-data workspace/x/kai-data.json --metric-id stripe_net_revenue
+python scripts/autonomy/decision_log.py learn [--apply]
+python scripts/autonomy/decision_log.py status
+```
+
 ## Growth control
 
 - `memory/MEMORY.md` ≤ 200 lines (hard cap; detail goes to topic files).

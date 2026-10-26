@@ -9,6 +9,8 @@ Modules:
   - ``ledger``    append-only, machine-readable record of every automation run
   - ``decisions`` maps findings to a permitted action class (the policy router)
   - ``impact``    turns raw change signals into practical impact cards
+  - ``decision_log`` Jev-typed decisions graded on revenue outcomes, with a
+    bounded learning loop (choice lessons, lesson retirement, gate tuning)
 
 See GitHub issue #27 for the full design and the broader roadmap.
 """

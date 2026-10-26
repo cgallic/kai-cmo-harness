@@ -106,6 +106,10 @@ python scripts/harness_cli.py goals update <goal-id> --current <value>
 
 Goals persist in `data/runtime/goals/` (`GoalRegistry`). The weekly `cmo_review` task (Mon 07:00, `agent/tasks/cmo_review.py`) refreshes goal progress from graded 30-day results, computes pace vs deadline, decomposes behind-pace goals into task graphs (`GoalDecomposer` → executed by `agent/loop.py`), flags failed graphs `needs_replan`, and writes a snapshot to `data/runtime/goals/reviews/`. All resulting actions flow through ActionStore approval + mandate validation. Without an LLM key it still snapshots and notifies — it just skips decomposition.
 
+### Decision log (`scripts/autonomy/decision_log.py`)
+
+Jev-typed decisions graded on revenue, with a bounded learning loop (choice lessons, lesson retirement, per-question confidence-gate tuning). Jev calls use `OPENROUTER_API_KEY` (`JEV_URL`/`JEV_MODEL` override; `TYPESAFE_API_KEY` for the direct endpoint); `--mock` runs offline. Log: `data/autonomy/decisions.jsonl` (`KAI_AUTONOMY_DIR` override). Detail: `docs/system/learning-loop.md`.
+
 ---
 
 ## Reporting
