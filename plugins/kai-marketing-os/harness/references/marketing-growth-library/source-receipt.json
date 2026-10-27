@@ -1,0 +1,15 @@
+{
+  "source_title": "Marketing Growth Prompt Library",
+  "source_version": "2026-10-27",
+  "source_body_sha256": "57178ad1f8973ee54157fcdebc7b8f669c14fee380019057ff18128a10912e35",
+  "source_body_characters": 48247,
+  "source_body_utf8_bytes": 48459,
+  "hash_scope": "Body from first heading through final non-newline character; excludes frontmatter and trailing line endings.",
+  "distribution": "sanitized derivative; not a byte-identical source mirror",
+  "changes": [
+    "Removed private links, conversation identifiers and customer-specific history.",
+    "Replaced client examples with fictional illustrative examples in a separate file.",
+    "Generalized fixed repository inventory.",
+    "Added local prompt anchors and packaging guidance."
+  ]
+}
