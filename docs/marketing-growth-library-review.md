@@ -1,6 +1,6 @@
 # Marketing growth library draft review
 
-Status: local draft for independent review. No ECO SHIPPED/CLOSED verdict is asserted. Independent craft review and exact-version human approval remain outstanding (C/E); no commercial outcome has been measured (O).
+Status: draft package for independent re-review after two scoped validator fixes. No ECO SHIPPED/CLOSED verdict is asserted. Exact-version independent craft review and human approval remain outstanding (C/E); no commercial outcome has been measured (O).
 
 ## Change surface
 
@@ -10,8 +10,8 @@ No runtime modules, workflow registry, accounts, publishers, credentials, client
 
 ## Author-run checks
 
-- Full suite: **1346 passed**, 212 existing datetime deprecation warnings, with missing test dependencies installed into a temporary virtual environment.
-- Focused library/skill parity/link/capability suite: **290 passed**.
+- Full suite after validator fixes: **1355 passed**, 212 existing datetime deprecation warnings, with missing test dependencies installed into a temporary virtual environment.
+- Focused library/skill parity/link/capability suite after validator fixes: **299 passed**.
 - `python scripts/doctor.py --ci`: passed hard checks. Its final configured message concerns repository checks, not client account access.
 - `python scripts/quality_gates/golden_check.py`: **6/6 passed**.
 - `python scripts/sync_plugin_assets.py --check`: passed, 33 asset entries.
@@ -20,6 +20,8 @@ No runtime modules, workflow registry, accounts, publishers, credentials, client
 - Four U's/model judging, live collectors, actual prompt generation, client account tests, installation, publishing and commercial outcome evaluation: **not run**. This is a prompt/context package, not publishable client copy or proof of business results.
 
 ## Independent review instructions
+
+The first independent review at `0bdb1ff` reported no blockers and identified two scoped validator improvements. This revision declares goal prerequisites per prompt in the catalog and allows P3 discovery before goal configuration; every other prompt retains its prior goal prerequisites. It also converts unsupported numeric magnitude into a normal validation error. Nine added regression cases cover P3 readiness and evidence holds, goal-dependent measurement/evaluation holds, and CLI rejection of oversized target/baseline numbers without tracebacks. Independent re-review of this revision remains pending.
 
 Compare the branch to base `46fe97f`. Read canonical files before plugin mirrors. Confirm:
 

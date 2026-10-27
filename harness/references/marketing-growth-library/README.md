@@ -40,6 +40,8 @@ Selection input fields:
 
 `kind` is one of the catalog's `requires` values. Add references, never raw transcripts, identities or credentials. `baseline` evidence requires a reconciled numeric goal baseline and source, including every offer for a hybrid. The helper refuses extra input fields; it accepts no execution, approval or publication switch. It does not authenticate the client label, verifier or referenced permissions.
 
+Each catalog entry declares `required_goal_fields` separately from evidence requirements. P3 can map an observed journey with a selected profile and verified journey evidence before a target or reporting window is known. It leaves those unknowns null. Goal-dependent planning, measurement, evaluation and channel work retain their configured-goal requirements; discovery readiness grants no downstream readiness. Numeric target/baseline values outside the helper's supported finite magnitude are rejected as invalid input.
+
 ## Existing contracts govern the handoff
 
 | Need | Existing seam |

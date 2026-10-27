@@ -47,8 +47,14 @@ def _goal(value):
         if item is None:
             continue
         if field in {"target", "baseline"}:
-            if isinstance(item, bool) or not isinstance(item, (int, float)) or not math.isfinite(item):
-                raise ValueError(f"{field} must be a finite number or null")
+            valid_number = not isinstance(item, bool) and isinstance(item, (int, float))
+            if valid_number:
+                try:
+                    valid_number = math.isfinite(item)
+                except OverflowError:
+                    valid_number = False
+            if not valid_number:
+                raise ValueError(f"{field} must be a finite number within supported magnitude or null")
         else:
             _text(item)
     if result["baseline"] is not None and result["baseline_ref"] is None:
@@ -136,10 +142,9 @@ def plan_selection(selection: dict) -> dict:
         missing = sorted(set(prompt["requires"]) - verified)
         if not selected and prompt_id not in {"R0", "P2", "P4", "C1"}:
             missing.append("business_profile")
-        if prompt_id not in {"R0", "P2", "P4", "C1", "C2", "C3", "C4", "C6"}:
-            for field in ("metric", "unit", "target", "period", "timezone", "reversal_rules"):
-                if any(g[field] is None for g in goals):
-                    missing.append(f"goal.{field}")
+        for field in prompt["required_goal_fields"]:
+            if any(g[field] is None for g in goals):
+                missing.append(f"goal.{field}")
         routes.append({"id": prompt_id, "status": "deferred" if missing else "ready_to_draft",
                        "missing": missing, "path": prompt["path"],
                        "handoff_skills": prompt["handoff_skills"], "feeds_next": prompt["feeds_next"]})

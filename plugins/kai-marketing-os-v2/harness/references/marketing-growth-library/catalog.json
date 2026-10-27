@@ -89,7 +89,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "P1",
@@ -118,6 +119,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -145,7 +154,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "P3",
@@ -172,7 +182,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "P4",
@@ -201,7 +212,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "P5",
@@ -232,6 +244,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -258,6 +278,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -290,6 +318,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -316,6 +352,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -344,6 +388,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -373,6 +425,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -398,6 +458,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -429,6 +497,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -464,6 +540,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -492,6 +576,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -522,6 +614,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -550,6 +650,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -576,6 +684,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -604,6 +720,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -631,6 +755,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -654,6 +786,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -682,6 +822,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -709,6 +857,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -736,6 +892,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -765,7 +929,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "C2",
@@ -791,7 +956,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "C3",
@@ -818,7 +984,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "C4",
@@ -845,7 +1012,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     },
     {
       "id": "C5",
@@ -872,6 +1040,14 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
       ]
     },
     {
@@ -901,7 +1077,8 @@
         "rentals-events",
         "professional-practices",
         "b2b-services"
-      ]
+      ],
+      "required_goal_fields": []
     }
   ]
 }

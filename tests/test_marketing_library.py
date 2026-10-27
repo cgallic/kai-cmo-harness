@@ -116,6 +116,64 @@ def test_evidence_and_reconciled_baseline_gate_requested_cro():
         library.plan_selection(request)
 
 
+def test_journey_discovery_can_start_before_goal_configuration():
+    request = selection(prompt_ids=["P3"])
+    request["goal"] = {}
+    request["evidence"] = [evidence("journey")]
+    result = library.plan_selection(request)
+    assert result["routes"][0]["status"] == "ready_to_draft"
+    assert result["routes"][0]["missing"] == []
+    assert all(value is None for value in result["goal"].values())
+    assert result["material_questions"] == []
+    assert not result["execution_authorized"]
+
+
+@pytest.mark.parametrize("missing", ["profile", "journey", "verified_journey"])
+def test_journey_discovery_still_requires_profile_and_observed_evidence(missing):
+    request = selection(prompt_ids=["P3"])
+    request["goal"] = {}
+    request["evidence"] = [evidence("journey")]
+    if missing == "profile":
+        request["profiles"] = []
+    elif missing == "journey":
+        request["evidence"] = []
+    else:
+        request["evidence"][0]["status"] = "hypothesis"
+    route = library.plan_selection(request)["routes"][0]
+    assert route["status"] == "deferred"
+    expected = "business_profile" if missing == "profile" else "journey"
+    assert expected in route["missing"]
+
+
+@pytest.mark.parametrize("prompt_id", ["P10", "P18", "P22"])
+def test_measurement_and_evaluation_keep_goal_requirements(prompt_id):
+    request = selection(prompt_ids=[prompt_id])
+    request["goal"] = {}
+    prompt = next(p for p in CATALOG["prompts"] if p["id"] == prompt_id)
+    request["evidence"] = [evidence(kind) for kind in prompt["requires"]]
+    route = library.plan_selection(request)["routes"][0]
+    assert route["status"] == "deferred"
+    assert {f"goal.{field}" for field in prompt["required_goal_fields"]} <= set(route["missing"])
+    assert {"metric", "unit", "target", "period", "timezone", "reversal_rules"} == set(prompt["required_goal_fields"])
+
+
+@pytest.mark.parametrize("field", ["target", "baseline"])
+def test_unsupported_numeric_magnitude_is_a_normal_cli_validation_error(field, tmp_path):
+    request = selection()
+    request["goal"][field] = 10 ** 1000
+    with pytest.raises(ValueError, match="supported magnitude"):
+        library.plan_selection(request)
+    source = tmp_path / "selection.json"
+    source.write_text(json.dumps(request))
+    result = subprocess.run([sys.executable, str(ROOT / "scripts/marketing_library.py"),
+                             "--input", str(source)], capture_output=True, text=True)
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert "Invalid selection:" in result.stderr
+    assert "supported magnitude" in result.stderr
+    assert "Traceback" not in result.stderr
+
+
 def hybrid():
     request = selection("saas", ["P18"])
     request["profiles"].append(profile("b2b-services"))
