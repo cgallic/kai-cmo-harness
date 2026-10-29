@@ -34,8 +34,23 @@ import requests
 from openai import OpenAI
 from dotenv import load_dotenv
 import review_prospecting
-sys.path.insert(0, str(Path.home() / "cmo-os"))
-from news_once import notify_many_once
+
+# news_once (send-once dedup against Brain's outreach ledger) lives in the
+# fleet's ~/cmo-os checkout, not in this repo. Load it only when a digest is
+# actually sent, so the module, --dry-run, and its tests work on a fresh clone.
+_CMO_OS = Path.home() / "cmo-os"
+
+
+def notify_many_once(*args, **kwargs):
+    if str(_CMO_OS) not in sys.path:
+        sys.path.insert(0, str(_CMO_OS))
+    try:
+        from news_once import notify_many_once as _notify
+    except ImportError as exc:
+        raise RuntimeError(
+            f"news_once not found under {_CMO_OS}; sending the digest needs the "
+            "fleet's cmo-os checkout (use --dry-run elsewhere)") from exc
+    return _notify(*args, **kwargs)
 
 _here = Path(__file__).parent
 _env_candidates = [
