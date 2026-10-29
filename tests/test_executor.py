@@ -624,3 +624,88 @@ class TestOutstandReadBack:
         )
 
         assert read_back["status"] == "timeout"
+
+
+# ---------------------------------------------------------------------------
+# ECO outcome ticket: a live write opens one; dry runs and reads do not
+# ---------------------------------------------------------------------------
+
+
+def _run_website_action(tmp_path, *, dry_run, metadata=None, connector=None):
+    executor, store, registry, mandates, cred_store = _make_executor(tmp_path, dry_run=dry_run)
+    _register_wordpress_integration(registry, cred_store)
+    mandate = mandates.create({
+        "agent_id": "agent_kai_operator",
+        "brand_id": "testbrand",
+        "channel": "website",
+        "action_types": ["update_page_copy"],
+        "created_by": "ops@kai.test",
+    })
+    mandates.approve(mandate["mandate_id"], approved_by="ops@kai.test")
+    action = store.propose_action({
+        "brand_id": "testbrand",
+        "channel": "website",
+        "action_type": "update_page_copy",
+        "intent": "Update hero headline",
+        "proposed_changes": {"page_id": "42", "section_id": "hero", "new_content": "<h1>New</h1>",
+                             "url": "https://test.example.com/pricing"},
+        "risk_tier": "medium",
+        "mandate_id": mandate["mandate_id"],
+        "metadata": metadata or {},
+    })
+    store.approve_action(action["action_id"])
+    executor._factory = MagicMock()
+    executor._factory.create.return_value = connector or MagicMock()
+    result = executor.execute(action["action_id"])
+    from kai.runtime.eco import EcoRecordStore
+    tickets = [r for r in EcoRecordStore(base_dir=store.base_dir / "eco").list_records() if r.get("ticket")]
+    return result, action, tickets
+
+
+class TestOutcomeTicket:
+    def test_live_write_registers_ticket_after_completion(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            result, action, tickets = _run_website_action(tmp_path, dry_run=False)
+        assert result.success is True and result.dry_run is False
+        assert len(tickets) == 1
+        record = tickets[0]
+        assert record["subject_id"] == f"action:{action['action_id']}"
+        assert record["work_type"] == "page-refresh"
+        assert record["claimed_by"] == "kai-executor"
+        assert record["ticket"]["brand_id"] == "testbrand"
+        assert record["ticket"]["receipt"]["url"] == "https://test.example.com/pricing"
+        # No declared baseline -> none invented; the ledger shows it unmeasurable.
+        assert record["ticket"]["baseline"] is None
+        assert "computed" not in record
+
+    def test_declared_baseline_is_snapshotted_before_dispatch(self, tmp_path):
+        snapshots = []
+        connector = MagicMock()
+        connector.update_page_section.side_effect = lambda **kw: snapshots.append(
+            datetime.now(timezone.utc)) or {"success": True}
+        metadata = {"outcome_baseline": {"metric": "clicks", "source": "google_search_console",
+                                         "scope": "page", "value": 210}}
+        with _with_config(YAML_CONTENT):
+            _, _, tickets = _run_website_action(tmp_path, dry_run=False, metadata=metadata, connector=connector)
+        baseline = tickets[0]["ticket"]["baseline"]
+        assert baseline["value"] == 210
+        captured = datetime.fromisoformat(baseline["captured_at"])
+        assert captured <= snapshots[0]
+        assert "unmeasurable_reason" not in tickets[0]["ticket"]
+
+    def test_dry_run_registers_nothing(self, tmp_path):
+        with _with_config(YAML_CONTENT):
+            result, _, tickets = _run_website_action(tmp_path, dry_run=True)
+        assert result.success is True
+        assert tickets == []
+
+    def test_ticket_failure_never_breaks_execution(self, tmp_path, monkeypatch):
+        import scripts.quality_gates.eco_core as eco_core
+
+        def boom(self, **kwargs):
+            raise RuntimeError("eco store down")
+
+        monkeypatch.setattr(eco_core.EcoRecordStore, "register_shipped", boom)
+        with _with_config(YAML_CONTENT):
+            result, _, _ = _run_website_action(tmp_path, dry_run=False)
+        assert result.success is True

@@ -546,6 +546,90 @@ class TestBaselineCapture:
 
 
 # ---------------------------------------------------------------------------
+# ECO outcome ticket: every publish opens one, with the publish-time baseline
+# ---------------------------------------------------------------------------
+
+
+class TestOutcomeTicket:
+    @pytest.fixture()
+    def eco(self, sandbox, monkeypatch):
+        from scripts.quality_gates.eco_core import EcoRecordStore
+
+        monkeypatch.delenv("KAI_RUNTIME_DIR", raising=False)
+        return lambda: EcoRecordStore(base_dir=sandbox["data_dir"] / "runtime" / "eco")
+
+    def _tickets(self, eco):
+        return [r for r in eco().list_records() if r.get("ticket")]
+
+    def test_publish_registers_ticket_with_site_baseline(self, sandbox, monkeypatch, eco):
+        import scripts.self_improvement.performance_check as pc
+
+        today = datetime.now(timezone.utc).date().isoformat()
+        monkeypatch.setattr(pc, "pull_site_baseline", lambda site, days=28: {
+            "clicks": 120, "impressions": 4000, "window_days": 28, "end_date": today})
+        entry = log_entry(url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+                          format="blog", content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        tickets = self._tickets(eco)
+        assert len(tickets) == 1
+        record = tickets[0]
+        assert record["subject_id"] == f"content:{entry['id']}"
+        assert record["work_type"] == "blog-post"
+        assert record["ticket"]["baseline"]["value"] == 120
+        assert record["ticket"]["baseline"]["scope"] == "site"
+        assert record["ticket"]["receipt"]["url"] == "https://kaicalls.com/blog/live"
+        assert "computed" not in record  # registering never issues a verdict
+
+    def test_unavailable_baseline_registers_unmeasurable_ticket(self, sandbox, monkeypatch, eco):
+        monkeypatch.delenv("GOOGLE_CREDENTIALS_PATH", raising=False)
+        log_entry(url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+                  format="blog", content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        ticket = self._tickets(eco)[0]["ticket"]
+        assert ticket["baseline"] is None
+        assert ticket["unmeasurable_reason"] == "no pre-ship baseline captured"
+
+    def test_unpublished_entry_gets_no_ticket(self, sandbox, eco):
+        log_entry(url=None, keyword="k", site="kaicalls", format="blog",
+                  content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        assert self._tickets(eco) == []
+
+    def test_republish_rerun_keeps_one_ticket(self, sandbox, monkeypatch, eco):
+        monkeypatch.delenv("GOOGLE_CREDENTIALS_PATH", raising=False)
+        entry = log_entry(url=None, keyword="k", site="kaicalls", format="blog",
+                          content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        mark_published(entry["id"], "https://kaicalls.com/blog/a", log_file=sandbox["log_file"])
+        mark_published(entry["id"], "https://kaicalls.com/blog/a", log_file=sandbox["log_file"])
+        assert len(self._tickets(eco)) == 1
+
+    def test_backfilled_publish_cannot_claim_a_pre_ship_baseline(self, sandbox, monkeypatch, eco):
+        """A baseline captured today for a piece published last month is post-ship."""
+        import scripts.self_improvement.performance_check as pc
+
+        today = datetime.now(timezone.utc).date().isoformat()
+        monkeypatch.setattr(pc, "pull_site_baseline", lambda site, days=28: {
+            "clicks": 50, "impressions": 900, "window_days": 28, "end_date": today})
+        entry = log_entry(url=None, keyword="k", site="kaicalls", format="blog",
+                          content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        last_month = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        mark_published(entry["id"], "https://kaicalls.com/blog/a", published_at=last_month,
+                       log_file=sandbox["log_file"])
+        ticket = self._tickets(eco)[0]["ticket"]
+        assert ticket["baseline"] is None
+        assert "outcome_predeclared" in ticket["unmeasurable_reason"]
+
+    def test_ticket_failure_never_breaks_publish(self, sandbox, monkeypatch):
+        import scripts.quality_gates.eco_core as eco_core
+
+        def boom(self, **kwargs):
+            raise RuntimeError("eco store down")
+
+        monkeypatch.setattr(eco_core.EcoRecordStore, "register_shipped", boom)
+        entry = log_entry(url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
+                          format="blog", content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        assert entry["status"] == "published"
+        assert len(_checks(sandbox)) == 1
+
+
+# ---------------------------------------------------------------------------
 # Engine: publisher success WITHOUT a URL must stay measurable (recoverable)
 # ---------------------------------------------------------------------------
 

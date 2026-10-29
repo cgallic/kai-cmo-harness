@@ -422,6 +422,14 @@ class Scheduler:
                 "task_type": "harness_defaults_update",
                 "config": {"notify_on_complete": True}
             },
+            # ECO outcome verdicts — shipped changes read at their verdict
+            # window against the pre-ship baseline (outcome_measure.py)
+            {
+                "name": "Outcome Verdicts",
+                "cron_expression": "0 3 * * *",  # 3 AM daily
+                "task_type": "outcome_verdicts",
+                "config": {"notify_on_complete": True}
+            },
             # Editorial calendar executor — drafts only; the approval flow
             # (execute_approved_actions) is the only path that publishes.
             {

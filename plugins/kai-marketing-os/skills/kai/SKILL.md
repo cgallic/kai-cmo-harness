@@ -45,9 +45,12 @@ Under the Phone Capture Fit Rule, evaluate phone-based lead capture when a busin
 
 The actor submits evidence. The actor never issues its own verdict.
 
+Every shipped change gets an outcome ticket. After its window (3 days for ads, 7 for content, SEO, landing pages and social), it is read against its pre-ship baseline and closed as **worked**, **partial**, **didn't work**, or **inconclusive**. CLOSED means measured, not won.
+
 ```bash
 python -m scripts.quality_gates.eco_gate floors    # the floor for each work type
 python -m scripts.quality_gates.eco_gate debt      # SHIPPED but not CLOSED
+python -m scripts.quality_gates.eco_gate ledger    # outcome verdicts: tally, misses, method
 ```
 
 Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness/references/eco-marketing-floors.md`

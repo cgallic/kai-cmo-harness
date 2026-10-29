@@ -110,6 +110,54 @@ def _attach_baseline(entry: dict) -> None:
         }
 
 
+# content_log format -> ECO work type for the outcome ticket.
+_FORMAT_WORK_TYPES = {
+    "landing-page": "landing-page",
+    "landing": "landing-page",
+    "social": "social-post",
+    "social-post": "social-post",
+}
+
+
+def _register_outcome_ticket(entry: dict) -> None:
+    """Open the ECO outcome ticket for a newly published entry (best-effort).
+
+    The ticket carries the EC-15 publish-time GSC snapshot as its baseline
+    (site scope, data window ending at the ship date). An "unavailable"
+    baseline is passed as nothing, so the ticket reads unmeasurable instead
+    of being graded against a guessed number. Never breaks publishing.
+    """
+    try:
+        from scripts.quality_gates.eco_core import EcoRecordStore
+
+        override = os.environ.get("KAI_RUNTIME_DIR")
+        base_dir = Path(override) / "eco" if override else Path(_CFG.data_dir) / "runtime" / "eco"
+        gsc = (entry.get("baseline") or {}).get("gsc")
+        baseline = None
+        if isinstance(gsc, dict) and isinstance(gsc.get("clicks"), (int, float)):
+            baseline = {
+                "metric": "clicks",
+                "source": "google_search_console",
+                "scope": "site",
+                "site": entry.get("site"),
+                "value": gsc["clicks"],
+                "window_days": gsc.get("window_days"),
+                "window_end": gsc.get("end_date"),
+                "captured_at": entry["baseline"].get("captured_at"),
+            }
+        EcoRecordStore(base_dir=base_dir).register_shipped(
+            subject_id=f"content:{entry['id']}",
+            work_type=_FORMAT_WORK_TYPES.get(str(entry.get("format") or ""), "blog-post"),
+            claimed_by="content_log",
+            receipt={"url": entry.get("url"), "site": entry.get("site"), "platform": entry.get("platform")},
+            baseline=baseline,
+            brand_id=entry.get("site"),
+            shipped_at=entry.get("published_at"),
+        )
+    except Exception as e:  # broad guard — never break the publish path
+        print(f"  Warning: outcome ticket not registered: {e}")
+
+
 def find_entry_by_hash(site: str, content_hash: str, log_file: str | None = None) -> dict | None:
     """Return the log entry matching (site, content_hash), or None.
 
@@ -212,6 +260,7 @@ def log_entry(
             if url and not url_was_set:
                 append_to_calendar(entry)
                 schedule_30day_check(entry)
+                _register_outcome_ticket(entry)
             return entry
 
     entry_id = f"{site}-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
@@ -248,6 +297,7 @@ def log_entry(
     if url:
         append_to_calendar(entry)
         schedule_30day_check(entry)
+        _register_outcome_ticket(entry)
 
     return entry
 
@@ -283,6 +333,7 @@ def mark_published(
     save_log(log, log_file)
     append_to_calendar(entry)
     schedule_30day_check(entry)
+    _register_outcome_ticket(entry)
     return entry
 
 
@@ -396,6 +447,7 @@ def main():
     save_log(log)
     append_to_calendar(entry)
     schedule_30day_check(entry)
+    _register_outcome_ticket(entry)
 
     print(f"\n✅ Logged: {args.url}")
     print(f"   ID: {entry_id}")

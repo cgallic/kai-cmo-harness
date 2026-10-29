@@ -29,6 +29,15 @@ python scripts/self_improvement/lesson_capture.py losers
 
 This lists pieces whose 30-day grade is `underperformer` (the grade vocabulary is `winner`/`average`/`underperformer`; older docs said "loser") with no diagnosis yet. For each one, read the piece and its `content_log.json` entry, write a one-line diagnosis (hook type, persona mismatch, seasonality, thin proof — name the cause, not the symptom), and add it to `memory/what-doesnt-work.md` under "Measured losers" with the piece id. Check seasonality and competitor moves before blaming the content (see `memory/edge-cases.md` EC-15).
 
+Then read the outcome verdict ledger:
+
+```bash
+python -m scripts.quality_gates.eco_gate ledger --since <date of last retro>
+python -m scripts.quality_gates.eco_gate unregistered
+```
+
+Diagnose every `didn't work` and `partial` row in its "Misses" table the same way, using the subject id. Read the verdict column, never CLOSED, because a CLOSED record can be a miss. List final-inconclusive and unmeasurable tickets as measurement gaps, not as losers. A change that `unregistered` lists shipped with no ticket: register it, or record why it cannot be measured.
+
 ## Step 3 — Triage every lesson
 
 Go through `memory/lessons.md`:
@@ -70,6 +79,7 @@ Output a retro summary:
 
 **Mined:** [N] recurring failure signatures ([gate]: [signature] ×[count], ...)
 **Underperformers diagnosed:** [N] ([id]: [one-line diagnosis], ...)
+**Outcome verdicts:** worked [N] · partial [N] · didn't work [N] · inconclusive [N] · unmeasurable [N]
 **Promoted:** [lesson] → [enforcement target] (+ golden case [id])
 **Retired:** [lesson] — [reason]
 **Edge cases:** [new/closed entries]

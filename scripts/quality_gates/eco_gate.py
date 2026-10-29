@@ -14,6 +14,9 @@ Subcommands
   status                     Show one record
   debt                       List SHIPPED items with unpaid outcome obligations
   fail                       Write the mandatory failure record
+  register                   Open an outcome ticket for shipped work (idempotent per subject)
+  unregistered               List published content / executed actions with no ticket
+  ledger                     Outcome verdict ledger: tally, misses, method (--format md|json)
 
 Exit codes
 ----------
@@ -41,6 +44,7 @@ try:  # full repo, or plugin install with `scripts` on the path
         EcoFloors,
         EcoRecordStore,
     )
+    from scripts.quality_gates.eco_ledger import build_ledger, render_json, render_markdown
 except ModuleNotFoundError as exc:
     if exc.name == "yaml":
         print(
@@ -58,6 +62,18 @@ except ModuleNotFoundError as exc:
         EcoFloors,
         EcoRecordStore,
     )
+    from eco_ledger import build_ledger, render_json, render_markdown  # type: ignore[no-redef]
+
+
+def _load_json_arg(value):
+    """Inline JSON or a path to a JSON file; None when absent."""
+    if not value:
+        return None
+    path = Path(value)
+    payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else json.loads(value)
+    if not isinstance(payload, dict):
+        raise EcoError("receipt and baseline must be JSON objects")
+    return payload
 
 
 def _load_evidence(args) -> list:
@@ -228,6 +244,100 @@ def cmd_fail(args) -> int:
     return 0
 
 
+def cmd_register(args) -> int:
+    store = EcoRecordStore(floors=EcoFloors.load(args.floors))
+    record = store.register_shipped(
+        subject_id=args.subject,
+        work_type=args.work_type,
+        claimed_by=args.actor,
+        receipt=_load_json_arg(args.receipt),
+        baseline=_load_json_arg(args.baseline),
+        brand_id=args.brand,
+        shipped_at=args.shipped_at,
+        threshold=args.threshold,
+        owner=args.owner,
+    )
+    ticket = record["ticket"]
+    if args.json:
+        print(json.dumps(record, indent=2))
+        return 0
+    print(f"\n  ticket   {record['record_id']}  ({record['subject_id']}, {record['work_type']})")
+    print(f"  shipped  {ticket['shipped_at']}")
+    if ticket.get("unmeasurable_reason"):
+        print(f"  UNMEASURABLE  {ticket['unmeasurable_reason']}")
+    else:
+        print(f"  measures {ticket['metric']} from {ticket['source']} over {ticket['window_days']}-day windows")
+    print("  No verdict issued. kai-measure reads it once the window closes.\n")
+    return 0
+
+
+def _unregistered(store: EcoRecordStore) -> list:
+    """Published content-log entries and executed actions with no outcome ticket."""
+    ticketed = {r.get("subject_id") for r in store.list_records() if r.get("ticket")}
+    found = []
+    try:  # full repo only — plugin installs have no content log
+        from scripts.harness_config import get_config  # type: ignore
+
+        log_path = Path(get_config().content_log)
+    except Exception:
+        log_path = None
+    if log_path and log_path.exists():
+        try:
+            entries = json.loads(log_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            entries = []
+        for entry in entries if isinstance(entries, list) else []:
+            if not isinstance(entry, dict) or not entry.get("url"):
+                continue
+            if entry.get("status") not in (None, "published"):
+                continue
+            subject = f"content:{entry.get('id')}"
+            if subject not in ticketed:
+                found.append({"subject_id": subject, "shipped_at": entry.get("published_at"),
+                              "what": entry.get("url")})
+    actions_dir = store.base_dir.parent / "actions"
+    for path in sorted(actions_dir.glob("*.json")) if actions_dir.is_dir() else []:
+        try:
+            action = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        summary = action.get("result_summary") or {}
+        if action.get("execution_state") != "completed" or summary.get("dry_run", True):
+            continue
+        subject = f"action:{action.get('action_id')}"
+        if subject not in ticketed:
+            found.append({"subject_id": subject, "shipped_at": action.get("executed_at"),
+                          "what": f"{action.get('channel')}/{action.get('action_type')}"})
+    return found
+
+
+def cmd_unregistered(args) -> int:
+    store = EcoRecordStore(floors=EcoFloors.load(args.floors))
+    found = _unregistered(store)
+    if args.json:
+        print(json.dumps(found, indent=2))
+        return 0
+    if not found:
+        print("\n  Every discoverable shipped change has an outcome ticket.\n")
+        return 0
+    print(f"\n  {len(found)} shipped change(s) with no outcome ticket\n")
+    for item in found:
+        print(f"  {item['shipped_at'] or '?':<32} {item['subject_id']}  {item['what']}")
+    print("\n  Register each with `eco_gate register` (with its pre-ship baseline, if one exists).\n")
+    return 0
+
+
+def cmd_ledger(args) -> int:
+    floors = EcoFloors.load(args.floors)
+    store = EcoRecordStore(floors=floors)
+    try:
+        ledger = build_ledger(store.list_records(), brand=args.brand, since=args.since, floors=floors)
+    except ValueError as exc:
+        raise EcoError(str(exc))
+    print(render_json(ledger) if args.json or args.format == "json" else render_markdown(ledger))
+    return 0
+
+
 # ---------------------------------------------------------------------------
 
 
@@ -282,6 +392,28 @@ def build_parser() -> argparse.ArgumentParser:
     fail.add_argument("--retryability", default="retryable", choices=["retryable", "waiting", "abandoned"])
     fail.add_argument("--next-check-at", help="ISO-8601 timestamp")
     fail.set_defaults(func=cmd_fail)
+
+    register = sub.add_parser("register", help="Open an outcome ticket for shipped work", parents=[common])
+    register.add_argument("--subject", required=True, help="Work item id, e.g. content:<id> or action:<id>")
+    register.add_argument("--work-type", required=True)
+    register.add_argument("--actor", required=True, help="Identity that shipped the work")
+    register.add_argument("--brand", help="Brand / business id")
+    register.add_argument("--shipped-at", help="ISO-8601 ship time (defaults to now)")
+    register.add_argument("--receipt", help="Provider receipt: inline JSON or a file path")
+    register.add_argument("--baseline", help="Pre-ship baseline {metric, source, value, captured_at|window_end, ...}")
+    register.add_argument("--threshold", type=float, help="Predeclared target value (else baseline x min_lift)")
+    register.add_argument("--owner", help="Measurement owner")
+    register.set_defaults(func=cmd_register)
+
+    sub.add_parser(
+        "unregistered", help="Shipped changes with no outcome ticket", parents=[common]
+    ).set_defaults(func=cmd_unregistered)
+
+    ledger = sub.add_parser("ledger", help="Outcome verdict ledger", parents=[common])
+    ledger.add_argument("--format", choices=["md", "json"], default="md")
+    ledger.add_argument("--brand", help="Only tickets for this brand id")
+    ledger.add_argument("--since", help="Only tickets shipped on/after this ISO date")
+    ledger.set_defaults(func=cmd_ledger)
 
     return parser
 

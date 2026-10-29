@@ -30,6 +30,7 @@ from .cmo_review import CMOReviewTask
 from .execute_approved import ExecuteApprovedActionsTask
 from .self_improvement import (
     HarnessDefaultsUpdateTask,
+    OutcomeVerdictTask,
     PatternExtractWeeklyTask,
     PerformanceCheck30dTask,
 )
@@ -60,6 +61,8 @@ TASK_HANDLERS: dict[str, type[BaseTask]] = {
     "performance_check_30d": PerformanceCheck30dTask,
     "pattern_extract_weekly": PatternExtractWeeklyTask,
     "harness_defaults_update": HarnessDefaultsUpdateTask,
+    # ECO outcome verdicts — due tickets read against their pre-ship baseline
+    "outcome_verdicts": OutcomeVerdictTask,
     # Editorial calendar executor (drafts only — approval flow publishes)
     "editorial_calendar_tick": EditorialCalendarTickTask,
     # Weekly CMO review — goal loop: measure KPIs, check pace, (re)plan
@@ -112,6 +115,7 @@ __all__ = [
     "PerformanceCheck30dTask",
     "PatternExtractWeeklyTask",
     "HarnessDefaultsUpdateTask",
+    "OutcomeVerdictTask",
     "EditorialCalendarTickTask",
     "CMOReviewTask",
     "ExecuteApprovedActionsTask",
