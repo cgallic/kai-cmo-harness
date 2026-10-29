@@ -98,12 +98,12 @@ Every shipped change becomes a ticket, and each ticket ends with one verdict: **
 | Blog post | 7d | Clicks (up) | Search Console | 50 |
 | Page refresh | 7d | Clicks (up) | Search Console | 30 |
 | Landing page | 7d | Key events (up) | GA4 | 20 |
-| Organic social post | 7d | Engagements (up) | Platform insights | 100 |
+| Organic social post | 7d | Engagements (up) | Platform insights (no reader yet, so tickets read unmeasurable) | 100 |
 
-Other work types declare no verdict window. Their tickets read **unmeasurable** rather than being forced into a verdict.
+Other work types declare no verdict window. Their tickets read **unmeasurable** rather than being forced into a verdict, as do tickets whose baseline measures a different metric or source than the work type (a landing page is not graded on site-wide Search Console clicks).
 
-- **Equal windows.** The runner compares the *n* days before the ship date with the *n* days after it, from the same source and at the same scope. The ship day itself is in neither window.
-- **Threshold.** The threshold is the one declared at registration. If none was declared, it is the pre-ship value moved by `min_lift` (10%) in the metric's better direction. Worked clears it. Partial moves the right way but misses it. Didn't work is flat or moves the wrong way.
+- **Equal windows.** The runner compares the *n* days before the ship date with the *n* days after it, from the same source and at the same scope. The ship day itself is in neither window, and days are the source's reporting days (Pacific for Search Console and GA4). A baseline must end before the ship day.
+- **Threshold.** The threshold for each read is its pre-ship value moved by `min_lift` (10%) in the metric's better direction. A threshold declared at registration becomes the `min_lift`, measured against the baseline, so a longer re-read window does not make a fixed count easier to clear. Worked clears it. Partial moves the right way but misses it. Didn't work is flat or moves the wrong way.
 - **Re-reads.** An inconclusive read (short sample or data gap) writes a `blocked` failure record and is re-read at the next window, using 2×, 3× and then 4× the window. After the fourth read the ticket is final inconclusive and stays SHIPPED.
 - **Data gaps are not zeros.** Missing credentials, an unknown site, an ads connector in sandbox mode, or an empty response makes the read inconclusive. It is never scored as zero.
 - **CLOSED is not a win.** A didn't-work read can CLOSE a blog post, because its O3 floor only requires the observation. Read the verdict, not the ECO status.

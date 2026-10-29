@@ -6,6 +6,7 @@ Doctrine under test: "Outcome verdicts" in docs/system/eco-completion-standard.m
 from __future__ import annotations
 
 import json
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
@@ -32,7 +33,8 @@ def ticket(store, subject, *, brand="kaicalls", shipped="2026-10-01T12:00:00+00:
         subject_id=subject, work_type=work_type, claimed_by="content_log", brand_id=brand, shipped_at=shipped,
         receipt={"url": f"https://kaicalls.com/{subject}"},
         baseline={"metric": "clicks", "source": "google_search_console", "value": 400,
-                  "window_end": shipped[:10]} if baseline else None,
+                  "window_end": (date.fromisoformat(shipped[:10]) - timedelta(days=1)).isoformat()}
+        if baseline else None,
     )
     if read:
         store.record_read(record["record_id"], verifier=MEASURE, pre={"value": read[0]}, post={"value": read[1]})

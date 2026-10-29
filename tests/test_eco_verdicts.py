@@ -41,7 +41,7 @@ def store(tmp_path: Path, floors: EcoFloors) -> EcoRecordStore:
 def baseline(**overrides) -> dict:
     base = {
         "metric": "clicks", "source": "google_search_console", "scope": "site",
-        "site": "kaicalls", "value": 400, "window_end": "2026-10-01",
+        "site": "kaicalls", "value": 400, "window_end": "2026-09-30",
         "captured_at": "2026-10-01T12:00:01+00:00",
     }
     base.update(overrides)
@@ -166,7 +166,7 @@ def test_register_attaches_to_an_existing_claim(store: EcoRecordStore):
 
 
 def test_baseline_after_ship_is_rejected_not_repaired(store: EcoRecordStore):
-    record = register(store, baseline=baseline(window_end="2026-10-05"))
+    record = register(store, baseline=baseline(window_end="2026-10-05"))  # after ship
     ticket = record["ticket"]
     assert ticket["baseline"] is None
     assert "outcome_predeclared" in ticket["unmeasurable_reason"]
@@ -278,3 +278,96 @@ def test_records_without_tickets_verify_exactly_as_before(store: EcoRecordStore)
     record = store.claim(subject_id="wi", step_id="s", work_type="internal-research", claimed_by="a")
     verified = store.verify(record["record_id"], verifier="gate")
     assert "outcome" not in verified["computed"]
+
+
+# ---------------------------------------------------------------------------
+# Review regressions (commit 8fa493e)
+# ---------------------------------------------------------------------------
+
+
+def test_declared_threshold_scales_with_longer_re_read_windows(store: EcoRecordStore):
+    """Fix 1: a declared target is a lift on the baseline, not an absolute count.
+
+    Read 2 sums 14 days; an absolute 120 would make 200 -> 208 a false 'worked'.
+    """
+    record = register(store, threshold=120, baseline=baseline(value=100))
+    assert record["ticket"]["min_lift"] == pytest.approx(0.2)
+    read_and_verify(store, record["record_id"], {"value": 20, "sample": 20}, {"value": 40, "sample": 40})
+    verified = read_and_verify(store, record["record_id"], {"value": 200}, {"value": 208})
+    assert verified["computed"]["outcome"]["verdict"] == OUTCOME_PARTIAL
+    assert verified["computed"]["outcome"]["threshold"] == pytest.approx(240)
+
+
+def test_declared_threshold_needs_a_nonzero_baseline(store: EcoRecordStore):
+    record = register(store, threshold=120, baseline=baseline(value=0))
+    assert "threshold" in record["ticket"]["unmeasurable_reason"]
+
+
+def test_baseline_for_a_different_metric_or_source_is_unmeasurable(store: EcoRecordStore):
+    """Fix 2: a landing page is not graded on site-wide GSC clicks."""
+    record = register(store, work_type="landing-page")
+    assert "does not match" in record["ticket"]["unmeasurable_reason"]
+
+
+def test_source_with_no_reader_is_unmeasurable_at_registration(store: EcoRecordStore):
+    """Fix 3: platform_insights has no fetcher, so it must not burn 4 reads."""
+    record = register(store, work_type="social-post",
+                      baseline=baseline(metric="engagements", source="platform_insights"))
+    assert "no reader" in record["ticket"]["unmeasurable_reason"]
+
+
+def test_baseline_ending_on_the_ship_date_is_not_pre_ship(store: EcoRecordStore):
+    """Fix 5: the ship day itself is post-ship data."""
+    record = register(store, baseline=baseline(window_end="2026-10-01"))
+    assert "outcome_predeclared" in record["ticket"]["unmeasurable_reason"]
+
+
+def test_ship_date_is_read_in_the_source_reporting_timezone(store: EcoRecordStore):
+    """Fix 5: 03:00 UTC on Oct 2 is still Oct 1 in Search Console's Pacific day."""
+    record = register(store, shipped_at="2026-10-02T03:00:00+00:00", baseline=baseline(window_end="2026-10-01"))
+    assert "outcome_predeclared" in record["ticket"]["unmeasurable_reason"]
+    assert record["ticket"]["report_tz"] == "America/Los_Angeles"
+
+
+def test_shipper_cannot_read_or_verify_when_ticket_joins_another_claim(store: EcoRecordStore):
+    """Fix 6: the shipper is stored on the ticket and refused as verifier."""
+    store.claim(subject_id="content:a", step_id="blog.publish", work_type="blog-post", claimed_by="writer")
+    record = register(store)
+    assert record["ticket"]["shipped_by"] == ACTOR
+    with pytest.raises(EcoError, match="shipped"):
+        store.record_read(record["record_id"], verifier=ACTOR, pre={"value": 1}, post={"value": 2})
+    with pytest.raises(EcoError, match="shipped"):
+        store.verify(record["record_id"], verifier=ACTOR)
+
+
+def test_register_refuses_a_work_type_mismatch(store: EcoRecordStore):
+    store.claim(subject_id="content:a", step_id="s", work_type="landing-page", claimed_by="writer")
+    with pytest.raises(EcoError, match="work type"):
+        register(store)
+
+
+def test_stale_read_number_is_refused(store: EcoRecordStore):
+    """Fix 7: two runners that both saw read 1 as due cannot both record it."""
+    record = register(store)
+    store.record_read(record["record_id"], verifier=MEASURE, pre={"value": 1}, post={"value": 2}, read_no=1)
+    with pytest.raises(EcoError, match="already taken"):
+        store.record_read(record["record_id"], verifier=MEASURE, pre={"value": 1}, post={"value": 2}, read_no=1)
+
+
+def test_concurrent_stores_open_one_ticket(tmp_path: Path, floors: EcoFloors):
+    """Fix 7: separate store instances (separate processes) share a file lock."""
+    import threading
+
+    stores = [EcoRecordStore(base_dir=tmp_path / "eco", floors=floors) for _ in range(8)]
+    gate = threading.Barrier(len(stores))
+
+    def go(s):
+        gate.wait()
+        register(s)
+
+    threads = [threading.Thread(target=go, args=(s,)) for s in stores]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert len([r for r in stores[0].list_records() if r.get("ticket")]) == 1

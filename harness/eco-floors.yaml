@@ -131,7 +131,8 @@ defaults:
 #   verdict_metric       the metric read for the verdict
 #   direction            up | down — which way counts as better
 #   min_sample           below this the read is inconclusive, never a verdict
-#   min_lift             threshold = baseline x (1 +/- min_lift) unless one is predeclared
+#   min_lift             threshold = pre-window value x (1 +/- min_lift); a threshold declared
+#                        at registration is converted to a min_lift against the baseline
 #   max_reads            inconclusive reads re-run with windows k x window; after the last, final
 # ---------------------------------------------------------------------------
 
@@ -141,11 +142,20 @@ outcome_verdicts:
     direction: up
     min_sample: 0
     min_lift: 0.10
+  # Sources the outcome runner can read (scripts/self_improvement/outcome_measure.py).
+  # A ticket whose source is not listed is unmeasurable at registration.
+  measured_sources: [google_search_console, analytics_connector, ads_connector]
   # Days a source needs before a closed window's data is complete.
   source_lag_days:
     google_search_console: 3
     analytics_connector: 1
     ads_connector: 1
+  # Reporting day boundaries. Search Console reports Pacific days; GA4 uses the
+  # property timezone, assumed Pacific until a property declares otherwise.
+  # Unlisted sources use UTC days.
+  source_timezones:
+    google_search_console: America/Los_Angeles
+    analytics_connector: America/Los_Angeles
   verdicts:
     worked: The observed value cleared the threshold. Recorded as outcome_threshold_met (O4).
     partial: The metric moved the right way but missed the threshold. Recorded as outcome_observation (O3).

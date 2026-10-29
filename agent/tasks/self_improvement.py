@@ -381,7 +381,8 @@ class OutcomeVerdictTask(BaseTask):
         # the ECO records (never zeros) — the run itself still succeeded.
         tally: Dict[str, int] = {}
         for r in results:
-            tally[r.get("verdict", "?")] = tally.get(r.get("verdict", "?"), 0) + 1
+            key = "error" if r.get("error") else r.get("verdict", "?")
+            tally[key] = tally.get(key, 0) + 1
         breakdown = ", ".join(f"{k} {v}" for k, v in sorted(tally.items())) or "none due"
         return {
             "success": True,

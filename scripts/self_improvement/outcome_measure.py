@@ -13,7 +13,9 @@ never recorded as zero (memory/lessons.md 2026-06-09).
 
 Read k uses windows of k x the verdict window, so an underpowered first read
 is re-run on more data. Pre window: the span days before the ship date. Post
-window: the span days after it. The ship day itself is in neither.
+window: the span days after it. The ship day itself is in neither. Days are
+the source's reporting days (Pacific for GSC and GA4), so a pre window never
+holds hours from after ship.
 
 Usage:
   python -m scripts.self_improvement.outcome_measure            # read + verify due tickets
@@ -28,7 +30,7 @@ import os
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from scripts.quality_gates.eco_core import EcoRecordStore, _parse_ts
+from scripts.quality_gates.eco_core import EcoError, EcoRecordStore, _parse_ts, report_date
 
 Fetcher = Callable[[Dict[str, Any], date, date], Dict[str, Any]]
 
@@ -49,7 +51,7 @@ def windows_for(ticket: Dict[str, Any], read_no: int) -> Tuple[date, date, date,
     shipped = _parse_ts(ticket.get("shipped_at"))
     if shipped is None:
         raise ValueError("ticket has no shipped_at")
-    ship_day = shipped.date()
+    ship_day = report_date(shipped, ticket.get("report_tz"))
     span = int(ticket["window_days"]) * read_no
     return (
         ship_day - timedelta(days=span),
@@ -246,11 +248,15 @@ def measure_due(
         pre = _safe_read(fetcher, source, ticket, pre_start, pre_end)
         post = _safe_read(fetcher, source, ticket, post_start, post_end)
         verifier = f"kai-measure:{key or source}"
-        store.record_read(
-            record["record_id"], verifier=verifier, pre=pre, post=post,
-            pre_window=summary["pre_window"], post_window=summary["post_window"],
-        )
-        outcome = store.verify(record["record_id"], verifier=verifier, now=now)["computed"]["outcome"]
+        try:  # one bad record (or a read another runner took) never aborts the run
+            store.record_read(
+                record["record_id"], verifier=verifier, pre=pre, post=post, read_no=read_no,
+                pre_window=summary["pre_window"], post_window=summary["post_window"],
+            )
+            outcome = store.verify(record["record_id"], verifier=verifier, now=now)["computed"]["outcome"]
+        except (EcoError, OSError, ValueError) as e:
+            results.append({**summary, "error": str(e)})
+            continue
         results.append({**summary, "verdict": outcome["verdict"], "final": outcome["final"],
                         "lift": outcome["lift"], "reason": outcome["reason"]})
     return results
@@ -270,7 +276,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         print("No outcome tickets due.")
         return 0
     for r in results:
-        verdict = "would read" if r.get("dry_run") else f"{r['verdict']}{' (final)' if r['final'] else ''}"
+        if r.get("error"):
+            verdict = f"error: {r['error']}"
+        else:
+            verdict = "would read" if r.get("dry_run") else f"{r['verdict']}{' (final)' if r['final'] else ''}"
         print(f"  {r['subject_id']}  read {r['read_no']}  {r['pre_window']} vs {r['post_window']}  -> {verdict}")
     return 0
 

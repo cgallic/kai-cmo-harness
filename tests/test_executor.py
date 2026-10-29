@@ -674,6 +674,8 @@ class TestOutcomeTicket:
         assert record["claimed_by"] == "kai-executor"
         assert record["ticket"]["brand_id"] == "testbrand"
         assert record["ticket"]["receipt"]["url"] == "https://test.example.com/pricing"
+        # Fix 3: GSC/GA4 readers key on the site; without it every read is "Unknown site".
+        assert record["ticket"]["receipt"]["site"] == "testbrand"
         # No declared baseline -> none invented; the ledger shows it unmeasurable.
         assert record["ticket"]["baseline"] is None
         assert "computed" not in record

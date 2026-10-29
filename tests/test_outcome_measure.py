@@ -27,7 +27,7 @@ def register(store, subject="content:a", work_type="blog-post", baseline=True, *
         shipped_at="2026-10-01T12:00:00+00:00",
         receipt={"url": "https://kaicalls.com/blog/a", "site": "kaicalls", **receipt},
         baseline={"metric": "clicks", "source": "google_search_console", "scope": "page",
-                  "value": 0, "window_end": "2026-10-01"} if baseline else None,
+                  "value": 0, "window_end": "2026-09-30"} if baseline else None,
     )
 
 
@@ -114,3 +114,38 @@ def test_main_dry_run(store, monkeypatch, capsys):
     monkeypatch.setattr(om, "EcoRecordStore", lambda: store)
     assert om.main(["--dry-run"]) == 0
     assert "No outcome tickets due" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# Review regressions (commit 8fa493e)
+# ---------------------------------------------------------------------------
+
+
+def test_windows_use_the_source_reporting_day():
+    """Fix 5: shipped 03:00 UTC Oct 2 is Oct 1 in GSC's Pacific day — Oct 1 is in neither window."""
+    ticket = {"shipped_at": "2026-10-02T03:00:00+00:00", "window_days": 7, "report_tz": "America/Los_Angeles"}
+    assert om.windows_for(ticket, 1) == (date(2026, 9, 24), date(2026, 9, 30), date(2026, 10, 2), date(2026, 10, 8))
+
+
+def test_one_failing_ticket_does_not_abort_the_run(store, monkeypatch):
+    """Fix 4: an EcoError on one ticket is recorded and the run continues."""
+    first = register(store, subject="content:a")
+    register(store, subject="content:b")
+    real_verify = store.verify
+
+    def flaky(record_id, **kwargs):
+        if record_id == first["record_id"]:
+            raise om.EcoError("record corrupted")
+        return real_verify(record_id, **kwargs)
+
+    monkeypatch.setattr(store, "verify", flaky)
+    results = om.measure_due(store, fetchers={"gsc": fake(40, 120)}, now=DUE)
+    by_subject = {r["subject_id"]: r for r in results}
+    assert by_subject["content:a"]["error"] == "record corrupted"
+    assert by_subject["content:b"]["verdict"] == "worked"
+
+
+def test_every_measured_source_in_floors_has_a_fetcher():
+    """Fix 3: registration trusts floors' measured_sources; each must have a reader here."""
+    measured = EcoFloors.load().outcome_verdicts["measured_sources"]
+    assert measured and all(om.SOURCE_KEYS.get(source) in om.default_fetchers() for source in measured)

@@ -564,9 +564,9 @@ class TestOutcomeTicket:
     def test_publish_registers_ticket_with_site_baseline(self, sandbox, monkeypatch, eco):
         import scripts.self_improvement.performance_check as pc
 
-        today = datetime.now(timezone.utc).date().isoformat()
+        yesterday = (datetime.now(timezone.utc) - timedelta(days=2)).date().isoformat()
         monkeypatch.setattr(pc, "pull_site_baseline", lambda site, days=28: {
-            "clicks": 120, "impressions": 4000, "window_days": 28, "end_date": today})
+            "clicks": 120, "impressions": 4000, "window_days": 28, "end_date": yesterday})
         entry = log_entry(url="https://kaicalls.com/blog/live", keyword="k", site="kaicalls",
                           format="blog", content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
         tickets = self._tickets(eco)
@@ -578,6 +578,28 @@ class TestOutcomeTicket:
         assert record["ticket"]["baseline"]["scope"] == "site"
         assert record["ticket"]["receipt"]["url"] == "https://kaicalls.com/blog/live"
         assert "computed" not in record  # registering never issues a verdict
+
+    def test_landing_page_is_not_graded_on_site_gsc_clicks(self, sandbox, monkeypatch, eco):
+        """Fix 2: the GSC site baseline only fits work types measured from GSC."""
+        import scripts.self_improvement.performance_check as pc
+
+        yesterday = (datetime.now(timezone.utc) - timedelta(days=2)).date().isoformat()
+        monkeypatch.setattr(pc, "pull_site_baseline", lambda site, days=28: {
+            "clicks": 120, "impressions": 4000, "window_days": 28, "end_date": yesterday})
+        log_entry(url="https://kaicalls.com/lp", keyword="k", site="kaicalls",
+                  format="landing-page", content_hash=compute_content_hash(BODY), log_file=sandbox["log_file"])
+        ticket = self._tickets(eco)[0]["ticket"]
+        assert ticket["baseline"] is None
+        assert ticket["metric"] == "key_events"
+
+    def test_site_baseline_window_ends_before_the_reporting_day(self):
+        """Fix 5: the publish-time GSC pull ends the day before today in Pacific time."""
+        from zoneinfo import ZoneInfo
+
+        import scripts.self_improvement.performance_check as pc
+
+        pacific_today = datetime.now(ZoneInfo("America/Los_Angeles")).date()
+        assert pc.last_complete_report_day() == pacific_today - timedelta(days=1)
 
     def test_unavailable_baseline_registers_unmeasurable_ticket(self, sandbox, monkeypatch, eco):
         monkeypatch.delenv("GOOGLE_CREDENTIALS_PATH", raising=False)

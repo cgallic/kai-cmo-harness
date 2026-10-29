@@ -26,16 +26,22 @@ stdlib and PyYAML.  It ships inside the Kai plugin, where `kai/` and
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import threading
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import yaml
+
+try:  # cross-process lock for the record store; absent on Windows
+    import fcntl
+except ImportError:  # pragma: no cover - Windows
+    fcntl = None  # type: ignore[assignment]
 
 
 AXES = ("E", "C", "O")
@@ -191,6 +197,9 @@ class EcoFloors:
         verdict_defaults = self.outcome_verdicts.get("defaults") or {}
         self.source_lag_days: Dict[str, int] = {
             str(k): int(v) for k, v in (self.outcome_verdicts.get("source_lag_days") or {}).items()
+        }
+        self.source_timezones: Dict[str, str] = {
+            str(k): str(v) for k, v in (self.outcome_verdicts.get("source_timezones") or {}).items()
         }
 
         self.evidence_kinds: Dict[str, EvidenceKind] = {}
@@ -502,12 +511,33 @@ def outcome_verdict(
             "reason": "moved the right way but missed the threshold"}
 
 
-def _baseline_is_pre_ship(baseline: Dict[str, Any], shipped_at: datetime) -> Tuple[bool, str]:
+# Used only when the tz database is missing (bare Windows): standard-time offset.
+_TZ_FALLBACK_HOURS = {"America/Los_Angeles": -8}
+
+
+def report_date(ts: datetime, tz_name: Optional[str] = None) -> date:
+    """The calendar day of ``ts`` as a source reports it (GSC and GA4 use Pacific days)."""
+    if tz_name:
+        try:
+            from zoneinfo import ZoneInfo
+
+            return ts.astimezone(ZoneInfo(tz_name)).date()
+        except Exception:
+            offset = _TZ_FALLBACK_HOURS.get(tz_name)
+            if offset is not None:
+                return ts.astimezone(timezone(timedelta(hours=offset))).date()
+    return ts.astimezone(timezone.utc).date()
+
+
+def _baseline_is_pre_ship(
+    baseline: Dict[str, Any], shipped_at: datetime, tz_name: Optional[str] = None
+) -> Tuple[bool, str]:
     """The outcome_predeclared invariant, applied to a ticket baseline.
 
     A baseline whose data window is declared (``window_end``) is pre-ship when
-    that window ends on or before the ship date. Otherwise its ``captured_at``
-    must not be later than ``shipped_at``.
+    that window ends before the ship date, read in the source's reporting
+    timezone — the ship day itself already holds post-ship data. Otherwise its
+    ``captured_at`` must not be later than ``shipped_at``.
     """
     window_end = baseline.get("window_end")
     if window_end:
@@ -515,8 +545,9 @@ def _baseline_is_pre_ship(baseline: Dict[str, Any], shipped_at: datetime) -> Tup
             end = datetime.fromisoformat(str(window_end)[:10]).date()
         except ValueError:
             return False, f"unreadable window_end {window_end!r}"
-        if end > shipped_at.date():
-            return False, f"baseline window ends {end}, after the ship date {shipped_at.date()}"
+        ship_day = report_date(shipped_at, tz_name)
+        if end >= ship_day:
+            return False, f"baseline window ends {end}, on or after the ship date {ship_day}"
         return True, ""
     captured = _parse_ts(baseline.get("captured_at"))
     if captured is None:
@@ -543,10 +574,12 @@ def ticket_measurable(ticket: Dict[str, Any]) -> bool:
 
 
 def ticket_threshold(ticket: Dict[str, Any], baseline_value: Any) -> Optional[float]:
-    """The predeclared threshold, or one derived from the baseline and min_lift."""
-    declared = _num(ticket.get("threshold"))
-    if declared is not None:
-        return declared
+    """The threshold for one read: its pre-window value moved by the ticket's min_lift.
+
+    A threshold declared at registration was converted into ``min_lift``
+    against the baseline then, so it scales with the k x window re-reads
+    instead of comparing a 14-day sum with a 7-day target.
+    """
     base = _num(baseline_value)
     if base is None:
         return None
@@ -570,6 +603,30 @@ class EcoRecordStore:
         self.failures_dir = _ensure_dir(self.base_dir / "failures")
         self.floors = floors or EcoFloors.load()
         self._lock = threading.RLock()
+
+    @contextlib.contextmanager
+    def _file_lock(self):
+        """Serialize read-modify-write across processes sharing this store.
+
+        On Windows there is no fcntl; only the in-process lock applies.
+        """
+        if fcntl is None:  # pragma: no cover - Windows
+            yield
+            return
+        with open(self.base_dir / ".lock", "a+") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    @staticmethod
+    def _refuse_actor(record: Dict[str, Any], verifier: str, consequence: str) -> None:
+        """The claiming actor and the ticket's shipper may not verify the work."""
+        who = verifier.strip().casefold()
+        for actor in (record.get("claimed_by"), (record.get("ticket") or {}).get("shipped_by")):
+            if actor and who == str(actor).strip().casefold():
+                raise EcoError(f"verifier {verifier!r} is the claiming actor or shipped this work — {consequence}")
 
     # -- claim ------------------------------------------------------------
 
@@ -634,12 +691,9 @@ class EcoRecordStore:
 
         if not verifier:
             raise EcoError("verifier identity is required")
-        with self._lock:
+        with self._lock, self._file_lock():
             record = self.get(record_id)
-            if verifier.strip().casefold() == str(record.get("claimed_by", "")).strip().casefold():
-                raise EcoError(
-                    f"verifier {verifier!r} is the claiming actor — the actor may not issue its own verdict"
-                )
+            self._refuse_actor(record, verifier, "the actor may not issue its own verdict")
             work = self.floors.work_type(record.get("work_type", ""))
             outcome, outcome_evidence = self._outcome_from_reads(record, verifier)
             result = grade(
@@ -692,14 +746,21 @@ class EcoRecordStore:
                 raise EcoError("actor submitted a verdict inside a ticket — the actor may submit evidence, not a verdict")
 
         work = self.floors.work_type(work_type)
-        with self._lock:
+        with self._lock, self._file_lock():
             existing = [r for r in self.list_records() if r.get("subject_id") == subject_id]
+            for record in existing:
+                if record.get("work_type") != work.name:
+                    raise EcoError(
+                        f"subject {subject_id!r} is recorded as work type {record.get('work_type')!r}, "
+                        f"not {work.name!r}"
+                    )
             for record in existing:
                 if record.get("ticket"):
                     return record
 
             shipped = _parse_ts(shipped_at) or _utc_now()
             source = work.outcome_source
+            report_tz = self.floors.source_timezones.get(str(source))
             ticket: Dict[str, Any] = {
                 "schema_version": "kai.eco-ticket.v1",
                 "brand_id": brand_id,
@@ -712,24 +773,44 @@ class EcoRecordStore:
                 "direction": work.direction,
                 "min_sample": work.min_sample,
                 "min_lift": work.min_lift,
-                "threshold": threshold,
+                "threshold_declared": threshold,
                 "window_days": work.verdict_window_days,
                 "max_reads": work.max_reads,
                 "lag_days": self.floors.source_lag_days.get(str(source), 0),
+                "report_tz": report_tz,
                 "owner": owner,
+                "shipped_by": claimed_by,
                 "reads": [],
             }
             if isinstance(baseline, dict) and baseline:
-                ok, reason = _baseline_is_pre_ship(baseline, shipped)
-                if ok:
-                    ticket["baseline"] = dict(baseline)
-                    ticket["metric"] = baseline.get("metric") or ticket["metric"]
-                    ticket["source"] = baseline.get("source") or ticket["source"]
-                    ticket["lag_days"] = self.floors.source_lag_days.get(str(ticket["source"]), 0)
-                else:
+                ok, reason = _baseline_is_pre_ship(baseline, shipped, report_tz)
+                b_metric, b_source = baseline.get("metric"), baseline.get("source")
+                if not ok:
                     ticket["unmeasurable_reason"] = f"outcome_predeclared: {reason}"
+                elif (b_metric and work.verdict_metric and b_metric != work.verdict_metric) or (
+                    b_source and source and b_source != source
+                ):
+                    ticket["unmeasurable_reason"] = (
+                        f"baseline {b_metric} from {b_source} does not match the work type's "
+                        f"verdict metric {work.verdict_metric} from {source}"
+                    )
+                else:
+                    ticket["baseline"] = dict(baseline)
             else:
                 ticket["unmeasurable_reason"] = "no pre-ship baseline captured"
+            if threshold is not None and ticket["baseline"]:
+                declared, base = _num(threshold), _num(ticket["baseline"].get("value"))
+                if declared is None or not base:
+                    ticket["baseline"] = None
+                    ticket["unmeasurable_reason"] = (
+                        "a declared threshold needs a nonzero baseline value to convert into a lift"
+                    )
+                else:
+                    ratio = declared / base
+                    ticket["min_lift"] = ratio - 1 if work.direction == "up" else 1 - ratio
+            measured = self.floors.outcome_verdicts.get("measured_sources")
+            if measured is not None and source not in measured:
+                ticket["unmeasurable_reason"] = f"no reader for source {source}"
             if work.verdict_window_days is None:
                 ticket["unmeasurable_reason"] = f"work type {work.name} declares no verdict window"
 
@@ -762,14 +843,18 @@ class EcoRecordStore:
         pre_window: Optional[List[str]] = None,
         post_window: Optional[List[str]] = None,
         read_at: Optional[str] = None,
+        read_no: Optional[int] = None,
     ) -> Dict[str, Any]:
-        """Append one measurement read. Never computes the verdict — verify() does."""
+        """Append one measurement read. Never computes the verdict — verify() does.
+
+        ``read_no`` is the read the caller saw as due; a read already taken by
+        another runner is refused instead of being recorded twice.
+        """
         if not verifier:
             raise EcoError("verifier identity is required")
-        with self._lock:
+        with self._lock, self._file_lock():
             record = self.get(record_id)
-            if verifier.strip().casefold() == str(record.get("claimed_by", "")).strip().casefold():
-                raise EcoError(f"verifier {verifier!r} is the claiming actor — the actor may not measure its own outcome")
+            self._refuse_actor(record, verifier, "the actor may not measure its own outcome")
             ticket = record.get("ticket")
             if not ticket:
                 raise EcoError(f"record {record_id!r} has no outcome ticket")
@@ -779,6 +864,8 @@ class EcoRecordStore:
                 raise EcoError("ticket already carries a final outcome verdict")
             if len(ticket["reads"]) >= int(ticket.get("max_reads") or 0):
                 raise EcoError("ticket has used all of its reads")
+            if read_no is not None and read_no != len(ticket["reads"]) + 1:
+                raise EcoError(f"read {read_no} already taken")
             if not isinstance(pre, dict) or not isinstance(post, dict):
                 raise EcoError("pre and post must be objects: {value, sample} or {error}")
             ticket["reads"].append({
@@ -1044,6 +1131,7 @@ __all__ = [
     "WorkType",
     "grade",
     "outcome_verdict",
+    "report_date",
     "ticket_measurable",
     "ticket_threshold",
 ]

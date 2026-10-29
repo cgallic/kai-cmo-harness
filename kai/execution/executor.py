@@ -332,6 +332,9 @@ class ActionExecutor:
                 "provider": result.connector_type or integration.get("provider"),
                 "method": result.method_called,
                 "url": proposed.get("url") or proposed.get("page_url"),
+                # GSC/GA4 readers key on the site; the brand id is the site key
+                # unless the integration names one.
+                "site": (integration.get("config") or {}).get("site") or action.get("brand_id"),
                 "entity_id": proposed.get("campaign_id") or proposed.get("ad_group_id"),
             }
             stored = self._store.get_action(result.action_id) or {}
