@@ -2,7 +2,7 @@
 title: "ECO: Execution, Craft, Outcome — The Completion Standard"
 type: doctrine
 created: 2026-07-27
-updated: 2026-07-28
+updated: 2026-10-29
 status: canonical
 owner: Connor Gallic
 supersedes: "Any use of `done` as a completion verdict"
@@ -266,6 +266,42 @@ If that debt has no owner and date, SHIPPED is being used as the old `done`.
 
 ---
 
+## Outcome verdicts
+
+Every change that ships becomes a ticket. Once its verdict window closes, the change is measured in the business's own data against a baseline captured before ship, and the ticket gets one of four verdicts:
+
+| Verdict | Meaning | ECO evidence |
+|---|---|---|
+| **worked** | The observed value cleared the threshold | `outcome_threshold_met` (O4) |
+| **partial** | It moved the right way but missed the threshold | `outcome_observation` (O3) |
+| **didn't work** | Flat or moved the wrong way | `outcome_observation` (O3) |
+| **inconclusive** | A value was missing (data gap) or the sample was below the minimum | none; a `blocked` failure record names the next read |
+
+**CLOSED means measured, not won.** A blog post with an O3 floor is CLOSED by a didn't-work read. Anything that reports results reads the verdict field, never CLOSED.
+
+How a ticket runs:
+
+1. **Register at ship.** `EcoRecordStore.register_shipped()` opens the ticket, once per subject. Publishing through `content_log` does this with the publish-time GSC snapshot, and the action executor does it after a live write. Use `eco_gate register` for anything else. The baseline must be captured before ship: a baseline whose data window ends on or after the ship date is rejected, never repaired. The ship date is the source's reporting day (Pacific for GSC and GA4). These tickets are stored as **unmeasurable** and listed in the ledger, never scored: no pre-ship baseline, a baseline for a different metric or source than the work type measures, or a source the runner cannot read (such as social platform insights today).
+2. **Wait for the window.** Windows are set per work type in `harness/eco-floors.yaml` (`outcome.verdict_window_days`): 3 days for paid ads and 7 for blog posts, page refreshes, landing pages and social posts. A read is due the day after the window closes, plus the source's reporting lag.
+3. **Read before and after.** `scripts/self_improvement/outcome_measure.py` (scheduled daily as `outcome_verdicts`) reads equal-length windows before and after the ship date from the ticket's source (GSC, GA4 or the ads connector). The ship day itself is in neither window, and days are the source's reporting days. Missing credentials or an empty response is recorded as a data gap, never as zero.
+4. **Verify as `kai-measure:<source>`.** The runner appends the read with `record_read()`, then `verify()` computes `computed.outcome` = `{verdict, lift, reads, window_days, source, verdict_by, ...}`. Neither the actor that claimed the record nor the one that shipped it (`ticket.shipped_by`) can take the read or issue the verdict. A file lock on the store keeps concurrent runners from opening duplicate tickets or recording the same read twice.
+5. **Re-read inconclusive results.** Read *k* uses windows of *k* × the verdict window. After `max_reads` (4) the ticket is **final inconclusive** and stays SHIPPED.
+
+The threshold for each read is the pre-ship window moved by the ticket's `min_lift` (10% by default). A threshold declared at registration is converted into that lift against the baseline value, so it scales with longer re-read windows. Declaring one requires a nonzero baseline. `direction: down` covers metrics where lower is better, such as cost per acquisition.
+
+A verdict compares before with after. It is not attribution: seasonality and concurrent changes are not controlled, and O5 still needs a counterfactual design.
+
+```bash
+python -m scripts.quality_gates.eco_gate register --subject <id> --work-type <type> --actor <you> --baseline <json>
+python -m scripts.quality_gates.eco_gate unregistered          # shipped changes with no ticket
+python -m scripts.quality_gates.eco_gate ledger --format md    # tally, misses, method; --brand, --since, --format json
+python -m scripts.self_improvement.outcome_measure --dry-run   # what is due to be read
+```
+
+The ledger tallies every verdict, lists pending and unmeasurable tickets, and lists every miss. Its method block says what was counted and what was not, the windows used, who verified, that it is not third-party audited, and that results from a business the operator owns are self-reported.
+
+---
+
 ## Independent verdict authority
 
 The actor-verifier boundary is about independence of evidence, not the number of agent names involved.
@@ -462,6 +498,7 @@ Field rules:
 | C3 | `human_review_required_when` in skill contracts | Approval doctrine |
 | O1–O2 | 30-day pending check registration at publish time | `data/content_log.json` |
 | O3–O4 | 30-day grading; winners to `what-works.md`, losers to `what-doesnt-work.md` | `/kai-retro` |
+| O3–O4 | Outcome verdict tickets read at their window by `kai-measure:<source>` | `scripts/self_improvement/outcome_measure.py`, `eco_gate ledger` |
 | O5 | Incrementality and experiment rigor frameworks | `knowledge/frameworks/marketing-science/` |
 
 The ECO gate does not replace any of these. It reads their outputs, computes grades, and issues the single verdict none of them was allowed to issue on its own.

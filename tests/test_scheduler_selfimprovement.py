@@ -3,8 +3,9 @@ seeded into the scheduler, plus the wrapping task handlers.
 
 Verifies:
 - create_default_tasks() seeds performance_check_30d (0 2 * * *),
-  pattern_extract_weekly (0 14 * * 1), harness_defaults_update (30 14 * * 1)
-  and editorial_calendar_tick (hourly), and stays idempotent
+  pattern_extract_weekly (0 14 * * 1), harness_defaults_update (30 14 * * 1),
+  editorial_calendar_tick (hourly) and outcome_verdicts (0 3 * * *), and
+  stays idempotent
 - handlers are registered and degrade gracefully (missing credentials /
   dependencies are data gaps, never exceptions that crash the loop)
 """
@@ -32,6 +33,7 @@ NEW_DEFAULT_TASKS = {
     "Weekly Pattern Extraction": ("0 14 * * 1", "pattern_extract_weekly"),
     "Harness Defaults Update": ("30 14 * * 1", "harness_defaults_update"),
     "Editorial Calendar Tick": ("0 * * * *", "editorial_calendar_tick"),
+    "Outcome Verdicts": ("0 3 * * *", "outcome_verdicts"),
 }
 
 
@@ -344,3 +346,44 @@ class TestRealModuleDegradation:
         result = asyncio.run(si.PatternExtractWeeklyTask().execute(MagicMock()))
         assert isinstance(result, dict)
         assert "success" in result
+
+
+# ---------------------------------------------------------------------------
+# outcome_verdicts handler
+# ---------------------------------------------------------------------------
+
+
+class TestOutcomeVerdicts:
+    def test_reads_due_tickets_and_tallies(self, monkeypatch):
+        import scripts.self_improvement.outcome_measure as om
+
+        monkeypatch.setattr(om, "measure_due", lambda store: [
+            {"verdict": "worked"}, {"verdict": "inconclusive"}, {"verdict": "worked"}])
+        result = asyncio.run(si.OutcomeVerdictTask().execute(MagicMock()))
+        assert result["success"] is True
+        assert result["read"] == 3
+        assert result["verdicts"] == {"worked": 2, "inconclusive": 1}
+
+    def test_nothing_due(self, monkeypatch):
+        import scripts.self_improvement.outcome_measure as om
+
+        monkeypatch.setattr(om, "measure_due", lambda store: [])
+        result = asyncio.run(si.OutcomeVerdictTask().execute(MagicMock()))
+        assert result["success"] is True and "none due" in result["summary"]
+
+    def test_exception_contained_not_raised(self, monkeypatch):
+        import scripts.self_improvement.outcome_measure as om
+
+        def boom(store):
+            raise RuntimeError("store unreadable")
+
+        monkeypatch.setattr(om, "measure_due", boom)
+        result = asyncio.run(si.OutcomeVerdictTask().execute(MagicMock()))
+        assert result["success"] is False
+        assert "store unreadable" in result["error"]
+
+    def test_import_failure_is_graceful(self, monkeypatch):
+        monkeypatch.setattr(si, "_import_module", lambda dotted: (None, "No module named x"))
+        result = asyncio.run(si.OutcomeVerdictTask().execute(MagicMock()))
+        assert result["success"] is False
+        assert "outcome_measure unavailable" in result["error"]

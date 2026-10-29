@@ -2,7 +2,7 @@
 
 > Doctrine: `docs/system/eco-completion-standard.md` · Machine-readable floors: `harness/eco-floors.yaml` · Verifier: `python -m scripts.quality_gates.eco_gate`
 >
-> Last updated: 2026-07-28
+> Last updated: 2026-10-29
 
 Marketing is the discipline where "done" lies most easily. A draft exists, so the post is "done." The campaign launched, so the launch is "done." The deck was delivered, so the audit is "done." None of those statements says whether anything happened, whether the work was any good, or whether it caused the result it promised.
 
@@ -85,6 +85,30 @@ Owner: Connor
 The harness already produces most of this: publishing registers a 30-day pending check, and `/kai-retro` grades it. ECO makes the debt explicit and refuses to call the item finished until it is paid.
 
 **If a SHIPPED item has no owner and no due date, SHIPPED is just the old "done" wearing a new label.**
+
+---
+
+## Outcome verdicts: windows and re-reads
+
+Every shipped change becomes a ticket, and each ticket ends with one verdict: **worked**, **partial**, **didn't work**, or **inconclusive**. The verdict window is shorter than the O-window above. It asks whether the change moved its metric soon after ship, measured in the business's own data against a baseline captured before ship.
+
+| Work type | Verdict window | Metric (direction) | Source | Minimum sample |
+|---|:---:|---|---|---:|
+| Paid ad campaign | 3d | CPA (down) | Ads connector | 10 conversions |
+| Blog post | 7d | Clicks (up) | Search Console | 50 |
+| Page refresh | 7d | Clicks (up) | Search Console | 30 |
+| Landing page | 7d | Key events (up) | GA4 | 20 |
+| Organic social post | 7d | Engagements (up) | Platform insights (no reader yet, so tickets read unmeasurable) | 100 |
+
+Other work types declare no verdict window. Their tickets read **unmeasurable** rather than being forced into a verdict, as do tickets whose baseline measures a different metric or source than the work type (a landing page is not graded on site-wide Search Console clicks).
+
+- **Equal windows.** The runner compares the *n* days before the ship date with the *n* days after it, from the same source and at the same scope. The ship day itself is in neither window, and days are the source's reporting days (Pacific for Search Console and GA4). A baseline must end before the ship day.
+- **Threshold.** The threshold for each read is its pre-ship value moved by `min_lift` (10%) in the metric's better direction. A threshold declared at registration becomes the `min_lift`, measured against the baseline, so a longer re-read window does not make a fixed count easier to clear. Worked clears it. Partial moves the right way but misses it. Didn't work is flat or moves the wrong way.
+- **Re-reads.** An inconclusive read (short sample or data gap) writes a `blocked` failure record and is re-read at the next window, using 2×, 3× and then 4× the window. After the fourth read the ticket is final inconclusive and stays SHIPPED.
+- **Data gaps are not zeros.** Missing credentials, an unknown site, an ads connector in sandbox mode, or an empty response makes the read inconclusive. It is never scored as zero.
+- **CLOSED is not a win.** A didn't-work read can CLOSE a blog post, because its O3 floor only requires the observation. Read the verdict, not the ECO status.
+
+`python -m scripts.quality_gates.eco_gate ledger` reports the tally, every miss, and the method block. Run `eco_gate unregistered` to find shipped changes that never got a ticket.
 
 ---
 

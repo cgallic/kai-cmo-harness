@@ -14,7 +14,7 @@
 # Nothing in this file may be interpreted as permission to self-certify.
 
 schema_version: kai.eco-floors.v1
-updated: 2026-07-28
+updated: 2026-10-29
 
 # ---------------------------------------------------------------------------
 # Evidence kinds — what an actor may submit, and which grade it can support.
@@ -121,6 +121,51 @@ defaults:
   craft_gates: [four_us_score, banned_word_check]
 
 # ---------------------------------------------------------------------------
+# Outcome verdicts — every shipped change becomes a ticket, measured once its
+# verdict window closes, in the business's own data, against a baseline
+# captured before ship. Doctrine: "Outcome verdicts" in
+# docs/system/eco-completion-standard.md. Ledger: `eco_gate ledger`.
+#
+# Per work type, `outcome:` may declare:
+#   verdict_window_days  length of the equal pre/post windows (unset = not measured)
+#   verdict_metric       the metric read for the verdict
+#   direction            up | down — which way counts as better
+#   min_sample           below this the read is inconclusive, never a verdict
+#   min_lift             threshold = pre-window value x (1 +/- min_lift); a threshold declared
+#                        at registration is converted to a min_lift against the baseline
+#   max_reads            inconclusive reads re-run with windows k x window; after the last, final
+# ---------------------------------------------------------------------------
+
+outcome_verdicts:
+  defaults:
+    max_reads: 4
+    direction: up
+    min_sample: 0
+    min_lift: 0.10
+  # Sources the outcome runner can read (scripts/self_improvement/outcome_measure.py).
+  # A ticket whose source is not listed is unmeasurable at registration.
+  measured_sources: [google_search_console, analytics_connector, ads_connector]
+  # Days a source needs before a closed window's data is complete.
+  source_lag_days:
+    google_search_console: 3
+    analytics_connector: 1
+    ads_connector: 1
+  # Reporting day boundaries. Search Console reports Pacific days; GA4 uses the
+  # property timezone, assumed Pacific until a property declares otherwise.
+  # Unlisted sources use UTC days.
+  source_timezones:
+    google_search_console: America/Los_Angeles
+    analytics_connector: America/Los_Angeles
+  verdicts:
+    worked: The observed value cleared the threshold. Recorded as outcome_threshold_met (O4).
+    partial: The metric moved the right way but missed the threshold. Recorded as outcome_observation (O3).
+    didnt_work: Flat or moved the wrong way. Recorded as outcome_observation (O3) — CLOSED means measured, not won.
+    inconclusive: >
+      A value was missing (data gap) or the sample was below min_sample. No O evidence; a
+      blocked failure record names the next read. After max_reads the ticket is final
+      inconclusive and stays SHIPPED.
+
+# ---------------------------------------------------------------------------
 # Work types.
 #
 # `external_effect: false` means nothing leaves the workspace, so E tops out at
@@ -142,6 +187,11 @@ work_types:
       source: google_search_console
       window_days: 30
       note: Registered automatically as a 30-day pending check when the entry gains a real URL.
+      verdict_window_days: 7
+      verdict_metric: clicks
+      direction: up
+      min_sample: 50
+      max_reads: 4
     close_path: /kai-retro grades the 30-day check; winners go to what-works.md, losers to what-doesnt-work.md.
 
   landing-page:
@@ -155,6 +205,11 @@ work_types:
       source: analytics_connector
       window_days: 30
       minimum_sample: "Do not read the metric before the declared minimum sample is reached; an underpowered read is not O3."
+      verdict_window_days: 7
+      verdict_metric: key_events
+      direction: up
+      min_sample: 20
+      max_reads: 4
     attribution_required: true
     attribution_note: A page that replaces an existing page needs a control or holdout before O5. See knowledge/frameworks/marketing-science/experiment-rigor.md.
 
@@ -168,6 +223,11 @@ work_types:
       metrics: [reach, engagement_rate, profile_clicks, link_clicks]
       source: platform_insights
       window_days: 7
+      verdict_window_days: 7
+      verdict_metric: engagements
+      direction: up
+      min_sample: 100
+      max_reads: 4
     policy_refs: harness/references/*-organic-posting-rules.md, harness/references/social-automation-rules.md
 
   email-lifecycle:
@@ -222,6 +282,11 @@ work_types:
       note: >
         Graded by `python -m scripts.seo.refresh_tracker check` against the rest of the site's
         non-brand clicks over the same windows. O4 when the grade is `won`.
+      verdict_window_days: 7
+      verdict_metric: clicks
+      direction: up
+      min_sample: 30
+      max_reads: 4
     close_path: refresh_tracker report feeds /kai-retro; winning fix types go to what-works.md.
 
   # ---- Paid media --------------------------------------------------------
@@ -241,6 +306,11 @@ work_types:
       source: ads_connector
       window_days: 14
       minimum_sample: "Read no earlier than the declared conversion window plus learning phase."
+      verdict_window_days: 3
+      verdict_metric: cpa
+      direction: down
+      min_sample: 10
+      max_reads: 4
     attribution_required: true
     attribution_note: >
       Platform-reported ROAS is not O5. O5 needs a holdout, geo-split, or incrementality

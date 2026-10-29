@@ -19,7 +19,7 @@ import logging
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # Use centralized config
@@ -242,6 +242,17 @@ def pull_gsc_data(url: str, keyword: str, site: str) -> dict:
         return {"error": str(e)}
 
 
+def last_complete_report_day():
+    """Yesterday in Search Console's reporting timezone (Pacific).
+
+    The site baseline ends here so the publish-day snapshot never includes the
+    ship day, which ECO outcome tickets treat as post-ship data.
+    """
+    from scripts.quality_gates.eco_core import report_date
+
+    return report_date(datetime.now(timezone.utc), "America/Los_Angeles") - timedelta(days=1)
+
+
 def pull_site_baseline(site: str, days: int = BASELINE_WINDOW_DAYS) -> dict:
     """Site-level GSC clicks/impressions for the trailing window.
 
@@ -272,7 +283,7 @@ def pull_site_baseline(site: str, days: int = BASELINE_WINDOW_DAYS) -> dict:
             scopes=["https://www.googleapis.com/auth/webmasters.readonly"],
         )
         service = build("searchconsole", "v1", credentials=creds)
-        end = datetime.now(timezone.utc).date()
+        end = last_complete_report_day()
         start = end - timedelta(days=days)
         response = service.searchanalytics().query(
             siteUrl=site_url,

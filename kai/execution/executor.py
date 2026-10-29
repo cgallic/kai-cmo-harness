@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import logging
 import time
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from kai.runtime.actions import ActionStore
@@ -77,6 +79,14 @@ _DISPATCH_TABLE: Dict[tuple, str] = {
     # Analytics
     ("analytics", "fix_tracking"): "get_metrics",
     ("analytics", "update_goals"): "get_metrics",
+}
+
+# Channel -> ECO work type for the outcome ticket opened after a live write.
+_OUTCOME_WORK_TYPES: Dict[str, str] = {
+    "website": "page-refresh",
+    "email": "email-lifecycle",
+    "social": "social-post",
+    "paid_media": "paid-ad-campaign",
 }
 
 _READ_ACTION_TYPES = {
@@ -262,6 +272,10 @@ class ActionExecutor:
             "dry_run", self._dry_run
         )
 
+        # Pre-ship outcome baseline, snapshotted before dispatch. Only a
+        # baseline the action already declares is used — none is invented.
+        outcome_baseline = _snapshot_outcome_baseline(action)
+
         # 6+7. Choose execution path:
         #   - Pipedream-backed if integration has a connected_account_id
         #   - Direct connector dispatch otherwise
@@ -293,7 +307,48 @@ class ActionExecutor:
 
         # Log to persistent execution log
         self._log_execution(brand_id, channel, action_type, result)
+        if result.success and not result.dry_run:
+            self._register_outcome_ticket(action, integration, result, outcome_baseline)
         return result
+
+    def _register_outcome_ticket(
+        self,
+        action: Dict[str, Any],
+        integration: Dict[str, Any],
+        result: ExecutionResult,
+        baseline: Optional[Dict[str, Any]],
+    ) -> None:
+        """Open the ECO outcome ticket for a live write (best-effort, never raises)."""
+        channel = action.get("channel", "")
+        work_type = _OUTCOME_WORK_TYPES.get(channel)
+        if work_type is None or (channel, action.get("action_type", "")) in _READ_ACTION_TYPES:
+            return
+        try:
+            from kai.runtime.eco import EcoRecordStore
+
+            proposed = action.get("proposed_changes") or {}
+            receipt = {
+                "action_id": result.action_id,
+                "provider": result.connector_type or integration.get("provider"),
+                "method": result.method_called,
+                "url": proposed.get("url") or proposed.get("page_url"),
+                # GSC/GA4 readers key on the site; the brand id is the site key
+                # unless the integration names one.
+                "site": (integration.get("config") or {}).get("site") or action.get("brand_id"),
+                "entity_id": proposed.get("campaign_id") or proposed.get("ad_group_id"),
+            }
+            stored = self._store.get_action(result.action_id) or {}
+            EcoRecordStore(base_dir=Path(self._store.base_dir) / "eco").register_shipped(
+                subject_id=f"action:{result.action_id}",
+                work_type=work_type,
+                claimed_by="kai-executor",
+                receipt={k: v for k, v in receipt.items() if v},
+                baseline=baseline,
+                brand_id=action.get("brand_id"),
+                shipped_at=stored.get("executed_at"),
+            )
+        except Exception:
+            logger.warning("Outcome ticket not registered for %s", result.action_id, exc_info=True)
 
     # ------------------------------------------------------------------
     # Pipedream execution path
@@ -662,6 +717,21 @@ class ActionExecutor:
 
         result = response.model_dump() if hasattr(response, "model_dump") else response
         return {"method": method_name, "response": result if isinstance(result, dict) else {"result": str(result)}}
+
+
+def _snapshot_outcome_baseline(action: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """The action's declared pre-ship baseline, stamped before dispatch.
+
+    Reads ``metadata.outcome_baseline`` (``{metric, source, value, ...}``) when
+    the planner attached one. No live metric is fetched here, and an action
+    with no declared baseline gets none: its ticket reads unmeasurable.
+    """
+    declared = (action.get("metadata") or {}).get("outcome_baseline")
+    if not isinstance(declared, dict) or declared.get("value") is None or not declared.get("metric"):
+        return None
+    snapshot = dict(declared)
+    snapshot.setdefault("captured_at", datetime.now(timezone.utc).isoformat())
+    return snapshot
 
 
 def _infer_required_scopes(action: Dict[str, Any]) -> List[str]:

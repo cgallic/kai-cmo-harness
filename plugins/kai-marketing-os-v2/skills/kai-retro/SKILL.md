@@ -17,11 +17,12 @@ Work type `harness-change` — floor **E3/C3/O1** (`harness/eco-floors.yaml`).
 - **C3** — every promotion into a gate script has a matching case in `evals/golden/manifest.json` (one sample proving the new check fires, plus confirmation existing pass samples still pass), reviewed by a non-author. A gate change without a golden case is not a promotion; it is a regression waiting to happen.
 - **O1** — metric `lesson_recurrence_stopped`, read from `data/learning/gate_runs.jsonl` at 30 days: the promoted lesson's failure signature stops appearing.
 
-The summary names: signatures mined with counts, underperformers diagnosed with their one-line causes, what was promoted and to which target with its golden case id, what was retired and why, edge cases opened or closed, and lessons sitting at two occurrences — one recurrence from mandatory promotion.
+The summary names: signatures mined with counts, the outcome verdict tally from `eco_gate ledger`, underperformers and ledger misses diagnosed with their one-line causes, what was promoted and to which target with its golden case id, what was retired and why, edge cases opened or closed, and lessons sitting at two occurrences — one recurrence from mandatory promotion.
 
 ## Constraints
 
 - **Diagnose the cause, not the symptom.** Name hook type, persona mismatch, seasonality, or thin proof — not "low traffic." Check seasonality and competitor moves before blaming the content (`memory/edge-cases.md` EC-15). Diagnoses are written against the piece and its `content_log.json` entry and land in `memory/what-doesnt-work.md` under "Measured losers" with the piece id.
+- **Read the verdict, not CLOSED.** In the outcome ledger, `didn't work` and `partial` are misses to diagnose even when the record is CLOSED. Final-inconclusive and unmeasurable tickets are measurement gaps, not losers. A shipped change that `eco_gate unregistered` lists gets registered, or gets a reason why it cannot be measured.
 - **Never delete a lesson.** Retired lessons are marked `(retired)` with the reason; git keeps history.
 - **Any change to a gate script requires a golden case**, then a passing `golden_check.py` run. **A promotion that changes publishing behavior — any new hard block — is flagged for human approval, never applied silently.**
 - **`memory/MEMORY.md` stays under 200 lines**; refresh its "Current standing lessons" section, and cross-check `memory/edge-cases.md` — mark entries whose `Enforcement: none` was just fixed, add ones found this cycle. An empty gate log is a finding, not a failure: note it and continue, since the gates only log when they run.
@@ -39,6 +40,8 @@ The summary names: signatures mined with counts, underperformers diagnosed with 
 python scripts/self_improvement/lesson_capture.py mine     # recurring failure signatures from data/learning/gate_runs.jsonl; --write appends candidates
 python scripts/self_improvement/lesson_capture.py losers   # 30-day underperformers with no diagnosis yet; grades are winner/average/underperformer (older docs said "loser")
 python scripts/quality_gates/golden_check.py               # required after any gate-script change
+python -m scripts.quality_gates.eco_gate ledger --since <last retro>   # outcome verdicts: tally, misses, method
+python -m scripts.quality_gates.eco_gate unregistered      # shipped changes with no outcome ticket
 ```
 
 | Verdict | Criteria | Action |

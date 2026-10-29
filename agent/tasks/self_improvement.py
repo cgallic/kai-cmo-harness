@@ -10,6 +10,8 @@ cron:
   aggregation into ``what-works.md`` / ``weekly-patterns.md``
 - ``harness_defaults_update`` — Mon 14:30: statistically-significant defaults
   written via the EC-11 safe-write path (safe_write.py validates + backs up)
+- ``outcome_verdicts``       — daily 03:00: read due ECO outcome tickets and
+  issue worked / partial / didn't work / inconclusive (outcome_measure.py)
 
 All handlers degrade gracefully: missing credentials (Google/Gemini) or a
 missing optional dependency is a DATA GAP reported in the result dict —
@@ -342,4 +344,50 @@ class HarnessDefaultsUpdateTask(BaseTask):
             "updated": len(all_updates),
             "updates": all_updates,
             "drift_alerts": drift_alerts,
+        }
+
+
+class OutcomeVerdictTask(BaseTask):
+    """Daily outcome verdicts (outcome_measure.py): read due ECO tickets, verify."""
+
+    @property
+    def task_type(self) -> str:
+        return "outcome_verdicts"
+
+    @property
+    def description(self) -> str:
+        return "Read due ECO outcome tickets and issue worked/partial/didn't work/inconclusive"
+
+    async def execute(self, task: ScheduledTask, **kwargs) -> Optional[Dict[str, Any]]:
+        return await asyncio.to_thread(self._run)
+
+    def _run(self) -> Dict[str, Any]:
+        mod, err = _import_module("scripts.self_improvement.outcome_measure")
+        if mod is None:
+            return {
+                "success": False,
+                "error": f"outcome_measure unavailable: {err}",
+                "summary": "Outcome verdicts skipped — outcome_measure.py could not be loaded",
+            }
+        try:
+            from scripts.quality_gates.eco_core import EcoRecordStore
+
+            results = mod.measure_due(EcoRecordStore())
+        except Exception as e:
+            logger.exception("outcome verdict run failed")
+            return {"success": False, "error": f"outcome verdict run failed: {e}"}
+
+        # Missing credentials surface as inconclusive data-gap verdicts inside
+        # the ECO records (never zeros) — the run itself still succeeded.
+        tally: Dict[str, int] = {}
+        for r in results:
+            key = "error" if r.get("error") else r.get("verdict", "?")
+            tally[key] = tally.get(key, 0) + 1
+        breakdown = ", ".join(f"{k} {v}" for k, v in sorted(tally.items())) or "none due"
+        return {
+            "success": True,
+            "summary": f"{len(results)} outcome ticket(s) read: {breakdown}",
+            "read": len(results),
+            "verdicts": tally,
+            "results": results,
         }
