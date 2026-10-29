@@ -1,6 +1,10 @@
 import types
+
+import pytest
+
 import reddit_digest as digest
-import news_once
+
+news_once = pytest.importorskip("news_once")
 
 
 def test_second_agent_news_digest_skipped(monkeypatch, tmp_path):
