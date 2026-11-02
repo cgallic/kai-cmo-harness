@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+
+import pytest
 from pathlib import Path
 
 import reddit_digest as digest
@@ -257,6 +259,7 @@ def test_expanded_search_queries_dedupes_and_expands_verticals():
 
 def test_validate_public_decision_requires_exact_buyer_evidence():
     post = {
+        "url": "https://reddit.com/r/smallbusiness/comments/abc/help/",
         "title": "Anyone recommend a virtual receptionist?",
         "content": "We keep missing calls while our HVAC techs are out.",
     }
@@ -326,3 +329,85 @@ def test_render_html_supports_legacy_reddit_rows():
     assert "r/smallbusiness" in html
     assert "How do you handle missed calls?" in html
     assert "Public sources only" in html
+
+
+# Persisted 2026-11-01 false positives; bucket stores evidence but omits original
+# content. Replay that exact excerpt, without claiming to recover the full page.
+@pytest.mark.parametrize(("title", "quote"), [
+    ("AI Receptionist vs Answering Service",
+     "An AI receptionist answers every call at once and can finish the task, such as booking the appointment and updating your CRM."),
+    ("Answering Service vs AI Receptionist: Which to Choose",
+     "How a live answering service, an AI receptionist and voicemail compare for a small business: who answers, booking, hours, cost and consistency."),
+])
+def test_editorial_copy_is_not_a_buyer_even_with_a_direct_url(title, quote):
+    result = digest.validate_public_decision({
+        "score": 90, "actor_role": "buyer", "intent_type": "direct_need",
+        "confidence": 0.95, "evidence_quote": quote, "angle": "Pitch",
+    }, {"title": title, "content": quote, "url": "https://publisher.example/comparison"})
+    assert result["evidence_valid"] is True
+    assert result["buyer_evidence_valid"] is False
+    assert result["score"] == 25
+    assert result["angle"] == ""
+
+
+@pytest.mark.parametrize("quote", [
+    "Anyone recommend a virtual receptionist?",
+    "Can anyone recommend an answering service for my plumbing business?",
+    "We need an answering service for our clinic.",
+    "I am looking for an after-hours receptionist.",
+    "I'm looking for an after-hours receptionist.",
+    "I’m looking for an after-hours receptionist.",
+    "We're looking for an answering service.",
+    "We’re looking for an answering service.",
+    "Looking for an answering service for my shop.",
+    "Any recommendations for phone coverage?",
+    "We keep missing calls while our HVAC techs are out.",
+    "I can't answer the phone when I'm on a job.",
+    "Our office has missed calls every evening.",
+])
+def test_explicit_requests_and_owned_pain_remain_qualified(quote):
+    result = digest.validate_public_decision({
+        "score": 92, "actor_role": "buyer", "intent_type": "direct_need",
+        "confidence": 0.95, "evidence_quote": quote,
+    }, {"title": "Phone help", "content": quote,
+        "url": "https://independent-forum.example/thread/phone-help"})
+    assert result["score"] == 92
+    assert result["buyer_evidence_valid"] is True
+    assert result["direct_public_url"] is True
+
+
+@pytest.mark.parametrize("quote", [
+    "We handle your calls so you never miss a lead.",
+    "We can help if you keep missing calls after hours.",
+    "When looking for recommendations, consider your opening hours.",
+    "Your business needs an answering service to capture leads.",
+    "Our AI receptionist answers calls and books appointments.",
+])
+def test_generic_and_vendor_copy_cannot_supply_buyer_evidence(quote):
+    assert digest.has_explicit_buyer_evidence(quote) is False
+
+
+@pytest.mark.parametrize("url", [
+    "", "javascript:alert(1)", "https://google.com/goto?url=opaque",
+    "https://www.google.com/search?q=need+receptionist",
+    "https://bit.ly/example", "https://example.com/",
+    "https://www.facebook.com/groups/hvacowners/",
+    "https://user:password@example.com/thread",
+])
+def test_unusable_source_link_caps_even_genuine_request(url):
+    quote = "Anyone recommend an answering service?"
+    result = digest.validate_public_decision({
+        "score": 95, "actor_role": "buyer", "intent_type": "recommendation_request",
+        "confidence": 0.95, "evidence_quote": quote,
+    }, {"title": quote, "content": "", "url": url})
+    assert result["buyer_evidence_valid"] is True
+    assert result["direct_public_url"] is False
+    assert result["score"] == 25
+
+
+def test_public_community_permalink_is_structurally_usable():
+    assert digest.has_direct_public_url("https://www.facebook.com/groups/hvacowners/posts/123")
+
+
+def test_unrelated_host_is_not_treated_as_facebook():
+    assert digest.has_direct_public_url("https://evilfacebook.com/groups/a/thread")
