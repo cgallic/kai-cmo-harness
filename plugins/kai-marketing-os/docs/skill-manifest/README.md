@@ -42,6 +42,7 @@ Generic marketing AI usually returns a draft from a loose prompt. Kai exposes a 
 ### Strategy
 
 - [Kai ABM](./kai-abm.md) - `kai-abm`
+- [Kai Ad Library Scan](./kai-ad-library-scan.md) - `kai-ad-library-scan`
 - [Kai Brand](./kai-brand.md) - `kai-brand`
 - [Kai Brief](./kai-brief.md) - `kai-brief`
 - [Kai Budget](./kai-budget.md) - `kai-budget`

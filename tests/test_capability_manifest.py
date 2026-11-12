@@ -50,6 +50,8 @@ def _minimal_tree(root: Path) -> None:
 
 def test_current_inventory_is_derived_from_live_sources():
     inventory = manifest.discover_inventory(REPO_ROOT)
+    # Re-baselined 2026-11-12: kai-ad-library-scan added (v1 + v2 skill, router row,
+    # manifest page, knowledge/playbooks/ad-library-survival-scan.md).
     # Re-baselined 2026-09-30 (third): ux-writing added, a third-party (MIT)
     # non-kai skill dir in v1 + v2. Only skill_directories and
     # v2_goal_oriented_skills move; no router row, no manifest page.
@@ -72,13 +74,13 @@ def test_current_inventory_is_derived_from_live_sources():
     # red on main from 2026-07-31. Bump these numbers deliberately when a
     # capability is added -- an unexplained change means something drifted.
     assert inventory["counts"] == {
-        "skill_directories": 63,
-        "canonical_kai_skills": 59,
-        "v2_goal_oriented_skills": 63,
-        "public_router_commands": 54,
-        "public_manifest_pages": 50,
+        "skill_directories": 64,
+        "canonical_kai_skills": 60,
+        "v2_goal_oriented_skills": 64,
+        "public_router_commands": 55,
+        "public_manifest_pages": 51,
         "undocumented_canonical_skills": 9,
-        "playbook_docs": 68,
+        "playbook_docs": 69,
         "checklists": 37,
         "framework_docs": 38,
         "channel_guides": 31,
