@@ -19,13 +19,13 @@
     "skill_contracts": "Immediate *.yaml files under harness/skill-contracts."
   },
   "counts": {
-    "skill_directories": 63,
-    "canonical_kai_skills": 59,
-    "v2_goal_oriented_skills": 63,
-    "public_router_commands": 54,
-    "public_manifest_pages": 50,
+    "skill_directories": 64,
+    "canonical_kai_skills": 60,
+    "v2_goal_oriented_skills": 64,
+    "public_router_commands": 55,
+    "public_manifest_pages": 51,
     "undocumented_canonical_skills": 9,
-    "playbook_docs": 68,
+    "playbook_docs": 69,
     "checklists": 37,
     "framework_docs": 38,
     "channel_guides": 31,
@@ -305,6 +305,11 @@
       "description": "Cited public brand intelligence across web, news, social, Reddit, and review sites"
     },
     {
+      "name": "kai-ad-library-scan",
+      "category": "analyze",
+      "description": "Ad patterns a category keeps paying for: Ad Library scan, Jev tags, 60+ day survival lifts, ranked briefs"
+    },
+    {
       "name": "kai-surround-sound",
       "category": "analyze",
       "description": "AI-search visibility, source-quality, and agent-readiness strategy"
@@ -336,6 +341,14 @@
       "public_router_command": true,
       "router_category": "produce",
       "manifest_doc": "docs/skill-manifest/kai-ad-campaign.md"
+    },
+    {
+      "name": "kai-ad-library-scan",
+      "description": "Find which ad patterns keep getting paid for in a category. Scans the Meta Ad Library (Apify or ScrapeCreators, under a spend cap), computes days running in code, has Jev tag each ad's hook, offer, angle, proof and format, drops off-category ads, measures advertiser-weighted 60+ day survival per tag, then scores LLM-written briefs against the surviving patterns and the brand file. Read-only. Use when \"ad library\", \"competitor ads\", \"what ads are working in my category\", \"long-running ads\", \"winning ad patterns\", \"swipe file\", \"which hooks work\", \"score these ad briefs\", or before writing a paid creative bench.",
+      "source": "harness/skills/kai-ad-library-scan/SKILL.md",
+      "public_router_command": true,
+      "router_category": "analyze",
+      "manifest_doc": "docs/skill-manifest/kai-ad-library-scan.md"
     },
     {
       "name": "kai-analytics",

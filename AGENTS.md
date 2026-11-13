@@ -13,7 +13,7 @@ Kai is a **marketing-native agent runtime**. This repo holds the knowledge base 
 - `gateway/` is the remote runner and connector surface
 
 <!-- capability-counts:start -->
-Inventory reachable from here: 63 skill directories, 59 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 54 public `/kai` router commands, 68 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 41 harness references, and 36 skill contracts.
+Inventory reachable from here: 64 skill directories, 60 canonical `kai-*` skills (each with a goal-oriented v2 counterpart), 55 public `/kai` router commands, 69 playbook docs, 37 checklists, 38 framework docs, 31 channel guides, 8 audience persona profiles, 41 harness references, and 36 skill contracts.
 <!-- capability-counts:end -->
 
 ## Instruction Contract (critical)
@@ -82,6 +82,7 @@ Load the primary framework as context, then validate against the checklist. Full
 | Grow search clicks on existing pages (striking distance, low CTR, portfolio focus) | `knowledge/playbooks/page-refresh-loop.md` + `knowledge/playbooks/seo-ops-monitoring.md` | `harness/eco-floors.yaml` (`page-refresh`) |
 | SEO content | `knowledge/frameworks/aeo-ai-search/aeo-ai-search-playbook-2026.md` + `knowledge/frameworks/content-copywriting/algorithmic-authorship.md` | `knowledge/checklists/seo-checklist.md` |
 | Meta ads (FB/IG) | `knowledge/channels/meta-advertising.md` + `knowledge/playbooks/meta-creative-testing-decision-framework.md` + `harness/references/meta-ads-rules.md` + `harness/references/meta-ads-api-reference.md` | `knowledge/checklists/meta-advertising-checklist.md` |
+| Competitor ad patterns / Ad Library survival scan | `knowledge/playbooks/ad-library-survival-scan.md` + `harness/references/meta-ads-rules.md` | `/kai-ad-library-scan` hand check (85%+ label agreement) |
 | Paid creative bench / concept testing | `knowledge/playbooks/combinatorial-creative-bench.md` + `knowledge/playbooks/ad-creative-best-practices.md` | `knowledge/checklists/ad-launch-checklist.md` |
 | OpenAI Ads measurement / CAPI | `harness/references/openai-ads-measurement-reference.md` + `harness/references/advertising-compliance.md` | `knowledge/checklists/paid-acquisition-checklist.md` |
 | Google ads | `knowledge/channels/paid-acquisition.md` + `harness/references/google-ads-policy-reference.md` | `knowledge/checklists/paid-acquisition-checklist.md` |

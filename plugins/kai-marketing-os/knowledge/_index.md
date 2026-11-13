@@ -162,6 +162,7 @@ For one-page summary of all frameworks: `_quick-reference.md`
 | `playbooks/business-model-marketing.md` | Marketing strategy by business model (B2B SaaS, DTC, Fintech, Crypto, Marketplace) |
 | `playbooks/video-clipping-automation-workflow.md` | Automated video clipping and multi-platform posting with OpusClip + Repurpose.io |
 | `playbooks/ad-creative-best-practices.md` | **Ad creatives** - Copy formulas (PAS, AIDA, BAB), testing framework (3x3 matrix), platform format specs, budget/bidding, creative fatigue signals |
+| `playbooks/ad-library-survival-scan.md` | **Competitor ad patterns** - Meta Ad Library scan, Jev visible-feature tags, advertiser-weighted 60+ day survival lifts, brief scoring; plus Jev for SEO, rating and judgment |
 | `playbooks/combinatorial-creative-bench.md` | **Combinatorial creative bench** - P.D.A. concept math, 60/30/10 portfolio allocation, named kill / graduate / iterate rules |
 | `playbooks/creative-test-resolution-protocol.md` | **Creative test resolution** - Controls, data floors, read windows, and kill / iterate / graduate decisions |
 | `playbooks/creative-intelligence-ledger.md` | **Creative intelligence ledger** - Durable memory for hooks, angles, awareness stages, mechanics, results, and next actions |

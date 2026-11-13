@@ -262,6 +262,7 @@ The tables below list the 49 public router commands plus `/kai-start`, the onboa
 |---|---|
 | `/kai-competitors` | Competitive teardown and sales battlecards |
 | `/kai-brand-pulse` | Cited public brand intelligence across web, news, social, Reddit, and review sites |
+| `/kai-ad-library-scan` | Ad patterns a category keeps paying for: Ad Library scan, Jev tags, 60+ day survival lifts, ranked briefs |
 | `/kai-surround-sound` | AEO/GEO strategy for agent-readiness, source-quality, and measured AI-search visibility |
 | `/kai-analytics` | Analytics and attribution setup |
 | `/kai` | Command router and help menu |

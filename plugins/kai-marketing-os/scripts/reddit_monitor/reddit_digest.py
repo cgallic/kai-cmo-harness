@@ -25,9 +25,11 @@ import base64
 import html
 import json
 import os
+import re
 import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import feedparser
 import requests
@@ -437,6 +439,60 @@ def _normal(text: str) -> str:
     return " ".join(str(text).split()).casefold()
 
 
+def has_direct_public_url(url: str) -> bool:
+    """Require a usable source link, not an opaque search/redirect wrapper.
+
+    This is a structural check, not proof that a page is public or that the
+    author owns a business. Those facts still need source review before contact.
+    """
+    try:
+        parsed = urlsplit(str(url))
+        host = (parsed.hostname or "").lower().removeprefix("www.")
+        if parsed.scheme not in {"http", "https"} or not host or parsed.username or parsed.password:
+            return False
+        if host in {"google.com", "bing.com", "bit.ly", "t.co", "tinyurl.com"}:
+            return False
+        path = parsed.path.rstrip("/")
+        if not path or path.lower() in {"/search", "/login", "/signin"}:
+            return False
+        if (host == "facebook.com" or host.endswith(".facebook.com")) and "/groups/" in path:
+            return bool(re.search(r"/groups/[^/]+/(?:posts|permalink)/[^/]+", path))
+        return True
+    except ValueError:
+        return False
+
+
+def has_explicit_buyer_evidence(evidence: str) -> bool:
+    """Conservative English request/pain floor over the exact source quote.
+
+    Topic overlap and model confidence alone cannot turn explanatory copy into
+    an author asking for help. Unrecognized wording stays review-only.
+    """
+    text = _normal(evidence).replace("’", "'")
+    for short, full in (("i'm", "i am"), ("we're", "we are"), ("we've", "we have")):
+        text = re.sub(r"\b" + short + r"\b", full, text)
+    patterns = (
+        # The author's own need or purchasing evaluation.
+        r"\b(?:i|we)\s+(?:(?:am|are|really|currently|urgently|still)\s+){0,2}"
+        r"(?:need|want|looking for|seeking|switching)\b",
+        # An explicit request to the community, including title-only requests.
+        r"^(?:(?:can|could|does|has|would)\s+)?anyone\b.{0,100}"
+        r"\b(?:recommend|recommendations|using|used|tried|suggest)\b",
+        r"^(?:looking for|need|seeking)\s+(?:a |an |some )?"
+        r"(?:recommendations?|suggestions?|help|advice)\b",
+        r"^any\s+(?:recommendations?|suggestions?)\s+(?:for|on)\b",
+        r"^(?:looking for|need|seeking)\s+(?:a |an )?"
+        r"(?:receptionist|answering service|call coverage|phone coverage)\b",
+        # First-person operational pain; second-person sales copy is excluded.
+        r"\b(?:i|we)\s+(?:(?:am|are|keep|have been|have|can't|cannot|don't|do not)\s+){0,3}"
+        r"(?:missing|miss|losing|lose|struggling|overwhelmed)\b",
+        r"\b(?:i|we)\s+(?:can\'t|cannot|don\'t|do not)\s+(?:answer|handle|manage|afford)\b",
+        r"\b(?:my|our)\s+(?:business|team|office|shop|company|clinic|practice|staff|phones?|calls?)"
+        r"\b.{0,80}\b(?:missing|missed|losing|unanswered|overwhelmed|can't|cannot|struggling)\b",
+    )
+    return any(re.search(pattern, text) for pattern in patterns)
+
+
 def validate_public_decision(data: dict, post: dict) -> dict:
     source_text = f"{post.get('title', '')}\n{post.get('content', '')}"
     evidence = str(data.get("evidence_quote") or "").strip()
@@ -447,6 +503,8 @@ def validate_public_decision(data: dict, post: dict) -> dict:
         len(evidence) >= 12
         and _normal(evidence) in _normal(source_text)
     )
+    buyer_evidence_valid = evidence_valid and has_explicit_buyer_evidence(evidence)
+    direct_public_url = has_direct_public_url(post.get("url", ""))
     valid = (
         actor_role == "buyer"
         and intent_type in {
@@ -455,7 +513,8 @@ def validate_public_decision(data: dict, post: dict) -> dict:
             "operational_pain",
         }
         and confidence >= 0.8
-        and evidence_valid
+        and buyer_evidence_valid
+        and direct_public_url
     )
     score = min(100, max(0, int(data.get("score") or 0)))
     if not valid:
@@ -469,6 +528,8 @@ def validate_public_decision(data: dict, post: dict) -> dict:
         "confidence": confidence,
         "evidence_quote": evidence if evidence_valid else "",
         "evidence_valid": evidence_valid,
+        "buyer_evidence_valid": buyer_evidence_valid,
+        "direct_public_url": direct_public_url,
     }
 
 

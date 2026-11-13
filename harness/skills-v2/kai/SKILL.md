@@ -135,6 +135,7 @@ Doctrine: `docs/system/eco-completion-standard.md` · Marketing floors: `harness
 |-------|-------------|
 | `/kai-competitors` | Competitive teardown + sales battlecards |
 | `/kai-brand-pulse` | Cited public brand intelligence across web, news, social, Reddit, and review sites |
+| `/kai-ad-library-scan` | Ad patterns a category keeps paying for: Ad Library scan, Jev tags, 60+ day survival lifts, ranked briefs |
 | `/kai-surround-sound` | AI-search visibility, source-quality, and agent-readiness strategy |
 | `/kai-analytics` | Analytics + attribution setup |
 
