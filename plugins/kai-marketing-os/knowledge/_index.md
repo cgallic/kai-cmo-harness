@@ -13,6 +13,8 @@
 
 For one-page summary of all frameworks: `_quick-reference.md`
 
+For **business-aware prompt selection**, load the [marketing growth library](../harness/references/marketing-growth-library/README.md): R0 + P1–P23 + C1–C6, seven profiles, hybrid/unknown handling, evidence requirements and existing skill handoffs. Draft preparation grants no live-channel authority.
+
 ---
 
 ## Core Frameworks

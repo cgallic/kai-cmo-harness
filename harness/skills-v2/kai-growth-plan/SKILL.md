@@ -7,6 +7,8 @@ description: Generate a stage-appropriate marketing plan based on your company's
 
 ## Objective
 
+For reusable prompt selection, non-SaaS businesses or hybrid offers, load `harness/references/marketing-growth-library/README.md`, its catalog and R0 in `prompts.md`. Establish the business profile, outcome unit, evidence and permissions before applying the stage model below. MRR bands apply to recurring software revenue, not every business. Follow only relevant P1–P23/C1–C6 prompts and their adaptations; keep unknown baselines null, distinguish buyers from users and keep hybrid offer goals separate. The optional read-only `scripts/marketing_library.py` validates selections without executing work. Existing provenance, Phone Capture Fit Rule, channel contracts, client isolation, human approvals and independent ECO verdicts still govern every handoff.
+
 A marketing plan the founder can start executing on Monday, matched to the company's actual stage — so that effort goes to the constraint that is currently binding growth rather than to the tactic that is currently fashionable. The plan names what to do, what to deliberately not do, which growth loop to build, and what to measure.
 
 The wrong strategy at the right stage wastes money. Stage diagnosis is the load-bearing judgment in this skill.

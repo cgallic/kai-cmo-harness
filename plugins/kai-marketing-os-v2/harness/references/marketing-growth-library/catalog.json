@@ -1,0 +1,1084 @@
+{
+  "version": 1,
+  "mode": "draft_only",
+  "default_prompt_ids": [
+    "R0",
+    "P1",
+    "P2",
+    "P3"
+  ],
+  "profiles": [
+    {
+      "id": "services-trades",
+      "label": "Local services and trades",
+      "outcome": "Completed, paid, profitable jobs; qualified inquiries and bookings are leading indicators, not completed jobs",
+      "journey": "Discovery → call/form → qualification → estimate → scheduled job → completion/payment → maintenance/referral",
+      "capacity": "Response time, seasonality, crew hours, dispatch and service area",
+      "buyer_distinction": "Qualified inquiry-to-job, show/completion rate, contribution/job, repeat work. Caller, property owner and payer may differ"
+    },
+    {
+      "id": "ecommerce",
+      "label": "Ecommerce and physical products",
+      "outcome": "Paid/fulfilled eligible units or orders, net of defined returns/cancellations; do not equate units with customers",
+      "journey": "Discovery → product → cart → checkout/payment → shipment → use → return or reorder",
+      "capacity": "Inventory, shipping, stockouts, replenishment and seasonality",
+      "buyer_distinction": "Contribution/order, conversion, AOV, returns, repeat purchase. Purchaser may be buying a gift or for another user"
+    },
+    {
+      "id": "saas",
+      "label": "SaaS and subscriptions",
+      "outcome": "Activated, retained paying accounts or appropriately defined recurring revenue; trial/sign-up is not activation/payment",
+      "journey": "Discovery → trial/demo → setup → first value → payment → sustained use → renewal/expansion/churn",
+      "capacity": "Onboarding time, renewal cohorts, support/service costs",
+      "buyer_distinction": "Activation, trial-to-paid, retention/churn, contribution and payback. Champion, admin, user, budget owner and buyer can differ"
+    },
+    {
+      "id": "retail-hospitality",
+      "label": "Local retail and hospitality",
+      "outcome": "Completed profitable transactions, visits, reservations or stays; specify the unit",
+      "journey": "Discovery → reservation or walk-in → visit/service → payment → review/revisit",
+      "capacity": "Opening hours, seats/rooms, staffing, local seasons and no-shows",
+      "buyer_distinction": "Booking-to-visit, utilization, spend/visit, contribution, repeat rate. Booker, guest and payer may differ"
+    },
+    {
+      "id": "rentals-events",
+      "label": "Rentals and events",
+      "outcome": "Completed, paid rentals/events with defined deposit, cancellation and refund treatment",
+      "journey": "Inquiry → date/availability → quote → deposit → logistics/setup → event → return/settlement → repeat/referral",
+      "capacity": "Date-specific inventory, delivery routes, setup crew, damage and return timing",
+      "buyer_distinction": "Quote-to-book, utilization, contribution/event, cancellations, delivery reliability. Planner, end client, venue and payer may differ"
+    },
+    {
+      "id": "professional-practices",
+      "label": "Professional practices",
+      "outcome": "Suitable completed and paid engagements/appointments under the practice’s own permitted criteria; inquiry is not accepted service",
+      "journey": "Discovery/referral → permissioned intake → suitability/scheduling → appointment/engagement → service → payment/follow-up",
+      "capacity": "Practitioner capacity, appointment cycles, confidentiality and professional obligations",
+      "buyer_distinction": "Qualified-intake conversion, attendance, capacity and collection where appropriate. Client/patient, referrer, decision-maker and payer can differ; no automated sensitive eligibility judgments"
+    },
+    {
+      "id": "b2b-services",
+      "label": "B2B agencies and consulting",
+      "outcome": "Signed, delivered and paid engagements or retained accounts, with each stage separately recorded",
+      "journey": "Introduction/inbound → discovery → qualification → proposal → procurement → signed engagement → delivery → invoice/payment → expansion",
+      "capacity": "Longer buying cycles, procurement, billable capacity and scope control",
+      "buyer_distinction": "Stage conversion, sales cycle, delivery margin, retention, receivables. Champion, economic buyer, procurement and users differ"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "R0",
+      "title": "Select the business profile and next useful work",
+      "path": "prompts.md#r0",
+      "required_inputs": "Available business evidence",
+      "output": "Selected profiles, configuration and uncertainty",
+      "requires": [],
+      "feeds_next": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "handoff_skills": [
+        "kai-growth-plan"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "P1",
+      "title": "Establish our baseline and path to the configured goal",
+      "path": "prompts.md#p1",
+      "required_inputs": "Authoritative outcome/reversal records",
+      "output": "Reconciled goal gap and economics",
+      "requires": [
+        "outcomes",
+        "economics"
+      ],
+      "feeds_next": [
+        "P10",
+        "P11",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-analytics",
+        "kai-goal"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Audit our systems and amplify the operator’s strengths",
+      "path": "prompts.md#p2",
+      "required_inputs": "Repos, access, relevant prior work",
+      "output": "Capability/gap and keep/amplify/automate map",
+      "requires": [
+        "systems"
+      ],
+      "feeds_next": [
+        "P10",
+        "P20",
+        "P23"
+      ],
+      "handoff_skills": [
+        "kai-start"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "P3",
+      "title": "Map the complete customer journey and funnel",
+      "path": "prompts.md#p3",
+      "required_inputs": "Observed screens, interactions and outcomes",
+      "output": "Journey diagram and screen register",
+      "requires": [
+        "journey"
+      ],
+      "feeds_next": [
+        "P10",
+        "P11",
+        "P18"
+      ],
+      "handoff_skills": [
+        "kai-funnel-audit"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "P4",
+      "title": "Build our first-party customer knowledge base",
+      "path": "prompts.md#p4",
+      "required_inputs": "Permissioned first-party sources",
+      "output": "Source-linked insight bank and research gaps",
+      "requires": [
+        "customer_research"
+      ],
+      "feeds_next": [
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9"
+      ],
+      "handoff_skills": [
+        "kai-proof-builder"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "P5",
+      "title": "Build the ICP matrix and 50 specific persona hypotheses",
+      "path": "prompts.md#p5",
+      "required_inputs": "Research and observed buyer situations",
+      "output": "50 hypotheses, top five validation priorities",
+      "requires": [
+        "customer_research"
+      ],
+      "feeds_next": [
+        "P7",
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17"
+      ],
+      "handoff_skills": [
+        "kai-brief"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P6",
+      "title": "Find historical stepping stones and useful comparisons",
+      "path": "prompts.md#p6",
+      "required_inputs": "Relevant cited cases",
+      "output": "Mechanisms, limits and test ideas",
+      "requires": [
+        "historical_sources"
+      ],
+      "feeds_next": [
+        "P7",
+        "P13"
+      ],
+      "handoff_skills": [
+        "kai-brand"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P7",
+      "title": "Map purchase motivations and messaging angles",
+      "path": "prompts.md#p7",
+      "required_inputs": "ICP, motivations, proof",
+      "output": "Truthful messaging matrix",
+      "requires": [
+        "customer_research",
+        "proof"
+      ],
+      "feeds_next": [
+        "P12",
+        "P13",
+        "P14",
+        "P15",
+        "P16",
+        "P17"
+      ],
+      "handoff_skills": [
+        "kai-brand",
+        "kai-hook-bench"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P8",
+      "title": "Analyze competitors and alternatives",
+      "path": "prompts.md#p8",
+      "required_inputs": "Current competitor/alternative evidence",
+      "output": "Positioning and differentiation tests",
+      "requires": [
+        "alternatives"
+      ],
+      "feeds_next": [
+        "P7",
+        "P9"
+      ],
+      "handoff_skills": [
+        "kai-competitors"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P9",
+      "title": "Design our offer ladder, bundles and upsells",
+      "path": "prompts.md#p9",
+      "required_inputs": "Confirmed offers, economics and capacity",
+      "output": "Approved/proposed offers separated",
+      "requires": [
+        "offers",
+        "economics"
+      ],
+      "feeds_next": [
+        "P12",
+        "P18",
+        "P19"
+      ],
+      "handoff_skills": [
+        "kai-offer-builder"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "Verify tracking and reconcile actual revenue",
+      "path": "prompts.md#p10",
+      "required_inputs": "Journey and source systems",
+      "output": "Tracking/reconciliation test matrix",
+      "requires": [
+        "journey",
+        "systems"
+      ],
+      "feeds_next": [
+        "P11",
+        "P18",
+        "P21",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-analytics"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P11",
+      "title": "Build the prioritized growth backlog",
+      "path": "prompts.md#p11",
+      "required_inputs": "Evidence, constraints and gaps",
+      "output": "Ranked next action and conditional backlog",
+      "requires": [
+        "baseline",
+        "journey",
+        "constraints"
+      ],
+      "feeds_next": [],
+      "handoff_skills": [
+        "kai-growth-plan"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P12",
+      "title": "Build the paid acquisition research and testing pack",
+      "path": "prompts.md#p12",
+      "required_inputs": "ICP, offers, tracking, economics",
+      "output": "Decision-ready paid test plan",
+      "requires": [
+        "customer_research",
+        "offers",
+        "measurement",
+        "economics"
+      ],
+      "feeds_next": [
+        "P13",
+        "P18",
+        "P21"
+      ],
+      "handoff_skills": [
+        "kai-ad-campaign",
+        "kai-brief"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P13",
+      "title": "Build the creative production and review system",
+      "path": "prompts.md#p13",
+      "required_inputs": "Insight, offer, proof, rights",
+      "output": "Versioned briefs/assets/review criteria",
+      "requires": [
+        "customer_research",
+        "offers",
+        "proof",
+        "rights"
+      ],
+      "feeds_next": [
+        "P14",
+        "P15",
+        "P16",
+        "P17",
+        "P18",
+        "P21"
+      ],
+      "handoff_skills": [
+        "kai-brief",
+        "kai-write",
+        "kai-video-production"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P14",
+      "title": "Build the email conversion loop",
+      "path": "prompts.md#p14",
+      "required_inputs": "Eligible segment, consent and lifecycle",
+      "output": "Draft sequence with stops/measurement",
+      "requires": [
+        "consent",
+        "lifecycle"
+      ],
+      "feeds_next": [
+        "P18",
+        "P21",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-email-system"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P15",
+      "title": "Build the organic search and content loop",
+      "path": "prompts.md#p15",
+      "required_inputs": "Intent, existing pages and proof",
+      "output": "Content improvement/cluster plan",
+      "requires": [
+        "search_intent",
+        "pages",
+        "proof"
+      ],
+      "feeds_next": [
+        "P13",
+        "P18",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-page-refresh",
+        "kai-seo-audit"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P16",
+      "title": "Build the social and community loop",
+      "path": "prompts.md#p16",
+      "required_inputs": "Audience evidence and channel context",
+      "output": "Test batch and response ownership",
+      "requires": [
+        "audience",
+        "channel_context"
+      ],
+      "feeds_next": [
+        "P13",
+        "P18",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-social"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P17",
+      "title": "Build the press, partnership and sponsorship loop",
+      "path": "prompts.md#p17",
+      "required_inputs": "Relevant relationships/news and standing",
+      "output": "Ranked opportunities and drafts",
+      "requires": [
+        "relationships",
+        "proof"
+      ],
+      "feeds_next": [
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-partnership"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P18",
+      "title": "Design and evaluate CRO experiments",
+      "path": "prompts.md#p18",
+      "required_inputs": "Baseline and one evidenced bottleneck",
+      "output": "Predeclared experiment and decision rules",
+      "requires": [
+        "baseline",
+        "bottleneck",
+        "measurement"
+      ],
+      "feeds_next": [
+        "P21",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-cro"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P19",
+      "title": "Build retention, repeat purchase and referral loops",
+      "path": "prompts.md#p19",
+      "required_inputs": "Delivery/use/support/repeat evidence",
+      "output": "Experience and repeat-value tests",
+      "requires": [
+        "delivery",
+        "retention"
+      ],
+      "feeds_next": [
+        "P18",
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-retention"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P20",
+      "title": "Map the organization and operating loops",
+      "path": "prompts.md#p20",
+      "required_inputs": "Existing roles and permissions",
+      "output": "Responsibility/operating-loop diagram",
+      "requires": [
+        "owners"
+      ],
+      "feeds_next": [],
+      "handoff_skills": [
+        "kai-growth-plan"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P21",
+      "title": "Run launch readiness and failure testing",
+      "path": "prompts.md#p21",
+      "required_inputs": "Exact candidate, journey and approvals",
+      "output": "Evidence-backed go/no-go",
+      "requires": [
+        "candidate",
+        "journey",
+        "approvals",
+        "measurement"
+      ],
+      "feeds_next": [
+        "P22"
+      ],
+      "handoff_skills": [
+        "kai-launch"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P22",
+      "title": "Run the weekly review and decide what happens next",
+      "path": "prompts.md#p22",
+      "required_inputs": "Mature independent observations",
+      "output": "Reconciled decisions and next action",
+      "requires": [
+        "mature_outcomes"
+      ],
+      "feeds_next": [
+        "P11",
+        "P23"
+      ],
+      "handoff_skills": [
+        "kai-weekly-audit",
+        "kai-retro"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "P23",
+      "title": "Turn proven work into reusable client setups",
+      "path": "prompts.md#p23",
+      "required_inputs": "Proven work and approved lessons",
+      "output": "Portable client setup without data leakage",
+      "requires": [
+        "proven_work",
+        "reuse_scope"
+      ],
+      "feeds_next": [
+        "R0"
+      ],
+      "handoff_skills": [
+        "kai-repurpose",
+        "kai-retro"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "C1",
+      "title": "The Deep Extract",
+      "path": "prompts.md#c1",
+      "required_inputs": "Client-selected authorized business history",
+      "output": "Owner-reviewed business evidence profile",
+      "requires": [
+        "authorized_history",
+        "sharing_scope"
+      ],
+      "feeds_next": [
+        "C2",
+        "C3",
+        "C4",
+        "P4"
+      ],
+      "handoff_skills": [
+        "kai-proof-builder"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "C2",
+      "title": "Persona Forge",
+      "path": "prompts.md#c2",
+      "required_inputs": "Approved client/customer evidence",
+      "output": "End-customer hypotheses and unknowns",
+      "requires": [
+        "approved_extract"
+      ],
+      "feeds_next": [
+        "P5",
+        "P7"
+      ],
+      "handoff_skills": [
+        "kai-brief"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "C3",
+      "title": "Purchase Path Autopsy",
+      "path": "prompts.md#c3",
+      "required_inputs": "Owner-approved actual purchases",
+      "output": "Provider-buyer decision/objection map",
+      "requires": [
+        "approved_purchases"
+      ],
+      "feeds_next": [
+        "P5",
+        "P7",
+        "P12"
+      ],
+      "handoff_skills": [
+        "kai-sales-meeting-prep"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "C4",
+      "title": "Nostalgia, Edge and Loop Scout",
+      "path": "prompts.md#c4",
+      "required_inputs": "Relevant local/industry sources",
+      "output": "Source-grounded messaging/test ideas",
+      "requires": [
+        "historical_sources"
+      ],
+      "feeds_next": [
+        "P6",
+        "P7",
+        "P19"
+      ],
+      "handoff_skills": [
+        "kai-brand"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    },
+    {
+      "id": "C5",
+      "title": "Case Study Miner",
+      "path": "prompts.md#c5",
+      "required_inputs": "Mature outcome records",
+      "output": "Draft stories and verification questions",
+      "requires": [
+        "mature_outcomes",
+        "public_use_scope"
+      ],
+      "feeds_next": [
+        "P13",
+        "P17"
+      ],
+      "handoff_skills": [
+        "kai-case-study"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": [
+        "metric",
+        "unit",
+        "target",
+        "period",
+        "timezone",
+        "reversal_rules"
+      ]
+    },
+    {
+      "id": "C6",
+      "title": "Approved Insight Aggregation",
+      "path": "prompts.md#c6",
+      "required_inputs": "Reviewed, approved extract and allowed purpose",
+      "output": "Provenance-preserving deidentified patterns",
+      "requires": [
+        "approved_extract",
+        "reuse_scope"
+      ],
+      "feeds_next": [
+        "P5",
+        "P7",
+        "P11",
+        "P23"
+      ],
+      "handoff_skills": [
+        "kai-retro"
+      ],
+      "applicable_profiles": [
+        "services-trades",
+        "ecommerce",
+        "saas",
+        "retail-hospitality",
+        "rentals-events",
+        "professional-practices",
+        "b2b-services"
+      ],
+      "required_goal_fields": []
+    }
+  ]
+}

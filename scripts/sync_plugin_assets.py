@@ -96,6 +96,7 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os/scripts/reddit_monitor", "scripts/reddit_monitor"),
     # DataForSEO collector for /kai-local-audit and the /kai-audit provenance collector (stdlib only)
     ("plugins/kai-marketing-os/scripts/__init__.py", "scripts/__init__.py"),
+    ("plugins/kai-marketing-os/scripts/marketing_library.py", "scripts/marketing_library.py"),
     ("plugins/kai-marketing-os/scripts/audit", "scripts/audit"),
     ("plugins/kai-marketing-os/scripts/local_audit", "scripts/local_audit"),
     ("plugins/kai-marketing-os/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),
@@ -116,6 +117,7 @@ ASSET_MAP: list[tuple[str, str]] = [
     ("plugins/kai-marketing-os-v2/scripts/reddit_monitor", "scripts/reddit_monitor"),
     # DataForSEO collector for /kai-local-audit and the /kai-audit provenance collector (stdlib only)
     ("plugins/kai-marketing-os-v2/scripts/__init__.py", "scripts/__init__.py"),
+    ("plugins/kai-marketing-os-v2/scripts/marketing_library.py", "scripts/marketing_library.py"),
     ("plugins/kai-marketing-os-v2/scripts/audit", "scripts/audit"),
     ("plugins/kai-marketing-os-v2/scripts/local_audit", "scripts/local_audit"),
     ("plugins/kai-marketing-os-v2/examples/local-audit-config.example.json", "examples/local-audit-config.example.json"),

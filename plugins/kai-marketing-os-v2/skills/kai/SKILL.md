@@ -11,6 +11,8 @@ description: Kai Marketing OS router - shows all 49 marketing skills organized b
 
 **First time?** Run `/kai-start` — it reads your codebase, writes MARKETING.md, and recommends your first command.
 
+**Selecting reusable marketing prompts or adapting work to a business type?** Load `harness/references/marketing-growth-library/README.md` and R0 in its `prompts.md`. The 30-prompt library supports seven profiles, hybrids and unresolved fit. Explain evidence/confidence, use the client's conversion unit, and defer missing evidence. It prepares drafts and routes to existing skills; it grants no execution, publication or spend authority.
+
 **Want an outcome, not an asset?** Run `/kai-goal`.
 
 ## How to read a v2 skill
